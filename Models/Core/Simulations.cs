@@ -331,6 +331,10 @@ namespace Models.Core
                     Links links = new Core.Links();
                     links.Resolve(clonedSimulation);
 
+                    modelToDocument.IncludeInDocumentation = true;
+                    foreach (IModel child in Apsim.ChildrenRecursively(modelToDocument))
+                        child.IncludeInDocumentation = true;
+
                     // Document the model.
                     modelToDocument.Document(tags, headingLevel, 0);
 

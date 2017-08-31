@@ -1,26 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Maize</Name>
-  <Memo>
-    <Name>TitlePage</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <MemoText>
-      <![CDATA[
-# The APSIM Maize Model
-
-_Brown, H.E., Teixeira, E.I., Huth, N.I. and Holzworth, D.P._
-
-The APSIM maize model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
-
-The model consists of:
-
-* a phenology model to simulate development between growth phases  
-* a structure model to simulate plant morphology  
-* a collection of organs to simulate the various plant parts  
-* an arbitrator to allocate resources (N, biomass) to the various plant organs  
-]]>
-    </MemoText>
-  </Memo>
   <OrganArbitrator>
     <Name>Arbitrator</Name>
     <RelativeAllocation>
@@ -323,7 +303,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
       <VariableName>[Phenology].ThermalTime.Value()</VariableName>
     </VariableReference>
     <PhaseLookup>
-      <Name>MainStemNodeAppearanceRate</Name>
+      <Name>Phyllochron</Name>
       <PhaseLookupValue>
         <Name>Phyllochron</Name>
         <LinearInterpolationFunction>
@@ -413,12 +393,12 @@ Though tillering is common in some maize varieties under certain agronomic condi
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </AddFunction>
     <Constant>
-      <Name>zMainStemFinalNodeNumber</Name>
+      <Name>zFinalLeafNumber</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>15</FixedValue>
     </Constant>
     <HoldFunction>
-      <Name>MainStemFinalNodeNumber</Name>
+      <Name>FinalLeafNumber</Name>
       <AddFunction>
         <Name>ValueToHold</Name>
         <Constant>
@@ -466,7 +446,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
                     <VariableReference>
                       <Name>Phyllochron</Name>
                       <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                      <VariableName>[Structure].Phyllochron.Value()</VariableName>
                     </VariableReference>
                     <Constant>
                       <Name>LeafTipsPerPrimordia</Name>
@@ -1166,10 +1146,10 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
       <MetabolicNReallocated>0</MetabolicNReallocated>
       <MetabolicWtReallocated>0</MetabolicWtReallocated>
-      <NonStructuralNReallocated>0</NonStructuralNReallocated>
-      <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+      <StorageNReallocated>0</StorageNReallocated>
+      <StorageWtReallocated>0</StorageWtReallocated>
       <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-      <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+      <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
       <DMRetranslocated>0</DMRetranslocated>
       <MetabolicNAllocation>0</MetabolicNAllocation>
       <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -1194,10 +1174,10 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
       <MetabolicNReallocated>0</MetabolicNReallocated>
       <MetabolicWtReallocated>0</MetabolicWtReallocated>
-      <NonStructuralNReallocated>0</NonStructuralNReallocated>
-      <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+      <StorageNReallocated>0</StorageNReallocated>
+      <StorageWtReallocated>0</StorageWtReallocated>
       <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-      <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+      <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
       <DMRetranslocated>0</DMRetranslocated>
       <MetabolicNAllocation>0</MetabolicNAllocation>
       <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -1276,7 +1256,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           <VariableReference>
             <Name>FinalLeafNumber</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+            <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>RelativePositionOfLargestLeaf</Name>
@@ -1308,7 +1288,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Structure].MainStemFinalNodeNumber.Value()</XProperty>
+          <XProperty>[Structure].FinalLeafNumber.Value()</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>Breadth</Name>
@@ -1331,7 +1311,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Structure].MainStemFinalNodeNumber.Value()</XProperty>
+          <XProperty>[Structure].FinalLeafNumber.Value()</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>Skewness</Name>
@@ -1599,7 +1579,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
         <FixedValue>0.7</FixedValue>
       </Constant>
       <Constant>
-        <Name>NonStructuralFraction</Name>
+        <Name>StorageFraction</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0</FixedValue>
       </Constant>
@@ -3216,8 +3196,8 @@ VShort duration variety released in New Zealand by Pioneer
     <Command>[Phenology].Juvenile.Target.FixedValue = 150</Command>
     <Command>[Phenology].GrainFilling.Target.FixedValue = 450</Command>
     <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
-    <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
-    <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
+    <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
+    <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
     <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 18</Command>
     <Command>[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6</Command>
     <Command>[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 1300</Command>

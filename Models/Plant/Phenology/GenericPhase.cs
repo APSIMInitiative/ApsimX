@@ -9,7 +9,7 @@ namespace Models.PMF.Phen
 {
     /// <summary>
     /// It uses a <i>ThermalTime Target</i> to determine the duration between development <i>Stages</i>.
-    /// <i>ThermalTime</i> is accumulated until the <i>Target</i> is met and remaining <i>ThermalTime</i> is forwarded to the next phase.
+    ///   <i>ThermalTime</i> is accumulated until the <i>Target</i> is met and remaining <i>ThermalTime</i> is forwarded to the next phase.
     /// 
     /// </summary>
     /// \param Target The thermal time target in this phase.
@@ -147,25 +147,28 @@ namespace Models.PMF.Phen
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
 
-            // Describe the start and end stages
-            tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
+                // Describe the start and end stages
+                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
 
-            // get description of this class.
-            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+                // get description of this class.
+                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
 
-            if (Stress != null)
-                tags.Add(new AutoDocumentation.Paragraph("Development is slowed in this phase by multiplying <i>ThermalTime</i> by the value of the <i>Stress</i> function.", indent));
+                if (Stress != null)
+                    tags.Add(new AutoDocumentation.Paragraph("Development is slowed in this phase by multiplying <i>ThermalTime</i> by the value of the <i>Stress</i> function.", indent));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
 
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                child.Document(tags, -1, indent);
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                    child.Document(tags, -1, indent);
+            }
         }
     }
 

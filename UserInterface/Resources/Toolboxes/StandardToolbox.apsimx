@@ -614,13 +614,13 @@
   </Folder>
   <Folder>
     <Name>Crops</Name>
-    <Plant15>
-      <Name>Wheat</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ResourceName>Wheat</ResourceName>
-      <AutoHarvest>true</AutoHarvest>
-      <CropType>Wheat</CropType>
-    </Plant15>
+	<Plant>
+	  <Name>Wheat</Name>
+	  <IncludeInDocumentation>false</IncludeInDocumentation>
+	  <ResourceName>Wheat</ResourceName>
+	  <CropType>Wheat</CropType>
+	  <SowingDate>0001-01-01T00:00:00</SowingDate>
+	</Plant>
     <OilPalm>
       <Name>OilPalm</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>

@@ -12,176 +12,39 @@ using Models.PMF.Interfaces;
 namespace Models.PMF.Struct
 {
     /// <summary>
-    /// The structure model calculates structural development of the plant.  This includes the number of primordia, leaf nodes and stems, as well as overall plant height.  The development of these characteristics is driven by <i>Thermal time</i>.
+    /// # Structure #
+    /// The structure model simulates morphological development of the plant to inform the Leaf class when 
+    ///   and how many leaves appear and to provides a hight estimate for use in calculating potential transpiration.
+    /// ## Plant and Main-Stem Population ##
+    /// The *Plant.Population* is set at sowing with information sent from a manager script in the Sow method.    
+    ///   The *PrimaryBudNumber* is also sent with the Sow method and the main-stem population (*MainStemPopn*) for the crop is calculated as:  
+    ///   *MainStemPopn* = *Plant.Population* x *PrimaryBudNumber*
+    ///   Primary bud number is > 1 for crops like potato and grape vine where there are more than one main-stem per plant
+    ///  ## Main-Stem leaf appearance ##
+    ///  Each day the number of main-stem leaf tips appeared (*LeafTipsAppeared*) is calculated as:  
+    ///    *LeafTipsAppeared* += *DeltaTips*
+    ///  Where *DeltaTips* is calculated as:  
+    ///    *DeltaTips* = *TheralTime*/*Phyllochron*  
+    ///    Where *Phyllochron* is the thermal time duration between the appearance of leaf tipx given by: 
+    /// [Document Phyllochron]
+    ///   and *ThermalTime* is given by:
+    /// [Document ThermalTime]
+    /// *LeafTipsAppeared* continues to increase until *FinalLeafNumber* is reached where *FinalLeafNumber* is calculated as:  
+    /// [Document FinalLeafNumber]
+    /// ##Branching and Branch Mortality##
+    /// The total population of stems (*TotalStemPopn*) is calculated as:  
+    ///   *TotalStemPopn* = *MainStemPopn* + *NewBranches* - *NewlyDeadBranches*   
+    ///    Where *NewBranches* = *MainStemPopn* x *BranchingRate*  
+    ///    and *BranchingRate* is given by:
+    /// [Document BranchingRate]
+    ///   *NewlyDeadBranches* is calcualted as:  
+    ///   *NewlyDeadBranches* = (*TotalStemPopn* - *MainStemPopn*) x *BranchMortality*  
+    ///   where *BranchMortality* is given by:  
+    /// [Document BranchMortality]
+    /// ##Height##
+    ///  The Height of the crop is calculated by the *HeightModel*:
+    /// [Document HeightModel]
     /// </summary>
-    /// \pre A \ref Models.PMF.Plant "Plant" model has to exist to access 
-    /// sowing data, e.g. population, bud number.
-    /// \pre A \ref Models.PMF.Organs.Leaf "Leaf" model has to exist to 
-    /// access leaf initialisation an number.
-    /// \pre A \ref Models.PMF.Phen.Phenology "Phenology" model has to exist 
-    /// to check whether plant is initialised.
-    /// \param InitialiseStage <b>(Constant)</b> The initialise stage. 
-    /// The primordia number, node number and stem population start to 
-    /// increase since initialise stage.
-    /// \param PrimaryBudNo <b>(Constant)</b> The primary bud number in each node. 
-    /// However, PrimaryBudNo is reset at sowing using sowing script 
-    /// with default value 1.
-    /// 
-    /// \param ThermalTime <b>(IFunction)</b> The daily thermal time (<sup>o</sup>Cd).
-    /// \param MainStemPrimordiaInitiationRate <b>(IFunction)</b> The initiation rate 
-    /// of primordia in main stem (# <sup>o</sup>Cd<sup>-1</sup>).
-    /// \param MainStemNodeAppearanceRate <b>(IFunction)</b> The appearance rate 
-    /// of node in main stem (# <sup>o</sup>Cd<sup>-1</sup>).
-    /// \param MainStemFinalNodeNumber <b>(IFunction)</b> The maximum node number
-    /// in main stem (#). The maximum node is calculated by model 
-    /// MainStemFinalNodeNumberFunction if MainStemFinalNodeNumber is 
-    /// specified to MainStemFinalNodeNumberFunction.
-    /// \param HeightModel <b>(IFunction)</b> Plant height (mm).
-    /// \param BranchingRate <b>(IFunction)</b> The rate of new branching (#).
-    /// \param ShadeInducedBranchMortality <b>(IFunction)</b> 
-    /// The branch mortality induced by shading (0-1).
-    /// \param DroughtInducedBranchMortality <b>(IFunction)</b> 
-    /// The branch mortality induced by drought (0-1).
-    /// \param PlantMortality <b>(IFunction, Optional)</b> The plant mortality 
-    /// to reduce plant population.
-    /// 
-    /// \retval TotalStemPopn Number of stems including main and branch stems 
-    /// (m<sup>-2</sup>).
-    /// \retval MainStemPrimordiaNo Number of primordia initiated in main stem.
-    /// \retval LeafTipsAppeared Number of nodes appeared in main stem.
-    /// \retval PlantTotalNodeNo Number of leaves appeared per plant including 
-    /// all main stem and branch leaves.
-    /// \retval ProportionBranchMortality Proportion of branch mortality.
-    /// \retval ProportionPlantMortality Proportion of plant mortality.
-    /// \retval DeltaTipNumber The daily changes of node number.
-    /// 
-    /// \retval MainStemPopn Number of main stem per square meter (m<sup>-2</sup>).
-    /// \retval RemainingNodeNo Number of leaves yet to appear.
-    /// \retval Height Plant height (mm).
-    /// \retval PrimaryBudTotalNodeNo Number of appeared bud (leaves) per primary 
-    /// bud unit including all main stem and branch leaves.
-    /// \retval MainStemFinalNodeNo The main stem final node number.
-    /// \retval RelativeNodeApperance Relative progress toward final leaf (0-1).
-    /// 
-    /// <remarks>
-    /// The Structure model predicts the development and mortality of phytomer and branch
-    /// (tiller) according to plastochron and phyllochron. The primary bud number assumes the same in seed and all axillary bud and set in the 
-    /// sowing data with default value 1.
-    /// 
-    /// ## Terminology
-    /// - <b>Node (Phytomer)</b> A phytomer unit is defined as consisting of a leaf, and 
-    /// the associated axillary bud, node and internode.
-    /// - <b>Main stem</b> The first culm that emerges from the seeds is the main stem.
-    /// - <b>Branch (Tiller)</b> All remaining culms that emerges from main stem or other branches (tillers),
-    /// are referred as branches or tillers.
-    /// - <b>Plastochron</b> The plastochron is commonly used as the thermal time between the appearance of 
-    /// successive leaf primordia on a shoot.
-    /// - <b>Phyllochron</b> The phyllochron is the thermal time it takes for successive leaves on a shoot to 
-    /// reach the same developmental stage.
-    /// 
-    /// ## Simulation commencing (OnSimulationCommencing)
-    /// Local variables are reset to 0 including total stem population, number of 
-    /// main stem primordia, main stem node and plant total node;
-    /// proportion of branch and plant mortality, changes of node number.
-    /// 
-    /// ## Sowing (OnPlantSowing)
-    /// The primary bud number and population of main stem are initialised from 
-    /// sowing date. Primary bud number equals to bud number bud number at 
-    /// sowing data (default value equals to 1). The population of main stem
-    /// equals to bud number multiplying sowing population.
-    /// 
-    /// The maximum node (phytomer) number in main stem is set by 
-    /// parameter MainStemFinalNodeNumber. 
-    ///     \ref Models.PMF.Functions.StructureFunctions.MainStemFinalNodeNumberFunction "MainStemFinalNodeNumberFunction" is called if 
-    ///     MainStemFinalNodeNumber specifies to MainStemFinalNodeNumberFunction.
-    /// The maximum node number in only used to limit the primordia number.
-    ///     
-    /// Plant height is set by parameter HeightModel, and updated by Leaf model.
-    /// 
-    /// ## Plant ending (OnPlantEnding)
-    /// See simulation commencing
-    /// 
-    /// ## Potential growth (OnDoPotentialPlantGrowth)
-    /// Daily changes of primordia (\f$\Delta N_{pri}\f$) and node (leaf) (\f$\Delta N_{node}\f$) 
-    /// number in main stem are calculated using plastochron (\f$P_{pla}\f$) 
-    /// and phyllochron (\f$P_{phy}\f$), respectively, after plant initialisation.
-    /// 
-    /// \f[
-    ///     \Delta N_{pri}=\frac{\Delta TT_{d}}{P_{pla}}
-    /// \f]
-    /// 
-    /// \f[
-    ///     \Delta N_{node}=\frac{\Delta TT_{t}}{P_{phy}}
-    /// \f]
-    /// where, \f$\Delta TT_{t}\f$ is the daily thermal time, which calculates 
-    /// from parameter ThermalTime. \f$P_{pla}\f$ and \f$P_{phy}\f$ calculates
-    /// from parameter MainStemPrimordiaInitiationRate and MainStemNodeAppearanceRate,
-    /// respectively.
-    /// 
-    /// Total number of primordia (\f$N_{pri}\f$) and node (\f$N_{node}\f$) in 
-    /// main stem are summarised since initialisation.
-    /// \f[
-    ///     N_{pri}=\sum_{t=T_{0}}^{T}\Delta N_{p}
-    /// \f]
-    /// 
-    /// \f[
-    ///     N_{node}=\sum_{t=T_{0}}^{T}\Delta N_{n}
-    /// \f]
-    /// where, \f$T_{0}\f$ is day of plant initialisation which is set by Leaf model. 
-    /// \f$T\f$ is today. In the Structure model, the primordia and node numbers 
-    /// are not calculated for branches or tillers. 
-    /// 
-    /// Plant population (\f$P\f$) is initialised at sowing from Sow event, and 
-    /// daily reduced by the plant mortality (\f$\Delta P\f$).
-    /// \f[
-    ///     P=P_{0} - \sum_{t=T_{0}}^{T}(\Delta P)
-    /// \f]
-    /// where, \f$P_{0}\f$ is the sown population, which initialised at sowing.
-    /// 
-    /// Population of main stem number (\f$P_{ms}\f$) is calculated  
-    /// according to plant population (\f$P\f$) and primary bud number (\f$N_{bud}\f$) 
-    /// with default value 1. The unit of \f$P_{ms}\f$ is per square meter.
-    /// \f[
-    ///     P_{ms}=P \times N_{bud}
-    /// \f]
-    /// 
-    /// Population of total stem (\f$P_{stem}\f$) is summed up 
-    /// population of main stem (\f$P_{ms}\f$) and branches ((\f$P_{branch}\f$)).
-    /// \f[
-    ///     P_{stem} = P_{ms} + P_{branch}
-    /// \f]
-    /// New branches are initialised when increase of the node number in 
-    /// main stem (\f$\Delta N_{node}\f$) is more than 1. 
-    /// The new branch number for each plant 
-    /// is specified by parameter BranchingRate (\f$\Delta N_{branch}\f$), which could be a function of 
-    /// branch number on leaf rank in main stem.
-    /// \f[
-    ///      P_{branch} = P \times \sum_{t=T_{0}}^{T}\Delta N_{branch}
-    /// \f]
-    /// 
-    /// Three factors are considered to reduce the population of total stem (\f$P_{stem}\f$), i.e.
-    /// 1) Plant mortality (\f$\Delta P\f$), 2) Drought(\f$\Delta N_{drought}\f$), 
-    /// 3) Shade (\f$\Delta N_{shade}\f$). 
-    /// 
-    /// During a day, branches are first killed by plant mortality which 
-    /// reduces population through killing all stems in a plant.
-    /// \f[
-    /// P_{branch} = P_{branch} - \frac{(P_{branch} + P_{ms})}{P_{ms}} \times \Delta P
-    /// \f]
-    /// 
-    /// Then environmental stresses (drought and shade) only cause mortality of 
-    /// the remaining branches.
-    /// \f[
-    ///     P_{branch} = P_{branch} \times [1 - (\Delta N_{drought}+\Delta N_{shade})]
-    /// \f]
-    /// The mortalities, caused by drought (\f$\Delta N_{drought}\f$)  
-    /// and shade (\f$\Delta N_{shade}\f$), are calculated by parameters 
-    /// DroughtInducedBranchMortality and ShadeInducedBranchMortality, respectively.
-    /// 
-    /// ## Actual growth (OnDoActualPlantGrowth)
-    /// Plant total node number is updated according to appeared node (leaf) number 
-    /// and population.
-    /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
     public class Structure : Model
@@ -231,11 +94,11 @@ namespace Models.PMF.Struct
         IFunction ThermalTime = null;
         /// <summary>The main stem node appearance rate</summary>
         [Link]
-        public IFunction MainStemNodeAppearanceRate = null;
+        public IFunction Phyllochron = null;
         
         /// <summary>The main stem final node number</summary>
         [Link]
-        public IFunction MainStemFinalNodeNumber = null;
+        public IFunction FinalLeafNumber = null;
         /// <summary>The height model</summary>
         [Link]
         [Units("mm")]
@@ -359,7 +222,7 @@ namespace Models.PMF.Struct
         /// <value>The remaining node no.</value>
         [XmlIgnore]
         [Description("Number of leaves yet to appear")]
-        public double RemainingNodeNo { get { return MainStemFinalNodeNumber.Value() - LeafTipsAppeared; } }
+        public double RemainingNodeNo { get { return FinalLeafNumber.Value() - LeafTipsAppeared; } }
 
         /// <summary>Gets the height.</summary>
         /// <value>The height.</value>
@@ -384,7 +247,7 @@ namespace Models.PMF.Struct
         {
             get
             {
-                return LeafTipsAppeared / MainStemFinalNodeNumber.Value();
+                return LeafTipsAppeared / FinalLeafNumber.Value();
             }
         }
         #endregion
@@ -419,8 +282,8 @@ namespace Models.PMF.Struct
             if (Plant.IsGerminated)
             {
                  DeltaHaunStage = 0;
-                if (MainStemNodeAppearanceRate.Value() > 0)
-                    DeltaHaunStage = ThermalTime.Value() / MainStemNodeAppearanceRate.Value();
+                if (Phyllochron.Value() > 0)
+                    DeltaHaunStage = ThermalTime.Value() / Phyllochron.Value();
                
                 if (Germinated==false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
                 {
@@ -439,13 +302,13 @@ namespace Models.PMF.Struct
                         DoEmergence();
                     }
 
-                    bool AllCohortsInitialised = (Leaf.InitialisedCohortNo >= MainStemFinalNodeNumber.Value());
+                    bool AllCohortsInitialised = (Leaf.InitialisedCohortNo >= FinalLeafNumber.Value());
                     bool AllLeavesAppeared = (Leaf.AppearedCohortNo == Leaf.InitialisedCohortNo);
                     bool LastLeafAppearing = ((Math.Truncate(LeafTipsAppeared) + 1)  == Leaf.InitialisedCohortNo);
                     
                     if ((AllCohortsInitialised)&&(LastLeafAppearing))
                     {
-                        NextLeafProportion = 1-(Leaf.InitialisedCohortNo - MainStemFinalNodeNumber.Value());
+                        NextLeafProportion = 1-(Leaf.InitialisedCohortNo - FinalLeafNumber.Value());
                     }
                     else
                     {
@@ -466,7 +329,7 @@ namespace Models.PMF.Struct
                     PotLeafTipsAppeared += DeltaTipNumber;
                     //if (PotLeafTipsAppeared > MainStemFinalNodeNumber.Value)
                     //    FinalLeafDeltaTipNumberonDayOfAppearance = PotLeafTipsAppeared - MainStemFinalNodeNumber.Value;
-                    LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, MainStemFinalNodeNumber.Value());
+                    LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, FinalLeafNumber.Value());
 
                     bool TimeForAnotherLeaf = PotLeafTipsAppeared >= (Leaf.AppearedCohortNo + 1);
                     int LeavesToAppear = (int)(LeafTipsAppeared - (Leaf.AppearedCohortNo - (1- NextLeafProportion)));
@@ -560,9 +423,9 @@ namespace Models.PMF.Struct
             CohortParams.CohortToAppear = TipToAppear;
             CohortParams.TotalStemPopn = TotalStemPopn;
             if ((Math.Truncate(LeafTipsAppeared) + 1) == Leaf.InitialisedCohortNo)
-                CohortParams.CohortAge = (PotLeafTipsAppeared - TipToAppear) * MainStemNodeAppearanceRate.Value();
+                CohortParams.CohortAge = (PotLeafTipsAppeared - TipToAppear) * Phyllochron.Value();
             else
-                CohortParams.CohortAge = (LeafTipsAppeared - TipToAppear) * MainStemNodeAppearanceRate.Value();
+                CohortParams.CohortAge = (LeafTipsAppeared - TipToAppear) * Phyllochron.Value();
             CohortParams.FinalFraction = NextLeafProportion;
             if(LeafTipAppearance != null)
             LeafTipAppearance.Invoke(this, CohortParams);
@@ -628,7 +491,7 @@ namespace Models.PMF.Struct
         [EventSubscribe("Cutting")]
         private void OnCutting(object sender, EventArgs e)
         {
-            PotLeafTipsAppeared = 0;
+            /*PotLeafTipsAppeared = 0;
             CohortToInitialise = 0;
             TipToAppear = 0;
             Emerged = false;
@@ -637,7 +500,7 @@ namespace Models.PMF.Struct
             InitialiseLeafCohorts.Invoke(this, args);
             NextLeafProportion = 1.0;
             DoEmergence();
-            Emerged = true;
+            Emerged = true;*/
         }
         
         /// <summary>Called when crop is being cut.</summary>
@@ -665,32 +528,16 @@ namespace Models.PMF.Struct
         }
         #endregion
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document a specific function
+        /// </summary>
+        /// <param name="FunctName"></param>
+        /// <param name="indent"></param>
+        /// <param name="tags"></param>
+        public void DocumentFunction(string FunctName, List<AutoDocumentation.ITag> tags, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write description of this class.
-            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
-
-            // write a list of constant functions.
-            foreach (IModel child in Apsim.Children(this, typeof(Constant)))
-                child.Document(tags, -1, indent);
-
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child is Constant || child is Biomass || child is CompositeBiomass)
-                {
-                    // don't document.
-                }
-                else
-                    child.Document(tags, headingLevel + 1, indent);
-            }
+            IModel Funct = Apsim.Child(this, FunctName);
+            Funct.Document(tags, -1, indent);
         }
     }
 

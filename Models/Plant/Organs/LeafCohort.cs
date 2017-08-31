@@ -120,7 +120,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The non structural fraction</summary>
         [XmlIgnore]
-        public double NonStructuralFraction;
+        public double StorageFraction;
 
         /// <summary>The maximum live area</summary>
         [XmlIgnore]
@@ -263,7 +263,7 @@ namespace Models.PMF.Organs
         /// The leaf start non structural n reallocation supply
         /// </summary>
         [XmlIgnore]
-        public double LeafStartNonStructuralNReallocationSupply;
+        public double LeafStartStorageNReallocationSupply;
 
         /// <summary>
         /// The leaf start metabolic n retranslocation supply
@@ -275,7 +275,7 @@ namespace Models.PMF.Organs
         /// The leaf start non structural n retranslocation supply
         /// </summary>
         [XmlIgnore]
-        public double LeafStartNonStructuralNRetranslocationSupply;
+        public double LeafStartStorageNRetranslocationSupply;
 
         /// <summary>
         /// The leaf start metabolic dm reallocation supply
@@ -287,7 +287,7 @@ namespace Models.PMF.Organs
         /// The leaf start non structural dm reallocation supply
         /// </summary>
         [XmlIgnore]
-        public double LeafStartNonStructuralDMReallocationSupply;
+        public double LeafStartStorageDMReallocationSupply;
 
         //variables used in calculating daily supplies and deltas
         /// <summary>Gets the DM amount detached (send to surface OM) (g/m2)</summary>
@@ -320,16 +320,16 @@ namespace Models.PMF.Organs
         public double MetabolicWtReallocated;
 
         /// <summary>The non structural n reallocated</summary>
-        public double NonStructuralNReallocated;
+        public double StorageNReallocated;
 
         /// <summary>The non structural wt reallocated</summary>
-        public double NonStructuralWtReallocated;
+        public double StorageWtReallocated;
 
         /// <summary>The metabolic n retranslocated</summary>
         public double MetabolicNRetranslocated;
 
         /// <summary>The non structural n retrasnlocated</summary>
-        public double NonStructuralNRetrasnlocated;
+        public double StorageNRetrasnlocated;
 
         /// <summary>The dm retranslocated</summary>
         public double DMRetranslocated;
@@ -494,15 +494,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the non structural dm demand.</summary>
         /// <value>The non structural dm demand.</value>
-        public double NonStructuralDMDemand
+        public double StorageDMDemand
         {
             get
             {
                 if (IsNotSenescing)
                 {
-                    double MaxNonStructuralDM = (MetabolicDMDemand + StructuralDMDemand + LiveStart.MetabolicWt +
-                                                 LiveStart.StructuralWt)*NonStructuralFraction;
-                    return Math.Max(0.0, MaxNonStructuralDM - LiveStart.NonStructuralWt);
+                    double MaxStorageDM = (MetabolicDMDemand + StructuralDMDemand + LiveStart.MetabolicWt +
+                                                 LiveStart.StructuralWt)*StorageFraction;
+                    return Math.Max(0.0, MaxStorageDM - LiveStart.StorageWt);
                 }
                 return 0.0;
             }
@@ -523,15 +523,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the non structural n demand.</summary>
         /// <value>The non structural n demand.</value>
-        public double NonStructuralNDemand
+        public double StorageNDemand
         {
             get
             {
-                if (IsNotSenescing && (ShadeInducedSenRate == 0.0) && (NonStructuralFraction > 0))
+                if (IsNotSenescing && (ShadeInducedSenRate == 0.0) && (StorageFraction > 0))
                     // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions.  Also if there is 
                     return Math.Max(0.0, LuxaryNConc*(LiveStart.StructuralWt + LiveStart.MetabolicWt
                                                       + PotentialStructuralDMAllocation + PotentialMetabolicDMAllocation) -
-                                         Live.NonStructuralN);
+                                         Live.StorageN);
                 return 0.0;
             }
         }
@@ -570,34 +570,34 @@ namespace Models.PMF.Organs
             set
             {
                 //Firstly allocate DM
-                if (value.Structural + value.NonStructural + value.Metabolic < -0.0000000001)
+                if (value.Structural + value.Storage + value.Metabolic < -0.0000000001)
                     throw new Exception("-ve DM Allocation to Leaf Cohort");
-                if (value.Structural + value.NonStructural + value.Metabolic - (StructuralDMDemand + MetabolicDMDemand + NonStructuralDMDemand) > 0.0000000001)
+                if (value.Structural + value.Storage + value.Metabolic - (StructuralDMDemand + MetabolicDMDemand + StorageDMDemand) > 0.0000000001)
                     throw new Exception("DM Allocated to Leaf Cohort is in excess of its Demand");
-                if (StructuralDMDemand + MetabolicDMDemand + NonStructuralDMDemand > 0)
+                if (StructuralDMDemand + MetabolicDMDemand + StorageDMDemand > 0)
                 {
                     StructuralDMAllocation = value.Structural;
                     MetabolicDMAllocation = value.Metabolic;
                     Live.StructuralWt += value.Structural;
                     Live.MetabolicWt += value.Metabolic;
-                    Live.NonStructuralWt += value.NonStructural;
+                    Live.StorageWt += value.Storage;
                 }
 
                 //Then remove reallocated DM
                 if (value.Reallocation -
-                    (LeafStartMetabolicDMReallocationSupply + LeafStartNonStructuralDMReallocationSupply) >
+                    (LeafStartMetabolicDMReallocationSupply + LeafStartStorageDMReallocationSupply) >
                     0.00000000001)
                     throw new Exception("A leaf cohort cannot supply that amount for DM Reallocation");
                 if (value.Reallocation < -0.0000000001)
                     throw new Exception("Leaf cohort given negative DM Reallocation");
                 if (value.Reallocation > 0.0)
                 {
-                    NonStructuralWtReallocated = Math.Min(LeafStartNonStructuralDMReallocationSupply, value.Reallocation);
-                        //Reallocate nonstructural first
+                    StorageWtReallocated = Math.Min(LeafStartStorageDMReallocationSupply, value.Reallocation);
+                        //Reallocate Storage first
                     MetabolicWtReallocated = Math.Max(0.0,
-                            Math.Min(value.Reallocation - NonStructuralWtReallocated, LeafStartMetabolicDMReallocationSupply));
+                            Math.Min(value.Reallocation - StorageWtReallocated, LeafStartMetabolicDMReallocationSupply));
                         //Then reallocate metabolic DM
-                    Live.NonStructuralWt -= NonStructuralWtReallocated;
+                    Live.StorageWt -= StorageWtReallocated;
                     Live.MetabolicWt -= MetabolicWtReallocated;
                 }
 
@@ -607,7 +607,7 @@ namespace Models.PMF.Organs
                 if (value.Retranslocation > LeafStartDMRetranslocationSupply)
                     throw new Exception("A leaf cohort cannot supply that amount for DM retranslocation");
                 if ((value.Retranslocation > 0) && (LeafStartDMRetranslocationSupply > 0))
-                    Live.NonStructuralWt -= value.Retranslocation;
+                    Live.StorageWt -= value.Retranslocation;
             }
         }
 
@@ -629,37 +629,37 @@ namespace Models.PMF.Organs
                 //Fresh allocations
                 Live.StructuralN += value.Structural;
                 Live.MetabolicN += value.Metabolic;
-                Live.NonStructuralN += value.NonStructural;
+                Live.StorageN += value.Storage;
                 //Reallocation
                 if (value.Reallocation -
-                    (LeafStartMetabolicNReallocationSupply + LeafStartNonStructuralNReallocationSupply) > 0.00000000001)
+                    (LeafStartMetabolicNReallocationSupply + LeafStartStorageNReallocationSupply) > 0.00000000001)
                     throw new Exception("A leaf cohort cannot supply that amount for N Reallocation");
                 if (value.Reallocation < -0.0000000001)
                     throw new Exception("Leaf cohort given negative N Reallocation");
                 if (value.Reallocation > 0.0)
                 {
-                    NonStructuralNReallocated = Math.Min(LeafStartNonStructuralNReallocationSupply, value.Reallocation);
-                        //Reallocate nonstructural first
-                    MetabolicNReallocated = Math.Max(0.0, value.Reallocation - LeafStartNonStructuralNReallocationSupply);
+                    StorageNReallocated = Math.Min(LeafStartStorageNReallocationSupply, value.Reallocation);
+                        //Reallocate Storage first
+                    MetabolicNReallocated = Math.Max(0.0, value.Reallocation - LeafStartStorageNReallocationSupply);
                         //Then reallocate metabolic N
-                    Live.NonStructuralN -= NonStructuralNReallocated;
+                    Live.StorageN -= StorageNReallocated;
                     Live.MetabolicN -= MetabolicNReallocated;
                 }
                 //Retranslocation
                 if (value.Retranslocation -
-                    (LeafStartMetabolicNRetranslocationSupply + LeafStartNonStructuralNRetranslocationSupply) >
+                    (LeafStartMetabolicNRetranslocationSupply + LeafStartStorageNRetranslocationSupply) >
                     0.00000000001)
                     throw new Exception("A leaf cohort cannot supply that amount for N Retranslocation");
                 if (value.Retranslocation < -0.0000000001)
                     throw new Exception("Leaf cohort given negative N Retranslocation");
                 if (value.Retranslocation > 0.0)
                 {
-                    NonStructuralNRetrasnlocated = Math.Min(LeafStartNonStructuralNRetranslocationSupply,
-                        value.Retranslocation); //Reallocate nonstructural first
+                    StorageNRetrasnlocated = Math.Min(LeafStartStorageNRetranslocationSupply,
+                        value.Retranslocation); //Reallocate Storage first
                     MetabolicNRetranslocated = Math.Max(0.0,
-                            value.Retranslocation - LeafStartNonStructuralNRetranslocationSupply);
+                            value.Retranslocation - LeafStartStorageNRetranslocationSupply);
                         //Then reallocate metabolic N
-                    Live.NonStructuralN -= NonStructuralNRetrasnlocated;
+                    Live.StorageN -= StorageNRetrasnlocated;
                     Live.MetabolicN -= MetabolicNRetranslocated;
                 }
             }
@@ -746,7 +746,7 @@ namespace Models.PMF.Organs
             SpecificLeafAreaMin = leafCohortParameterseafCohortParameters.SpecificLeafAreaMin.Value();
             MaximumNConc = leafCohortParameterseafCohortParameters.MaximumNConc.Value();
             MinimumNConc = leafCohortParameterseafCohortParameters.MinimumNConc.Value();
-            NonStructuralFraction = leafCohortParameterseafCohortParameters.NonStructuralFraction.Value();
+            StorageFraction = leafCohortParameterseafCohortParameters.StorageFraction.Value();
             InitialNConc = leafCohortParameterseafCohortParameters.InitialNConc.Value();
             if (Area > 0) //Only set age for cohorts that have an area specified in the xml.
                 Age = Area/MaxArea*GrowthDuration;
@@ -760,10 +760,10 @@ namespace Models.PMF.Organs
             LuxaryNConc = leafCohortParameterseafCohortParameters.MaximumNConc.Value() -
                            leafCohortParameterseafCohortParameters.CriticalNConc.Value();
             Live.MetabolicWt = Live.StructuralWt*1/StructuralFraction - Live.StructuralWt;
-            Live.NonStructuralWt = 0;
+            Live.StorageWt = 0;
             Live.StructuralN = Live.StructuralWt*MinimumNConc;
             Live.MetabolicN = Live.MetabolicWt*FunctionalNConc;
-            Live.NonStructuralN = 0;
+            Live.StorageN = 0;
             NReallocationFactor = leafCohortParameterseafCohortParameters.NReallocationFactor.Value();
             DMReallocationFactor = leafCohortParameterseafCohortParameters.DMReallocationFactor.Value();
             NRetranslocationFactor = leafCohortParameterseafCohortParameters.NRetranslocationFactor.Value();
@@ -833,43 +833,43 @@ namespace Models.PMF.Organs
                     // DM to reallocate.
 
                     LeafStartMetabolicDMReallocationSupply = LiveStart.MetabolicWt * SenescedFrac * DMReallocationFactor;
-                    LeafStartNonStructuralDMReallocationSupply = LiveStart.NonStructuralWt * SenescedFrac *
+                    LeafStartStorageDMReallocationSupply = LiveStart.StorageWt * SenescedFrac *
                                                                  DMReallocationFactor;
 
                     LeafStartDMReallocationSupply = LeafStartMetabolicDMReallocationSupply +
-                                                    LeafStartNonStructuralDMReallocationSupply;
+                                                    LeafStartStorageDMReallocationSupply;
                     liveBiomass.MetabolicWt -= LeafStartMetabolicDMReallocationSupply;
-                    liveBiomass.NonStructuralWt -= LeafStartNonStructuralDMReallocationSupply;
+                    liveBiomass.StorageWt -= LeafStartStorageDMReallocationSupply;
 
                 }
                 else
                 {
                     LeafStartMetabolicDMReallocationSupply =
-                        LeafStartNonStructuralDMReallocationSupply = LeafStartDMReallocationSupply = 0;
+                        LeafStartStorageDMReallocationSupply = LeafStartDMReallocationSupply = 0;
                 }
 
-                LeafStartDMRetranslocationSupply = liveBiomass.NonStructuralWt * DMRetranslocationFactor;
+                LeafStartDMRetranslocationSupply = liveBiomass.StorageWt * DMRetranslocationFactor;
                 //Nretranslocation is that which occurs before uptake (senessed metabolic N and all non-structuralN)
                 LeafStartMetabolicNReallocationSupply = SenescedFrac * liveBiomass.MetabolicN * NReallocationFactor;
-                LeafStartNonStructuralNReallocationSupply = SenescedFrac * liveBiomass.NonStructuralN * NReallocationFactor;
+                LeafStartStorageNReallocationSupply = SenescedFrac * liveBiomass.StorageN * NReallocationFactor;
                 //Retranslocated N is only that which occurs after N uptake. Both Non-structural and metabolic N are able to be retranslocated but metabolic N will only be moved if remobilisation of non-structural N does not meet demands
                 LeafStartMetabolicNRetranslocationSupply = Math.Max(0.0,
                     liveBiomass.MetabolicN * NRetranslocationFactor - LeafStartMetabolicNReallocationSupply);
-                LeafStartNonStructuralNRetranslocationSupply = Math.Max(0.0,
-                    liveBiomass.NonStructuralN * NRetranslocationFactor - LeafStartNonStructuralNReallocationSupply);
-                LeafStartNReallocationSupply = LeafStartNonStructuralNReallocationSupply + LeafStartMetabolicNReallocationSupply;
-                LeafStartNRetranslocationSupply = LeafStartNonStructuralNRetranslocationSupply + LeafStartMetabolicNRetranslocationSupply;
+                LeafStartStorageNRetranslocationSupply = Math.Max(0.0,
+                    liveBiomass.StorageN * NRetranslocationFactor - LeafStartStorageNReallocationSupply);
+                LeafStartNReallocationSupply = LeafStartStorageNReallocationSupply + LeafStartMetabolicNReallocationSupply;
+                LeafStartNRetranslocationSupply = LeafStartStorageNRetranslocationSupply + LeafStartMetabolicNRetranslocationSupply;
 
                 //zero locals variables
                 PotentialStructuralDMAllocation = 0;
                 PotentialMetabolicDMAllocation = 0;
                 DMRetranslocated = 0;
                 MetabolicNReallocated = 0;
-                NonStructuralNReallocated = 0;
+                StorageNReallocated = 0;
                 MetabolicWtReallocated = 0;
-                NonStructuralWtReallocated = 0;
+                StorageWtReallocated = 0;
                 MetabolicNRetranslocated = 0;
-                NonStructuralNRetrasnlocated = 0;
+                StorageNRetrasnlocated = 0;
                 MetabolicNAllocation = 0;
                 StructuralDMAllocation = 0;
                 MetabolicDMAllocation = 0;
@@ -894,7 +894,7 @@ namespace Models.PMF.Organs
 
             //Growing leaf area after DM allocated
             DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation)*SpecificLeafAreaMax;
-            //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
+            //Fixme.  Live.Storage should probably be included in DM supply for leaf growth also
             double deltaActualArea = Math.Min(DeltaWaterConstrainedArea, DeltaCarbonConstrainedArea);
             LiveArea += deltaActualArea;
             
@@ -912,8 +912,8 @@ namespace Models.PMF.Organs
             double structuralNSenescing = SenescedFrac*LiveStart.StructuralN;
             double metabolicWtSenescing = SenescedFrac*LiveStart.MetabolicWt;
             double metabolicNSenescing = SenescedFrac*LiveStart.MetabolicN;
-            double nonStructuralWtSenescing = SenescedFrac*LiveStart.NonStructuralWt;
-            double nonStructuralNSenescing = SenescedFrac*LiveStart.NonStructuralN;
+            double StorageWtSenescing = SenescedFrac*LiveStart.StorageWt;
+            double StorageNSenescing = SenescedFrac*LiveStart.StorageN;
 
             DeadArea = DeadArea + leafAreaLoss;
             LiveArea = LiveArea - leafAreaLoss;
@@ -933,24 +933,24 @@ namespace Models.PMF.Organs
             //Don't Seness todays N if it has been taken for reallocation
             Dead.MetabolicN += Math.Max(0.0, metabolicNSenescing - MetabolicNReallocated - MetabolicNRetranslocated);
 
-            Live.NonStructuralN -= Math.Max(0.0,
-                nonStructuralNSenescing - NonStructuralNReallocated - NonStructuralNRetrasnlocated);
-            //Dont Senesess todays NonStructural N if it was retranslocated or reallocated 
-            Dead.NonStructuralN += Math.Max(0.0,
-                nonStructuralNSenescing - NonStructuralNReallocated - NonStructuralNRetrasnlocated);
+            Live.StorageN -= Math.Max(0.0,
+                StorageNSenescing - StorageNReallocated - StorageNRetrasnlocated);
+            //Dont Senesess todays Storage N if it was retranslocated or reallocated 
+            Dead.StorageN += Math.Max(0.0,
+                StorageNSenescing - StorageNReallocated - StorageNRetrasnlocated);
 
-            Live.NonStructuralWt -= Math.Max(0.0, nonStructuralWtSenescing - DMRetranslocated);
-            Live.NonStructuralWt = Math.Max(0.0, Live.NonStructuralWt);
+            Live.StorageWt -= Math.Max(0.0, StorageWtSenescing - DMRetranslocated);
+            Live.StorageWt = Math.Max(0.0, Live.StorageWt);
 
-            Dead.NonStructuralWt += Math.Max(0.0,
-                nonStructuralWtSenescing - DMRetranslocated - NonStructuralWtReallocated);
+            Dead.StorageWt += Math.Max(0.0,
+                StorageWtSenescing - DMRetranslocated - StorageWtReallocated);
 
             MaintenanceRespiration = 0;
             //Do Maintenance respiration
             MaintenanceRespiration += Live.MetabolicWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
             Live.MetabolicWt *= (1 - leafCohortParameters.MaintenanceRespirationFunction.Value());
-            MaintenanceRespiration += Live.NonStructuralWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
-            Live.NonStructuralWt *= (1 - leafCohortParameters.MaintenanceRespirationFunction.Value());
+            MaintenanceRespiration += Live.StorageWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
+            Live.StorageWt *= (1 - leafCohortParameters.MaintenanceRespirationFunction.Value());
 
             Age = Age + thermalTime;
 
@@ -965,8 +965,8 @@ namespace Models.PMF.Organs
                 DeadArea *= 1 - DetachedFrac;
                 Dead.StructuralWt *= 1 - DetachedFrac;
                 Dead.StructuralN *= 1 - DetachedFrac;
-                Dead.NonStructuralWt *= 1 - DetachedFrac;
-                Dead.NonStructuralN *= 1 - DetachedFrac;
+                Dead.StorageWt *= 1 - DetachedFrac;
+                Dead.StorageN *= 1 - DetachedFrac;
                 Dead.MetabolicWt *= 1 - DetachedFrac;
                 Dead.MetabolicN *= 1 - DetachedFrac;
 
@@ -990,17 +990,17 @@ namespace Models.PMF.Organs
             Live.StructuralWt -= change;
             Dead.StructuralWt += change;
 
-            change = Live.NonStructuralWt*fraction;
-            Live.NonStructuralWt -= change;
-            Dead.NonStructuralWt += change;
+            change = Live.StorageWt*fraction;
+            Live.StorageWt -= change;
+            Dead.StorageWt += change;
 
             change = Live.StructuralN*fraction;
             Live.StructuralN -= change;
             Dead.StructuralN += change;
 
-            change = Live.NonStructuralN*fraction;
-            Live.NonStructuralN -= change;
-            Dead.NonStructuralN += change;
+            change = Live.StorageN*fraction;
+            Live.StorageN -= change;
+            Dead.StorageN += change;
         }
 
         /// <summary>Does the frost.</summary>
@@ -1139,11 +1139,14 @@ namespace Models.PMF.Organs
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+            if (IncludeInDocumentation)
+            {
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
 
-            tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
+                tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
+            }
         }
     }
 }

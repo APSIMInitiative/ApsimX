@@ -65,18 +65,20 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-            // Describe the function
-            if (ValueToHold != null)
+            if (IncludeInDocumentation)
             {
-                tags.Add(new AutoDocumentation.Paragraph(Name + " is the same as " + (ValueToHold as IModel).Name + " until it reaches " + WhenToHold + " stage when it fixes its value", indent));
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+                // Describe the function
+                if (ValueToHold != null)
+                {
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " is the same as " + (ValueToHold as IModel).Name + " until it reaches " + WhenToHold + " stage when it fixes its value", indent));
+                }
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                    child.Document(tags, headingLevel + 1, indent + 1);
             }
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                child.Document(tags, headingLevel + 1, indent + 1);
         }
-
     }
 
 }

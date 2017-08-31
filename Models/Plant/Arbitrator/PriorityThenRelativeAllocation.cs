@@ -45,13 +45,13 @@ namespace Models.PMF
             double FirstPassNotallocated = NotAllocated;
             for (int i = 0; i < Organs.Length; i++)
             {
-                double NonStructuralRequirement = Math.Max(0.0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
-                if (NonStructuralRequirement > 0.0)
+                double StorageRequirement = Math.Max(0.0, BAT.StorageDemand[i] - BAT.StorageAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
+                if (StorageRequirement > 0.0)
                 {
-                    double NonStructuralAllocation = Math.Min(FirstPassNotallocated * MathUtilities.Divide(BAT.NonStructuralDemand[i], BAT.TotalNonStructuralDemand, 0), NonStructuralRequirement);
-                    BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
-                    NotAllocated -= NonStructuralAllocation;
-                    TotalAllocated += NonStructuralAllocation;
+                    double StorageAllocation = Math.Min(FirstPassNotallocated * MathUtilities.Divide(BAT.StorageDemand[i], BAT.TotalStorageDemand, 0), StorageRequirement);
+                    BAT.StorageAllocation[i] += Math.Max(0, StorageAllocation);
+                    NotAllocated -= StorageAllocation;
+                    TotalAllocated += StorageAllocation;
                 }
             }
         }
@@ -61,19 +61,22 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
 
-            // write description of this class.
-            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+                // write description of this class.
+                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
 
-            string PriorityTheRelativeDocStirng = "Arbitration is performed in two passes for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first. On the second pass any remaining biomass is allocated to non-structural demands based on the relative demand from all organs.";
-            
-            tags.Add(new AutoDocumentation.Paragraph(PriorityTheRelativeDocStirng, indent));
+                string PriorityTheRelativeDocStirng = "Arbitration is performed in two passes for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first. On the second pass any remaining biomass is allocated to non-structural demands based on the relative demand from all organs.";
+
+                tags.Add(new AutoDocumentation.Paragraph(PriorityTheRelativeDocStirng, indent));
+            }
         }
     }
 }

@@ -60,13 +60,13 @@ namespace Models.PMF
 
         /// <summary>Gets or sets the non structural n.</summary>
         /// <value>The non structural n.</value>
-        /// <exception cref="System.Exception">Cannot set NonStructuralN in CompositeBiomass</exception>
+        /// <exception cref="System.Exception">Cannot set StorageN in CompositeBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
-        override public double NonStructuralN
+        override public double StorageN
         {
-            get { Update(); return base.NonStructuralN; }
-            set { throw new Exception("Cannot set NonStructuralN in CompositeBiomass"); }
+            get { Update(); return base.StorageN; }
+            set { throw new Exception("Cannot set StorageN in CompositeBiomass"); }
         }
 
         /// <summary>Gets or sets the structural n.</summary>
@@ -82,13 +82,13 @@ namespace Models.PMF
 
         /// <summary>Gets or sets the non structural wt.</summary>
         /// <value>The non structural wt.</value>
-        /// <exception cref="System.Exception">Cannot set NonStructuralWt in CompositeBiomass</exception>
+        /// <exception cref="System.Exception">Cannot set StorageWt in CompositeBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
-        override public double NonStructuralWt
+        override public double StorageWt
         {
-            get { Update(); return base.NonStructuralWt; }
-            set { throw new Exception("Cannot set NonStructuralWt in CompositeBiomass"); }
+            get { Update(); return base.StorageWt; }
+            set { throw new Exception("Cannot set StorageWt in CompositeBiomass"); }
         }
 
         /// <summary>Gets or sets the structural wt.</summary>
@@ -132,7 +132,7 @@ namespace Models.PMF
             get
             {
                 Update();
-                return _StructuralWt + _NonStructuralWt + _MetabolicWt;
+                return _StructuralWt + _StorageWt + _MetabolicWt;
             }
         }
 
@@ -145,7 +145,7 @@ namespace Models.PMF
             get
             {
                 Update();
-                return _StructuralN + _NonStructuralN + _MetabolicN;
+                return _StructuralN + _StorageN + _MetabolicN;
             }
         }
 
@@ -155,25 +155,27 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
-
-            // write description of this class.
-            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
-
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                child.Document(tags, headingLevel + 1, indent);
-
-            tags.Add(new AutoDocumentation.Paragraph(this.Name +" is a composite of the following biomass objects:", indent));
-
-            string st = string.Empty;
-            foreach (string PropertyName in Propertys)
+            if (IncludeInDocumentation)
             {
-                st = st + Environment.NewLine + "* " + PropertyName;
-            }
-            tags.Add(new AutoDocumentation.Paragraph(st, indent));
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
 
+                // write description of this class.
+                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                    child.Document(tags, headingLevel + 1, indent);
+
+                tags.Add(new AutoDocumentation.Paragraph(this.Name + " is a composite of the following biomass objects:", indent));
+
+                string st = string.Empty;
+                foreach (string PropertyName in Propertys)
+                {
+                    st = st + Environment.NewLine + "* " + PropertyName;
+                }
+                tags.Add(new AutoDocumentation.Paragraph(st, indent));
+            }
         }
     }
 }

@@ -329,8 +329,8 @@ namespace Models.PMF.Organs
             get
             {
                 StructuralDMDemand = DMDemandFunction.Value();
-                NonStructuralDMDemand = 0;
-                return new BiomassPoolType { Structural = StructuralDMDemand, NonStructural = NonStructuralDMDemand };
+                StorageDMDemand = 0;
+                return new BiomassPoolType { Structural = StructuralDMDemand, Storage = StorageDMDemand };
             }
             set { }
         }
@@ -344,7 +344,7 @@ namespace Models.PMF.Organs
                 return new BiomassSupplyType
                 {
                     Fixation = Photosynthesis.Value(),
-                    Retranslocation = StartLive.NonStructuralWt * DMRetranslocationFactor.Value(),
+                    Retranslocation = StartLive.StorageWt * DMRetranslocationFactor.Value(),
                     Reallocation = 0.0
                 };
             }
@@ -360,7 +360,7 @@ namespace Models.PMF.Organs
                 double StructuralDemand = MinimumNConc.Value() * PotentialDMAllocation;
                 double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);
 
-                return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
+                return new BiomassPoolType { Structural = StructuralDemand, Storage = NDeficit };
             }
             set { }
         }
@@ -395,7 +395,7 @@ namespace Models.PMF.Organs
             PotentialStructuralDMAllocation = 0;
             PotentialMetabolicDMAllocation = 0;
             StructuralDMDemand = 0;
-            NonStructuralDMDemand = 0;
+            StorageDMDemand = 0;
             LiveFWt = 0;
         }
         #endregion
@@ -465,7 +465,7 @@ namespace Models.PMF.Organs
         /// <summary>The structural dm demand</summary>
         protected double StructuralDMDemand = 0;
         /// <summary>The non structural dm demand</summary>
-        protected double NonStructuralDMDemand = 0;
+        protected double StorageDMDemand = 0;
 
         #endregion
 
@@ -488,13 +488,13 @@ namespace Models.PMF.Organs
 
         private List<PerrenialLeafCohort> Leaves = new List<PerrenialLeafCohort>();
 
-        private void AddNewLeafMaterial(double StructuralWt, double NonStructuralWt, double StructuralN, double NonStructuralN, double SLA)
+        private void AddNewLeafMaterial(double StructuralWt, double StorageWt, double StructuralN, double StorageN, double SLA)
         {
             Leaves[Leaves.Count - 1].Live.StructuralWt += StructuralWt;
-            Leaves[Leaves.Count - 1].Live.NonStructuralWt += NonStructuralWt;
+            Leaves[Leaves.Count - 1].Live.StorageWt += StorageWt;
             Leaves[Leaves.Count - 1].Live.StructuralN += StructuralN;
-            Leaves[Leaves.Count - 1].Live.NonStructuralN += NonStructuralN;
-            Leaves[Leaves.Count - 1].Area += (StructuralWt + NonStructuralWt) * SLA;
+            Leaves[Leaves.Count - 1].Live.StorageN += StorageN;
+            Leaves[Leaves.Count - 1].Area += (StructuralWt + StorageWt) * SLA;
         }
 
         private void ReduceLeavesUniformly(double fraction)
@@ -517,7 +517,7 @@ namespace Models.PMF.Organs
         {
             foreach (PerrenialLeafCohort L in Leaves)
             {
-                L.Live.NonStructuralWt *= (1 - fraction);
+                L.Live.StorageWt *= (1 - fraction);
                 L.Live.MetabolicWt *= (1 - fraction);
             }
         }
@@ -589,13 +589,13 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value());
+                double LabileN = Math.Max(0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
                 Biomass Senescing = new Biomass();
                 GetSenescingLeafBiomass(out Senescing);
 
                 return new BiomassSupplyType()
                 {
-                    Reallocation = Senescing.NonStructuralN * NReallocationFactor.Value(),
+                    Reallocation = Senescing.StorageN * NReallocationFactor.Value(),
                     Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value(),
                     Uptake = 0.0
                 };
@@ -610,23 +610,23 @@ namespace Models.PMF.Organs
             set
             {
                 GrowthRespiration = value.Structural * (1 - DMConversionEfficiency.Value())
-                                  + value.NonStructural * (1 - DMConversionEfficiency.Value());
+                                  + value.Storage * (1 - DMConversionEfficiency.Value());
 
                 AddNewLeafMaterial(StructuralWt: Math.Min(value.Structural * DMConversionEfficiency.Value(), StructuralDMDemand),
-                                   NonStructuralWt: value.NonStructural * DMConversionEfficiency.Value(),
+                                   StorageWt: value.Storage * DMConversionEfficiency.Value(),
                                    StructuralN: 0,
-                                   NonStructuralN: 0,
+                                   StorageN: 0,
                                    SLA: SpecificLeafAreaFunction.Value());
 
                 double Removal = value.Retranslocation;
                 foreach (PerrenialLeafCohort L in Leaves)
                 {
-                    double Delta = Math.Min(L.Live.NonStructuralWt, Removal);
-                    L.Live.NonStructuralWt -= Delta;
+                    double Delta = Math.Min(L.Live.StorageWt, Removal);
+                    L.Live.StorageWt -= Delta;
                     Removal -= Delta;
                 }
                 if (MathUtilities.IsGreaterThan(Removal, 0))
-                    throw new Exception("Insufficient Nonstructural DM to account for Retranslocation and Reallocation in Perrenial Leaf");
+                    throw new Exception("Insufficient Storage DM to account for Retranslocation and Reallocation in Perrenial Leaf");
 
 
             }
@@ -637,20 +637,20 @@ namespace Models.PMF.Organs
             set
             {
                 AddNewLeafMaterial(StructuralWt: 0,
-                    NonStructuralWt: 0,
+                    StorageWt: 0,
                     StructuralN: value.Structural,
-                    NonStructuralN: value.NonStructural,
+                    StorageN: value.Storage,
                     SLA: SpecificLeafAreaFunction.Value());
 
                 double Removal = value.Retranslocation + value.Reallocation;
                 foreach (PerrenialLeafCohort L in Leaves)
                 {
-                    double Delta = Math.Min(L.Live.NonStructuralN, Removal);
-                    L.Live.NonStructuralN -= Delta;
+                    double Delta = Math.Min(L.Live.StorageN, Removal);
+                    L.Live.StorageN -= Delta;
                     Removal -= Delta;
                 }
                 if (MathUtilities.IsGreaterThan(Removal, 0))
-                    throw new Exception("Insufficient Nonstructural N to account for Retranslocation and Reallocation in Perrenial Leaf");
+                    throw new Exception("Insufficient Storage N to account for Retranslocation and Reallocation in Perrenial Leaf");
             }
         }
 
@@ -711,9 +711,9 @@ namespace Models.PMF.Organs
                 Leaves.Add(new PerrenialLeafCohort());
                 if (Leaves.Count == 1)
                     AddNewLeafMaterial(StructuralWt: InitialWtFunction.Value(),
-                                       NonStructuralWt: 0,
+                                       StorageWt: 0,
                                        StructuralN: InitialWtFunction.Value() * MinimumNConc.Value(),
-                                       NonStructuralN: InitialWtFunction.Value() * (MaximumNConc.Value() - MinimumNConc.Value()),
+                                       StorageN: InitialWtFunction.Value() * (MaximumNConc.Value() - MinimumNConc.Value()),
                                        SLA: SpecificLeafAreaFunction.Value());
 
                 foreach (PerrenialLeafCohort L in Leaves)
@@ -748,7 +748,7 @@ namespace Models.PMF.Organs
                     MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
                     RespireLeafFraction(MaintenanceRespirationFunction.Value());
 
-                    MaintenanceRespiration += Live.NonStructuralWt * MaintenanceRespirationFunction.Value();
+                    MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
 
                 }
 

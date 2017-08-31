@@ -7,7 +7,6 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
-using Models.PMF.OldPlant;
 using APSIM.Shared.Utilities;
 using System.Data;
 
@@ -107,15 +106,11 @@ namespace Models.PMF.Phen
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    [ValidParent(ParentType = typeof(Plant15))]
     public class Phenology : Model
     {
         #region Links
-        [Link(IsOptional = true)]
+        [Link]
         private Plant Plant = null;
-
-        [Link(IsOptional = true)]
-        private Plant15 Plant15 = null;    // This can be deleted once we get rid of plant15.
 
         /// <summary>The clock</summary>
         [Link]
@@ -371,8 +366,6 @@ namespace Models.PMF.Phen
             get
             {
                 if (Plant != null && Plant.IsAlive)
-                    return true;
-                if (Plant15 != null && Plant15.IsAlive)
                     return true;
                 return false;
             }
@@ -806,58 +799,61 @@ namespace Models.PMF.Phen
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write description of this class.
-            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
-
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(Memo)))
-                child.Document(tags, headingLevel + 1, indent);
-
-            // Write Phase Table
-            tags.Add(new AutoDocumentation.Paragraph(" **List of stages and phases used in the simulation of crop phenological development**", indent));
-
-            DataTable tableData = new DataTable();
-            tableData.Columns.Add("Stage Number", typeof(int));
-            tableData.Columns.Add("Stage Name", typeof(string));
-            tableData.Columns.Add("Phase Name", typeof(string));
-
-            int N = 0;
-            foreach (IModel child in Apsim.Children(this, typeof(Phase)))
+            if (IncludeInDocumentation)
             {
-                DataRow row;
-                if (N == 0)
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                // write description of this class.
+                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(Memo)))
+                    child.Document(tags, headingLevel + 1, indent);
+
+                // Write Phase Table
+                tags.Add(new AutoDocumentation.Paragraph(" **List of stages and phases used in the simulation of crop phenological development**", indent));
+
+                DataTable tableData = new DataTable();
+                tableData.Columns.Add("Stage Number", typeof(int));
+                tableData.Columns.Add("Stage Name", typeof(string));
+                tableData.Columns.Add("Phase Name", typeof(string));
+
+                int N = 0;
+                foreach (IModel child in Apsim.Children(this, typeof(Phase)))
                 {
+                    DataRow row;
+                    if (N == 0)
+                    {
+                        N++;
+                        row = tableData.NewRow();
+                        row[0] = N;
+                        row[1] = (child as Phase).Start;
+                        tableData.Rows.Add(row);
+                    }
+                    row = tableData.NewRow();
+                    row[2] = child.Name;
+                    tableData.Rows.Add(row);
                     N++;
                     row = tableData.NewRow();
                     row[0] = N;
-                    row[1] = (child as Phase).Start;
+                    row[1] = (child as Phase).End;
                     tableData.Rows.Add(row);
                 }
-                row = tableData.NewRow();
-                row[2] = child.Name;
-                tableData.Rows.Add(row);
-                N++;
-                row = tableData.NewRow();
-                row[0] = N;
-                row[1] = (child as Phase).End;
-                tableData.Rows.Add(row);
-            }
-            tags.Add(new AutoDocumentation.Table(tableData, indent));
-            tags.Add(new AutoDocumentation.Paragraph(System.Environment.NewLine, indent));
+                tags.Add(new AutoDocumentation.Table(tableData, indent));
+                tags.Add(new AutoDocumentation.Paragraph(System.Environment.NewLine, indent));
 
 
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel+1));
-            foreach (IModel child in Apsim.Children(this, typeof(Phase)))
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel + 1));
+                foreach (IModel child in Apsim.Children(this, typeof(Phase)))
                     child.Document(tags, headingLevel + 2, indent);
 
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                if (child.GetType()!=typeof(Memo) && !typeof(Phase).IsAssignableFrom(child.GetType()))
-                    child.Document(tags, headingLevel + 1, indent);
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                    if (child.GetType() != typeof(Memo) && !typeof(Phase).IsAssignableFrom(child.GetType()))
+                        child.Document(tags, headingLevel + 1, indent);
+            }
         }
     }
 }
