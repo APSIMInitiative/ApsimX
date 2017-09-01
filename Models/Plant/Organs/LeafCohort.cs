@@ -1078,26 +1078,45 @@ namespace Models.PMF.Organs
             //Calculate fraction of leaf area senessing based on age and shading.  This is used to to calculate change in leaf area and Nreallocation supply.
             if (!IsAppeared)
                 return 0;
-
-            double fracSenAge;
-            double ttInSenPhase = Math.Max(0.0, Age + tt - LagDuration - GrowthDuration);
-            if (ttInSenPhase > 0)
+            double[] LagDurationAgeMultiplier = new double[] { 0.5, 0.75, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+            double[] SenescenceDurationAgeMultiplier = new double[] { 0.5, 0.75, 1, 1, 1, 1, 1, 1, 1,1,1, 1,1 };
+            double _lagDuration;
+            double _senescenceDuration;
+            double fracSenAge = 0;
+            for (int i = 0; i < ApexGroupAge.Count; i++)
             {
-                double leafDuration = GrowthDuration + LagDuration + SenescenceDuration;
-                double remainingTt = Math.Max(0, leafDuration - Age);
+                if (i == 0)
+                {
+                    _lagDuration = LagDuration;
+                    _senescenceDuration = SenescenceDuration;
+                } else
+                {
+                    _lagDuration = LagDuration * LagDurationAgeMultiplier[(int)ApexGroupAge[i]];
+                    _senescenceDuration = SenescenceDuration * SenescenceDurationAgeMultiplier[(int)ApexGroupAge[i]];
+                }
+                
+                double ttInSenPhase = Math.Max(0.0, Age + tt - _lagDuration - GrowthDuration);
+                double _fracSenAge = 0;
+                if (ttInSenPhase > 0)
+                {
+                    double leafDuration = GrowthDuration + _lagDuration + _senescenceDuration;
+                    double remainingTt = Math.Max(0, leafDuration - Age);
 
-                if (remainingTt == 0)
-                    fracSenAge = 1;
+                    if (remainingTt == 0)
+                        _fracSenAge = 1;
+                    else
+                        _fracSenAge = Math.Min(1, Math.Min(tt, ttInSenPhase) / remainingTt);
+                    if ((_fracSenAge > 1) || (_fracSenAge < 0))
+                        throw new Exception("Bad Fraction Senescing");
+                }
                 else
-                    fracSenAge = Math.Min(1, Math.Min(tt, ttInSenPhase)/remainingTt);
-                if ((fracSenAge > 1) || (fracSenAge < 0))
-                    throw new Exception("Bad Fraction Senescing");
-            }
-            else
-            {
-                fracSenAge = 0;
-            }
+                {
+                    _fracSenAge = 0;
+                }
 
+                fracSenAge += _fracSenAge * ApexGroupSize[i];
+            }
+            fracSenAge = fracSenAge / ApexGroupSize.Sum();
             MaxLiveArea = Math.Max(MaxLiveArea, LiveArea);
             MaxCohortPopulation = Math.Max(MaxCohortPopulation, CohortPopulation);
 
