@@ -35,6 +35,19 @@ namespace Models.WholeFarm.Activities
 		public List<WFActivityBase> ActivityList { get; set; }
 
 		/// <summary>
+		/// Method to check if timing of this activity is ok based on child ActivityTimers
+		/// </summary>
+		/// <returns>T/F</returns>
+		public bool TimingOK
+		{
+			get
+			{
+				// sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
+				return this.Children.Where(a => a.GetType() == typeof(IActivityTimer)).Cast<IActivityTimer>().Sum(a => a.ActivityDue() ? 0 : 1) == 0;
+			}
+		}
+
+		/// <summary>
 		/// Method to cascade calls for resources for all activities in the UI tree. 
 		/// Responds to WFInitialiseActivity in the Activity model holing top level list of activities
 		/// </summary>
@@ -72,7 +85,10 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public virtual void GetResourcesForAllActivities()
 		{
-			ResourcesForAllActivities();
+			if (this.TimingOK)
+			{
+				ResourcesForAllActivities();
+			}
 		}
 
 		/// <summary>

@@ -56,7 +56,14 @@ namespace Models.WholeFarm.Reporting
 			ReportDetails = new RuminantReportItemEventArgs();
 			foreach (Ruminant item in herd)
 			{
-				ReportDetails.Individual = item;
+				if(item.GetType() == typeof(RuminantFemale))
+				{
+					ReportDetails.RumObj = item as RuminantFemale;
+				}
+				else
+				{
+					ReportDetails.RumObj = item as RuminantMale;
+				}
 				ReportItemGenerated(ReportDetails);
 			}
 		}
@@ -69,8 +76,20 @@ namespace Models.WholeFarm.Reporting
 	public class RuminantReportItemEventArgs : EventArgs
 	{
 		/// <summary>
+		/// Individual ruminant to report as Female
+		/// </summary>
+		public object RumObj { get; set; }
+		/// <summary>
 		/// Individual ruminant to report
 		/// </summary>
-		public Ruminant Individual { get; set; }
+		public Ruminant Individual { get { return RumObj as Ruminant; } }
+		/// <summary>
+		/// Individual ruminant to report as Female
+		/// </summary>
+		public RuminantFemale Female { get { return RumObj as RuminantFemale; } }
+		/// <summary>
+		/// Individual ruminant to report as Male
+		/// </summary>
+		public RuminantMale Male { get { return RumObj as RuminantMale; } }
 	}
 }

@@ -911,7 +911,7 @@
           <RuminantActivityFeed>
             <Name>Feed Bos indicus</Name>
             <RuminantFeedGroup>
-              <Name>FIlter Bos indicus</Name>
+              <Name>Filter Bos indicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=BosIndicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -952,6 +952,7 @@
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>BosIndicus</HerdName>
             <MaximumConceptionRateUncontrolled>0.8</MaximumConceptionRateUncontrolled>
+            <UseAI>false</UseAI>
           </RuminantActivityBreed>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
@@ -1297,6 +1298,7 @@
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>BosIndicus</HerdName>
             <MaximumConceptionRateUncontrolled>0.8</MaximumConceptionRateUncontrolled>
+            <UseAI>false</UseAI>
           </RuminantActivityBreed>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
@@ -1305,6 +1307,10 @@
           <Name>SummariseHerd</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </SummariseRuminantHerd>
+        <ReportRuminantHerd>
+          <Name>ReportHerd</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </ReportRuminantHerd>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ActivitiesHolder>
       <Folder>
@@ -1404,6 +1410,25 @@
           </VariableNames>
           <EventNames>
             <string>[Resources].Ruminants.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>HerdReport</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.ID as ID</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.Weight as Weight</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.GenderAsString as Gender</string>
+            <string>[Activities].ReportHerd.ReportDetails.Female.NumberOfBirths as Births</string>
+            <string>[Activities].ReportHerd.ReportDetails.Female.AgeAtLastBirth as AgeBirth</string>
+            <string>[Activities].ReportHerd.ReportDetails.Female.ID as FID</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.PreviousWeight as PWeight</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Activities].ReportHerd.OnReportItemGenerated</string>
           </EventNames>
         </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>

@@ -16,32 +16,32 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// The age of female at last birth
 		/// </summary>
-		public double AgeAtLastBirth;
+		public double AgeAtLastBirth { get; set; }
 
 		/// <summary>
 		/// Number of births for the female (twins = 1 birth)
 		/// </summary>
-		public int NumberOfBirths;
+		public int NumberOfBirths { get; set; }
 
 		/// <summary>
 		/// Births this timestep
 		/// </summary>
-		public int NumberOfBirthsThisTimestep;
-		
+		public int NumberOfBirthsThisTimestep { get; set; }
+
 		/// <summary>
 		/// The age at last conception
 		/// </summary>
-		public double AgeAtLastConception;
+		public double AgeAtLastConception { get; set; }
 
 		/// <summary>
 		/// Weight at time of conception
 		/// </summary>
-		public double WeightAtConception;
+		public double WeightAtConception { get; set; }
 
 		/// <summary>
 		/// Previous conception rate
 		/// </summary>
-		public double PreviousConceptionRate;
+		public double PreviousConceptionRate { get; set; }
 
 		/// <summary>
 		/// Indicates if birth is due this month
@@ -73,7 +73,6 @@ namespace Models.WholeFarm.Resources
 				NumberOfBirthsThisTimestep = (CarryingTwins ? 2 : 1);
 			}
 			AgeAtLastBirth = this.Age;
-//			SuccessfulPregnancy = false;
 		}
 
 		/// <summary>
@@ -90,7 +89,7 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Indicates if individual is carrying twins
 		/// </summary>
-		public bool CarryingTwins;
+		public bool CarryingTwins { get; set; }
 
 		/// <summary>
 		/// Method to remove one offspring that dies between conception and death
@@ -129,7 +128,7 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Indicates if the individual is a dry breeder
 		/// </summary>
-		public bool DryBreeder;
+		public bool DryBreeder { get; set; }
 
 		/// <summary>
 		/// Indicates if the individual is lactating
@@ -163,12 +162,12 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Amount of milk available in the month (L)
 		/// </summary>
-		public double MilkAmount;
+		public double MilkAmount { get; set; }
 
 		/// <summary>
 		/// Amount of milk produced (L/day)
 		/// </summary>
-		public double MilkProduction;
+		public double MilkProduction { get; set; }
 
 		/// <summary>
 		/// Method to remove milk from female
@@ -183,12 +182,12 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// A list of individuals currently suckling this female
 		/// </summary>
-		public List<Ruminant> SucklingOffspring;
+		public List<Ruminant> SucklingOffspring { get; set; }
 
 		/// <summary>
 		/// Used to track successful preganacy
 		/// </summary>
-		public bool SuccessfulPregnancy;
+		public bool SuccessfulPregnancy { get; set; }
 
 		/// <summary>
 		/// Constructor
