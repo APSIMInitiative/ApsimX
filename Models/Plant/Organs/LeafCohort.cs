@@ -826,7 +826,7 @@ namespace Models.PMF.Organs
                 CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
                 ShadeInducedSenRate = leafCohortParameters.ShadeInducedSenescenceRate.Value();
                 SenessingLeafRelativeSize = leafCohortParameters.SenessingLeafRelativeSize.Value();
-                SenescedFrac = FractionSenescing(thermalTime, propnStemMortality, SenessingLeafRelativeSize);
+                SenescedFrac = FractionSenescing(thermalTime, propnStemMortality, SenessingLeafRelativeSize, leafCohortParameters);
 
                 // Doing leaf mass growth in the cohort
                 Biomass liveBiomass = new Biomass(Live);
@@ -1072,15 +1072,14 @@ namespace Models.PMF.Organs
         /// <param name="tt">The tt.</param>
         /// <param name="stemMortality">The stem mortality.</param>
         /// <param name="senessingLeafRelativeSize">The relative size of senessing tillers leaves relative to the other leaves in the cohort</param>
+        /// <param name="leafCohortParameters">The associated leaf cohort parameters.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Bad Fraction Senescing</exception>
-        public double FractionSenescing(double tt, double stemMortality, double senessingLeafRelativeSize)
+        public double FractionSenescing(double tt, double stemMortality, double senessingLeafRelativeSize, Leaf.LeafCohortParameters leafCohortParameters)
         {
             //Calculate fraction of leaf area senessing based on age and shading.  This is used to to calculate change in leaf area and Nreallocation supply.
             if (!IsAppeared)
                 return 0;
-            double[] LagDurationAgeMultiplier = new double[] { 0.5, 0.75, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-            double[] SenescenceDurationAgeMultiplier = new double[] { 0.5, 0.75, 1, 1, 1, 1, 1, 1, 1,1,1, 1,1 };
             double _lagDuration;
             double _senescenceDuration;
             double fracSenAge = 0;
@@ -1092,8 +1091,8 @@ namespace Models.PMF.Organs
                     _senescenceDuration = SenescenceDuration;
                 } else
                 {
-                    _lagDuration = LagDuration * LagDurationAgeMultiplier[(int)ApexGroupAge[i]];
-                    _senescenceDuration = SenescenceDuration * SenescenceDurationAgeMultiplier[(int)ApexGroupAge[i]];
+                    _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                    _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
                 }
                 
                 double ttInSenPhase = Math.Max(0.0, Age + tt - _lagDuration - GrowthDuration);
