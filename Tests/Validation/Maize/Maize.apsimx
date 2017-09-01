@@ -44,16 +44,16 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
           <RegrStats>
             <Name>Biomass</Name>
             <n>88</n>
-            <Slope>1.1275698395945712</Slope>
-            <Intercept>-22.108123315555304</Intercept>
-            <SEslope>0.043887011614175193</SEslope>
-            <SEintercept>60.15165461301428</SEintercept>
-            <R2>0.88473515910262668</R2>
-            <RMSE>284.79666551553623</RMSE>
-            <NSE>0.76444326295755738</NSE>
-            <ME>135.90462521870478</ME>
-            <MAE>215.10284951587406</MAE>
-            <RSR>0.48257637316769619</RSR>
+            <Slope>1.1266896863756921</Slope>
+            <Intercept>-19.540065695579869</Intercept>
+            <SEslope>0.043880049901163572</SEslope>
+            <SEintercept>60.142112870681231</SEintercept>
+            <R2>0.88460818778394146</R2>
+            <RMSE>285.33817257970151</RMSE>
+            <NSE>0.76354664499440184</NSE>
+            <ME>137.38249232273702</ME>
+            <MAE>215.73083131696157</MAE>
+            <RSR>0.48349393487649123</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FinalLeafNo</Name>
@@ -86,58 +86,58 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
           <RegrStats>
             <Name>GPSM</Name>
             <n>84</n>
-            <Slope>0.91391560570901065</Slope>
-            <Intercept>244.63953136618898</Intercept>
-            <SEslope>0.042051741618312176</SEslope>
-            <SEintercept>100.80917739443187</SEintercept>
-            <R2>0.85207329180675628</R2>
-            <RMSE>476.81419518793319</RMSE>
-            <NSE>0.84456516544450833</NSE>
-            <ME>66.459427740986669</ME>
-            <MAE>350.53397518269975</MAE>
-            <RSR>0.39189848157195323</RSR>
+            <Slope>0.91391519018893808</Slope>
+            <Intercept>244.63930600306912</Intercept>
+            <SEslope>0.042051688375142886</SEslope>
+            <SEintercept>100.80904975643419</SEintercept>
+            <R2>0.85207349637071417</R2>
+            <RMSE>476.81359042930791</RMSE>
+            <NSE>0.84456555973015746</NSE>
+            <ME>66.458342321752539</ME>
+            <MAE>350.53287361097438</MAE>
+            <RSR>0.3918979845146312</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainSize</Name>
             <n>78</n>
-            <Slope>0.54923285483072548</Slope>
-            <Intercept>0.14919988271723433</Intercept>
-            <SEslope>0.12968988428121978</SEslope>
-            <SEintercept>0.037228654808328494</SEintercept>
-            <R2>0.19092969584996444</R2>
-            <RMSE>0.071097002228245568</RMSE>
-            <NSE>-0.64220299522733781</NSE>
-            <ME>0.022242817146094281</ME>
-            <MAE>0.053083400934801669</MAE>
-            <RSR>1.2732435394193606</RSR>
+            <Slope>0.54923396046245354</Slope>
+            <Intercept>0.14919955576021773</Intercept>
+            <SEslope>0.129689898012983</SEslope>
+            <SEintercept>0.03722865875015538</SEintercept>
+            <R2>0.19093028507099363</R2>
+            <RMSE>0.071096981643273854</RMSE>
+            <NSE>-0.64220204428155259</NSE>
+            <ME>0.022242801586572665</ME>
+            <MAE>0.053083358246413366</MAE>
+            <RSR>1.2732431707725622</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
             <n>103</n>
-            <Slope>0.90857739235646029</Slope>
-            <Intercept>98.823806339797216</Intercept>
-            <SEslope>0.040714911924624925</SEslope>
-            <SEintercept>28.351359530540535</SEintercept>
-            <R2>0.83138161128941057</R2>
-            <RMSE>150.41136890952541</RMSE>
-            <NSE>0.80821304542923122</NSE>
-            <ME>43.445152872046044</ME>
-            <MAE>119.70139194452199</MAE>
-            <RSR>0.43580379220824977</RSR>
+            <Slope>0.90858514182137273</Slope>
+            <Intercept>98.819907461006892</Intercept>
+            <SEslope>0.040715154418042472</SEslope>
+            <SEintercept>28.351528388036222</SEintercept>
+            <R2>0.83138233277723272</R2>
+            <RMSE>150.41182507761974</RMSE>
+            <NSE>0.808211882123254</NSE>
+            <ME>43.445948181520748</ME>
+            <MAE>119.70219484396154</MAE>
+            <RSR>0.43580511391542415</RSR>
           </RegrStats>
           <RegrStats>
             <Name>LAImax</Name>
             <n>74</n>
-            <Slope>1.1769923669280487</Slope>
-            <Intercept>0.3010953423737166</Intercept>
-            <SEslope>0.052593782241642455</SEslope>
-            <SEintercept>0.1583418031114239</SEintercept>
-            <R2>0.87430526031621592</R2>
-            <RMSE>1.010947724815408</RMSE>
-            <NSE>0.43512568283863673</NSE>
-            <ME>0.77781870185481361</ME>
-            <MAE>0.7851907248586476</MAE>
-            <RSR>0.74648568669664828</RSR>
+            <Slope>1.1769924819922821</Slope>
+            <Intercept>0.30109470032723396</Intercept>
+            <SEslope>0.052593742861313728</SEslope>
+            <SEintercept>0.15834168455078818</SEintercept>
+            <R2>0.87430544637490115</R2>
+            <RMSE>1.0109472388437506</RMSE>
+            <NSE>0.43512622591882832</NSE>
+            <ME>0.77781836973021534</ME>
+            <MAE>0.78519039273404923</MAE>
+            <RSR>0.74648532785426958</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
@@ -37195,11 +37195,11 @@ namespace Models
               <Name>SowingRule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
+                <SowingDate>2010-10-04</SowingDate>
+                <CultivarName>Pioneer_39V43</CultivarName>
                 <RowSpace>720</RowSpace>
                 <PlantPopulation>10.5</PlantPopulation>
                 <PlantingDepth>20</PlantingDepth>
-                <CultivarName>Pioneer_39V43</CultivarName>
-                <SowingDate>2010-10-04</SowingDate>
               </Script>
               <Code><![CDATA[
 using System;
