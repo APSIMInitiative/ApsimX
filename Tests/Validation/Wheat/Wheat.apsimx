@@ -447,17 +447,17 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
-            <n>947</n>
-            <Slope>0.54961510408751835</Slope>
-            <Intercept>201.27534415121772</Intercept>
-            <SEslope>0.023997508231915762</SEslope>
-            <SEintercept>29.426094540629187</SEintercept>
-            <R2>0.35694501463539052</R2>
-            <RMSE>655.72176892109019</RMSE>
-            <NSE>0.12343593766513439</NSE>
-            <ME>-252.04628993859316</ME>
-            <MAE>333.79358249255881</MAE>
-            <RSR>0.93575554516387716</RSR>
+            <n>948</n>
+            <Slope>0.54896594774142138</Slope>
+            <Intercept>201.2410070918562</Intercept>
+            <SEslope>0.023999433728730361</SEslope>
+            <SEintercept>29.435225684797917</SEintercept>
+            <R2>0.35612330372695655</R2>
+            <RMSE>656.37171876560387</RMSE>
+            <NSE>0.12117507326647792</NSE>
+            <ME>-252.95430387478422</ME>
+            <MAE>334.61536510749039</MAE>
+            <RSR>0.93696205697994517</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.N</Name>
