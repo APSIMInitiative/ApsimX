@@ -5,7 +5,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// A constant value function
+    /// Returns the value at the given index. If the index is outside the array, the last value will be returned.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -43,7 +43,7 @@ namespace Models.PMF.Functions
             }
 
             if (arrayIndex > str2dbl.Count - 1)
-                throw new ApsimXException(this, "ArrayFunction: array index greater than array size.");
+                return str2dbl[str2dbl.Count - 1];
 
             return str2dbl[arrayIndex];
         }
