@@ -1080,6 +1080,7 @@ namespace Models.PMF.Organs
             //Calculate fraction of leaf area senessing based on age and shading.  This is used to to calculate change in leaf area and Nreallocation supply.
             if (!IsAppeared)
                 return 0;
+
             double _lagDuration;
             double _senescenceDuration;
             double fracSenAge = 0;
