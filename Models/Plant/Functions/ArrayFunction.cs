@@ -26,7 +26,7 @@ namespace Models.PMF.Functions
         public double Value(int arrayIndex = -1)
         {
             if (arrayIndex == -1)
-                throw new ApsimXException(this, "ArrayFunction must pass an index to return.");
+                throw new ApsimXException(this, "ArrayFunction must have an index to return.");
 
             if (str2dbl.Count == 0)
             {
@@ -41,6 +41,10 @@ namespace Models.PMF.Functions
                         throw new ApsimXException(this, "ArrayFunction: Could not convert " + s + " to a number.");
                     }
             }
+
+            if (arrayIndex > str2dbl.Count - 1)
+                throw new ApsimXException(this, "ArrayFunction: array index greater than array size.");
+
             return str2dbl[arrayIndex];
         }
 
