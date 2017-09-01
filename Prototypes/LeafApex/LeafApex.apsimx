@@ -1715,16 +1715,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
-          <Constant>
+          <ArrayFunction>
             <Name>LagDurationAgeMultiplier</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1</FixedValue>
-          </Constant>
-          <Constant>
+            <Values>0.5 0.75 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
             <Name>SenescenceDurationAgeMultiplier</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1</FixedValue>
-          </Constant>
+            <Values>0.5 0.75 1</Values>
+          </ArrayFunction>
           <Constant>
             <Name>MaintenanceRespirationFunction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2206,7 +2206,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
           <ArrayFunction>
-            <Name>AgeMultiplier</Name>
+            <Name>LeafSizeAgeMultiplier</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Values>0.5 0.75 1 1 1 1 1 1 1 1 1 1</Values>
           </ArrayFunction>

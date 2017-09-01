@@ -21,7 +21,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 10; } }
+        public static int LastestVersion { get { return 11; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -233,6 +233,10 @@ namespace Models.Core
                 SearchReplaceReportCode(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
         }
 
+        /// <summary>
+        /// Upgrades to version 8. Adds leaf apex nodes.
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
         private static void UpgradeToVersion8(XmlNode node)
         {
             XmlNode apex = XmlUtilities.CreateNode(node.OwnerDocument, "ApexStandard", "");
@@ -410,6 +414,45 @@ namespace Models.Core
                 XmlUtilities.SetValue(critNConc, "Name", "CriticalNConc");
                 string refPath = "[" + OrganType.FirstChild.InnerText + "].MinimumNConc.Value()";
                 XmlUtilities.SetValue(critNConc, "VariableName", refPath);
+            }
+        }
+
+        /// <summary>
+        /// Add nodes for new
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        private static void UpgradeToVersion11(XmlNode node)
+        {
+            XmlNode LagDurationAgeMultiplier = XmlUtilities.CreateNode(node.OwnerDocument, "ArrayFunction", "");
+            XmlNode SenescenceDurationAgeMultiplier = XmlUtilities.CreateNode(node.OwnerDocument, "ArrayFunction", "");
+            XmlNode LeafSizeAgeMultiplier = XmlUtilities.CreateNode(node.OwnerDocument, "ArrayFunction", "");
+            XmlElement name = node.OwnerDocument.CreateElement("Name");
+            XmlElement element = node.OwnerDocument.CreateElement("Values");
+
+            name.InnerText = "LagDurationAgeMultiplier";
+            element.InnerText = "0.5 0.75 1";
+            LagDurationAgeMultiplier.AppendChild(name);
+            LagDurationAgeMultiplier.AppendChild(element);
+
+            name = node.OwnerDocument.CreateElement("Name");
+            name.InnerText = "SenescenceDurationAgeMultiplier";
+            element = node.OwnerDocument.CreateElement("Values");
+            element.InnerText = "0.5 0.75 1";
+            SenescenceDurationAgeMultiplier.AppendChild(name);
+            SenescenceDurationAgeMultiplier.AppendChild(element);
+
+            name = node.OwnerDocument.CreateElement("Name");
+            element = node.OwnerDocument.CreateElement("Values");
+            name.InnerText = "LeafSizeAgeMultiplier";
+            element.InnerText = "0.5 0.75 1 1 1 1 1 1 1 1 1 1";
+            LeafSizeAgeMultiplier.AppendChild(name);
+            LeafSizeAgeMultiplier.AppendChild(element);
+
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "LeafCohortParameters"))
+            {
+                n.AppendChild(LagDurationAgeMultiplier);
+                n.AppendChild(SenescenceDurationAgeMultiplier);
+                n.AppendChild(LeafSizeAgeMultiplier);
             }
         }
 

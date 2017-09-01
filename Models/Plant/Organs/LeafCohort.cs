@@ -909,7 +909,7 @@ namespace Models.PMF.Organs
             double totalf = 1;
             for(int i=1; i< ApexGroupAge.Count;i++)
             {
-                double f = leafCohortParameters.AgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
+                double f = leafCohortParameters.LeafSizeAgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
                 totalf += f * Leaf.ApexGroupSize[i];
             }
 
