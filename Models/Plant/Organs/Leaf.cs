@@ -332,13 +332,13 @@ namespace Models.PMF.Organs
             public IFunction MaintenanceRespirationFunction = null;
             /// <summary>Modify leaf size by age</summary>
             [Link]
-            public ArrayFunction AgeMultiplier = null;
+            public ArrayFunction LeafSizeAgeMultiplier = null;
             /// <summary>Modify lag duration by age</summary>
             [Link]
-            public IFunction LagDurationAgeMultiplier = null;
+            public ArrayFunction LagDurationAgeMultiplier = null;
             /// <summary>Modify senescence duration by age</summary>
             [Link]
-            public IFunction SenescenceDurationAgeMultiplier = null;
+            public ArrayFunction SenescenceDurationAgeMultiplier = null;
         }
         #endregion
 
