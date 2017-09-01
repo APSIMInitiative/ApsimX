@@ -51676,6 +51676,11 @@ namespace Models
               <Name>Total Above Ground</Name>
               <Series>
                 <Name>Predicted</Name>
+                <Regression>
+                  <Name>Regression</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ForEachSeries>false</ForEachSeries>
+                </Regression>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -51683,37 +51688,14 @@ namespace Models
                 <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.AboveGround.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-                <Filter />
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>Observed</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.AboveGround.Wt</YFieldName>
+                <TableName>HarvestObsPred</TableName>
+                <XFieldName>Observed.Barley.AboveGround.Wt</XFieldName>
+                <YFieldName>Predicted.Barley.AboveGround.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -51739,9 +51721,14 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <Graph>
-              <Name>Grain</Name>
+              <Name>Grain Wt</Name>
               <Series>
                 <Name>Predicted</Name>
+                <Regression>
+                  <Name>Regression</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ForEachSeries>false</ForEachSeries>
+                </Regression>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -51749,38 +51736,63 @@ namespace Models
                 <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
+                <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Grain.Wt</YFieldName>
+                <TableName>HarvestObsPred</TableName>
+                <XFieldName>Observed.Barley.Grain.Wt</XFieldName>
+                <YFieldName>Predicted.Barley.Grain.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
                 <Filter />
               </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>Grain N</Name>
               <Series>
-                <Name>Observed</Name>
+                <Name>Predicted</Name>
+                <Regression>
+                  <Name>Regression</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ForEachSeries>false</ForEachSeries>
+                </Regression>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>Observed</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Grain.Wt</YFieldName>
-                <ShowInLegend>false</ShowInLegend>
+                <TableName>HarvestObsPred</TableName>
+                <XFieldName>Observed.Barley.Grain.N</XFieldName>
+                <YFieldName>Predicted.Barley.Grain.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
