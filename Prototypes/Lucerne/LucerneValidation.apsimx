@@ -6914,7 +6914,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>shootbiomass</YFieldName>
+              <YFieldName>Lucerne.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
