@@ -73,42 +73,17 @@ namespace UserInterface
             if (!String.IsNullOrWhiteSpace(initialPath)  && (File.Exists(initialPath) || action == FileChooserAction.Save))
             {
                 dialog.InitialDirectory = Path.GetDirectoryName(initialPath);
-                dialog.FileName = Path.GetFileName(initialPath);
+                dialog.FileName = null;
             }
             else if (Directory.Exists(initialPath))
                 dialog.InitialDirectory = initialPath;
             else
                 dialog.InitialDirectory = Utility.Configuration.Settings.PreviousFolder;
 
-            if (!string.IsNullOrEmpty(initialPath))
-            {
-                timer.Tick += new EventHandler(WindowsWorkaround);
-                timer.Interval = 50;
-                timer.Tag = dialog;
-                timer.Start();
-            }
             if (dialog.ShowDialog() == DialogResult.OK)
                 fileName = dialog.FileName;
             dialog = null;
             return fileName;
-        }
-
-        /// <summary>
-        /// Works around weird Windows bug.
-        /// See https://connect.microsoft.com/VisualStudio/feedback/details/525070/openfiledialog-show-part-of-file-name-in-win7
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private static void WindowsWorkaround(object sender, EventArgs args)
-        {
-            FileDialog dialog = timer.Tag as FileDialog;
-            if (dialog != null)
-            {
-                SendKeys.SendWait("{HOME}");
-                SendKeys.SendWait("^(a)");
-                SendKeys.Flush();
-                (sender as Timer).Stop();
-            }
         }
 
         /// <summary>Ask user for a filename to open on Windows.</summary>
