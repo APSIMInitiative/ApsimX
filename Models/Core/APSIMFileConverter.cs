@@ -236,15 +236,9 @@ namespace Models.Core
         }
 
         /// <summary>
-<<<<<<< HEAD
         /// Upgrades to version 8. Create ApexStandard node.
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
-=======
-        /// Upgrades to version 8. Adds leaf apex nodes.
-        /// </summary>
-        /// <param name="node">The node to modifiy</param>
->>>>>>> Changed LagDurationAgeMultiplier and SenescenceDurationAgeMultiplier to ArrayFunctions.
         private static void UpgradeToVersion8(XmlNode node)
         {
             XmlNode apex = XmlUtilities.CreateNode(node.OwnerDocument, "ApexStandard", "");
