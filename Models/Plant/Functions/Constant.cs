@@ -32,26 +32,28 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // get description and units.
-            string description = AutoDocumentation.GetDescription(Parent, Name);
-            string units = Units;
-            if (units == null)
-                units = AutoDocumentation.GetUnits(Parent, Name);
-            if (units != string.Empty)
-                units = " (" + units + ")";
+            if (IncludeInDocumentation)
+            {
+                // get description and units.
+                string description = AutoDocumentation.GetDescription(Parent, Name);
+                string units = Units;
+                if (units == null)
+                    units = AutoDocumentation.GetUnits(Parent, Name);
+                if (units != string.Empty)
+                    units = " (" + units + ")";
 
-            if (!(Parent is IFunction) && headingLevel > 0)
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+                if (!(Parent is IFunction) && headingLevel > 0)
+                    tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + FixedValue + units + "</i>", indent));
+                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + FixedValue + units + "</i>", indent));
 
-            if (!String.IsNullOrEmpty(description))
-                tags.Add(new AutoDocumentation.Paragraph(description, indent));
+                if (!String.IsNullOrEmpty(description))
+                    tags.Add(new AutoDocumentation.Paragraph(description, indent));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
+            }
         }
     }
 }

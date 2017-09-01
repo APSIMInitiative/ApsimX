@@ -34,16 +34,19 @@ namespace Models.PMF
                 {
                     foreach (object i in v as IEnumerable)
                     {
+                        if (i is CompositeBiomass)
+                            (i as CompositeBiomass).Update();
                         if (!(i is Biomass))
-                            throw new Exception("Elements in the array: " + PropertyName + " are not Biomass objects in composition biomass: " + this.Name);
+                            throw new Exception("Elements in the array: " + PropertyName + " are not Biomass objects in composite biomass: " + this.Name);
                         Add(i as Biomass);
                     }
                 }
                 else
                 {
-
                     if (!(v is Biomass))
-                        throw new Exception("Property: " + PropertyName + " is not a Biomass object in composition biomass: " + this.Name);
+                        throw new Exception("Property: " + PropertyName + " is not a Biomass object in composite biomass: " + this.Name);
+                    if (v is CompositeBiomass)
+                        (v as CompositeBiomass).Update();
                     Add(v as Biomass);
                 }
             }
@@ -155,25 +158,27 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
-
-            // write description of this class.
-            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
-
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                child.Document(tags, headingLevel + 1, indent);
-
-            tags.Add(new AutoDocumentation.Paragraph(this.Name +" is a composite of the following biomass objects:", indent));
-
-            string st = string.Empty;
-            foreach (string PropertyName in Propertys)
+            if (IncludeInDocumentation)
             {
-                st = st + Environment.NewLine + "* " + PropertyName;
-            }
-            tags.Add(new AutoDocumentation.Paragraph(st, indent));
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
 
+                // write description of this class.
+                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                    child.Document(tags, headingLevel + 1, indent);
+
+                tags.Add(new AutoDocumentation.Paragraph(this.Name + " is a composite of the following biomass objects:", indent));
+
+                string st = string.Empty;
+                foreach (string PropertyName in Propertys)
+                {
+                    st = st + Environment.NewLine + "* " + PropertyName;
+                }
+                tags.Add(new AutoDocumentation.Paragraph(st, indent));
+            }
         }
     }
 }

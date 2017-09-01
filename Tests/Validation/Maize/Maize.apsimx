@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
+  <Memo>
+    <Name>TitlePage</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <MemoText><![CDATA[# The APSIM Maize Model
+
+_Brown, H.E., Teixeira, E.I., Huth, N.I. and Holzworth, D.P._
+
+The APSIM maize model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
+
+The model consists of:
+
+* a phenology model to simulate development between growth phases  
+* a structure model to simulate plant morphology  
+* a collection of organs to simulate the various plant parts  
+* an arbitrator to allocate resources (N, biomass) to the various plant organs ]]></MemoText>
+  </Memo>
+  <Memo>
+    <Name>Introduction</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <MemoText><![CDATA[
+The APSIM Maize model has been tested on a range of datasets from around the world to provide tests across a range of environmental conditions.  Tests include ranges in plant population, nitrogen management and irrigation levels, as well as including historical datasets from africa using cultivars developed during the 1960's, through to modern varieties grown in the American mid-West.
+
+]]></MemoText>
+  </Memo>
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>Observed</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>HarvestData</string>
@@ -15,21 +39,21 @@
       <Name>PredictedObserved</Name>
       <Tests>
         <Name>Tests</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <AcceptedStats>
           <RegrStats>
             <Name>Biomass</Name>
             <n>88</n>
-            <Slope>1.1275698395945712</Slope>
-            <Intercept>-22.108123315555304</Intercept>
-            <SEslope>0.043887011614175193</SEslope>
-            <SEintercept>60.15165461301428</SEintercept>
-            <R2>0.88473515910262668</R2>
-            <RMSE>284.79666551553623</RMSE>
-            <NSE>0.76444326295755738</NSE>
-            <ME>135.90462521870478</ME>
-            <MAE>215.10284951587406</MAE>
-            <RSR>0.48257637316769619</RSR>
+            <Slope>1.1266896863756921</Slope>
+            <Intercept>-19.540065695579869</Intercept>
+            <SEslope>0.043880049901163572</SEslope>
+            <SEintercept>60.142112870681231</SEintercept>
+            <R2>0.88460818778394146</R2>
+            <RMSE>285.33817257970151</RMSE>
+            <NSE>0.76354664499440184</NSE>
+            <ME>137.38249232273702</ME>
+            <MAE>215.73083131696157</MAE>
+            <RSR>0.48349393487649123</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FinalLeafNo</Name>
@@ -62,58 +86,58 @@
           <RegrStats>
             <Name>GPSM</Name>
             <n>84</n>
-            <Slope>0.91391560570901065</Slope>
-            <Intercept>244.63953136618898</Intercept>
-            <SEslope>0.042051741618312176</SEslope>
-            <SEintercept>100.80917739443187</SEintercept>
-            <R2>0.85207329180675628</R2>
-            <RMSE>476.81419518793319</RMSE>
-            <NSE>0.84456516544450833</NSE>
-            <ME>66.459427740986669</ME>
-            <MAE>350.53397518269975</MAE>
-            <RSR>0.39189848157195323</RSR>
+            <Slope>0.91391519018893808</Slope>
+            <Intercept>244.63930600306912</Intercept>
+            <SEslope>0.042051688375142886</SEslope>
+            <SEintercept>100.80904975643419</SEintercept>
+            <R2>0.85207349637071417</R2>
+            <RMSE>476.81359042930791</RMSE>
+            <NSE>0.84456555973015746</NSE>
+            <ME>66.458342321752539</ME>
+            <MAE>350.53287361097438</MAE>
+            <RSR>0.3918979845146312</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainSize</Name>
             <n>78</n>
-            <Slope>0.54923285483072548</Slope>
-            <Intercept>0.14919988271723433</Intercept>
-            <SEslope>0.12968988428121978</SEslope>
-            <SEintercept>0.037228654808328494</SEintercept>
-            <R2>0.19092969584996444</R2>
-            <RMSE>0.071097002228245568</RMSE>
-            <NSE>-0.64220299522733781</NSE>
-            <ME>0.022242817146094281</ME>
-            <MAE>0.053083400934801669</MAE>
-            <RSR>1.2732435394193606</RSR>
+            <Slope>0.54923396046245354</Slope>
+            <Intercept>0.14919955576021773</Intercept>
+            <SEslope>0.129689898012983</SEslope>
+            <SEintercept>0.03722865875015538</SEintercept>
+            <R2>0.19093028507099363</R2>
+            <RMSE>0.071096981643273854</RMSE>
+            <NSE>-0.64220204428155259</NSE>
+            <ME>0.022242801586572665</ME>
+            <MAE>0.053083358246413366</MAE>
+            <RSR>1.2732431707725622</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
             <n>103</n>
-            <Slope>0.90857739235646029</Slope>
-            <Intercept>98.823806339797216</Intercept>
-            <SEslope>0.040714911924624925</SEslope>
-            <SEintercept>28.351359530540535</SEintercept>
-            <R2>0.83138161128941057</R2>
-            <RMSE>150.41136890952541</RMSE>
-            <NSE>0.80821304542923122</NSE>
-            <ME>43.445152872046044</ME>
-            <MAE>119.70139194452199</MAE>
-            <RSR>0.43580379220824977</RSR>
+            <Slope>0.90858514182137273</Slope>
+            <Intercept>98.819907461006892</Intercept>
+            <SEslope>0.040715154418042472</SEslope>
+            <SEintercept>28.351528388036222</SEintercept>
+            <R2>0.83138233277723272</R2>
+            <RMSE>150.41182507761974</RMSE>
+            <NSE>0.808211882123254</NSE>
+            <ME>43.445948181520748</ME>
+            <MAE>119.70219484396154</MAE>
+            <RSR>0.43580511391542415</RSR>
           </RegrStats>
           <RegrStats>
             <Name>LAImax</Name>
             <n>74</n>
-            <Slope>1.1769923669280487</Slope>
-            <Intercept>0.3010953423737166</Intercept>
-            <SEslope>0.052593782241642455</SEslope>
-            <SEintercept>0.1583418031114239</SEintercept>
-            <R2>0.87430526031621592</R2>
-            <RMSE>1.010947724815408</RMSE>
-            <NSE>0.43512568283863673</NSE>
-            <ME>0.77781870185481361</ME>
-            <MAE>0.7851907248586476</MAE>
-            <RSR>0.74648568669664828</RSR>
+            <Slope>1.1769924819922821</Slope>
+            <Intercept>0.30109470032723396</Intercept>
+            <SEslope>0.052593742861313728</SEslope>
+            <SEintercept>0.15834168455078818</SEintercept>
+            <R2>0.87430544637490115</R2>
+            <RMSE>1.0109472388437506</RMSE>
+            <NSE>0.43512622591882832</NSE>
+            <ME>0.77781836973021534</ME>
+            <MAE>0.78519039273404923</MAE>
+            <RSR>0.74648532785426958</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
@@ -133,14 +157,14 @@
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
         <POName>PredictedObserved</POName>
       </Tests>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <PredictedTableName>HarvestReport</PredictedTableName>
       <ObservedTableName>HarvestData</ObservedTableName>
       <FieldNameUsedForMatch>Stage</FieldNameUsedForMatch>
     </PredictedObserved>
     <ExcelInput>
       <Name>ObservedTimeSeries</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>TimeSeriesData</string>
@@ -148,7 +172,7 @@
     </ExcelInput>
     <ExcelInput>
       <Name>NZObserved</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>observed</string>
@@ -156,7 +180,7 @@
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterN</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>RainShelterNitrogen</string>
@@ -164,7 +188,7 @@
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterSW</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>%root%\Tests\Validation\Maize\Observations\SoilWater.xlsx</FileName>
       <SheetNames>
         <string>SoilWater</string>
@@ -172,7 +196,7 @@
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterCob</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>RachisHusk_RainS</string>
@@ -180,12 +204,12 @@
     </ExcelInput>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
     <ExcelInput>
       <Name>PhenologySimple</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>PhenologySimple</string>
@@ -193,7 +217,7 @@
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterSen</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>Observations\LeafSenesCount.xlsx</FileName>
       <SheetNames>
         <string>EndSenes</string>
@@ -201,7 +225,7 @@
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterSenStart</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>Observations\LeafSenesCount.xlsx</FileName>
       <SheetNames>
         <string>StartSenes</string>
@@ -209,7 +233,7 @@
     </ExcelInput>
     <ExcelInput>
       <Name>RainShelterLeafSize</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>Observations\IndLeafData_MaizeRainshelter.xlsx</FileName>
       <SheetNames>
         <string>MaxLeafSize</string>
@@ -217,24 +241,228 @@
     </ExcelInput>
     <Probability>
       <Name>Probability</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <TableName>SensibilityReport</TableName>
       <Exceedence>false</Exceedence>
     </Probability>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>Validation</Name>
-    <Memo>
-      <Name>Introduction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText><![CDATA[
-The APSIM Maize model has been tested on a range of datasets from around the world to provide tests across a range of environmental conditions.  Tests include ranges in plant population, nitrogen management and irrigation levels, as well as including historical datasets from africa using cultivars developed during the 1960's, through to modern varieties grown in the American mid-West.
-
+    <Folder>
+      <Name>Combined Results</Name>
+      <Memo>
+        <Name>Combined Results</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <MemoText><![CDATA[
+Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).
 ]]></MemoText>
-    </Memo>
+      </Memo>
+      <Graph>
+        <Name>GrainWt</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.GrainWt</XFieldName>
+          <YFieldName>Predicted.GrainWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Biomass</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Biomass</XFieldName>
+          <YFieldName>Predicted.Biomass</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Maximum LAI</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.LAImax</XFieldName>
+          <YFieldName>Predicted.LAImax</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Grain Number</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.GPSM</XFieldName>
+          <YFieldName>Predicted.GPSM</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
+    </Folder>
     <Folder>
       <Name>Africa</Name>
       <Memo>
@@ -356,7 +584,6 @@ Note.  The BMW1 trail consists of data from unreplicated plots.
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -1464,7 +1691,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -12152,7 +12378,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -13781,7 +14006,6 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -14962,7 +15186,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -16140,7 +16363,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -17118,7 +17340,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -18014,7 +18235,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -18998,7 +19218,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -19484,7 +19703,7 @@ namespace Models
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
@@ -20546,7 +20765,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -21029,7 +21247,7 @@ namespace Models
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
@@ -21991,7 +22209,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -22474,7 +22691,7 @@ namespace Models
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
@@ -23498,7 +23715,6 @@ Testing of APSIM Maize, Soil Water, Soil Nitrogen, Manure, and Soil Temperature 
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -24312,7 +24528,6 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -25341,7 +25556,6 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -27088,7 +27302,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>ExtraVariables</Name>
@@ -27414,7 +27627,7 @@ namespace Models
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value()</string>
+                <string>[Maize].Structure.Phyllochron.Value()</string>
                 <string>[Maize].Structure.Height</string>
                 <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
                 <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
@@ -28372,7 +28585,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Structure.MainStemNodeAppearanceRate.Value()</YFieldName>
+                <YFieldName>Maize.Structure.Phyllochron.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -29071,7 +29284,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Maize.Structure.LeafTipsAppeared</XFieldName>
-                <YFieldName>Maize.Structure.MainStemNodeAppearanceRate.Value()</YFieldName>
+                <YFieldName>Maize.Structure.Phyllochron.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -33123,7 +33336,7 @@ This trial was conducted to provide data for parametersising the Leaf Area model
               <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -33166,7 +33379,6 @@ TreatNo = 2
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>ExtraVariables</Name>
@@ -35618,7 +35830,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Operations>
               <Name>Fert</Name>
@@ -35802,7 +36013,7 @@ namespace Models
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value()</string>
+                <string>[Maize].Structure.Phyllochron.Value()</string>
                 <string>[Maize].Structure.Height</string>
                 <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
                 <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
@@ -36523,7 +36734,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ResourceName>Maize</ResourceName>
               <CropType>Maize</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Operations>
               <Name>Fert</Name>
@@ -36699,7 +36909,7 @@ namespace Models
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value()</string>
+                <string>[Maize].Structure.Phyllochron.Value()</string>
                 <string>[Maize].Structure.Height</string>
                 <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
                 <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
@@ -36985,11 +37195,11 @@ namespace Models
               <Name>SowingRule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
+                <SowingDate>2010-10-04</SowingDate>
+                <CultivarName>Pioneer_39V43</CultivarName>
                 <RowSpace>720</RowSpace>
                 <PlantPopulation>10.5</PlantPopulation>
                 <PlantingDepth>20</PlantingDepth>
-                <CultivarName>Pioneer_39V43</CultivarName>
-                <SowingDate>2010-10-04</SowingDate>
               </Script>
               <Code><![CDATA[
 using System;
@@ -37924,214 +38134,6 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>false</ShowPageOfGraphs>
     </Folder>
-    <Memo>
-      <Name>Combined Results</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText><![CDATA[
-### Combined Results
-Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).
-]]></MemoText>
-    </Memo>
-    <Graph>
-      <Name>GrainWt</Name>
-      <Series>
-        <Name>Series1</Name>
-        <Regression>
-          <Name>Regression</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ForEachSeries>false</ForEachSeries>
-        </Regression>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.GrainWt</XFieldName>
-        <YFieldName>Predicted.GrainWt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Caption />
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Biomass</Name>
-      <Series>
-        <Name>Series1</Name>
-        <Regression>
-          <Name>Regression</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ForEachSeries>false</ForEachSeries>
-        </Regression>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.Biomass</XFieldName>
-        <YFieldName>Predicted.Biomass</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Caption />
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Maximum LAI</Name>
-      <Series>
-        <Name>Series1</Name>
-        <Regression>
-          <Name>Regression</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ForEachSeries>false</ForEachSeries>
-        </Regression>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.LAImax</XFieldName>
-        <YFieldName>Predicted.LAImax</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Caption />
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Grain Number</Name>
-      <Series>
-        <Name>Series1</Name>
-        <Regression>
-          <Name>Regression</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ForEachSeries>false</ForEachSeries>
-        </Regression>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.GPSM</XFieldName>
-        <YFieldName>Predicted.GPSM</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Caption />
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
@@ -38141,40 +38143,40 @@ Simulation results for the combined datasets from the various countries are show
       <Name>Bugesera</Name>
       <Memo>
         <Name>Memo</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText><![CDATA[Maize is grown in the Bugesera region of southern Rwanda in Central Africa.  The region has a bimodal rainfall distribution which allows two plantings per year.  For low input situations the maize yields should vary between 1 and 3 t/ha per crop.  Under fertilised conditions the yield should increase up to 5 t/ha per crop.]]></MemoText>
       </Memo>
       <Factors>
         <Name>Factors</Name>
         <Factor>
           <Name>NRate</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[SowingFertiliser].Script.Amount = 0, 50</string>
           </Specifications>
         </Factor>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
       <Simulation>
         <Name>Bugesera</Name>
         <Clock>
           <Name>Clock</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>2000-01-01T00:00:00</StartDate>
           <EndDate>2013-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>Bugesera.met</FileName>
         </Weather>
         <Manager>
           <Name>ClimateChange</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <DeltaMaxT>0</DeltaMaxT>
             <DeltaRadiation>0</DeltaRadiation>
@@ -38182,7 +38184,7 @@ Simulation results for the combined datasets from the various countries are show
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
@@ -38223,27 +38225,27 @@ namespace Models
         </Manager>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </SoilArbitrator>
         <Zone>
           <Name>Field</Name>
           <Report>
             <Name>SensibilityReport</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>Maize.Phenology.CurrentStageName</string>
-              <string>Maize.AboveGround.Wt</string>
-              <string>Maize.AboveGround.N</string>
-              <string>Maize.Grain.Size</string>
-              <string>Maize.Grain.Number</string>
-              <string>Maize.Grain.Wt</string>
-              <string>Maize.Grain.N</string>
-              <string>Maize.Total.Wt</string>
-              <string>Maize.Phenology.FloweringDAS.Value() as FloweringDAS</string>
-              <string>Maize.Phenology.MaturityDAS.Value() as MaturityDAS</string>
+              <string>[Maize].Phenology.CurrentStageName</string>
+              <string>[Maize].AboveGround.Wt</string>
+              <string>[Maize].AboveGround.N</string>
+              <string>[Maize].Grain.Size</string>
+              <string>[Maize].Grain.Number</string>
+              <string>[Maize].Grain.Wt</string>
+              <string>[Maize].Grain.N</string>
+              <string>[Maize].Total.Wt</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Maize].Phenology.MaturityDAS.Value() as MaturityDAS</string>
               <string>[Maize].Phenology.DaysAfterSowing</string>
               <string>sum of [Weather].Rain from [Maize].Sowing to [Maize].Harvesting as InCropRain</string>
               <string>[Soil].SoilNitrogen.OC[1] as SurfaceOC</string>
@@ -38254,11 +38256,11 @@ namespace Models
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -38297,7 +38299,7 @@ namespace Models
             <Name>Soil</Name>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>3</SummerU>
               <SummerCona>4.5</SummerCona>
@@ -38336,7 +38338,7 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -38372,7 +38374,7 @@ namespace Models
             </SoilNitrogen>
             <InitialWater>
               <Name>InitialWater</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <PercentMethod>FilledFromTop</PercentMethod>
               <FractionFull>0.25</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
@@ -38381,7 +38383,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.199</double>
                   <double>0.222</double>
@@ -38412,7 +38414,7 @@ namespace Models
               </SoilCrop>
               <SoilCrop>
                 <Name>NavyBeanSoil</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.199</double>
                   <double>0.222</double>
@@ -38443,7 +38445,7 @@ namespace Models
               </SoilCrop>
               <SoilCrop>
                 <Name>WeedSoil</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.199</double>
                   <double>0.222</double>
@@ -38472,7 +38474,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -38530,7 +38532,7 @@ namespace Models
             </Water>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12.8</SoilCN>
@@ -38585,7 +38587,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -38609,7 +38611,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Initial nitrogen</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>1600</double>
@@ -38630,9 +38632,9 @@ namespace Models
             </Sample>
             <CERESSoilTemperature>
               <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </CERESSoilTemperature>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <Site>Bugesera</Site>
             <NearestTown>Nyamata</NearestTown>
@@ -38644,14 +38646,13 @@ namespace Models
           </Soil>
           <Plant>
             <Name>Maize</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
@@ -38667,7 +38668,7 @@ namespace Models
           </MicroClimate>
           <Manager>
             <Name>SowingFertiliser</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <Amount>0</Amount>
               <CropName>maize</CropName>
@@ -38708,7 +38709,7 @@ namespace Models
           </Manager>
           <Manager>
             <Name>SowingRuleA</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <StartDate>15-sep</StartDate>
               <EndDate>15-oct</EndDate>
@@ -38791,7 +38792,7 @@ namespace Models
           </Manager>
           <Manager>
             <Name>SowingRuleB</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <StartDate>1-mar</StartDate>
               <EndDate>30-mar</EndDate>
@@ -38874,7 +38875,7 @@ namespace Models
           </Manager>
           <Manager>
             <Name>Harvesting</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <RemoveFraction>1</RemoveFraction>
             </Script>
@@ -38925,19 +38926,19 @@ namespace Models
           </Manager>
           <SoluteManager>
             <Name>SoluteManager</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Simulation>
       <Graph>
         <Name>Yield CDF</Name>
         <Series>
           <Name>Yield</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -38957,7 +38958,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -38977,9 +38978,9 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
       </Graph>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Experiment>
-    <IncludeInDocumentation>false</IncludeInDocumentation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>

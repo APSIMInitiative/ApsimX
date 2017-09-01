@@ -24,6 +24,7 @@ namespace Models.Report
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
+    [ValidParent(ParentType = typeof(Simulation))]
     public class Report : Model
     {
         /// <summary>
