@@ -1876,17 +1876,17 @@ But their data suggests a value of 0.3]]></MemoText>
           </RegrStats>
           <RegrStats>
             <Name>TOC0_30cm</Name>
-            <n>172</n>
-            <Slope>0.68900325068974866</Slope>
-            <Intercept>12005.711542137338</Intercept>
-            <SEslope>0.027396614012666277</SEslope>
-            <SEintercept>1005.3964439924725</SEintercept>
-            <R2>0.78815746874740933</R2>
-            <RMSE>3717.2959437838485</RMSE>
-            <NSE>0.763517355286205</NSE>
-            <ME>843.14362268653792</ME>
-            <MAE>2623.8322687918676</MAE>
-            <RSR>0.48487910412454549</RSR>
+            <n>199</n>
+            <Slope>0.76646678046981487</Slope>
+            <Intercept>9776.4628310925655</Intercept>
+            <SEslope>0.028551397839589057</SEslope>
+            <SEintercept>1074.9224247192465</SEintercept>
+            <R2>0.78532412454932887</R2>
+            <RMSE>3722.6520698950781</RMSE>
+            <NSE>0.76145648808722033</NSE>
+            <ME>1166.3104117992893</ME>
+            <MAE>2705.3980858199766</MAE>
+            <RSR>0.48718046019687622</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TOC10_30cm</Name>
@@ -1904,17 +1904,17 @@ But their data suggests a value of 0.3]]></MemoText>
           </RegrStats>
           <RegrStats>
             <Name>TOC30_60cm</Name>
-            <n>144</n>
-            <Slope>0.814608851943158</Slope>
-            <Intercept>4495.5706038583558</Intercept>
-            <SEslope>0.031880332267004839</SEslope>
-            <SEintercept>656.77671834810508</SEintercept>
-            <R2>0.8213631719216824</R2>
-            <RMSE>3448.2846831699608</RMSE>
-            <NSE>0.806189167156189</NSE>
-            <ME>963.09226422376719</ME>
-            <MAE>2750.7763567570137</MAE>
-            <RSR>0.4387082450585989</RSR>
+            <n>171</n>
+            <Slope>0.88793728135732908</Slope>
+            <Intercept>3667.2364904472925</Intercept>
+            <SEslope>0.030245410180319746</SEslope>
+            <SEintercept>667.48361112859254</SEintercept>
+            <R2>0.836062021332695</R2>
+            <RMSE>3560.3768850356546</RMSE>
+            <NSE>0.80407703643214257</NSE>
+            <ME>1364.2535814040098</ME>
+            <MAE>2871.0488748273015</MAE>
+            <RSR>0.44133571716200265</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TON0_10cm</Name>
@@ -1932,31 +1932,31 @@ But their data suggests a value of 0.3]]></MemoText>
           </RegrStats>
           <RegrStats>
             <Name>TON0_30cm</Name>
-            <n>34</n>
-            <Slope>0.85746132618646032</Slope>
-            <Intercept>433.41187931888044</Intercept>
-            <SEslope>0.1481911289052614</SEslope>
-            <SEintercept>533.618805713256</SEintercept>
-            <R2>0.51130071210085026</R2>
-            <RMSE>355.58559836850475</RMSE>
-            <NSE>0.24181265706796684</NSE>
-            <ME>-76.541722833456191</ME>
-            <MAE>217.42321546781494</MAE>
-            <RSR>0.8578389797617838</RSR>
+            <n>61</n>
+            <Slope>0.84578900864805662</Slope>
+            <Intercept>580.21526343634378</Intercept>
+            <SEslope>0.10229576569428622</SEslope>
+            <SEintercept>361.43215038284217</SEintercept>
+            <R2>0.536750070095368</R2>
+            <RMSE>306.15029046735378</RMSE>
+            <NSE>0.34851264772851476</NSE>
+            <ME>38.50459282990407</ME>
+            <MAE>204.46494899428208</MAE>
+            <RSR>0.80050436085160992</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TON30_60cm</Name>
-            <n>27</n>
-            <Slope>0.36129461079108177</Slope>
-            <Intercept>1608.6430177519696</Intercept>
-            <SEslope>0.087073052134269788</SEslope>
-            <SEintercept>256.26589659260935</SEintercept>
-            <R2>0.40782035476315959</R2>
-            <RMSE>280.51990014772787</RMSE>
-            <NSE>-7.1925739170848715</NSE>
-            <ME>-270.09705672848514</ME>
-            <MAE>270.09705672848514</MAE>
-            <RSR>2.8087622280088316</RSR>
+            <n>54</n>
+            <Slope>0.67351983591575659</Slope>
+            <Intercept>655.9234355860599</Intercept>
+            <SEslope>0.063960247776721268</SEslope>
+            <SEintercept>181.89437679395516</SEintercept>
+            <R2>0.68076021783287888</R2>
+            <RMSE>282.84886906901568</RMSE>
+            <NSE>-3.0262981286543589</NSE>
+            <ME>-271.40114899248186</ME>
+            <MAE>271.40114899248186</MAE>
+            <RSR>1.9878976463082287</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
