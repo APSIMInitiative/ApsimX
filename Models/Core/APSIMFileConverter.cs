@@ -366,44 +366,5 @@ namespace Models.Core
                 }
             }
         }
-
-        /// <summary>
-        /// Add nodes for new
-        /// </summary>
-        /// <param name="node">The node to modifiy</param>
-        private static void UpgradeToVersion11(XmlNode node)
-        {
-            XmlNode LagDurationAgeMultiplier = XmlUtilities.CreateNode(node.OwnerDocument, "ArrayFunction", "");
-            XmlNode SenescenceDurationAgeMultiplier = XmlUtilities.CreateNode(node.OwnerDocument, "ArrayFunction", "");
-            XmlNode LeafSizeAgeMultiplier = XmlUtilities.CreateNode(node.OwnerDocument, "ArrayFunction", "");
-            XmlElement name = node.OwnerDocument.CreateElement("Name");
-            XmlElement element = node.OwnerDocument.CreateElement("Values");
-
-            name.InnerText = "LagDurationAgeMultiplier";
-            element.InnerText = "0.5 0.75 1";
-            LagDurationAgeMultiplier.AppendChild(name);
-            LagDurationAgeMultiplier.AppendChild(element);
-
-            name = node.OwnerDocument.CreateElement("Name");
-            name.InnerText = "SenescenceDurationAgeMultiplier";
-            element = node.OwnerDocument.CreateElement("Values");
-            element.InnerText = "0.5 0.75 1";
-            SenescenceDurationAgeMultiplier.AppendChild(name);
-            SenescenceDurationAgeMultiplier.AppendChild(element);
-
-            name = node.OwnerDocument.CreateElement("Name");
-            element = node.OwnerDocument.CreateElement("Values");
-            name.InnerText = "LeafSizeAgeMultiplier";
-            element.InnerText = "0.5 0.75 1 1 1 1 1 1 1 1 1 1";
-            LeafSizeAgeMultiplier.AppendChild(name);
-            LeafSizeAgeMultiplier.AppendChild(element);
-
-            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "LeafCohortParameters"))
-            {
-                n.AppendChild(LagDurationAgeMultiplier);
-                n.AppendChild(SenescenceDurationAgeMultiplier);
-                n.AppendChild(LeafSizeAgeMultiplier);
-            }
-        }
     }
 }
