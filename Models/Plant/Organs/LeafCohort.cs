@@ -777,7 +777,6 @@ namespace Models.PMF.Organs
             NRetranslocationFactor = leafCohortParameterseafCohortParameters.NRetranslocationFactor.Value();
             DMRetranslocationFactor = leafCohortParameterseafCohortParameters.DMRetranslocationFactor.Value();
             LeafSizeShape = leafCohortParameterseafCohortParameters.LeafSizeShapeParameter.Value();
-			AgeMultiplier moved to LeafCohort. SenescenceDurationAgeMultiplier and LagDurationAgeMultiplier added to LeafCohort.
         }
 
         /// <summary>Does the potential growth.</summary>
@@ -1172,7 +1171,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the `ings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
