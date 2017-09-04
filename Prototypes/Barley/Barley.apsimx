@@ -8195,8 +8195,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Cultivar>Booma</Cultivar>
                   <InitialRootDepth>40</InitialRootDepth>
+                  <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -10754,9 +10754,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -12646,9 +12646,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
-                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -14476,9 +14476,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2014-10-15</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -26042,9 +26042,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Boss</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -27310,9 +27310,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2004-05-28</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Cellar</Cultivar>
+                  <SowingDate>2004-05-28</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -28804,9 +28804,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>County</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -30212,9 +30212,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -31714,9 +31714,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2004-05-28</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Doyen</Cultivar>
+                  <SowingDate>2004-05-28</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -33201,9 +33201,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Omaka</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -34677,9 +34677,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Optic</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -36031,9 +36031,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2005-05-27</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Pyramid</Cultivar>
+                  <SowingDate>2005-05-27</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -37373,9 +37373,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Sherwood</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -38748,9 +38748,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Tavern</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -40116,9 +40116,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Vortex</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -41630,12 +41630,12 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <Population>120</Population>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -43108,12 +43108,12 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <Population>120</Population>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -44581,12 +44581,12 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <Population>120</Population>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -48907,12 +48907,12 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Grimmett</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <Population>120</Population>
+                    <CultivarName>Grimmett</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -50190,12 +50190,12 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Grimmett</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <Population>120</Population>
+                    <CultivarName>Grimmett</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -50893,6 +50893,933 @@ namespace Models
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Experiment>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
+      <Folder>
+        <Name>Gatton1984</Name>
+        <Experiment>
+          <Name>Gatton1984</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <MemoText><![CDATA[NOTE: High N treatment logdged.  Final grain sizes were less than expected.
+]]></MemoText>
+          </Memo>
+          <Factors>
+            <Name>Factors</Name>
+            <Factor>
+              <Name>NRate</Name>
+              <Operations>
+                <Name>0</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Operations>
+              <Operations>
+                <Name>50</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Operation>
+                  <Date>1984-05-23</Date>
+                  <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.NO3N);</Action>
+                </Operation>
+              </Operations>
+              <Operations>
+                <Name>100</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Operation>
+                  <Date>1984-05-23</Date>
+                  <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.NO3N);</Action>
+                </Operation>
+              </Operations>
+              <Operations>
+                <Name>150</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Operation>
+                  <Date>1984-05-23</Date>
+                  <Action>[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N);</Action>
+                </Operation>
+              </Operations>
+              <Operations>
+                <Name>200</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Operation>
+                  <Date>1984-05-23</Date>
+                  <Action>[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N);</Action>
+                </Operation>
+              </Operations>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Specifications>
+                <string>[ApplyFertiliser]</string>
+              </Specifications>
+            </Factor>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Factors>
+          <Simulation>
+            <Name>Gatton1984Base</Name>
+            <Clock>
+              <Name>Clock</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <StartDate>1984-05-20T00:00:00</StartDate>
+              <EndDate>1984-12-31T00:00:00</EndDate>
+            </Clock>
+            <Summary>
+              <Name>summaryfile</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Summary>
+            <Weather>
+              <Name>Weather</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <FileName>Gatton1984.met</FileName>
+              <ExcelWorkSheetName />
+            </Weather>
+            <Zone>
+              <Name>paddock</Name>
+              <Irrigation>
+                <Name>Irrigation</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Irrigation>
+              <Manager>
+                <Name>Auto_Irrigation</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script>
+                  <Trigger_Def>30</Trigger_Def>
+                  <Irrigation_Amount>30</Irrigation_Amount>
+                  <Top_Depth>1000</Top_Depth>
+                </Script>
+                <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using System.Xml.Serialization;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		//Communication to other modules
+		[Link] ISummary summary = null;
+		[Link] Irrigation Irrig;
+		[Link] Clock Clock;
+		[Link] Soils.Soil soil;
+		[Link] Plant Barley;
+		[Link] Simulation Simulation;
+        
+       
+		//User inputs from properties tab
+
+		[Description("Deficit to trigger irrigation Y(mm)")]
+		public double Trigger_Def { get; set; }
+		[Description("Irrigation application Y(mm)")]
+		public double Irrigation_Amount { get; set; }
+		[Description("Depth to calculate Deficit (mm)")]
+		public double Top_Depth { get; set; }
+        
+		//private
+		[XmlIgnore] public bool SoilIsDry { get; set; }
+		[XmlIgnore] public double Top_DUL { get; set; }
+		[XmlIgnore] public double Top_Refull { get; set; }
+		[XmlIgnore] public double Top_Trigger { get; set; }
+		[XmlIgnore] public double Top_LL { get; set; }
+		[XmlIgnore] public double Top_SW { get; set; }
+		[XmlIgnore] public double Accumulated_depth { get; set; }
+		[XmlIgnore] public double Current_Deficit { get; set; }
+        
+        
+       
+    
+		//Calculate static soil variables
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{   
+			//Calculated soil water variables
+			Accumulated_depth = 0;
+			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			{
+				Top_LL += soil.SoilWater.LL15mm[layer];
+				Top_DUL += soil.SoilWater.DULmm[layer];
+				Accumulated_depth += soil.SoilWater.Thickness[layer];
+			}
+			Top_Trigger = Top_DUL - Trigger_Def;
+			//SeasonIsOpen = false;
+        
+		}
+       
+      
+		//Determine daily requirement for irrigation
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			//double DAS = (double)Apsim.Get(Simulation, "DAS.Script.DAS");
+                        
+		
+		
+		
+            
+              
+			//Is the soil dry enough to require irrigation?
+			SoilIsDry = false;
+			double CurrentRootDepth = 0;
+			double RootDepth = Barley.Root.Depth;
+			CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
+          
+			Accumulated_depth = 0;
+			Top_SW = 0;
+			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+			{
+				Top_SW += soil.SoilWater.SWmm[layer];
+				Accumulated_depth += soil.SoilWater.Thickness[layer];
+			}
+            
+			if (Top_SW <= Top_Trigger)
+				SoilIsDry = true;
+            
+                
+			
+			if (SoilIsDry) //Set Deficit-based irrigation
+			{
+                
+				
+				Irrig.Apply(Irrigation_Amount);
+				summary.WriteMessage(this, "Automatic Irrigation");
+				
+                            
+			}
+		}
+	}
+}
+             
+                             
+				   ]]></Code>
+              </Manager>
+              <Fertiliser>
+                <Name>Fertiliser</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Fertiliser>
+              <Soil>
+                <Name>Soil</Name>
+                <Water>
+                  <Name>Water</Name>
+                  <SoilCrop>
+                    <Name>BarleySoil</Name>
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                    <LL>
+                      <double>0.2</double>
+                      <double>0.2</double>
+                      <double>0.22</double>
+                      <double>0.18</double>
+                      <double>0.14</double>
+                      <double>0.25</double>
+                      <double>0.28</double>
+                    </LL>
+                    <KL>
+                      <double>0.06</double>
+                      <double>0.05</double>
+                      <double>0.05</double>
+                      <double>0.04</double>
+                      <double>0.04</double>
+                      <double>0.06</double>
+                      <double>0.06</double>
+                    </KL>
+                    <XF>
+                      <double>1</double>
+                      <double>1</double>
+                      <double>1</double>
+                      <double>1</double>
+                      <double>1</double>
+                      <double>1</double>
+                      <double>1</double>
+                    </XF>
+                  </SoilCrop>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <Thickness>
+                    <double>150</double>
+                    <double>150</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                  </Thickness>
+                  <BD>
+                    <double>1.38</double>
+                    <double>1.34</double>
+                    <double>1.35</double>
+                    <double>1.5</double>
+                    <double>1.49</double>
+                    <double>1.46</double>
+                    <double>1.46</double>
+                  </BD>
+                  <AirDry>
+                    <double>0.1</double>
+                    <double>0.1</double>
+                    <double>0.1</double>
+                    <double>0.1</double>
+                    <double>0.1</double>
+                    <double>0.1</double>
+                    <double>0.1</double>
+                  </AirDry>
+                  <LL15>
+                    <double>0.2</double>
+                    <double>0.2</double>
+                    <double>0.22</double>
+                    <double>0.18</double>
+                    <double>0.14</double>
+                    <double>0.2</double>
+                    <double>0.2</double>
+                  </LL15>
+                  <DUL>
+                    <double>0.38</double>
+                    <double>0.38</double>
+                    <double>0.4</double>
+                    <double>0.4</double>
+                    <double>0.39</double>
+                    <double>0.38</double>
+                    <double>0.38</double>
+                  </DUL>
+                  <SAT>
+                    <double>0.43</double>
+                    <double>0.43</double>
+                    <double>0.43</double>
+                    <double>0.43</double>
+                    <double>0.42</double>
+                    <double>0.4</double>
+                    <double>0.4</double>
+                  </SAT>
+                </Water>
+                <SoilWater>
+                  <Name>SoilWater</Name>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <SummerDate>1-Nov</SummerDate>
+                  <SummerU>6</SummerU>
+                  <SummerCona>3.5</SummerCona>
+                  <WinterDate>1-Apr</WinterDate>
+                  <WinterU>6</WinterU>
+                  <WinterCona>3.5</WinterCona>
+                  <DiffusConst>88</DiffusConst>
+                  <DiffusSlope>35.4</DiffusSlope>
+                  <Salb>0.13</Salb>
+                  <CN2Bare>60</CN2Bare>
+                  <CNRed>20</CNRed>
+                  <CNCov>0.8</CNCov>
+                  <slope>0</slope>
+                  <discharge_width>0</discharge_width>
+                  <catchment_area>0</catchment_area>
+                  <max_pond>0</max_pond>
+                  <Thickness>
+                    <double>150</double>
+                    <double>150</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                  </Thickness>
+                  <SWCON>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                  </SWCON>
+                  <KLAT>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </KLAT>
+                  <residueinterception>0</residueinterception>
+                </SoilWater>
+                <SoilNitrogen>
+                  <Name>SoilNitrogen</Name>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <fom_type>
+                    <string>default</string>
+                    <string>manure</string>
+                    <string>mucuna</string>
+                    <string>lablab</string>
+                    <string>shemp</string>
+                    <string>stable</string>
+                  </fom_type>
+                  <fract_carb>
+                    <double>0.2</double>
+                    <double>0.3</double>
+                    <double>0.54</double>
+                    <double>0.57</double>
+                    <double>0.45</double>
+                    <double>0</double>
+                  </fract_carb>
+                  <fract_cell>
+                    <double>0.7</double>
+                    <double>0.3</double>
+                    <double>0.37</double>
+                    <double>0.37</double>
+                    <double>0.47</double>
+                    <double>0.1</double>
+                  </fract_cell>
+                  <fract_lign>
+                    <double>0.1</double>
+                    <double>0.4</double>
+                    <double>0.09</double>
+                    <double>0.06</double>
+                    <double>0.08</double>
+                    <double>0.9</double>
+                  </fract_lign>
+                </SoilNitrogen>
+                <SoilOrganicMatter>
+                  <Name>SoilOrganicMatter</Name>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <RootCN>60</RootCN>
+                  <RootWt>2000</RootWt>
+                  <SoilCN>14.5</SoilCN>
+                  <EnrACoeff>1</EnrACoeff>
+                  <EnrBCoeff>1</EnrBCoeff>
+                  <Thickness>
+                    <double>150</double>
+                    <double>150</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                  </Thickness>
+                  <Depth>
+                    <string>0-15</string>
+                    <string>15-30</string>
+                    <string>30-60</string>
+                    <string>60-90</string>
+                    <string>90-120</string>
+                    <string>120-150</string>
+                    <string>150-180</string>
+                  </Depth>
+                  <OC>
+                    <double>2.2</double>
+                    <double>1.6</double>
+                    <double>1.15</double>
+                    <double>1</double>
+                    <double>0.8</double>
+                    <double>0.45</double>
+                    <double>0.45</double>
+                  </OC>
+                  <FBiom>
+                    <double>0.03</double>
+                    <double>0.02</double>
+                    <double>0.01</double>
+                    <double>0.01</double>
+                    <double>0.01</double>
+                    <double>0.01</double>
+                    <double>0.01</double>
+                  </FBiom>
+                  <FInert>
+                    <double>0.45</double>
+                    <double>0.6</double>
+                    <double>0.78</double>
+                    <double>0.9</double>
+                    <double>0.99</double>
+                    <double>0.99</double>
+                    <double>0.99</double>
+                  </FInert>
+                  <OCUnits>Total</OCUnits>
+                </SoilOrganicMatter>
+                <Analysis>
+                  <Name>Analysis</Name>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <Thickness>
+                    <double>150</double>
+                    <double>150</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                  </Thickness>
+                  <PH>
+                    <double>7.5</double>
+                    <double>8</double>
+                    <double>8</double>
+                    <double>8</double>
+                    <double>8</double>
+                    <double>8</double>
+                    <double>8</double>
+                  </PH>
+                  <PHUnits>Water</PHUnits>
+                  <BoronUnits>HotWater</BoronUnits>
+                </Analysis>
+                <Sample>
+                  <Name>Initial Water</Name>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <Thickness>
+                    <double>150</double>
+                    <double>150</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                  </Thickness>
+                  <SW>
+                    <double>0.326</double>
+                    <double>0.326</double>
+                    <double>0.346</double>
+                    <double>0.333</double>
+                    <double>0.315</double>
+                    <double>0.326</double>
+                    <double>0.326</double>
+                  </SW>
+                  <NO3Units>ppm</NO3Units>
+                  <NH4Units>ppm</NH4Units>
+                  <SWUnits>Volumetric</SWUnits>
+                  <OCUnits>Total</OCUnits>
+                  <PHUnits>Water</PHUnits>
+                </Sample>
+                <Sample>
+                  <Name>Initial Nitrogen</Name>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <Thickness>
+                    <double>150</double>
+                    <double>150</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                    <double>300</double>
+                  </Thickness>
+                  <NO3>
+                    <double>1.3</double>
+                    <double>0.6</double>
+                    <double>0.25</double>
+                    <double>0.2</double>
+                    <double>0.1</double>
+                    <double>0.1</double>
+                    <double>0.1</double>
+                  </NO3>
+                  <NH4>
+                    <double>1.3</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0.8</double>
+                    <double>0.8</double>
+                    <double>0.5</double>
+                    <double>0.5</double>
+                  </NH4>
+                  <NO3Units>ppm</NO3Units>
+                  <NH4Units>ppm</NH4Units>
+                  <SWUnits>Volumetric</SWUnits>
+                  <OCUnits>Total</OCUnits>
+                  <PHUnits>Water</PHUnits>
+                </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                </CERESSoilTemperature>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <RecordNumber>0</RecordNumber>
+                <SoilType>APS6Soil</SoilType>
+                <LocalName>APS6Site</LocalName>
+                <Site>APS6Site</Site>
+                <NearestTown>Unknown</NearestTown>
+                <Region>Lawes</Region>
+                <NaturalVegetation>Unknown</NaturalVegetation>
+                <Latitude>0</Latitude>
+                <Longitude>0</Longitude>
+              </Soil>
+              <SurfaceOrganicMatter>
+                <Name>SurfaceOrganicMatter</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResidueTypes>
+                  <Name>ResidueTypes</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <LoadFromResource>ResidueTypes</LoadFromResource>
+                </ResidueTypes>
+                <Pools>
+                  <Pool>
+                    <PoolName>wheat_stubble</PoolName>
+                    <ResidueType>wheat</ResidueType>
+                    <Mass>500</Mass>
+                    <CNRatio>100</CNRatio>
+                    <CPRatio>NaN</CPRatio>
+                    <StandingFraction>0</StandingFraction>
+                  </Pool>
+                </Pools>
+                <PoolName>wheat_stubble</PoolName>
+                <type>wheat</type>
+                <mass>500</mass>
+                <standing_fraction>0</standing_fraction>
+                <cpr />
+                <cnr>100</cnr>
+                <CriticalResidueWeight>2000</CriticalResidueWeight>
+                <OptimumDecompTemp>20</OptimumDecompTemp>
+                <MaxCumulativeEOS>20</MaxCumulativeEOS>
+                <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+                <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+                <TotalLeachRain>25</TotalLeachRain>
+                <MinRainToLeach>10</MinRainToLeach>
+                <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+                <DefaultCPRatio>0</DefaultCPRatio>
+                <DefaultStandingFraction>0</DefaultStandingFraction>
+                <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+                <FractionFaecesAdded>0.5</FractionFaecesAdded>
+              </SurfaceOrganicMatter>
+              <Plant>
+                <Name>Barley</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ResourceName>Barley</ResourceName>
+                <CropType>barley</CropType>
+              </Plant>
+              <Operations>
+                <Name>ApplyFertiliser</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Operation>
+                  <Date>1992-06-16T00:00:00</Date>
+                  <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+                </Operation>
+              </Operations>
+              <Manager>
+                <Name>SowingRule</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script>
+                  <SowDate>25-may</SowDate>
+                  <CultivarName>Grimmett</CultivarName>
+                  <SowingDepth>30</SowingDepth>
+                  <RowSpacing>250</RowSpacing>
+                  <Population>120</Population>
+                </Script>
+                <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant Barley;
+		[Link] Soil Soil; 
+
+		[Description("Sowing Date (d-mmm)")]
+		public string SowDate { get; set;}
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set;}
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set;}		
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set;}	
+		[Description("Plant population (/m2)")]
+		public double Population { get; set;}	
+		
+		
+        [EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate))
+               Barley.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
+		}
+		
+	}
+}
+]]></Code>
+              </Manager>
+              <Manager>
+                <Name>Harvesting</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script />
+                <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Barley.Phenology.CurrentPhaseName == "Ripening")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
+		}
+	}
+}
+	   ]]></Code>
+              </Manager>
+              <MicroClimate>
+                <Name>MicroClimate</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <a_interception>0</a_interception>
+                <b_interception>1</b_interception>
+                <c_interception>0</c_interception>
+                <d_interception>0</d_interception>
+                <soil_albedo>0.3</soil_albedo>
+                <sun_angle>15</sun_angle>
+                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+                <night_interception_fraction>0.5</night_interception_fraction>
+                <refheight>2</refheight>
+                <albedo>0.15</albedo>
+                <emissivity>0.96</emissivity>
+                <RadIntTotal>0</RadIntTotal>
+              </MicroClimate>
+              <Report>
+                <Name>DailyReport</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string />
+                </VariableNames>
+                <EventNames>
+                  <string />
+                </EventNames>
+              </Report>
+              <Report>
+                <Name>HarvestReport</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string />
+                </VariableNames>
+                <EventNames>
+                  <string />
+                </EventNames>
+              </Report>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </SoluteManager>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Area>1</Area>
+              <Slope>0</Slope>
+            </Zone>
+            <SoilArbitrator>
+              <Name>Soil Arbitrator</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </SoilArbitrator>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Simulation>
+          <Graph>
+            <Name>NStress</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Leaf.Fn</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Folder>
+            <Name>Biomass</Name>
+            <Graph>
+              <Name>Total Above Ground</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Regression>
+                  <Name>Regression</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ForEachSeries>false</ForEachSeries>
+                </Regression>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>HarvestObsPred</TableName>
+                <XFieldName>Observed.Barley.AboveGround.Wt</XFieldName>
+                <YFieldName>Predicted.Barley.AboveGround.Wt</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>Grain Wt</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Regression>
+                  <Name>Regression</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ForEachSeries>false</ForEachSeries>
+                </Regression>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>HarvestObsPred</TableName>
+                <XFieldName>Observed.Barley.Grain.Wt</XFieldName>
+                <YFieldName>Predicted.Barley.Grain.Wt</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>Grain N</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Regression>
+                  <Name>Regression</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ForEachSeries>false</ForEachSeries>
+                </Regression>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>HarvestObsPred</TableName>
+                <XFieldName>Observed.Barley.Grain.N</XFieldName>
+                <YFieldName>Predicted.Barley.Grain.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ShowPageOfGraphs>true</ShowPageOfGraphs>
+          </Folder>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Experiment>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
