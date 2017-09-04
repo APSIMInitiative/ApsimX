@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1973,6 +1973,8 @@ N conc values are from Zhao et al 2009
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -2001,6 +2003,8 @@ N conc values are from Zhao et al 2009
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -5623,6 +5627,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -5651,6 +5657,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -6169,6 +6177,21 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
+          <ArrayFunction>
+            <Name>LagDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>0.5 0.75 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>SenescenceDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>0.5 0.75 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>LeafSizeAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>0.5 0.75 1 1 1 1 1 1 1 1 1 1</Values>
+          </ArrayFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </LeafCohortParameters>
         <RUEModel>
@@ -26042,9 +26065,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Boss</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -27310,9 +27333,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2004-05-28</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Cellar</Cultivar>
+                  <SowingDate>2004-05-28</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -28804,9 +28827,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>County</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -30212,9 +30235,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -31714,9 +31737,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2004-05-28</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Doyen</Cultivar>
+                  <SowingDate>2004-05-28</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -33201,9 +33224,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Omaka</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -34677,9 +34700,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Optic</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -36031,9 +36054,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2005-05-27</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Pyramid</Cultivar>
+                  <SowingDate>2005-05-27</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -37373,9 +37396,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Sherwood</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -38748,9 +38771,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Tavern</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -40116,9 +40139,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Vortex</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
