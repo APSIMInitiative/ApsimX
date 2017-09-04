@@ -744,29 +744,29 @@ namespace Models.PMF.Organs
 
             MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor * leafFraction;
             //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
-            GrowthDuration = leafCohortParameterseafCohortParameters.GrowthDuration.Value() * leafFraction;
-            LagDuration = leafCohortParameterseafCohortParameters.LagDuration.Value();
-            SenescenceDuration = leafCohortParameterseafCohortParameters.SenescenceDuration.Value();
-            DetachmentLagDuration = leafCohortParameterseafCohortParameters.DetachmentLagDuration.Value();
-            DetachmentDuration = leafCohortParameterseafCohortParameters.DetachmentDuration.Value();
-            StructuralFraction = leafCohortParameterseafCohortParameters.StructuralFraction.Value();
-            SpecificLeafAreaMax = leafCohortParameterseafCohortParameters.SpecificLeafAreaMax.Value();
-            SpecificLeafAreaMin = leafCohortParameterseafCohortParameters.SpecificLeafAreaMin.Value();
-            MaximumNConc = leafCohortParameterseafCohortParameters.MaximumNConc.Value();
-            MinimumNConc = leafCohortParameterseafCohortParameters.MinimumNConc.Value();
-            StorageFraction = leafCohortParameterseafCohortParameters.StorageFraction.Value();
-            InitialNConc = leafCohortParameterseafCohortParameters.InitialNConc.Value();
+            GrowthDuration = leafCohortParameters.GrowthDuration.Value() * leafFraction;
+            LagDuration = leafCohortParameters.LagDuration.Value();
+            SenescenceDuration = leafCohortParameters.SenescenceDuration.Value();
+            DetachmentLagDuration = leafCohortParameters.DetachmentLagDuration.Value();
+            DetachmentDuration = leafCohortParameters.DetachmentDuration.Value();
+            StructuralFraction = leafCohortParameters.StructuralFraction.Value();
+            SpecificLeafAreaMax = leafCohortParameters.SpecificLeafAreaMax.Value();
+            SpecificLeafAreaMin = leafCohortParameters.SpecificLeafAreaMin.Value();
+            MaximumNConc = leafCohortParameters.MaximumNConc.Value();
+            MinimumNConc = leafCohortParameters.MinimumNConc.Value();
+            StorageFraction = leafCohortParameters.StorageFraction.Value();
+            InitialNConc = leafCohortParameters.InitialNConc.Value();
             if (Area > 0) //Only set age for cohorts that have an area specified in the xml.
                 Age = Area/MaxArea*GrowthDuration;
                     //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
             LiveArea = Area*CohortPopulation;
             Live.StructuralWt = LiveArea/((SpecificLeafAreaMax + SpecificLeafAreaMin)/2)*StructuralFraction;
             Live.StructuralN = Live.StructuralWt*InitialNConc;
-            FunctionalNConc = (leafCohortParameterseafCohortParameters.CriticalNConc.Value() -
-                               leafCohortParameterseafCohortParameters.MinimumNConc.Value() * StructuralFraction)*
+            FunctionalNConc = (leafCohortParameters.CriticalNConc.Value() -
+                               leafCohortParameters.MinimumNConc.Value() * StructuralFraction)*
                               (1/(1 - StructuralFraction));
-            LuxaryNConc = leafCohortParameterseafCohortParameters.MaximumNConc.Value() -
-                           leafCohortParameterseafCohortParameters.CriticalNConc.Value();
+            LuxaryNConc = leafCohortParameters.MaximumNConc.Value() -
+                           leafCohortParameters.CriticalNConc.Value();
             Live.MetabolicWt = Live.StructuralWt*1/StructuralFraction - Live.StructuralWt;
             Live.StorageWt = 0;
             Live.StructuralN = Live.StructuralWt*MinimumNConc;
