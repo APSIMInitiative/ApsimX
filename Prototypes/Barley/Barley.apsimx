@@ -7110,6 +7110,14 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
+            <Name>Grimmett</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
+          </Cultivar>
+          <Cultivar>
             <Name>Hindmarsh</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
@@ -7127,14 +7135,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Oxford</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
-            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
-            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
-          </Cultivar>
-          <Cultivar>
-            <Name>Grimmett</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
@@ -8207,8 +8207,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Cultivar>Booma</Cultivar>
                   <InitialRootDepth>40</InitialRootDepth>
+                  <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -10829,9 +10829,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -12752,9 +12752,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
-                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -14875,9 +14875,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2014-10-15</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -26901,12 +26901,12 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <Population>120</Population>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -28379,12 +28379,12 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <Population>120</Population>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -29852,12 +29852,12 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <Population>120</Population>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -31820,7 +31820,7 @@ namespace Models
                   <Name>Sow_n_Harvest</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <SowingDate>1991-07-15</SowingDate>
+                    <SowingDate>1991-06-30</SowingDate>
                     <Cultivar>Grimmett</Cultivar>
                   </Script>
                   <Code><![CDATA[using System;
@@ -34178,12 +34178,12 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Grimmett</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <Population>120</Population>
+                    <CultivarName>Grimmett</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -35461,12 +35461,12 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Grimmett</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <Population>120</Population>
+                    <CultivarName>Grimmett</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
