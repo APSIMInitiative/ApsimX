@@ -14,7 +14,7 @@ namespace Models.WholeFarm.Resources
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(ResourcesHolder))]
+	[ValidParent(ParentType = typeof(GreenhouseGases))]
 	public class GreenhouseGasesType : WFModel, IResourceWithTransactionType, IResourceType
 	{
 		/// <summary>

@@ -13,7 +13,7 @@ namespace Models.WholeFarm.Resources
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(ResourcesHolder))]
+	[ValidParent(ParentType = typeof(Finance))]
 	public class FinanceType : WFModel, IResourceWithTransactionType, IResourceType
 	{
 		/// <summary>

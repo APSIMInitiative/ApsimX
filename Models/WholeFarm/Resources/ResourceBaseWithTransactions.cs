@@ -14,7 +14,6 @@ namespace Models.WholeFarm.Resources
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(ResourcesHolder))]
 	public class ResourceBaseWithTransactions: WFModel
 	{
 		/// <summary>
