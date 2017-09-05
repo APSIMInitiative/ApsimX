@@ -26,8 +26,6 @@ namespace Models.WholeFarm
         ProductStore,
     }
 
-
-
     /// <summary>
     /// Reasons for a change in herd
     /// </summary>
@@ -118,8 +116,6 @@ namespace Models.WholeFarm
 		perKg
 	}
 
-
-
     /// <summary>
     /// Crop payment style
     /// </summary>
@@ -138,8 +134,6 @@ namespace Models.WholeFarm
         /// </summary>
         perTree,
     }
-
-
 
 
     /// <summary>
@@ -278,6 +272,5 @@ namespace Models.WholeFarm
 		/// </summary>
 		Ignore
 	}
-
 
 }

@@ -11,6 +11,11 @@ namespace Models.WholeFarm.Activities
 	/// <summary>
 	/// Activity timer based on monthly interval
 	/// </summary>
+	[Serializable]
+	[ViewName("UserInterface.Views.GridView")]
+	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+	[ValidParent(ParentType = typeof(WFActivityBase))]
+	[ValidParent(ParentType = typeof(ActivityFolder))]
 	public class ActivityTimerInterval: WFModel, IActivityTimer
 	{
 		[XmlIgnore]

@@ -20,7 +20,7 @@
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <WholeFarm>
-      <Name>WholeFarm</Name>
+      <Name>FARMONY</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
         <Finance>
@@ -63,7 +63,7 @@
         <RuminantHerd>
           <Name>Ruminants</Name>
           <RuminantType>
-            <Name>BosIndicus</Name>
+            <Name>Bos indicus</Name>
             <RuminantInitialCohorts>
               <Name>Initial cohorts</Name>
               <RuminantTypeCohort>
@@ -361,7 +361,7 @@
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <WholeFarm>
-      <Name>WholeFarm</Name>
+      <Name>FARMONY</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
         <Finance>
@@ -404,7 +404,7 @@
         <RuminantHerd>
           <Name>Ruminants</Name>
           <RuminantType>
-            <Name>BosIndicus</Name>
+            <Name>Bos indicus</Name>
             <RuminantInitialCohorts>
               <Name>Initial cohorts</Name>
               <RuminantTypeCohort>
@@ -521,34 +521,6 @@
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </RuminantHerd>
-        <GreenhouseGases>
-          <Name>GreenhouseGases</Name>
-          <GreenhouseGasesType>
-            <Name>Methane store</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartingAmount>1100</StartingAmount>
-            <GlobalWarmingPotential>25</GlobalWarmingPotential>
-          </GreenhouseGasesType>
-          <GreenhouseGasesType>
-            <Name>Methane</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartingAmount>0</StartingAmount>
-            <GlobalWarmingPotential>25</GlobalWarmingPotential>
-          </GreenhouseGasesType>
-          <GreenhouseGasesType>
-            <Name>CO2</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartingAmount>0</StartingAmount>
-            <GlobalWarmingPotential>1</GlobalWarmingPotential>
-          </GreenhouseGasesType>
-          <GreenhouseGasesType>
-            <Name>NOx</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartingAmount>0</StartingAmount>
-            <GlobalWarmingPotential>298</GlobalWarmingPotential>
-          </GreenhouseGasesType>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </GreenhouseGases>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ResourcesHolder>
       <ActivitiesHolder>
@@ -742,7 +714,7 @@
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <WholeFarm>
-      <Name>WholeFarm</Name>
+      <Name>FARMONY</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
         <Finance>
@@ -785,7 +757,7 @@
         <RuminantHerd>
           <Name>Ruminants</Name>
           <RuminantType>
-            <Name>BosIndicus</Name>
+            <Name>Bos indicus</Name>
             <RuminantInitialCohorts>
               <Name>Initial cohorts</Name>
               <RuminantTypeCohort>
@@ -796,7 +768,7 @@
                 <StartingNumber>1</StartingNumber>
                 <StartingWeight>270</StartingWeight>
                 <StartingWeightSD>0</StartingWeightSD>
-                <Suckling>true</Suckling>
+                <Suckling>false</Suckling>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Male</Name>
@@ -1083,7 +1055,7 @@
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <WholeFarm>
-      <Name>IAT</Name>
+      <Name>FARMONY</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
         <Finance>
@@ -1126,7 +1098,7 @@
         <RuminantHerd>
           <Name>Ruminants</Name>
           <RuminantType>
-            <Name>BosIndicus</Name>
+            <Name>Bos indicus</Name>
             <RuminantInitialCohorts>
               <Name>Initial cohorts</Name>
               <RuminantTypeCohort>
@@ -1137,7 +1109,7 @@
                 <StartingNumber>1</StartingNumber>
                 <StartingWeight>270</StartingWeight>
                 <StartingWeightSD>0</StartingWeightSD>
-                <Suckling>true</Suckling>
+                <Suckling>false</Suckling>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Male</Name>
@@ -1289,16 +1261,16 @@
           </RuminantActivityGrow>
           <RuminantActivityBreed>
             <Name>Breed Bos indicus</Name>
-            <ControlledMatingSettings>
-              <Name>Controlled mating</Name>
+            <ActivityTimerInterval>
+              <Name>Perform every August</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthDue>8</MonthDue>
-            </ControlledMatingSettings>
+            </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>BosIndicus</HerdName>
             <MaximumConceptionRateUncontrolled>0.8</MaximumConceptionRateUncontrolled>
-            <UseAI>false</UseAI>
+            <UseAI>true</UseAI>
           </RuminantActivityBreed>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>

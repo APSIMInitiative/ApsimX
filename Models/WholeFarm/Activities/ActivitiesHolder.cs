@@ -30,6 +30,7 @@ namespace Models.WholeFarm.Activities
 				if (item.GetType() != typeof(ActivityFolder))
 				{
 					(item as WFActivityBase).ResourceShortfallOccurred += ActivitiesHolder_ResourceShortfallOccurred;
+					(item as WFActivityBase).ActivityPerformed += ActivitiesHolder_ActivityPerformed;
 				}
 				BindEvents(item.Children.Cast<IModel>().ToList());
 			}
@@ -61,6 +62,34 @@ namespace Models.WholeFarm.Activities
 		{
 			if (ResourceShortfallOccurred != null)
 				ResourceShortfallOccurred(this, e);
+		}
+
+		/// <summary>
+		/// Details of the last activity performed
+		/// </summary>
+		public WFActivityBase LastActivityPerformed { get; set; }
+		
+		private void ActivitiesHolder_ActivityPerformed(object sender, EventArgs e)
+		{
+			// save 
+			LastActivityPerformed = (e as ActivityPerformedEventArgs).Activity;
+			// call ActivityPerformedEventhandler
+			OnActivityPerformed(e);
+		}
+
+		/// <summary>
+		/// Resource shortfall occured event handler
+		/// </summary>
+		public event EventHandler ActivityPerformed;
+
+		/// <summary>
+		/// Shortfall occurred 
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnActivityPerformed(EventArgs e)
+		{
+			if (ActivityPerformed != null)
+				ActivityPerformed(this, e);
 		}
 
 		/// <summary>

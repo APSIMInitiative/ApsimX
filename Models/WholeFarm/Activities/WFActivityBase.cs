@@ -35,6 +35,12 @@ namespace Models.WholeFarm.Activities
 		public List<WFActivityBase> ActivityList { get; set; }
 
 		/// <summary>
+		/// Current status of this activity
+		/// </summary>
+		[XmlIgnore]
+		public ActivityStatus Status { get; set; }
+
+		/// <summary>
 		/// Method to check if timing of this activity is ok based on child ActivityTimers
 		/// </summary>
 		/// <returns>T/F</returns>
@@ -43,7 +49,7 @@ namespace Models.WholeFarm.Activities
 			get
 			{
 				// sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
-				return this.Children.Where(a => a.GetType() == typeof(IActivityTimer)).Cast<IActivityTimer>().Sum(a => a.ActivityDue() ? 0 : 1) == 0;
+				return this.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.ActivityDue() ? 0 : 1) == 0;
 			}
 		}
 
@@ -176,6 +182,7 @@ namespace Models.WholeFarm.Activities
 		/// <param name="ResourceRequestList"></param>
 		public bool TakeResources(List<ResourceRequest> ResourceRequestList)
         {
+			this.Status = ActivityStatus.Success;
             bool resourceAvailable = false;
 
             // no resources required or this is an Activity folder.
@@ -246,10 +253,11 @@ namespace Models.WholeFarm.Activities
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
                 OnShortfallOccurred(rrEventArgs);
-            }
+				Status = ActivityStatus.Partial;
+			}
 
-            // remove activity resources 
-            // check if deficit and performWithPartial
+			// remove activity resources 
+			// check if deficit and performWithPartial
 			if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) || OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity)
 			{
 				if(OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
@@ -263,6 +271,7 @@ namespace Models.WholeFarm.Activities
 					if (resourcelist.Length > 0)
 					{
 						Summary.WriteWarning(this, String.Format("Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity ({0}) to handle previous error", this.Name));
+						Status = ActivityStatus.Critical;
 						throw new Exception(String.Format("Insufficient resources ({0}) for activity ({1}) (see Summary for details)", resourcelist, this.Name));
 					}
 				}
@@ -277,12 +286,19 @@ namespace Models.WholeFarm.Activities
                         request.Resource.Remove(request);
                     }
                 }
-                return true; //could take all the resources it needed or is able to do with partial amounts
+                //return true; //could take all the resources it needed or is able to do with partial amounts
             }
             else
             {
-                return false;  //could not take all the resources it needed.
+				Status = ActivityStatus.Ignored;
+                //return false;  //could not take all the resources it needed.
             }
+
+			// report activity occurred
+			ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs();
+			activitye.Activity = this;
+			this.OnActivityPerformed(activitye);
+			return Status != ActivityStatus.Ignored;
         }
 
         /// <summary>
@@ -325,6 +341,45 @@ namespace Models.WholeFarm.Activities
 			if (ResourceShortfallOccurred != null)
 				ResourceShortfallOccurred(this, e);
 		}
+
+		/// <summary>
+		/// Resource shortfall occured event handler
+		/// </summary>
+		public virtual event EventHandler ActivityPerformed;
+
+		/// <summary>
+		/// Shortfall occurred 
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnActivityPerformed(EventArgs e)
+		{
+			if (ActivityPerformed != null)
+				ActivityPerformed(this, e);
+		}
+
+	}
+
+	/// <summary>
+	/// Status of activity
+	/// </summary>
+	public enum ActivityStatus
+	{
+		/// <summary>
+		/// Performed with all resources available
+		/// </summary>
+		Success,
+		/// <summary>
+		/// Performed with partial resources available
+		/// </summary>
+		Partial,
+		/// <summary>
+		/// Insufficient resources so activity ignored
+		/// </summary>
+		Ignored,
+		/// <summary>
+		/// Insufficient resources so simulation stopped
+		/// </summary>
+		Critical
 	}
 
 }

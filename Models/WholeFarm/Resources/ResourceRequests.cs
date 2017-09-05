@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Activities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,5 +111,18 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		public ResourceRequest Request { get; set; }
 	}
+
+	/// <summary>
+	/// Class for reporting last activity performed details in OnActivityPerformed
+	/// </summary>
+	[Serializable]
+	public class ActivityPerformedEventArgs : EventArgs
+	{
+		/// <summary>
+		/// Activity details
+		/// </summary>
+		public WFActivityBase Activity { get; set; }
+	}
+
 
 }

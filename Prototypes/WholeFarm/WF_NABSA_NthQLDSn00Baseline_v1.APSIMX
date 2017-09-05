@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Simulation</Name>
@@ -805,9 +805,9 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-						<string>[Activities].LastShortfallResourceRequest.ResourceType.Name as Resource</string>
-						<string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
-						<string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceType.Name as Resource</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
+            <string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
             <string>[Activities].LastShortfallResourceRequest.Reason as Reason</string>
             <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
             <string>[Activities].LastShortfallResourceRequest.Available as Available</string>

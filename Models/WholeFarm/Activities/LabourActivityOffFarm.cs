@@ -139,5 +139,21 @@ namespace Models.WholeFarm.Activities
 			if (ResourceShortfallOccurred != null)
 				ResourceShortfallOccurred(this, e);
 		}
+
+		/// <summary>
+		/// Resource shortfall occured event handler
+		/// </summary>
+		public override event EventHandler ActivityPerformed;
+
+		/// <summary>
+		/// Shortfall occurred 
+		/// </summary>
+		/// <param name="e"></param>
+		protected override void OnActivityPerformed(EventArgs e)
+		{
+			if (ActivityPerformed != null)
+				ActivityPerformed(this, e);
+		}
+
 	}
 }

@@ -24,19 +24,12 @@ namespace Models.WholeFarm.Activities
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
-//		[Link]
-//		ISummary Summary = null;
 
 		/// <summary>
 		/// Name of herd to breed
 		/// </summary>
 		[Description("Name of herd to breed")]
 		public string HerdName { get; set; }
-
-		///// <summary>
-		///// The location of controlled mating settings
-		///// </summary>
-		//private ControlledMatingSettings ControlledMatings { get; set; }
 
 		/// <summary>
 		/// Labour settings
@@ -77,116 +70,115 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("WFAnimalBreeding")]
 		private void OnWFAnimalBreeding(object sender, EventArgs e)
 		{
-			if (this.TimingOK)
+			RuminantHerd ruminantHerd = Resources.RuminantHerd();
+			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
+
+			// get list of all individuals of breeding age and condition
+			// grouped by location
+			var breeders = from ind in herd
+							where
+							(ind.Gender == Sex.Male & ind.Age >= ind.BreedParams.MinimumAge1stMating) ||
+							(ind.Gender == Sex.Female &
+							ind.Age >= ind.BreedParams.MinimumAge1stMating &
+							ind.Weight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
+							)
+							group ind by ind.Location into grp
+							select grp;
+
+			// for each location where parts of this herd are located
+			foreach (var location in breeders)
 			{
-				RuminantHerd ruminantHerd = Resources.RuminantHerd();
-				List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
-
-				// get list of all individuals of breeding age and condition
-				// grouped by location
-				var breeders = from ind in herd
-							   where
-							   (ind.Gender == Sex.Male & ind.Age >= ind.BreedParams.MinimumAge1stMating) ||
-							   (ind.Gender == Sex.Female &
-							   ind.Age >= ind.BreedParams.MinimumAge1stMating &
-							   ind.Weight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
-							   )
-							   group ind by ind.Location into grp
-							   select grp;
-
-				// for each location where parts of this herd are located
-				foreach (var location in breeders)
+				// determine all foetus and newborn mortality.
+				foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
 				{
-					// determine all foetus and newborn mortality.
-					foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+					if (female.IsPregnant)
 					{
-						if (female.IsPregnant)
+						// calculate foetus and newborn mortality 
+						// total mortality / (gestation months + 1) to get monthly mortality
+						// done here before births to account for post birth motality as well..
+						double rnd = WholeFarm.RandomGenerator.NextDouble();
+						if (rnd < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)) / 100.0)
 						{
-							// calculate foetus and newborn mortality 
-							// total mortality / (gestation months + 1) to get monthly mortality
-							// done here before births to account for post birth motality as well..
-							double rnd = WholeFarm.RandomGenerator.NextDouble();
-							if (rnd < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)) / 100.0)
-							{
-								female.OneOffspringDies();
-							}
+							female.OneOffspringDies();
 						}
 					}
+				}
 
-					// check for births of all pregnant females.
-					foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+				// check for births of all pregnant females.
+				foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+				{
+					if (female.BirthDue)
 					{
-						if (female.BirthDue)
+						int numberOfNewborn = (female.CarryingTwins) ? 2 : 1;
+						for (int i = 0; i < numberOfNewborn; i++)
 						{
-							int numberOfNewborn = (female.CarryingTwins) ? 2 : 1;
-							for (int i = 0; i < numberOfNewborn; i++)
+							// Foetal mortality is now performed each timestep at base of this method
+							object newCalf = null;
+							bool isMale = (WholeFarm.RandomGenerator.NextDouble() > 0.5);
+							if (isMale)
 							{
-								// Foetal mortality is now performed each timestep at base of this method
-								object newCalf = null;
-								bool isMale = (WholeFarm.RandomGenerator.NextDouble() > 0.5);
-								if (isMale)
-								{
-									newCalf = new RuminantMale();
-								}
-								else
-								{
-									newCalf = new RuminantFemale();
-								}
-								Ruminant newCalfRuminant = newCalf as Ruminant;
-								newCalfRuminant.Age = 0;
-								newCalfRuminant.HerdName = female.HerdName;
-								newCalfRuminant.BreedParams = female.BreedParams;
-								newCalfRuminant.Breed = female.BreedParams.Breed;
-								newCalfRuminant.Gender = (isMale) ? Sex.Male : Sex.Female;
-								newCalfRuminant.ID = ruminantHerd.NextUniqueID;
-								newCalfRuminant.Location = female.Location;
-								newCalfRuminant.Mother = female;
-								newCalfRuminant.Number = 1;
-								newCalfRuminant.SetUnweaned();
-								// calf weight from  Freer
-								newCalfRuminant.Weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
-								newCalfRuminant.HighWeight = newCalfRuminant.Weight;
-								newCalfRuminant.SaleFlag = HerdChangeReason.Born;
-								ruminantHerd.AddRuminant(newCalfRuminant);
-
-								// add to sucklings
-								female.SucklingOffspring.Add(newCalfRuminant);
-								// remove calf weight from female
-								female.Weight -= newCalfRuminant.Weight;
+								newCalf = new RuminantMale();
 							}
-							female.UpdateBirthDetails();
-						}
-					}
-
-					// uncontrolled conception
-					if (!UseAI)
-					{
-						// check if males and females of breeding condition are together
-						if (location.GroupBy(a => a.Gender).Count() == 2)
-						{
-							// servicing rate
-							int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
-							int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
-							double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
-							double maleLimiter = Math.Min(1.0, matingsPossible / femaleCount);
-
-							foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+							else
 							{
-								if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+								newCalf = new RuminantFemale();
+							}
+							Ruminant newCalfRuminant = newCalf as Ruminant;
+							newCalfRuminant.Age = 0;
+							newCalfRuminant.HerdName = female.HerdName;
+							newCalfRuminant.BreedParams = female.BreedParams;
+							newCalfRuminant.Breed = female.BreedParams.Breed;
+							newCalfRuminant.Gender = (isMale) ? Sex.Male : Sex.Female;
+							newCalfRuminant.ID = ruminantHerd.NextUniqueID;
+							newCalfRuminant.Location = female.Location;
+							newCalfRuminant.Mother = female;
+							newCalfRuminant.Number = 1;
+							newCalfRuminant.SetUnweaned();
+							// calf weight from  Freer
+							newCalfRuminant.Weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
+							newCalfRuminant.HighWeight = newCalfRuminant.Weight;
+							newCalfRuminant.SaleFlag = HerdChangeReason.Born;
+							ruminantHerd.AddRuminant(newCalfRuminant);
+
+							// add to sucklings
+							female.SucklingOffspring.Add(newCalfRuminant);
+							// remove calf weight from female
+							female.Weight -= newCalfRuminant.Weight;
+						}
+						female.UpdateBirthDetails();
+					}
+				}
+				// uncontrolled conception
+				if (!UseAI)
+				{
+					// check if males and females of breeding condition are together
+					if (location.GroupBy(a => a.Gender).Count() == 2)
+					{
+						// servicing rate
+						int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
+						int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
+						double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
+						double maleLimiter = Math.Min(1.0, matingsPossible / femaleCount);
+
+						foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+						{
+							if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+							{
+								// calculate conception
+								double conceptionRate = ConceptionRate(female) * maleLimiter;
+								conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
+								if (WholeFarm.RandomGenerator.NextDouble() <= conceptionRate)
 								{
-									// calculate conception
-									double conceptionRate = ConceptionRate(female) * maleLimiter;
-									conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
-									if (WholeFarm.RandomGenerator.NextDouble() <= conceptionRate)
-									{
-										female.UpdateConceptionDetails(WholeFarm.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate);
-									}
+									female.UpdateConceptionDetails(WholeFarm.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate);
 								}
 							}
 						}
 					}
-					// controlled conception
-					else
+				}
+				// controlled conception
+				else
+				{
+					if (this.TimingOK)
 					{
 						foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
 						{
@@ -367,5 +359,21 @@ namespace Models.WholeFarm.Activities
 			if (ResourceShortfallOccurred != null)
 				ResourceShortfallOccurred(this, e);
 		}
+
+		/// <summary>
+		/// Resource shortfall occured event handler
+		/// </summary>
+		public override event EventHandler ActivityPerformed;
+
+		/// <summary>
+		/// Shortfall occurred 
+		/// </summary>
+		/// <param name="e"></param>
+		protected override void OnActivityPerformed(EventArgs e)
+		{
+			if (ActivityPerformed != null)
+				ActivityPerformed(this, e);
+		}
+
 	}
 }
