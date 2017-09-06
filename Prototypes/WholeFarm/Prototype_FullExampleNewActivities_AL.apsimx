@@ -513,80 +513,81 @@
             <Name>Bank interest</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           </FinanceActivityCalculateInterest>
-          <FinanceActivityPayOverhead>
+          <FinanceActivityPayExpense>
             <Name>General farm maintenance</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>3333.33</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+					<FinanceActivityPayExpense>
             <Name>Fuel costs</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>2500</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+					<FinanceActivityPayExpense>
             <Name>Pest control</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>12</MonthDue>
             <Amount>5000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+					<FinanceActivityPayExpense>
             <Name>Contractors</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>10</MonthDue>
             <Amount>30000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+					<FinanceActivityPayExpense>
             <Name>Administration</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>1666.67</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+					<FinanceActivityPayExpense>
             <Name>Rates and Fees</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>7</MonthDue>
             <Amount>15000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+					<FinanceActivityPayExpense>
             <Name>Insurance</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>12</MonthDue>
             <Amount>20000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+					<FinanceActivityPayExpense>
             <Name>Electricity</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>3</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>2000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+					<FinanceActivityPayExpense>
             <Name>Living costs</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>6</PaymentInterval>
             <MonthDue>6</MonthDue>
             <Amount>1000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-        </ActivityFolder>
+        
+			</ActivityFolder>
         <ActivityFolder>
           <Name>Off farm labour</Name>
           <LabourActivityOffFarm>
@@ -750,21 +751,21 @@
               <MinimumTrucksBeforeSelling>0</MinimumTrucksBeforeSelling>
               <MinimumLoadBeforeSelling>0</MinimumLoadBeforeSelling>
             </TruckingSettings>
-            <RuminantSaleFee>
+            <RuminantFee>
               <Name>MLA Fee</Name>
               <PaymentStyle>perHead</PaymentStyle>
               <Amount>2</Amount>
-            </RuminantSaleFee>
-            <RuminantSaleFee>
+            </RuminantFee>
+            <RuminantFee>
               <Name>Yard Fees</Name>
               <PaymentStyle>perHead</PaymentStyle>
               <Amount>2</Amount>
-            </RuminantSaleFee>
-            <RuminantSaleFee>
+            </RuminantFee>
+            <RuminantFee>
               <Name>Sales commission</Name>
               <PaymentStyle>ProportionOfTotalSales</PaymentStyle>
               <Amount>0.02</Amount>
-            </RuminantSaleFee>
+            </RuminantFee>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <BreedName>Bos indicus</BreedName>
             <BreedingSirePrice>4500</BreedingSirePrice>

@@ -181,11 +181,11 @@
             <RuminantFeedGroup>
               <Name>Filter Bos indicus</Name>
               <RuminantFilter>
-                <Name>Filter[HerdName=BosIndicus]</Name>
+                <Name>Filter[HerdName=Bos indicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Parameter>HerdName</Parameter>
                 <Operator>Equal</Operator>
-                <Value>BosIndicus</Value>
+                <Value>Bos indicus</Value>
               </RuminantFilter>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthlyValues>
@@ -532,11 +532,11 @@
             <RuminantFeedGroup>
               <Name>Filter Bos indicus</Name>
               <RuminantFilter>
-                <Name>Filter[HerdName=BosIndicus]</Name>
+                <Name>Filter[HerdName=Bos indicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Parameter>HerdName</Parameter>
                 <Operator>Equal</Operator>
-                <Value>BosIndicus</Value>
+                <Value>Bos indicus</Value>
               </RuminantFilter>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthlyValues>
@@ -671,23 +671,6 @@
           </VariableNames>
           <EventNames>
             <string>[Resources].Ruminants.TransactionOccurred</string>
-          </EventNames>
-        </Report>
-        <Report>
-          <Name>GreenhouseGases</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ExperimentFactorNames />
-          <ExperimentFactorValues />
-          <VariableNames>
-            <string>[Clock].Today as Date</string>
-            <string>[Resources].GreenhouseGases.LastTransaction.Credit as Credit</string>
-            <string>[Resources].GreenhouseGases.LastTransaction.CreditStandardised as CreditCO2e</string>
-            <string>[Resources].GreenhouseGases.LastTransaction.ResourceType as Resource</string>
-            <string>[Resources].GreenhouseGases.LastTransaction.Activity as Activity</string>
-            <string>[Resources].GreenhouseGases.LastTransaction.Reason as Reason</string>
-          </VariableNames>
-          <EventNames>
-            <string>[Resources].GreenhouseGases.TransactionOccurred</string>
           </EventNames>
         </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -885,11 +868,11 @@
             <RuminantFeedGroup>
               <Name>Filter Bos indicus</Name>
               <RuminantFilter>
-                <Name>Filter[HerdName=BosIndicus]</Name>
+                <Name>Filter[HerdName=Bos indicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Parameter>HerdName</Parameter>
                 <Operator>Equal</Operator>
-                <Value>BosIndicus</Value>
+                <Value>Bos indicus</Value>
               </RuminantFilter>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthlyValues>
@@ -1226,11 +1209,11 @@
             <RuminantFeedGroup>
               <Name>FIlter Bos indicus</Name>
               <RuminantFilter>
-                <Name>Filter[HerdName=BosIndicus]</Name>
+                <Name>Filter[HerdName=Bos indicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Parameter>HerdName</Parameter>
                 <Operator>Equal</Operator>
-                <Value>BosIndicus</Value>
+                <Value>Bos indicus</Value>
               </RuminantFilter>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthlyValues>
@@ -1266,9 +1249,20 @@
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthDue>8</MonthDue>
             </ActivityTimerInterval>
+            <RuminantFee>
+              <Name>Vet callout fee</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <PaymentStyle>Fixed</PaymentStyle>
+              <Amount>300</Amount>
+            </RuminantFee>
+            <RuminantFee>
+              <Name>AI fee</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Amount>10</Amount>
+            </RuminantFee>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <HerdName>BosIndicus</HerdName>
+            <HerdName>Bos indicus</HerdName>
             <MaximumConceptionRateUncontrolled>0.8</MaximumConceptionRateUncontrolled>
             <UseAI>true</UseAI>
           </RuminantActivityBreed>
@@ -1391,7 +1385,7 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Activities].ReportHerd.ReportDetails.Individual.ID as ID</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.ID as IndID</string>
             <string>[Activities].ReportHerd.ReportDetails.Individual.GenderAsString as Gender</string>
             <string>[Activities].ReportHerd.ReportDetails.Individual.Weight as Weight</string>
             <string>[Activities].ReportHerd.ReportDetails.Individual.PreviousWeight as PWeight</string>
@@ -1400,6 +1394,20 @@
           </VariableNames>
           <EventNames>
             <string>[Activities].ReportHerd.OnReportItemGenerated</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>ActivityLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Activities].LastActivityPerformed.Name as Name</string>
+            <string>[Activities].LastActivityPerformed.Status.ToString() as Status</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Activities].ActivityPerformed</string>
           </EventNames>
         </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>

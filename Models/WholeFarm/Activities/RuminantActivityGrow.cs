@@ -23,6 +23,11 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(ActivityFolder))]
 	public class RuminantActivityGrow : WFActivityBase
 	{
+		[XmlIgnore]
+		[Link]
+		Clock Clock = null;
+
+
 		[Link]
 		private ResourcesHolder Resources = null;
 
@@ -51,8 +56,8 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			methaneEmissions = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
-			manureStore = Resources.GetResourceItem(this, typeof(ProductStoreType), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as ProductStoreTypeManure;
+			methaneEmissions = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportWarning) as GreenhouseGasesType;
+			manureStore = Resources.GetResourceItem(this, typeof(ProductStoreType), "Manure", OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportWarning) as ProductStoreTypeManure;
 		}
 
 		/// <summary>Function to determine all individuals potential intake and suckling intake after milk consumption from mother</summary>
@@ -146,7 +151,7 @@ namespace Models.WholeFarm.Activities
 				if (ind.Gender == Sex.Female)
 				{
 					RuminantFemale femaleind = ind as RuminantFemale;
-
+					int a = Clock.Today.Month;
 					// Increase potential intake for lactating breeder
 					if (femaleind.IsLactating)
 					{
@@ -196,7 +201,7 @@ namespace Models.WholeFarm.Activities
 			double kl = ind.BreedParams.ELactationEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationEfficiencyIntercept;
 			double milkTime = ind.DaysLactating;  //Math.Max(0.0, (ind.Age - femaleind.AgeAtLastBirth) * 30.4);
 			double milkCurve = 0;
-			if (ind.SucklingOffspring.Count == 0) // no suckling calf
+			if (ind.SucklingOffspring.Count == 0 && ind.MilkingPerformed) // no suckling calf and milking has been performed
 			{
 				milkCurve = ind.BreedParams.MilkCurveNonSuckling;
 			}
@@ -307,6 +312,9 @@ namespace Models.WholeFarm.Activities
 					methaneEmissions.Add(totalMethane * 30.4 / 1000, this.Name, breed);
 				}
 			}
+
+			// report that this activity was performed as it does not use base GetResourcesRequired
+			this.TriggerOnActivityPerformed();
 		}
 
 		/// <summary>
