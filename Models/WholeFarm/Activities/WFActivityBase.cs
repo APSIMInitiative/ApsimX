@@ -295,16 +295,24 @@ namespace Models.WholeFarm.Activities
             }
 
 			// report activity occurred
-			ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs();
-			activitye.Activity = this;
-			this.OnActivityPerformed(activitye);
+			this.TriggerOnActivityPerformed();
 			return Status != ActivityStatus.Ignored;
         }
 
-        /// <summary>
-        /// Perform Activity with partial resources available
-        /// </summary>
-        [Description("Perform Activity with partial resources available")]
+		/// <summary>
+		/// Method to trigger an Activity Performed event 
+		/// </summary>
+		public void TriggerOnActivityPerformed()
+		{
+			ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs();
+			activitye.Activity = this;
+			this.OnActivityPerformed(activitye);
+		}
+
+		/// <summary>
+		/// Perform Activity with partial resources available
+		/// </summary>
+		[Description("Perform Activity with partial resources available")]
 		public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
 		/// <summary>

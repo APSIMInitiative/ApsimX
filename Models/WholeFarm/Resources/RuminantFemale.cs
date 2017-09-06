@@ -73,6 +73,7 @@ namespace Models.WholeFarm.Resources
 				NumberOfBirthsThisTimestep = (CarryingTwins ? 2 : 1);
 			}
 			AgeAtLastBirth = this.Age;
+			MilkingPerformed = false;
 		}
 
 		/// <summary>
@@ -158,6 +159,11 @@ namespace Models.WholeFarm.Resources
 				}
 			}
 		}
+
+		/// <summary>
+		/// Determines if milking has been performed on individual to increase milk production
+		/// </summary>
+		public bool MilkingPerformed { get; set; }
 
 		/// <summary>
 		/// Amount of milk available in the month (L)
