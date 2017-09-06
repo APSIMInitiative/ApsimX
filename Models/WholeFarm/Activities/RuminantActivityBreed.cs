@@ -56,9 +56,6 @@ namespace Models.WholeFarm.Activities
 		{
 			// Assignment of mothers was moved to RuminantHerd resource to ensure this is done even if no breeding activity is included
 
-			// check for controlled mating settings
-			//ControlledMatings = Apsim.Children(this, typeof(ControlledMatingSettings)).FirstOrDefault() as ControlledMatingSettings;
-
 			// get labour specifications
 			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour.Count() == 0) labour = new List<LabourFilterGroupSpecified>();
@@ -84,6 +81,50 @@ namespace Models.WholeFarm.Activities
 							)
 							group ind by ind.Location into grp
 							select grp;
+
+
+			// calculate labour and finance limitations if needed when doing AI
+			int breedersCount = breeders.Count();
+			int numberPossible = breedersCount;
+			int numberServiced = 1;
+			if (UseAI & TimingOK)
+			{
+				// attempt to get required resources
+				List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal();
+				bool tookRequestedResources = TakeResources(resourcesneeded);
+				// get all shortfalls
+				if (tookRequestedResources & (ResourceRequestList != null))
+				{
+					//TODO: fix this to account for perHead payments and labour and not fixed expenses
+					double amountCashNeeded = resourcesneeded.Where(a => a.ResourceType == typeof(Finance)).Sum(a => a.Required);
+					double amountCashProvided = resourcesneeded.Where(a => a.ResourceType == typeof(Finance)).Sum(a => a.Provided);
+					double amountLabourNeeded = resourcesneeded.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
+					double amountLabourProvided = resourcesneeded.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
+					double cashlimit = 1;
+					if (amountCashNeeded > 0)
+					{
+						if (amountCashProvided == 0)
+							cashlimit = 0;
+						else
+							cashlimit = amountCashNeeded / amountCashProvided;
+					}
+					double labourlimit = 1;
+					if (amountLabourNeeded > 0)
+					{
+						if (amountLabourProvided == 0)
+							labourlimit = 0;
+						else
+							labourlimit = amountLabourNeeded / amountLabourProvided;
+					}
+					double limiter = Math.Min(cashlimit, labourlimit);
+					numberPossible = Convert.ToInt32(limiter * breedersCount);
+
+					// determine if fixed payments were not possible
+
+					// determine limits by insufficient labour or cash for per head payments
+
+				}
+			}
 
 			// for each location where parts of this herd are located
 			foreach (var location in breeders)
@@ -186,13 +227,16 @@ namespace Models.WholeFarm.Activities
 							{
 								// calculate conception
 								double conceptionRate = ConceptionRate(female);
-								if (WholeFarm.RandomGenerator.NextDouble() <= conceptionRate)
+								if (numberServiced <= numberPossible) // labour/finance limited number
 								{
-									female.UpdateConceptionDetails(WholeFarm.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate);
+									if (WholeFarm.RandomGenerator.NextDouble() <= conceptionRate)
+									{
+										female.UpdateConceptionDetails(WholeFarm.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate);
+									}
+									numberServiced++;
 								}
 							}
 						}
-
 					}
 
 				}
@@ -262,25 +306,55 @@ namespace Models.WholeFarm.Activities
 		}
 
 		/// <summary>
-		/// Method to determine resources required for this activity in the current month
+		/// Private method to determine resources required for this activity in the current month
+		/// This method is local to this activity and not called with WFGetResourcesRequired event
 		/// </summary>
 		/// <returns>List of required resource requests</returns>
-		public override List<ResourceRequest> GetResourcesNeededForActivity()
+		private List<ResourceRequest> GetResourcesNeededForActivityLocal()
 		{
 			ResourceRequestList = null;
 
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
-			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
+
+			// get only breeders for labour calculations
+			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName & a.Gender == Sex.Female &
+							a.Age >= a.BreedParams.MinimumAge1stMating & a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).ToList();
 			int head = herd.Count();
 			double AE = herd.Sum(a => a.AdultEquivalent);
 
-			//TODO: this should only be breeding females.
-
 			if (head == 0) return null;
 
-			//TODO: look for cash requirements for breeding (e.g. AI)
-
-
+			// get all fees for breeding
+			foreach (RuminantFee item in Apsim.Children(this, typeof(RuminantFee)))
+			{
+				if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+				double sumneeded = 0;
+				switch (item.PaymentStyle)
+				{
+					case AnimalPaymentStyleType.Fixed:
+						sumneeded = item.Amount;
+						break;
+					case AnimalPaymentStyleType.perHead:
+						sumneeded = head * item.Amount;
+						break;
+					case AnimalPaymentStyleType.perAE:
+						sumneeded = AE * item.Amount;
+						break;
+					default:
+						throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
+				}
+				ResourceRequestList.Add(new ResourceRequest()
+				{
+					AllowTransmutation = false,
+					Required = sumneeded,
+					ResourceType = typeof(Finance),
+					ResourceTypeName = "General account",
+					ActivityModel = this,
+					FilterDetails = null,
+					Reason = item.Name
+				}
+				);
+			}
 
 			// for each labour item specified
 			foreach (var item in labour)
@@ -316,6 +390,15 @@ namespace Models.WholeFarm.Activities
 				}
 			}
 			return ResourceRequestList;
+		}
+
+		/// <summary>
+		/// Method to determine resources required for this activity in the current month
+		/// </summary>
+		/// <returns>List of required resource requests</returns>
+		public override List<ResourceRequest> GetResourcesNeededForActivity()
+		{
+			return null;
 		}
 
 		/// <summary>
