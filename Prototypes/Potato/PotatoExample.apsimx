@@ -1190,17 +1190,17 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <ArrayFunction>
             <Name>LagDurationAgeMultiplier</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>0.5 0.75 1</Values>
+            <Values>1 1 1</Values>
           </ArrayFunction>
           <ArrayFunction>
             <Name>SenescenceDurationAgeMultiplier</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>0.5 0.75 1</Values>
+            <Values>1 1 1</Values>
           </ArrayFunction>
           <ArrayFunction>
             <Name>LeafSizeAgeMultiplier</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>0.5 0.75 1 1 1 1 1 1 1 1 1 1</Values>
+            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
           </ArrayFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </LeafCohortParameters>
