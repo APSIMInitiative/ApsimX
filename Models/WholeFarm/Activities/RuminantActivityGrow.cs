@@ -151,29 +151,25 @@ namespace Models.WholeFarm.Activities
 				if (ind.Gender == Sex.Female)
 				{
 					RuminantFemale femaleind = ind as RuminantFemale;
-					int a = Clock.Today.Month;
 					// Increase potential intake for lactating breeder
 					if (femaleind.IsLactating)
 					{
 						double dayOfLactation = femaleind.DaysLactating;
-						if (dayOfLactation <= ind.BreedParams.MilkingDays)
-						{
-							// Reference: Intake multiplier for lactating cow (M.Freer)
-							// TODO: Need to look at equation to fix Math.Pow() ^ issue
-							// double intakeMilkMultiplier = 1 + 0.57 * Math.Pow((dayOfLactation / 81.0), 0.7) * Math.Exp(0.7 * (1 - (dayOfLactation / 81.0)));
-							double intakeMilkMultiplier = 1 + ind.BreedParams.LactatingPotentialModifierConstantA * Math.Pow((dayOfLactation / ind.BreedParams.LactatingPotentialModifierConstantB), ind.BreedParams.LactatingPotentialModifierConstantC) * Math.Exp(ind.BreedParams.LactatingPotentialModifierConstantC * (1 - (dayOfLactation / ind.BreedParams.LactatingPotentialModifierConstantB)))*(1 - 0.5 + 0.5 * (ind.Weight/ind.NormalisedAnimalWeight));
-							// To make this flexible for sheep and goats, added three new Ruminant Coeffs
-							// Feeding standard values for Beef, Dairy suck, Dairy non-suck and sheep are:
-							// For 0.57 (A) use .42, .58, .85 and .69; for 0.7 (B) use 1.7, 0.7, 0.7 and 1.4, for 81 (C) use 62, 81, 81, 28
-							// added LactatingPotentialModifierConstantA, LactatingPotentialModifierConstantB and LactatingPotentialModifierConstantC
-							// replaces 
-							potentialIntake *= intakeMilkMultiplier;
+						// Reference: Intake multiplier for lactating cow (M.Freer)
+						// TODO: Need to look at equation to fix Math.Pow() ^ issue
+						// double intakeMilkMultiplier = 1 + 0.57 * Math.Pow((dayOfLactation / 81.0), 0.7) * Math.Exp(0.7 * (1 - (dayOfLactation / 81.0)));
+						double intakeMilkMultiplier = 1 + ind.BreedParams.LactatingPotentialModifierConstantA * Math.Pow((dayOfLactation / ind.BreedParams.LactatingPotentialModifierConstantB), ind.BreedParams.LactatingPotentialModifierConstantC) * Math.Exp(ind.BreedParams.LactatingPotentialModifierConstantC * (1 - (dayOfLactation / ind.BreedParams.LactatingPotentialModifierConstantB)))*(1 - 0.5 + 0.5 * (ind.Weight/ind.NormalisedAnimalWeight));
+						// To make this flexible for sheep and goats, added three new Ruminant Coeffs
+						// Feeding standard values for Beef, Dairy suck, Dairy non-suck and sheep are:
+						// For 0.57 (A) use .42, .58, .85 and .69; for 0.7 (B) use 1.7, 0.7, 0.7 and 1.4, for 81 (C) use 62, 81, 81, 28
+						// added LactatingPotentialModifierConstantA, LactatingPotentialModifierConstantB and LactatingPotentialModifierConstantC
+						// replaces (A), (B) nad (C) 
+						potentialIntake *= intakeMilkMultiplier;
 
-							// calculate estimated milk production for time step here
-							// assuming average feed quality
-							// This need to happen before suckling potential intake can be determined.
-							CalculateMilkProduction(femaleind);
-						}
+						// calculate estimated milk production for time step here
+						// assuming average feed quality if no previos diet values
+						// This need to happen before suckling potential intake can be determined.
+						CalculateMilkProduction(femaleind);
 					}
 					else
 					{
@@ -181,6 +177,7 @@ namespace Models.WholeFarm.Activities
 						femaleind.MilkAmount = 0;
 					}
 				}
+				
 				//TODO: option to restrict potential further due to stress (e.g. heat, cold, rain)
 
 				// get monthly intake
@@ -199,7 +196,7 @@ namespace Models.WholeFarm.Activities
 			double energyMetabolic = EnergyGross * (((ind.DietDryMatterDigestibility==0)?50:ind.DietDryMatterDigestibility)/100.0) * 0.81;
 			// Reference: SCA p.
 			double kl = ind.BreedParams.ELactationEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationEfficiencyIntercept;
-			double milkTime = ind.DaysLactating;  //Math.Max(0.0, (ind.Age - femaleind.AgeAtLastBirth) * 30.4);
+			double milkTime = ind.DaysLactating;
 			double milkCurve = 0;
 			if (ind.SucklingOffspring.Count == 0 && ind.MilkingPerformed) // no suckling calf and milking has been performed
 			{
@@ -235,6 +232,8 @@ namespace Models.WholeFarm.Activities
 		{
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 			List<Ruminant> herd = ruminantHerd.Herd;
+
+			int cmonth = Clock.Today.Month;
 
 			// grow all weaned individuals
 
@@ -282,13 +281,11 @@ namespace Models.WholeFarm.Activities
 						// TODO: check if we still need to apply modification to only the non-supplemented component of intake
 
 						ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake * 1.2);
-
 					}
 					else
 					{
-						// no petential * 1.2 as potential has been fixed based on suckling individuals.
+						// no potential * 1.2 as potential has been fixed based on suckling individuals.
 						ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
-
 					}
 
 					// TODO: nabsa adjusts potential intake for digestability of fodder here.
@@ -298,7 +295,6 @@ namespace Models.WholeFarm.Activities
 					double methane = 0;
 					CalculateEnergy(ind, out methane);
 
-					// TODO:? call methane produced event
 					// Sum and produce one event for breed at end of loop
 					totalMethane += methane;
 

@@ -905,7 +905,7 @@
             <Name>Breed Bos indicus</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <HerdName>BosIndicus</HerdName>
+            <HerdName>Bos indicus</HerdName>
             <MaximumConceptionRateUncontrolled>0.8</MaximumConceptionRateUncontrolled>
             <UseAI>false</UseAI>
           </RuminantActivityBreed>

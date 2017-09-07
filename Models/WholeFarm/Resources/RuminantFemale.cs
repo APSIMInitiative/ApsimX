@@ -138,7 +138,12 @@ namespace Models.WholeFarm.Resources
 		{
 			get
 			{
-				return (this.AgeAtLastBirth > this.AgeAtLastConception && (this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays && SuccessfulPregnancy);
+				// Had birth after last conception
+				// Time since birth < milking days
+				// Last pregnancy was successful
+				// Mother has suckling offspring OR
+				// Cow has been milked since weaning.
+				return (this.AgeAtLastBirth > this.AgeAtLastConception && (this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays && SuccessfulPregnancy && (this.SucklingOffspring.Count() > 0 | this.MilkingPerformed));
 			}			
 		}
 

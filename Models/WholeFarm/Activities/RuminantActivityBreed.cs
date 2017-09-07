@@ -119,10 +119,8 @@ namespace Models.WholeFarm.Activities
 					double limiter = Math.Min(cashlimit, labourlimit);
 					numberPossible = Convert.ToInt32(limiter * breedersCount);
 
-					// determine if fixed payments were not possible
-
-					// determine limits by insufficient labour or cash for per head payments
-
+					// TODO: determine if fixed payments were not possible
+					// TODO: determine limits by insufficient labour or cash for per head payments
 				}
 			}
 
