@@ -937,6 +937,7 @@
             <string>[Activities].SummariseHerd.ReportDetails.AverageIntake as AvgIntake</string>
             <string>[Activities].SummariseHerd.ReportDetails.AdultEquivalents as AE</string>
             <string>[Activities].SummariseHerd.ReportDetails.NumberPregnant as NoPregnant</string>
+            <string>[Activities].SummariseHerd.ReportDetails.NumberLactating as NoLactating</string>
             <string>[Activities].SummariseHerd.ReportDetails.NumberOfBirths as Births</string>
           </VariableNames>
           <EventNames>

@@ -20,7 +20,7 @@
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <WholeFarm>
-      <Name>FARMONY</Name>
+      <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
         <Finance>
@@ -88,6 +88,93 @@
           <AccountName>Overheads account</AccountName>
           <IsOverhead>true</IsOverhead>
         </FinanceActivityPayExpense>
+        <ActivityFolder>
+          <Name>Cash flow</Name>
+          <FinanceActivityPayExpense>
+            <Name>General farm maintenance</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <PaymentInterval>1</PaymentInterval>
+            <Amount>3333.33</Amount>
+            <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
+            <Name>Fuel costs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <PaymentInterval>1</PaymentInterval>
+            <Amount>2500</Amount>
+            <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
+            <Name>Pest control</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <MonthDue>12</MonthDue>
+            <Amount>5000</Amount>
+            <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
+            <Name>Contractors</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <MonthDue>10</MonthDue>
+            <Amount>30000</Amount>
+            <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
+            <Name>Administration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <PaymentInterval>1</PaymentInterval>
+            <Amount>1666.67</Amount>
+            <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
+            <Name>Rates and Fees</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <MonthDue>7</MonthDue>
+            <Amount>15000</Amount>
+            <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
+            <Name>Insurance</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <MonthDue>12</MonthDue>
+            <Amount>20000</Amount>
+            <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
+            <Name>Electricity</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <PaymentInterval>3</PaymentInterval>
+            <Amount>2000</Amount>
+            <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
+            <Name>Living costs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <PaymentInterval>6</PaymentInterval>
+            <MonthDue>6</MonthDue>
+            <Amount>1000</Amount>
+            <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
+          </FinanceActivityPayExpense>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+        </ActivityFolder>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ActivitiesHolder>
       <Folder>
