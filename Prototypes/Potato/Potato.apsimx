@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -661,7 +661,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
@@ -902,6 +902,12 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
           </Memo>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
         </Constant>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
@@ -1664,7 +1670,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
@@ -13395,7 +13401,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <Units>0-1</Units>
                 </Constant>
                 <Constant>
-                  <Name>DMConversionEfficiency</Name>
+                  <Name>DMConversionEfficiencyFunction</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <FixedValue>1</FixedValue>
                   <Units>0-1</Units>
@@ -14279,7 +14285,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <Units>0-1</Units>
                 </Constant>
                 <Constant>
-                  <Name>DMConversionEfficiency</Name>
+                  <Name>DMConversionEfficiencyFunction</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <FixedValue>1</FixedValue>
                   <Units>0-1</Units>
@@ -16983,7 +16989,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <Units>0-1</Units>
                 </Constant>
                 <Constant>
-                  <Name>DMConversionEfficiency</Name>
+                  <Name>DMConversionEfficiencyFunction</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <FixedValue>1</FixedValue>
                   <Units>0-1</Units>
@@ -17847,7 +17853,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <Units>0-1</Units>
                 </Constant>
                 <Constant>
-                  <Name>DMConversionEfficiency</Name>
+                  <Name>DMConversionEfficiencyFunction</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <FixedValue>1</FixedValue>
                   <Units>0-1</Units>
@@ -17862,6 +17868,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <VariableName>[Stem].MinimumNConc.Value()</VariableName>
                 </VariableReference>
+                <Constant>
+                  <Name>DMConversionEfficiencyFunction</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>1</FixedValue>
+                </Constant>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </GenericOrgan>
               <CompositeBiomass>

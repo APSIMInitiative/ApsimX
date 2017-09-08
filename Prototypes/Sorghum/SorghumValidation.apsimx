@@ -1594,7 +1594,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
@@ -1766,7 +1766,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
@@ -1903,7 +1903,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>

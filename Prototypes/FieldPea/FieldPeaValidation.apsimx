@@ -1144,7 +1144,7 @@
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
@@ -1390,7 +1390,7 @@
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
@@ -2259,7 +2259,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>

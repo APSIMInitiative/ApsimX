@@ -2328,7 +2328,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
@@ -2566,7 +2566,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>

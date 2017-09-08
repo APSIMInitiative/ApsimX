@@ -682,7 +682,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PartitionFractionDemandFunction>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1300,7 +1300,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PartitionFractionDemandFunction>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1786,7 +1786,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PartitionFractionDemandFunction>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2181,7 +2181,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PartitionFractionDemandFunction>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2624,7 +2624,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PartitionFractionDemandFunction>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>

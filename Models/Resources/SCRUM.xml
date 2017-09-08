@@ -475,7 +475,7 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       <Units>0-1</Units>
     </Constant>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
@@ -1123,7 +1123,7 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
       <Units>0-1</Units>
     </Constant>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
@@ -1626,7 +1626,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
       <Units>0-1</Units>
     </Constant>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>

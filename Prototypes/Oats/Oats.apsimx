@@ -3094,7 +3094,7 @@ N conc values are from Zhao et al 2009
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
@@ -3465,7 +3465,7 @@ N conc values are from Zhao et al 2009
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
@@ -6503,7 +6503,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
@@ -6789,7 +6789,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>

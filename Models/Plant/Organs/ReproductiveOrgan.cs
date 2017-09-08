@@ -255,7 +255,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return new BiomassPoolType { Structural = DMDemandFunction.Value() / DMConversionEfficiency};
+                return new BiomassPoolType { Structural = DMDemandFunction.Value() / DMConversionEfficiencyFunction.Value()};
             }
         }
         /// <summary>Sets the dm potential allocation.</summary>
@@ -276,8 +276,8 @@ namespace Models.PMF.Organs
         {
             set
             {
-                GrowthRespiration = value.Structural *(1- DMConversionEfficiency);
-                Live.StructuralWt += value.Structural * DMConversionEfficiency;
+                GrowthRespiration = value.Structural *(1- DMConversionEfficiencyFunction.Value());
+                Live.StructuralWt += value.Structural * DMConversionEfficiencyFunction.Value();
             }
         }
         /// <summary>Gets or sets the n demand.</summary>

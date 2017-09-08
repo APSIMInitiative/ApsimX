@@ -368,7 +368,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <FixedValue>180</FixedValue>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
@@ -697,7 +697,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
@@ -828,7 +828,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>

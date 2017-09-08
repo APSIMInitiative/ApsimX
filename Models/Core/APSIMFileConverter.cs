@@ -387,8 +387,8 @@ namespace Models.Core
                     root.AppendChild(DMnode);
 
             foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"))
-                    if (APSIMFileConverterUtilities.FindPMFNode(root, "DMConversionEfficiencyFunction") == null)
-                        root.AppendChild(DMnode);
+                if (APSIMFileConverterUtilities.FindPMFNode(root, "DMConversionEfficiencyFunction") == null)
+                    root.AppendChild(DMnode);
 
             foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "ReproductiveOrgan"))
                 if (APSIMFileConverterUtilities.FindPMFNode(root, "DMConversionEfficiencyFunction") == null)

@@ -504,6 +504,11 @@ Though tillering is common in some maize varieties under certain agronomic condi
   <ReproductiveOrgan>
     <Name>Grain</Name>
     <Constant>
+      <Name>DMConversionEfficiencyFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
+    <Constant>
       <Name>InitialGrainProportion</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.05</FixedValue>
@@ -842,6 +847,11 @@ Though tillering is common in some maize varieties under certain agronomic condi
   </ReproductiveOrgan>
   <Root>
     <Name>Root</Name>
+    <Constant>
+      <Name>DMConversionEfficiencyFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
     <CompositeBiomass>
       <Name>Live</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2024,7 +2034,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Units>0-1</Units>
     </Constant>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
@@ -2236,7 +2246,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Units>0-1</Units>
     </Constant>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
@@ -2483,7 +2493,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Units>0-1</Units>
     </Constant>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>

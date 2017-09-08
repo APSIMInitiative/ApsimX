@@ -1041,6 +1041,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
   </Structure>
   <ReproductiveOrgan>
     <Name>Grain</Name>
+    <Constant>
+      <Name>DMConversionEfficiencyFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
     <Biomass>
       <Name>Live</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1319,6 +1324,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
   </ReproductiveOrgan>
   <Root>
     <Name>Root</Name>
+    <Constant>
+      <Name>DMConversionEfficiencyFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
     <CompositeBiomass>
       <Name>Live</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1597,7 +1607,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
           <End>EndGrainFill</End>
         </PhaseLookupValue>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
+      </PhaseLookup>    
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PartitionFractionDemandFunction>
     <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2580,7 +2590,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <Units>0-1</Units>
     </Constant>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
@@ -2856,7 +2866,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <Units>0-1</Units>
     </Constant>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>

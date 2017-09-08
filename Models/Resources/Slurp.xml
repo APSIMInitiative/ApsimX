@@ -474,7 +474,7 @@ This is important in SLURP as it is set for each species to represent their diff
       <Units>0-1</Units>
     </Constant>
     <Constant>
-      <Name>DMConversionEfficiency</Name>
+      <Name>DMConversionEfficiencyFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>

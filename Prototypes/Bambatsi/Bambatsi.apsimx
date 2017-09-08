@@ -344,7 +344,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <FixedValue>130</FixedValue>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
@@ -959,7 +959,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiency</Name>
+          <Name>DMConversionEfficiencyFunction</Name>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
