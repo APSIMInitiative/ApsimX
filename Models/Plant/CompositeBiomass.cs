@@ -34,16 +34,19 @@ namespace Models.PMF
                 {
                     foreach (object i in v as IEnumerable)
                     {
+                        if (i is CompositeBiomass)
+                            (i as CompositeBiomass).Update();
                         if (!(i is Biomass))
-                            throw new Exception("Elements in the array: " + PropertyName + " are not Biomass objects in composition biomass: " + this.Name);
+                            throw new Exception("Elements in the array: " + PropertyName + " are not Biomass objects in composite biomass: " + this.Name);
                         Add(i as Biomass);
                     }
                 }
                 else
                 {
-
                     if (!(v is Biomass))
-                        throw new Exception("Property: " + PropertyName + " is not a Biomass object in composition biomass: " + this.Name);
+                        throw new Exception("Property: " + PropertyName + " is not a Biomass object in composite biomass: " + this.Name);
+                    if (v is CompositeBiomass)
+                        (v as CompositeBiomass).Update();
                     Add(v as Biomass);
                 }
             }

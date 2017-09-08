@@ -280,9 +280,9 @@ namespace Models.PMF.Organs
         {
             if (DMConversionEfficiency.Value() > 0.0)
             {
-                double theoreticalMaximumDM = (StartLive.StructuralWt + StructuralDMDemand) / StructuralFraction.Value();
+                double theoreticalMaximumDM = MathUtilities.Divide(StartLive.StructuralWt + StructuralDMDemand, StructuralFraction.Value(), 0);
                 double baseAllocated = StartLive.StructuralWt + StartLive.StorageWt + StructuralDMDemand;
-                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency.Value();
+                double demandedDM = MathUtilities.Divide(Math.Max(0.0, theoreticalMaximumDM - baseAllocated), DMConversionEfficiency.Value(), 0);
                 return demandedDM;
             }
             else

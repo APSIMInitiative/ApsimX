@@ -376,6 +376,11 @@ namespace Models.Graph
         /// <param name="simulationZones">The simulation/zone pairs to change</param>
         private void PaintAllSimulationZones(List<SimulationZone> simulationZones)
         {
+            if (FactorIndexToVaryLines != -1 && FactorIndexToVaryLines >= FactorNamesForVarying.Count)
+                FactorIndexToVaryLines = -1;
+            if (FactorIndexToVaryMarkers != -1 && FactorIndexToVaryMarkers >= FactorNamesForVarying.Count)
+                FactorIndexToVaryMarkers = -1;
+
             // Create an appropriate painter object
             SimulationZonePainter.IPainter painter;
             if (FactorIndexToVaryColours != -1 && FactorIndexToVaryColours < FactorNamesForVarying.Count)
