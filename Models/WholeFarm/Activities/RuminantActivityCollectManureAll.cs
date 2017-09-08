@@ -99,17 +99,30 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public override void DoActivity()
 		{
-			if (manureStore != null)
+			return;
+		}
+
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("WFCollectManure")]
+		private void OnWFCollectManure(object sender, EventArgs e)
+		{
+			// check that resources didn't skip the activity.
+			if (this.Status != ActivityStatus.Ignored | this.Status != ActivityStatus.Critical)
 			{
-				double labourLimit = 1;
-				double labourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
-				double labourProvided = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
-				if (labourNeeded > 0)
+				if (manureStore != null)
 				{
-					labourLimit = labourProvided / labourNeeded;
-					foreach (ManureStoreUncollected msu in manureStore.UncollectedStores)
+					double labourLimit = 1;
+					double labourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
+					double labourProvided = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
+					if (labourNeeded > 0)
 					{
-						manureStore.Collect(msu.Name, labourLimit, this.Name);
+						labourLimit = labourProvided / labourNeeded;
+						foreach (ManureStoreUncollected msu in manureStore.UncollectedStores)
+						{
+							manureStore.Collect(msu.Name, labourLimit, this.Name);
+						}
 					}
 				}
 			}

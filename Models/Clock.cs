@@ -118,6 +118,8 @@ namespace Models
 		/// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
 		public event EventHandler WFCalculateManure;
 		/// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
+		public event EventHandler WFCollectManure;
+		/// <summary>Request and perform the collection of maure after resources are allocated and manure produced in time-step</summary>
 		public event EventHandler WFGetResourcesRequired;
 		/// <summary>WholeFarm Calculate Animals (Ruminant and Other) milk production</summary>
 		public event EventHandler WFAnimalMilkProduction;
@@ -290,12 +292,14 @@ namespace Models
 						WFAnimalMilkProduction.Invoke(this, args);
 					if (WFPotentialIntake != null)
 						WFPotentialIntake.Invoke(this, args);
-					if (WFCalculateManure != null)
-						WFCalculateManure.Invoke(this, args);
 					if (WFGetResourcesRequired != null)
 						WFGetResourcesRequired.Invoke(this, args);
 					if (WFAnimalWeightGain != null)
 						WFAnimalWeightGain.Invoke(this, args);
+					if (WFCalculateManure != null)
+						WFCalculateManure.Invoke(this, args);
+					if (WFCollectManure != null)
+						WFCollectManure.Invoke(this, args);
 					if (WFAnimalDeath != null)
 						WFAnimalDeath.Invoke(this, args);
 					if (WFAnimalMilking != null)
