@@ -43,9 +43,9 @@ namespace Models.WholeFarm.Activities
 		public double MaximumConceptionRateUncontrolled { get; set; }
 
 		/// <summary>
-		/// Use artificial incemination (no bulls required)
+		/// Use artificial insemination (no bulls required)
 		/// </summary>
-		[Description("Use artificial incemination (no bulls required)")]
+		[Description("Use artificial insemination (no bulls required)")]
 		public bool UseAI { get; set; }
 
 		/// <summary>An event handler to allow us to initialise herd breeding status.</summary>
@@ -148,6 +148,7 @@ namespace Models.WholeFarm.Activities
 				{
 					if (female.BirthDue)
 					{
+						female.WeightLossDueToCalf = 0;
 						int numberOfNewborn = (female.CarryingTwins) ? 2 : 1;
 						for (int i = 0; i < numberOfNewborn; i++)
 						{
@@ -182,7 +183,7 @@ namespace Models.WholeFarm.Activities
 							// add to sucklings
 							female.SucklingOffspring.Add(newCalfRuminant);
 							// remove calf weight from female
-							female.Weight -= newCalfRuminant.Weight;
+							female.WeightLossDueToCalf += newCalfRuminant.Weight;
 						}
 						female.UpdateBirthDetails();
 					}

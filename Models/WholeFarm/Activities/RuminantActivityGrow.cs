@@ -479,6 +479,10 @@ namespace Models.WholeFarm.Activities
 			energyPredictedBodyMassChange *= 30.4;  // Convert to monthly
 
 			ind.PreviousWeight = ind.Weight;
+			if(ind.Gender == Sex.Female && (ind as RuminantFemale).BirthDue)
+			{
+				ind.Weight -= (ind as RuminantFemale).WeightLossDueToCalf;
+			}
 			ind.Weight += energyPredictedBodyMassChange;
 			ind.Weight = Math.Max(0.0, ind.Weight);
 			ind.Weight = Math.Min(ind.Weight, ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual);

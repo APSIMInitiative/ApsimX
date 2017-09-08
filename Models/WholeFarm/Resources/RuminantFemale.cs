@@ -44,6 +44,11 @@ namespace Models.WholeFarm.Resources
 		public double PreviousConceptionRate { get; set; }
 
 		/// <summary>
+		/// Weight lost at birth due to calf
+		/// </summary>
+		public double WeightLossDueToCalf { get; set; }
+
+		/// <summary>
 		/// Indicates if birth is due this month
 		/// Knows whether the feotus(es) have survived
 		/// </summary>
