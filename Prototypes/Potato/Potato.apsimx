@@ -1250,6 +1250,21 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
+          <ArrayFunction>
+            <Name>LagDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>SenescenceDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>LeafSizeAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+          </ArrayFunction>
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </LeafCohortParameters>
         <RUEModel>
