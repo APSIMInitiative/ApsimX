@@ -163,6 +163,10 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public IFunction MaximumRootDepth = null;
 
+        /// <summary>Dry matter efficiency function</summary>
+        [Link]
+        public IFunction DMConversionEfficiencyFunction = null;
+
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
@@ -177,6 +181,7 @@ namespace Models.PMF.Organs
         public List<double> ZoneInitialDM { get; set; }
 
         private double BiomassToleranceValue = 0.0000000001;   // 10E-10
+        private new double DMConversionEfficiency;
 
         #endregion
 
@@ -438,6 +443,7 @@ namespace Models.PMF.Organs
                 PlantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value(), Plant.Population, MaximumNConc.Value());
                 InitialiseZones();
             }
+            DMConversionEfficiency = DMConversionEfficiencyFunction.Value();
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>

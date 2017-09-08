@@ -169,14 +169,7 @@ namespace Models.PMF.Organs
             if (data.Plant == Plant)
                 Clear();
 
-
-            if (DMConversionEfficiencyFunction != null)
                 DMConversionEfficiency = DMConversionEfficiencyFunction.Value();
-            else
-                DMConversionEfficiency = 1.0;
-
-
-
         }
 
         /// <summary>

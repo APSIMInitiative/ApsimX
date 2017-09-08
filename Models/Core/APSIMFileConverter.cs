@@ -23,7 +23,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 13; } }
+        public static int LastestVersion { get { return 14; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -365,6 +365,34 @@ namespace Models.Core
                     XmlUtilities.EnsureNodeExists(plantModels[0].ParentNode, "MicroClimate");
                 }
             }
+        }
+
+        /// <summary>
+        /// Add DMConversionEfficiency node
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        private static void UpgradeToVersion14(XmlNode node)
+        {
+            XmlNode DMnode;
+            DMnode = XmlUtilities.CreateNode(node.OwnerDocument, "Constant", "");
+            XmlElement name = node.OwnerDocument.CreateElement("Name");
+            XmlElement element = node.OwnerDocument.CreateElement("FixedValue");
+            name.InnerText = "DMConversionEfficiencyFunction";
+            element.InnerText = "1";
+            DMnode.AppendChild(name);
+            DMnode.AppendChild(element);
+
+            foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "Root"))
+                if (APSIMFileConverterUtilities.FindPMFNode(root, "DMConversionEfficiencyFunction") == null)
+                    root.AppendChild(DMnode);
+
+            foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"))
+                    if (APSIMFileConverterUtilities.FindPMFNode(root, "DMConversionEfficiencyFunction") == null)
+                        root.AppendChild(DMnode);
+
+            foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "ReproductiveOrgan"))
+                if (APSIMFileConverterUtilities.FindPMFNode(root, "DMConversionEfficiencyFunction") == null)
+                    root.AppendChild(DMnode);
         }
     }
 }

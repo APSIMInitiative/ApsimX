@@ -118,7 +118,7 @@ namespace Models.PMF.Organs
         /// <summary>Dry matter conversion efficiency</summary>
         [Link]
         [Units("/d")]
-        public IFunction DMConversionEfficiency = null;
+        public IFunction DMConversionEfficiencyFunction = null;
 
         #endregion
 
@@ -224,6 +224,7 @@ namespace Models.PMF.Organs
         public double GrowthRespiration { get; set; }
 
         private double BiomassToleranceValue = 0.0000000001;   // 10E-10
+        private double DMConversionEfficiency;
 
         #endregion
 
@@ -263,9 +264,9 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of structural DM demanded.</summary>
         public double DemandedDMStructural()
         {
-            if (DMConversionEfficiency.Value() > 0.0)
+            if (DMConversionEfficiencyFunction.Value() > 0.0)
             {
-                double demandedDM = DMDemandFunction.Value() * StructuralFraction.Value() / DMConversionEfficiency.Value();
+                double demandedDM = DMDemandFunction.Value() * StructuralFraction.Value() / DMConversionEfficiencyFunction.Value();
                 return demandedDM;
             }
             else
@@ -278,11 +279,11 @@ namespace Models.PMF.Organs
         /// <remarks>Assumes that StructuralFraction is always greater than zero</remarks>
         public double DemandedDMStorage()
         {
-            if (DMConversionEfficiency.Value() > 0.0)
+            if (DMConversionEfficiencyFunction.Value() > 0.0)
             {
                 double theoreticalMaximumDM = MathUtilities.Divide(StartLive.StructuralWt + StructuralDMDemand, StructuralFraction.Value(), 0);
                 double baseAllocated = StartLive.StructuralWt + StartLive.StorageWt + StructuralDMDemand;
-                double demandedDM = MathUtilities.Divide(Math.Max(0.0, theoreticalMaximumDM - baseAllocated), DMConversionEfficiency.Value(), 0);
+                double demandedDM = MathUtilities.Divide(Math.Max(0.0, theoreticalMaximumDM - baseAllocated), DMConversionEfficiencyFunction.Value(), 0);
                 return demandedDM;
             }
             else
@@ -425,25 +426,25 @@ namespace Models.PMF.Organs
             {
                 // get DM lost by respiration (growth respiration)
                 GrowthRespiration = 0.0;
-                GrowthRespiration += value.Structural * (1.0 - DMConversionEfficiency.Value())
-                                  + value.Storage * (1.0 - DMConversionEfficiency.Value())
-                                  + value.Metabolic * (1.0 - DMConversionEfficiency.Value());
+                GrowthRespiration += value.Structural * (1.0 - DMConversionEfficiencyFunction.Value())
+                                  + value.Storage * (1.0 - DMConversionEfficiencyFunction.Value())
+                                  + value.Metabolic * (1.0 - DMConversionEfficiencyFunction.Value());
 
                 // allocate structural DM
-                Allocated.StructuralWt = Math.Min(value.Structural * DMConversionEfficiency.Value(), StructuralDMDemand);
+                Allocated.StructuralWt = Math.Min(value.Structural * DMConversionEfficiencyFunction.Value(), StructuralDMDemand);
                 Live.StructuralWt += Allocated.StructuralWt;
                 
                 // allocate non structural DM
-                if ((value.Storage * DMConversionEfficiency.Value() - DMDemand.Storage) > BiomassToleranceValue)
+                if ((value.Storage * DMConversionEfficiencyFunction.Value() - DMDemand.Storage) > BiomassToleranceValue)
                     throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
                 if (DMDemand.Storage > 0.0)
                 {
-                    Allocated.StorageWt = value.Storage * DMConversionEfficiency.Value();
+                    Allocated.StorageWt = value.Storage * DMConversionEfficiencyFunction.Value();
                     Live.StorageWt += Allocated.StorageWt;
                 }
 
                 // allocate metabolic DM
-                Allocated.MetabolicWt = value.Metabolic * DMConversionEfficiency.Value();
+                Allocated.MetabolicWt = value.Metabolic * DMConversionEfficiencyFunction.Value();
 
                 // Retranslocation
                 if (value.Retranslocation - StartLive.StorageWt > BiomassToleranceValue)
@@ -540,6 +541,7 @@ namespace Models.PMF.Organs
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
             Clear();
+            DMConversionEfficiency = DMConversionEfficiencyFunction.Value();
         }
 
         /// <summary>Called when crop is emerging</summary>
