@@ -67,6 +67,9 @@ namespace Models.WholeFarm.Activities
 			double milkTotal = herd.Sum(a => a.MilkAmount);
 			if (milkTotal > 0)
 			{
+				// set these females to state milking perfomred so they switch to the non-suckling milk production curves.
+				herd.Select(a => a.MilkingPerformed == true);
+
 				// only provide what labour would allow
 				// calculate labour limit
 				double labourLimit = 1;
