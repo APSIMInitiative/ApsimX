@@ -1,8 +1,8 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using System.Collections.Generic;
-using static Models.Core.Runners.JobManagerMultiProcess;
 using System.Linq;
+using Models.Core.Runners;
 
 namespace APSIMRunner
 {
@@ -16,7 +16,7 @@ namespace APSIMRunner
         /// <param name="valuesToWrite">Values of row to write</param>
         public void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
         {
-            TransferRowInTable rowData = new TransferRowInTable()
+            JobManagerMultiProcess.TransferRowInTable rowData = new JobManagerMultiProcess.TransferRowInTable()
             {
                 simulationName = simulationName,
                 tableName = tableName,
