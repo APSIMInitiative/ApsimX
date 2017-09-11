@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -7,6 +7,7 @@
       <Name>Sorghum</Name>
       <Memo>
         <Name>TitlePage</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText><![CDATA[
 <html><body>
 <div><p><H1>The APSIM Sorghum Model</H1></p></div>
@@ -21,6 +22,7 @@ This new framework provides a library of plant organ and process submodels that 
         <Name>Arbitrator</Name>
         <Memo>
           <Name>memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
 <html><body>
 There are a number of passes involved in the allocation of Weight (Wt).  <br/>
@@ -50,21 +52,26 @@ There are a number of passes involved in the allocation of Weight (Wt).  <br/>
 <br/>
 </body></html>]]></MemoText>
         </Memo>
-    <PrioritythenRelativeAllocation>
-      <Name>NArbitrator</Name>
-    </PrioritythenRelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+        <PrioritythenRelativeAllocation>
+          <Name>NArbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PrioritythenRelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </RelativeAllocation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </OrganArbitrator>
       <CompositeBiomass>
         <Name>AboveGroundLive</Name>
         <Memo>
           <Name>memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
 The AboveGroundLive composite biomass object includes the Live pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]></MemoText>
         </Memo>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Stem].Live</string>
@@ -76,10 +83,12 @@ The AboveGroundLive composite biomass object includes the Live pools of all orga
         <Name>AboveGroundDead</Name>
         <Memo>
           <Name>memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
 The AboveGroundDead composite biomass object includes the Dead pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]></MemoText>
         </Memo>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Dead</string>
           <string>[Stem].Dead</string>
@@ -91,25 +100,31 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
         <Name>TotalPlantDemand</Name>
         <VariableReference>
           <Name>LeafDemand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Leaf].DMDemandFunction.Value()</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>StemDemand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Stem].DMDemandFunction.Value()</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>RachisDemand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Rachis].DMDemandFunction.Value()</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>GrainDemand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Grain].DMDemandFunction.Value()</VariableName>
         </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </AddFunction>
       <Phenology>
         <Name>Phenology</Name>
         <Memo>
           <Name>memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
 <html><body>
 The phenology model used in the APSIM sorghum model follows the approach used in earlier sorghum models(Jones and Kiniry (1986), Carberry and Arbrecht (1991), Carberry et al (1989).  
@@ -127,6 +142,7 @@ The model predicts development of primordia on the apex of the main stem and app
                 <Name>ThermalTime</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>11</double>
                     <double>30</double>
@@ -138,7 +154,9 @@ The model predicts development of primordia on the apex of the main stem and app
                     <double>0</double>
                   </Y>
                 </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
               </AirTemperatureFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>Germination</Start>
               <End>Flowering</End>
             </PhaseLookupValue>
@@ -148,6 +166,7 @@ The model predicts development of primordia on the apex of the main stem and app
                 <Name>ThermalTime</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>5.7</double>
                     <double>23.5</double>
@@ -157,14 +176,19 @@ The model predicts development of primordia on the apex of the main stem and app
                     <double>17.8</double>
                   </Y>
                 </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
               </AirTemperatureFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>Flowering</Start>
               <End>Maturity</End>
             </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <GerminatingPhase>
           <Name>Germinating</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Sowing</Start>
           <End>Germination</End>
         </GerminatingPhase>
@@ -172,8 +196,10 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Germination</Start>
           <End>Emergence</End>
           <ShootLag>15</ShootLag>
@@ -183,12 +209,15 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>Juvenile</Name>
           <Constant>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>100</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>EndJuvenile</End>
         </GenericPhase>
@@ -196,12 +225,15 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>JuvenileToFloralInit</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].TTTargetPhotoSensitive.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>EndJuvenile</Start>
           <End>FloralInitiation</End>
         </GenericPhase>
@@ -209,23 +241,29 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>FloralInitToFlagLeaf</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <SubtractFunction>
             <Name>Target</Name>
             <VariableReference>
               <Name>TTEmergToFlag</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].TTEmergToFlagLeaf.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>TTJuvenile</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].Juvenile.Target.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>TTJuvToFloralInit</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].JuvenileToFloralInit.Target.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </SubtractFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>FloralInitiation</Start>
           <End>FlagLeaf</End>
         </GenericPhase>
@@ -233,12 +271,15 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>FlagLeafToFlowering</Name>
           <Constant>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>170</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>FlagLeaf</Start>
           <End>Flowering</End>
         </GenericPhase>
@@ -246,12 +287,15 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>FloweringToGrainFilling</Name>
           <Constant>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>80</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Flowering</Start>
           <End>StartGrainFill</End>
         </GenericPhase>
@@ -259,23 +303,29 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>GrainFilling</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <SubtractFunction>
             <Name>Target</Name>
             <VariableReference>
               <Name>FlowerToMaturity</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].TTFIowerToMaturity.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>FlowerToGrainFill</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].FloweringToGrainFilling.Target.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>GrainFillToMaturity</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].TTGrainFillToMaturity.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </SubtractFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>StartGrainFill</Start>
           <End>EndGrainFill</End>
         </GenericPhase>
@@ -283,12 +333,15 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>Maturing</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].TTGrainFillToMaturity.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>EndGrainFill</Start>
           <End>Maturity</End>
         </GenericPhase>
@@ -296,12 +349,15 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>MaturityToHarvestRipe</Name>
           <Constant>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Maturity</Start>
           <End>HarvestRipe</End>
         </GenericPhase>
@@ -309,13 +365,16 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>ReadyForHarvesting</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>HarvestRipe</Start>
           <End>Unused</End>
         </EndPhase>
         <PhotoperiodFunction>
           <Name>Photoperiod</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Twilight>-6</Twilight>
           <DayLength>0</DayLength>
         </PhotoperiodFunction>
@@ -323,6 +382,7 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>FloweringDAS</Name>
           <Memo>
             <Name>memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 <html><body>
 A function is used to provide flowering date as days after sowing(DAS).
@@ -331,12 +391,15 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].DaysAfterSowing</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>Flowering</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
@@ -344,6 +407,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>MaturityDAS</Name>
           <Memo>
             <Name>memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 <html><body>
 A function is used to provide maturity date as days after sowing(DAS).
@@ -352,38 +416,47 @@ A function is used to provide maturity date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].DaysAfterSowing</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>Maturity</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
         <Constant>
           <Name>TTFIowerToMaturity</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>761</FixedValue>
         </Constant>
         <Constant>
           <Name>TTEndJuvToInit</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>160</FixedValue>
         </Constant>
         <MultiplyFunction>
           <Name>TTGrainFillToMaturity</Name>
           <VariableReference>
             <Name>FlowerToMaturity</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].TTFIowerToMaturity.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>Proportion</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.05</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <OnEventFunction>
           <Name>TTTargetPhotoSensitive</Name>
           <VariableReference>
             <Name>PreEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].TTEndJuvToInit.Value()</VariableName>
           </VariableReference>
           <AddFunction>
@@ -392,6 +465,7 @@ A function is used to provide maturity date as days after sowing(DAS).
               <Name>PhotoModifier</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>11.5</double>
                   <double>13.5</double>
@@ -401,26 +475,33 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <double>23</double>
                 </Y>
               </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <XProperty>[Phenology].Photoperiod.Value()</XProperty>
             </LinearInterpolationFunction>
             <VariableReference>
               <Name>TTEndJuvToInit</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].TTEndJuvToInit.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AddFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>EndJuvenile</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
         <Constant>
           <Name>FinalLeafNo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>17.101</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafNoAtEmergence</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafNoRateChange</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>3.5</FixedValue>
         </Constant>
         <AddFunction>
@@ -431,69 +512,96 @@ A function is used to provide maturity date as days after sowing(DAS).
               <Name>NoLeavesRate1</Name>
               <VariableReference>
                 <Name>FinalLeafNo</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Phenology].FinalLeafNo.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>LeafNoAtEmergence</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Phenology].LeafNoAtEmergence.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>LeafNoRateChange</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Phenology].LeafNoRateChange.Value()</VariableName>
               </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </SubtractFunction>
             <Constant>
               <Name>LeafAppearanceRate1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>41</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
           <MultiplyFunction>
             <Name>LeafAppearingPhase2</Name>
             <Constant>
               <Name>LeafAppearanceRate2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>20</FixedValue>
             </Constant>
             <VariableReference>
               <Name>LeafNoRateChange</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].LeafNoRateChange.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </AddFunction>
         <AccumulateFunction>
           <Name>TTFromEmergence</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartStageName>Emergence</StartStageName>
           <EndStageName>Maturity</EndStageName>
+          <FractionRemovedOnCut>0</FractionRemovedOnCut>
+          <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+          <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+          <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
         </AccumulateFunction>
         <AccumulateFunction>
           <Name>TTFMFromFlowering</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartStageName>Flowering</StartStageName>
           <EndStageName>Maturity</EndStageName>
+          <FractionRemovedOnCut>0</FractionRemovedOnCut>
+          <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+          <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+          <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
         </AccumulateFunction>
         <AddFunction>
           <Name>TTEmergToFloralInit</Name>
           <VariableReference>
             <Name>TTTargetJuvenille</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].Juvenile.Target.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>TTTargetJuvToFI</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].JuvenileToFloralInit.Target.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </AddFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
         <Memo>
           <Name>memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
 <html><body>
 Though tillering is common in some sorghum varieties under certain agronomic conditions, no tillering is accounted for within this model.  Therefore all branching has been parameterised out of the current sorghum model.
@@ -502,54 +610,68 @@ Though tillering is common in some sorghum varieties under certain agronomic con
         </Memo>
         <VariableReference>
           <Name>ThermalTime</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <LessThanFunction>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <VariableReference>
             <Name>CurrentLeafNum</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Structure].LeafTipsAppeared</VariableName>
           </VariableReference>
           <SubtractFunction>
             <Name>SubtractFunction</Name>
             <VariableReference>
               <Name>FinalLeafNum</Name>
-              <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>LeafNumRateChange</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>3.5</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </SubtractFunction>
           <Constant>
             <Name>LeafAppRate1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>41</FixedValue>
           </Constant>
           <Constant>
             <Name>LeafAppRate2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>20</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </LessThanFunction>
         <HoldFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <AddFunction>
             <Name>ValueToHold</Name>
             <VariableReference>
               <Name>LeafNumSeed</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Structure].LeafNumSeed.Value()</VariableName>
             </VariableReference>
             <DivideFunction>
               <Name>DivideFunction</Name>
               <VariableReference>
                 <Name>TTEmergToFI</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Phenology].TTEmergToFloralInit.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>LeafInitRate</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Structure].LeafInitiationRate.Value()</VariableName>
               </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </DivideFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AddFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <WhenToHold>FloralInitiation</WhenToHold>
         </HoldFunction>
         <HeightFunction>
@@ -558,6 +680,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
             <Name>PotentialHeight</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>3</double>
                 <double>4</double>
@@ -571,61 +694,82 @@ Though tillering is common in some sorghum varieties under certain agronomic con
                 <double>1700</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </HeightFunction>
         <Constant>
           <Name>BranchingRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>ShadeInducedBranchMortality</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafNumSeed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>4</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafInitiationRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>21.6</FixedValue>
         </Constant>
         <VariableReference>
           <Name>MainStemPrimordiaInitiationRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Structure].LeafInitiationRate.Value()</VariableName>
         </VariableReference>
         <Constant>
           <Name>BranchMortality</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
+        <Constant>
+          <Name>StemSenescenceAge</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
         <Constant>
           <Name>InitialGrainProportion</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.3</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.008</FixedValue>
         </Constant>
         <PhaseLookup>
@@ -634,8 +778,10 @@ Though tillering is common in some sorghum varieties under certain agronomic con
             <Name>InitialPhase</Name>
             <Constant>
               <Name>InitialNconc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.05</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>Flowering</Start>
             <End>StartGrainFill</End>
           </PhaseLookupValue>
@@ -643,14 +789,18 @@ Though tillering is common in some sorghum varieties under certain agronomic con
             <Name>LinearPhase</Name>
             <Constant>
               <Name>FinalNconc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.013</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>StartGrainFill</Start>
             <End>EndGrainFill</End>
           </PhaseLookupValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <Constant>
           <Name>WaterContent</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.12</FixedValue>
         </Constant>
         <PhaseLookup>
@@ -661,39 +811,50 @@ Though tillering is common in some sorghum varieties under certain agronomic con
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>NumberFunction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <AddFunction>
                 <Name>FillingDuration</Name>
                 <VariableReference>
                   <Name>FloweringToGrainFilling</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <VariableName>[Phenology].FloweringToGrainFilling.Target.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>GrainFilling</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
                 </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
               </AddFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
                 <Constant>
                   <Name>MaximumFinalNConc</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <FixedValue>0.013</FixedValue>
                   <Units>g/g</Units>
                 </Constant>
                 <VariableReference>
                   <Name>MaximumSize</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
               </MultiplyFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </FillingRateFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>Flowering</Start>
             <End>EndGrainFill</End>
           </PhaseLookupValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <MultiplyFunction>
           <Name>NumberFunction</Name>
@@ -701,36 +862,46 @@ Though tillering is common in some sorghum varieties under certain agronomic con
             <Name>MinimumFunction</Name>
             <VariableReference>
               <Name>FinalGrainNum</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Grain].FinalGrainNum.Value()</VariableName>
             </VariableReference>
             <MultiplyFunction>
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>FinalGrainNum</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Grain].FinalGrainNum.Value()</VariableName>
               </VariableReference>
               <DivideFunction>
                 <Name>DivideFunction</Name>
                 <VariableReference>
                   <Name>TTStartGrainToNow</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <VariableName>[Grain].TTStartGrainToNow.Value()</VariableName>
                 </VariableReference>
                 <Constant>
                   <Name>RampTT</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <FixedValue>100</FixedValue>
                 </Constant>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
               </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </MultiplyFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MinimumFunction>
           <Constant>
             <Name>TemperatureFactor</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <OnEventFunction>
           <Name>FinalGrainNum</Name>
           <Constant>
             <Name>PreEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
           <DivideFunction>
@@ -743,74 +914,103 @@ Though tillering is common in some sorghum varieties under certain agronomic con
                   <Name>TotalPlantWt</Name>
                   <VariableReference>
                     <Name>LiveWt</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
                     <VariableName>[Sorghum].AboveGroundLive.Wt</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>DeadWt</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
                     <VariableName>[Sorghum].AboveGroundDead.Wt</VariableName>
                   </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                 </AddFunction>
                 <VariableReference>
                   <Name>GreenWtAtFI</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <VariableName>[Grain].GreenWtAtFI.Value()</VariableName>
                 </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
               </SubtractFunction>
               <VariableReference>
                 <Name>DaysFIToStartGF</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Grain].DaysFIToStartGrainFill.Value()</VariableName>
               </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </DivideFunction>
             <Constant>
               <Name>DMPerSeed</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.00083</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </DivideFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>StartGrainFill</SetEvent>
         </OnEventFunction>
         <AccumulateFunction>
           <Name>DaysFIToStartGrainFill</Name>
           <Constant>
             <Name>One</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartStageName>FloralInitiation</StartStageName>
           <EndStageName>StartGrainFill</EndStageName>
+          <FractionRemovedOnCut>0</FractionRemovedOnCut>
+          <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+          <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+          <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
         </AccumulateFunction>
         <OnEventFunction>
           <Name>GreenWtAtFI</Name>
           <Constant>
             <Name>PreEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Sorghum].AboveGroundLive.Wt</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>StartGrainFill</SetEvent>
         </OnEventFunction>
         <AccumulateFunction>
           <Name>TTStartGrainToNow</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartStageName>StartGrainFill</StartStageName>
           <EndStageName>Maturity</EndStageName>
+          <FractionRemovedOnCut>0</FractionRemovedOnCut>
+          <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+          <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+          <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
         </AccumulateFunction>
         <DivideFunction>
           <Name>DMCaryopsis</Name>
           <VariableReference>
             <Name>DMFixationSupply</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>GrainNumber</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Grain].NumberFunction.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </DivideFunction>
         <MinimumFunction>
           <Name>PotGrainFillRate</Name>
@@ -822,58 +1022,71 @@ Though tillering is common in some sorghum varieties under certain agronomic con
                 <Name>MultiplyFunction</Name>
                 <VariableReference>
                   <Name>DMCaryopsis</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <VariableName>[Grain].DMCaryopsis.Value()</VariableName>
                 </VariableReference>
                 <Constant>
                   <Name>Constant</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <FixedValue>0.4026</FixedValue>
                 </Constant>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
               </MultiplyFunction>
               <Constant>
                 <Name>Constant</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>3.19E-05</FixedValue>
               </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </AddFunction>
             <Constant>
               <Name>Constant</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1000</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
           <Constant>
             <Name>MaxGrainFillRate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.09</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MinimumFunction>
         <MultiplyFunction>
           <Name>DMDemandFunction</Name>
           <VariableReference>
             <Name>GrainFillRate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Grain].PotGrainFillRate.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>GrainNumber</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Grain].NumberFunction.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>Constant</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.001</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <Constant>
           <Name>DMDemandFunction33</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <RipeStage />
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.5</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -881,6 +1094,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -888,6 +1102,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -895,23 +1110,36 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <RipeStage />
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
         <CompositeBiomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Root].LayerLive</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Root].LayerDead</string>
           </Propertys>
@@ -920,6 +1148,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>KLModifier</Name>
           <Memo>
             <Name>memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 <html><body>
 The parameter KL is is described by Meinke et al (1993) to combine elements of soil conductivity (K) with root length (L) in determining root water uptake.  Peake et al (2013) demonstrated that in sorghum KL varied with plant population through impacts on root length density.  Here we adjust KL linearly with plant population.
@@ -928,6 +1157,7 @@ The parameter KL is is described by Meinke et al (1993) to combine elements of s
           </Memo>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>10</double>
@@ -937,99 +1167,86 @@ The parameter KL is is described by Meinke et al (1993) to combine elements of s
               <double>1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Sorghum].Population</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>SoilWaterEffect</Name>
           <Memo>
             <Name>memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 <html><body>
 No effect of soil water content on root growth is currently captured in the model.<br/>
 </body></html>]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>TemperatureEffect</Name>
           <Memo>
             <Name>memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 <html><body>
 No effect of temperature on root growth is currently captured in the model.<br/>
 </body></html>]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
           <Memo>
             <Name>memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 <html><body>
 Maximum daily N uptake is set to an arbitrarily high value.<br/>
 </body></html>]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>20</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
           <Memo>
             <Name>memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 <html><body>
 Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Sorghum model.<br/>
 </body></html>]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1000000</FixedValue>
         </Constant>
-        <LinearInterpolationFunction>
-          <Name>PartitionFraction</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>NaN</double>
-              <double>1</double>
-              <double>2</double>
-              <double>3</double>
-              <double>4</double>
-              <double>5</double>
-              <double>6</double>
-              <double>7</double>
-            </X>
-            <Y>
-              <double>NaN</double>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.087</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Phenology].Stage</XProperty>
-        </LinearInterpolationFunction>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
           <Memo>
             <Name>memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 <html><body>
 Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day in their analysis of historical sorghum yield trends in the US corn belt.
@@ -1040,8 +1257,10 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>PreFlowering</Name>
             <Constant>
               <Name>Function</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>25</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>Germination</Start>
             <End>Flowering</End>
           </PhaseLookupValue>
@@ -1049,14 +1268,18 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>PostFlowering</Name>
             <Constant>
               <Name>Function</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>Flowering</Start>
             <End>Maturity</End>
           </PhaseLookupValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Germination</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
@@ -1064,6 +1287,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>KNO3</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.003</double>
@@ -1073,12 +1297,14 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <double>0.03</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NUptakeSWFactor</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.2</double>
@@ -1090,12 +1316,14 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <double>1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].RWC</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNH4</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.003</double>
@@ -1105,27 +1333,26 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <double>0.03</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.2</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <ZoneNamesToGrowRootsIn />
-        <ZoneRootDepths />
-        <ZoneInitialDM />
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.5</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1133,6 +1360,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1140,6 +1368,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1147,23 +1376,73 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </BiomassRemoval>        
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </BiomassRemoval>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <LinearInterpolationFunction>
+            <Name>PartitionFraction</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <X>
+                <double>NaN</double>
+                <double>1</double>
+                <double>2</double>
+                <double>3</double>
+                <double>4</double>
+                <double>5</double>
+                <double>6</double>
+                <double>7</double>
+              </X>
+              <Y>
+                <double>NaN</double>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0.33</double>
+                <double>0.33</double>
+                <double>0.087</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <XProperty>[Phenology].Stage</XProperty>
+          </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
       <SimpleLeaf>
         <Name>Leaf</Name>
         <Biomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Constant>
           <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
@@ -1171,16 +1450,20 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>InitialWtFunction</Name>
           <Constant>
             <Name>InitialPlantWt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
             <Units>g/plant</Units>
           </Constant>
           <VariableReference>
             <Name>Population</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Plant].Population</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <Constant>
           <Name>LaiDeadFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>m^2/m^2</Units>
         </Constant>
@@ -1188,12 +1471,14 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1.25</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>8</double>
@@ -1209,28 +1494,35 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
           </WeightedTemperatureFunction>
           <RUECO2Function>
             <Name>FCO2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PhotosyntheticPathway>C4</PhotosyntheticPathway>
           </RUECO2Function>
           <VariableReference>
             <Name>RadnInt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].RadIntTot</VariableName>
           </VariableReference>
           <Constant>
             <Name>FVPD</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>FN</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>FW</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RUEModel>
         <MultiplyFunction>
           <Name>ExtinctionCoefficientFunction</Name>
@@ -1238,6 +1530,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>PotentialExtinctionCoeff</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0.2</double>
                 <double>0.5</double>
@@ -1249,13 +1542,16 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
                 <double>0.4</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Sorghum].SowingData.RowSpacing</XProperty>
           </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <LinearInterpolationFunction>
           <Name>FrostFraction</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>-10</double>
               <double>-9</double>
@@ -1265,38 +1561,47 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <double>0</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Weather].MinT</XProperty>
         </LinearInterpolationFunction>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MinimumFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MinimumFunction>
         <VariableReference>
           <Name>ThermalTime</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <Constant>
           <Name>FTN</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.1</FixedValue>
         </Constant>
         <MultiplyFunction>
           <Name>TPLAMax</Name>
           <Constant>
             <Name>cm2Tomm2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>100</FixedValue>
           </Constant>
           <PowerFunction>
@@ -1305,141 +1610,179 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <Name>AddFunction</Name>
               <VariableReference>
                 <Name>FTN</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Leaf].FTN.Value()</VariableName>
               </VariableReference>
               <Constant>
                 <Name>One</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>1</FixedValue>
               </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </AddFunction>
             <Constant>
               <Name>TillerCoeff</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.66</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Exponent>1</Exponent>
           </PowerFunction>
           <PowerFunction>
             <Name>PowerFunction1</Name>
             <VariableReference>
               <Name>FLN</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].FinalLeafNo.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>MainStemCoeff</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>2.9</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Exponent>1</Exponent>
           </PowerFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <Constant>
           <Name>NConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1000</FixedValue>
         </Constant>
         <Constant>
           <Name>HeightFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>10</FixedValue>
         </Constant>
         <LessThanFunction>
           <Name>Exponent</Name>
           <VariableReference>
             <Name>TTFromEmergence</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].TTFromEmergence.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>Constant</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>80</FixedValue>
           </Constant>
           <MultiplyFunction>
             <Name>MultiplyFunction</Name>
             <Constant>
               <Name>TPLAProductionCoeff</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.018</FixedValue>
             </Constant>
             <SubtractFunction>
               <Name>SubtractFunction</Name>
               <Constant>
                 <Name>Constant</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>80</FixedValue>
               </Constant>
               <MultiplyFunction>
                 <Name>TPLAInflection</Name>
                 <Constant>
                   <Name>TPLAInlectionRatio</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <FixedValue>0.66</FixedValue>
                 </Constant>
                 <VariableReference>
                   <Name>TTEmergToFlagLeaf</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <VariableName>[Phenology].TTEmergToFlagLeaf.Value()</VariableName>
                 </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
               </MultiplyFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </SubtractFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
           <MultiplyFunction>
             <Name>MultiplyFunction1</Name>
             <Constant>
               <Name>TPLAProductionCoeff</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.018</FixedValue>
             </Constant>
             <SubtractFunction>
               <Name>SubtractFunction</Name>
               <VariableReference>
                 <Name>TTFromEmergence</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Phenology].TTFromEmergence.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>TPLAInflection</Name>
                 <Constant>
                   <Name>TPLAInlectionRatio</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <FixedValue>0.66</FixedValue>
                 </Constant>
                 <VariableReference>
                   <Name>TTEmergToFlagLeaf</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <VariableName>[Phenology].TTEmergToFlagLeaf.Value()</VariableName>
                 </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
               </MultiplyFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </SubtractFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </LessThanFunction>
         <MultiplyFunction>
           <Name>TPLAInflection</Name>
           <Constant>
             <Name>TPLAInlectionRatio</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.66</FixedValue>
           </Constant>
           <VariableReference>
             <Name>TTEmergToFlagLeaf</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].TTEmergToFlagLeaf.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <MultiplyFunction>
           <Name>LAIFunction</Name>
           <Constant>
             <Name>cm2tom2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1E-06</FixedValue>
           </Constant>
           <VariableReference>
             <Name>TPLA</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].TPLA.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>Population</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Sorghum].SowingData.Population</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <LessThanFunction>
           <Name>TPLA</Name>
           <VariableReference>
             <Name>TTFromEmergence</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].TTFromEmergence.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>Constant</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>80</FixedValue>
           </Constant>
           <AddFunction>
             <Name>AddFunction</Name>
             <Constant>
               <Name>Constant</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>200</FixedValue>
             </Constant>
             <MultiplyFunction>
@@ -1448,79 +1791,102 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
                 <Name>DivideFunction</Name>
                 <VariableReference>
                   <Name>TTFromEmergence</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <VariableName>[Phenology].TTFromEmergence.Value()</VariableName>
                 </VariableReference>
                 <Constant>
                   <Name>Constant</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <FixedValue>80</FixedValue>
                 </Constant>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
               </DivideFunction>
               <VariableReference>
                 <Name>TPLAToday</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Leaf].TPLAToday.Value()</VariableName>
               </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </MultiplyFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AddFunction>
           <VariableReference>
             <Name>TPLAToday</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].TPLAToday.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </LessThanFunction>
         <DivideFunction>
           <Name>TPLAToday</Name>
           <VariableReference>
             <Name>TPLAMax</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].TPLAMax.Value()</VariableName>
           </VariableReference>
           <AddFunction>
             <Name>AddFunction</Name>
             <Constant>
               <Name>Constant</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1</FixedValue>
             </Constant>
             <ExponentialFunction>
               <Name>ExpFunc</Name>
               <VariableReference>
                 <Name>Exponent</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Leaf].Exponent.Value()</VariableName>
               </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <A>0</A>
               <B>1</B>
               <C>-1</C>
             </ExponentialFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AddFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </DivideFunction>
         <DivideFunction>
           <Name>LeafPartitioningCoefficient</Name>
           <Constant>
             <Name>One</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <AddFunction>
             <Name>AddFunction</Name>
             <Constant>
               <Name>One</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1</FixedValue>
             </Constant>
             <MultiplyFunction>
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>PartitionRate</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Leaf].PartitionRate.Value()</VariableName>
               </VariableReference>
               <PowerFunction>
                 <Name>PowerFunction</Name>
                 <VariableReference>
                   <Name>LeafNumber</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <VariableName>[Structure].LeafTipsAppeared</VariableName>
                 </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Exponent>2</Exponent>
               </PowerFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </MultiplyFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AddFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </DivideFunction>
         <Constant>
           <Name>PartitionRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.006</FixedValue>
         </Constant>
         <PhaseLookup>
@@ -1531,70 +1897,89 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>LeafPartitionCoeff</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Leaf].LeafPartitioningCoefficient.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>DMFixationSupply</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
               </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </MultiplyFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>Emergence</Start>
             <End>FlagLeaf</End>
           </PhaseLookupValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <SubtractFunction>
           <Name>DMRemaining</Name>
           <VariableReference>
             <Name>DMFixationSupply</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>LeafDMDemand</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].DMDemandFunction.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </SubtractFunction>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>100</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <TEWaterDemandFunction>
           <Name>TEWaterDemandFunction</Name>
           <Constant>
             <Name>SVPFrac</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.75</FixedValue>
           </Constant>
           <Constant>
             <Name>TranspirationEfficiencyCoefficient</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.009</FixedValue>
           </Constant>
           <VariableReference>
             <Name>Photosynthesis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].Photosynthesis.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </TEWaterDemandFunction>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
@@ -1602,6 +1987,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.5</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1609,6 +1995,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1616,6 +2003,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1623,12 +2011,40 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
+        </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -1642,6 +2058,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <Height>0</Height>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.03</KDead>
         <LAIDead>0</LAIDead>
       </SimpleLeaf>
@@ -1651,59 +2068,74 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>CobNumber</Name>
           <VariableReference>
             <Name>StemNumber</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Structure].TotalStemPopn</VariableName>
           </VariableReference>
           <Constant>
             <Name>CobsPerStem</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1.1</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <DivideFunction>
           <Name>CobSize</Name>
           <VariableReference>
             <Name>CobMass</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Rachis].Live.Wt</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>CobNumber</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Rachis].CobNumber.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </DivideFunction>
         <Biomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.008</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.003</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>ExpansionStress</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.6</double>
@@ -1713,6 +2145,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <double>1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Sorghum].WaterSupplyDemandRatio</XProperty>
         </LinearInterpolationFunction>
         <PhaseLookup>
@@ -1723,13 +2156,17 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>DMRemainingAfterLeaf</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Leaf].DMRemaining.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>Stem2FlowerFrac</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Stem].StemToFlowerFrac.Value()</VariableName>
               </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </MultiplyFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>FloralInitiation</Start>
             <End>FlagLeaf</End>
           </PhaseLookupValue>
@@ -1739,34 +2176,43 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>DMFixationSupply</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>Stem2FlowerFrac</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Stem].StemToFlowerFrac.Value()</VariableName>
               </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </MultiplyFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>FlagLeaf</Start>
             <End>Flowering</End>
           </PhaseLookupValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <Constant>
           <Name>InitialWtFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
@@ -1774,6 +2220,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.5</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1781,6 +2228,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1788,6 +2236,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1795,27 +2244,54 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Rachis].MinimumNConc.Value()</VariableName>
+        </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
         <Biomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Constant>
           <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.8</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
@@ -1823,6 +2299,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>MaximumNConc</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>1</double>
               <double>10</double>
@@ -1834,31 +2311,38 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <double>0.005</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Structure].LeafTipsAppeared</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.006</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>StartGrainFill</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>NReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
           <Name>StemToFlowerFrac</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.3</FixedValue>
         </Constant>
         <MaximumFunction>
@@ -1867,43 +2351,54 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>DMDemandFunction</Name>
             <VariableReference>
               <Name>DMFixationSupply</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>LeafDemand</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Leaf].DMDemandFunction.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RachisDemand</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Rachis].DMDemandFunction.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>GrainDemand</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Grain].DMDemandFunction.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </SubtractFunction>
           <Constant>
             <Name>Zero</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MaximumFunction>
         <Constant>
           <Name>InitialWtFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
@@ -1911,6 +2406,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.5</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1918,6 +2414,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1925,6 +2422,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1932,19 +2430,34 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+        </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <Cultivar>
         <Name>Buster</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Command />
       </Cultivar>
       <Memo>
         <Name>References</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText><![CDATA[
 <html><body>
 <h2>References</h2>
@@ -1967,17 +2480,20 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
 <br/><br/>
 </body></html>]]></MemoText>
       </Memo>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Sorghum</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>SorghumObs.txt</FileName>
     </Input>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -1985,6 +2501,7 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
     <Name>LeafNo</Name>
     <Series>
       <Name>Leaf Appear</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
@@ -2006,6 +2523,7 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
     </Series>
     <Series>
       <Name>Stage</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Right</YAxis>
@@ -2027,6 +2545,7 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
     </Series>
     <Series>
       <Name>LeafExpandObs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
@@ -2048,6 +2567,7 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
     </Series>
     <Series>
       <Name>Leaf Expand</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
@@ -2069,6 +2589,7 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
     </Series>
     <Series>
       <Name>StageObs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Right</YAxis>
@@ -2088,6 +2609,7 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
     <Axis>
       <Type>Bottom</Type>
       <Title />
@@ -2113,7 +2635,6 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
     </Axis>
     <LegendPosition>TopLeft</LegendPosition>
     <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <Folder>
     <Name>Sorghums</Name>
@@ -2127,6 +2648,7 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
             <Name>HighWaterHighN</Name>
             <Operations>
               <Name>operations</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>1997-11-28T00:00:00</Date>
                 <Action>[Irrigation].Apply(16);</Action>
@@ -2188,29 +2710,36 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
                 <Action>[Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);</Action>
               </Operation>
             </Operations>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Specifications>
               <string>[operations]</string>
             </Specifications>
           </Factor>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications />
         </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
       <Simulation>
         <Name>SorghumBase1</Name>
         <Clock>
           <Name>clock</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1997-11-18T00:00:00</StartDate>
           <EndDate>1998-04-15T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>HE5.met</FileName>
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </SoilArbitrator>
         <Zone>
           <Name>paddock</Name>
@@ -2218,6 +2747,7 @@ Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extra
             <Name>Manager folder</Name>
             <Manager>
               <Name>SorghumSowingRule</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
                 <PlantPopulation>10</PlantPopulation>
                 <RowSpacing>500</RowSpacing>
@@ -2288,9 +2818,12 @@ namespace Models
 }
 				]]></Code>
             </Manager>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
           <Operations>
             <Name>operations</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>1997-11-28T00:00:00</Date>
               <Action>[Irrigation].Apply(16);</Action>
@@ -2358,6 +2891,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>SorghumSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.226</double>
                   <double>0.226</double>
@@ -2395,6 +2929,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -2470,6 +3005,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>1.5</SummerU>
               <SummerCona>6.5</SummerCona>
@@ -2514,6 +3050,7 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -2546,17 +3083,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>50</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12.5</SoilCN>
@@ -2626,6 +3156,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -2655,6 +3186,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Initial Water</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -2687,6 +3219,7 @@ namespace Models
             </Sample>
             <Sample>
               <Name>Initial Nitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -2741,6 +3274,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <SoilType>HMM</SoilType>
             <Site>HRS</Site>
@@ -2749,18 +3287,19 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Plant>
             <Name>Sorghum</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Sorghum</ResourceName>
             <CropType>Sorghum</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypesList</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -2794,32 +3333,31 @@ namespace Models
           </SurfaceOrganicMatter>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <Irrigation>
             <Name>irrigation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Irrigation>
           <Report>
             <Name>Report</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -2848,7 +3386,7 @@ namespace Models
               <string>[Sorghum].Phenology.LeafAppearance2.RemainingLeaves.Value()</string>
               <string>[Sorghum].Phenology.LeafAppearance1._RemainingLeaves</string>
               <string>[Sorghum].Phenology.LeafAppearance2._RemainingLeaves</string>
-              <string>[Soil].SoilWater.ESW as esw</string>
+              <string>sum([Soil].SoilWater.ESW) as esw</string>
               <string>[Sorghum].Phenology.Juvenile.Target.Value()</string>
               <string>sum([Soil].SoilNitrogen.NO3) as no3</string>
               <string>sum([Soil].SoilWater.SW) as sw</string>
@@ -2873,7 +3411,7 @@ namespace Models
               <string>[Leaf].TPLAInflection.Value()</string>
               <string>[Leaf].LAI</string>
               <string>[Phenology].TTEmergToFlagLeaf.Value()</string>
-              <string>[Structure].MainStemFinalNodeNumber.Value()</string>
+              <string>[Structure].FinalLeafNumber.Value()</string>
               <string>[Structure].LeafTipsAppeared</string>
               <string>[Leaf].CoverGreen</string>
               <string>[Leaf].RadIntTot</string>
@@ -2901,14 +3439,21 @@ namespace Models
               <string />
             </EventNames>
           </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Simulation>
       <Graph>
         <Name>Biomass</Name>
         <Series>
           <Name>BiomassWt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -2930,6 +3475,7 @@ namespace Models
         </Series>
         <Series>
           <Name>YieldWt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -2951,6 +3497,7 @@ namespace Models
         </Series>
         <Series>
           <Name>BiomassObs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -2972,6 +3519,7 @@ namespace Models
         </Series>
         <Series>
           <Name>YieldObs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -2993,6 +3541,7 @@ namespace Models
         </Series>
         <Series>
           <Name>LeafWt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -3014,6 +3563,7 @@ namespace Models
         </Series>
         <Series>
           <Name>StemWt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -3035,6 +3585,7 @@ namespace Models
         </Series>
         <Series>
           <Name>RootWt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -3056,6 +3607,7 @@ namespace Models
         </Series>
         <Series>
           <Name>RachisWt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -3075,6 +3627,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -3092,12 +3645,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafNo</Name>
         <Series>
           <Name>Leaf Appear</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3119,6 +3672,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Stage</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -3140,6 +3694,7 @@ namespace Models
         </Series>
         <Series>
           <Name>LeafExpandObs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3161,6 +3716,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Leaf Expand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3182,6 +3738,7 @@ namespace Models
         </Series>
         <Series>
           <Name>StageObs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -3203,6 +3760,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Leaf Expand1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3222,6 +3780,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -3247,12 +3806,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TPLA</Name>
         <Series>
           <Name>TPLA</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3274,6 +3833,7 @@ namespace Models
         </Series>
         <Series>
           <Name>LAI</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -3293,6 +3853,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -3318,12 +3879,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Water</Name>
         <Series>
           <Name>Demand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3343,6 +3904,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -3361,12 +3923,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DM</Name>
         <Series>
           <Name>TotalFixationSupply</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3388,6 +3950,7 @@ namespace Models
         </Series>
         <Series>
           <Name>LeafDemand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3409,6 +3972,7 @@ namespace Models
         </Series>
         <Series>
           <Name>GrainDemand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3430,6 +3994,7 @@ namespace Models
         </Series>
         <Series>
           <Name>StemDemand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3451,6 +4016,7 @@ namespace Models
         </Series>
         <Series>
           <Name>RachisDemand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3472,6 +4038,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Stage</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -3491,6 +4058,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -3516,12 +4084,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Grain</Name>
         <Series>
           <Name>GrainNum</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3541,6 +4109,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -3559,12 +4128,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafDM</Name>
         <Series>
           <Name>TotalFixationSupply</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3584,6 +4153,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -3602,12 +4172,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafDM2</Name>
         <Series>
           <Name>TotalFixationSupply</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3629,6 +4199,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Demand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3650,6 +4221,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Remaining</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3669,6 +4241,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -3687,12 +4260,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Stem</Name>
         <Series>
           <Name>Wt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3714,6 +4287,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Wt1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3733,6 +4307,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -3751,12 +4326,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Grain1</Name>
         <Series>
           <Name>FillRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3776,6 +4351,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -3794,14 +4370,17 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Experiment>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <Graph>
     <Name>LeafNo1</Name>
     <Series>
       <Name>Leaf Appear</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
@@ -3823,6 +4402,7 @@ namespace Models
     </Series>
     <Series>
       <Name>Stage</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Right</YAxis>
@@ -3844,6 +4424,7 @@ namespace Models
     </Series>
     <Series>
       <Name>LeafExpandObs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
@@ -3865,6 +4446,7 @@ namespace Models
     </Series>
     <Series>
       <Name>Leaf Expand</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
@@ -3886,6 +4468,7 @@ namespace Models
     </Series>
     <Series>
       <Name>StageObs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Right</YAxis>
@@ -3905,6 +4488,7 @@ namespace Models
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
     </Series>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
     <Axis>
       <Type>Bottom</Type>
       <Title />
@@ -3930,7 +4514,7 @@ namespace Models
     </Axis>
     <LegendPosition>TopLeft</LegendPosition>
     <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>321</ExplorerWidth>
 </Simulations>

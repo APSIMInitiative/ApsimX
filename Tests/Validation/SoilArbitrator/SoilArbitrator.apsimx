@@ -2918,6 +2918,12 @@ This is important in SLURP as it is set for each species to represent their diff
             </Constant>
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </PartitionFractionDemandFunction>
+          <Constant>
+            <Name>DMConversionEfficiencyFunction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
+            <Units>0-1</Units>
+          </Constant>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <GrowthRespiration>0</GrowthRespiration>
           <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -3481,6 +3487,12 @@ This is important in SLURP as it is set for each species to represent their diff
             <Name>DMConversionEfficiencyFunction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>DMConversionEfficiencyFunction1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
+            <Units>0-1</Units>
           </Constant>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <GrowthRespiration>0</GrowthRespiration>

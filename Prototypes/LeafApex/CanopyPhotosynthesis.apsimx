@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1339,6 +1339,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </WangEngelTempFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1681,6 +1686,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -4251,7 +4262,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Wheat</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>HarvestReport</Name>
@@ -6448,7 +6458,6 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>ResetSW</Name>
@@ -8882,7 +8891,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>DailyReport</Name>
