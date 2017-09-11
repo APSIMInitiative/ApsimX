@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Small Windbreak Example</Name>
@@ -216,7 +216,7 @@
 using System.Collections.Generic;
 using Models.Core;
 using Models.Agroforestry;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
 using Models.Zones;
@@ -258,7 +258,7 @@ namespace Models
 		
 		private Zone ESWZone;
 		private List<IModel> Zones;
-		private Plant15 Wheat;
+		private Plant Wheat;
 		private Soil Soil;
 		
 		[EventSubscribe("Commencing")]
@@ -285,12 +285,12 @@ namespace Models
 			
 			foreach (Zone z in Zones)
 			{
-				Wheat = Apsim.Find(z, typeof(Plant15)) as Plant15;	
+				Wheat = Apsim.Find(z, typeof(Plant)) as Plant;	
 				Soil = Apsim.Find(z, typeof(Soil)) as Soil;
 						
 				if (Wheat != null && DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
-				    Wheat.plant_status == "out" &&
-				    ESWSoil.SoilWater.ESW > MinESW &&
+				    !Wheat.IsAlive &&
+				    MathUtilities.Sum(ESWSoil.SoilWater.ESW) > MinESW &&
 				    accumulatedRain.Sum > MinRain)
 				{
 					Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
@@ -737,6 +737,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -777,6 +778,7 @@ namespace Models
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>0 to 5m</Name>
@@ -1228,6 +1230,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -1264,16 +1267,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>5 to 10m</Name>
@@ -1725,6 +1729,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -1761,16 +1766,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>10 to 15m</Name>
@@ -2218,6 +2224,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -2254,16 +2261,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>15 to 20m</Name>
@@ -2712,6 +2720,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -2748,12 +2757,12 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Graph>
           <Name>SoilWater</Name>
           <Series>
@@ -2801,6 +2810,7 @@ namespace Models
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <Graph>
         <Name>Yield</Name>
@@ -3664,7 +3674,7 @@ namespace Models
 using System.Collections.Generic;
 using Models.Core;
 using Models.Agroforestry;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
 using Models.Zones;
@@ -3706,7 +3716,7 @@ namespace Models
 		
 		private Zone ESWZone;
 		private List<IModel> Zones;
-		private Plant15 Wheat;
+		private Plant Wheat;
 		private Soil Soil;
 		
 		[EventSubscribe("Commencing")]
@@ -3733,12 +3743,12 @@ namespace Models
 			
 			foreach (Zone z in Zones)
 			{
-				Wheat = Apsim.Find(z, typeof(Plant15)) as Plant15;	
+				Wheat = Apsim.Find(z, typeof(Plant)) as Plant;	
 				Soil = Apsim.Find(z, typeof(Soil)) as Soil;
 						
 				if (Wheat != null && DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
-				    Wheat.plant_status == "out" &&
-				    ESWSoil.SoilWater.ESW > MinESW &&
+				    !Wheat.IsAlive &&
+				    MathUtilities.Sum(ESWSoil.SoilWater.ESW) > MinESW &&
 				    accumulatedRain.Sum > MinRain)
 				{
 					Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
@@ -4187,6 +4197,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -4227,6 +4238,7 @@ namespace Models
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>0 to 5m</Name>
@@ -4678,6 +4690,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -4714,16 +4727,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>5 to 10m</Name>
@@ -5175,6 +5189,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -5211,16 +5226,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>10 to 15m</Name>
@@ -5668,6 +5684,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -5704,16 +5721,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>15 to 20m</Name>
@@ -6162,6 +6180,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -6198,16 +6217,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>20 to 25m</Name>
@@ -6656,6 +6676,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -6692,16 +6713,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>25 to 30m</Name>
@@ -7150,6 +7172,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -7186,16 +7209,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>30 to 35m</Name>
@@ -7644,6 +7668,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -7680,16 +7705,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>35 to 40m</Name>
@@ -8138,6 +8164,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -8174,16 +8201,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>5</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>40 to 50m</Name>
@@ -8632,6 +8660,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -8668,16 +8697,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.1</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>10</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>50 to 75m</Name>
@@ -9126,6 +9156,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -9162,16 +9193,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.25</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>25</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>75 to 100m</Name>
@@ -9620,6 +9652,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -9656,16 +9689,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.25</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>25</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>100 to 200m</Name>
@@ -10114,6 +10148,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -10150,16 +10185,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>1</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>100</Width>
+        <SoluteManager />
       </RectangularZone>
       <RectangularZone>
         <Name>200 to 300m</Name>
@@ -10608,6 +10644,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -10644,16 +10681,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>1</Area>
         <Slope>0</Slope>
         <Length>100</Length>
         <Width>100</Width>
+        <SoluteManager />
       </RectangularZone>
       <Graph>
         <Name>Yield</Name>
@@ -11318,7 +11356,7 @@ namespace Models
 using System.Collections.Generic;
 using Models.Core;
 using Models.Agroforestry;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
 using Models.Zones;
@@ -11360,7 +11398,7 @@ namespace Models
 		
 		private Zone ESWZone;
 		private List<IModel> Zones;
-		private Plant15 Wheat;
+		private Plant Wheat;
 		private Soil Soil;
 		
 		[EventSubscribe("Commencing")]
@@ -11387,12 +11425,12 @@ namespace Models
 			
 			foreach (Zone z in Zones)
 			{
-				Wheat = Apsim.Find(z, typeof(Plant15)) as Plant15;	
+				Wheat = Apsim.Find(z, typeof(Plant)) as Plant;	
 				Soil = Apsim.Find(z, typeof(Soil)) as Soil;
 						
 				if (Wheat != null && DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
-				    Wheat.plant_status == "out" &&
-				    ESWSoil.SoilWater.ESW > MinESW &&
+				    !Wheat.IsAlive &&
+				    MathUtilities.Sum(ESWSoil.SoilWater.ESW) > MinESW &&
 				    accumulatedRain.Sum > MinRain)
 				{
 					Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
@@ -11849,6 +11887,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -11885,16 +11924,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.0078539816339744835</Area>
         <Slope>0</Slope>
         <Radius>5</Radius>
         <Width>5</Width>
+        <SoluteManager />
       </CircularZone>
       <CircularZone>
         <Name>5 to 10m</Name>
@@ -12320,6 +12360,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -12356,12 +12397,12 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
           <a_interception>0</a_interception>
@@ -12386,6 +12427,7 @@ namespace Models
         <Slope>0</Slope>
         <Radius>10</Radius>
         <Width>5</Width>
+        <SoluteManager />
       </CircularZone>
       <CircularZone>
         <Name>10 to 15m</Name>
@@ -12811,6 +12853,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -12847,12 +12890,12 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
           <a_interception>0</a_interception>
@@ -12877,6 +12920,7 @@ namespace Models
         <Slope>0</Slope>
         <Radius>15</Radius>
         <Width>5</Width>
+        <SoluteManager />
       </CircularZone>
       <CircularZone>
         <Name>15 to 20m</Name>
@@ -13322,6 +13366,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -13358,16 +13403,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.054977871437821374</Area>
         <Slope>0</Slope>
         <Radius>20</Radius>
         <Width>5</Width>
+        <SoluteManager />
       </CircularZone>
       <CircularZone>
         <Name>20 to 25m</Name>
@@ -13813,6 +13859,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -13849,16 +13896,17 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <Area>0.070685834705770348</Area>
         <Slope>0</Slope>
         <Radius>25</Radius>
         <Width>5</Width>
+        <SoluteManager />
       </CircularZone>
       <Graph>
         <Name>Yield</Name>
@@ -14685,11 +14733,13 @@ namespace Models
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
+            <CERESSoilTemperature />
           </Soil>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
           <Width>5</Width>
+          <SoluteManager />
         </RectangularZone>
         <RectangularZone>
           <Name>5m</Name>
@@ -15045,11 +15095,13 @@ namespace Models
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
+            <CERESSoilTemperature />
           </Soil>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
           <Width>5</Width>
+          <SoluteManager />
         </RectangularZone>
         <RectangularZone>
           <Name>10m</Name>
@@ -15406,11 +15458,13 @@ namespace Models
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
+            <CERESSoilTemperature />
           </Soil>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
           <Width>5</Width>
+          <SoluteManager />
         </RectangularZone>
         <RectangularZone>
           <Name>15m</Name>
@@ -15766,11 +15820,13 @@ namespace Models
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
+            <CERESSoilTemperature />
           </Soil>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
           <Width>5</Width>
+          <SoluteManager />
         </RectangularZone>
         <RectangularZone>
           <Name>20m</Name>
@@ -16126,11 +16182,13 @@ namespace Models
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
+            <CERESSoilTemperature />
           </Soil>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
           <Width>5</Width>
+          <SoluteManager />
         </RectangularZone>
         <RectangularZone>
           <Name>25m</Name>
@@ -16486,11 +16544,13 @@ namespace Models
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
+            <CERESSoilTemperature />
           </Soil>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
           <Width>5</Width>
+          <SoluteManager />
         </RectangularZone>
         <RectangularZone>
           <Name>30m</Name>
@@ -16846,11 +16906,13 @@ namespace Models
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
+            <CERESSoilTemperature />
           </Soil>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
           <Width>5</Width>
+          <SoluteManager />
         </RectangularZone>
         <RectangularZone>
           <Name>35m</Name>
@@ -17206,11 +17268,13 @@ namespace Models
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
+            <CERESSoilTemperature />
           </Soil>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
           <Width>5</Width>
+          <SoluteManager />
         </RectangularZone>
         <RectangularZone>
           <Name>40m</Name>
@@ -17566,11 +17630,13 @@ namespace Models
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
+            <CERESSoilTemperature />
           </Soil>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
           <Width>5</Width>
+          <SoluteManager />
         </RectangularZone>
         <RectangularZone>
           <Name>45m</Name>
@@ -17926,11 +17992,13 @@ namespace Models
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
+            <CERESSoilTemperature />
           </Soil>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
           <Width>5</Width>
+          <SoluteManager />
         </RectangularZone>
         <RectangularZone>
           <Name>50m</Name>
@@ -18286,11 +18354,13 @@ namespace Models
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
+            <CERESSoilTemperature />
           </Soil>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
           <Width>5</Width>
+          <SoluteManager />
         </RectangularZone>
         <Graph>
           <Name>SoilWater</Name>

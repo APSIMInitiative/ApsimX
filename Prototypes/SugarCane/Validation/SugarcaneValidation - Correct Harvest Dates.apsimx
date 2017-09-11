@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Memo>
     <Name>Memo</Name>
@@ -353,6 +353,7 @@ Dataset 18 was not included as irrigation records were missing.
           <State>NSW</State>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -3669,6 +3670,7 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -4389,6 +4391,7 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -6895,6 +6898,7 @@ nb. irrigation amounts and depths are in (mm)
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -7615,6 +7619,7 @@ nb. irrigation amounts and depths are in (mm)
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -10136,6 +10141,7 @@ They are missing the word "tillage". This means these tillage events won't occur
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -10835,6 +10841,7 @@ They are missing the word "tillage". This means these tillage events won't occur
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -13325,6 +13332,7 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -14024,6 +14032,7 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -16510,6 +16519,7 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -17293,6 +17303,7 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -19711,6 +19722,7 @@ However Automatic Irrigations are not possible in ApsimX yet.
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -20451,6 +20463,7 @@ However Automatic Irrigations are not possible in ApsimX yet.
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -22913,6 +22926,7 @@ All operation irrigations are Overhead, high pressure gun
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -23650,6 +23664,7 @@ All operation irrigations are Overhead, high pressure gun
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -26116,6 +26131,7 @@ All operation irrigations are Overhead, high pressure gun
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -26853,6 +26869,7 @@ All operation irrigations are Overhead, high pressure gun
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -29323,6 +29340,7 @@ All operation irrigations are Overhead, high pressure gun
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -30040,6 +30058,7 @@ All operation irrigations are Overhead, high pressure gun
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -32566,6 +32585,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -33280,6 +33300,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -35774,6 +35795,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -36488,6 +36510,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -38889,6 +38912,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -39707,6 +39731,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -42100,6 +42125,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -42535,6 +42561,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -45024,6 +45051,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -45459,6 +45487,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -47932,6 +47961,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -48367,6 +48397,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -50848,6 +50879,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -51283,6 +51315,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -53716,6 +53749,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -54044,6 +54078,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -56748,6 +56783,7 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -57531,6 +57567,7 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -59949,6 +59986,7 @@ However Automatic Irrigations are not possible in ApsimX yet.
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -60648,6 +60686,7 @@ However Automatic Irrigations are not possible in ApsimX yet.
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -63440,6 +63479,7 @@ Likewise fertiliser applications are subsurface fertigations except the followin
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -64139,6 +64179,7 @@ Likewise fertiliser applications are subsurface fertigations except the followin
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -66791,6 +66832,7 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -67511,6 +67553,7 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -70070,6 +70113,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -70790,6 +70834,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -73384,6 +73429,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -74101,6 +74147,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -76703,6 +76750,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -77420,6 +77468,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -80088,6 +80137,7 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>LAI Time Series</Name>
@@ -80880,6 +80930,7 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -83477,6 +83528,7 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -83886,6 +83938,7 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -86383,6 +86436,7 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -86792,6 +86846,7 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -89357,6 +89412,7 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -89766,6 +89822,7 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -92311,6 +92368,7 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>

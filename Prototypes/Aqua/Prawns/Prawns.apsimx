@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Prawns</Name>
@@ -638,6 +638,7 @@ namespace Models
       </Graph>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>

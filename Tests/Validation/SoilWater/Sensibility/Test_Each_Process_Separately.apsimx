@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Memo>
     <Name>Differences</Name>
@@ -456,6 +456,7 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Report>
         <Name>Report</Name>
@@ -481,6 +482,7 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -934,6 +936,7 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Report>
         <Name>Report</Name>
@@ -959,6 +962,7 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -1412,6 +1416,7 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Report>
         <Name>Report</Name>
@@ -1439,6 +1444,7 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -1486,7 +1492,7 @@ Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS.
         <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -1923,6 +1929,7 @@ namespace Models
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Report>
         <Name>Report</Name>
@@ -1957,6 +1964,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -2423,6 +2431,7 @@ namespace Models
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Manager>
         <Name>calculate_total_pond</Name>
@@ -2432,7 +2441,7 @@ namespace Models
         <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 namespace Models
 {
@@ -2489,6 +2498,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -2952,6 +2962,7 @@ namespace Models
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Manager>
         <Name>calculate_total_pond</Name>
@@ -2961,7 +2972,7 @@ namespace Models
         <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 namespace Models
 {
@@ -3012,6 +3023,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -3475,6 +3487,7 @@ namespace Models
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Report>
         <Name>Report</Name>
@@ -3502,6 +3515,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -3952,6 +3966,7 @@ namespace Models
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Report>
         <Name>Report</Name>
@@ -3978,6 +3993,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -4064,7 +4080,7 @@ namespace Models
         <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -4459,6 +4475,7 @@ namespace Models
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Report>
         <Name>Report</Name>
@@ -4494,6 +4511,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -4944,6 +4962,7 @@ namespace Models
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Report>
         <Name>Report</Name>
@@ -4972,6 +4991,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -5422,6 +5442,7 @@ namespace Models
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Manager>
         <Name>TillageSW</Name>
@@ -5500,6 +5521,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -5953,6 +5975,7 @@ namespace Models
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -6017,6 +6040,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -6470,6 +6494,7 @@ namespace Models
         <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -6706,6 +6731,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -7223,6 +7249,7 @@ namespace Models
           <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Report>
           <Name>Report</Name>
@@ -7254,6 +7281,7 @@ namespace Models
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -7769,6 +7797,7 @@ namespace Models
           <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Report>
           <Name>Report</Name>
@@ -7800,6 +7829,7 @@ namespace Models
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -8250,6 +8280,7 @@ namespace Models
           <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -8296,6 +8327,7 @@ namespace Models
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -8754,6 +8786,7 @@ namespace Models
             <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <Manager>
             <Name>set water table</Name>
@@ -8761,7 +8794,7 @@ namespace Models
             <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 namespace Models
 {
@@ -8815,6 +8848,7 @@ namespace Models
           </Report>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
         <Area>0</Area>
         <Slope>0</Slope>
@@ -9268,6 +9302,7 @@ namespace Models
             <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <Manager>
             <Name>set setable variables</Name>
@@ -9275,7 +9310,7 @@ namespace Models
             <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 
 namespace Models
@@ -9425,6 +9460,7 @@ namespace Models
           </Report>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
         <Area>0</Area>
         <Slope>0</Slope>
@@ -9901,6 +9937,7 @@ namespace Models
             <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <Plant>
             <Name>Slurp</Name>
@@ -9982,6 +10019,7 @@ namespace Models
           </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
         <Area>0</Area>
         <Slope>0</Slope>
@@ -10446,6 +10484,7 @@ namespace Models
             <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <Plant>
             <Name>Slurp</Name>
@@ -10526,6 +10565,7 @@ namespace Models
           </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
         <Area>0</Area>
         <Slope>0</Slope>
@@ -10990,6 +11030,7 @@ namespace Models
             <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <Plant>
             <Name>Slurp</Name>
@@ -11070,6 +11111,7 @@ namespace Models
           </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
         <Area>0</Area>
         <Slope>0</Slope>
@@ -11576,6 +11618,7 @@ namespace Models
             <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <Plant>
             <Name>Slurp1</Name>
@@ -11710,6 +11753,7 @@ namespace Models
           </Report>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
         <Graph>
           <Name>Graph</Name>
@@ -11918,6 +11962,5 @@ namespace Models
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
-  
   <ExplorerWidth>278</ExplorerWidth>
 </Simulations>

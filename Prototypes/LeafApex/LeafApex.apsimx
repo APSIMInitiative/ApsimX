@@ -2872,12 +2872,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Units>0-1</Units>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiencyFunction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1</FixedValue>
-          <Units>0-1</Units>
-        </Constant>
-        <Constant>
           <Name>DMReallocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>

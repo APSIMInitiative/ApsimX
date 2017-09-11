@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -480,6 +480,7 @@ namespace Models
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+        <CERESSoilTemperature />
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -516,12 +517,12 @@ namespace Models
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
-      <Plant15>
+      <Plant>
         <Name>Wheat</Name>
         <ResourceName>Wheat</ResourceName>
         <AutoHarvest>true</AutoHarvest>
         <CropType>Wheat</CropType>
-      </Plant15>
+      </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
         <air_pressure>1010</air_pressure>
@@ -598,7 +599,7 @@ namespace Models
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
@@ -611,7 +612,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Fertiliser Fertiliser;
 		[Link] Summary Summary;
-		[Link] Plant15 Wheat;
+		[Link] Plant Wheat;
 		[Link] Soil Soil; 
 		Accumulator accumulatedRain;
 		
@@ -648,8 +649,8 @@ namespace Models
 			accumulatedRain.Update();
 			
 			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
-			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    !Wheat.IsAlive &&
+			    MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
@@ -666,6 +667,7 @@ namespace Models
       </Irrigation>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Zone>
       <Name>Field2</Name>
@@ -1065,6 +1067,7 @@ namespace Models
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+        <CERESSoilTemperature />
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -1101,12 +1104,12 @@ namespace Models
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
-      <Plant15>
+      <Plant>
         <Name>Wheat</Name>
         <ResourceName>Wheat</ResourceName>
         <AutoHarvest>true</AutoHarvest>
         <CropType>Wheat</CropType>
-      </Plant15>
+      </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
         <air_pressure>1010</air_pressure>
@@ -1183,7 +1186,7 @@ namespace Models
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
@@ -1196,7 +1199,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Fertiliser Fertiliser;
 		[Link] Summary Summary;
-		[Link] Plant15 Wheat;
+		[Link] Plant Wheat;
 		[Link] Soil Soil; 
 		Accumulator accumulatedRain;
 		
@@ -1233,8 +1236,8 @@ namespace Models
 			accumulatedRain.Update();
 			
 			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
-			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    !Wheat.IsAlive &&
+			    MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
@@ -1251,6 +1254,7 @@ namespace Models
       </Irrigation>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Graph>
       <Name>Biomass</Name>
@@ -1754,6 +1758,7 @@ namespace Models
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+        <CERESSoilTemperature />
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -1790,12 +1795,12 @@ namespace Models
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
-      <Plant15>
+      <Plant>
         <Name>Wheat</Name>
         <ResourceName>Wheat</ResourceName>
         <AutoHarvest>true</AutoHarvest>
         <CropType>Wheat</CropType>
-      </Plant15>
+      </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
         <air_pressure>1010</air_pressure>
@@ -1872,7 +1877,7 @@ namespace Models
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
@@ -1885,7 +1890,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Fertiliser Fertiliser;
 		[Link] Summary Summary;
-		[Link] Plant15 Wheat;
+		[Link] Plant Wheat;
 		[Link] Soil Soil; 
 		Accumulator accumulatedRain;
 		
@@ -1922,8 +1927,8 @@ namespace Models
 			accumulatedRain.Update();
 			
 			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
-			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    !Wheat.IsAlive &&
+			    MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
@@ -1940,6 +1945,7 @@ namespace Models
       </Irrigation>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>

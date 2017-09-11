@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Rain_Evap_Test</Name>
@@ -38,6 +38,7 @@
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Graph>
       <Name>Graph</Name>
@@ -315,6 +316,7 @@ namespace Models
       </Graph>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -442,6 +444,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Zone>
       <Name>SettlingPond</Name>
@@ -552,6 +555,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Manager>
       <Name>Transfer water from PrawnPond to SettlingPond</Name>

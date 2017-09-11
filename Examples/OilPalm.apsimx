@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Simulation>
     <Name>OilPalm</Name>
@@ -484,6 +484,7 @@
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Report>
         <Name>AnnualOutput</Name>
@@ -792,6 +793,7 @@ namespace Models
       </Manager>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Graph>
       <Name>AnnualFFB</Name>
@@ -821,44 +823,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Annual Rainfall</Title>
+        <Name>Annual Rainfall</Name>
         <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-8355585</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualRain</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualRain</YFieldName>
       </Series>
       <Series>
-        <Title>FFB</Title>
+        <Name>FFB</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388544</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualYield</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>Calculations.Script.AnnualYield</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -892,44 +884,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Annual Rainfall</Title>
+        <Name>Annual Rainfall</Name>
         <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-8355585</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualRain</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualRain</YFieldName>
       </Series>
       <Series>
-        <Title>Annual Bunches per palm</Title>
+        <Name>Annual Bunches per palm</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388544</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunches</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -963,44 +945,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Annual Rainfall</Title>
+        <Name>Annual Rainfall</Name>
         <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-8355585</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualRain</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualRain</YFieldName>
       </Series>
       <Series>
-        <Title>Annual Bunch Size</Title>
+        <Name>Annual Bunch Size</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388544</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualBunchSize</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1026,64 +998,49 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Annual Understory NPP</Title>
+        <Name>Annual Understory NPP</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualUnderstoryNPP</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualUnderstoryNPP</YFieldName>
       </Series>
       <Series>
-        <Title>Annual Palm Vegetative NPP</Title>
+        <Name>Annual Palm Vegetative NPP</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualPalmVegetativeNPP</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualPalmVegetativeNPP</YFieldName>
       </Series>
       <Series>
-        <Title>Annual Total Vegetative NPP</Title>
+        <Name>Annual Total Vegetative NPP</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualTotalVegetativeNPP</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualTotalVegetativeNPP</YFieldName>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1109,84 +1066,64 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Annual Frond NPP</Title>
+        <Name>Annual Frond NPP</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-12550016</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualFrondNPP</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualFrondNPP</YFieldName>
       </Series>
       <Series>
-        <Title>Annual Stem NPP</Title>
+        <Name>Annual Stem NPP</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8355840</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualStemNPP</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualStemNPP</YFieldName>
       </Series>
       <Series>
-        <Title>Annual Root NPP</Title>
+        <Name>Annual Root NPP</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualRootNPP</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualRootNPP</YFieldName>
       </Series>
       <Series>
-        <Title>Annual Bunch NPP</Title>
+        <Name>Annual Bunch NPP</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388544</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualBunchNPP</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualBunchNPP</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1212,24 +1149,19 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>LAI</Title>
+        <Name>LAI</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>OilPalm.LAI</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>OilPalm.LAI</YFieldName>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1255,44 +1187,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Annual Rainfall</Title>
+        <Name>Annual Rainfall</Name>
         <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8355585</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualRain</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualRain</YFieldName>
       </Series>
       <Series>
-        <Title>Annual Potential Evaporation</Title>
+        <Name>Annual Potential Evaporation</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualPotentialEvaporation</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualPotentialEvaporation</YFieldName>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1326,44 +1248,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Annual Irrigation Addition</Title>
+        <Name>Annual Irrigation Addition</Name>
         <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-8355585</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualIrrigation</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualIrrigation</YFieldName>
       </Series>
       <Series>
-        <Title>Annual N Addition</Title>
+        <Name>Annual N Addition</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualFertiliserNAdded</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualFertiliserNAdded</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1389,64 +1301,49 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Annual N Fixation</Title>
+        <Name>Annual N Fixation</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualUnderstoryNFixation</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualUnderstoryNFixation</YFieldName>
       </Series>
       <Series>
-        <Title>Annual N Addition</Title>
+        <Name>Annual N Addition</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualFertiliserNAdded</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualFertiliserNAdded</YFieldName>
       </Series>
       <Series>
-        <Title>Annual Total N Input</Title>
+        <Name>Annual Total N Input</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualTotalNInput</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualTotalNInput</YFieldName>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1472,64 +1369,49 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Annual N Leaching</Title>
+        <Name>Annual N Leaching</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualNLeaching</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualNLeaching</YFieldName>
       </Series>
       <Series>
-        <Title>Annual N Denitrified</Title>
+        <Name>Annual N Denitrified</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualDenitrification</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualDenitrification</YFieldName>
       </Series>
       <Series>
-        <Title>Annual N Removed</Title>
+        <Name>Annual N Removed</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualNRemoved</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>Calculations.Script.AnnualNRemoved</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1555,44 +1437,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Annual N Addition</Title>
+        <Name>Annual N Addition</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualTotalNInput</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualTotalNInput</YFieldName>
       </Series>
       <Series>
-        <Title>Annual N Removed</Title>
+        <Name>Annual N Removed</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualNRemoved</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>Calculations.Script.AnnualNRemoved</YFieldName>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1626,44 +1498,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Total Soil Carbon</Title>
+        <Name>Total Soil Carbon</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>SoilCtpha</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SoilCtpha</YFieldName>
       </Series>
       <Series>
-        <Title>Total Soil Nitrogen</Title>
+        <Name>Total Soil Nitrogen</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-16744320</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>SoilNkgpha</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SoilNkgpha</YFieldName>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1697,44 +1559,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Litter Mass</Title>
+        <Name>Litter Mass</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32704</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>SurfaceOM.Wt</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SurfaceOM.Wt</YFieldName>
       </Series>
       <Series>
-        <Title>Litter N</Title>
+        <Name>Litter N</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-16744320</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>SurfaceOM.N</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SurfaceOM.N</YFieldName>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1768,24 +1620,19 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Profile Nitrate</Title>
+        <Name>Profile Nitrate</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744320</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>TotalNO3</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>TotalNO3</YFieldName>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1819,64 +1666,49 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Soil Water</Title>
+        <Name>Soil Water</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>TotalSW</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>TotalSW</YFieldName>
       </Series>
       <Series>
-        <Title>DUL</Title>
+        <Name>DUL</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8355585</ColourArgb>
         <Marker>None</Marker>
         <Line>Dash</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>DUL</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>DUL</YFieldName>
       </Series>
       <Series>
-        <Title>SAT</Title>
+        <Name>SAT</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777056</ColourArgb>
         <Marker>None</Marker>
         <Line>Dash</Line>
-        <X>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>MonthlyOutput</TableName>
-          <FieldName>SAT</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>MonthlyOutput</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SAT</YFieldName>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1910,44 +1742,34 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Annual Rainfall</Title>
+        <Name>Annual Rainfall</Name>
         <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-8355585</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualRain</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualRain</YFieldName>
       </Series>
       <Series>
-        <Title>Annual N2O Emission</Title>
+        <Name>Annual N2O Emission</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today.Year</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualN2O</FieldName>
-        </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <TableName>AnnualOutput</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>AnnualN2O</YFieldName>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>

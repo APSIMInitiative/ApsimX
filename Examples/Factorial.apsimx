@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="4">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Experiment>
     <Name>Experiment</Name>
@@ -545,6 +545,7 @@
           <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -1208,6 +1209,7 @@
           <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -1847,6 +1849,7 @@
           <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -2483,6 +2486,7 @@
           <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -3213,6 +3217,7 @@
           <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>

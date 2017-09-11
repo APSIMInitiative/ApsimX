@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -1101,11 +1101,13 @@ namespace Models
         <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today as Date</string>
-          <string />
+          <string>
+          </string>
           <string>[Chicory].Population</string>
           <string>[Chicory].CropType</string>
           <string>[Chicory].Leaf.RadIntTot as InterceptedRadiation</string>
-          <string />
+          <string>
+          </string>
           <string>[Irrigation].IrrigationApplied as IrrigationApplied</string>
           <string>[Soil].SoilWater.Es as Evaporation</string>
           <string>[Chicory].Leaf.Transpiration as Transpiration</string>
@@ -1119,7 +1121,8 @@ namespace Models
           <string>([Soil].SoilWater.LeachNH4 + [Soil].SoilWater.LeachNO3) as LeachedN</string>
           <string>(-1*[Chicory].Root.NUptake) as UptakeN</string>
           <string>(sum([Soil].SoilNitrogen.urea) + sum([Soil].SoilNitrogen.NH4) + sum([Soil].SoilNitrogen.NO3)) as SoilNContent</string>
-          <string />
+          <string>
+          </string>
           <string>[Chicory].Total.Wt</string>
           <string>[Chicory].AboveGround.Wt</string>
           <string>[Chicory].BelowGround.Wt</string>
@@ -1130,7 +1133,8 @@ namespace Models
           <string>[Chicory].Inflorescence.Live.Wt</string>
           <string>[Chicory].Taproot.Live.Wt</string>
           <string>[Chicory].Root.Live.Wt</string>
-          <string />
+          <string>
+          </string>
           <string>[Defoliate].Script.DefoliatedDM as HarvestedWt</string>
         </VariableNames>
         <EventNames>

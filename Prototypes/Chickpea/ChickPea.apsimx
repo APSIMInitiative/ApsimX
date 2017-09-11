@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -85,7 +85,7 @@ The model consists of:
         <string>[Chickpea].Arbitrator.DM.TotalFixationSupply</string>
         <string>[Chickpea].Leaf.Live.MetabolicNConc</string>
         <string>[Chickpea].Leaf.Live.StructuralNConc</string>
-        <string>[Chickpea].Leaf.Live.NonStructuralNConc</string>
+        <string>[Chickpea].Leaf.Live.StorageNConc</string>
         <string>[Chickpea].Leaf.SenescingCohortNo</string>
         <string>[Chickpea].Stem.DMDemand</string>
         <string>[Chickpea].Leaf.DMSupplyPhotosynthesis</string>
@@ -334,7 +334,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <FixedValue>40</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
@@ -876,7 +876,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Stem].Live.NonStructuralWt</XProperty>
+            <XProperty>[Stem].Live.StorageWt</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <Constant>
@@ -884,7 +884,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <FixedValue>0</FixedValue>
         </Constant>
         <PhaseLookup>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <PhaseLookupValue>
             <Name>PreEmergence</Name>
             <Constant>
@@ -940,6 +940,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
         <ApexNum>0</ApexNum>
+        <Constant>
+          <Name>StemSenescenceAge</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
       </Structure>
       <HIReproductiveOrgan>
         <Name>Grain</Name>
@@ -1164,36 +1168,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <End>Maturity</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>Early</Name>
-            <Constant>
-              <Name>Function</Name>
-              <FixedValue>0.2</FixedValue>
-            </Constant>
-            <Start>Emergence</Start>
-            <End>StartFlowering</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>Middle</Name>
-            <Constant>
-              <Name>Function</Name>
-              <FixedValue>0.1</FixedValue>
-            </Constant>
-            <Start>StartFlowering</Start>
-            <End>EndFlowering</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>Late</Name>
-            <Constant>
-              <Name>Function</Name>
-              <FixedValue>0</FixedValue>
-            </Constant>
-            <Start>EndFlowering</Start>
-            <End>Maturity</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
           <FixedValue>0.01</FixedValue>
@@ -1302,6 +1276,43 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
         <ZoneInitialDM />
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>Early</Name>
+              <Constant>
+                <Name>Function</Name>
+                <FixedValue>0.2</FixedValue>
+              </Constant>
+              <Start>Emergence</Start>
+              <End>StartFlowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Middle</Name>
+              <Constant>
+                <Name>Function</Name>
+                <FixedValue>0.1</FixedValue>
+              </Constant>
+              <Start>StartFlowering</Start>
+              <End>EndFlowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Late</Name>
+              <Constant>
+                <Name>Function</Name>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <Start>EndFlowering</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <FixedValue>1</FixedValue>
+        </Constant>
       </Root>
       <GenericOrgan>
         <Name>Shell</Name>
@@ -1458,6 +1469,14 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <FixedValue>0.0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <VariableName>[Shell].MinimumNConc.Value()</VariableName>
+        </VariableReference>
       </GenericOrgan>
       <Leaf>
         <Name>Leaf</Name>
@@ -1578,7 +1597,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <MultiplyFunction>
@@ -1589,7 +1608,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <MultiplyFunction>
@@ -1600,7 +1619,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Constant>
@@ -1794,7 +1813,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
             <FixedValue>0.08</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
@@ -2158,6 +2177,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
+        <ApexStandard />
       </Leaf>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -2327,6 +2347,14 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <FixedValue>0.0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+        </VariableReference>
       </GenericOrgan>
       <Nodule>
         <Name>Nodule</Name>
@@ -2563,6 +2591,22 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <FixedValue>0.0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <FixedValue>0.0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <FixedValue>0.0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <VariableName>[Nodule].MinimumNConc.Value()</VariableName>
+        </VariableReference>
       </Nodule>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -6120,7 +6164,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Leaf.Live.NonStructuralNConc</YFieldName>
+            <YFieldName>Chickpea.Leaf.Live.StorageNConc</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -35594,7 +35638,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Leaf.Live.NonStructuralNConc</YFieldName>
+            <YFieldName>Chickpea.Leaf.Live.StorageNConc</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>

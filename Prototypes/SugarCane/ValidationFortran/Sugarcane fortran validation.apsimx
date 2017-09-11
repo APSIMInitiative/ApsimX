@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Memo>
     <Name>Memo</Name>
@@ -345,6 +345,7 @@ nb. In old fortran simulation had to change reporting frequency for all simulati
         <State>NSW</State>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -2677,7 +2678,7 @@ nb. In old fortran simulation had to change reporting frequency for all simulati
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -3746,6 +3747,7 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -4092,6 +4094,7 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -6424,7 +6427,7 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -6686,6 +6689,7 @@ nb. irrigation amounts and depths are in (mm)
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -7032,6 +7036,7 @@ nb. irrigation amounts and depths are in (mm)
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -9364,7 +9369,7 @@ nb. irrigation amounts and depths are in (mm)
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -9631,6 +9636,7 @@ They are missing the word "tillage". This means these tillage events won't occur
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -9956,6 +9962,7 @@ They are missing the word "tillage". This means these tillage events won't occur
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -12288,7 +12295,7 @@ They are missing the word "tillage". This means these tillage events won't occur
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -12515,6 +12522,7 @@ So removed them from original fortran simulation as well.
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -12840,6 +12848,7 @@ So removed them from original fortran simulation as well.
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -15172,7 +15181,7 @@ So removed them from original fortran simulation as well.
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -15395,6 +15404,7 @@ So removed them from original fortran simulation as well.
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -15804,6 +15814,7 @@ So removed them from original fortran simulation as well.
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -18136,7 +18147,7 @@ So removed them from original fortran simulation as well.
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -18286,6 +18297,7 @@ So removed it from original fortran simulation as well.
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -18652,6 +18664,7 @@ So removed it from original fortran simulation as well.
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -20984,7 +20997,7 @@ So removed it from original fortran simulation as well.
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -21179,6 +21192,7 @@ All operation irrigations are Overhead, high pressure gun
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -21545,6 +21559,7 @@ All operation irrigations are Overhead, high pressure gun
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -23877,7 +23892,7 @@ All operation irrigations are Overhead, high pressure gun
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -24076,6 +24091,7 @@ All operation irrigations are Overhead, high pressure gun
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -24442,6 +24458,7 @@ All operation irrigations are Overhead, high pressure gun
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -26774,7 +26791,7 @@ All operation irrigations are Overhead, high pressure gun
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -26977,6 +26994,7 @@ All operation irrigations are Overhead, high pressure gun
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -27320,6 +27338,7 @@ All operation irrigations are Overhead, high pressure gun
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -29652,7 +29671,7 @@ All operation irrigations are Overhead, high pressure gun
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -29920,6 +29939,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -30263,6 +30283,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -32595,7 +32616,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -32829,6 +32850,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -33172,6 +33194,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -35504,7 +35527,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -35639,6 +35662,7 @@ treat=3
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -36074,6 +36098,7 @@ treat=3
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -38406,7 +38431,7 @@ treat=3
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -38530,6 +38555,7 @@ treat=5
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -38965,6 +38991,7 @@ treat=5
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -41297,7 +41324,7 @@ treat=5
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -41517,6 +41544,7 @@ treat=1
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -41952,6 +41980,7 @@ treat=1
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -44284,7 +44313,7 @@ treat=1
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -44488,6 +44517,7 @@ treat=2
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -44923,6 +44953,7 @@ treat=2
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -47255,7 +47286,7 @@ treat=2
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -47467,6 +47498,7 @@ treat=3
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -47902,6 +47934,7 @@ treat=3
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -50234,7 +50267,7 @@ treat=3
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -50398,6 +50431,7 @@ treat=4
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -50723,6 +50757,7 @@ treat=4
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -53055,7 +53090,7 @@ treat=4
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -53498,6 +53533,7 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -53907,6 +53943,7 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -56239,7 +56276,7 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -56389,6 +56426,7 @@ So removed it from original fortran simulation as well.
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -56714,6 +56752,7 @@ So removed it from original fortran simulation as well.
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -59046,7 +59085,7 @@ So removed it from original fortran simulation as well.
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -59576,6 +59615,7 @@ Likewise fertiliser applications are subsurface fertigations except the followin
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -59901,6 +59941,7 @@ Likewise fertiliser applications are subsurface fertigations except the followin
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -62233,7 +62274,7 @@ Likewise fertiliser applications are subsurface fertigations except the followin
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -62597,6 +62638,7 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -62943,6 +62985,7 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -65275,7 +65318,7 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -65575,6 +65618,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -65921,6 +65965,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -68253,7 +68298,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -68585,6 +68630,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -68931,6 +68977,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -71263,7 +71310,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -71603,6 +71650,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -71949,6 +71997,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -74281,7 +74330,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -74688,6 +74737,7 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -75097,6 +75147,7 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -77429,7 +77480,7 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -77757,6 +77808,7 @@ treat=1
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -78166,6 +78218,7 @@ treat=1
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -80498,7 +80551,7 @@ treat=1
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -80739,6 +80792,7 @@ I removed the 2 other duplications of this irrigation for this simulation.
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -81148,6 +81202,7 @@ I removed the 2 other duplications of this irrigation for this simulation.
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -83480,7 +83535,7 @@ I removed the 2 other duplications of this irrigation for this simulation.
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -83776,6 +83831,7 @@ treat=3
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -84185,6 +84241,7 @@ treat=3
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Fertiliser>
         <Name>Fertiliser</Name>
@@ -86517,7 +86574,7 @@ treat=3
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 namespace Models
 {
 	[Serializable]
@@ -86809,6 +86866,7 @@ This will cause this simulation to not be identical to the original validation d
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Area>0</Area>
     <Slope>0</Slope>

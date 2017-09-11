@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -873,6 +873,21 @@ The current model assumes generic responses to enviromental factors, such as tem
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
@@ -1243,6 +1258,21 @@ The current model assumes generic responses to enviromental factors, such as tem
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1594,6 +1624,21 @@ The current model assumes generic responses to enviromental factors, such as tem
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Inflorescence].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1864,6 +1909,21 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Taproot].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <Root>
@@ -1919,90 +1979,6 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
           <Start>Germination</Start>
           <End>Ripening</End>
         </PhaseBasedSwitch>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <Memo>
-            <Name>Description</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The allocation of biomass below ground follows a simple approach in the plantain model.  The amount allocated to roots is computed based on current proportion and two target ratios (the [TargetShootRootRatio].Value and [TaprootRootRatio].Value).  There is little information in the literature about these parameters and they should vary with cultivar. Currently the model will attempt to keep a given proportion in ach organ, ho these porportions vary should be update when more data becomes available.
-]]></MemoText>
-          </Memo>
-          <PhaseLookupValue>
-            <Name>AllPhases</Name>
-            <DivideFunction>
-              <Name>RootFraction</Name>
-              <MultiplyFunction>
-                <Name>Numerator</Name>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>CurrentTR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[TaprootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </MultiplyFunction>
-              <MultiplyFunction>
-                <Name>Denominator</Name>
-                <AddFunction>
-                  <Name>SRs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetSRs</Name>
-                    <VariableReference>
-                      <Name>TargetSR1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetSR2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentSR</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[ShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </AddFunction>
-                <AddFunction>
-                  <Name>TRs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetTRs</Name>
-                    <VariableReference>
-                      <Name>TargetTR1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetTR2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentTR</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </AddFunction>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </MultiplyFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </DivideFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>Emergence</Start>
-            <End>Ripening</End>
-          </PhaseLookupValue>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </PhaseLookup>
         <Constant>
           <Name>MaximumRootDepth</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2296,6 +2272,99 @@ No effect of soil water content on root growth is currently captured in the mode
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <Memo>
+              <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The allocation of biomass below ground follows a simple approach in the plantain model.  The amount allocated to roots is computed based on current proportion and two target ratios (the [TargetShootRootRatio].Value and [TaprootRootRatio].Value).  There is little information in the literature about these parameters and they should vary with cultivar. Currently the model will attempt to keep a given proportion in ach organ, ho these porportions vary should be update when more data becomes available.
+]]></MemoText>
+            </Memo>
+            <PhaseLookupValue>
+              <Name>AllPhases</Name>
+              <DivideFunction>
+                <Name>RootFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>CurrentSR</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[ShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>CurrentTR</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TaprootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>TRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetTRs</Name>
+                      <VariableReference>
+                        <Name>TargetTR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetTR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentTR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[TaprootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -2752,7 +2821,6 @@ Published results suggest that reproductive parts represent a relatively small p
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Plantain</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Manager>
       <Name>Defoliate</Name>
@@ -3382,11 +3450,11 @@ namespace Models
 			Inflorescence_DMSupply = Inflorescence_DMSupplies.Fixation + Inflorescence_DMSupplies.Uptake + Inflorescence_DMSupplies.Reallocation + Inflorescence_DMSupplies.Retranslocation;
 			Root_DMSupply = Root_DMSupplies.Fixation + Root_DMSupplies.Uptake + Root_DMSupplies.Reallocation + Root_DMSupplies.Retranslocation;
 			Taproot_DMSupply = Taproot_DMSupplies.Fixation + Taproot_DMSupplies.Uptake + Taproot_DMSupplies.Reallocation + Taproot_DMSupplies.Retranslocation;
-			Leaf_DMDemand = Leaf_DMDemands.Structural + Leaf_DMDemands.NonStructural + Leaf_DMDemands.Metabolic;
-			Stem_DMDemand = Stem_DMDemands.Structural + Stem_DMDemands.NonStructural + Stem_DMDemands.Metabolic;
-			Inflorescence_DMDemand = Inflorescence_DMDemands.Structural + Inflorescence_DMDemands.NonStructural + Inflorescence_DMDemands.Metabolic;
-			Root_DMDemand = Root_DMDemands.Structural + Root_DMDemands.NonStructural + Root_DMDemands.Metabolic;
-			Taproot_DMDemand = Taproot_DMDemands.Structural + Taproot_DMDemands.NonStructural + Taproot_DMDemands.Metabolic;
+			Leaf_DMDemand = Leaf_DMDemands.Structural + Leaf_DMDemands.Storage + Leaf_DMDemands.Metabolic;
+			Stem_DMDemand = Stem_DMDemands.Structural + Stem_DMDemands.Storage + Stem_DMDemands.Metabolic;
+			Inflorescence_DMDemand = Inflorescence_DMDemands.Structural + Inflorescence_DMDemands.Storage + Inflorescence_DMDemands.Metabolic;
+			Root_DMDemand = Root_DMDemands.Structural + Root_DMDemands.Storage + Root_DMDemands.Metabolic;
+			Taproot_DMDemand = Taproot_DMDemands.Structural + Taproot_DMDemands.Storage + Taproot_DMDemands.Metabolic;
 			
 			Leaf_NSupply = Leaf_NSupplies.Fixation + Leaf_NSupplies.Uptake + Leaf_NSupplies.Reallocation + Leaf_NSupplies.Retranslocation;
 			Stem_NSupply = Stem_NSupplies.Fixation + Stem_NSupplies.Uptake + Stem_NSupplies.Reallocation + Stem_NSupplies.Retranslocation;
@@ -3394,11 +3462,11 @@ namespace Models
 			Taproot_NSupply = Taproot_NSupplies.Fixation + Taproot_NSupplies.Uptake + Taproot_NSupplies.Reallocation + Taproot_NSupplies.Retranslocation;
 			Root_NSupply = Root_NSupplies.Fixation + Root_NSupplies.Uptake + Root_NSupplies.Reallocation + Root_NSupplies.Retranslocation;
 
-			Leaf_NDemand = Leaf_NDemands.Structural + Leaf_NDemands.NonStructural + Leaf_NDemands.Metabolic;
-			Stem_NDemand = Stem_NDemands.Structural + Stem_NDemands.NonStructural + Stem_NDemands.Metabolic;
-			Inflorescence_NDemand = Inflorescence_NDemands.Structural + Inflorescence_NDemands.NonStructural + Inflorescence_NDemands.Metabolic;
-			Taproot_NDemand = Taproot_NDemands.Structural + Taproot_NDemands.NonStructural + Taproot_NDemands.Metabolic;
-			Root_NDemand = Root_NDemands.Structural + Root_NDemands.NonStructural + Root_NDemands.Metabolic;
+			Leaf_NDemand = Leaf_NDemands.Structural + Leaf_NDemands.Storage + Leaf_NDemands.Metabolic;
+			Stem_NDemand = Stem_NDemands.Structural + Stem_NDemands.Storage + Stem_NDemands.Metabolic;
+			Inflorescence_NDemand = Inflorescence_NDemands.Structural + Inflorescence_NDemands.Storage + Inflorescence_NDemands.Metabolic;
+			Taproot_NDemand = Taproot_NDemands.Structural + Taproot_NDemands.Storage + Taproot_NDemands.Metabolic;
+			Root_NDemand = Root_NDemands.Structural + Root_NDemands.Storage + Root_NDemands.Metabolic;
 
 			Leaf_NSupplyReallocation = Leaf_NSupplies.Reallocation;
 			Stem_NSupplyReallocation = Stem_NSupplies.Reallocation;
@@ -3622,40 +3690,40 @@ namespace Models
         <string>[Plantain].Root.WaterUptake</string>
         <string />
         <string>[Plantain].Leaf.Live.StructuralWt</string>
-        <string>[Plantain].Leaf.Live.NonStructuralWt</string>
+        <string>[Plantain].Leaf.Live.StorageWt</string>
         <string>[Plantain].Leaf.Live.MetabolicWt</string>
         <string>[Plantain].Leaf.Live.StructuralN</string>
-        <string>[Plantain].Leaf.Live.NonStructuralN</string>
+        <string>[Plantain].Leaf.Live.StorageN</string>
         <string>[Plantain].Leaf.Live.MetabolicN</string>
         <string />
         <string>[Plantain].Leaf.Dead.StructuralWt</string>
-        <string>[Plantain].Leaf.Dead.NonStructuralWt</string>
+        <string>[Plantain].Leaf.Dead.StorageWt</string>
         <string>[Plantain].Leaf.Dead.MetabolicWt</string>
         <string>[Plantain].Leaf.Dead.StructuralN</string>
-        <string>[Plantain].Leaf.Dead.NonStructuralN</string>
+        <string>[Plantain].Leaf.Dead.StorageN</string>
         <string>[Plantain].Leaf.Dead.MetabolicN</string>
         <string />
         <string>[Plantain].Stem.Live.StructuralWt</string>
-        <string>[Plantain].Stem.Live.NonStructuralWt</string>
+        <string>[Plantain].Stem.Live.StorageWt</string>
         <string>[Plantain].Stem.Live.MetabolicWt</string>
         <string>[Plantain].Stem.Live.StructuralN</string>
-        <string>[Plantain].Stem.Live.NonStructuralN</string>
+        <string>[Plantain].Stem.Live.StorageN</string>
         <string>[Plantain].Inflorescence.Live.StructuralWt</string>
-        <string>[Plantain].Inflorescence.Live.NonStructuralWt</string>
+        <string>[Plantain].Inflorescence.Live.StorageWt</string>
         <string>[Plantain].Inflorescence.Live.StructuralN</string>
-        <string>[Plantain].Inflorescence.Live.NonStructuralN</string>
+        <string>[Plantain].Inflorescence.Live.StorageN</string>
         <string>[Plantain].Root.Live.StructuralWt</string>
-        <string>[Plantain].Root.Live.NonStructuralWt</string>
+        <string>[Plantain].Root.Live.StorageWt</string>
         <string>[Plantain].Root.Live.StructuralN</string>
-        <string>[Plantain].Root.Live.NonStructuralN</string>
+        <string>[Plantain].Root.Live.StorageN</string>
         <string>[Plantain].Taproot.Live.StructuralWt</string>
-        <string>[Plantain].Taproot.Live.NonStructuralWt</string>
+        <string>[Plantain].Taproot.Live.StorageWt</string>
         <string>[Plantain].Taproot.Live.StructuralN</string>
-        <string>[Plantain].Taproot.Live.NonStructuralN</string>
+        <string>[Plantain].Taproot.Live.StorageN</string>
         <string>[Plantain].Leaf.Live.StructuralNConc</string>
-        <string>[Plantain].Leaf.Live.NonStructuralNConc</string>
+        <string>[Plantain].Leaf.Live.StorageNConc</string>
         <string>[Plantain].Root.Live.StructuralNConc</string>
-        <string>[Plantain].Root.Live.NonStructuralNConc</string>
+        <string>[Plantain].Root.Live.StorageNConc</string>
         <string />
         <string>[Plantain].Leaf.DMDemandFunction.PartitionFraction.Value()</string>
         <string>[Plantain].Stem.DMDemandFunction.PartitionFraction.Value()</string>
@@ -3728,30 +3796,30 @@ Where:
           <RegrStats>
             <Name>CumulativeHarvestedWt</Name>
             <n>670</n>
-            <Slope>0.97297100094555822</Slope>
-            <Intercept>-30.027985099146633</Intercept>
-            <SEslope>0.014658532622330802</SEslope>
-            <SEintercept>9.4228191822275331</SEintercept>
-            <R2>0.86834167903379811</R2>
-            <RMSE>140.70019516286118</RMSE>
-            <NSE>0.83963732454025719</NSE>
-            <ME>-44.577794289201506</ME>
-            <MAE>102.23453557338856</MAE>
-            <RSR>0.40015413053339494</RSR>
+            <Slope>0.97311399468862581</Slope>
+            <Intercept>-30.060755223861293</Intercept>
+            <SEslope>0.014655148959259909</SEslope>
+            <SEintercept>9.4206440910289757</SEintercept>
+            <R2>0.86842804177414057</R2>
+            <RMSE>140.65374059686698</RMSE>
+            <NSE>0.83974319999663316</NSE>
+            <ME>-44.5335903582797</ME>
+            <MAE>102.17865843746326</MAE>
+            <RSR>0.40002201283133204</RSR>
           </RegrStats>
           <RegrStats>
             <Name>HarvestedWt</Name>
             <n>660</n>
-            <Slope>0.586986143326879</Slope>
-            <Intercept>49.096503376073059</Intercept>
-            <SEslope>0.024030122919750981</SEslope>
-            <SEintercept>3.4318895950462736</SEintercept>
-            <R2>0.47556477246878814</R2>
-            <RMSE>59.157880243843714</RMSE>
-            <NSE>0.44945559060829265</NSE>
-            <ME>0.15874341138288095</ME>
-            <MAE>41.803387445497663</MAE>
-            <RSR>0.74142447437055869</RSR>
+            <Slope>0.58713047194998114</Slope>
+            <Intercept>49.080688384043938</Intercept>
+            <SEslope>0.024024200225902671</SEslope>
+            <SEintercept>3.4310437387241675</SEintercept>
+            <R2>0.47581036567110313</R2>
+            <RMSE>59.141415649706325</RMSE>
+            <NSE>0.44976199877642919</NSE>
+            <ME>0.16002982987386072</ME>
+            <MAE>41.784808730747024</MAE>
+            <RSR>0.74121812395699216</RSR>
           </RegrStats>
           <RegrStats>
             <Name>NRate</Name>
@@ -3770,30 +3838,30 @@ Where:
           <RegrStats>
             <Name>Plantain.AboveGround.Wt</Name>
             <n>786</n>
-            <Slope>0.60701002511985513</Slope>
-            <Intercept>55.947889244078041</Intercept>
-            <SEslope>0.024175573155878875</SEslope>
-            <SEintercept>3.7135301074324012</SEintercept>
-            <R2>0.44571385229683158</R2>
-            <RMSE>46.751038397241771</RMSE>
-            <NSE>0.38731259691225706</NSE>
-            <ME>0.33225799113189819</ME>
-            <MAE>32.331877950796006</MAE>
-            <RSR>0.78224542349246673</RSR>
+            <Slope>0.60705003482521391</Slope>
+            <Intercept>55.947419993495004</Intercept>
+            <SEslope>0.024176375481284564</SEslope>
+            <SEintercept>3.713653349993427</SEintercept>
+            <R2>0.44573002132993278</R2>
+            <RMSE>46.751036266400241</RMSE>
+            <NSE>0.38731265276298388</NSE>
+            <ME>0.33745088249136779</ME>
+            <MAE>32.326932183945246</MAE>
+            <RSR>0.782245387838905</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Plantain.AboveGroundLive.NConc</Name>
             <n>831</n>
-            <Slope>0.78113367912731291</Slope>
-            <Intercept>0.0022038721524908038</Intercept>
-            <SEslope>0.047162785136594589</SEslope>
-            <SEintercept>0.0014482114621744834</SEintercept>
-            <R2>0.24862898008416678</R2>
-            <RMSE>0.010447886541048756</RMSE>
-            <NSE>-1.2873847248306771</NSE>
-            <ME>-0.0043445002111952794</ME>
-            <MAE>0.0087058322100084535</MAE>
-            <RSR>1.511499968894497</RSR>
+            <Slope>0.78065198239227207</Slope>
+            <Intercept>0.0022160825775868684</Intercept>
+            <SEslope>0.047145110030430169</SEslope>
+            <SEintercept>0.0014476687187536203</SEintercept>
+            <R2>0.24853856797913698</R2>
+            <RMSE>0.0104461283261196</RMSE>
+            <NSE>-1.2866149278845631</NSE>
+            <ME>-0.0043467019148124859</ME>
+            <MAE>0.0087034521157331162</MAE>
+            <RSR>1.5112456072300315</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Plantain.Population</Name>
@@ -5468,7 +5536,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Plantain</ResourceName>
               <CropType>Plantain</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>Report</Name>
@@ -7847,7 +7914,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -7913,7 +7980,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -7979,7 +8046,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8045,7 +8112,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8111,7 +8178,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9906,7 +9973,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9994,7 +10061,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -10060,7 +10127,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -10126,7 +10193,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -10192,7 +10259,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13485,7 +13552,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Plantain</ResourceName>
               <CropType>Plantain</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>Report</Name>
@@ -15864,7 +15930,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -15930,7 +15996,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -15996,7 +16062,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -16062,7 +16128,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -16128,7 +16194,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -17923,7 +17989,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -18011,7 +18077,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -18077,7 +18143,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -18143,7 +18209,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -18209,7 +18275,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -21629,7 +21695,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Plantain</ResourceName>
               <CropType>Plantain</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>Report</Name>
@@ -24008,7 +24073,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -24074,7 +24139,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -24140,7 +24205,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -24206,7 +24271,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -24272,7 +24337,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -26067,7 +26132,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -26155,7 +26220,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -26221,7 +26286,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -26287,7 +26352,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -26353,7 +26418,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -28368,7 +28433,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Plantain</ResourceName>
               <CropType>Plantain</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>Report</Name>
@@ -30750,7 +30814,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30816,7 +30880,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30882,7 +30946,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30948,7 +31012,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31014,7 +31078,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -32809,7 +32873,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -32897,7 +32961,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -32963,7 +33027,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -33029,7 +33093,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -33095,7 +33159,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
