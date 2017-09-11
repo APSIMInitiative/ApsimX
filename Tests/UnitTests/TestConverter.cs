@@ -201,6 +201,10 @@ namespace UnitTests
                                  "<Name>CriticalNConc</Name>" +
                                  "<VariableName>[Stem].MinimumNConc.Value()</VariableName>" +
                                "</VariableReference>" +
+                               "<Constant>" + 
+                                 "<Name>DMConversionEfficiencyFunction</Name>" +
+                                 "<FixedValue>1</FixedValue>" +
+                               "</Constant>" +
                              "</GenericOrgan>" +
                             "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
