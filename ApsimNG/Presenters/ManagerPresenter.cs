@@ -16,6 +16,7 @@ namespace UserInterface.Presenters
     using ICSharpCode.NRefactory.CSharp;
     using Models;
     using Views;
+    using Models.Core;
 
     /// <summary>
     /// Presenter for the Manager component
@@ -213,7 +214,7 @@ namespace UserInterface.Presenters
                     this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", code));
                 }
 
-                this.explorerPresenter.MainPresenter.ShowMessage("Manager script compiled successfully", DataStore.ErrorLevel.Information);
+                this.explorerPresenter.MainPresenter.ShowMessage("Manager script compiled successfully", Simulation.ErrorLevel.Information);
             }
             catch (Models.Core.ApsimXException err)
             {

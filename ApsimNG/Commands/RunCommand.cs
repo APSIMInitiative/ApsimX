@@ -160,7 +160,7 @@
         {
             int numSimulations = jobManager.CountJobTypeInQueue("RunSimulation");
             double percentComplete = jobManager.PercentComplete;
-            int numberComplete = jobManager.CountJobTypeInQueue("RunSimulation");
+            int numberComplete = jobManager.GetNumberOfJobsCompleted<RunSimulation>();
 
             if (numSimulations > 0)
             {

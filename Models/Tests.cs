@@ -57,7 +57,7 @@ namespace Models
             IStorageReader DS = PO.Parent as IStorageReader;
             MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
-            DataTable POtable = DS.GetData(PO.Name);
+            DataTable POtable = DS.GetData("*", PO.Name);
             List<string> columnNames;
             string sigIdent = "X";
 
@@ -247,65 +247,72 @@ namespace Models
         /// <param name="indent"></param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // Run test suite so that data table is full.
-            Test(accept: false, GUIrun: true);
-
-            // add a heading.
-            // tags.Add(new AutoDocumentation.Heading(Parent.Name + " statistics", headingLevel));
-
-            // Get stat names.
-            List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
-            statNames.RemoveAt(0);
-
-            // Grab the columns of data we want.
-            List<List<string>> dataForDoc = new List<List<string>>();
-            dataForDoc.Add(new List<string>()); // variable name.
-            foreach (string stat in statNames)
-                dataForDoc.Add(new List<string>()); // column for each stat.
-            
-            // add in headings.
-            dataForDoc[0].Add("Variable");
-            for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
+            if (IncludeInDocumentation)
             {
-                if (statNames[statIndex] == "SEintercept")
-                    statNames[statIndex] = "SEinter";
-                dataForDoc[statIndex + 1].Add(statNames[statIndex]);
-            }
+                tags.Add(new AutoDocumentation.Heading(Parent.Name, headingLevel));
 
-            int rowIndex = 0;
-            while (rowIndex < Table.Rows.Count)
-            {
-                string variableName = Table.Rows[rowIndex][1].ToString();
-                dataForDoc[0].Add(variableName);
+                // Run test suite so that data table is full.
+                Test(accept: false, GUIrun: true);
 
+                // Get stat names.
+                List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
+                statNames.RemoveAt(0);
+
+                // Grab the columns of data we want.
+                DataTable dataForDoc = new DataTable();
+                dataForDoc.Columns.Add("Variable", typeof(string));
                 for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
                 {
-                    object currentValue = Table.Rows[rowIndex]["Current"];
-                    string formattedValue;
-                    if (currentValue.GetType() == typeof(double))
-                    {
-                        double doubleValue = Convert.ToDouble(currentValue);
-                        if (!double.IsNaN(doubleValue))
-                        {
-                            if (statIndex == 0)
-                                formattedValue = doubleValue.ToString("F0");
-                            else
-                                formattedValue = doubleValue.ToString("F3");
-                        }
-                        else
-                            formattedValue = currentValue.ToString();
-                    }
-                    else
-                        formattedValue = currentValue.ToString();
-
-                    dataForDoc[statIndex + 1].Add(formattedValue);
-                    
-                    rowIndex++;
+                    if (statNames[statIndex] != "SEintercept" &&
+                        statNames[statIndex] != "SEslope" &&
+                        statNames[statIndex] != "RSR")
+                        dataForDoc.Columns.Add(statNames[statIndex], typeof(string));
                 }
-            }
 
-            // add data to doc table.
-            tags.Add(new AutoDocumentation.Table(dataForDoc, headingLevel));
+                int rowIndex = 0;
+                while (rowIndex < Table.Rows.Count)
+                {
+                    DataRow row = dataForDoc.NewRow();
+                    dataForDoc.Rows.Add(row);
+                    string variableName = Table.Rows[rowIndex][1].ToString();
+                    row[0] = variableName;
+
+                    int i = 1;
+                    for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
+                    {
+                        if (statNames[statIndex] != "SEintercept" &&
+                            statNames[statIndex] != "SEslope" &&
+                            statNames[statIndex] != "RSR")
+                        {
+                            object currentValue = Table.Rows[rowIndex]["Current"];
+                            string formattedValue;
+                            if (currentValue.GetType() == typeof(double))
+                            {
+                                double doubleValue = Convert.ToDouble(currentValue);
+                                if (!double.IsNaN(doubleValue))
+                                {
+                                    if (statIndex == 0)
+                                        formattedValue = doubleValue.ToString("F0");
+                                    else
+                                        formattedValue = doubleValue.ToString("F3");
+                                }
+                                else
+                                    formattedValue = currentValue.ToString();
+                            }
+                            else
+                                formattedValue = currentValue.ToString();
+
+                            row[i] = formattedValue;
+                            i++;
+                        }
+                        rowIndex++;
+                    }
+                }
+
+                // add data to doc table.
+                tags.Add(new AutoDocumentation.Table(dataForDoc, headingLevel));
+            }
         }
+
     }
 }
