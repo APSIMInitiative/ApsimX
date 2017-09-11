@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -37195,11 +37195,11 @@ namespace Models
               <Name>SowingRule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowingDate>2010-10-04</SowingDate>
-                <CultivarName>Pioneer_39V43</CultivarName>
                 <RowSpace>720</RowSpace>
                 <PlantPopulation>10.5</PlantPopulation>
                 <PlantingDepth>20</PlantingDepth>
+                <CultivarName>Pioneer_39V43</CultivarName>
+                <SowingDate>2010-10-04</SowingDate>
               </Script>
               <Code><![CDATA[
 using System;

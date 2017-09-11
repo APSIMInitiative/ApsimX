@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -12,23 +13,28 @@
       <Name>Intercrop</Name>
       <Clock>
         <Name>Clock</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <StartDate>1900-01-01T00:00:00</StartDate>
         <EndDate>1904-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Summary>
       <Weather>
         <Name>Weather</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
       </Weather>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </SoilArbitrator>
       <Zone>
         <Name>Field</Name>
         <Report>
           <Name>Intercrop</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -57,9 +63,11 @@
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Fertiliser>
         <Manager>
           <Name>Slurp2Sow</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <CultivarName>StaticCrop</CultivarName>
             <InitialRootDepth>600</InitialRootDepth>
@@ -106,6 +114,7 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>WheatSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -136,6 +145,7 @@ namespace Models
             </SoilCrop>
             <SoilCrop>
               <Name>BarleySoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -166,6 +176,7 @@ namespace Models
             </SoilCrop>
             <SoilCrop>
               <Name>Slurp1Soil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -196,6 +207,7 @@ namespace Models
             </SoilCrop>
             <SoilCrop>
               <Name>Slurp2Soil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -224,6 +236,7 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -290,6 +303,7 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -328,6 +342,7 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -360,17 +375,10 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>12</SoilCN>
@@ -425,6 +433,7 @@ namespace Models
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -448,12 +457,14 @@ namespace Models
           </Analysis>
           <InitialWater>
             <Name>InitialWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>InitialN</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -541,6 +552,11 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -555,15 +571,16 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
           <Pools>
@@ -597,28 +614,25 @@ namespace Models
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
           <Name>Slurp1</Name>
           <Memo>
             <Name>TitlePage</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 # SLURP: the Sound of a crop using water
 
@@ -651,58 +665,64 @@ zone.Set("Slurp.Leaf.HeightFunction.FixedValue", HeightResetValue);<br>
           </Memo>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
-    <PrioritythenRelativeAllocation>
-      <Name>NArbitrator</Name>
-    </PrioritythenRelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+            <PrioritythenRelativeAllocation>
+              <Name>NArbitrator</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </PrioritythenRelativeAllocation>
+            <RelativeAllocation>
+              <Name>DMArbitrator</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </RelativeAllocation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </OrganArbitrator>
           <Root>
             <Name>Root</Name>
             <Memo>
               <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MemoText><![CDATA[
 Stuff regarding Root]]></MemoText>
             </Memo>
             <CompositeBiomass>
               <Name>Live</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Propertys>
                 <string>[Root].LayerLive</string>
               </Propertys>
             </CompositeBiomass>
             <CompositeBiomass>
               <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Propertys>
                 <string>[Root].LayerDead</string>
               </Propertys>
             </CompositeBiomass>
             <Constant>
               <Name>RootFrontVelocity</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
               <Units>mm/d</Units>
             </Constant>
             <Constant>
               <Name>MaxDailyNUptake</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>6</FixedValue>
             </Constant>
             <Constant>
               <Name>MaximumRootDepth</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1000</FixedValue>
               <Units>mm</Units>
             </Constant>
             <Constant>
               <Name>SenescenceRate</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
               <Units>/d</Units>
             </Constant>
             <Constant>
-              <Name>PartitionFraction</Name>
-              <FixedValue>0</FixedValue>
-              <Units>0-1</Units>
-            </Constant>
-            <Constant>
               <Name>NitrogenDemandSwitch</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1</FixedValue>
               <Units>mm</Units>
             </Constant>
@@ -710,6 +730,7 @@ Stuff regarding Root]]></MemoText>
               <Name>KLModifier</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>200</double>
@@ -723,16 +744,19 @@ Stuff regarding Root]]></MemoText>
               </XYPairs>
               <Memo>
                 <Name>Description</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <MemoText><![CDATA[
 This is important in SLURP as it is set for each species to represent their differences in rooting patterns between crop species
 ]]></MemoText>
               </Memo>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <XProperty>[Root].LayerMidPointDepth</XProperty>
             </LinearInterpolationFunction>
             <BiomassRemoval>
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0.5</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -740,6 +764,7 @@ This is important in SLURP as it is set for each species to represent their diff
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Cut</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0.8</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -747,6 +772,7 @@ This is important in SLURP as it is set for each species to represent their diff
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Prune</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -754,16 +780,19 @@ This is important in SLURP as it is set for each species to represent their diff
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Graze</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0.6</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0.2</FractionLiveToResidue>
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </BiomassRemoval>
             <LinearInterpolationFunction>
               <Name>KNO3</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>0.003</double>
@@ -773,12 +802,14 @@ This is important in SLURP as it is set for each species to represent their diff
                   <double>0.02</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Root].RootLengthDenisty</XProperty>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Root].LengthDensity</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>KNH4</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>0.003</double>
@@ -788,12 +819,14 @@ This is important in SLURP as it is set for each species to represent their diff
                   <double>0.003</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Root].RootLengthDenisty</XProperty>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Root].LengthDensity</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>NUptakeSWFactor</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>1</double>
@@ -803,26 +836,48 @@ This is important in SLURP as it is set for each species to represent their diff
                   <double>1</double>
                 </Y>
               </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <XProperty>[Root].RWC</XProperty>
             </LinearInterpolationFunction>
             <Constant>
               <Name>InitialDM</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>50</FixedValue>
               <Units>g/plant</Units>
             </Constant>
             <Constant>
               <Name>SpecificRootLength</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>40</FixedValue>
               <Units>m/g</Units>
             </Constant>
             <Constant>
               <Name>MaximumNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.01</FixedValue>
             </Constant>
             <Constant>
               <Name>MinimumNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.01</FixedValue>
             </Constant>
+            <PartitionFractionDemandFunction>
+              <Name>DMDemandFunction</Name>
+              <Constant>
+                <Name>PartitionFraction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+                <Units>0-1</Units>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </PartitionFractionDemandFunction>
+            <Constant>
+              <Name>DMConversionEfficiencyFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+              <Units>0-1</Units>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <ZoneNamesToGrowRootsIn />
@@ -833,47 +888,58 @@ This is important in SLURP as it is set for each species to represent their diff
             <Name>Leaf</Name>
             <Biomass>
               <Name>Live</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </Biomass>
             <Biomass>
               <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </Biomass>
             <Constant>
               <Name>StructuralFraction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1</FixedValue>
               <Units>0-1</Units>
             </Constant>
             <Constant>
               <Name>DetachmentRateFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
               <Units>/d</Units>
             </Constant>
             <Constant>
               <Name>NReallocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
             </Constant>
             <Constant>
               <Name>SenescenceRate</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
             </Constant>
             <MultiplyFunction>
               <Name>InitialWtFunction</Name>
               <Constant>
                 <Name>InitialPlantWt</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>0</FixedValue>
                 <Units>g/plant</Units>
               </Constant>
               <VariableReference>
                 <Name>Population</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Plant].Population</VariableName>
               </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </MultiplyFunction>
             <Constant>
               <Name>LaiDeadFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
               <Units>m^2/m^2</Units>
             </Constant>
             <Constant>
               <Name>Photosynthesis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>5</FixedValue>
               <Units>g/m2/d</Units>
             </Constant>
@@ -885,6 +951,7 @@ This is important in SLURP as it is set for each species to represent their diff
                   <Name>Graph</Name>
                   <Series>
                     <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Type>Scatter</Type>
                     <XAxis>Bottom</XAxis>
                     <YAxis>Left</YAxis>
@@ -903,6 +970,7 @@ This is important in SLURP as it is set for each species to represent their diff
                     <Cumulative>false</Cumulative>
                     <CumulativeX>false</CumulativeX>
                   </Series>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
                   <Axis>
                     <Type>Left</Type>
                     <Title>Y</Title>
@@ -921,8 +989,8 @@ This is important in SLURP as it is set for each species to represent their diff
                   </Axis>
                   <LegendPosition>BottomRight</LegendPosition>
                   <DisabledSeries />
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
                 </Graph>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>10</double>
@@ -936,32 +1004,40 @@ This is important in SLURP as it is set for each species to represent their diff
                   <double>0</double>
                 </Y>
               </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </AirTemperatureFunction>
             <PartitionFractionDemandFunction>
               <Name>DMDemandFunction</Name>
               <Constant>
                 <Name>PartitionFraction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>1</FixedValue>
               </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </PartitionFractionDemandFunction>
             <Constant>
               <Name>MaximumNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.05</FixedValue>
             </Constant>
             <Constant>
               <Name>MinimumNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.05</FixedValue>
             </Constant>
             <Constant>
               <Name>LAIFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>5</FixedValue>
             </Constant>
             <Constant>
               <Name>ExtinctionCoefficientFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.7</FixedValue>
             </Constant>
             <Constant>
               <Name>HeightFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>400</FixedValue>
               <Units>mm</Units>
             </Constant>
@@ -969,6 +1045,7 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0.5</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -976,6 +1053,7 @@ This is important in SLURP as it is set for each species to represent their diff
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Cut</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0.8</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -983,6 +1061,7 @@ This is important in SLURP as it is set for each species to represent their diff
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Prune</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -990,14 +1069,52 @@ This is important in SLURP as it is set for each species to represent their diff
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Graze</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0.6</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0.2</FractionLiveToResidue>
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </BiomassRemoval>
-            <GrowthRespiration>0</GrowthRespiration>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
+            <Constant>
+              <Name>MaintenanceRespirationFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+              <Units>0-1</Units>
+            </Constant>
+            <Constant>
+              <Name>DMConversionEfficiencyFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+              <Units>0-1</Units>
+            </Constant>
+            <Constant>
+              <Name>NRetranslocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>NitrogenDemandSwitch</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>DMReallocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>DMRetranslocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>CriticalNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <CohortsInitialised>false</CohortsInitialised>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -1011,38 +1128,33 @@ This is important in SLURP as it is set for each species to represent their diff
             <Height>0</Height>
             <FRGR>0</FRGR>
             <PotentialEP>0</PotentialEP>
+            <MicroClimatePresent>true</MicroClimatePresent>
             <KDead>0</KDead>
             <LAIDead>0</LAIDead>
-            <WaterAllocation>0</WaterAllocation>
-            <Constant>
-              <Name>MaintenanceRespirationFunction</Name>
-              <FixedValue>0</FixedValue>
-              <Units>0-1</Units>
-            </Constant> 
-            <Constant>
-              <Name>DMConversionEfficiencyFunction</Name>
-              <FixedValue>1</FixedValue>
-              <Units>0-1</Units>
-            </Constant>
           </SimpleLeaf>
           <Cultivar>
             <Name>StaticCrop</Name>
             <Memo>
               <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MemoText><![CDATA[The static crop is the base crop and uses all the paramaters values specified above.
 ]]></MemoText>
             </Memo>
             <Alias>
               <Name>StaticCrop</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </Alias>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Cultivar>
           <Cultivar>
             <Name>StaticTree</Name>
             <Memo>
               <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MemoText><![CDATA[The static tree is similar to the static crop but is taller, has a deeper root system and a lower extinction coefficient
 ]]></MemoText>
             </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Root].MaximumRootDepth.FixedValue = 2600</Command>
             <Command>[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.65</Command>
             <Command>[Leaf].HeightFunction.FixedValue = 5000</Command>
@@ -1053,9 +1165,11 @@ This is important in SLURP as it is set for each species to represent their diff
             <Name>Pasture</Name>
             <Memo>
               <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MemoText><![CDATA[The pasture differs from the base crop because its has a RootFrontVelocity of 15 (as opposed to zero) which means the roots grow downward from sowing untill the MaximumRootDepth is reached.  It ExtinctionCoefficient and MaximumRootDepth are different to the base StaticCrop and it has a different pattern of kl with depth.
 ]]></MemoText>
             </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Root].MaximumRootDepth.FixedValue = 800</Command>
             <Command>[Root].RootFrontVelocity.FixedValue = 15</Command>
             <Command>[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.65</Command>
@@ -1066,22 +1180,25 @@ This is important in SLURP as it is set for each species to represent their diff
             <Name>Lucerne</Name>
             <Memo>
               <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MemoText><![CDATA[Lucerne also grows root depth like pasture but has a greater root depth, different kl pattern and different extinction coefficient
 ]]></MemoText>
             </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Root].MaximumRootDepth.FixedValue = 2500</Command>
             <Command>[Root].RootFrontVelocity.FixedValue = 15</Command>
             <Command>[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.8</Command>
             <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500, 2000</Command>
             <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3, 0.1</Command>
           </Cultivar>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <CropType>Slurp</CropType>
-          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Plant>
           <Name>Slurp2</Name>
           <Memo>
             <Name>TitlePage</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 # SLURP: the Sound of a crop using water
 
@@ -1114,58 +1231,64 @@ zone.Set("Slurp.Leaf.HeightFunction.FixedValue", HeightResetValue);<br>
           </Memo>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
-    <PrioritythenRelativeAllocation>
-      <Name>NArbitrator</Name>
-    </PrioritythenRelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+            <PrioritythenRelativeAllocation>
+              <Name>NArbitrator</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </PrioritythenRelativeAllocation>
+            <RelativeAllocation>
+              <Name>DMArbitrator</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </RelativeAllocation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </OrganArbitrator>
           <Root>
             <Name>Root</Name>
             <Memo>
               <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MemoText><![CDATA[
 Stuff regarding Root]]></MemoText>
             </Memo>
             <CompositeBiomass>
               <Name>Live</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Propertys>
                 <string>[Root].LayerLive</string>
               </Propertys>
             </CompositeBiomass>
             <CompositeBiomass>
               <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Propertys>
                 <string>[Root].LayerDead</string>
               </Propertys>
             </CompositeBiomass>
             <Constant>
               <Name>RootFrontVelocity</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
               <Units>mm/d</Units>
             </Constant>
             <Constant>
               <Name>SenescenceRate</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
               <Units>/d</Units>
             </Constant>
             <Constant>
-              <Name>PartitionFraction</Name>
-              <FixedValue>0</FixedValue>
-              <Units>0-1</Units>
-            </Constant>
-            <Constant>
               <Name>MaxDailyNUptake</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>6</FixedValue>
             </Constant>
             <Constant>
               <Name>MaximumRootDepth</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1000</FixedValue>
               <Units>mm</Units>
             </Constant>
             <Constant>
               <Name>NitrogenDemandSwitch</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1</FixedValue>
               <Units>mm</Units>
             </Constant>
@@ -1173,6 +1296,7 @@ Stuff regarding Root]]></MemoText>
               <Name>KLModifier</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>200</double>
@@ -1186,16 +1310,19 @@ Stuff regarding Root]]></MemoText>
               </XYPairs>
               <Memo>
                 <Name>Description</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <MemoText><![CDATA[
 This is important in SLURP as it is set for each species to represent their differences in rooting patterns between crop species
 ]]></MemoText>
               </Memo>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <XProperty>[Root].LayerMidPointDepth</XProperty>
             </LinearInterpolationFunction>
             <BiomassRemoval>
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0.5</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1203,6 +1330,7 @@ This is important in SLURP as it is set for each species to represent their diff
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Cut</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0.8</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1210,6 +1338,7 @@ This is important in SLURP as it is set for each species to represent their diff
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Prune</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1217,16 +1346,19 @@ This is important in SLURP as it is set for each species to represent their diff
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Graze</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0.6</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0.2</FractionLiveToResidue>
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </BiomassRemoval>
             <LinearInterpolationFunction>
               <Name>KNO3</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>0.003</double>
@@ -1236,12 +1368,14 @@ This is important in SLURP as it is set for each species to represent their diff
                   <double>0.02</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Root].RootLengthDenisty</XProperty>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Root].LengthDensity</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>KNH4</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>0.003</double>
@@ -1251,12 +1385,14 @@ This is important in SLURP as it is set for each species to represent their diff
                   <double>0.003</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Root].RootLengthDenisty</XProperty>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Root].LengthDensity</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>NUptakeSWFactor</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>1</double>
@@ -1266,26 +1402,53 @@ This is important in SLURP as it is set for each species to represent their diff
                   <double>1</double>
                 </Y>
               </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <XProperty>[Root].RWC</XProperty>
             </LinearInterpolationFunction>
             <Constant>
               <Name>InitialDM</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>50</FixedValue>
               <Units>g/plant</Units>
             </Constant>
             <Constant>
               <Name>SpecificRootLength</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>40</FixedValue>
               <Units>m/g</Units>
             </Constant>
             <Constant>
               <Name>MaximumNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.01</FixedValue>
             </Constant>
             <Constant>
               <Name>MinimumNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.01</FixedValue>
             </Constant>
+            <PartitionFractionDemandFunction>
+              <Name>DMDemandFunction</Name>
+              <Constant>
+                <Name>PartitionFraction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+                <Units>0-1</Units>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </PartitionFractionDemandFunction>
+            <Constant>
+              <Name>DMConversionEfficiencyFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>DMConversionEfficiencyFunction1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+              <Units>0-1</Units>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <ZoneNamesToGrowRootsIn />
@@ -1296,17 +1459,21 @@ This is important in SLURP as it is set for each species to represent their diff
             <Name>Leaf</Name>
             <Biomass>
               <Name>Live</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </Biomass>
             <Biomass>
               <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </Biomass>
             <Constant>
               <Name>StructuralFraction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1</FixedValue>
               <Units>0-1</Units>
             </Constant>
             <Constant>
               <Name>DetachmentRateFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
               <Units>/d</Units>
             </Constant>
@@ -1314,21 +1481,26 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>InitialWtFunction</Name>
               <Constant>
                 <Name>InitialPlantWt</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>0</FixedValue>
                 <Units>g/plant</Units>
               </Constant>
               <VariableReference>
                 <Name>Population</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Plant].Population</VariableName>
               </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </MultiplyFunction>
             <Constant>
               <Name>LaiDeadFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
               <Units>m^2/m^2</Units>
             </Constant>
             <Constant>
               <Name>Photosynthesis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>5</FixedValue>
               <Units>g/m2/d</Units>
             </Constant>
@@ -1340,6 +1512,7 @@ This is important in SLURP as it is set for each species to represent their diff
                   <Name>Graph</Name>
                   <Series>
                     <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Type>Scatter</Type>
                     <XAxis>Bottom</XAxis>
                     <YAxis>Left</YAxis>
@@ -1358,6 +1531,7 @@ This is important in SLURP as it is set for each species to represent their diff
                     <Cumulative>false</Cumulative>
                     <CumulativeX>false</CumulativeX>
                   </Series>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
                   <Axis>
                     <Type>Left</Type>
                     <Title>Y</Title>
@@ -1376,8 +1550,8 @@ This is important in SLURP as it is set for each species to represent their diff
                   </Axis>
                   <LegendPosition>BottomRight</LegendPosition>
                   <DisabledSeries />
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
                 </Graph>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>10</double>
@@ -1391,47 +1565,58 @@ This is important in SLURP as it is set for each species to represent their diff
                   <double>0</double>
                 </Y>
               </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </AirTemperatureFunction>
             <PartitionFractionDemandFunction>
               <Name>DMDemandFunction</Name>
               <Constant>
                 <Name>PartitionFraction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>1</FixedValue>
               </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </PartitionFractionDemandFunction>
             <Constant>
               <Name>MaximumNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.05</FixedValue>
             </Constant>
             <Constant>
               <Name>MinimumNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.05</FixedValue>
             </Constant>
             <Constant>
               <Name>LAIFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>5</FixedValue>
             </Constant>
             <Constant>
               <Name>ExtinctionCoefficientFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.7</FixedValue>
             </Constant>
             <Constant>
               <Name>HeightFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>400</FixedValue>
               <Units>mm</Units>
             </Constant>
             <Constant>
               <Name>NReallocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
             </Constant>
             <Constant>
               <Name>SenescenceRate</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
             </Constant>
             <BiomassRemoval>
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0.5</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1439,6 +1624,7 @@ This is important in SLURP as it is set for each species to represent their diff
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Cut</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0.8</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1446,6 +1632,7 @@ This is important in SLURP as it is set for each species to represent their diff
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Prune</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1453,14 +1640,52 @@ This is important in SLURP as it is set for each species to represent their diff
               </OrganBiomassRemovalType>
               <OrganBiomassRemovalType>
                 <Name>Graze</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FractionLiveToRemove>0.6</FractionLiveToRemove>
                 <FractionDeadToRemove>0</FractionDeadToRemove>
                 <FractionLiveToResidue>0.2</FractionLiveToResidue>
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </BiomassRemoval>
-            <GrowthRespiration>0</GrowthRespiration>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
+            <Constant>
+              <Name>MaintenanceRespirationFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+              <Units>0-1</Units>
+            </Constant>
+            <Constant>
+              <Name>DMConversionEfficiencyFunction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+              <Units>0-1</Units>
+            </Constant>
+            <Constant>
+              <Name>NRetranslocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>NitrogenDemandSwitch</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>DMReallocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>DMRetranslocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>CriticalNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <CohortsInitialised>false</CohortsInitialised>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -1474,38 +1699,33 @@ This is important in SLURP as it is set for each species to represent their diff
             <Height>0</Height>
             <FRGR>0</FRGR>
             <PotentialEP>0</PotentialEP>
+            <MicroClimatePresent>true</MicroClimatePresent>
             <KDead>0</KDead>
             <LAIDead>0</LAIDead>
-            <WaterAllocation>0</WaterAllocation>
-            <Constant>
-              <Name>MaintenanceRespirationFunction</Name>
-              <FixedValue>0</FixedValue>
-              <Units>0-1</Units>
-            </Constant> 
-            <Constant>
-              <Name>DMConversionEfficiencyFunction</Name>
-              <FixedValue>1</FixedValue>
-              <Units>0-1</Units>
-            </Constant>
           </SimpleLeaf>
           <Cultivar>
             <Name>StaticCrop</Name>
             <Memo>
               <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MemoText><![CDATA[The static crop is the base crop and uses all the paramaters values specified above.
 ]]></MemoText>
             </Memo>
             <Alias>
               <Name>StaticCrop</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </Alias>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Cultivar>
           <Cultivar>
             <Name>StaticTree</Name>
             <Memo>
               <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MemoText><![CDATA[The static tree is similar to the static crop but is taller, has a deeper root system and a lower extinction coefficient
 ]]></MemoText>
             </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Root].MaximumRootDepth.FixedValue = 2600</Command>
             <Command>[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.65</Command>
             <Command>[Leaf].HeightFunction.FixedValue = 5000</Command>
@@ -1516,9 +1736,11 @@ This is important in SLURP as it is set for each species to represent their diff
             <Name>Pasture</Name>
             <Memo>
               <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MemoText><![CDATA[The pasture differs from the base crop because its has a RootFrontVelocity of 15 (as opposed to zero) which means the roots grow downward from sowing untill the MaximumRootDepth is reached.  It ExtinctionCoefficient and MaximumRootDepth are different to the base StaticCrop and it has a different pattern of kl with depth.
 ]]></MemoText>
             </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Root].MaximumRootDepth.FixedValue = 800</Command>
             <Command>[Root].RootFrontVelocity.FixedValue = 15</Command>
             <Command>[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.65</Command>
@@ -1529,20 +1751,23 @@ This is important in SLURP as it is set for each species to represent their diff
             <Name>Lucerne</Name>
             <Memo>
               <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MemoText><![CDATA[Lucerne also grows root depth like pasture but has a greater root depth, different kl pattern and different extinction coefficient
 ]]></MemoText>
             </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Root].MaximumRootDepth.FixedValue = 2500</Command>
             <Command>[Root].RootFrontVelocity.FixedValue = 15</Command>
             <Command>[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.8</Command>
             <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500, 2000</Command>
             <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3, 0.1</Command>
           </Cultivar>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <CropType>Slurp</CropType>
-          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Manager>
           <Name>ExtraVariables</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script />
           <Code><![CDATA[using System;
 using Models.Core;
@@ -1682,10 +1907,17 @@ namespace Models
         </Manager>
         <Irrigation>
           <Name>Irrigation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Fertiliser>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SoluteManager>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -1693,6 +1925,7 @@ namespace Models
         <Name>Uptakes</Name>
         <Series>
           <Name>Slurp1Demand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1714,6 +1947,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Slurp2Demand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1735,6 +1969,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Slurp1Uptake</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1756,6 +1991,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Slurp2Uptake</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1775,6 +2011,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Accumulated Water Changes (mm)</Title>
@@ -1792,12 +2029,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Uptakes1</Name>
         <Series>
           <Name>Slurp1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1819,6 +2056,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Slurp2</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1838,6 +2076,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Accumulated Water Changes (mm)</Title>
@@ -1855,9 +2094,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Simulation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>350</ExplorerWidth>
 </Simulations>

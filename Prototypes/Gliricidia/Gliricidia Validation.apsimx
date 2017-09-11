@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <MemoText><![CDATA[The APSIM Gliricidia Model
  
 Huth, N.I. and Smethurst, P.J. ]]></MemoText>
   </Memo>
   <Memo>
     <Name>Introduction</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <MemoText><![CDATA[The APSIM gliricidia model  . . . . . ]]></MemoText>
   </Memo>
   <Replacements>
@@ -19,15 +21,22 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
         <Name>Age</Name>
         <Constant>
           <Name>day</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.0027397260273972603</FixedValue>
         </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <StartStageName>Emergence</StartStageName>
         <EndStageName>Old</EndStageName>
+        <FractionRemovedOnCut>0</FractionRemovedOnCut>
+        <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+        <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+        <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
       </AccumulateFunction>
       <Phenology>
         <Name>Phenology</Name>
         <StageBasedInterpolation>
           <Name>StageCode</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Stages>
             <string>Emergence</string>
             <string>EndJuvenile</string>
@@ -44,10 +53,12 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
         </StageBasedInterpolation>
         <Constant>
           <Name>ThermalTime</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <GerminatingPhase>
           <Name>Germinating</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Sowing</Start>
           <End>Germination</End>
         </GerminatingPhase>
@@ -55,8 +66,10 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Germination</Start>
           <End>Emergence</End>
           <ShootLag>1</ShootLag>
@@ -66,12 +79,15 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
           <Name>Juvenile</Name>
           <Constant>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>365</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>EndJuvenile</End>
         </GenericPhase>
@@ -79,12 +95,15 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
           <Name>Mature</Name>
           <Constant>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1825</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>EndJuvenile</Start>
           <End>Maturity</End>
         </GenericPhase>
@@ -92,12 +111,15 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
           <Name>Declining</Name>
           <Constant>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>27010</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Maturity</Start>
           <End>Old</End>
         </GenericPhase>
@@ -105,24 +127,31 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
           <Name>Old</Name>
           <Constant>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Old</Start>
           <End>Unused</End>
         </EndPhase>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
         <RelativeAllocation>
           <Name>NArbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RelativeAllocation>
         <RelativeAllocation>
           <Name>DMArbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RelativeAllocation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </OrganArbitrator>
       <CompositeBiomass>
         <Name>AboveGround</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -132,6 +161,7 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>BelowGround</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Root].Live</string>
           <string>[Root].Dead</string>
@@ -139,6 +169,7 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>Total</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -150,6 +181,7 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>TotalLive</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Stem].Live</string>
@@ -160,15 +192,19 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
         <Name>IndividualTreeLiveWt</Name>
         <VariableReference>
           <Name>LiveWt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Gliricidia].TotalLive.Wt</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>Population</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Gliricidia].Population</VariableName>
         </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </DivideFunction>
       <CompositeBiomass>
         <Name>TotalDead</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Dead</string>
           <string>[Stem].Dead</string>
@@ -179,27 +215,33 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
         <Name>Leaf</Name>
         <Memo>
           <Name>Description</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[]]></MemoText>
         </Memo>
         <MultiplyFunction>
           <Name>InitialWtFunction</Name>
           <Constant>
             <Name>InitialPlantWt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
             <Units>g/plant</Units>
           </Constant>
           <VariableReference>
             <Name>Population</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Plant].Population</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <Constant>
           <Name>LaiDeadFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>m^2/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
@@ -209,21 +251,25 @@ Huth, N.I. and Smethurst, P.J. ]]></MemoText>
             <Name>RUE</Name>
             <Memo>
               <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MemoText><![CDATA[Value of 1.06 for above ground growth from 
 Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees
 Author(s): Robin A. Harrington and James H. Fownes
 Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8]]></MemoText>
             </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1.3</FixedValue>
           </Constant>
           <VariableReference>
             <Name>Radiation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Weather].Radn</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>WaterStressFactor</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -233,12 +279,15 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8]]></Mem
                 <double>1</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
           <VariableReference>
             <Name>Frgr</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].FRGRFunction.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
@@ -246,6 +295,7 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8]]></Mem
             <Name>FRGRFunctionTemp</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>10</double>
@@ -259,19 +309,24 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8]]></Mem
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AirTemperatureFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MinimumFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <Constant>
             <Name>PartitionFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.25</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>ExtinctionCoefficient</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[Value of 0.57 from 
 Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees
 Author(s): Robin A. Harrington and James H. Fownes
@@ -279,12 +334,14 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.57</FixedValue>
         </Constant>
         <Constant>
           <Name>ExtinctionCoefficientDead</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[Value of 0.57 from 
 Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees
 Author(s): Robin A. Harrington and James H. Fownes
@@ -292,12 +349,14 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.57</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>3</double>
               <double>5</double>
@@ -309,33 +368,40 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>1200</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Phenology].Stage</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MaximumNConc</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[0.043 gN/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
 (GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.043</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.9</FractionLiveToResidue>
@@ -343,6 +409,7 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -350,6 +417,7 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -357,44 +425,54 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>LeafResidenceTime</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>180</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafDetachmentTime</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>7</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafKillFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumLAI</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>SpecificLeafAreaFunction</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[0.0232 m2/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
 (GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421
 
@@ -403,9 +481,17 @@ using hemispherical photography
 P.R. van Gardingen*, G.E. Jackson, S. Hernandez-Daumas, G. Russell, L. Sharp
 Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.01</FixedValue>
           <Units>m^2/g</Units>
         </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
         <CohortsInitialised>false</CohortsInitialised>
@@ -426,54 +512,65 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         <Name>Root</Name>
         <CompositeBiomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Root].LayerLive</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Root].LayerDead</string>
           </Propertys>
         </CompositeBiomass>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>Old</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>RootFrontVelocity</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>10</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[0.02 gN/g for seedlings from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
 (GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>6</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.004</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1000000</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>3</double>
@@ -483,12 +580,14 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
               <double>1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Leaf].LAI</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.003</double>
@@ -498,12 +597,14 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
               <double>0.03</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNH4</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.003</double>
@@ -513,12 +614,14 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
               <double>0</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NUptakeSWFactor</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>1</double>
@@ -528,15 +631,18 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
               <double>1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].RWC</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>5</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>100</FixedValue>
           <Units>m/g</Units>
         </Constant>
@@ -544,6 +650,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -551,6 +658,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.3</FractionLiveToResidue>
@@ -558,6 +666,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -565,6 +674,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
@@ -572,16 +682,29 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Thin</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.3</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
         <Constant>
-          <Name>PartitionFraction</Name>
-          <FixedValue>0.3</FixedValue>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
         </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
@@ -592,23 +715,28 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>Old</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
@@ -616,33 +744,41 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Name>MaximumNConc</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[0.03 gN/g for seedlings from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
 (GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.03</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.0014</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Constant>
           <Name>InitialWtFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
@@ -650,6 +786,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.9</FractionLiveToRemove>
             <FractionDeadToRemove>0.9</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -657,6 +794,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -664,6 +802,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.9</FractionLiveToRemove>
             <FractionDeadToRemove>0.9</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -671,6 +810,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
@@ -678,14 +818,17 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Thin</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <AllometricDemandFunction>
           <Name>DMDemandFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Const>0.0322</Const>
           <Power>1.3743</Power>
           <XProperty>[AboveGround].Wt</XProperty>
@@ -693,33 +836,51 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </AllometricDemandFunction>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+        </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <Nodule>
         <Name>Nodule</Name>
         <Biomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Memo>
           <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[]]></MemoText>
         </Memo>
         <Constant>
           <Name>FixationMetabolicCost</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <PartitionFractionDemandFunction>
@@ -728,46 +889,58 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Name>PartitionFraction</Name>
             <Memo>
               <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>MaximumNConc</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
@@ -775,6 +948,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -782,6 +956,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -789,6 +964,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -796,55 +972,87 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>InitialWtFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>FixationRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>10000</FixedValue>
           <Units>g/m^2/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Nodule].MinimumNConc.Value()</VariableName>
+        </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Nodule>
       <Cultivar>
         <Name>Gliricidia</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Command />
       </Cultivar>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Gliricidia</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>Observed</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
@@ -854,27 +1062,32 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
     </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>HarvestReport</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Year</FieldNameUsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
       <Name>PredictedObservedSoil</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>DailyReport</PredictedTableName>
       <ObservedTableName>ObservedSoil</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
       <Name>PredictedObservedGliricidia</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>GliricidiaDailyReport</PredictedTableName>
       <ObservedTableName>ObservedGliricidia</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Map>
     <Name>Map</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Center>
       <Latitude>-29.878755346037963</Latitude>
       <Longitude>134.384765625</Longitude>
@@ -887,19 +1100,23 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
       <Name>Hamakuapoko</Name>
       <Clock>
         <Name>Clock</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <StartDate>1988-05-22T00:00:00</StartDate>
         <EndDate>1990-05-22T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Summary>
       <Weather>
         <Name>Weather</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FileName>Hamakuapoko.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </SoilArbitrator>
       <Zone>
         <Name>Zone</Name>
@@ -909,6 +1126,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Name>Water</Name>
             <SoilCrop>
               <Name>MaizeSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.17</double>
                 <double>0.18</double>
@@ -936,6 +1154,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             </SoilCrop>
             <SoilCrop>
               <Name>GliricidiaSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.17</double>
                 <double>0.18</double>
@@ -961,6 +1180,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
                 <double>1</double>
               </XF>
             </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>230</double>
               <double>400</double>
@@ -1012,6 +1232,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <SummerDate>1-May</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>2.5</SummerCona>
@@ -1056,6 +1277,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -1088,17 +1310,10 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>40</RootCN>
             <RootWt>400</RootWt>
             <SoilCN>11</SoilCN>
@@ -1148,6 +1363,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>230</double>
               <double>400</double>
@@ -1171,6 +1387,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </Analysis>
           <Sample>
             <Name>Sample</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>230</double>
               <double>400</double>
@@ -1209,6 +1426,11 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RecordNumber>0</RecordNumber>
           <LocalName>Paia Silty Clay</LocalName>
           <Site>c. 90 m south of Kaheka Rd, south-east of Sunny Side and Kaheka Rds, Maui</Site>
@@ -1223,6 +1445,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </Soil>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <a_interception>0</a_interception>
           <b_interception>0</b_interception>
           <c_interception>0</c_interception>
@@ -1238,9 +1461,11 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Irrigation>
         <Report>
           <Name>GliricidiaDailyReport</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1299,11 +1524,14 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
           <Pools>
@@ -1337,12 +1565,13 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </SurfaceOrganicMatter>
         <Plant>
           <Name>Gliricidia</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Gliricidia</ResourceName>
           <CropType>Gliricidia</CropType>
-          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Manager>
           <Name>TreeSowingRule</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <RowSpace>1</RowSpace>
             <RowWidth>2</RowWidth>
@@ -1397,6 +1626,7 @@ namespace Models
         </Manager>
         <Manager>
           <Name>Automatic irrigation based on water deficit</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <FASW>0</FASW>
             <WaterDeficit>0</WaterDeficit>
@@ -1491,6 +1721,11 @@ namespace Models
 }
 	   ]]></Code>
         </Manager>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SoluteManager>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -1498,6 +1733,7 @@ namespace Models
         <Name>AboveGroundWt</Name>
         <Series>
           <Name>TotalPredicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1519,6 +1755,7 @@ namespace Models
         </Series>
         <Series>
           <Name>TotalObserved</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1540,6 +1777,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Leaf</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1559,6 +1797,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -1577,12 +1816,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1604,6 +1843,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1623,6 +1863,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -1641,12 +1882,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LightInterception</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1668,6 +1909,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1687,6 +1929,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -1705,12 +1948,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Fw</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1730,6 +1973,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -1748,12 +1992,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Fn</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1773,6 +2017,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -1791,12 +2036,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>NO3 ppm 10 cm</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1816,6 +2061,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -1834,12 +2080,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>AboveGroundWt Hawaii</Name>
         <Series>
           <Name>TotalPredicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1861,6 +2107,7 @@ namespace Models
         </Series>
         <Series>
           <Name>TotalObserved</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1880,6 +2127,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -1898,13 +2146,14 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Simulation>
     <Experiment>
       <Name>Guadeloupe</Name>
       <Memo>
         <Name>Memo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText><![CDATA[This trial was conducted at Gatton in 1995 using the local variety, Hartog.  It consisted of 4 Nitrogen rates (0,40,80,160) with two irrigation rates (minimal amount for establishment, fully irrigated).  Yields ranged from 1.4 t/ha to 5.4 t/ha.]]></MemoText>
       </Memo>
       <Factors>
@@ -1913,9 +2162,11 @@ namespace Models
           <Name>Harvest</Name>
           <Operations>
             <Name>12Month</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Operations>
           <Operations>
             <Name>06Month</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>1996-08-13</Date>
               <Action>[Gliricidia].Harvest()</Action>
@@ -1923,6 +2174,7 @@ namespace Models
           </Operations>
           <Operations>
             <Name>02Month</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>1996-04-29</Date>
               <Action>[Gliricidia].Harvest()</Action>
@@ -1944,28 +2196,34 @@ namespace Models
               <Action>[Gliricidia].Harvest()</Action>
             </Operation>
           </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[Operations]</string>
           </Specifications>
         </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
       <Simulation>
         <Name>GuadeloupeBase</Name>
         <Clock>
           <Name>Clock</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1993-05-01T00:00:00</StartDate>
           <EndDate>1997-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>Guadeloupe.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </SoilArbitrator>
         <Zone>
           <Name>Zone</Name>
@@ -1975,6 +2233,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.17</double>
                   <double>0.18</double>
@@ -2002,6 +2261,7 @@ namespace Models
               </SoilCrop>
               <SoilCrop>
                 <Name>GliricidiaSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.17</double>
                   <double>0.18</double>
@@ -2027,6 +2287,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -2078,6 +2339,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-May</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -2106,6 +2368,7 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -2138,17 +2401,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>400</RootWt>
               <SoilCN>14.6</SoilCN>
@@ -2188,6 +2444,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -2207,6 +2464,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Sample</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -2237,6 +2495,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <NearestTown>Prise d'Eau</NearestTown>
             <Country>Guadeloupe</Country>
@@ -2246,6 +2509,7 @@ namespace Models
           </Soil>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>0</b_interception>
             <c_interception>0</c_interception>
@@ -2261,6 +2525,7 @@ namespace Models
           </MicroClimate>
           <Report>
             <Name>GliricidiaDailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -2317,11 +2582,14 @@ namespace Models
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -2355,12 +2623,13 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant>
             <Name>Gliricidia</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Gliricidia</ResourceName>
             <CropType>Gliricidia</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>TreeSowingRule</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <RowSpace>0.7</RowSpace>
               <RowWidth>3</RowWidth>
@@ -2415,9 +2684,11 @@ namespace Models
           </Manager>
           <Operations>
             <Name>Operations</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Operations>
           <Operations>
             <Name>PreExperimentOperations</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>1993-09-01</Date>
               <Action>[Gliricidia].Harvest()</Action>
@@ -2455,14 +2726,21 @@ namespace Models
               <Action>[Gliricidia].Harvest()</Action>
             </Operation>
           </Operations>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Simulation>
       <Graph>
         <Name>Leaf Wt</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2484,6 +2762,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2503,6 +2782,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2519,12 +2799,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Stem Wt</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2546,6 +2826,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2565,6 +2846,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2581,12 +2863,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>AboveGroundWt</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2608,6 +2890,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2627,6 +2910,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2643,7 +2927,6 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PreObs LeafWt</Name>
@@ -2651,8 +2934,10 @@ namespace Models
           <Name>Observed</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2672,6 +2957,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2688,7 +2974,6 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PreObs StemWt</Name>
@@ -2696,8 +2981,10 @@ namespace Models
           <Name>Observed</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2717,6 +3004,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2733,7 +3021,6 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PreObs AboveGroundWt</Name>
@@ -2741,8 +3028,10 @@ namespace Models
           <Name>Observed</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2762,6 +3051,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2778,12 +3068,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Frgr</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2803,6 +3093,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2819,12 +3110,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2844,6 +3135,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2860,12 +3152,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Leaf Wt1996to1997</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2887,6 +3179,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2906,6 +3199,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2922,13 +3216,14 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Experiment>
     <Experiment>
       <Name>GuadeloupeGodet</Name>
       <Memo>
         <Name>Limitation</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText><![CDATA[These is currenlty (1/3/2017) no grass model inlcuded. Can we include a tropical grass model, with cuttings removed every 4-6 weeks?  ]]></MemoText>
       </Memo>
       <Factors>
@@ -2937,13 +3232,16 @@ namespace Models
           <Name>Harvest</Name>
           <Memo>
             <Name>Limitation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[These harvests are currenlty (1/3/2017) full, but could reflect better the amounts of foliage and stem left.  ]]></MemoText>
           </Memo>
           <Operations>
             <Name>12Month</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Operations>
           <Operations>
             <Name>06Month</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>1996-08-13</Date>
               <Action>[Gliricidia].Harvest()</Action>
@@ -2951,6 +3249,7 @@ namespace Models
           </Operations>
           <Operations>
             <Name>02Month</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>1996-04-29</Date>
               <Action>[Gliricidia].Harvest()</Action>
@@ -2972,28 +3271,34 @@ namespace Models
               <Action>[Gliricidia].Harvest()</Action>
             </Operation>
           </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[Operations]</string>
           </Specifications>
         </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
       <Simulation>
         <Name>GuadeloupeGodetBase</Name>
         <Clock>
           <Name>Clock</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1993-05-01T00:00:00</StartDate>
           <EndDate>1997-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>GuadeloupeGodet.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </SoilArbitrator>
         <Zone>
           <Name>Zone</Name>
@@ -3003,6 +3308,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.17</double>
                   <double>0.18</double>
@@ -3018,6 +3324,7 @@ namespace Models
               </SoilCrop>
               <SoilCrop>
                 <Name>GliricidiaSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.17</double>
                   <double>0.18</double>
@@ -3031,6 +3338,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -3058,6 +3366,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-May</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -3086,6 +3395,7 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -3118,17 +3428,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>400</RootWt>
               <SoilCN>10.6</SoilCN>
@@ -3158,6 +3461,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -3173,6 +3477,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Sample</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -3195,6 +3500,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <NearestTown>Godet</NearestTown>
             <Country>Guadeloupe</Country>
@@ -3205,6 +3515,7 @@ namespace Models
           </Soil>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>0</b_interception>
             <c_interception>0</c_interception>
@@ -3220,6 +3531,7 @@ namespace Models
           </MicroClimate>
           <Report>
             <Name>GliricidiaDailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -3267,11 +3579,14 @@ namespace Models
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -3305,12 +3620,13 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant>
             <Name>Gliricidia</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Gliricidia</ResourceName>
             <CropType>Gliricidia</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>TreeSowingRule</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <RowSpace>0.4083</RowSpace>
               <RowWidth>2</RowWidth>
@@ -3365,9 +3681,11 @@ namespace Models
           </Manager>
           <Operations>
             <Name>Operations</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Operations>
           <Operations>
             <Name>PreExperimentOperations</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>1993-06-22</Date>
               <Action>[Gliricidia].Harvest()</Action>
@@ -3433,14 +3751,21 @@ namespace Models
               <Action>[Gliricidia].Harvest()</Action>
             </Operation>
           </Operations>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Simulation>
       <Graph>
         <Name>Leaf Wt</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3462,6 +3787,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3481,6 +3807,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3497,12 +3824,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Stem Wt</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3524,6 +3851,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3543,6 +3871,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3559,12 +3888,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>AboveGroundWt</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3586,6 +3915,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3605,6 +3935,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3621,7 +3952,6 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PreObs LeafWt</Name>
@@ -3629,8 +3959,10 @@ namespace Models
           <Name>Observed</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3650,6 +3982,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3666,7 +3999,6 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PreObs StemWt</Name>
@@ -3674,8 +4006,10 @@ namespace Models
           <Name>Observed</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3695,6 +4029,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3711,7 +4046,6 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PreObs AboveGroundWt</Name>
@@ -3719,8 +4053,10 @@ namespace Models
           <Name>Observed</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3740,6 +4076,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3756,12 +4093,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Frgr</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3781,6 +4118,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3797,12 +4135,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3822,6 +4160,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3838,13 +4177,14 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Experiment>
     <Experiment>
       <Name>Makoka</Name>
       <Memo>
         <Name>Memo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText><![CDATA[]]></MemoText>
       </Memo>
       <Factors>
@@ -3853,6 +4193,7 @@ namespace Models
           <Name>N</Name>
           <Manager>
             <Name>0</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <Amount>0</Amount>
               <CropName>maize</CropName>
@@ -3898,6 +4239,7 @@ namespace Models
           </Manager>
           <Manager>
             <Name>24</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <Amount>24</Amount>
               <CropName>maize</CropName>
@@ -3943,6 +4285,7 @@ namespace Models
           </Manager>
           <Manager>
             <Name>48</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <Amount>48</Amount>
               <CropName>maize</CropName>
@@ -3986,6 +4329,7 @@ namespace Models
 }
 ]]></Code>
           </Manager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[FertiliserRule]</string>
           </Specifications>
@@ -3994,9 +4338,11 @@ namespace Models
           <Name>Maize</Name>
           <Operations>
             <Name>Sole</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Operations>
           <Operations>
             <Name>Gliricidia</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>1991-12-15</Date>
               <Action>[Gliricidia].Sow(population: 0.74, cultivar: Gliricidia,depth: 100, rowSpacing: 1500);</Action>
@@ -4198,28 +4544,34 @@ namespace Models
               <Action>[Gliricidia].Harvest();</Action>
             </Operation>
           </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[GliricidiaManagement]</string>
           </Specifications>
         </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
       <Simulation>
         <Name>MakokaBase</Name>
         <Clock>
           <Name>Clock</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1991-12-01T00:00:00</StartDate>
           <EndDate>2006-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>Makoka.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </SoilArbitrator>
         <Zone>
           <Name>Zone</Name>
@@ -4229,6 +4581,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.17</double>
                   <double>0.18</double>
@@ -4274,6 +4627,7 @@ namespace Models
               </SoilCrop>
               <SoilCrop>
                 <Name>GliricidiaSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.17</double>
                   <double>0.18</double>
@@ -4317,6 +4671,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -4404,6 +4759,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -4432,6 +4788,7 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -4464,17 +4821,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>400</RootWt>
               <SoilCN>14.3</SoilCN>
@@ -4544,6 +4894,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -4573,6 +4924,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Sample</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -4627,6 +4979,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <SoilType>sand</SoilType>
             <NearestTown>Makoka</NearestTown>
@@ -4636,6 +4993,7 @@ namespace Models
           </Soil>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>0</b_interception>
             <c_interception>0</c_interception>
@@ -4651,6 +5009,7 @@ namespace Models
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -4692,6 +5051,7 @@ namespace Models
           </Report>
           <Report>
             <Name>DailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -4745,7 +5105,7 @@ namespace Models
               <string>[Maize].Phenology.Photoperiod.Value</string>
               <string>[Maize].Phenology.Photosensitive.Target.Value</string>
               <string>[Maize].Phenology.LeafAppearance.FractionComplete</string>
-              <string>[Maize].Structure.MainStemFinalNodeNumber.Value</string>
+              <string>[Maize].Structure.FinalLeafNumber.Value</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
               <string>[Soil].SoilWater.LeachNO3</string>
               <string>[Soil].SoilWater.flow_no3</string>
@@ -4756,6 +5116,7 @@ namespace Models
           </Report>
           <Report>
             <Name>GliricidiaDailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -4814,11 +5175,14 @@ namespace Models
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -4852,6 +5216,7 @@ namespace Models
           </SurfaceOrganicMatter>
           <Manager>
             <Name>SowingRule</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <StartDate>12-Dec</StartDate>
               <EndDate>30-Dec</EndDate>
@@ -4916,7 +5281,7 @@ namespace Models
 			
 			if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
 			    Maize.IsAlive != true &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 				Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
@@ -4930,12 +5295,13 @@ namespace Models
           </Manager>
           <Plant>
             <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>FertiliserRule</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <Amount>0</Amount>
               <CropName>maize</CropName>
@@ -4981,6 +5347,7 @@ namespace Models
           </Manager>
           <Manager>
             <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -5027,12 +5394,13 @@ namespace Models
           </Manager>
           <Plant>
             <Name>Gliricidia</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Gliricidia</ResourceName>
             <CropType>Gliricidia</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Operations>
             <Name>Operations</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>1999-12-12</Date>
               <Action>[Maize].Sow(population: 1, cultivar: "NSCM_41", depth: 30, rowSpacing: 750);</Action>
@@ -5044,10 +5412,17 @@ namespace Models
           </Operations>
           <Operations>
             <Name>GliricidiaManagement</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Operations>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Simulation>
       <Graph>
         <Name>Grain Yield PvsO</Name>
@@ -5055,8 +5430,10 @@ namespace Models
           <Name>PvsO</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5076,6 +5453,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5094,12 +5472,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Grain Yield vs Year</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5121,6 +5499,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5140,6 +5519,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5158,7 +5538,6 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Maize AboveGroundWt PvsO</Name>
@@ -5166,8 +5545,10 @@ namespace Models
           <Name>PvsO</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5187,6 +5568,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5205,12 +5587,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>AboveGroundWt vs Year</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5232,6 +5614,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5251,6 +5634,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5269,12 +5653,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SurfaceMineralN vs Year</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5296,6 +5680,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5315,6 +5700,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5333,7 +5719,6 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SurfaceMineralN PvsO</Name>
@@ -5341,8 +5726,10 @@ namespace Models
           <Name>PvsO</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5362,6 +5749,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5380,12 +5768,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SuburfaceMineralN vs Year</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5407,6 +5795,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5426,6 +5815,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5444,12 +5834,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>FloweringDate</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5469,6 +5859,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5487,12 +5878,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAIMax</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5512,6 +5903,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5530,12 +5922,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>NStress</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5555,6 +5947,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5573,7 +5966,6 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Grain No PvsO</Name>
@@ -5581,8 +5973,10 @@ namespace Models
           <Name>PvsO</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5602,6 +5996,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5620,7 +6015,6 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>GrainSize PvsO</Name>
@@ -5628,8 +6022,10 @@ namespace Models
           <Name>PvsO</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5649,6 +6045,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5667,12 +6064,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>NLeaching</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5692,6 +6089,7 @@ namespace Models
           <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5710,12 +6108,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Gliricidia Stem vs Year</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5737,6 +6135,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5756,6 +6155,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5774,12 +6174,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Gliricidia Foliage vs Year</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5801,6 +6201,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5820,6 +6221,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5838,12 +6240,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Gliricidia LAI vs Year</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5863,6 +6265,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5881,12 +6284,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Gliricidia Fn</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5906,6 +6309,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5924,12 +6328,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Gliricidia Fw</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5949,6 +6353,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -5967,9 +6372,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Experiment>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>282</ExplorerWidth>
 </Simulations>
