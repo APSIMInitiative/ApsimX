@@ -1,12 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Manager>
     <Name>ResetPMFSlurpProperties</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Script>
       <OverRidePath>[PMFSlurp].Leaf.LAIFunction.FixedValue</OverRidePath>
       <OverRideInterger>5</OverRideInterger>
@@ -47,18 +50,22 @@ namespace Models
     <Name>PMFSlurpTestBase</Name>
     <Weather>
       <Name>Weather</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartDate>2010-11-15T00:00:00</StartDate>
       <EndDate>2011-02-02T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </SoilArbitrator>
     <Zone>
       <Name>Field</Name>
@@ -66,6 +73,7 @@ namespace Models
         <Name>Soil</Name>
         <Analysis>
           <Name>Analysis</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -87,6 +95,7 @@ namespace Models
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <PercentMethod>EvenlyDistributed</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
@@ -95,6 +104,7 @@ namespace Models
           <Name>Water</Name>
           <SoilCrop>
             <Name>PMFSlurpSoil</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -122,6 +132,7 @@ namespace Models
           </SoilCrop>
           <SoilCrop>
             <Name>PotatoSoil</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -147,6 +158,7 @@ namespace Models
               <double>0</double>
             </XF>
           </SoilCrop>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -198,7 +210,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>4.4</SummerCona>
@@ -239,9 +251,11 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -274,25 +288,10 @@ namespace Models
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
-          <oc>
-            <double>1.8356606676098439</double>
-            <double>1.4633385968844384</double>
-            <double>1.1988393325681357</double>
-            <double>1.0301002994895852</double>
-            <double>0.4703383219429832</double>
-            <double>0.47013790451920212</double>
-          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RootCN>30</RootCN>
           <RootWt>3000</RootWt>
           <SoilCN>11.5</SoilCN>
@@ -342,6 +341,7 @@ namespace Models
         </SoilOrganicMatter>
         <Sample>
           <Name>Initial nitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -372,6 +372,11 @@ namespace Models
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </CERESSoilTemperature>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RecordNumber>0</RecordNumber>
         <SoilType />
         <LocalName />
@@ -384,36 +389,37 @@ namespace Models
       </Soil>
       <Plant>
         <Name>PMFSlurp</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>Slurp</ResourceName>
         <CropType>Slurp</CropType>
       </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
-        <sun_angle>15</sun_angle>
-        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-        <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
-        <refheight>2</refheight>
-        <albedo>0.26</albedo>
-        <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
+        <sun_angle>15</sun_angle>
+        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+        <night_interception_fraction>0.5</night_interception_fraction>
+        <refheight>2</refheight>
+        <albedo>0.26</albedo>
+        <emissivity>0.96</emissivity>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Irrigation>
       <Fertiliser>
         <Name>Fertiliser</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Fertiliser>
       <Manager>
         <Name>PMFSlurpSowingRule</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script>
           <CultivarName>StaticCrop</CultivarName>
           <InitialRootDepth>600</InitialRootDepth>
@@ -462,6 +468,7 @@ namespace Models
       </Manager>
       <Manager>
         <Name>ExtraVariables</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script />
         <Code><![CDATA[using System;
 using Models.Core;
@@ -601,15 +608,18 @@ namespace Models
       </Manager>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypesList</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <TillageType />
         </TillageTypes>
         <Pools>
@@ -643,6 +653,7 @@ namespace Models
       </SurfaceOrganicMatter>
       <Operations>
         <Name>operations</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Operation>
           <Date>1998-10-02T00:00:00</Date>
           <Action>[Irrigation].Apply(40);</Action>
@@ -690,6 +701,9 @@ namespace Models
       </Operations>
       <Report>
         <Name>Report</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[ExtraVariables].Script.AccumPlantN</string>
@@ -758,6 +772,7 @@ namespace Models
       </Report>
       <Manager>
         <Name>ResetPMFSlurpProperties</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script>
           <OverRidePath>PMFSlurp.Leaf.LAIFunction.FixedValue</OverRidePath>
           <OverRideInterger>5</OverRideInterger>
@@ -805,19 +820,27 @@ namespace Models
         <Name>Nitrogen supply and demand1</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Slurp.Leaf.Live.NConc</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Water (mm)</Title>
@@ -843,138 +866,194 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Arbitrator>
-        <Name>Arbitrator</Name>
-        <ArbitrationMethod>Old</ArbitrationMethod>
-        <NutrientUptakeMethod>2</NutrientUptakeMethod>
-      </Arbitrator>
-      <Area>0</Area>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </SoluteManager>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Graph>
       <Name>N balance components</Name>
       <Series>
         <Name>AccumPlantN</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumPlantN</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>AccumMineralisation</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388353</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumMineralisation</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>AccumDenit</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744193</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumDenit</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>AccumFert</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumFert</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>AccumLeach</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumLeach</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>DeltaSoilOMN</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372224</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.DeltaSoilOMN</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>DeltaSurfaceOMN</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.DeltaSurfaceOMN</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>DeltaSoilMineralN</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777152</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.DeltaSoilMineralN</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title>X axis title 2</Title>
@@ -993,160 +1072,230 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>WaterBalanceComponents</Name>
       <Series>
         <Name>Pond</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SoilWater.pond</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>AccumEO</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumEO</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>AccumEP</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumEP</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>AccumES</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumES</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>AccumDrainage</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumDrainage</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>AccumRunoff</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711681</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumRunoff</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>AccumRainfall</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388544</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumRainfall</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>AccumIrrigation</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-12582784</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumIrrigation</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>AccumLatOutFlow</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.AccumOutflowLat</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>SoilWaterDeficit</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777056</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>ExtraVariables.Script.SoilWaterDeficit</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Accumulated Water Changes (mm)</Title>
@@ -1164,175 +1313,252 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Biomass components</Name>
       <Series>
         <Name>Leaf</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388608</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.Live.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Stem</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16760704</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Stem.Live.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Tuber</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Tuber.Live.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Root</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Root.Live.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Dead Leaf</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388480</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.Dead.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Dead Step</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Stem.Dead.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Dead Tuber</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Tuber.Dead.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Root Dead</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711681</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Root.Dead.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Above Ground Wt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372160</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.AboveGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Below Ground Wt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777088</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.BelowGround.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Total Wt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388608</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Total.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Crop Biomass (g/m2)</Title>
@@ -1350,190 +1576,274 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Nitrogen components</Name>
       <Series>
         <Name>Leaf</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388608</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.Live.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Stem</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16760704</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Stem.Live.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Tuber</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Tuber.Live.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Root</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Root.Live.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Dead Leaf</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388480</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.Dead.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Dead Step</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Stem.Dead.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Dead Tuber</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Tuber.Dead.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Root Dead</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711681</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Root.Dead.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Above Ground Wt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372160</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.AboveGround.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Below Ground Wt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777088</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.BelowGround.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Total Wt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388608</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Total.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Total Live N</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.TotalLive.N</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Crop Nitrogen (g/m2)</Title>
@@ -1551,115 +1861,164 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Water supply and demand</Name>
       <Series>
         <Name>Supply</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777088</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Root.WaterSupply</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Uptake</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372224</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Root.WaterUptake</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Demand</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.WaterDemand</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Transpiration</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.Transpiration</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Potential</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.Eo</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Root Depth</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Root.Depth</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Canopy Height</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-16711936</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.Height</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Water (mm)</Title>
@@ -1685,100 +2044,142 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Crop structure</Name>
       <Series>
         <Name>Cover Dead</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372224</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.CoverDead</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Cover Green</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.CoverGreen</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>CoverTotal</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.CoverTotal</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>LAI</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.LAI</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>LAI Dead</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.LAIDead</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Root depth</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Root.Depth</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Cover </Title>
@@ -1803,40 +2204,54 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>N supply and demand</Name>
       <Series>
         <Name>Series 0</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Arbitrator.N.TotalPlantDemand</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Series2</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Root.NSupply.Uptake</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Water (mm)</Title>
@@ -1862,40 +2277,54 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Stress Factors</Name>
       <Series>
         <Name>Series 0</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.Fw</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Series2</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Slurp.Leaf.Fn</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Water (mm)</Title>
@@ -1921,10 +2350,9 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>235</ExplorerWidth>
 </Simulations>

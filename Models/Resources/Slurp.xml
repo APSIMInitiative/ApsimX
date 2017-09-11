@@ -50,6 +50,12 @@ zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);
   </OrganArbitrator>
   <Root>
     <Name>Root</Name>
+    <Constant>
+      <Name>DMConversionEfficiencyFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+      <Units>0-1</Units>
+    </Constant>
     <CompositeBiomass>
       <Name>Live</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>

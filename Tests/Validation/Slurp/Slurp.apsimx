@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -506,9 +506,9 @@ zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);]]></MemoText>
         <Name>SlurpSowingRule</Name>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Script>
+          <SowingDate>1998-10-14</SowingDate>
           <CultivarName>StaticCrop</CultivarName>
           <InitialRootDepth>600</InitialRootDepth>
-          <SowingDate>1998-10-14</SowingDate>
         </Script>
         <Code><![CDATA[
 using System;
@@ -6018,9 +6018,9 @@ namespace Models
           <Name>SlurpSowingRule</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
+            <SowingDate>2011-03-14</SowingDate>
             <CultivarName>Lucerne</CultivarName>
             <InitialRootDepth>15</InitialRootDepth>
-            <SowingDate>2011-03-14</SowingDate>
           </Script>
           <Code><![CDATA[
 using System;
@@ -6113,13 +6113,13 @@ namespace Models
           <Name>SetCropVariables</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <CoverFile>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
-            <Ext_coef>0.8</Ext_coef>
+            <Irrigation>
+            </Irrigation>
             <MaximumHeight>600</MaximumHeight>
             <Cover>
             </Cover>
-            <Irrigation>
-            </Irrigation>
+            <CoverFile>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
+            <Ext_coef>0.8</Ext_coef>
             <Treatment>
             </Treatment>
             <leaflai>0</leaflai>
