@@ -25,6 +25,11 @@ namespace Models.Core
                                  string filter = null,
                                  int from = 0, int count = 0);
 
+        /// <summary>Get a simulation ID for the specified simulation name</summary>
+        /// <param name="simulationName">The simulation name to look for</param>
+        /// <returns>The database ID or -1 if not found</returns>
+        int GetSimulationID(string simulationName);
+
         /// <summary>
         /// Obtain the units for a column of data
         /// </summary>

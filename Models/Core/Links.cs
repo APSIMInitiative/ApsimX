@@ -34,11 +34,17 @@ namespace Models.Core
         /// 
         /// </summary>
         /// <param name="rootNode"></param>
-        public void Resolve(IModel rootNode)
+        /// <param name="recurse">Recurse through all child models?</param>
+        public void Resolve(IModel rootNode, bool recurse = true)
         {
-            List<IModel> allModels = Apsim.ChildrenRecursively(rootNode);
-            foreach (IModel modelNode in allModels)
-                ResolveInternal(modelNode, null);
+            if (recurse)
+            {
+                List<IModel> allModels = Apsim.ChildrenRecursively(rootNode);
+                foreach (IModel modelNode in allModels)
+                    ResolveInternal(modelNode, null);
+            }
+            else
+                ResolveInternal(rootNode, null);
         }
 
         /// <summary>

@@ -47,6 +47,7 @@
             this.jobs.Add(job);
             this.jobName = name;
             this.explorerPresenter = presenter;
+            this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
 
             if (multiProcess)
                 jobManager = new JobManagerMultiProcess(storage);
@@ -65,6 +66,7 @@
             this.jobs = jobs;
             this.jobName = name;
             this.explorerPresenter = presenter;
+            this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
 
             if (multiProcess)
                 jobManager = new JobManagerMultiProcess(storage);
@@ -112,6 +114,43 @@
             return errorMessage;
         }
 
+        private string JobErrorMessages = String.Empty;
+
+        /// <summary>
+        /// Handles a signal that we want to abort the set of simulations.
+        /// </summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">Event arguments. Shouldn't be anything of interest</param>
+        private void OnStopSimulation(object sender, EventArgs e)
+        {
+            Stop();
+            string msg = jobName + " aborted";
+            if (JobErrorMessages == null)
+                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Information);
+            else
+            {
+                msg += Environment.NewLine + JobErrorMessages;
+                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
+            }
+        }
+
+        /// <summary>
+        /// Clean up at the end of a set of runs. Stops the job manager, timers, etc.
+        /// </summary>
+        private void Stop()
+        {
+            this.explorerPresenter.MainPresenter.RemoveStopHandler(OnStopSimulation);
+            timer.Stop();
+            stopwatch.Stop();
+            jobManager.Stop();
+
+            JobErrorMessages = GetErrorsFromSimulations();
+
+            IsRunning = false;
+            jobManager = null;
+
+        }
+
         /// <summary>
         /// The timer has ticked. Update the progress bar.
         /// </summary>
@@ -121,32 +160,30 @@
         {
             int numSimulations = jobManager.CountJobTypeInQueue("RunSimulation");
             double percentComplete = jobManager.PercentComplete;
+            int numberComplete = jobManager.GetNumberOfJobsCompleted<RunSimulation>();
 
             if (numSimulations > 0)
             {
                 explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
-                         (numSimulations) + ")", Simulation.ErrorLevel.Information);
+                         numberComplete + " of " +
+                         (numSimulations) + " completed)", Simulation.ErrorLevel.Information);
 
                 explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(percentComplete));
             }
             if (percentComplete == 100)
             {
-                timer.Stop();
-                stopwatch.Stop();
-                jobManager.Stop();
-
-                string errorMessage = GetErrorsFromSimulations();
-                if (errorMessage == null)
+                Stop();
+                if (JobErrorMessages == null)
                     explorerPresenter.MainPresenter.ShowMessage(jobName + " complete "
                             + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Simulation.ErrorLevel.Information);
                 else
-                    explorerPresenter.MainPresenter.ShowMessage(errorMessage, Simulation.ErrorLevel.Error);
+                    explorerPresenter.MainPresenter.ShowMessage(JobErrorMessages, Simulation.ErrorLevel.Error);
 
                 SoundPlayer player = new SoundPlayer();
                 if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
-                    player.Stream = Properties.Resources.notes;
+                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.notes.wav");
                 else
-                    player.Stream = Properties.Resources.success;
+                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");
                 player.Play();
                 IsRunning = false;
                 jobManager = null;

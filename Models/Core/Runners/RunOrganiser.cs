@@ -65,6 +65,7 @@
 
             if (model is Experiment)
             {
+                simulations.Links.Resolve(model, recurse:false); // experiments have a IStorage link that needs resolving.
                 parentJob.Jobs.Add(model as Experiment);
                 simulationNames.AddRange((model as Experiment).Names());
             }

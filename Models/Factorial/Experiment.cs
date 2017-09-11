@@ -120,6 +120,7 @@ namespace Models.Factorial
                 parentFolderName = parentFolder.Name;
 
             DataTable factorTable = new DataTable();
+            factorTable.TableName = "_Factors";
             factorTable.Columns.Add("ExperimentName", typeof(string));
             factorTable.Columns.Add("SimulationName", typeof(string));
             factorTable.Columns.Add("FolderName", typeof(string));

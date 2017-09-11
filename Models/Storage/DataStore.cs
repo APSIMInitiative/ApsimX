@@ -1,19 +1,17 @@
-﻿using APSIM.Shared.Utilities;
-using Models.Core;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-
-namespace Models.Storage
+﻿namespace Models.Storage
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Xml.Serialization;
+
     /// <summary>
     /// A storage service for reading and writing to/from a SQLITE database.
     /// </summary>
@@ -207,12 +205,15 @@ namespace Models.Storage
         /// <param name="data">The data to write</param>
         public void WriteTable(DataTable data)
         {
+            bool writeImmediately = writeTask == null || writeTask.IsCompleted;
+            if (writeImmediately)
+                BeginWriting();
+
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in data.Columns)
                 columnNames.Add(column.ColumnName);
             string[] units = new string[columnNames.Count];
 
-            BeginWriting();
             foreach (DataRow row in data.Rows)
             {
                 object[] values = new object[columnNames.Count];
@@ -224,7 +225,8 @@ namespace Models.Storage
                 WriteRow(simulationName, data.TableName, columnNames, units, values);
             }
 
-            EndWriting();
+            if (writeImmediately)
+                EndWriting();
         }
 
         /// <summary>Delete the specified table.</summary>
@@ -278,6 +280,16 @@ namespace Models.Storage
             Open(openForReadOnly);
         }
 
+        /// <summary>Get a simulation ID for the specified simulation name</summary>
+        /// <param name="simulationName">The simulation name to look for</param>
+        /// <returns>The database ID or -1 if not found</returns>
+        public int GetSimulationID(string simulationName)
+        {
+            int id;
+            if (simulationIDs.TryGetValue(simulationName, out id))
+                return id;
+            return -1;
+        }
 
         /// <summary>Worker method for writing to the .db file. This runs in own thread.</summary>
         /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file</param>

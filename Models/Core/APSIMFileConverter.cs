@@ -24,7 +24,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 14; } }
+        public static int LastestVersion { get { return 15; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -248,7 +248,8 @@ namespace Models.Core
         /// Upgrades to version 8. Create ApexStandard node.
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
-        private static void UpgradeToVersion8(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion8(XmlNode node, string fileName)
         {
             XmlNode apex = XmlUtilities.CreateNode(node.OwnerDocument, "ApexStandard", "");
             XmlNode stemSen = XmlUtilities.CreateNode(node.OwnerDocument, "Constant", "");
@@ -273,7 +274,8 @@ namespace Models.Core
         /// Add a DMDemandFunction constant function to all Root nodes that don't have one
         /// </summary>
         /// <param name="node">The node to modifiy</param>
-        private static void UpgradeToVersion9(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion9(XmlNode node, string fileName)
         {
             foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "Root"))
             {
@@ -292,7 +294,8 @@ namespace Models.Core
         /// Add default values for generic organ parameters that were previously optional
         /// </summary>
         /// <param name="node">The node to modifiy</param>
-        private static void UpgradeToVersion10(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion10(XmlNode node, string fileName)
         {
             List<XmlNode> organs = XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan");
             organs.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"));
@@ -312,7 +315,8 @@ namespace Models.Core
         /// Rename NonStructural to Storage in Biomass organs
         /// </summary>
         /// <param name="node">The node to modifiy</param>
-        private static void UpgradeToVersion11(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion11(XmlNode node, string fileName)
         {
             APSIMFileConverterUtilities.RenameVariable(node, ".NonStructural", ".Storage");
             APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralDemand", ".StorageDemand");
@@ -341,7 +345,8 @@ namespace Models.Core
         ///        MainStemFinalNodeNumber to FinalLeafNumber in Structure
         /// </summary>
         /// <param name="node">The node to modifiy</param>
-        private static void UpgradeToVersion12(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion12(XmlNode node, string fileName)
         {
             APSIMFileConverterUtilities.RenamePMFFunction(node, "Structure", "MainStemNodeAppearanceRate", "Phyllochron");
             APSIMFileConverterUtilities.RenameVariable(node, ".MainStemNodeAppearanceRate", ".Phyllochron");
@@ -354,7 +359,8 @@ namespace Models.Core
         /// Rename Plant15 to Plant.
         /// </summary>
         /// <param name="node">The node to modifiy</param>
-        private static void UpgradeToVersion13(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion13(XmlNode node, string fileName)
         {
             APSIMFileConverterUtilities.RenameNode(node, "Plant15", "Plant");
             APSIMFileConverterUtilities.RenameVariable(node, "using Models.PMF.OldPlant;", "using Models.PMF;");
@@ -376,7 +382,7 @@ namespace Models.Core
             }
         }
 		
-		        /// <summary>
+		/// <summary>
         /// Rename the "Simulations", "Messages", "InitialConditions" .db tables to be
         /// prefixed with an underscore.
         /// </summary>
@@ -404,6 +410,35 @@ namespace Models.Core
                 }
             }
         }
+
+        /// <summary>
+        /// Ensure report variables have a square bracket around the first word.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion15(XmlNode node, string fileName)
+        {
+            List<string> modelNames = APSIMFileConverterUtilities.GetAllModelNames(node);
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+            {
+                List<string> variables = XmlUtilities.Values(report, "VariableNames/string");
+
+                for (int i = 0; i < variables.Count; i++)
+                {
+                    // If the first word (delimited by '.') is a model name then make sure it has
+                    // square brackets around it.
+                    int indexPeriod = variables[i].IndexOf('.');
+                    if (indexPeriod != -1)
+                    {
+                        string firstWord = variables[i].Substring(0, indexPeriod);
+
+                        if (modelNames.Contains(firstWord) && !firstWord.StartsWith("["))
+                            variables[i] = "[" + firstWord + "]" + variables[i].Substring(indexPeriod);
+                    }
+                }
+                XmlUtilities.SetValues(report, "VariableNames/string", variables);
+            }
+        } 
 
     }
 }

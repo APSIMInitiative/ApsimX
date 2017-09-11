@@ -77,23 +77,26 @@
             {
                 // Clone simulation
                 if (cloneSimulationBeforeRun)
+                {
                     simulationToRun = Apsim.Clone(simulationToRun) as Simulation;
+                    events = new Events(simulationToRun);
+                    simulationEngine.MakeSubstitutions(simulationToRun);
+                    events.Publish("Loaded", null);
+                }
+                else
+                    events = new Events(simulationToRun);
 
                 // Get an event and links service
-                events = new Events(simulationToRun);
-
-                // Setup the simulation
                 if (simulationEngine != null)
-                {
-                    simulationEngine.MakeSubstitutions(simulationToRun);
                     links = simulationEngine.Links;
-                }
                 else
                     links = new Core.Links(Services);
 
+                // Resolve links and events.
                 links.Resolve(simulationToRun);
                 events.ConnectEvents();
-                events.Publish("Loaded", null);
+
+                simulationToRun.ClearCaches();
 
                 // Send a commence event so the simulation runs
                 object[] args = new object[] { null, new EventArgs() };
