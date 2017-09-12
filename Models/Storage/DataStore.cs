@@ -355,6 +355,10 @@
 
                 }
             }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.ToString());
+            }
             finally
             {
                 Close();
@@ -502,7 +506,7 @@
 
                     // It appears that SQLite can't handle lots of values in SQL INSERT INTO statements
                     // so we will run the query on batches of ~100 values at a time.
-                    if (sql.Length > 0 && (i + 1 % 100 == 0 || i == simulationNames.Count() - 1))
+                    if (sql.Length > 0 && (i % 100 == 0 || i == simulationNames.Count() - 1))
                     {
                         sql.Insert(0, "INSERT INTO [" + tableName + "] (" + columnName + ") VALUES ");
                         connection.ExecuteNonQuery(sql.ToString());
@@ -529,7 +533,7 @@
 
                 // It appears that SQLite can't handle lots of values in SQL INSERT INTO statements
                 // so we will run the query on batches of ~100 values at a time.
-                if (sql.Length > 0 && (i + 1 % 100 == 0 || i == simulationNames.Count() - 1))
+                if (sql.Length > 0 && (i % 100 == 0 || i == simulationNames.Count() - 1))
                 {
                     connection.ExecuteNonQuery(sqlPrefix + sql + sqlSuffix);
                     sql.Clear();
@@ -559,7 +563,7 @@
 
                 // It appears that SQLite can't handle lots of values in SQL DELETE statements
                 // so we will run the query on batches of ~100 values at a time.
-                if (sql.Length > 0 && (i + 1 % 100 == 0 || i == simulationNames.Count() - 1))
+                if (sql.Length > 0 && (i % 100 == 0 || i == simulationNames.Count() - 1))
                 {
                     connection.ExecuteNonQuery(sqlPrefix + sql + sqlSuffix);
                     sql.Clear();
