@@ -272,6 +272,7 @@
         /// <summary>Delete all tables</summary>
         public void DeleteAllTables()
         {
+            Console.WriteLine("Deleting all tables in file: " + FileName);
             bool openForReadOnly = true;
             if (connection != null)
                 openForReadOnly = connection.IsReadOnly;

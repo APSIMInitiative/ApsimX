@@ -57,7 +57,7 @@ namespace Models
             IStorageReader DS = PO.Parent as IStorageReader;
             MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
-            DataTable POtable = DS.GetData("*", PO.Name);
+            DataTable POtable = DS.GetData(PO.Name);
             List<string> columnNames;
             string sigIdent = "X";
 

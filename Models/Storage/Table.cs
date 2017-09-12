@@ -68,6 +68,8 @@ namespace Models.Storage
         /// <summary>Dispose of the table</summary>
         public void Dispose()
         {
+            Console.WriteLine("Table " + Name + " being disposed: Stack trace:");
+            Console.WriteLine(Environment.StackTrace);
             if (preparedInsertQuery != IntPtr.Zero)
                 connection.Finalize(preparedInsertQuery);
             preparedInsertQuery = IntPtr.Zero;
@@ -78,6 +80,7 @@ namespace Models.Storage
         /// <param name="existingConnection"></param>
         public void SetConnection(SQLite existingConnection)
         {
+            Console.WriteLine("Setting connection in table: " + Name);
             connection = existingConnection;
             Open();
         }
@@ -144,6 +147,9 @@ namespace Models.Storage
         /// <param name="sqliteConnection">The SQLite connection to write to</param>
         private void CreateTable(SQLite sqliteConnection)
         {
+            if (connection == null)
+                Console.WriteLine("Connection is null in table: " + Name);
+            Console.WriteLine("Creating table: " + Name);
             connection = sqliteConnection;
             Columns.Clear();
             StringBuilder sql = new StringBuilder();

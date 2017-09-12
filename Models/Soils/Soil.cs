@@ -139,6 +139,7 @@ namespace Models.Soils
         [XmlIgnore] public SoilOrganicMatter SoilOrganicMatter { get; private set; }
 
         /// <summary>Gets the soil nitrogen.</summary>
+        [NonSerialized]
         private SoluteManager SoluteManager;
 
         /// <summary>Gets the soil nitrogen.</summary>
