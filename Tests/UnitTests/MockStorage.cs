@@ -108,5 +108,10 @@ namespace UnitTests
         {
             throw new NotImplementedException();
         }
+
+        public void AllCompleted()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

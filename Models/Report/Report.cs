@@ -80,13 +80,6 @@ namespace Models.Report
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            // Subscribe to events.
-            foreach (string eventName in EventNames)
-            {
-                if (eventName != string.Empty)
-                    events.Subscribe(eventName.Trim(), DoOutput);
-            }
-
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
             variableNames.Add("Name as Zone");
@@ -98,6 +91,13 @@ namespace Models.Report
             }
             this.VariableNames = variableNames.ToArray();
             this.FindVariableMembers();
+
+            // Subscribe to events.
+            foreach (string eventName in EventNames)
+            {
+                if (eventName != string.Empty)
+                    events.Subscribe(eventName.Trim(), DoOutput);
+            }
         }
 
         /// <summary>A method that can be called by other models to perform a line of output.</summary>

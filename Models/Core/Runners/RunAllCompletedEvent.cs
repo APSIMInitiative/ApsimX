@@ -26,13 +26,13 @@
             ILocator locator = simulations.GetLocatorService(simulations);
             IStorageReader store = locator.Get(typeof(IStorageReader)) as IStorageReader;
 
-            store.EndWriting();
-
             // Call the all completed event in all models
             object[] args = new object[] { this, new EventArgs() };
 
             foreach (IPostSimulationTool tool in Apsim.FindAll(simulations, typeof(IPostSimulationTool)))
                 tool.Run(store);
+
+            store.EndWriting();
         }
     }
 }

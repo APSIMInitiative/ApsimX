@@ -125,6 +125,9 @@
         {
             Open(readOnly: true);
 
+            // If currently writing, wait for all records to be written.
+            WaitForAllRecordsToBeWritten();
+
             Table table = tables.Find(t => t.Name == tableName);
             if (connection == null || table == null || !table.Exists)
                 return null;
@@ -205,9 +208,11 @@
         /// <param name="data">The data to write</param>
         public void WriteTable(DataTable data)
         {
-            bool writeImmediately = writeTask == null || writeTask.IsCompleted;
-            if (writeImmediately)
+            bool startWriteThread = writeTask == null || writeTask.IsCompleted;
+            if (startWriteThread)
                 BeginWriting();
+            else
+                WaitForAllRecordsToBeWritten();
 
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in data.Columns)
@@ -225,7 +230,7 @@
                 WriteRow(simulationName, data.TableName, columnNames, units, values);
             }
 
-            if (writeImmediately)
+            if (startWriteThread)
                 EndWriting();
         }
 
@@ -249,6 +254,9 @@
         public DataTable RunQuery(string sql)
         {
             Open(readOnly: true);
+
+            // If currently writing, wait for all records to be written.
+            WaitForAllRecordsToBeWritten();
 
             try
             {
@@ -292,6 +300,15 @@
             return -1;
         }
 
+        /// <summary>Wait for all records to be written.</summary>
+        private void WaitForAllRecordsToBeWritten()
+        {
+            // Make sure all existing writing has completed.
+            if (writeTask != null && !writeTask.IsCompleted)
+                while (tables.Find(table => table.HasRowsToWrite) != null)
+                    Thread.Sleep(100);
+        }
+
         /// <summary>Worker method for writing to the .db file. This runs in own thread.</summary>
         /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file</param>
         /// <param name="simulationNamesBeingRun">Collection of simulation names being run</param>
@@ -333,36 +350,40 @@
                         }
                     }
                 }
-
-                // Write table units
-                foreach (Table table in tables)
-                {
-                    foreach (Table.Column column in table.Columns)
-                    {
-                        if (column.Units != null)
-                        {
-                            StringBuilder sql = new StringBuilder();
-                            sql.Append("INSERT INTO [_Units] (TableName, ColumnHeading, Units) VALUES ('");
-                            sql.Append(table.Name);
-                            sql.Append("','");
-                            sql.Append(column.Name);
-                            sql.Append("','");
-                            sql.Append(column.Units);
-                            sql.Append("\')");
-                            connection.ExecuteNonQuery(sql.ToString());
-                        }
-                    }
-
-                }
             }
             catch (Exception err)
             {
                 Console.WriteLine(err.ToString());
             }
-            finally
+            finally   
             {
+                WriteUnitsTable();
                 Close();
                 Open(readOnly: true);
+            }
+        }
+
+        /// <summary>Write a _units table to .db</summary>
+        private void WriteUnitsTable()
+        {
+            connection.ExecuteQuery("DELETE FROM _Units");
+            foreach (Table table in tables)
+            {
+                foreach (Table.Column column in table.Columns)
+                {
+                    if (column.Units != null)
+                    {
+                        StringBuilder sql = new StringBuilder();
+                        sql.Append("INSERT INTO [_Units] (TableName, ColumnHeading, Units) VALUES ('");
+                        sql.Append(table.Name);
+                        sql.Append("','");
+                        sql.Append(column.Name);
+                        sql.Append("','");
+                        sql.Append(column.Units);
+                        sql.Append("\')");
+                        connection.ExecuteNonQuery(sql.ToString());
+                    }
+                }
             }
         }
 

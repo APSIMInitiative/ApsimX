@@ -62,6 +62,7 @@ namespace Models.Storage
             Name = tableName;
             Columns = new List<Column>();
             connection = sqliteConnection;
+            Console.WriteLine("Setting connection in table constructor: " + Name);
             Open();
         }
 
@@ -91,7 +92,9 @@ namespace Models.Storage
             foreach (DataRow row in data.Rows)
             {
                 string columnName = row["Name"].ToString();
-                Columns.Add(new Column(columnName, LookupUnitsForColumn(columnName)));
+                string units = null;
+                units = LookupUnitsForColumn(columnName);
+                Columns.Add(new Column(columnName, units));
             }
         }
 
@@ -100,7 +103,8 @@ namespace Models.Storage
         /// <param name="simulationIDs">A dictionary of simulation IDs</param>
         /// <returns>The number of rows written to the .db</returns>
         public int WriteRows(SQLite sqliteConnection, Dictionary<string, int> simulationIDs)
-        {
+        { 
+            connection = sqliteConnection;
             sqliteConnection.ExecuteNonQuery("BEGIN");
             int numRows = RowsToWrite.Count;
             for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
@@ -108,10 +112,10 @@ namespace Models.Storage
                 RowsToWrite[rowIndex].Flatten();
 
                 // If this is the first time we've written to the table, then create table.
-                if (!Exists)
+                if (!DoesTableExist(Name))
                     CreateTable(sqliteConnection);
 
-                EnsureColumnsExistInDB(connection, RowsToWrite[rowIndex]);
+                EnsureColumnsExistInDB(sqliteConnection, RowsToWrite[rowIndex]);
 
                 Array.Resize(ref values, preparedInsertQueryColumnNames.Count);
                 Array.Clear(values, 0, values.Length);
@@ -121,6 +125,14 @@ namespace Models.Storage
             sqliteConnection.ExecuteNonQuery("END");
 
             return numRows;
+        }
+
+        /// <summary>Does the specified table exist?</summary>
+        /// <param name="tableName">The table name to look for</param>
+        private bool DoesTableExist(string tableName)
+        {
+            List<string> tableNames = DataTableUtilities.GetColumnAsStrings(connection.ExecuteQuery("SELECT * FROM sqlite_master"), "Name").ToList();
+            return tableNames.Contains(tableName);
         }
 
         /// <summary>
