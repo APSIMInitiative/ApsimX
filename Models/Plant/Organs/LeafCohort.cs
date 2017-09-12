@@ -772,12 +772,11 @@ namespace Models.PMF.Organs
             Live.StructuralN = Live.StructuralWt*MinimumNConc;
             Live.MetabolicN = Live.MetabolicWt*FunctionalNConc;
             Live.StorageN = 0;
-            NReallocationFactor = leafCohortParameterseafCohortParameters.NReallocationFactor.Value();
-            DMReallocationFactor = leafCohortParameterseafCohortParameters.DMReallocationFactor.Value();
-            NRetranslocationFactor = leafCohortParameterseafCohortParameters.NRetranslocationFactor.Value();
-            DMRetranslocationFactor = leafCohortParameterseafCohortParameters.DMRetranslocationFactor.Value();
-            LeafSizeShape = leafCohortParameterseafCohortParameters.LeafSizeShapeParameter.Value();
-			AgeMultiplier moved to LeafCohort. SenescenceDurationAgeMultiplier and LagDurationAgeMultiplier added to LeafCohort.
+            NReallocationFactor = leafCohortParameters.NReallocationFactor.Value();
+            DMReallocationFactor = leafCohortParameters.DMReallocationFactor.Value();
+            NRetranslocationFactor = leafCohortParameters.NRetranslocationFactor.Value();
+            DMRetranslocationFactor = leafCohortParameters.DMRetranslocationFactor.Value();
+            LeafSizeShape = leafCohortParameters.LeafSizeShapeParameter.Value();
         }
 
         /// <summary>Does the potential growth.</summary>
@@ -907,7 +906,7 @@ namespace Models.PMF.Organs
             double deltaActualArea = Math.Min(DeltaWaterConstrainedArea, DeltaCarbonConstrainedArea);
 
             //Modify leaf area using tillering approach
-            double totalf = 1;
+            double totalf = ApexGroupSize[0];
             for(int i=1; i< ApexGroupAge.Count;i++)
             {
                 double f = leafCohortParameters.LeafSizeAgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
