@@ -69,7 +69,6 @@ namespace Models.Storage
         public void Dispose()
         {
             Console.WriteLine("Table " + Name + " being disposed: Stack trace:");
-            Console.WriteLine(Environment.StackTrace);
             if (preparedInsertQuery != IntPtr.Zero)
                 connection.Finalize(preparedInsertQuery);
             preparedInsertQuery = IntPtr.Zero;

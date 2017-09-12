@@ -405,6 +405,8 @@
         {
             if (connection != null)
             {
+                Console.WriteLine("DataStore closing file " + FileName);
+
                 // Get a list of all table instances that don't have rows to write to the .db file. 
                 List<Table> tablesToRemove = tables.FindAll(t => !t.HasRowsToWrite);
 
