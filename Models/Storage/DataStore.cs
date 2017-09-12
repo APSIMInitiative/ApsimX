@@ -506,7 +506,7 @@
 
                     // It appears that SQLite can't handle lots of values in SQL INSERT INTO statements
                     // so we will run the query on batches of ~100 values at a time.
-                    if (sql.Length > 0 && (i % 100 == 0 || i == simulationNames.Count() - 1))
+                    if (sql.Length > 0 && ((i + 1) % 100 == 0 || i == simulationNames.Count() - 1))
                     {
                         sql.Insert(0, "INSERT INTO [" + tableName + "] (" + columnName + ") VALUES ");
                         connection.ExecuteNonQuery(sql.ToString());
@@ -527,13 +527,13 @@
             StringBuilder sql = new StringBuilder();
             for (int i = 0; i < simulationNames.Count(); i++)
             {
-                if (i > 0)
+                if (sql.Length > 0)
                     sql.Append(',');
                 sql.AppendFormat("'{0}'", simulationNames.ElementAt(i));
 
                 // It appears that SQLite can't handle lots of values in SQL INSERT INTO statements
                 // so we will run the query on batches of ~100 values at a time.
-                if (sql.Length > 0 && (i % 100 == 0 || i == simulationNames.Count() - 1))
+                if (sql.Length > 0 && ((i + 1) % 100 == 0 || i == simulationNames.Count() - 1))
                 {
                     connection.ExecuteNonQuery(sqlPrefix + sql + sqlSuffix);
                     sql.Clear();
@@ -556,14 +556,14 @@
                 string simulationName = simulationNames.ElementAt(i);
                 if (simulationIDs.ContainsKey(simulationName))
                 {
-                    if (i > 0)
+                    if (sql.Length > 0)
                         sql.Append(',');
                     sql.Append(simulationIDs[simulationName]);
                 }
 
                 // It appears that SQLite can't handle lots of values in SQL DELETE statements
                 // so we will run the query on batches of ~100 values at a time.
-                if (sql.Length > 0 && (i % 100 == 0 || i == simulationNames.Count() - 1))
+                if (sql.Length > 0 && ((i+1) % 100 == 0 || i == simulationNames.Count() - 1))
                 {
                     connection.ExecuteNonQuery(sqlPrefix + sql + sqlSuffix);
                     sql.Clear();
