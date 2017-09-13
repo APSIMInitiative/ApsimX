@@ -2162,6 +2162,18 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
         <FixedValue>1</FixedValue>
         <Units>0-1</Units>
       </Constant>
+      <ArrayFunction>
+        <Name>LagDurationAgeMultiplier</Name>
+        <Values>1 1 1</Values>
+      </ArrayFunction>
+      <ArrayFunction>
+        <Name>SenescenceDurationAgeMultiplier</Name>
+        <Values>1 1 1</Values>
+      </ArrayFunction>
+      <ArrayFunction>
+        <Name>LeafSizeAgeMultiplier</Name>
+        <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+      </ArrayFunction>
       <MultiplyFunction>
         <Name>ShadeInducedSenescenceRate</Name>
         <Constant>
@@ -2283,6 +2295,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </RUEModel>
+
     <Constant>
       <Name>FrostFraction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
