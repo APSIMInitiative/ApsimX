@@ -63,14 +63,12 @@ namespace Models.Storage
             Name = tableName;
             Columns = new List<Column>();
             connection = sqliteConnection;
-            Console.WriteLine("Setting connection in table constructor: " + Name);
             Open();
         }
 
         /// <summary>Dispose of the table</summary>
         public void Dispose()
         {
-            Console.WriteLine("Table " + Name + " being disposed: Stack trace:");
             if (preparedInsertQuery != IntPtr.Zero)
                 connection.Finalize(preparedInsertQuery);
             preparedInsertQuery = IntPtr.Zero;
@@ -81,7 +79,6 @@ namespace Models.Storage
         /// <param name="existingConnection"></param>
         public void SetConnection(SQLite existingConnection)
         {
-            Console.WriteLine("Setting connection in table: " + Name);
             connection = existingConnection;
             Open();
         }
@@ -89,6 +86,7 @@ namespace Models.Storage
         /// <summary>Open the table and get a list of columns and simulation ids.</summary>
         private void Open()
         {
+            Columns.Clear();
             DataTable data = connection.ExecuteQuery("pragma table_info('" + Name + "')");
             foreach (DataRow row in data.Rows)
             {
@@ -160,9 +158,6 @@ namespace Models.Storage
         /// <param name="sqliteConnection">The SQLite connection to write to</param>
         private void CreateTable(SQLite sqliteConnection)
         {
-            if (connection == null)
-                Console.WriteLine("Connection is null in table: " + Name);
-            Console.WriteLine("Creating table: " + Name);
             connection = sqliteConnection;
             Columns.Clear();
             StringBuilder sql = new StringBuilder();
@@ -216,7 +211,6 @@ namespace Models.Storage
                 string columnName = row.ColumnNames.ElementAt(i);
                 if (!columnNames.Contains(columnName))
                 {
-                    columnNames.Add(columnName); 
                     string columnUnit = row.ColumnUnits.ElementAt(i);
                     object value = row.Values.ElementAt(i);
                     if (value != null)
@@ -224,6 +218,7 @@ namespace Models.Storage
                         string sql = "ALTER TABLE " + Name + " ADD COLUMN [" + columnName + "] " + GetSQLiteDataType(value.GetType());
                         connection.ExecuteNonQuery(sql);
                         Columns.Add(new Column(columnName, columnUnit));
+                        columnNames.Add(columnName);
                         columnsWereAdded = true;
                     }
                 }

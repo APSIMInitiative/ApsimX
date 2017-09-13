@@ -239,6 +239,9 @@
         public void DeleteTable(string tableName)
         {
             Open(readOnly: false);
+
+            WaitForAllRecordsToBeWritten();
+
             Table tableToDelete = tables.Find(t => t.Name == tableName);
             if (tableToDelete != null)
             {
@@ -280,7 +283,6 @@
         /// <summary>Delete all tables</summary>
         public void DeleteAllTables()
         {
-            Console.WriteLine("Deleting all tables in file: " + FileName);
             bool openForReadOnly = true;
             if (connection != null)
                 openForReadOnly = connection.IsReadOnly;
@@ -430,8 +432,6 @@
         {
             if (connection != null)
             {
-                Console.WriteLine("DataStore closing file " + FileName);
-
                 // Get a list of all table instances that don't have rows to write to the .db file. 
                 List<Table> tablesToRemove = tables.FindAll(t => !t.HasRowsToWrite);
 
