@@ -3,6 +3,7 @@ using Models.WholeFarm.Resources;
 using StdUnits;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -27,7 +28,6 @@ namespace Models.WholeFarm.Activities
 		[Link]
 		Clock Clock = null;
 
-
 		[Link]
 		private ResourcesHolder Resources = null;
 
@@ -39,7 +39,8 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(18.4)]
 		[Description("Gross energy content of forage")]
-		[Units("MJ/kg DM")]
+        [Required]
+        [Units("MJ/kg DM")]
 		public double EnergyGross { get; set; }
 
 		/// <summary>
@@ -56,8 +57,8 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			methaneEmissions = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportWarning) as GreenhouseGasesType;
-			manureStore = Resources.GetResourceItem(this, typeof(ProductStoreType), "Manure", OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportWarning) as ProductStoreTypeManure;
+			methaneEmissions = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning) as GreenhouseGasesType;
+			manureStore = Resources.GetResourceItem(this, typeof(ProductStoreType), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning) as ProductStoreTypeManure;
 		}
 
 		/// <summary>Function to determine all individuals potential intake and suckling intake after milk consumption from mother</summary>

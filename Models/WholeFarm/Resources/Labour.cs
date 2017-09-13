@@ -6,6 +6,7 @@ using System.Collections;  //enumerator
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.WholeFarm.Resources
 {
@@ -40,6 +41,7 @@ namespace Models.WholeFarm.Resources
 		/// Allows indiviuals to age each month
 		/// </summary>
 		[Description("Allow individuals to age")]
+        [Required]
 		public bool AllowAging { get; set; }
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>

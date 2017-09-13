@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace Models.WholeFarm
 		/// Seed for random number generator (0 uses clock)
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(1)]
+        [Required, Range(0, Int32.MaxValue, ErrorMessage = "Value must be in range of an 32bit integer") ]
 		[Description("Random number generator seed (0 to use clock)")]
 		public int RandomSeed { get; set; }
 
@@ -49,14 +51,16 @@ namespace Models.WholeFarm
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(12)]
 		[Description("Ecological indicators calculation interval (in months, 1 monthly, 12 annual)")]
-		public int EcologicalIndicatorsCalculationInterval { get; set; }
+        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must an integer greater or equal to 1")]
+        public int EcologicalIndicatorsCalculationInterval { get; set; }
 
 		/// <summary>
 		/// End of month to calculate ecological indicators
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(7)]
 		[Description("End of month to calculate ecological indicators")]
-		public int EcologicalIndicatorsCalculationMonth { get; set; }
+        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        public int EcologicalIndicatorsCalculationMonth { get; set; }
 
 		/// <summary>
 		/// Month this overhead is next due.
@@ -64,27 +68,54 @@ namespace Models.WholeFarm
 		[XmlIgnore]
 		public DateTime EcologicalIndicatorsNextDueDate { get; set; }
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public WholeFarm()
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public WholeFarm()
 		{
 			this.SetDefaults();
 		}
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            if (!Validate(this))
+            {
+                string error = "Invalid parameters in model (see summary for details)";
+                throw new Exception(error);
+            }
+
+            if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
+            {
+                EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+            }
+            else
+            {
+                EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
+                {
+                    EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                }
+            }
+
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			if (RandomSeed < Int32.MinValue || RandomSeed > Int32.MaxValue)
 			{
-				string error = String.Format("Random generator seed (WholeFarm Zone) must be an integer in range of Int32."+ Environment.NewLine+"Using clock to set random number generator");
-				Summary.WriteWarning(this, error);
-				randomGenerator = new Random();
-			}
-			else if (RandomSeed==0)
+                string error = "Random generator seed in ["+this.Name+"] must be an integer between 0 and "+ Int32.MaxValue.ToString();
+                throw new Exception(error);
+            }
+
+            if (RandomSeed==0)
 			{
 				randomGenerator = new Random();
 			}
@@ -98,37 +129,44 @@ namespace Models.WholeFarm
 				string error = String.Format("WholeFarm must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString());
 				Summary.WriteWarning(this, error);
 			}
+        }
 
-			if (EcologicalIndicatorsCalculationMonth <= 0)
-			{
-				string error = "Calculation month for Ecological indicators must be between 1 and 12 in (WholeFarm)";
-				throw new Exception(error);
-			}
-			if (EcologicalIndicatorsCalculationInterval <= 0)
-			{
-				string error = "Interval (months) for calculation of Ecological indicators must be greater or equal to 1 in (WholeFarm)";
-				throw new Exception(error);
-			}
+        /// <summary>
+        /// Internal method to iterate through all children in CLEM and report any parameter setting errors
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Boolean indicating whether validation was successful</returns>
+        private bool Validate(Model model)
+        {
+            bool valid = true;
+            var validationContext = new ValidationContext(model, null, null);
+            var validationResults = new List<ValidationResult>();
+            Validator.TryValidateObject(model, validationContext, validationResults, true);
+            if(validationResults.Count > 0)
+            {
+                valid = false;
+                // report all errors
+                foreach (var validateError in validationResults)
+                {
+                    string error = String.Format("Invalid parameter in model object ["+this.Name+ "]"+Environment.NewLine + "PARAMETER: "+validateError.MemberNames.FirstOrDefault()+ Environment.NewLine +"PROBLEM: "+validateError.ErrorMessage+Environment.NewLine );
+                    Summary.WriteWarning(this, error);
+                }
+            }
+            foreach (var child in model.Children)
+            {
+                bool result = Validate(child);
+                if(valid & !result)
+                {
+                    valid = false;
+                }
+            }
+            return valid;
+        }
 
-			if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
-			{
-				EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
-			}
-			else
-			{
-				EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
-				while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
-				{
-					EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
-				}
-			}
-
-		}
-
-		/// <summary>
-		/// Method to set defaults from   
-		/// </summary>
-		public void SetDefaults()
+        /// <summary>
+        /// Method to set defaults from   
+        /// </summary>
+        public void SetDefaults()
 		{
 			foreach (var property in GetType().GetProperties())
 			{

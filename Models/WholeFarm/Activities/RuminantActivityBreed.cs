@@ -4,6 +4,7 @@ using Models.WholeFarm.Resources;
 using StdUnits;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -29,7 +30,8 @@ namespace Models.WholeFarm.Activities
 		/// Name of herd to breed
 		/// </summary>
 		[Description("Name of herd to breed")]
-		public string HerdName { get; set; }
+        [Required]
+        public string HerdName { get; set; }
 
 		/// <summary>
 		/// Labour settings
@@ -40,13 +42,15 @@ namespace Models.WholeFarm.Activities
 		/// Maximum conception rate for uncontrolled matings
 		/// </summary>
 		[Description("Maximum conception rate for uncontrolled matings")]
-		public double MaximumConceptionRateUncontrolled { get; set; }
+        [Required]
+        public double MaximumConceptionRateUncontrolled { get; set; }
 
 		/// <summary>
 		/// Use artificial insemination (no bulls required)
 		/// </summary>
 		[Description("Use artificial insemination (no bulls required)")]
-		public bool UseAI { get; set; }
+        [Required]
+        public bool UseAI { get; set; }
 
 		/// <summary>An event handler to allow us to initialise herd breeding status.</summary>
 		/// <param name="sender">The sender.</param>

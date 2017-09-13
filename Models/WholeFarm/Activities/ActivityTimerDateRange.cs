@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,19 +30,22 @@ namespace Models.WholeFarm.Activities
 		/// Start date of period to perform activities
 		/// </summary>
 		[Description("Start date of period to perform activities")]
-		public DateTime StartDate { get; set; }
+        [Required]
+        public DateTime StartDate { get; set; }
 		
 		/// <summary>
 		/// Start date of period to perform activities
 		/// </summary>
 		[Description("End date of period to perform activities")]
-		public DateTime EndDate { get; set; }
+        [Required]
+        public DateTime EndDate { get; set; }
 
 		/// <summary>
 		/// Invert (NOT in selected range)
 		/// </summary>
 		[Description("Invert (NOT in selected range)")]
-		public bool Invert { get; set; }
+        [Required]
+        public bool Invert { get; set; }
 
 		private DateTime startDate;
 		private DateTime endDate;

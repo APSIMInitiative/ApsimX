@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using Models.Core;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.WholeFarm.Resources
 {
@@ -23,12 +24,14 @@ namespace Models.WholeFarm.Resources
         /// Age in years.
         /// </summary>
         [Description("Initial Age")]
+        [Required]
         public double InitialAge { get; set; }
 
         /// <summary>
         /// Male or Female
         /// </summary>
         [Description("Gender")]
+        [Required]
         public Sex Gender { get; set; }
 
 		/// <summary>
@@ -36,6 +39,7 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(new double[] { 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4 })]
 		[Description("Max Labour Supply (in days) for each month of the year")]
+        [Required]
         public double[] MaxLabourSupply { get; set; }
 
 		/// <summary>
@@ -54,7 +58,8 @@ namespace Models.WholeFarm.Resources
 		/// Number of individuals
 		/// </summary>
 		[Description("Number of individuals")]
-		public int Individuals { get; set; }
+        [Required]
+        public int Individuals { get; set; }
 
 		/// <summary>
 		/// The unique id of the last activity request for this labour type

@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,31 +30,36 @@ namespace Models.WholeFarm.Activities
 		/// Starting value
 		/// </summary>
 		[Description("Value at start of simulation")]
-		public double StartingValue { get; set; }
+        [Required]
+        public double StartingValue { get; set; }
 
 		/// <summary>
 		/// Minimum value possible
 		/// </summary>
 		[Description("Minimum value possible")]
-		public double Minumum { get; set; }
+        [Required]
+        public double Minumum { get; set; }
 
 		/// <summary>
 		/// Maximum value possible
 		/// </summary>
 		[Description("Maximum value possible")]
-		public double Maximum { get; set; }
+        [Required]
+        public double Maximum { get; set; }
 
 		/// <summary>
 		/// X values of relationship
 		/// </summary>
 		[Description("X values of relationship")]
-		public double[] XValues { get; set; }
+        [Required]
+        public double[] XValues { get; set; }
 
 		/// <summary>
 		/// Y values of relationship
 		/// </summary>
 		[Description("Y values of relationship")]
-		public double[] YValues { get; set; }
+        [Required]
+        public double[] YValues { get; set; }
 
 		///// <summary>
 		///// List of points to define relationship 

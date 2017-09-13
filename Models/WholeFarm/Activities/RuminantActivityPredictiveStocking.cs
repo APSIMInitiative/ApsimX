@@ -2,6 +2,7 @@
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -30,25 +31,29 @@ namespace Models.WholeFarm.Activities
 		/// Herd to manage for dry season pasture availability
 		/// </summary>
 		[Description("Name of herd to manage")]
-		public string HerdName { get; set; }
+        [Required]
+        public string HerdName { get; set; }
 
 		/// <summary>
 		/// Month for assessing dry season feed requirements
 		/// </summary>
 		[Description("Month for assessing dry season feed requirements (1-12)")]
-		public int AssessmentMonth { get; set; }
+        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        public int AssessmentMonth { get; set; }
 
 		/// <summary>
 		/// Number of months to assess
 		/// </summary>
 		[Description("Number of months to assess")]
-		public int DrySeasonLength { get; set; }
+        [Required]
+        public int DrySeasonLength { get; set; }
 
 		/// <summary>
 		/// Minimum estimated feed (kg/ha) allowed at end of period
 		/// </summary>
 		[Description("Minimum estimated feed (kg/ha) allowed at end of period")]
-		public double FeedLowLimit { get; set; }
+        [Required]
+        public double FeedLowLimit { get; set; }
 
 		/// minimum no that can be sold off... now controlled by sale and transport activity 
 
@@ -56,7 +61,8 @@ namespace Models.WholeFarm.Activities
 		/// Minimum breedeer age allowed to be sold
 		/// </summary>
 		[Description("Minimum breedeer age allowed to be sold")]
-		public double MinimumBreederAgeLimit { get; set; }
+        [Required]
+        public double MinimumBreederAgeLimit { get; set; }
 
 		// restock proportion. I don't understand this.
 		// Maximum % restock breeders/age group
@@ -65,19 +71,22 @@ namespace Models.WholeFarm.Activities
 		/// Allow dry cows to be sold if feed shortage
 		/// </summary>
 		[Description("Allow dry cows to be sold if feed shortage")]
-		public bool SellDryCows { get; set; }
+        [Required]
+        public bool SellDryCows { get; set; }
 
 		/// <summary>
 		/// Allow wet cows to be sold if feed shortage
 		/// </summary>
 		[Description("Allow wet cows to be sold if feed shortage")]
-		public bool SellWetCows { get; set; }
+        [Required]
+        public bool SellWetCows { get; set; }
 
 		/// <summary>
 		/// Allow steers to be sold if feed shortage
 		/// </summary>
 		[Description("Allow steers to be sold if feed shortage")]
-		public bool SellSteers { get; set; }
+        [Required]
+        public bool SellSteers { get; set; }
 
 		/// <summary>An event handler to call for all resources other than food for feeding activity</summary>
 		/// <param name="sender">The sender.</param>

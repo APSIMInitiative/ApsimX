@@ -344,7 +344,8 @@
       <Area>1</Area>
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
-      <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
+      <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
+      <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </WholeFarm>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>

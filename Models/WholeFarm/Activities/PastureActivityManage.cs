@@ -2,6 +2,7 @@
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -42,24 +43,28 @@ namespace Models.WholeFarm.Activities
         /// Name of land type where pasture is located
         /// </summary>
         [Description("Land type where pasture is located")]
-		public string LandTypeNameToUse { get; set; }
+        [Required]
+        public string LandTypeNameToUse { get; set; }
 
 		/// <summary>
 		/// Name of the pasture type to use
 		/// </summary>
 		[Description("Name of pasture")]
-		public string FeedTypeName { get; set; }
+        [Required]
+        public string FeedTypeName { get; set; }
 
 		/// <summary>
 		/// Starting amount (kg)
 		/// </summary>
 		[Description("Starting Amount (kg/ha)")]
-		public double StartingAmount { get; set; }
+        [Required]
+        public double StartingAmount { get; set; }
 
         /// <summary>
         /// Starting stocking rate (Adult Equivalents/square km)
         /// </summary>
         [Description("Starting stocking rate (Adult Equivalents/sqkm)")]
+        [Required]
         public double StartingStockingRate { get; set; }
 
         /// <summary>

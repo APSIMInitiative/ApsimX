@@ -9,8 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-
-
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.WholeFarm.Activities
 {
@@ -38,6 +37,7 @@ namespace Models.WholeFarm.Activities
         /// Months before harvest to sow crop
         /// </summary>
         [Description("Months before harvest to apply cost")]
+        [Required]
         public int MthsBeforeHarvest { get; set; }
 
 

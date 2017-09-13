@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -20,31 +21,36 @@ namespace Models.WholeFarm.Resources
 		/// Opening balance
 		/// </summary>
 		[Description("Opening balance")]
-		public double OpeningBalance { get; set; }
+        [Required]
+        public double OpeningBalance { get; set; }
 
 		/// <summary>
 		/// Enforce withdrawal limit
 		/// </summary>
 		[Description("Enforce withdrawal limit. (false, no limit to spending)")]
-		public bool EnforceWithdrawalLimit { get; set; }
+        [Required]
+        public bool EnforceWithdrawalLimit { get; set; }
 
 		/// <summary>
 		/// The amount this account can be withdrawn to (-ve)
 		/// </summary>
 		[Description("The amount this account can be withdrawn to (<0 credit, 0 no credit)")]
-		public double WithdrawalLimit { get; set; }
+        [Required]
+        public double WithdrawalLimit { get; set; }
 
 		/// <summary>
 		/// Interest rate (%) charged on negative balance
 		/// </summary>
 		[Description("Interest rate (%) charged on negative balance")]
-		public double InterestRateCharged { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        public double InterestRateCharged { get; set; }
 
 		/// <summary>
 		/// Interest rate (%) paid on positive balance
 		/// </summary>
 		[Description("Interest rate (%) paid on positive balance")]
-		public double InterestRatePaid { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        public double InterestRatePaid { get; set; }
 
 		/// <summary>
 		/// Current funds available

@@ -3,6 +3,7 @@ using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -34,13 +35,15 @@ namespace Models.WholeFarm.Activities
 		/// Name of Feed to use
 		/// </summary>
 		[Description("Feed type name in Animal Food Store")]
-		public string FeedTypeName { get; set; }
+        [Required]
+        public string FeedTypeName { get; set; }
 
 		/// <summary>
 		/// Proportion wastage through trampling (feed trough = 0)
 		/// </summary>
 		[Description("Proportion wastage through trampling (feed trough = 0)")]
-		public double ProportionTramplingWastage { get; set; }
+        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        public double ProportionTramplingWastage { get; set; }
 
 		private IResourceType FoodSource { get; set; }
 
@@ -61,7 +64,8 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(RuminantFeedActivityTypes.SpecifiedDailyAmount)]
 		[Description("Feeding style to use")]
-		public RuminantFeedActivityTypes FeedStyle { get; set; }
+        [Required]
+        public RuminantFeedActivityTypes FeedStyle { get; set; }
 
 		/// <summary>
 		/// Labour settings

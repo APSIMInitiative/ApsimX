@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,12 +43,14 @@ namespace Models.WholeFarm.Resources
 		/// Age when individuals become adults for feeding and breeding rates
 		/// </summary>
 		[Description("Age when adult (months)")]
+        [Required]
 		public double AgeWhenAdult { get; set; }
 
 		/// <summary>
 		/// Age when individuals die
 		/// </summary>
 		[Description("Maximum age before death (months)")]
+        [Required]
 		public double MaxAge { get; set; }
 
 		/// <summary>

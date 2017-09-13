@@ -2,6 +2,7 @@
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,8 @@ namespace Models.WholeFarm.Activities
 		/// Name of Other Animal Type
 		/// </summary>
 		[Description("Name of Other Animal Type")]
-		public string OtherAnimalType { get; set; }
+        [Required]
+        public string OtherAnimalType { get; set; }
 
 		private OtherAnimalsType animalType { get; set; }
 

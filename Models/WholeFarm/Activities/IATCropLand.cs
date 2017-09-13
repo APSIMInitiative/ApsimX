@@ -2,6 +2,7 @@
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -36,12 +37,14 @@ namespace Models.WholeFarm.Activities
         /// Name of land type where crop is located
         /// </summary>
         [Description("Land item where crop is to be grown")]
+        [Required]
         public string LandItemNameToUse { get; set; }
 
         /// <summary>
         /// Area of land requested
         /// </summary>
         [Description("Area requested")]
+        [Required]
         public double AreaRequested { get; set; }
 
         /// <summary>

@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using Models.Core;
 using Models.WholeFarm.Activities;
 using Models.WholeFarm.Reporting;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.WholeFarm.Resources
 {
@@ -32,73 +33,85 @@ namespace Models.WholeFarm.Resources
 		/// Coefficient to convert initial N% to DMD%
 		/// </summary>
 		[Description("Coefficient to convert initial N% to DMD%")]
-		public double NToDMDCoefficient { get; set; }
+        [Required]
+        public double NToDMDCoefficient { get; set; }
 
 		/// <summary>
 		/// Intercept to convert initial N% to DMD%
 		/// </summary>
 		[Description("Intercept to convert initial N% to DMD%")]
-		public double NToDMDIntercept { get; set; }
+        [Required]
+        public double NToDMDIntercept { get; set; }
 
 		/// <summary>
 		/// Crude protein denominator to convert initial N% to DMD%
 		/// </summary>
 		[Description("Crude protein denominator to convert initial N% to DMD%")]
-		public double NToDMDCrudeProteinDenominator { get; set; }
+        [Required]
+        public double NToDMDCrudeProteinDenominator { get; set; }
 
 		/// <summary>
 		/// Nitrogen of new growth (%)
 		/// </summary>
 		[Description("Nitrogen of new growth (%)")]
-		public double GreenNitrogen { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        public double GreenNitrogen { get; set; }
 
 		/// <summary>
 		/// Proportion Nitrogen loss each month from pools
 		/// </summary>
 		[Description("Proportion Nitrogen loss each month from pools")]
-		public double DecayNitrogen { get; set; }
+        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        public double DecayNitrogen { get; set; }
 
 		/// <summary>
 		/// Minimum Nitrogen %
 		/// </summary>
 		[Description("Minimum Nitrogen")]
-		public double MinimumNitrogen { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        public double MinimumNitrogen { get; set; }
 
 		/// <summary>
 		/// Proportion Dry Matter Digestibility loss each month from pools
 		/// </summary>
 		[Description("Proportion DMD loss each month from pools")]
-		public double DecayDMD { get; set; }
+        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        public double DecayDMD { get; set; }
 
 		/// <summary>
 		/// Minimum Dry Matter Digestibility
 		/// </summary>
 		[Description("Minimum Dry Matter Digestibility")]
-		public double MinimumDMD { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        public double MinimumDMD { get; set; }
 
 		/// <summary>
 		/// Monthly detachment rate
 		/// </summary>
 		[Description("Detachment rate")]
-		public double DetachRate { get; set; }
+        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        public double DetachRate { get; set; }
 
 		/// <summary>
 		/// Detachment rate of 12 month or older plants
 		/// </summary>
 		[Description("Carryover detachment rate")]
-		public double CarryoverDetachRate { get; set; }
+        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        public double CarryoverDetachRate { get; set; }
 
 		/// <summary>
 		/// Coefficient to adjust intake for tropical herbage quality
 		/// </summary>
 		[Description("Coefficient to adjust intake for tropical herbage quality")]
-		public double IntakeTropicalQualityCoefficient { get; set; }
+        [Required]
+        public double IntakeTropicalQualityCoefficient { get; set; }
 
 		/// <summary>
 		/// Coefficient to adjust intake for herbage quality
 		/// </summary>
 		[Description("Coefficient to adjust intake for herbage quality")]
-		public double IntakeQualityCoefficient { get; set; }
+        [Required]
+        public double IntakeQualityCoefficient { get; set; }
 
 		/// <summary>
 		/// The area provided for this pasture to grow on

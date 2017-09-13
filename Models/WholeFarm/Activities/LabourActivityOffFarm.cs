@@ -3,6 +3,7 @@ using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -33,19 +34,22 @@ namespace Models.WholeFarm.Activities
 		/// Daily labour rate
 		/// </summary>
 		[Description("Daily labour rate")]
-		public double DailyRate { get; set; }
+        [Required]
+        public double DailyRate { get; set; }
 
 		/// <summary>
 		/// Days worked
 		/// </summary>
 		[Description("Days work available each month")]
-		public double[] DaysWorkAvailableEachMonth { get; set; }
+        [Required]
+        public double[] DaysWorkAvailableEachMonth { get; set; }
 
 		/// <summary>
 		/// Bank account name to pay to
 		/// </summary>
 		[Description("Bank account name to pay to")]
-		public string BankAccountName { get; set; }
+        [Required]
+        public string BankAccountName { get; set; }
 
 		private FinanceType bankType { get; set; }
 

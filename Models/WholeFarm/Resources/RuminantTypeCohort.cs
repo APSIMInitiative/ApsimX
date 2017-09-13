@@ -5,6 +5,7 @@ using System.Text;
 
 using System.Xml.Serialization;
 using Models.Core;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.WholeFarm.Resources
 {
@@ -48,37 +49,43 @@ namespace Models.WholeFarm.Resources
 		/// Gender
 		/// </summary>
 		[Description("Gender")]
-		public Sex Gender { get; set; }
+        [Required]
+        public Sex Gender { get; set; }
 
 		/// <summary>
 		/// Starting Age (Months)
 		/// </summary>
 		[Description("Starting Age")]
-		public int StartingAge { get; set; }
+        [Required]
+        public int StartingAge { get; set; }
 
 		/// <summary>
 		/// Starting Number
 		/// </summary>
 		[Description("Starting Number")]
-		public double StartingNumber { get; set; }
+        [Required]
+        public double StartingNumber { get; set; }
 
 		/// <summary>
 		/// Starting Weight
 		/// </summary>
 		[Description("Starting Weight (kg)")]
-		public double StartingWeight { get; set; }
+        [Required]
+        public double StartingWeight { get; set; }
 
 		/// <summary>
 		/// Standard deviation of starting weight. Use 0 to use starting weight only
 		/// </summary>
 		[Description("Standard deviation of starting weight")]
-		public double StartingWeightSD { get; set; }
+        [Required]
+        public double StartingWeightSD { get; set; }
 
 		/// <summary>
 		/// Is suckling?
 		/// </summary>
 		[Description("Still suckling?")]
-		public bool Suckling { get; set; }
+        [Required]
+        public bool Suckling { get; set; }
 
 		/// <summary>
 		/// Create the individual ruminant animals using the Cohort parameterisations.

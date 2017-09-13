@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,12 +31,14 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[Description("Start month of annual period to perform activities (1-12)")]
 		[System.ComponentModel.DefaultValueAttribute(1)]
-		public int StartMonth { get; set; }
+        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        public int StartMonth { get; set; }
 		/// <summary>
 		/// End month of annual period to perform activities
 		/// </summary>
 		[Description("End month of annual period to perform activities (1-12)")]
-		[System.ComponentModel.DefaultValueAttribute(12)]
+        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        [System.ComponentModel.DefaultValueAttribute(12)]
 		public int EndMonth { get; set; }
 
 		/// <summary>

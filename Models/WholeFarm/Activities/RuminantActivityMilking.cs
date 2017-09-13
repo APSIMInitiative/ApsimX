@@ -3,6 +3,7 @@ using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,8 @@ namespace Models.WholeFarm.Activities
 		/// Herd to milk
 		/// </summary>
 		[Description("Name of herd to milk")]
-		public string HerdName { get; set; }
+        [Required]
+        public string HerdName { get; set; }
 
 		/// <summary>
 		/// Labour settings

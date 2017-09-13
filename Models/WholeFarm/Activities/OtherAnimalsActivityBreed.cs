@@ -3,6 +3,7 @@ using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,45 +37,52 @@ namespace Models.WholeFarm.Activities
 		/// name of other animal type
 		/// </summary>
 		[Description("Name of other animal type")]
-		public string AnimalType { get; set; }
+        [Required]
+        public string AnimalType { get; set; }
 
 		/// <summary>
 		/// Offspring per female breeder
 		/// </summary>
 		[Description("Offspring per female breeder")]
-		public double OffspringPerBreeder { get; set; }
+        [Required]
+        public double OffspringPerBreeder { get; set; }
 
 		/// <summary>
 		/// Start breeding month
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(1)]
 		[Description("First month of breeding")]
-		public int StartBreedingMonth { get; set; }
+        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        public int StartBreedingMonth { get; set; }
 
 		/// <summary>
 		/// Breeding interval (months)
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(12)]
 		[Description("Breeding interval (months)")]
-		public int BreedingInterval { get; set; }
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        public int BreedingInterval { get; set; }
 
 		/// <summary>
 		/// Cost per female breeder
 		/// </summary>
 		[Description("Cost per female breeder")]
-		public int CostPerBreeder { get; set; }
+        [Required]
+        public int CostPerBreeder { get; set; }
 
 		/// <summary>
 		/// Breeding female age
 		/// </summary>
 		[Description("Breeding age (months)")]
-		public int BreedingAge { get; set; }
+        [Required]
+        public int BreedingAge { get; set; }
 
 		/// <summary>
 		/// Use local males for breeding
 		/// </summary>
 		[Description("Use local males for breeding")]
-		public bool UseLocalMales { get; set; }
+        [Required]
+        public bool UseLocalMales { get; set; }
 
 		/// <summary>
 		/// The Other animal type this group points to

@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,14 +31,16 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(12)]
 		[Description("The interval (in months, 1 monthly, 12 annual)")]
-		public int Interval { get; set; }
+        [Required]
+        public int Interval { get; set; }
 
 		/// <summary>
 		/// First month to pay overhead
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(1)]
 		[Description("First month to start interval (1-12)")]
-		public int MonthDue { get; set; }
+        [Required]
+        public int MonthDue { get; set; }
 
 		/// <summary>
 		/// Month this overhead is next due.

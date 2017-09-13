@@ -116,6 +116,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
@@ -509,8 +510,6 @@
     <Compile Include="WholeFarm\Activities\RuminantActivityMilking.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityPredictiveStockingENSO.cs" />
     <Compile Include="WholeFarm\Activities\RuminantFee.cs" />
-    <Compile Include="WholeFarm\Activities\TimingActivityDateRange.cs" />
-    <Compile Include="WholeFarm\Activities\TimingActivityMonthRange.cs" />
     <Compile Include="WholeFarm\Activities\TruckingSettings.cs" />
     <Compile Include="WholeFarm\FileCrop.cs" />
     <Compile Include="WholeFarm\Groupings\LabourFilterGroupSpecified.cs" />

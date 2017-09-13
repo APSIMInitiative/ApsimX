@@ -3,6 +3,7 @@ using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,27 +35,31 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(24)]
 		[Description("The burn interval (in months, 12 annual, 24 biennially)")]
-		public int BurnInterval { get; set; }
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        public int BurnInterval { get; set; }
 
 		/// <summary>
 		/// Month to perform burn
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(9)]
 		[Description("Month to perform burn")]
-		public int BurnMonth { get; set; }
+        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        public int BurnMonth { get; set; }
 
 		/// <summary>
 		/// Minimum proportion green for fire to carry
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(0.5)]
 		[Description("Minimum proportion green for fire to carry")]
-		public double MinimumProportionGreen { get; set; }
+        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        public double MinimumProportionGreen { get; set; }
 
 		/// <summary>
 		/// Name of graze food store/paddock to burn
 		/// </summary>
 		[Description("Name of graze food store/paddock to burn")]
-		public string PaddockName { get; set; }
+        [Required]
+        public string PaddockName { get; set; }
 
 		/// <summary>
 		/// Month this overhead is next due.

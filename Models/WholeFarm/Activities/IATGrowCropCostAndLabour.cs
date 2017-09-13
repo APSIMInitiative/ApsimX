@@ -9,8 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-
-
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.WholeFarm.Activities
 {
@@ -45,6 +44,7 @@ namespace Models.WholeFarm.Activities
         /// Months before harvest to sow crop
         /// </summary>
         [Description("Months before harvest to apply cost")]
+        [Required]
         public int MthsBeforeHarvest { get; set; }
 
 
@@ -52,6 +52,7 @@ namespace Models.WholeFarm.Activities
         /// Crop payment style
         /// </summary>
         [Description("Payment style")]
+        [Required]
         public CropPaymentStyleType PaymentStyle { get; set; }
 
 
@@ -59,18 +60,21 @@ namespace Models.WholeFarm.Activities
         /// Units Per Hectare 
         /// </summary>
         [Description("Units [eg. tonnes, kgs, bags] perHa or perTree")]
+        [Required]
         public double UnitsPerHaOrTree { get; set; }
 
         /// <summary>
         /// Cost Per Unit
         /// </summary>
         [Description("Cost [per unit or fixed] ($)")]
+        [Required]
         public double CostPerUnit { get; set; }
 
         /// <summary>
         /// name of account to use
         /// </summary>
         [Description("Name of account to use")]
+        [Required]
         public string AccountName { get; set; }
 
 

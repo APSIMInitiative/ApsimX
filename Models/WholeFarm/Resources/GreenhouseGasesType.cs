@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,8 @@ namespace Models.WholeFarm.Resources
 		/// Starting amount
 		/// </summary>
 		[Description("Starting amount")]
-		public double StartingAmount { get; set; }
+        [Required]
+        public double StartingAmount { get; set; }
 
 		private double amount;
 		/// <summary>
@@ -33,13 +35,15 @@ namespace Models.WholeFarm.Resources
 		/// Global warming potential
 		/// </summary>
 		[Description("Global warming potential")]
-		public double GlobalWarmingPotential { get; set; }
+        [Required]
+        public double GlobalWarmingPotential { get; set; }
 
 		/// <summary>
 		/// CO2 equivalents
 		/// </summary>
 		[Description("CO2 equivalents")]
-		public double CO2Equivalents { get { return Amount * GlobalWarmingPotential; } }
+        [Required]
+        public double CO2Equivalents { get { return Amount * GlobalWarmingPotential; } }
 
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>

@@ -3,6 +3,7 @@ using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,14 +34,16 @@ namespace Models.WholeFarm.Activities
 		/// Name of Feed to use
 		/// </summary>
 		[Description("Feed type name in Animal Food Store")]
-		public string FeedTypeName { get; set; }
+        [Required]
+        public string FeedTypeName { get; set; }
 
 		/// <summary>
 		/// Feeding style to use
 		/// </summary>
 		[Description("Feeding style to use")]
 		[System.ComponentModel.DefaultValueAttribute(OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount)]
-		public OtherAnimalsFeedActivityTypes FeedStyle { get; set; }
+        [Required]
+        public OtherAnimalsFeedActivityTypes FeedStyle { get; set; }
 
 		/// <summary>
 		/// Labour settings

@@ -3,6 +3,7 @@ using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -28,25 +29,29 @@ namespace Models.WholeFarm.Activities
 		/// Name of managed pasture to muster to
 		/// </summary>
 		[Description("Name of managed pasture to muster to")]
-		public string ManagedPastureName { get; set; }
+        [Required]
+        public string ManagedPastureName { get; set; }
 
 		/// <summary>
 		/// Determines whether this must be performed to setup herds at the start of the simulation
 		/// </summary>
 		[Description("Perform muster at start of simulation")]
-		public bool PerformAtStartOfSimulation { get; set; }
+        [Required]
+        public bool PerformAtStartOfSimulation { get; set; }
 
 		/// <summary>
 		/// Month to muster in (set to 0 to not perform muster)
 		/// </summary>
 		[Description("Month to muster in")]
-		public int Month { get; set; }
+        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        public int Month { get; set; }
 
 		/// <summary>
 		/// Determines whether sucklings are automatically mustered with the mother or seperated
 		/// </summary>
 		[Description("Move sucklings with mother")]
-		public bool MoveSucklings { get; set; }
+        [Required]
+        public bool MoveSucklings { get; set; }
 
 		private GrazeFoodStoreType pasture { get; set; }
 		private List<LabourFilterGroupSpecified> labour { get; set; }

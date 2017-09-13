@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,31 +21,36 @@ namespace Models.WholeFarm.Resources
 		/// Gender
 		/// </summary>
 		[Description("Gender")]
+        [Required]
 		public Sex Gender { get; set; }
 
 		/// <summary>
 		/// Age (Months)
 		/// </summary>
 		[Description("Age")]
-		public int Age { get; set; }
+        [Required]
+        public int Age { get; set; }
 
 		/// <summary>
 		/// Starting Number
 		/// </summary>
 		[Description("Number")]
-		public double Number { get; set; }
+        [Required]
+        public double Number { get; set; }
 
 		/// <summary>
 		/// Starting Weight
 		/// </summary>
 		[Description("Weight (kg)")]
-		public double Weight { get; set; }
+        [Required]
+        public double Weight { get; set; }
 
 		/// <summary>
 		/// Standard deviation of starting weight. Use 0 to use starting weight only
 		/// </summary>
 		[Description("Standard deviation of starting weight")]
-		public double StartingWeightSD { get; set; }
+        [Required]
+        public double StartingWeightSD { get; set; }
 
 		/// <summary>
 		/// Flag to identify individual ready for sale

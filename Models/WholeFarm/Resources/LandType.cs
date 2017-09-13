@@ -5,6 +5,7 @@ using System.Text;
 
 using System.Xml.Serialization;
 using Models.Core;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.WholeFarm.Resources
 {
@@ -25,6 +26,7 @@ namespace Models.WholeFarm.Resources
         /// Total Area
         /// </summary>
         [Description("Land area")]
+        [Required]
         public double LandArea { get; set; }
 
 		/// <summary>
@@ -32,6 +34,7 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(0.0)]
 		[Description("Buildings - proportion taken up with bldgs, paths (%)")]
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
         public double UnusablePortion { get; set; }
 
 		/// <summary>
@@ -39,12 +42,14 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(1.0)]
 		[Description("Proportion of Total Area to assign")]
-		public double ProportionOfTotalArea { get; set; }
+        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion in the range 0 to 1")]
+        public double ProportionOfTotalArea { get; set; }
 
 		/// <summary>
 		/// Soil Type (1-5) 
 		/// </summary>
 		[Description("Soil type index")]
+        [Required]
         public int SoilType { get; set; }
 
         /// <summary>

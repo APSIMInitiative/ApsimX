@@ -3,6 +3,7 @@ using Models.Core;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,20 +33,23 @@ namespace Models.WholeFarm.Activities
 		/// Herd to manage for dry season pasture availability
 		/// </summary>
 		[Description("Name of herd to manage")]
-		public string HerdName { get; set; }
+        [Required]
+        public string HerdName { get; set; }
 
 		/// <summary>
 		/// Month for assessing dry season feed requirements
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(5)]
 		[Description("Month for assessing dry season feed requirements (1-12)")]
-		public int AssessmentMonth { get; set; }
+        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        public int AssessmentMonth { get; set; }
 
 		/// <summary>
 		/// Minimum estimated feed (kg/ha) before restocking
 		/// </summary>
 		[Description("Minimum estimated feed (kg/ha) before restocking")]
-		public double MinimumFeedBeforeRestock { get; set; }
+        [Required]
+        public double MinimumFeedBeforeRestock { get; set; }
 
 		// restock proportion. I don't understand this.
 		// Maximum % restock breeders/age group
@@ -54,19 +58,22 @@ namespace Models.WholeFarm.Activities
 		/// Allow dry cows to be sold if feed shortage
 		/// </summary>
 		[Description("Allow dry cows to be sold if feed shortage")]
-		public bool SellDryCows { get; set; }
+        [Required]
+        public bool SellDryCows { get; set; }
 
 		/// <summary>
 		/// Allow wet cows to be sold if feed shortage
 		/// </summary>
 		[Description("Allow wet cows to be sold if feed shortage")]
-		public bool SellWetCows { get; set; }
+        [Required]
+        public bool SellWetCows { get; set; }
 
 		/// <summary>
 		/// Allow steers to be sold if feed shortage
 		/// </summary>
 		[Description("Allow steers to be sold if feed shortage")]
-		public bool SellSteers { get; set; }
+        [Required]
+        public bool SellSteers { get; set; }
 
 		/// <summary>
 		/// File containing SOI measure from BOM http://www.bom.gov.au/climate/influences/timeline/
@@ -74,7 +81,8 @@ namespace Models.WholeFarm.Activities
 		/// 1876 11  0.2 -3  +ve LaNina -ve El Nino
 		/// </summary>
 		[Description("SOI monthly data file")]
-		public string MonthlySIOFile { get; set; }
+        [Required]
+        public string MonthlySIOFile { get; set; }
 
 		private string fullFilename;
 
@@ -82,7 +90,8 @@ namespace Models.WholeFarm.Activities
 		/// Name of GrazeFoodStore (paddock) to place purchases in for grazing (leave blank for general yards)
 		/// </summary>
 		[Description("Name of GrazeFoodStore (paddock) to place purchases in (leave blank for general yards)")]
-		public string GrazeFoodStoreName { get; set; }
+        [Required]
+        public string GrazeFoodStoreName { get; set; }
 
 		private Dictionary<DateTime, double> ForecastSequence;
 
@@ -90,25 +99,29 @@ namespace Models.WholeFarm.Activities
 		/// Minimum mean SOI for La Nina
 		/// </summary>
 		[Description("Minimum mean SOI for La Nina")]
-		public double MeanSOIForLaNina { get; set; }
+        [Required]
+        public double MeanSOIForLaNina { get; set; }
 
 		/// <summary>
 		/// Minimum mean SOI (absolute) for El Nino
 		/// </summary>
 		[Description("Minimum mean SOI (absolute) for El Nino")]
-		public double MeanSOIForElNino { get; set; }
+        [Required]
+        public double MeanSOIForElNino { get; set; }
 
 		/// <summary>
 		/// The relationship to convert pasture biomass to stock rate change for El Nino
 		/// </summary>
 		[Description("The relationship to convert last 6 months SOI to stock rate change proportion")]
-		public Relationship PastureToStockingChangeElNino { get; set; }
+        [Required]
+        public Relationship PastureToStockingChangeElNino { get; set; }
 
 		/// <summary>
 		/// The relationship to convert pasture biomass to stock rate change for La Nina
 		/// </summary>
 		[Description("The relationship to convert last 6 months SOI to stock rate change proportion")]
-		public Relationship PastureToStockingChangeLaNina { get; set; }
+        [Required]
+        public Relationship PastureToStockingChangeLaNina { get; set; }
 
 		/// <summary>
 		/// Store graze 

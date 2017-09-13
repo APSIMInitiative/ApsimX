@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using System.Xml.Serialization;
 using Models.Core;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.WholeFarm.Resources
 {
@@ -22,18 +22,21 @@ namespace Models.WholeFarm.Resources
         /// Dry Matter (%)
         /// </summary>
         [Description("Dry Matter (%)")]
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
         public double DryMatter { get; set; }
 
 		/// <summary>
 		/// Dry Matter Digestibility (%)
 		/// </summary>
 		[Description("Dry Matter Digestibility (%)")]
-		public double DMD { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        public double DMD { get; set; }
 
 		/// <summary>
 		/// Nitrogen (%)
 		/// </summary>
 		[Description("Nitrogen (%)")]
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
         public double Nitrogen { get; set; }
 
 		/// <summary>
@@ -47,6 +50,7 @@ namespace Models.WholeFarm.Resources
 		/// Starting Amount (kg)
 		/// </summary>
 		[Description("Starting Amount (kg)")]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double StartingAmount { get; set; }
 
         /// <summary>

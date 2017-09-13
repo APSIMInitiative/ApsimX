@@ -2,6 +2,7 @@
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -26,44 +27,51 @@ namespace Models.WholeFarm.Activities
 		/// Name of herd to trade
 		/// </summary>
 		[Description("Name of herd to trade")]
-		public string HerdName { get; set; }
+        [Required]
+        public string HerdName { get; set; }
 
 		/// <summary>
 		/// Weight of inividuals to buy
 		/// </summary>
 		[Description("Weight of inividuals to buy")]
-		public double BuyWeight { get; set; }
+        [Required]
+        public double BuyWeight { get; set; }
 
 		/// <summary>
 		/// Animal age at purchase (months)
 		/// </summary>
 		[Description("Animal age at purchase (months)")]
-		public int BuyAge { get; set; }
+        [Required]
+        public int BuyAge { get; set; }
 
 		/// <summary>
 		/// Trade price (purchase/sell price /kg LWT)
 		/// </summary>
 		[Description("Trade price (purchase/sell price /kg LWT)")]
-		public double TradePrice { get; set; }
+        [Required]
+        public double TradePrice { get; set; }
 
 		/// <summary>
 		/// Months kept before sale
 		/// </summary>
 		[Description("Months kept before sale")]
-		public int MinMonthsKept { get; set; }
+        [Required]
+        public int MinMonthsKept { get; set; }
 
 		/// <summary>
 		/// Weight to achieve before sale
 		/// </summary>
 		[Description("Weight to achieve before sale")]
-		public int TradeWeight { get; set; }
+        [Required]
+        public int TradeWeight { get; set; }
 
 		/// <summary>
 		/// Purchase month
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(11)]
 		[Description("Purchase month")]
-		public int PurchaseMonth { get; set; }
+        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        public int PurchaseMonth { get; set; }
 
 		//TODO: devide how many to stock.
 		// stocking rate for paddock

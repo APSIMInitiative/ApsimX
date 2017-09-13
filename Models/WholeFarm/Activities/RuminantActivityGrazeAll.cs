@@ -2,6 +2,7 @@
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -30,7 +31,8 @@ namespace Models.WholeFarm.Activities
 		/// Could be modified to account for rain/heat walking to water etc.
 		/// </summary>
 		[Description("Number of hours grazed")]
-		public double HoursGrazed { get; set; }
+        [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day")]
+        public double HoursGrazed { get; set; }
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

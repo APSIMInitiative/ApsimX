@@ -2,6 +2,7 @@
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,31 +37,36 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(12)]
 		[Description("The payment interval (in months, 1 monthly, 12 annual)")]
-		public int PaymentInterval { get; set; }
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        public int PaymentInterval { get; set; }
 
 		/// <summary>
 		/// First month to pay overhead
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(1)]
 		[Description("First month to pay overhead (1-12)")]
-		public int MonthDue { get; set; }
+        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        public int MonthDue { get; set; }
 
 		/// <summary>
 		/// Amount payable
 		/// </summary>
 		[Description("Amount payable")]
-		public double Amount { get; set; }
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        public double Amount { get; set; }
 
 		/// <summary>
 		/// name of account to use
 		/// </summary>
 		[Description("Name of account to use")]
-		public string AccountName { get; set; }
+        [Required]
+        public string AccountName { get; set; }
 
 		/// <summary>
 		/// Farm overhead
 		/// </summary>
 		[Description("Farm overhead")]
+        [Required]
 		public bool IsOverhead { get; set; }
 
 		/// <summary>
@@ -88,13 +94,6 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			// check payment interval > 0
-			if (PaymentInterval <= 0)
-			{
-				Summary.WriteWarning(this, String.Format("Overhead payment interval must be greater than 1 ({0})", this.Name));
-				throw new Exception(String.Format("Invalid payment interval supplied for overhead {0}", this.Name));
-			}
-
 			if (MonthDue >= Clock.StartDate.Month)
 			{
 				NextDueDate = new DateTime(Clock.StartDate.Year, MonthDue, Clock.StartDate.Day);

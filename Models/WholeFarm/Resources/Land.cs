@@ -6,6 +6,7 @@ using System.Collections;  //enumerator
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.WholeFarm.Resources
 {
@@ -29,6 +30,7 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute("Hectares")]
 		[Description("Unit of area to be used in this simulation")]
+        [Required]
 		public string UnitsOfArea { get; set; }
 
 		/// <summary>
@@ -36,6 +38,7 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(1)]
 		[Description("Unit of area conversion to ha")]
+        [Required]
 		public double UnitsOfAreaToHaConversion { get; set; }
 
 		/// <summary>

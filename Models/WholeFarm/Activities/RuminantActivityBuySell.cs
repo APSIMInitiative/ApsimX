@@ -3,6 +3,7 @@ using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -30,19 +31,22 @@ namespace Models.WholeFarm.Activities
 		/// Name of breed to buy or sell
 		/// </summary>
 		[Description("Name of breed to buy or sell")]
-		public string BreedName { get; set; }
+        [Required]
+        public string BreedName { get; set; }
 
 		/// <summary>
 		/// Price of breeding sire
 		/// </summary>
 		[Description("Price of breeding sire")]
-		public double BreedingSirePrice { get; set; }
+        [Required]
+        public double BreedingSirePrice { get; set; }
 
 		/// <summary>
 		/// name of account to use
 		/// </summary>
 		[Description("Name of bank account to use")]
-		public string BankAccountName { get; set; }
+        [Required]
+        public string BankAccountName { get; set; }
 
 		private FinanceType bankAccount = null;
 		private Finance finance = null;

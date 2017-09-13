@@ -2,6 +2,7 @@
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -28,98 +29,114 @@ namespace Models.WholeFarm.Activities
 		/// Name of herd to breed
 		/// </summary>
 		[Description("Name of herd to manage")]
-		public string HerdName { get; set; }
+        [Required]
+        public string HerdName { get; set; }
 
 		/// <summary>
 		/// Maximum number of breeders that can be kept
 		/// </summary>
 		[Description("Maximum number of breeders to be kept")]
-		public int MaximumBreedersKept { get; set; }
+        [Required]
+        public int MaximumBreedersKept { get; set; }
 
 		/// <summary>
 		/// Minimum number of breeders that can be kept
 		/// </summary>
 		[Description("Minimum number of breeders to be kept")]
-		public int MinimumBreedersKept { get; set; }
+        [Required]
+        public int MinimumBreedersKept { get; set; }
 
 		/// <summary>
 		/// Maximum breeder age (months) for culling
 		/// </summary>
 		[Description("Maximum breeder age (months) for culling")]
-		public double MaximumBreederAge { get; set; }
+        [Required]
+        public double MaximumBreederAge { get; set; }
 
 		/// <summary>
 		/// Maximum number of breeding sires kept
 		/// </summary>
 		[Description("Maximum number of breeding sires kept")]
-		public int MaximumSiresKept { get; set; }
+        [Required]
+        public int MaximumSiresKept { get; set; }
 
 		/// <summary>
 		/// Maximum bull age (months) for culling
 		/// </summary>
 		[Description("Maximum bull age (months) for culling")]
-		public double MaximumBullAge { get; set; }
+        [Required]
+        public double MaximumBullAge { get; set; }
 
 		/// <summary>
 		/// Allow natural herd replacement of sires
 		/// </summary>
 		[Description("Allow sire replacement from herd")]
-		public bool AllowSireReplacement { get; set; }
+        [Required]
+        public bool AllowSireReplacement { get; set; }
 
 		/// <summary>
 		/// Male selling age (months)
 		/// </summary>
 		[Description("Male selling age (months)")]
-		public double MaleSellingAge { get; set; }
+        [Required]
+        public double MaleSellingAge { get; set; }
 
 		/// <summary>
 		/// Male selling weight (kg)
 		/// </summary>
 		[Description("Male selling weight (kg)")]
-		public double MaleSellingWeight { get; set; }
+        [Required]
+        public double MaleSellingWeight { get; set; }
 
 		/// <summary>
 		/// Month to undertake management (1-12) and assign costs
 		/// </summary>
 		[Description("Month to undertake management (1-12) and assign costs")]
 		[System.ComponentModel.DefaultValueAttribute(12)]
-		public int ManagementMonth { get; set; }
+        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        public int ManagementMonth { get; set; }
 
 		/// <summary>
 		/// Manage every month
 		/// </summary>
 		[Description("Manage every month")]
-		public bool MonthlyManagement { get; set; }
+        [Required]
+        public bool MonthlyManagement { get; set; }
 
 		/// <summary>
 		/// Weaning age (months)
 		/// </summary>
 		[Description("Weaning age (months)")]
-		public double WeaningAge { get; set; }
+        [Required]
+        public double WeaningAge { get; set; }
 
 		/// <summary>
 		/// Weaning weight (kg)
 		/// </summary>
 		[Description("Weaning weight (kg)")]
-		public double WeaningWeight { get; set; }
+        [Required]
+        public double WeaningWeight { get; set; }
 
 		/// <summary>
 		/// Name of GrazeFoodStore (paddock) to place purchases in for grazing (leave blank for general yards)
 		/// </summary>
 		[Description("Name of GrazeFoodStore (paddock) to place purchases in (leave blank for general yards)")]
-		public string GrazeFoodStoreName { get; set; }
+        [Required]
+        public string GrazeFoodStoreName { get; set; }
 
 		/// <summary>
 		/// Minimum pasture (kg/ha) before restocking if placed in paddock
 		/// </summary>
 		[Description("Minimum pasture (kg/ha) before restocking if placed in paddock")]
-		public double MinimumPastureBeforeRestock { get; set; }
+        [Required]
+        public double MinimumPastureBeforeRestock { get; set; }
 
 		/// <summary>
 		/// Perform selling of young females the same as males
 		/// </summary>
 		[Description("Perform selling of young females the same as males")]
-		public bool SellFemalesLikeMales { get; set; }
+        [Required]
+        public bool SellFemalesLikeMales { get; set; }
 
 		/// <summary>
 		/// Store graze 

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Models.WholeFarm.Resources;
 using System.Xml.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.WholeFarm.Activities
 {
@@ -29,13 +30,15 @@ namespace Models.WholeFarm.Activities
 		/// Could be modified to account for rain/heat walking to water etc.
 		/// </summary>
 		[Description("Number of hours grazed (based on 8 hr grazing day)")]
-		public double HoursGrazed { get; set; }
+        [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day")]
+        public double HoursGrazed { get; set; }
 
 		/// <summary>
 		/// Name of paddock or pasture to graze
 		/// </summary>
 		[Description("Name of GrazeFoodStoreType to graze")]
-		public string GrazeFoodStoreTypeName { get; set; }
+        [Required]
+        public string GrazeFoodStoreTypeName { get; set; }
 
 		/// <summary>
 		/// paddock or pasture to graze
@@ -47,7 +50,8 @@ namespace Models.WholeFarm.Activities
 		/// Name of ruminant group to graze
 		/// </summary>
 		[Description("Name of ruminant type to graze")]
-		public string RuminantTypeName { get; set; }
+        [Required]
+        public string RuminantTypeName { get; set; }
 
 		/// <summary>
 		/// Ruminant group to graze

@@ -2,6 +2,7 @@
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -37,13 +38,15 @@ namespace Models.WholeFarm.Activities
         /// Name of the model for the crop input file
         /// </summary>
         [Description("Name of model for crop growth file")]
+        [Required]
         public string ModelNameFileCrop { get; set; }
 
         /// <summary>
         /// Name of crop in file
         /// </summary>
         [Description("Name of crop in file")]
-		public string CropName { get; set; }
+        [Required]
+        public string CropName { get; set; }
 
 
 
@@ -53,6 +56,7 @@ namespace Models.WholeFarm.Activities
         /// Store to put crop growth into
         /// </summary>
         [Description("Store to put crop growth into")]
+        [Required]
         public StoresForCrops Store { get; set; }
 
 
@@ -60,12 +64,14 @@ namespace Models.WholeFarm.Activities
         /// Item name (in the store) to put crop growth into
         /// </summary>
         [Description("Item name [in the store] to put crop growth into")]
+        [Required]
         public string StoreItemName { get; set; }
 
         /// <summary>
         /// Percentage of the crop growth that is kept
         /// </summary>
         [Description("Proportion of crop growth kept (%)")]
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
         public double PercentKept { get; set; }
 
 
@@ -73,6 +79,7 @@ namespace Models.WholeFarm.Activities
         /// Number of Trees per Hectare 
         /// </summary>
         [Description("Number of Trees (perHa) [0 if not a tree crop]")]
+        [Required]
         public double TreesPerHa { get; set; }
 
 

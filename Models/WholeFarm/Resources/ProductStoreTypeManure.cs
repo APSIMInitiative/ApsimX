@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,25 +27,29 @@ namespace Models.WholeFarm.Resources
 		/// Biomass decay rate each time step
 		/// </summary>
 		[Description("Biomass decay rate each time step")]
-		public double DecayRate { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a proportion in the range 0 to 1")]
+        public double DecayRate { get; set; }
 
 		/// <summary>
 		/// Moisture decay rate each time step
 		/// </summary>
 		[Description("Moisture decay rate each time step")]
-		public double MoistureDecayRate { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a proportion in the range 0 to 1")]
+        public double MoistureDecayRate { get; set; }
 
 		/// <summary>
 		/// Proportion moisture of fresh manure
 		/// </summary>
 		[Description("Proportion moisture of fresh manure")]
-		public double ProportionMoistureFresh { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a proportion in the range 0 to 1")]
+        public double ProportionMoistureFresh { get; set; }
 
 		/// <summary>
 		/// Maximum age manure lasts
 		/// </summary>
 		[Description("Maximum age (time steps) manure lasts")]
-		public int MaximumAge { get; set; }
+        [Required]
+        public int MaximumAge { get; set; }
 
 		/// <summary>
 		/// Method to add uncollected manure to stores
