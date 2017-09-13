@@ -191,18 +191,20 @@
         [Test]
         public void BeginWriting_Cleanup()
         {
+            string[] columnNames1 = new string[] { "Col" };
             using (DataStore storage = new DataStore(fileName))
             {
                 // Create a database with 3 sims.
                 storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim2", "Sim3" },
                                      simulationNamesBeingRun: new string[] { "Sim1" });
 
-                string[] columnNames1 = new string[] { "Col" };
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { 1 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null }, new object[] { 2 });
                 storage.WriteRow("Sim3", "Report1", columnNames1, new string[] { null }, new object[] { 3 });
                 storage.EndWriting();
-
+            }
+            using (DataStore storage = new DataStore(fileName))
+            { 
                 // Now do it again this time with another sim.
                 storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim4" },
                                      simulationNamesBeingRun: new string[] { "Sim4" });
