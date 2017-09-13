@@ -80,15 +80,15 @@ namespace Models.Core.Runners
         /// <summary>Create one job runner process for each CPU</summary>
         private void CreateRunners()
         {
-            int numRunners = Process.GetProcessesByName("APSIMRunner").Length;
-            for (int i = numRunners; i < MaximumNumOfProcessors; i++)
-            {
-                string workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
-                ProcessUtilities.ProcessWithRedirectedOutput runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
-                runnerProcess.Exited += OnExited;
-                runnerProcess.Start(runnerFileName, null, workingDirectory, false);
-            }
+            //int numRunners = Process.GetProcessesByName("APSIMRunner").Length;
+            //for (int i = numRunners; i < MaximumNumOfProcessors; i++)
+            //{
+            //    string workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //    string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
+            //    ProcessUtilities.ProcessWithRedirectedOutput runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
+            //    runnerProcess.Exited += OnExited;
+            //    runnerProcess.Start(runnerFileName, null, workingDirectory, false);
+            //}
         }
 
         /// <summary>Delete any runners that may exist.</summary>

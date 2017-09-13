@@ -986,12 +986,38 @@ namespace Models.Soils
         /// <summary>Gets or sets the nitrate N for each layer (kg/ha)</summary>
         [XmlIgnore]
         [Units("kg/ha")]
-        public double[] NO3N { get { return SoluteManager.GetSolute("NO3"); } set { SoluteManager.SetSolute("NO3",value); } }
+        public double[] NO3N
+        {
+            get
+            {
+                if (SoluteManager == null)
+                    return new double[0];
+                else
+                    return SoluteManager.GetSolute("NO3");
+            }
+            set
+            {
+                SoluteManager.SetSolute("NO3",value);
+            }
+        }
 
         /// <summary>Gets the ammonia N for each layer (kg/ha)</summary>
         [XmlIgnore]
         [Units("kg/ha")]
-        public double[] NH4N { get { return SoluteManager.GetSolute("NH4"); } set { SoluteManager.SetSolute("NH4", value); } }
+        public double[] NH4N
+        {
+            get
+            {
+                if (SoluteManager == null)
+                    return new double[0];
+                else
+                    return SoluteManager.GetSolute("NH4");
+            }
+            set
+            {
+                SoluteManager.SetSolute("NH4", value);
+            }
+        }
 
         /// <summary>Gets the temperature of each layer</summary>
         public double[] Temperature { get { return temperatureModel.Value; } }

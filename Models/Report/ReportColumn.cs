@@ -100,6 +100,9 @@ namespace Models.Report
         /// </summary>
         private DateTime lastStoreDate;
 
+        /// <summary>Have we tried to get units yet?</summary>
+        private bool haveGotUnits = false;
+
         /// <summary>
         /// Constructor for an aggregated column.
         /// </summary>
@@ -167,16 +170,6 @@ namespace Models.Report
             this.locator = locator;
             this.events = events;
             this.clock = clock;
-            try
-            {
-                IVariable var = locator.GetObject(variableName);
-                if (var != null)
-                   Units = var.UnitsLabel;
-            }
-            // Exceptions may arise when we are setting up at the start of simulation, since some of the other model
-            // components might not be fully initialized. If that's the case, we just fail silently and don't
-            // worry about determining units of measurement.
-            catch (Exception) { }
         }
 
         /// <summary>
@@ -414,6 +407,14 @@ namespace Models.Report
                                                 ". Variable is not of a reportable type. Perhaps " +
                                                 " it is a PMF Function that needs a .Value appended to the name.");
                         }
+                    }
+
+                    if (!haveGotUnits)
+                    {
+                        IVariable var = locator.GetObject(variableName);
+                        if (var != null)
+                            Units = var.UnitsLabel;
+                        haveGotUnits = true;
                     }
 
                     Values.Add(value);

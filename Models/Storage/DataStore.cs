@@ -25,7 +25,7 @@
         private List<Table> tables = new List<Table>();
 
         /// <summary>The simulations table in the .db</summary>
-        private Dictionary<string, int> simulationIDs = new Dictionary<string, int>();
+        private Dictionary<string, int> simulationIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>Are we stopping writing to the DB?</summary>
         private bool stoppingWriteToDB;
