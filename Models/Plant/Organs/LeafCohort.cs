@@ -903,7 +903,7 @@ namespace Models.PMF.Organs
             //Growing leaf area after DM allocated
             DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation)*SpecificLeafAreaMax;
             //Fixme.  Live.Storage should probably be included in DM supply for leaf growth also
-            double deltaActualArea = Math.Min(DeltaWaterConstrainedArea, DeltaCarbonConstrainedArea);
+            double deltaActualArea = Math.Min(DeltaStressConstrainedArea, DeltaCarbonConstrainedArea);
 
             //Modify leaf area using tillering approach
             double totalf = ApexGroupSize[0];
