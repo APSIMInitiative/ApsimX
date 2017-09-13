@@ -32,6 +32,7 @@ namespace Models.Storage
         private List<string> preparedInsertQueryColumnNames;
         private IntPtr preparedInsertQuery;
         private object[] values;
+        private SortedSet<string> columnNames = new SortedSet<string>(); // added the dramatic speed improvement.
         public List<Row> RowsToWrite = new List<Row>();
 
         /// <summary>Name of table.</summary>
@@ -95,6 +96,7 @@ namespace Models.Storage
                 string units = null;
                 units = LookupUnitsForColumn(columnName);
                 Columns.Add(new Column(columnName, units));
+                columnNames.Add(columnName);
             }
         }
 
@@ -196,6 +198,7 @@ namespace Models.Storage
                     sql.Append(type);
                     needToAppendComma = true;
                     Columns.Add(new Column(columnName, columnUnit));
+                    columnNames.Add(columnName);
                 }
             }
             sql.Append(')');
@@ -211,8 +214,9 @@ namespace Models.Storage
             for (int i = 0; i < row.ColumnNames.Count(); i++)
             {
                 string columnName = row.ColumnNames.ElementAt(i);
-                if (Columns.Find(c => c.Name == columnName) == null)
+                if (!columnNames.Contains(columnName))
                 {
+                    columnNames.Add(columnName); 
                     string columnUnit = row.ColumnUnits.ElementAt(i);
                     object value = row.Values.ElementAt(i);
                     if (value != null)
