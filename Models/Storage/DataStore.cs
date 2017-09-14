@@ -237,6 +237,8 @@
         /// <param name="data">The data to write</param>
         public void WriteTable(DataTable data)
         {
+            SortedSet<string> simulationNames = new SortedSet<string>();
+
             bool startWriteThread = writeTask == null || writeTask.IsCompleted;
             if (startWriteThread)
                 BeginWriting();
@@ -255,10 +257,16 @@
                 for (int colIndex = 0; colIndex < data.Columns.Count; colIndex++)
                     values[colIndex] = row[colIndex];
                 WriteRow(simulationName, data.TableName, columnNames, units, values);
+                simulationNames.Add(simulationName);
             }
 
             if (startWriteThread)
+            {
+                foreach (string simulationName in simulationNames)
+                    if (simulationName != null && simulationName != string.Empty)
+                        CompletedWritingSimulationData(simulationName);
                 EndWriting();
+            }
         }
 
         /// <summary>Create a table in the database based on the specified one.</summary>

@@ -90,6 +90,8 @@
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 2.0, 12.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 3.0, 13.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 4.0, 14.0 });
+                storage.CompletedWritingSimulationData("Sim1");
+                storage.CompletedWritingSimulationData("Sim2");
                 storage.EndWriting();
             }
 
@@ -116,6 +118,8 @@
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 2.0, 12.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames2, new string[] { null, "(g)" }, new object[] { 3.0, 13.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames2, new string[] { null, "(g)" }, new object[] { 4.0, 14.0 });
+                storage.CompletedWritingSimulationData("Sim1");
+                storage.CompletedWritingSimulationData("Sim2");
                 storage.EndWriting();
             }
 
@@ -140,6 +144,7 @@
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 1.0 } });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 2.0, 2.1} });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 3.0, 3.1, 3.2} });
+                storage.CompletedWritingSimulationData("Sim1");
                 storage.EndWriting();
             }
 
@@ -178,6 +183,7 @@
                 string[] columnNames1 = new string[] { "Col" };
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { record1 });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { record2 });
+                storage.CompletedWritingSimulationData("Sim1");
                 storage.EndWriting();
             }
 
@@ -201,6 +207,9 @@
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { 1 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null }, new object[] { 2 });
                 storage.WriteRow("Sim3", "Report1", columnNames1, new string[] { null }, new object[] { 3 });
+                storage.CompletedWritingSimulationData("Sim1");
+                storage.CompletedWritingSimulationData("Sim2");
+                storage.CompletedWritingSimulationData("Sim3");
                 storage.EndWriting();
             }
             using (DataStore storage = new DataStore(fileName))
@@ -209,6 +218,7 @@
                 storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim4" },
                                      simulationNamesBeingRun: new string[] { "Sim4" });
                 storage.WriteRow("Sim4", "Report1", columnNames1, new string[] { null }, new object[] { 4 });
+                storage.CompletedWritingSimulationData("Sim4");
                 storage.EndWriting();
             }
 
@@ -319,72 +329,11 @@
                 row["Col1"] = 11;
                 row["Col2"] = 21;
                 data.Rows.Add(row);
-                storage.WriteTable(data);
+                storage.WriteTableRaw(data);
                 Assert.AreEqual(TableToString(fileName, "Test"),
                                            "Col1,Col2\r\n" +
                                            "  10,  20\r\n" +
                                            "  11,  21\r\n");
-            }
-        }
-
-        /// <summary>Call WriteTable with unknown simulation name. Test that it writes correctly.</summary>
-        [Test]
-        public void WriteTable_DataWithUnknownSimulationName_CorrectWriting()
-        {
-            using (DataStore storage = new DataStore(fileName))
-            {
-                DataTable data = new DataTable("Test");
-                data.Columns.Add("SimulationName", typeof(string));
-                data.Columns.Add("Col1", typeof(int));
-                data.Columns.Add("Col2", typeof(int));
-                DataRow row = data.NewRow();
-                row["SimulationName"] = "??";
-                row["Col1"] = 10;
-                row["Col2"] = 20;
-                data.Rows.Add(row);
-                row = data.NewRow();
-                row["SimulationName"] = null;
-                row["Col1"] = 11;
-                row["Col2"] = 21;
-                data.Rows.Add(row);
-                storage.WriteTable(data);
-                Assert.AreEqual(TableToString(fileName, "Test"),
-                                           "SimulationID,SimulationName,Col1,Col2\r\n" +
-                                           "            ,            ??,  10,  20\r\n" +
-                                           "            ,              ,  11,  21\r\n");
-            }
-        }
-
-        /// <summary>Call WriteTable with known simulation name. Test that it writes correctly.</summary>
-        [Test]
-        public void WriteTable_DataWithKnownSimulationName_CorrectWriting()
-        {
-            using (DataStore storage = new DataStore(fileName))
-            {
-                // Tell storage about our sim.
-                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1" },
-                                     simulationNamesBeingRun: new string[] { "Sim1" });
-                storage.EndWriting();
-
-                DataTable data = new DataTable("Test");
-                data.Columns.Add("SimulationName", typeof(string));
-                data.Columns.Add("Col1", typeof(int));
-                data.Columns.Add("Col2", typeof(int));
-                DataRow row = data.NewRow();
-                row["SimulationName"] = "Sim1";
-                row["Col1"] = 10;
-                row["Col2"] = 20;
-                data.Rows.Add(row);
-                row = data.NewRow();
-                row["SimulationName"] = null;
-                row["Col1"] = 11;
-                row["Col2"] = 21;
-                data.Rows.Add(row);
-                storage.WriteTable(data);
-                Assert.AreEqual(TableToString(fileName, "Test"),
-                                           "SimulationID,SimulationName,Col1,Col2\r\n" +
-                                           "           1,          Sim1,  10,  20\r\n" +
-                                           "            ,              ,  11,  21\r\n");
             }
         }
         
@@ -481,6 +430,8 @@
             storage.WriteRow("Sim1", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 2), 22.0 });
             storage.WriteRow("Sim2", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 1), 31.0 });
             storage.WriteRow("Sim2", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 2), 32.0 });
+            storage.CompletedWritingSimulationData("Sim1");
+            storage.CompletedWritingSimulationData("Sim2");
             storage.EndWriting();
         }
         
