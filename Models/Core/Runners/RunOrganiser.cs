@@ -34,8 +34,8 @@
         {
             JobSequence parentJob = new JobSequence();
             JobParallel simulationJobs = new JobParallel();
-            List<string> simulationNames = new List<string>();
-            FindAllSimulationsToRun(model, simulationJobs, simulationNames);
+            List<string> simulationNamesToRun = new List<string>();
+            FindAllSimulationsToRun(model, simulationJobs, simulationNamesToRun);
             parentJob.Jobs.Add(simulationJobs);
             parentJob.Jobs.Add(new RunAllCompletedEvent(simulations));
 
@@ -44,7 +44,11 @@
 
             if (store == null)
                 throw new Exception("Cannot find a DataStore.");
-            store.BeginWriting(simulations.FindAllSimulationNames(), simulationNames);
+
+            List<string> allSimulationNames = new List<string>(simulations.FindAllSimulationNames());
+            allSimulationNames.Sort();
+            simulationNamesToRun.Sort();
+            store.BeginWriting(allSimulationNames, simulationNamesToRun);
             
             if (runTests)
             {

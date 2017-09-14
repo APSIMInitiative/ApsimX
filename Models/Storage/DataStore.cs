@@ -21,8 +21,29 @@
         [NonSerialized]
         private SQLite connection = null;
 
+        private class SimulationData
+        {
+            public string simulationName;
+            public bool complete = false;
+            public List<Table> tables = new List<Table>();
+            public SimulationData(string simName) { simulationName = simName; }
+            public void AddRowToTable(string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
+            {
+                Table table = tables.Find(t => t.Name == tableName);
+                if (table == null)
+                {
+                    table = new Table(tableName);
+                    tables.Add(table);
+                }
+                table.RowsToWrite.Add(new Row(simulationName, columnNames, columnUnits, valuesToWrite));
+            }
+        }
+
         /// <summary>A List of tables that needs writing.</summary>
         private List<Table> tables = new List<Table>();
+
+        /// <summary>Data that needs writing</summary>
+        private List<SimulationData> dataToWrite = new List<SimulationData>();
 
         /// <summary>The simulations table in the .db</summary>
         private Dictionary<string, int> simulationIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -51,7 +72,7 @@
             {
                 if (FileName == null)
                     Open(readOnly: true);
-                return tables.FindAll(t => t.Exists && !t.Name.StartsWith("_")).Select(t => t.Name);
+                return tables.FindAll(t => !t.Name.StartsWith("_")).Select(t => t.Name);
             }
         }
 
@@ -79,17 +100,25 @@
         /// <param name="valuesToWrite">Values of row to write</param>
         public void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
         {
-            // Find the table.
-            lock (tables)
+            SimulationData simData = dataToWrite.Find(s => s.simulationName == simulationName);
+            if (simData == null)
             {
-                Table table = tables.Find(t => t.Name == tableName);
-                if (table == null)
+                simData = new SimulationData(simulationName);
+                lock (dataToWrite)
                 {
-                    table = new Table(tableName);
-                    tables.Add(table);
+                    dataToWrite.Add(simData);
                 }
-                table.RowsToWrite.Add(new Row(simulationName, columnNames, columnUnits, valuesToWrite));
             }
+            simData.AddRowToTable(tableName, columnNames, columnUnits, valuesToWrite);
+        }
+
+        /// <summary>Completed writing data for simulation</summary>
+        /// <param name="simulationName"></param>
+        public void CompletedWritingSimulationData(string simulationName)
+        {
+            SimulationData simData = dataToWrite.Find(s => s.simulationName == simulationName);
+            if (simData != null)
+                simData.complete = true;
         }
 
         /// <summary>Begin writing to DB file</summary>
@@ -129,7 +158,7 @@
             WaitForAllRecordsToBeWritten();
 
             Table table = tables.Find(t => t.Name == tableName);
-            if (connection == null || table == null || !table.Exists)
+            if (connection == null || table == null)
                 return null;
 
             StringBuilder sql = new StringBuilder();
@@ -211,8 +240,6 @@
             bool startWriteThread = writeTask == null || writeTask.IsCompleted;
             if (startWriteThread)
                 BeginWriting();
-            else
-                WaitForAllRecordsToBeWritten();
 
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in data.Columns)
@@ -232,6 +259,63 @@
 
             if (startWriteThread)
                 EndWriting();
+        }
+
+        /// <summary>Create a table in the database based on the specified one.</summary>
+        /// <param name="table">The table.</param>
+        public void WriteTableRaw(DataTable table)
+        {
+            // Open the .db for writing.
+            Open(readOnly: false);
+
+            if (table.Columns.Contains("SimulationName"))
+                AddSimulationIDColumnToTable(table);
+
+            // Get a list of all names and datatypes for each field in this table.
+            List<string> names = new List<string>();
+            List<Type> types = new List<Type>();
+
+            // Go through all columns for this table and add to 'names' and 'types'
+            foreach (DataColumn column in table.Columns)
+            {
+                names.Add(column.ColumnName);
+                types.Add(column.DataType);
+            }
+
+            // Create the table.
+            CreateTable(table.TableName, names, types);
+
+            // Prepare the insert query sql
+            IntPtr query = PrepareInsertIntoTable(connection, table.TableName, names);
+
+            // Tell SQLite that we're beginning a transaction.
+            connection.ExecuteNonQuery("BEGIN");
+
+            try
+            {
+                // Write each row to the .db
+                if (table != null)
+                {
+                    object[] values = new object[names.Count];
+                    foreach (DataRow row in table.Rows)
+                    {
+                        for (int i = 0; i < names.Count; i++)
+                            if (table.Columns.Contains(names[i]))
+                                values[i] = row[names[i]];
+
+                        // Write the row to the .db
+                        connection.BindParametersAndRunQuery(query, values);
+                    }
+                }
+            }
+            finally
+            {
+                // tell SQLite we're ending our transaction.
+                connection.ExecuteNonQuery("END");
+
+                // finalise our query.
+                connection.Finalize(query);
+            }
         }
 
         /// <summary>Delete the specified table.</summary>
@@ -307,8 +391,19 @@
         {
             // Make sure all existing writing has completed.
             if (writeTask != null && !writeTask.IsCompleted)
-                while (tables.Find(table => table.HasRowsToWrite) != null)
+                while (IsDataToWrite())
                     Thread.Sleep(100);
+        }
+
+        /// <summary>Is there data to be written?</summary>
+        private bool IsDataToWrite()
+        {
+            foreach (SimulationData data in dataToWrite)
+            {
+                if (data.tables.Find(table => table.HasRowsToWrite) != null)
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>Worker method for writing to the .db file. This runs in own thread.</summary>
@@ -325,30 +420,34 @@
 
                 while (true)
                 {
-                    Table tableWithRows = null;
-                    lock (tables)
+                    SimulationData dataToWriteToDB = null;
+                    lock (dataToWrite)
                     {
-                        // Find first table that has rows.
-                        tableWithRows = tables.Find(table => table.HasRowsToWrite);
+                        dataToWriteToDB = dataToWrite.Find(d => d.complete);
                     }
 
-                    if (tableWithRows == null)
+                    if (dataToWriteToDB == null)
                     {
                         if (stoppingWriteToDB)
                             break;
                         else
                             Thread.Sleep(100);
                     }
-
-                    if (tableWithRows != null)
+                    else
                     {
-                        int numRowsWritten = tableWithRows.WriteRows(connection, simulationIDs);
-                        if (numRowsWritten > 0)
+                        foreach (Table tableWithRows in dataToWriteToDB.tables)
                         {
-                            lock (tables)
-                            {
-                                tableWithRows.RowsToWrite.RemoveRange(0, numRowsWritten);
-                            }
+                            tableWithRows.WriteRows(connection, simulationIDs);
+
+                            Table table = tables.Find(t => t.Name == tableWithRows.Name);
+                            if (table == null)
+                                tables.Add(tableWithRows);
+                            else
+                                table.MergeColumns(tableWithRows);
+                        }
+                        lock (dataToWrite)
+                        {
+                            dataToWrite.Remove(dataToWriteToDB);
                         }
                     }
                 }
@@ -432,13 +531,7 @@
         {
             if (connection != null)
             {
-                // Get a list of all table instances that don't have rows to write to the .db file. 
-                List<Table> tablesToRemove = tables.FindAll(t => !t.HasRowsToWrite);
-
-                // Dispose of and remove all table instances that don't have rows to write.
-                tablesToRemove.ForEach(t => t.Dispose());
-                tablesToRemove.ForEach(t => tables.Remove(t));
-
+                tables.Clear();
                 simulationIDs.Clear();
                 connection.CloseDatabase();
                 connection = null;
@@ -455,11 +548,10 @@
                 Table table = tables.Find(t => t.Name == tableName);
                 if (table == null)
                 {
-                    table = new Table(tableName, connection);
+                    table = new Table(tableName);
                     tables.Add(table);
                 }
-                else
-                    table.SetConnection(connection);
+                table.SetConnection(connection);
             }
 
             // Get a list of simulation names
@@ -591,5 +683,101 @@
                 }
             }
         }
+
+        /// <summary>Go create a table in the DataStore with the specified field names and types.</summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="names">The names.</param>
+        /// <param name="types">The types.</param>
+        private void CreateTable(string tableName, List<string> names, List<Type> types)
+        {
+            DeleteTable(tableName);
+            string cmd = "CREATE TABLE " + tableName + "(";
+
+            for (int i = 0; i < names.Count; i++)
+            {
+                string columnType = null;
+                columnType = GetSQLColumnType(types[i]);
+
+                if (i != 0)
+                    cmd += ",";
+                cmd += "[" + names[i] + "] " + columnType;
+            }
+            cmd += ")";
+
+            connection.ExecuteNonQuery(cmd);
+
+            tables.RemoveAll(table => table.Name == tableName);
+
+            Table newTable = new Table(tableName);
+            names.ForEach(name => newTable.Columns.Add(new Table.Column(name, null)));
+            tables.Add(newTable);
+        }
+
+        /// <summary>Convert the specified type to a SQL type.</summary>
+        /// <param name="type">The type.</param>
+        private static string GetSQLColumnType(Type type)
+        {
+            if (type == null)
+                return "integer";
+            else if (type.ToString() == "System.DateTime")
+                return "date";
+            else if (type.ToString() == "System.Int32")
+                return "integer";
+            else if (type.ToString() == "System.Single")
+                return "real";
+            else if (type.ToString() == "System.Double")
+                return "real";
+            else
+                return "char(50)";
+        }
+
+        /// <summary>Go prepare an insert into query and return the query.</summary>
+        /// <param name="Connection">The connection.</param>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="names">The names.</param>
+        /// <returns></returns>
+        private static IntPtr PrepareInsertIntoTable(SQLite Connection, string tableName, List<string> names)
+        {
+            string Cmd = "INSERT INTO " + tableName + "(";
+
+            for (int i = 0; i < names.Count; i++)
+            {
+                if (i > 0)
+                    Cmd += ",";
+                Cmd += "[" + names[i] + "]";
+            }
+            Cmd += ") VALUES (";
+
+            for (int i = 0; i < names.Count; i++)
+            {
+                if (i > 0)
+                    Cmd += ",";
+                Cmd += "?";
+            }
+            Cmd += ")";
+            return Connection.Prepare(Cmd);
+        }
+
+        /// <summary>
+        /// Using the SimulationName column in the specified 'table', add a
+        /// SimulationID column.
+        /// </summary>
+        /// <param name="table">The table.</param>
+        private void AddSimulationIDColumnToTable(DataTable table)
+        {
+            table.Columns.Add("SimulationID", typeof(int)).SetOrdinal(0);
+            foreach (DataRow row in table.Rows)
+            {
+                string simulationName = row["SimulationName"].ToString();
+                if (simulationName != null)
+                {
+                    int id = 0;
+                    simulationIDs.TryGetValue(simulationName, out id);
+                    if (id > 0)
+                        row["SimulationID"] = id;
+                }
+            }
+        }
+
     }
 }

@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 namespace Models.Storage
 {
     /// <summary>Encapsulates a table that needs writing to the database.</summary>
-    class Table : IDisposable
+    class Table
     {
         public class Column
         {
@@ -28,18 +28,10 @@ namespace Models.Storage
             }
         }
 
-        public SQLite connection;
-        private List<string> preparedInsertQueryColumnNames;
-        private IntPtr preparedInsertQuery;
-        private object[] values;
-        private SortedSet<string> columnNames = new SortedSet<string>(); // added the dramatic speed improvement.
         public List<Row> RowsToWrite = new List<Row>();
 
         /// <summary>Name of table.</summary>
         public string Name { get; private set; }
-
-        /// <summary>Does the table exist in the .db</summary>
-        public bool Exists { get { return connection != null; } }
 
         /// <summary>Are there any rows that need writing?</summary>
         public bool HasRowsToWrite { get { return RowsToWrite.Count > 0; } }
@@ -55,36 +47,16 @@ namespace Models.Storage
             Columns = new List<Column>();
         }
 
-        /// <summary>Constructor</summary>
-        /// <param name="tableName">Name of table</param>
-        /// <param name="sqliteConnection">SQLite connection</param>
-        public Table(string tableName, SQLite sqliteConnection)
-        {
-            Name = tableName;
-            Columns = new List<Column>();
-            connection = sqliteConnection;
-            Open();
-        }
-
-        /// <summary>Dispose of the table</summary>
-        public void Dispose()
-        {
-            if (preparedInsertQuery != IntPtr.Zero)
-                connection.Finalize(preparedInsertQuery);
-            preparedInsertQuery = IntPtr.Zero;
-            connection = null;
-        }
-
         /// <summary>Set the connection</summary>
-        /// <param name="existingConnection"></param>
-        public void SetConnection(SQLite existingConnection)
+        /// <param name="connection">The SQLite connection</param>
+        public void SetConnection(SQLite connection)
         {
-            connection = existingConnection;
-            Open();
+            Open(connection);
         }
 
         /// <summary>Open the table and get a list of columns and simulation ids.</summary>
-        private void Open()
+        /// <param name="connection">The SQLite connection to open</param>
+        private void Open(SQLite connection)
         {
             Columns.Clear();
             DataTable data = connection.ExecuteQuery("pragma table_info('" + Name + "')");
@@ -92,54 +64,76 @@ namespace Models.Storage
             {
                 string columnName = row["Name"].ToString();
                 string units = null;
-                units = LookupUnitsForColumn(columnName);
+                units = LookupUnitsForColumn(connection, columnName);
                 Columns.Add(new Column(columnName, units));
-                columnNames.Add(columnName);
             }
         }
 
         /// <summary>Write the specified number of rows.</summary>
-        /// <param name="sqliteConnection">The SQLite connection to write to</param>
+        /// <param name="connection">The SQLite connection to write to</param>
         /// <param name="simulationIDs">A dictionary of simulation IDs</param>
-        /// <returns>The number of rows written to the .db</returns>
-        public int WriteRows(SQLite sqliteConnection, Dictionary<string, int> simulationIDs)
+        public void WriteRows(SQLite connection, Dictionary<string, int> simulationIDs)
         { 
-            connection = sqliteConnection;
-            sqliteConnection.ExecuteNonQuery("BEGIN");
-            int numRows = RowsToWrite.Count;
-            for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
+            connection.ExecuteNonQuery("BEGIN");
+
+            IntPtr preparedInsertQuery = IntPtr.Zero;
+            try
             {
-                RowsToWrite[rowIndex].Flatten();
+                // Flatten all rows.
+                RowsToWrite.ForEach(r => r.Flatten());
 
-                // If this is the first time we've written to the table, then create table.
-                if (!DoesTableExist(Name))
-                    CreateTable(sqliteConnection);
+                // Update our Columns variable from the columns in all rows.
+                UpdateColumnsFromRowsToWrite();
 
-                EnsureColumnsExistInDB(sqliteConnection, RowsToWrite[rowIndex]);
+                // If the table exists, make sure it has the required columns, otherwise create the table
+                if (TableExists(connection, Name))
+                    AlterTable(connection);
+                else
+                    CreateTable(connection);
 
-                Array.Resize(ref values, preparedInsertQueryColumnNames.Count);
-                Array.Clear(values, 0, values.Length);
-                RowsToWrite[rowIndex].GetValues(preparedInsertQueryColumnNames, ref values, simulationIDs);
-                connection.BindParametersAndRunQuery(preparedInsertQuery, values);
+                // Create an insert query
+                preparedInsertQuery = CreateInsertQuery(connection);
+
+                object[] values = new object[Columns.Count];
+                List<string> columnNames = Columns.Select(col => col.Name).ToList();
+                for (int rowIndex = 0; rowIndex < RowsToWrite.Count; rowIndex++)
+                {
+                    Array.Clear(values, 0, values.Length);
+                    RowsToWrite[rowIndex].GetValues(columnNames, ref values, simulationIDs);
+                    connection.BindParametersAndRunQuery(preparedInsertQuery, values);
+                }
             }
-            sqliteConnection.ExecuteNonQuery("END");
+            finally
+            {
+                connection.ExecuteNonQuery("END");
+                if (preparedInsertQuery != IntPtr.Zero)
+                    connection.Finalize(preparedInsertQuery);
+            }
+        }
 
-            return numRows;
+        /// <summary>Merge columns</summary>
+        public void MergeColumns(Table table)
+        {
+            foreach (Column column in table.Columns)
+            {
+                if (Columns.Find(c => c.Name == column.Name) == null)
+                    Columns.Add(column);
+            }
         }
 
         /// <summary>Does the specified table exist?</summary>
+        /// <param name="connection">SQLite connection</param>
         /// <param name="tableName">The table name to look for</param>
-        private bool DoesTableExist(string tableName)
+        private bool TableExists(SQLite connection, string tableName)
         {
             List<string> tableNames = DataTableUtilities.GetColumnAsStrings(connection.ExecuteQuery("SELECT * FROM sqlite_master"), "Name").ToList();
             return tableNames.Contains(tableName);
         }
 
-        /// <summary>
-        /// Lookup and return units for the specified column.
-        /// </summary>
+        /// <summary>Lookup and return units for the specified column.</summary>
+        /// <param name="connection">SQLite connection</param>
         /// <param name="columnName">The column name to return units for</param>
-        private string LookupUnitsForColumn(string columnName)
+        private string LookupUnitsForColumn(SQLite connection, string columnName)
         {
             StringBuilder sql = new StringBuilder();
             sql.Append("SELECT Units FROM _Units WHERE TableName='");
@@ -154,83 +148,81 @@ namespace Models.Storage
                 return null;
         }
 
-        /// <summary>Ensure columns exist in .db file</summary>
-        /// <param name="sqliteConnection">The SQLite connection to write to</param>
-        private void CreateTable(SQLite sqliteConnection)
+        /// <summary>Alter an existing table ensuring all columns exist.</summary>
+        private void UpdateColumnsFromRowsToWrite()
         {
-            connection = sqliteConnection;
-            Columns.Clear();
-            StringBuilder sql = new StringBuilder();
-            sql.Append("CREATE TABLE ");
-            sql.Append(Name);
-            sql.Append(" (");
-
-            bool needToAppendComma = false;
-
-            bool hasSimulationName = RowsToWrite.Count > 0 && RowsToWrite[0].SimulationName != null;
-            if (hasSimulationName)
-            {
-                sql.Append("SimulationID INTEGER");
-                Columns.Add(new Column("SimulationID", null));
-                needToAppendComma = true;
-            }
-
-            Row row = RowsToWrite[0];
-            for (int i = 0; i < row.ColumnNames.Count(); i++)
-            {
-                string columnName = row.ColumnNames.ElementAt(i);
-                string columnUnit = row.ColumnUnits.ElementAt(i);
-                object value = row.Values.ElementAt(i);
-                if (value != null)
-                {
-                    string type = GetSQLiteDataType(value.GetType());
-
-                    if (needToAppendComma)
-                        sql.Append(',');
-                    sql.Append("[");
-                    sql.Append(columnName);
-                    sql.Append("] ");
-                    sql.Append(type);
-                    needToAppendComma = true;
-                    Columns.Add(new Column(columnName, columnUnit));
-                    columnNames.Add(columnName);
-                }
-            }
-            sql.Append(')');
-            connection.ExecuteNonQuery(sql.ToString());
+            foreach (Row row in RowsToWrite)
+                for (int colIndex = 0; colIndex < row.ColumnNames.Count(); colIndex++)
+                    if (Columns.Find(col => col.Name == row.ColumnNames.ElementAt(colIndex)) == null)
+                        Columns.Add(new Column(row.ColumnNames.ElementAt(colIndex), row.ColumnUnits.ElementAt(colIndex)));
         }
 
         /// <summary>Ensure columns exist in .db file</summary>
         /// <param name="connection">The SQLite connection to write to</param>
-        /// <param name="row">The row</param>
-        private void EnsureColumnsExistInDB(SQLite connection, Row row)
+        private void CreateTable(SQLite connection)
         {
-            bool columnsWereAdded = false;
-            for (int i = 0; i < row.ColumnNames.Count(); i++)
+            StringBuilder sql = new StringBuilder();
+
+            bool hasSimulationName = RowsToWrite.Count > 0 && RowsToWrite[0].SimulationName != null;
+            if (hasSimulationName)
+                Columns.Insert(0, new Column("SimulationID", null));
+
+            foreach (Column col in Columns)
             {
-                string columnName = row.ColumnNames.ElementAt(i);
-                if (!columnNames.Contains(columnName))
+                if (sql.Length > 0)
+                    sql.Append(',');
+
+                sql.Append("[");
+                sql.Append(col.Name);
+                sql.Append("] ");
+                sql.Append(GetSQLiteDataType(col.Name));
+            }
+            sql.Insert(0, "CREATE TABLE " + Name + " (");
+            sql.Append(')');
+            connection.ExecuteNonQuery(sql.ToString());
+        }
+
+        /// <summary>Alter an existing table ensuring all columns exist.</summary>
+        /// <param name="connection">The SQLite connection to write to</param>
+        private void AlterTable(SQLite connection)
+        {
+            DataTable columnData = connection.ExecuteQuery("pragma table_info('" + Name + "')");
+            List<string> existingColumns = DataTableUtilities.GetColumnAsStrings(columnData, "Name").ToList();
+
+            bool hasSimulationName = RowsToWrite.Count > 0 && RowsToWrite[0].SimulationName != null;
+            if (hasSimulationName && Columns.Find(col => col.Name == "SimulationID") == null)
+                Columns.Insert(0, new Column("SimulationID", null));
+
+            foreach (Column col in Columns)
+            {
+                if (!existingColumns.Contains(col.Name))
                 {
-                    string columnUnit = row.ColumnUnits.ElementAt(i);
-                    object value = row.Values.ElementAt(i);
-                    if (value != null)
-                    {
-                        string sql = "ALTER TABLE " + Name + " ADD COLUMN [" + columnName + "] " + GetSQLiteDataType(value.GetType());
-                        connection.ExecuteNonQuery(sql);
-                        Columns.Add(new Column(columnName, columnUnit));
-                        columnNames.Add(columnName);
-                        columnsWereAdded = true;
-                    }
+                    string sql = "ALTER TABLE " + Name + " ADD COLUMN [" + col.Name + "] " + GetSQLiteDataType(col.Name);
+                    connection.ExecuteNonQuery(sql);
                 }
             }
-
-            if (columnsWereAdded || preparedInsertQuery == IntPtr.Zero)
-                CreateInsertQuery(connection);
         }
 
         /// <summary>Convert .NET type into an SQLite type</summary>
-        private string GetSQLiteDataType(Type type)
+        private string GetSQLiteDataType(string columnName)
         {
+            // Find the first non null value if possible.
+            object value = null;
+            foreach (Row row in RowsToWrite)
+            {
+                int i = row.ColumnNames.ToList().IndexOf(columnName);
+                if (i != -1)
+                {
+                    value = row.Values.ElementAt(i);
+                    if (value != null) break;
+                }
+            }
+
+            // Convert the value we found above into an SQLite data type string and return it.
+            Type type = null;
+            if (value != null)
+                type = value.GetType();
+
             if (type == null)
                 return "integer";
             else if (type.ToString() == "System.DateTime")
@@ -247,12 +239,8 @@ namespace Models.Storage
 
         /// <summary>Create a prepared insert query</summary>
         /// <param name="connection">The SQLite connection to write to</param>
-        private void CreateInsertQuery(SQLite connection)
+        private IntPtr CreateInsertQuery(SQLite connection)
         {
-            if (preparedInsertQuery != IntPtr.Zero)
-                connection.Finalize(preparedInsertQuery);
-            preparedInsertQuery = IntPtr.Zero;
-
             StringBuilder sql = new StringBuilder();
             sql.Append("INSERT INTO ");
             sql.Append(Name);
@@ -275,8 +263,7 @@ namespace Models.Storage
                 sql.Append('?');
             }
             sql.Append(')');
-            preparedInsertQuery = connection.Prepare(sql.ToString());
-            preparedInsertQueryColumnNames = Columns.Select(c => c.Name).ToList();
+            return connection.Prepare(sql.ToString());
         }
 
     }

@@ -3,11 +3,17 @@ using Models.Core;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Core.Runners;
+using System;
 
 namespace APSIMRunner
 {
     class StorageViaSockets : Model, IStorageWriter
     {
+        public void CompletedWritingSimulationData(string simulationName)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>Write to permanent storage.</summary>
         /// <param name="simulationName">Name of simulation</param>
         /// <param name="tableName">Name of table</param>

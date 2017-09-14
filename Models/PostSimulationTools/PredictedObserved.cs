@@ -124,7 +124,7 @@ namespace Models.PostSimulationTools
                 if (predictedObservedData != null)
                 {
                     predictedObservedData.TableName = this.Name;
-                    dataStore.WriteTable(predictedObservedData);
+                    dataStore.WriteTableRaw(predictedObservedData);
                 }
                 else
                 {

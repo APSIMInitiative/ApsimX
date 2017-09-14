@@ -49,7 +49,7 @@ namespace Models.Storage
         /// <param name="simulationIDs">A dictionary of simulation IDs</param>
         public void GetValues(List<string> returnColumnNames, ref object[] returnValues, Dictionary<string, int> simulationIDs)
         {
-            Flatten();
+         //   Flatten();
             int id;
             if (SimulationName != null && simulationIDs.TryGetValue(SimulationName, out id))
                 returnValues[0] = simulationIDs[SimulationName];

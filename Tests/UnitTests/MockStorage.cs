@@ -113,5 +113,15 @@ namespace UnitTests
         {
             throw new NotImplementedException();
         }
+
+        public void CompletedWritingSimulationData(string simulationName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteTableRaw(DataTable data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

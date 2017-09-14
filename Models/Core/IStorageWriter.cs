@@ -15,5 +15,9 @@ namespace Models.Core
         /// <param name="columnUnits">Column units</param>
         /// <param name="valuesToWrite">Values of row to write</param>
         void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite);
+
+        /// <summary>Completed writing data for simulation</summary>
+        /// <param name="simulationName"></param>
+        void CompletedWritingSimulationData(string simulationName);
     }
 }

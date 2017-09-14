@@ -102,6 +102,7 @@
                 object[] args = new object[] { null, new EventArgs() };
                 events.Publish("Commencing", args);
                 events.Publish("DoCommence", args);
+                events.Publish("Completed", args);
             }
             catch (Exception err)
             {

@@ -86,7 +86,7 @@ namespace Models.PostSimulationTools
 
                 // Write the stats data to the DataStore
                 probabilityData.TableName = this.Name;
-                dataStore.WriteTable(probabilityData);
+                dataStore.WriteTableRaw(probabilityData);
             }
         }
     }

@@ -154,6 +154,16 @@ namespace Models.Report
                     this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
             }
         }
- 
+
+        /// <summary>
+        /// Simulation has completed - write the report table.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            storage.CompletedWritingSimulationData(simulation.Name);
+        }
     }
 }

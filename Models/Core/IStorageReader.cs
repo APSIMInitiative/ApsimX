@@ -45,6 +45,12 @@ namespace Models.Core
         /// <param name="data">The data to write</param>
         void WriteTable(DataTable data);
 
+        /// <summary>
+        /// Create a table in the database based on the specified data. 
+        /// </summary>
+        /// <param name="data">The data to write</param>
+        void WriteTableRaw(DataTable data);
+
         /// <summary>Delete the specified table.</summary>
         /// <param name="tableName">Name of the table.</param>
         void DeleteTable(string tableName);

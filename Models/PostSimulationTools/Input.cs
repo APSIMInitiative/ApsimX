@@ -67,7 +67,7 @@ namespace Models.PostSimulationTools
                 dataStore.DeleteTable(Name);
                 DataTable data = GetTable();
                 data.TableName = this.Name;
-                dataStore.WriteTable(data);
+                dataStore.WriteTableRaw(data);
             }
         }
 
