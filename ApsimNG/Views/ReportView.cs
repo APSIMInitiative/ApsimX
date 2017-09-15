@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
-    using Glade;
     using Gtk;
 
     interface IReportView
@@ -22,13 +21,9 @@ namespace UserInterface.Views
 
     public class ReportView : ViewBase, IReportView
     {
-        [Widget]
         private Notebook notebook1 = null;
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private VBox vbox2 = null;
-        [Widget]
         private Alignment alignment1 = null;
 
         private EditorView VariableEditor;
@@ -38,8 +33,11 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public ReportView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.ReportView.glade", "notebook1");
-            gxml.Autoconnect(this);
+            Builder builder = new Builder("ApsimNG.Resources.Glade.ReportView.glade");
+            notebook1 = (Notebook)builder.GetObject("notebook1");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            vbox2 = (VBox)builder.GetObject("vbox2");
+            alignment1 = (Alignment)builder.GetObject("alignment1");
             _mainWidget = notebook1;
 
             VariableEditor = new EditorView(this);

@@ -7,19 +7,13 @@ namespace UserInterface.Views
 {
     using Interfaces;
     using Gtk;
-    using Glade;
-    /// using System.Windows.Forms;
 
     /// <summary>This view allows a single series to be edited.</summary>
     public class SeriesView : ViewBase, ISeriesView
     {
-        [Widget]
         private Table table1 = null;
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private Label label4 = null;
-        [Widget]
         private Label label5 = null;
 
         private DropDownView dropDownView1;
@@ -45,8 +39,11 @@ namespace UserInterface.Views
         /// <summary>Initializes a new instance of the <see cref="SeriesView" /> class</summary>
         public SeriesView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.SeriesView.glade", "vbox1");
-            gxml.Autoconnect(this);
+            Builder builder = new Builder("ApsimNG.Resources.Glade.SeriesView.glade");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            table1 = (Table)builder.GetObject("table1");
+            label4 = (Label)builder.GetObject("label4");
+            label5 = (Label)builder.GetObject("label5");
             _mainWidget = vbox1;
 
             graphView1 = new GraphView(this);

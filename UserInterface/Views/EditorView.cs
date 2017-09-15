@@ -2,18 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Data;
     using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
     using System.Windows.Forms;
     using System.Xml;
     using EventArguments;
     using ICSharpCode.TextEditor.Document;
-    using ICSharpCode.TextEditor.Gui.InsightWindow;
     using TextEditor;
 
 

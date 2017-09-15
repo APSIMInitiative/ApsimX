@@ -16,7 +16,6 @@ namespace UserInterface.Views
     using Classes;
     //using DataGridViewAutoFilter;
     using EventArguments;
-    using Glade;
     using Gtk;
     using Interfaces;
     using Models.Core;
@@ -86,19 +85,10 @@ namespace UserInterface.Views
         /// </summary>
         private bool selfCursorMove = false;
 
-        [Widget]
         private ScrolledWindow scrolledwindow1 = null;
-        // [Widget]
-        // private ScrolledWindow scrolledwindow2 = null;
-
-        [Widget]
         public TreeView gridview = null;
-        [Widget]
         public TreeView fixedcolview = null;
-
-        [Widget]
         private HBox hbox1 = null;
-        [Widget]
         private Gtk.Image image1 = null;
 
         private Gdk.Pixbuf imagePixbuf;
@@ -116,8 +106,12 @@ namespace UserInterface.Views
         /// </summary>
         public GridView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.GridView.glade", "hbox1");
-            gxml.Autoconnect(this);
+            Builder builder = new Builder("ApsimNG.Resources.Glade.GridView.glade");
+            hbox1 = (HBox)builder.GetObject("hbox1");
+            scrolledwindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
+            gridview = (TreeView)builder.GetObject("gridview");
+            fixedcolview = (TreeView)builder.GetObject("fixedcolview");
+            image1 = (Gtk.Image)builder.GetObject("image1");
             _mainWidget = hbox1;
             gridview.Model = gridmodel;
             gridview.Selection.Mode = SelectionMode.Multiple;
