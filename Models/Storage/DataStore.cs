@@ -273,56 +273,59 @@
         /// <param name="table">The table.</param>
         public void WriteTableRaw(DataTable table)
         {
-            // Open the .db for writing.
-            Open(readOnly: false);
-
-            if (table.Columns.Contains("SimulationName"))
-                AddSimulationIDColumnToTable(table);
-
-            // Get a list of all names and datatypes for each field in this table.
-            List<string> names = new List<string>();
-            List<Type> types = new List<Type>();
-
-            // Go through all columns for this table and add to 'names' and 'types'
-            foreach (DataColumn column in table.Columns)
+            if (table.Columns.Count > 0)
             {
-                names.Add(column.ColumnName);
-                types.Add(column.DataType);
-            }
+                // Open the .db for writing.
+                Open(readOnly: false);
 
-            // Create the table.
-            CreateTable(table.TableName, names, types);
+                if (table.Columns.Contains("SimulationName"))
+                    AddSimulationIDColumnToTable(table);
 
-            // Prepare the insert query sql
-            IntPtr query = PrepareInsertIntoTable(connection, table.TableName, names);
+                // Get a list of all names and datatypes for each field in this table.
+                List<string> names = new List<string>();
+                List<Type> types = new List<Type>();
 
-            // Tell SQLite that we're beginning a transaction.
-            connection.ExecuteNonQuery("BEGIN");
-
-            try
-            {
-                // Write each row to the .db
-                if (table != null)
+                // Go through all columns for this table and add to 'names' and 'types'
+                foreach (DataColumn column in table.Columns)
                 {
-                    object[] values = new object[names.Count];
-                    foreach (DataRow row in table.Rows)
-                    {
-                        for (int i = 0; i < names.Count; i++)
-                            if (table.Columns.Contains(names[i]))
-                                values[i] = row[names[i]];
+                    names.Add(column.ColumnName);
+                    types.Add(column.DataType);
+                }
 
-                        // Write the row to the .db
-                        connection.BindParametersAndRunQuery(query, values);
+                // Create the table.
+                CreateTable(table.TableName, names, types);
+
+                // Prepare the insert query sql
+                IntPtr query = PrepareInsertIntoTable(connection, table.TableName, names);
+
+                // Tell SQLite that we're beginning a transaction.
+                connection.ExecuteNonQuery("BEGIN");
+
+                try
+                {
+                    // Write each row to the .db
+                    if (table != null)
+                    {
+                        object[] values = new object[names.Count];
+                        foreach (DataRow row in table.Rows)
+                        {
+                            for (int i = 0; i < names.Count; i++)
+                                if (table.Columns.Contains(names[i]))
+                                    values[i] = row[names[i]];
+
+                            // Write the row to the .db
+                            connection.BindParametersAndRunQuery(query, values);
+                        }
                     }
                 }
-            }
-            finally
-            {
-                // tell SQLite we're ending our transaction.
-                connection.ExecuteNonQuery("END");
+                finally
+                {
+                    // tell SQLite we're ending our transaction.
+                    connection.ExecuteNonQuery("END");
 
-                // finalise our query.
-                connection.Finalize(query);
+                    // finalise our query.
+                    connection.Finalize(query);
+                }
             }
         }
 
