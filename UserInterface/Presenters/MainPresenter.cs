@@ -134,7 +134,7 @@ namespace UserInterface.Presenters
         /// Add a status message. A message of null will clear the status message.
         /// </summary>
         /// <param name="message"></param>
-        public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
+        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel)
         {
             view.ShowMessage(message, errorLevel);
         }
@@ -266,7 +266,7 @@ namespace UserInterface.Presenters
 
                 catch (Exception err)
                 {
-                    this.view.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                    this.view.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
                 }
 
                 view.ShowWaitCursor(false);
@@ -434,7 +434,7 @@ namespace UserInterface.Presenters
                 if (err.InnerException != null)
                     message += "\r\n" + err.InnerException.Message;
 
-                view.ShowMessage(message, DataStore.ErrorLevel.Error);
+                view.ShowMessage(message, Simulation.ErrorLevel.Error);
             }
         }
 
@@ -515,7 +515,7 @@ namespace UserInterface.Presenters
             // Get the version of the current assembly.
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             if (version.Revision == 0)
-                view.ShowMessage("You are on a custom build. You cannot upgrade.", DataStore.ErrorLevel.Error);
+                view.ShowMessage("You are on a custom build. You cannot upgrade.", Simulation.ErrorLevel.Error);
             else
             {
                 if (AllowClose())

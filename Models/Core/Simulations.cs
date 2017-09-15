@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using Models.Factorial;
 using APSIM.Shared.Utilities;
 using System.Linq;
+using Models.Core.Interfaces;
+using Models.Core.Runners;
 
 namespace Models.Core
 {
@@ -18,10 +20,12 @@ namespace Models.Core
     /// </summary>
     [Serializable]
     [ScopedModel]
-    public class Simulations : Model
+    public class Simulations : Model, ISimulationEngine
     {
         /// <summary>The _ file name</summary>
         private string _FileName;
+
+        private Links links;
 
         /// <summary>Gets or sets the width of the explorer.</summary>
         /// <value>The width of the explorer.</value>
@@ -53,6 +57,61 @@ namespace Models.Core
         [XmlIgnore]
         public List<Exception> LoadErrors { get; private set; }
 
+        /// <summary>Returns an instance of a links service</summary>
+        [XmlIgnore]
+        public Links Links
+        {
+            get
+            {
+                if (links == null)
+                    CreateLinks();
+                return links;
+            }
+        }
+
+        /// <summary>Returns an instance of an events service</summary>
+        /// <param name="model">The model the service is for</param>
+        public IEvent GetEventService(IModel model)
+        {
+            return new Events(model);
+        }
+
+        /// <summary>Returns an instance of an locator service</summary>
+        /// <param name="model">The model the service is for</param>
+        public ILocator GetLocatorService(IModel model)
+        {
+            return new Locator(model);
+        }
+
+        /// <summary>Constructor</summary>
+        private Simulations()
+        {
+            Version = APSIMFileConverter.LastestVersion;
+        }
+
+        /// <summary>
+        /// Create a simulations model
+        /// </summary>
+        /// <param name="children">The child models</param>
+        public static Simulations Create(IEnumerable<Model> children)
+        {
+            Simulations newSimulations = new Core.Simulations();
+            newSimulations.Children.AddRange(children);
+
+            // Call the OnDeserialised method in each model.
+            Events events = new Core.Events(newSimulations);
+            object[] args = new object[] { true };
+            events.Publish("Deserialised", args);
+
+            // Parent all models.
+            newSimulations.Parent = null;
+            Apsim.ParentAllChildren(newSimulations);
+
+            // Call OnLoaded in all models.
+            newSimulations.LoadErrors = events.Publish("Loaded", null);
+            return newSimulations;
+        }
+
         /// <summary>Create a simulations object by reading the specified filename</summary>
         /// <param name="FileName">Name of the file.</param>
         /// <returns></returns>
@@ -72,33 +131,16 @@ namespace Models.Core
                 simulations.SetFileNameInAllSimulations();
 
                 // Call the OnDeserialised method in each model.
-                Events events = new Core.Events();
-                events.AddModelEvents(simulations);
+                Events events = new Core.Events(simulations);
                 object[] args = new object[] { true };
-                events.CallEventHandler(simulations, "Deserialised", args);
+                events.Publish("Deserialised", args);
 
                 // Parent all models.
                 simulations.Parent = null;
                 Apsim.ParentAllChildren(simulations);
 
                 // Call OnLoaded in all models.
-                simulations.LoadErrors = new List<Exception>();
-                foreach (Model child in Apsim.ChildrenRecursively(simulations))
-                {
-                    try
-                    {
-                        events.CallEventHandler(child, "Loaded", null);
-                    }
-                    catch (ApsimXException err)
-                    {
-                        simulations.LoadErrors.Add(err);
-                    }
-                    catch (Exception err)
-                    {
-                        err.Source = child.Name;
-                        simulations.LoadErrors.Add(err);
-                    }
-                }
+                simulations.LoadErrors = events.Publish("Loaded", null);
             }
 
             return simulations;
@@ -111,7 +153,7 @@ namespace Models.Core
         public static Simulations Read(XmlNode node)
         {
             // Run the converter.
-            APSIMFileConverter.ConvertToLatestVersion(node);
+            APSIMFileConverter.ConvertToLatestVersion(node, null);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;
@@ -123,58 +165,55 @@ namespace Models.Core
 
                 // Call the OnSerialised method in each model.
                 object[] args = new object[] { true };
-                Events events = new Events();
-                events.AddModelEvents(simulations);
-                events.CallEventHandler(simulations, "Deserialised", args);
+                Events events = new Events(simulations);
+                events.Publish("Deserialised", args);
 
                 // Parent all models.
                 simulations.Parent = null;
                 Apsim.ParentAllChildren(simulations);
 
-                CallOnLoaded(simulations);
+                events.Publish("Loaded", null);
             }
             else
                 throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
             return simulations;
         }
 
-        /// <summary>Make model substitutions if necessary.</summary>
-        /// <param name="simulations">The simulations to make substitutions in.</param>
-        /// <param name="parentSimulations">Parent simulations object</param>
-        public static void MakeSubstitutions(Simulations parentSimulations, List<Simulation> simulations)
+        /// <summary>Run a simulation</summary>
+        /// <param name="simulation">The simulation to run</param>
+        /// <param name="doClone">Clone the simulation before running?</param>
+        public void Run(Simulation simulation, bool doClone)
         {
-            IModel replacements = Apsim.Child(parentSimulations, "Replacements");
+            Apsim.ParentAllChildren(simulation);
+            RunSimulation simulationRunner = new RunSimulation(simulation, this, doClone);
+            simulationRunner.Run(null, null);
+        }
+
+        /// <summary>Make model substitutions if necessary.</summary>
+        /// <param name="model">The model to make substitutions in.</param>
+        public void MakeSubstitutions(IModel model)
+        {
+            IModel replacements = Apsim.Child(this, "Replacements");
             if (replacements != null)
             {
                 foreach (IModel replacement in replacements.Children)
                 {
-                    foreach (Simulation simulation in simulations)
+                    foreach (IModel match in Apsim.FindAll(model))
                     {
-                        foreach (IModel match in Apsim.FindAll(simulation))
+                        if (!(match is Simulation) && match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            if (!(match is Simulation) && match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                // Do replacement.
-                                IModel newModel = Apsim.Clone(replacement);
-                                int index = match.Parent.Children.IndexOf(match as Model);
-                                match.Parent.Children.Insert(index, newModel as Model);
-                                newModel.Parent = match.Parent;
-                                match.Parent.Children.Remove(match as Model);
-                                CallOnLoaded(newModel);
-                            }
+                            // Do replacement.
+                            IModel newModel = Apsim.Clone(replacement);
+                            int index = match.Parent.Children.IndexOf(match as Model);
+                            match.Parent.Children.Insert(index, newModel as Model);
+                            newModel.Parent = match.Parent;
+                            match.Parent.Children.Remove(match as Model);
+                            Events events = new Events(newModel);
+                            events.Publish("Loaded", null);
                         }
                     }
                 }
             }
-        }
-
-        /// <summary>Call Loaded event in specified model and all children</summary>
-        /// <param name="model">The model.</param>
-        public static void CallOnLoaded(IModel model)
-        {
-            Events events = new Events();
-            events.AddModelEvents(model);
-            events.CallEventHandler(model, "Loaded", null);
         }
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
@@ -203,9 +242,8 @@ namespace Models.Core
         {
             object[] args = new object[] { true };
 
-            Events events = new Events();
-            events.AddModelEvents(this);
-            events.CallEventHandler(this, "Serialising", args);
+            Events events = new Events(this);
+            events.Publish("Serialising", args);
 
             try
             {
@@ -213,14 +251,8 @@ namespace Models.Core
             }
             finally
             {
-                events.CallEventHandler(this, "Serialised", args);
+                events.Publish("Serialised", args);
             }
-        }
-
-        /// <summary>Constructor, private to stop developers using it. Use Simulations.Read instead.</summary>
-        public Simulations()
-        {
-            Version = APSIMFileConverter.LastestVersion;
         }
 
         /// <summary>Find all simulation names that are going to be run.</summary>
@@ -268,6 +300,16 @@ namespace Models.Core
             foreach (Model simulation in Apsim.ChildrenRecursively(this))
                 if (simulation is Simulation)
                     (simulation as Simulation).FileName = FileName;
+        }
+
+        /// <summary>Create a links object</summary>
+        private void CreateLinks()
+        {
+            List<object> services = new List<object>();
+            IStorageReader storage = Apsim.Find(this, typeof(IStorageReader)) as IStorageReader;
+            if (storage != null)
+                services.Add(storage);
+            links = new Links(services);
         }
 
         /// <summary>
@@ -319,7 +361,7 @@ namespace Models.Core
                     Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
 
                     // Make any substitutions.
-                    Simulations.MakeSubstitutions(this, new List<Simulation> { clonedSimulation });
+                    MakeSubstitutions(clonedSimulation);
 
                     // Now use the path to get the model we want to document.
                     modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
@@ -328,8 +370,7 @@ namespace Models.Core
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);
 
                     // resolve all links in cloned simulation.
-                    Links links = new Core.Links();
-                    links.Resolve(clonedSimulation);
+                    Links.Resolve(clonedSimulation);
 
                     modelToDocument.IncludeInDocumentation = true;
                     foreach (IModel child in Apsim.ChildrenRecursively(modelToDocument))
@@ -339,7 +380,7 @@ namespace Models.Core
                     modelToDocument.Document(tags, headingLevel, 0);
 
                     // Unresolve links.
-                    links.Unresolve(clonedSimulation);
+                    Links.Unresolve(clonedSimulation);
                 }
             }
         }

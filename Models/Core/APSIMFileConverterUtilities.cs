@@ -243,5 +243,22 @@ namespace Models.Core
                     XmlUtilities.SetValue(pmfNode, "Name", newName);
             }
         }
+
+        /// <summary>Get a list of model names under the specified node</summary>
+        /// <param name="node">Root node</param>
+        internal static List<string> GetAllModelNames(XmlNode node)
+        {
+            SortedSet<string> childNames = new SortedSet<string>();
+
+            foreach (XmlNode child in XmlUtilities.ChildNodesRecursively(node, typeFilter:null))
+            {
+                string name = XmlUtilities.Value(child, "Name");
+                if (name != string.Empty)
+                    childNames.Add(name);
+            }
+            return childNames.ToList();
+        }
     }
 }
+
+

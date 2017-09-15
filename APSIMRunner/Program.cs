@@ -3,20 +3,16 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 //-----------------------------------------------------------------------
-namespace APSIMJobRunner
+namespace APSIMRunner
 {
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.Interfaces;
     using Models.Core.Runners;
-    using Models.Report;
+    using Models.Storage;
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
     using System.Net.Sockets;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
     using System.Threading;
 
     class Program
@@ -28,6 +24,8 @@ namespace APSIMJobRunner
             { 
                 AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
 
+                
+
                 // Send a command to socket server to get the job to run.
                 object response = GetNextJob();
                 while (response != null)
@@ -36,15 +34,22 @@ namespace APSIMJobRunner
 
                     // Run the simulation.
                     string errorMessage = null;
-                    Simulation simulation = null;
+                    RunSimulation simulationRunner = null;
                     try
                     {
-                        simulation = job.job as Simulation;
-                        simulation.Run(null, null);
+                        simulationRunner = job.job as RunSimulation;
 
-                        SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
-                        SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
-                        DataStore.TablesToWrite.Clear();
+                        // Replace datastore with a socket writer
+                        simulationRunner.Services = new object[] { new StorageViaSockets() };
+
+                        // Run simulation
+                        simulationRunner.cloneSimulationBeforeRun = false;
+                        simulationRunner.Run(null, null);
+
+                        // TODO Dean: Need to migrate this to the new mechanism.
+                        //SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
+                        //SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
+                        //DataStore.TablesToWrite.Clear();
                     }
                     catch (Exception err)
                     {

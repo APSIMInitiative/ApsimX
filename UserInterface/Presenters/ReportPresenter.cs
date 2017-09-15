@@ -15,13 +15,14 @@ namespace UserInterface.Presenters
     using EventArguments;
     using Interfaces;
     using Views;
+    using Models.Storage;
 
     class ReportPresenter : IPresenter
     {
         private Report report;
         private IReportView view;
         private ExplorerPresenter explorerPresenter;
-        private DataStore dataStore;
+        private IStorageReader dataStore;
         private DataStorePresenter dataStorePresenter;
 
         /// <summary>Attach the model (report) and the view (IReportView)</summary>
@@ -41,7 +42,7 @@ namespace UserInterface.Presenters
 
             Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
             if (simulations != null)
-                dataStore = Apsim.Child(simulations, typeof(DataStore)) as DataStore;
+                dataStore = Apsim.Child(simulations, typeof(IStorageReader)) as IStorageReader;
             this.view.VariableList.SetSyntaxHighlighter("Report");
 
             dataStorePresenter = new DataStorePresenter();

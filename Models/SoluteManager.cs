@@ -39,6 +39,8 @@
         /// <param name="name">Name of solute</param>
         public double[] GetSolute(string name)
         {
+            if (solutes == null)
+                FindSolutes();
             Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (foundSolute == null)
                 throw new Exception("Cannot find solute: " + name);

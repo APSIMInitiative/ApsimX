@@ -8,6 +8,7 @@ using Models.Core;
 using Models.PostSimulationTools;
 using APSIM.Shared.Utilities;
 using System.ComponentModel;
+using Models.Storage;
 
 namespace Models
 {
@@ -53,10 +54,10 @@ namespace Models
             PredictedObserved PO = Parent as PredictedObserved;
             if (PO == null)
                 return;
-            DataStore DS = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            IStorageReader DS = PO.Parent as IStorageReader;
             MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
-            DataTable POtable = DS.GetData("*", PO.Name);
+            DataTable POtable = DS.GetData(PO.Name);
             List<string> columnNames;
             string sigIdent = "X";
 
@@ -82,22 +83,28 @@ namespace Models
 
             for (int c = 0; c < columnNames.Count; c++) //on each P/O column pair
             {
-                x.Clear();
-                y.Clear();
-                foreach (DataRow row in POtable.Rows)
+                string observedFieldName = "Observed." + columnNames[c];
+                string predictedFieldName = "Predicted." + columnNames[c];
+                if (POtable.Columns.Contains(observedFieldName) &&
+                    POtable.Columns.Contains(predictedFieldName))
                 {
-                    xstr = row["Observed." + columnNames[c]].ToString();
-                    ystr = row["Predicted." + columnNames[c]].ToString();
-                    if (Double.TryParse(xstr, out xres) && Double.TryParse(ystr, out yres))
+                    x.Clear();
+                    y.Clear();
+                    foreach (DataRow row in POtable.Rows)
                     {
-                        x.Add(xres);
-                        y.Add(yres);
+                        xstr = row[observedFieldName].ToString();
+                        ystr = row[predictedFieldName].ToString();
+                        if (Double.TryParse(xstr, out xres) && Double.TryParse(ystr, out yres))
+                        {
+                            x.Add(xres);
+                            y.Add(yres);
+                        }
                     }
-                }
-                if (x.Count == 0 || y.Count == 0)
-                    continue;
+                    if (x.Count == 0 || y.Count == 0)
+                        continue;
 
-                stats[c] = MathUtilities.CalcRegressionStats(columnNames[c], y, x);
+                    stats[c] = MathUtilities.CalcRegressionStats(columnNames[c], y, x);
+                }
             }
 
             //remove any null stats which can occur from non-numeric columns such as dates
@@ -312,5 +319,6 @@ namespace Models
                 tags.Add(new AutoDocumentation.Table(dataForDoc, headingLevel));
             }
         }
+
     }
 }

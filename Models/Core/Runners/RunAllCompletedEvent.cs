@@ -23,12 +23,16 @@
         /// <param name="workerThread">The thread this job is running on.</param>
         public void Run(JobManager jobManager, BackgroundWorker workerThread)
         {
+            ILocator locator = simulations.GetLocatorService(simulations);
+            IStorageReader store = locator.Get(typeof(IStorageReader)) as IStorageReader;
+
             // Call the all completed event in all models
             object[] args = new object[] { this, new EventArgs() };
 
-            Events events = new Events();
-            events.AddModelEvents(simulations);
-            events.CallEventHandler(simulations, "AllCompleted", args);
+            foreach (IPostSimulationTool tool in Apsim.FindAll(simulations, typeof(IPostSimulationTool)))
+                tool.Run(store);
+
+            store.EndWriting();
         }
     }
 }

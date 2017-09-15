@@ -7,6 +7,8 @@ using Models.Factorial;
 using APSIM.Shared.Utilities;
 using System.ComponentModel;
 using System.IO;
+using System.Data;
+using Models.Core.Runners;
 
 namespace Models.Factorial
 {
@@ -19,6 +21,9 @@ namespace Models.Factorial
     [ValidParent(ParentType = typeof(Simulations))]
     public class Experiment : Model, JobManager.IRunnable
     {
+        [Link]
+        IStorageReader storage = null;
+
         /// <summary>Called to start the job.</summary>
         /// <param name="jobManager">The job manager running this job.</param>
         /// <param name="workerThread">The thread this job is running on.</param>
@@ -44,19 +49,18 @@ namespace Models.Factorial
                 Apsim.ParentAllChildren(newSimulation);
 
                 // Make substitutions.
-                Simulations.MakeSubstitutions(parentSimulations, new List<Simulation> { newSimulation });
+                parentSimulations.MakeSubstitutions(newSimulation);
 
                 // Call OnLoaded in all models.
-                Events events = new Events();
-                events.AddModelEvents(newSimulation);
-                events.CallEventHandler(newSimulation, "Loaded", null);
+                Events events = new Events(newSimulation);
+                events.Publish("Loaded", null);
 
                 foreach (FactorValue value in combination)
                     value.ApplyToSimulation(newSimulation);
 
                 PushFactorsToReportModels(newSimulation, combination);
                 StoreFactorsInDataStore(newSimulation, combination);
-                jobManager.AddChildJob(this, newSimulation);
+                jobManager.AddChildJob(this, new RunSimulation(newSimulation, parentSimulations, doClone: false));
             }
         }
 
@@ -114,9 +118,25 @@ namespace Models.Factorial
             IModel parentFolder = Apsim.Parent(this, typeof(Folder));
             if (parentFolder != null)
                 parentFolderName = parentFolder.Name;
-            DataStore store = new DataStore(this);
-            store.StoreFactors(Name, simulation.Name, parentFolderName, names, values);
-            store.Disconnect();
+
+            DataTable factorTable = new DataTable();
+            factorTable.TableName = "_Factors";
+            factorTable.Columns.Add("ExperimentName", typeof(string));
+            factorTable.Columns.Add("SimulationName", typeof(string));
+            factorTable.Columns.Add("FolderName", typeof(string));
+            factorTable.Columns.Add("FactorName", typeof(string));
+            factorTable.Columns.Add("FactorValue", typeof(string));
+            for (int i = 0; i < names.Count; i++)
+            {
+                DataRow row = factorTable.NewRow();
+                row[0] = Name;
+                row[1] = simulation.Name;
+                row[2] = parentFolderName;
+                row[3] = names[i];
+                row[4] = values[i];
+                factorTable.Rows.Add(row);
+            }
+            storage.WriteTable(factorTable);
         }
 
         /// <summary>
@@ -154,12 +174,11 @@ namespace Models.Factorial
                     Apsim.ParentAllChildren(newSimulation);
 
                     // Make substitutions.
-                    Simulations.MakeSubstitutions(parentSimulations, new List<Simulation> { newSimulation });
+                    parentSimulations.MakeSubstitutions(newSimulation);
 
                     // Connect events and links in our new  simulation.
-                    Events events = new Events();
-                    events.AddModelEvents(newSimulation);
-                    events.CallEventHandler(newSimulation, "Loaded", null);
+                    Events events = new Events(newSimulation);
+                    events.Publish("Loaded", null);
 
                     foreach (FactorValue value in combination)
                         value.ApplyToSimulation(newSimulation);

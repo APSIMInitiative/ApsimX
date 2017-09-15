@@ -445,6 +445,7 @@ namespace UserInterface.Commands
                     gfx.FillRectangle(brush, 0, 0, image.Width, image.Height);
                 }
                 GraphPresenter graphPresenter = new GraphPresenter();
+                ExplorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                 GraphView graphView = new GraphView();
                 graphView.BackColor = System.Drawing.Color.White;
                 graphView.FontSize = 22;
@@ -620,6 +621,7 @@ namespace UserInterface.Commands
                 else if (tag is Graph)
                 {
                     GraphPresenter graphPresenter = new GraphPresenter();
+                    ExplorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                     GraphView graphView = new GraphView();
                     graphView.BackColor = System.Drawing.Color.White;
                     graphView.FontSize = 12;

@@ -6,6 +6,7 @@ namespace UnitTests
     using Models.Soils;
     using System;
 
+    [Serializable]
     class MockIrrigation : IIrrigation
     {
         public double IrrigationApplied { get; set; }
