@@ -158,7 +158,7 @@ namespace Models
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoCommence")]
-        private void OnDoCommence(object sender, Simulation.CommenceArgs e)
+        private void OnDoCommence(object sender, EventArgs e)
         {
             if (DoInitialSummary != null)
                 DoInitialSummary.Invoke(this, args);
@@ -168,13 +168,6 @@ namespace Models
 
             while (Today <= EndDate)
             {
-                // If this is being run on a background worker thread then check for cancellation
-                if (e != null && e.workerThread != null && e.workerThread.CancellationPending)
-                {
-                    Summary.WriteMessage(this, "Simulation cancelled");
-                    return;
-                }
-
                 if (DoWeather != null)
                     DoWeather.Invoke(this, args);
 

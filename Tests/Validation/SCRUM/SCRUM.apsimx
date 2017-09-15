@@ -4,27 +4,11 @@
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
-      <Name>NZObserved</Name>
+      <Name>RainShelter</Name>
       <IncludeInDocumentation>false</IncludeInDocumentation>
-      <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Validation\Maize\Observations\MaizeObservations.xlsx</FileName>
       <SheetNames>
-        <string>observed</string>
-      </SheetNames>
-    </ExcelInput>
-    <ExcelInput>
-      <Name>RainShelterN</Name>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <FileName>%root%\Tests\Validation\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
-      <SheetNames>
-        <string>RainShelterNitrogen</string>
-      </SheetNames>
-    </ExcelInput>
-    <ExcelInput>
-      <Name>RainShelterSW</Name>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <FileName>%root%\Tests\Validation\Maize\Observations\SoilWater.xlsx</FileName>
-      <SheetNames>
-        <string>SoilWater</string>
+        <string>Observed</string>
       </SheetNames>
     </ExcelInput>
     <Input>
@@ -220,7 +204,7 @@
       </Tests>
       <IncludeInDocumentation>false</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
-      <ObservedTableName>SoilWater</ObservedTableName>
+      <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -10486,7 +10470,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>RainShelterNitrogen</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Maize.AboveGroundLive.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -10551,7 +10535,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>SoilWater</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>ProfileWater</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -10588,7 +10572,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10610,7 +10594,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10618,7 +10602,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>SoilWater</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -10653,7 +10637,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10675,7 +10659,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10683,7 +10667,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>SoilWater</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
@@ -10718,7 +10702,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10740,7 +10724,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10748,7 +10732,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>SoilWater</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
@@ -10783,7 +10767,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10805,7 +10789,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10813,7 +10797,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>SoilWater</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
@@ -10848,7 +10832,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10870,7 +10854,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10878,7 +10862,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>SoilWater</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
@@ -10913,7 +10897,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10935,7 +10919,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10943,7 +10927,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>SoilWater</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
@@ -10978,7 +10962,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -11000,7 +10984,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -11008,7 +10992,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>SoilWater</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
@@ -11043,7 +11027,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -11065,7 +11049,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -11073,7 +11057,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>SoilWater</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
@@ -11143,9 +11127,9 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>observed</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+            <YFieldName>Maize.Grain.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11210,7 +11194,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>StoverWt</YFieldName>
+            <YFieldName>Maize.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11273,9 +11257,9 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>RainShelterNitrogen</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.N</YFieldName>
+            <YFieldName>Maize.Grain.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11338,9 +11322,9 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>RainShelterNitrogen</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>StoverN</YFieldName>
+            <YFieldName>Maize.Stem.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11475,7 +11459,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Leaf.CoverTotal</YFieldName>
+            <YFieldName>Maize.Leaf.CoverTotal</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12698,17 +12682,17 @@ namespace Models
             <Name>Sowing_Yield</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <Crop2>Dried_Peas</Crop2>
+              <SowingDate2>2005-09-28</SowingDate2>
+              <HarvestDate2>2006-02-24</HarvestDate2>
+              <CropNConc>0</CropNConc>
               <YieldFile>%root%\Tests\Validation\SCRUM\YieldsToSet.csv</YieldFile>
               <InitialRootDepth>10</InitialRootDepth>
               <Crop1>Potatoes_Short</Crop1>
               <SowingDate1>2004-10-15</SowingDate1>
               <HarvestDate1>2005-03-14</HarvestDate1>
               <Yield1>5500</Yield1>
-              <Crop2>Dried_Peas</Crop2>
-              <SowingDate2>2005-09-28</SowingDate2>
-              <HarvestDate2>2006-02-24</HarvestDate2>
               <Yield2>958</Yield2>
-              <CropNConc>0</CropNConc>
               <Crop3>Potatoes_Short</Crop3>
               <SowingDate3>2006-10-11</SowingDate3>
               <HarvestDate3>2007-03-12</HarvestDate3>
@@ -13005,22 +12989,22 @@ namespace Models
             <Name>InF</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <NFert>0</NFert>
+              <Irr1>0</Irr1>
+              <Irr2>0</Irr2>
+              <Irr3>0</Irr3>
+              <Irr4>0</Irr4>
+              <IrrFact1>0</IrrFact1>
+              <IrrFact2>0</IrrFact2>
+              <IrrFact3>0</IrrFact3>
+              <IrrFact4>0</IrrFact4>
+              <TreatFact>0</TreatFact>
               <FertDate1>2005-10-26</FertDate1>
               <FertDate2>2005-11-25</FertDate2>
-              <NFert>0</NFert>
-              <TreatFact>0</TreatFact>
               <IrrDate1>2005-11-18</IrrDate1>
-              <Irr1>0</Irr1>
-              <IrrFact1>0</IrrFact1>
               <IrrDate2>2005-11-23</IrrDate2>
-              <Irr2>0</Irr2>
-              <IrrFact2>0</IrrFact2>
               <IrrDate3>2005-12-07</IrrDate3>
-              <Irr3>0</Irr3>
-              <IrrFact3>0</IrrFact3>
               <IrrDate4>2005-12-29</IrrDate4>
-              <Irr4>0</Irr4>
-              <IrrFact4>0</IrrFact4>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -13429,14 +13413,15 @@ namespace Models
           <Name>NConcReps</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <NConcFile>%root%\Tests\Validation\SCRUM\NO3.csv</NConcFile>
             <TotalLeach>0</TotalLeach>
-            <Leach_60>0</Leach_60>
             <ObservedLeach1>0</ObservedLeach1>
             <ObservedLeach2>0</ObservedLeach2>
             <ObservedLeach3>0</ObservedLeach3>
             <ObservedLeach4>0</ObservedLeach4>
             <ObservedLeach5>0</ObservedLeach5>
+            <Leach_60>0</Leach_60>
+            <NLeachMean>0</NLeachMean>
+            <NConcFile>%root%\Tests\Validation\SCRUM\NO3.csv</NConcFile>
             <NConc1>0</NConc1>
             <NConc2>0</NConc2>
             <NConc3>0</NConc3>
@@ -13452,7 +13437,6 @@ namespace Models
             </Treat_Rep4>
             <Treat_Rep5>
             </Treat_Rep5>
-            <NLeachMean>0</NLeachMean>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
@@ -17425,5 +17409,5 @@ namespace Models
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>270</ExplorerWidth>
+  <ExplorerWidth>311</ExplorerWidth>
 </Simulations>

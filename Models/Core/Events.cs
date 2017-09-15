@@ -6,105 +6,135 @@
 namespace Models.Core
 {
     using APSIM.Shared.Utilities;
-    using Models.Core;
     using System;
     using System.Collections.Generic;
     using System.Reflection;
 
-    class Events
+    /// <summary>
+    /// An event handling class
+    /// </summary>
+    public class Events : IEvent
     {
-        private List<Events.Publisher> publishers = null;
-        private List<Events.Subscriber> subscribers = null;
-        private Dictionary<IModel, List<Subscriber>> cache = new Dictionary<IModel, List<Subscriber>>();
-        private Simulation simulation;
-
-        /// <summary>Default constructor</summary>
-        public Events() { }
+        private IModel relativeTo;
+        private ScopingRules scope = new ScopingRules();
 
         /// <summary>Constructor</summary>
-        /// <param name="simulation">Parent simulation</param>
-        public Events(Simulation simulation)
+        /// <param name="relativeTo">The model this events instance is relative to</param>
+        internal Events(IModel relativeTo)
         {
-            this.simulation = simulation;
+            this.relativeTo = relativeTo;
         }
+
         /// <summary>Connect all events in the specified simulation.</summary>
-        internal void ConnectEvents()
+        public void ConnectEvents()
         {
             // Get a complete list of all models in simulation (including the simulation itself).
             List<IModel> allModels = new List<IModel>();
-            allModels.Add(simulation);
-            allModels.AddRange(Apsim.ChildrenRecursively(simulation));
+            allModels.Add(relativeTo);
+            allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
 
-            if (publishers == null)
-                publishers = Events.Publisher.FindAll(allModels);
-            if (subscribers == null)
-                subscribers = Events.Subscriber.FindAll(allModels);
+            List<Events.Publisher> publishers = Events.Publisher.FindAll(allModels);
+            List<Events.Subscriber> subscribers = Events.Subscriber.FindAll(allModels);
 
             // Connect publishers to subscribers.
+            Dictionary<IModel, List<Subscriber>> cache = new Dictionary<IModel, List<Subscriber>>();
             foreach (Events.Publisher publisher in publishers)
-                ConnectPublisherToScriber(publisher, FilterSubscribersInScope(publisher));
+                ConnectPublisherToScriber(publisher, FilterSubscribersInScope(publisher, cache, scope, subscribers));
         }
 
         /// <summary>Connect all events in the specified simulation.</summary>
-        /// <param name="model"></param>
-        internal void DisconnectEvents(IModel model)
+        public void DisconnectEvents()
         {
+            List<IModel> allModels = new List<IModel>();
+            allModels.Add(relativeTo);
+            allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
+            List<Events.Publisher> publishers = Events.Publisher.FindAll(allModels);
             foreach (Events.Publisher publisher in publishers)
                 publisher.DisconnectAll();
         }
 
         /// <summary>
-        /// Scan a model and all child model for events and add the found publishers and subscribers
-        /// to the list of known events and handlers.
+        /// Subscribe to an event. Will throw if namePath doesn't point to a event publisher.
         /// </summary>
-        /// <param name="model">The model to scan</param>
-        internal void AddModelEvents(IModel model)
+        /// <param name="eventNameAndPath">The name of the event to subscribe to</param>
+        /// <param name="handler">The event handler</param>
+        public void Subscribe(string eventNameAndPath, EventHandler handler)
         {
-            // Get a complete list of all models in simulation (including the simulation itself).
-            List<IModel> allModels = new List<IModel>();
-            allModels.Add(model);
-            allModels.AddRange(Apsim.ChildrenRecursively(model));
-            if (publishers == null)
-            {
-                publishers = new List<Core.Events.Publisher>();
-                subscribers = new List<Core.Events.Subscriber>();
-            }
-            publishers.AddRange(Events.Publisher.FindAll(allModels));
-            subscribers.AddRange(Events.Subscriber.FindAll(allModels));
+            // Get the name of the component and event.
+            string componentName = StringUtilities.ParentName(eventNameAndPath, '.');
+            if (componentName == null)
+                throw new Exception("Invalid syntax for event: " + eventNameAndPath);
+            string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
+
+            // Get the component.
+            object component = Apsim.Get(relativeTo, componentName);
+            if (component == null)
+                throw new Exception(Apsim.FullPath(relativeTo) + " can not find the component: " + componentName);
+
+            // Get the EventInfo for the published event.
+            EventInfo componentEvent = component.GetType().GetEvent(eventName);
+            if (componentEvent == null)
+                throw new Exception("Cannot find event: " + eventName + " in model: " + componentName);
+
+            // Subscribe to the event.
+            componentEvent.AddEventHandler(component, handler);
         }
 
         /// <summary>
-        /// Remove a model and all child model events and handlers from the list.
+        /// Unsubscribe an event. Throws if not found.
         /// </summary>
-        /// <param name="model">The model to scan</param>
-        internal void RemoveModelEvents(IModel model)
+        /// <param name="eventNameAndPath">The name of the event to subscribe to</param>
+        /// <param name="handler">The event handler</param>
+        public void Unsubscribe(string eventNameAndPath, EventHandler handler)
         {
-            // Get a complete list of all models in simulation (including the simulation itself).
-            List<IModel> allModels = new List<IModel>();
-            allModels.Add(model);
-            allModels.AddRange(Apsim.ChildrenRecursively(model));
+            // Get the name of the component and event.
+            string componentName = StringUtilities.ParentName(eventNameAndPath, '.');
+            if (componentName == null)
+                throw new Exception("Invalid syntax for event: " + eventNameAndPath);
+            string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
-            publishers.RemoveAll(publisher => allModels.Contains(publisher.Model as IModel));
-            subscribers.RemoveAll(subscriber => allModels.Contains(subscriber.Model as IModel));
+            // Get the component.
+            object component = Apsim.Get(relativeTo, componentName);
+            if (component == null)
+                throw new Exception(Apsim.FullPath(relativeTo) + " can not find the component: " + componentName);
+
+            // Get the EventInfo for the published event.
+            EventInfo componentEvent = component.GetType().GetEvent(eventName);
+            if (componentEvent == null)
+                throw new Exception("Cannot find event: " + eventName + " in model: " + componentName);
+
+            // Unsubscribe to the event.
+            componentEvent.RemoveEventHandler(component, handler);
         }
 
         /// <summary>
         /// Call the specified event on the specified model and all child models.
         /// </summary>
-        /// <param name="model">The model to call the event on</param>
         /// <param name="eventName">The name of the event</param>
         /// <param name="args">The event arguments. Can be null</param>
-        internal void CallEventHandler(IModel model, string eventName, object[] args)
+        internal List<Exception> Publish(string eventName, object[] args)
         {
             List<IModel> allModels = new List<IModel>();
-            allModels.Add(model);
-            allModels.AddRange(Apsim.ChildrenRecursively(model));
+            allModels.Add(relativeTo);
+            allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
+            List<Events.Subscriber> subscribers = Events.Subscriber.FindAll(allModels);
 
             List<Subscriber> matches = subscribers.FindAll(subscriber => subscriber.Name == eventName &&
                                                                          allModels.Contains(subscriber.Model as IModel));
 
+            List<Exception> errors = new List<Exception>();
             foreach (Subscriber subscriber in matches)
-                subscriber.Invoke(args);
+            {
+                try
+                {
+                    subscriber.Invoke(args);
+                }
+                catch (Exception err)
+                {
+                    errors.Add(err);
+                }
+            }
+            return errors;
         }
 
         /// <summary>Connect the specified publisher to all subscribers in scope</summary>
@@ -123,14 +153,20 @@ namespace Models.Core
         /// Return a list of subscribers that are in scope.
         /// </summary>
         /// <param name="relativeTo">Model to base scoping rules on.</param>
-        private List<Subscriber> FilterSubscribersInScope(Publisher relativeTo)
+        /// <param name="cache">The model/scriber cache</param>
+        /// <param name="scope">An instance of scoping rules</param>
+        /// <param name="subscribers">A collection of all subscribers</param>
+        private static List<Subscriber> FilterSubscribersInScope(Publisher relativeTo, 
+                                                                 Dictionary<IModel, List<Subscriber>> cache, 
+                                                                 ScopingRules scope,
+                                                                 List<Events.Subscriber> subscribers)
         {
             // Try cache
             List<Subscriber> subscribersInScope;
             if (cache.TryGetValue(relativeTo.Model as IModel, out subscribersInScope))
                 return subscribersInScope;
 
-            List<IModel> modelsInScope = new List<IModel>(simulation.Scope.FindAll(relativeTo.Model as IModel));
+            List<IModel> modelsInScope = new List<IModel>(scope.FindAll(relativeTo.Model as IModel));
             subscribersInScope = new List<Subscriber>();
             subscribersInScope = subscribers.FindAll(subscriber => modelsInScope.Contains(subscriber.Model as IModel));
             cache.Add(relativeTo.Model as IModel, subscribersInScope);

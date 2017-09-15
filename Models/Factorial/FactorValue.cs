@@ -132,9 +132,8 @@ namespace Models.Factorial
             newModel.Name = modelToReplace.Name;
             newModel.Parent = modelToReplace.Parent;
 
-            Events events = new Events();
-            events.AddModelEvents(newModel);
-            events.CallEventHandler(newModel, "Loaded", null);
+            Events events = new Events(newModel);
+            events.Publish("Loaded", null);
         }
     }
 }

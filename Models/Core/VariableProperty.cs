@@ -449,7 +449,7 @@ namespace Models.Core
                     return displayFormatAttribute.Format;
                 }
 
-                return null;
+                return string.Empty;
             }
         }
 

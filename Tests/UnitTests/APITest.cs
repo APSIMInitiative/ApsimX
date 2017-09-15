@@ -59,7 +59,7 @@ namespace UnitTests
             w.Close();
             this.simulations = Simulations.Read("Test.apsimx");
             
-            string sqliteSourceFileName = this.FindSqlite3DLL();
+            string sqliteSourceFileName = TestDataStore.FindSqlite3DLL();
 
             string sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
             if (!File.Exists(sqliteFileName))
@@ -68,7 +68,6 @@ namespace UnitTests
             }
 
             this.simulation = this.simulations.Children[0] as Simulation;
-            this.simulation.StartRun();
         }
 
         /// <summary>
@@ -275,30 +274,6 @@ namespace UnitTests
             Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Children.Count, 4);
         }
 
-
-        /// <summary>
-        /// Find an return the database file name.
-        /// </summary>
-        /// <returns>The filename</returns>
-        private string FindSqlite3DLL()
-        {
-            string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            while (directory != null) 
-            {
-                string[] directories = Directory.GetDirectories(directory, "Bin");
-                if (directories.Length == 1) 
-                {
-                    string[] files = Directory.GetFiles(directories[0], "sqlite3.dll");
-                    if (files.Length == 1)
-                    {
-                        return files[0];
-                    }
-                }
-                
-                directory = Path.GetDirectoryName(directory); // parent directory
-            }
-            
-            throw new Exception("Cannot find apsimx bin directory");
-        }        
+       
     }
 }

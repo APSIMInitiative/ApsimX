@@ -263,7 +263,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Layer dead.</summary>
         [XmlIgnore]
-        public Biomass[] LayerDead { get { return PlantZone.LayerDead; } }
+        public Biomass[] LayerDead { get { if (PlantZone != null) return PlantZone.LayerDead; else return new Biomass[0]; } }
 
         /// <summary>Gets or sets the length.</summary>
         [XmlIgnore]

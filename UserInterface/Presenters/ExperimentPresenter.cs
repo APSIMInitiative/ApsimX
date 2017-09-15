@@ -15,6 +15,9 @@ namespace UserInterface.Presenters
     /// </summary>
     public class ExperimentPresenter : IPresenter
     {
+        [Link]
+        IStorageWriter storageWriter = null;
+
         private Experiment Experiment;
         private IMemoView ListView;
         private ExplorerPresenter ExplorerPresenter;
@@ -49,12 +52,13 @@ namespace UserInterface.Presenters
                 Commands.RunCommand run = new Commands.RunCommand(job, 
                                                                   simulation.Name,
                                                                   ExplorerPresenter,
-                                                                  false);
+                                                                  false,
+                                                                  storageWriter);
                 run.Do(null);
             }
             catch (Exception err)
             {
-                ExplorerPresenter.MainPresenter.ShowMessage(err.Message, Models.DataStore.ErrorLevel.Error);
+                ExplorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
             }
         }
 

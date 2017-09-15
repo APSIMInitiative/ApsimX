@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using System.IO;
-using System.Data;
-using System.Xml.Serialization;
-using Models.Factorial;
+﻿
 
 namespace Models.PostSimulationTools
 {
-
+    using Models.Core;
+    using Models.Factorial;
+    using Models.Storage;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Reads the contents of a file (in apsim format) and stores into the DataStore.
@@ -58,7 +57,7 @@ namespace Models.PostSimulationTools
         /// or
         /// Could not find observed data table:  + ObservedTableName
         /// </exception>
-        public void Run(DataStore dataStore)
+        public void Run(IStorageReader dataStore)
         {
             if (PredictedTableName != null && ObservedTableName != null)
             {
@@ -124,25 +123,8 @@ namespace Models.PostSimulationTools
 
                 if (predictedObservedData != null)
                 {
-                    dataStore.WriteTable(null, this.Name, predictedObservedData);
-
-                    List<string> unitFieldNames = new List<string>();
-                    List<string> unitNames = new List<string>();
-
-                    // write units to table.
-                    foreach (string fieldName in commonCols)
-                    {
-                        string units = dataStore.GetUnits(PredictedTableName, fieldName);
-                        if (units != null)
-                        {
-                            unitFieldNames.Add("Predicted." + fieldName);
-                            unitNames.Add(units);
-                            unitFieldNames.Add("Observed." + fieldName);
-                            unitNames.Add(units);
-                        }
-                    }
-                    if (unitNames.Count > 0)
-                        dataStore.AddUnitsForTable(Name, unitFieldNames, unitNames);
+                    predictedObservedData.TableName = this.Name;
+                    dataStore.WriteTableRaw(predictedObservedData);
                 }
                 else
                 {
@@ -156,7 +138,7 @@ namespace Models.PostSimulationTools
                     else
                         throw new Exception(Name + ": Observed data was found but didn't match the predicted values. Make sure the values in the SimulationName column match the simulation names in the user interface. Also ensure column names in the observed file match the APSIM report column names.");
                 }
-                dataStore.Disconnect();
+
             }
         }
     }

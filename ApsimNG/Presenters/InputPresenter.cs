@@ -9,6 +9,7 @@ namespace UserInterface.Presenters
     using System;
     using Models;
     using Views;
+    using Models.Core;
 
     /// <summary>
     /// Attaches an Input model to an Input View.
@@ -70,7 +71,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                this.explorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
             }
         }
 

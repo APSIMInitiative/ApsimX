@@ -114,6 +114,9 @@
   <ItemGroup>
     <Compile Include="APSIMFileReaderTests.cs" />
     <Compile Include="FertiliserTests.cs" />
+    <Compile Include="MockEvents.cs" />
+    <Compile Include="MockLocator.cs" />
+    <Compile Include="MockStorage.cs" />
     <Compile Include="ScopeTests.cs" />
     <Compile Include="MockSoil.cs" />
     <Compile Include="MockSummary.cs" />
@@ -133,6 +136,7 @@
     <Compile Include="FileFormatTests.cs" />
     <Compile Include="LinksTests.cs" />
     <Compile Include="TestModelNode.cs" />
+    <Compile Include="TestDataStore.cs" />
     <Compile Include="TestReport.cs" />
     <Compile Include="TestSoils.cs" />
     <Compile Include="TestStats.cs" />
