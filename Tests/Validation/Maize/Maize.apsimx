@@ -26349,7 +26349,7 @@ namespace Models
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
-      <Name>NewZealand</Name>
+      <Name>New Zealand</Name>
       <Memo>
         <Name>memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
