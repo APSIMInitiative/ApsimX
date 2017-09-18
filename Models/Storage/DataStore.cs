@@ -565,12 +565,17 @@
 
             // Get a list of simulation names
             simulationIDs.Clear();
-            DataTable simulationTable = connection.ExecuteQuery("SELECT ID, Name FROM _Simulations ORDER BY Name");
-            foreach (DataRow row in simulationTable.Rows)
+            
+            bool haveSimulationTable = tables.Find(table => table.Name == "Simulation") != null;
+            if (haveSimulationTable)
             {
-                string name = row["Name"].ToString();
-                if (!simulationIDs.ContainsKey(name))
-                    simulationIDs.Add(name, Convert.ToInt32(row["ID"]));
+                DataTable simulationTable = connection.ExecuteQuery("SELECT ID, Name FROM _Simulations ORDER BY Name");
+                foreach (DataRow row in simulationTable.Rows)
+                {
+                    string name = row["Name"].ToString();
+                    if (!simulationIDs.ContainsKey(name))
+                        simulationIDs.Add(name, Convert.ToInt32(row["ID"]));
+                }
             }
         }
 
