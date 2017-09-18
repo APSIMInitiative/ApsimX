@@ -566,7 +566,7 @@
             // Get a list of simulation names
             simulationIDs.Clear();
             
-            bool haveSimulationTable = tables.Find(table => table.Name == "Simulation") != null;
+            bool haveSimulationTable = tables.Find(table => table.Name == "_Simulations") != null;
             if (haveSimulationTable)
             {
                 DataTable simulationTable = connection.ExecuteQuery("SELECT ID, Name FROM _Simulations ORDER BY Name");
