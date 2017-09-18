@@ -46,9 +46,12 @@ namespace UserInterface.Presenters
             this.view.TableList.IsEditable = false;
             this.view.Grid.ReadOnly = true;
             this.view.Grid.NumericFormat = "N3";
-            this.view.TableList.Values = dataStore.TableNames.ToArray();
-            if (dataStore != null && Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
-                this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
+            if (dataStore != null)
+            {
+                this.view.TableList.Values = dataStore.TableNames.ToArray();
+                if (Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
+                    this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
+            }
 
             this.view.Grid.ResizeControls();
             this.view.TableList.Changed += this.OnTableSelected;

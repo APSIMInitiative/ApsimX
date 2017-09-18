@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.24 -->
+<interface>
+  <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <widget class="GtkHBox" id="hbox1">
+  <object class="GtkHBox" id="hbox1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <child>
-      <widget class="GtkLabel" id="label1">
+      <object class="GtkLabel" id="label1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Title:</property>
-      </widget>
+      </object>
       <packing>
         <property name="expand">False</property>
         <property name="fill">False</property>
@@ -19,7 +19,7 @@
       </packing>
     </child>
     <child>
-      <widget class="GtkEntry" id="entry1">
+      <object class="GtkEntry" id="entry1">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
@@ -27,12 +27,12 @@
         <property name="secondary_icon_activatable">False</property>
         <property name="primary_icon_sensitive">True</property>
         <property name="secondary_icon_sensitive">True</property>
-      </widget>
+      </object>
       <packing>
         <property name="expand">False</property>
         <property name="fill">False</property>
         <property name="position">1</property>
       </packing>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+</interface>

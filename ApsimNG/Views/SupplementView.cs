@@ -8,8 +8,6 @@ namespace UserInterface.Views
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using Glade;
     using Gtk;
     using Interfaces;
     using Models.GrazPlan;   // For access to the TSuppAttribute enumeration
@@ -45,43 +43,24 @@ namespace UserInterface.Views
 
         public event EventHandler<TStringArgs> SuppNameChanged;
 
-        [Widget]
         private Table table1 = null;
-        [Widget]
         private Entry tbSulph = null;
-        [Widget]
         private Entry tbPhos = null;
-        [Widget]
         private Entry tbADIP2CP = null;
-        [Widget]
         private Entry tbProtDegrad = null;
-        [Widget]
         private Entry tbEE = null;
-        [Widget]
         private Entry tbCP = null;
-        [Widget]
         private Entry tbME = null;
-        [Widget]
         private Entry tbDMD = null;
-        [Widget]
         private Entry tbDM = null;
-        [Widget]
         private CheckButton cbxRoughage = null;
-        [Widget]
         private Entry tbAmount = null;
-        [Widget]
         private Entry tbName = null;
-        [Widget]
         private Button btnResetAll = null;
-        [Widget]
         private Button btnReset = null;
-        [Widget]
         private Button btnDelete = null;
-        [Widget]
         private Button btnAdd = null;
-        [Widget]
         private IconView lbDefaultNames = null;
-        [Widget]
         private TreeView lvSupps = null;
 
         private ListStore suppList = new ListStore(typeof(string));
@@ -91,8 +70,26 @@ namespace UserInterface.Views
 
         public SupplementView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.SupplementView.glade", "table1");
-            gxml.Autoconnect(this);
+            Builder builder = new Builder("ApsimNG.Resources.Glade.SupplementView.glade");
+            table1 = (Table)builder.GetObject("table1");
+            tbSulph = (Entry)builder.GetObject("tbSulph");
+            tbPhos = (Entry)builder.GetObject("tbPhos");
+            tbADIP2CP = (Entry)builder.GetObject("tbADIP2CP");
+            tbProtDegrad = (Entry)builder.GetObject("tbProtDegrad");
+            tbEE = (Entry)builder.GetObject("tbEE");
+            tbCP = (Entry)builder.GetObject("tbCP");
+            tbME = (Entry)builder.GetObject("tbME");
+            tbDMD = (Entry)builder.GetObject("tbDMD");
+            tbDM = (Entry)builder.GetObject("tbDM");
+            cbxRoughage = (CheckButton)builder.GetObject("cbxRoughage");
+            tbAmount = (Entry)builder.GetObject("tbAmount");
+            tbName = (Entry)builder.GetObject("tbName");
+            btnResetAll = (Button)builder.GetObject("btnResetAll");
+            btnReset = (Button)builder.GetObject("btnReset");
+            btnDelete = (Button)builder.GetObject("btnDelete");
+            btnAdd = (Button)builder.GetObject("btnAdd");
+            lbDefaultNames = (IconView)builder.GetObject("lbDefaultNames");
+            lvSupps = (TreeView)builder.GetObject("lvSupps");
             _mainWidget = table1;
 
             entryLookup.Add(tbDM, TSupplement.TSuppAttribute.spaDMP);
