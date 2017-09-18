@@ -126,14 +126,17 @@ namespace UserInterface.Views
             gridview.FocusInEvent += FocusInEvent;
             gridview.FocusOutEvent += FocusOutEvent;
             gridview.KeyPressEvent += Gridview_KeyPressEvent;
+            gridview.Mapped += Gridview_Mapped;
             gridview.EnableSearch = false;
             fixedcolview.FocusInEvent += FocusInEvent;
             fixedcolview.FocusOutEvent += FocusOutEvent;
+            fixedcolview.Mapped += Gridview_Mapped;
             fixedcolview.EnableSearch = false;
             image1.Pixbuf = null;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
+
 
         /// <summary>
         /// Does cleanup when the main widget is destroyed
@@ -154,8 +157,10 @@ namespace UserInterface.Views
             gridview.FocusInEvent -= FocusInEvent;
             gridview.FocusOutEvent -= FocusOutEvent;
             gridview.KeyPressEvent -= Gridview_KeyPressEvent;
+            gridview.Mapped -= Gridview_Mapped;
             fixedcolview.FocusInEvent -= FocusInEvent;
             fixedcolview.FocusOutEvent -= FocusOutEvent;
+            fixedcolview.Mapped -= Gridview_Mapped;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
             // know what to disconnect?
@@ -507,33 +512,38 @@ namespace UserInterface.Views
 
             gridview.Show();
 
-            // Now let's apply center-justification to all the column headers, just for the heck of it
-            // It seems that on Windows, it's best to do this after gridview has been shown
-            // Note that this affects the justification of wrapped lines, not justification of the
-            // header as a whole, which is handled with column.Alignment
-            for (int i = 0; i < nCols; i++)
-            {
-                Label label = GetColumnHeaderLabel(i);
-                if (label != null)
-                {
-                    label.Wrap = true;
-                    label.Justify = Justification.Center;
-                    if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
-                        (label.Parent as Alignment).LeftPadding = 2;
-                    label.Style.FontDescription.Weight = Pango.Weight.Bold;
-                }
-
-                label = GetColumnHeaderLabel(i, fixedcolview);
-                if (label != null)
-                {
-                    label.Wrap = true;
-                    label.Justify = Justification.Center;
-                    label.Style.FontDescription.Weight = Pango.Weight.Bold;
-                }
-            }
-
             if (mainWindow != null)
                 mainWindow.Cursor = null;
+        }
+
+        /// <summary>
+        /// Responds to the "mapping" event of a grid
+        /// We apply center-justification to all the column headers, just for the heck of it
+        /// It seems that on Windows, it's best to do this after gridview has been mapped,
+        /// so we change settings here, rather than when the columns are created.
+        /// Note that "justification" here refers to justification of wrapped lines, not 
+        /// justification of the header as a whole, which is handled with column.Alignment
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        private void Gridview_Mapped(object sender, EventArgs e)
+        {
+            TreeView grid = sender as TreeView;
+            if (grid != null)
+            {
+                for (int i = 0; i < grid.Columns.Length; i++)
+                {
+                    Label label = GetColumnHeaderLabel(i, grid);
+                    if (label != null)
+                    {
+                        label.Wrap = true;
+                        label.Justify = Justification.Center;
+                        if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
+                            (label.Parent as Alignment).LeftPadding = 2;
+                        label.Style.FontDescription.Weight = Pango.Weight.Bold;
+                    }
+                }
+            }
         }
 
         /// <summary>

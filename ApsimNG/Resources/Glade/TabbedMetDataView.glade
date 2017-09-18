@@ -172,6 +172,8 @@
           <object class="GtkLabel" id="label2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">2</property>
+            <property name="ypad">2</property>
             <property name="label" translatable="yes">Summary</property>
           </object>
           <packing>
@@ -195,6 +197,8 @@
           <object class="GtkLabel" id="label3">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">2</property>
+            <property name="ypad">2</property>
             <property name="label" translatable="yes">Data</property>
           </object>
           <packing>
@@ -370,6 +374,8 @@
           <object class="GtkLabel" id="label4">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">2</property>
+            <property name="ypad">2</property>
             <property name="label" translatable="yes">Rainfall Chart</property>
           </object>
           <packing>
@@ -407,6 +413,8 @@
           <object class="GtkLabel" id="label6">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">2</property>
+            <property name="ypad">2</property>
             <property name="label" translatable="yes">Monthly Rainfall</property>
           </object>
           <packing>
@@ -444,6 +452,8 @@
           <object class="GtkLabel" id="label5">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">2</property>
+            <property name="ypad">2</property>
             <property name="label" translatable="yes">Temperature</property>
           </object>
           <packing>
@@ -481,6 +491,8 @@
           <object class="GtkLabel" id="label7">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="xpad">2</property>
+            <property name="ypad">2</property>
             <property name="label" translatable="yes">Radiation</property>
           </object>
           <packing>
