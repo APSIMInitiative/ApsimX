@@ -49,7 +49,7 @@ namespace Models.PostSimulationTools
             statsData.Columns.Add("SDSD", typeof(double));
             statsData.Columns.Add("LCS", typeof(double));
 
-            DataTable simulationData = dataStore.GetData("*", this.TableName);
+            DataTable simulationData = dataStore.GetData(this.TableName);
             if (simulationData != null)
             {
                 DataView view = new DataView(simulationData);

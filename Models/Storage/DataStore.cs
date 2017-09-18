@@ -133,6 +133,9 @@
         /// <summary>Finish writing to DB file</summary>
         public void EndWriting()
         {
+            foreach (SimulationData data in dataToWrite)
+                data.complete = true;
+
             stoppingWriteToDB = true;
             writeTask.Wait();
         }
@@ -154,9 +157,6 @@
         {
             Open(readOnly: true);
 
-            // If currently writing, wait for all records to be written.
-            WaitForAllRecordsToBeWritten();
-
             Table table = tables.Find(t => t.Name == tableName);
             if (connection == null || table == null)
                 return null;
@@ -164,21 +164,24 @@
             StringBuilder sql = new StringBuilder();
 
             // Write SELECT clause
-            sql.Append("SELECT S.Name AS SimulationName, ");
+            sql.Append("SELECT S.Name AS SimulationName,S.ID AS SimulationID");
+            List<string> fieldList = null;
             if (fieldNames == null)
-                sql.Append("T.*");
+                fieldList = table.Columns.Select(col => col.Name).ToList();
             else
             {
-                sql.Append("SimulationID");
-                for (int i = 0; i < fieldNames.Count(); i++)
-                {
-                    sql.Append(',');
-                    sql.Append('[');
-                    sql.Append(fieldNames.ElementAt(i));
-                    sql.Append(']');
-                }
+                fieldList = fieldNames.ToList();
             }
-
+            fieldList.Remove("SimulationName");
+            fieldList.Remove("SimulationID");
+            
+            foreach (string fieldName in fieldList)
+            {
+                sql.Append(",T.");
+                sql.Append("[");
+                sql.Append(fieldName);
+                sql.Append(']');
+            }
 
             // Write FROM clause
             sql.Append(" FROM _Simulations S, ");
@@ -335,8 +338,6 @@
         {
             Open(readOnly: false);
 
-            WaitForAllRecordsToBeWritten();
-
             Table tableToDelete = tables.Find(t => t.Name == tableName);
             if (tableToDelete != null)
             {
@@ -352,9 +353,6 @@
         public DataTable RunQuery(string sql)
         {
             Open(readOnly: true);
-
-            // If currently writing, wait for all records to be written.
-            WaitForAllRecordsToBeWritten();
 
             try
             {

@@ -34,6 +34,7 @@ namespace APSIMRunner
 
                     // Run the simulation.
                     string errorMessage = null;
+                    string simulationName = null;
                     RunSimulation simulationRunner = null;
                     try
                     {
@@ -43,13 +44,9 @@ namespace APSIMRunner
                         simulationRunner.Services = new object[] { new StorageViaSockets() };
 
                         // Run simulation
+                        simulationName = simulationRunner.simulationToRun.Name;
                         simulationRunner.cloneSimulationBeforeRun = false;
                         simulationRunner.Run(null, null);
-
-                        // TODO Dean: Need to migrate this to the new mechanism.
-                        //SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
-                        //SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
-                        //DataStore.TablesToWrite.Clear();
                     }
                     catch (Exception err)
                     {
@@ -60,6 +57,7 @@ namespace APSIMRunner
                     JobManagerMultiProcess.EndJobArguments endJobArguments = new JobManagerMultiProcess.EndJobArguments();
                     endJobArguments.key = job.key;
                     endJobArguments.errorMessage = errorMessage;
+                    endJobArguments.simulationName = simulationName;
                     SocketServer.CommandObject endJobCommand = new SocketServer.CommandObject() { name = "EndJob", data = endJobArguments };
                     SocketServer.Send("127.0.0.1", 2222, endJobCommand);
 
@@ -94,6 +92,7 @@ namespace APSIMRunner
         {
             SocketServer.CommandObject command = new SocketServer.CommandObject() { name = "GetJob" };
             object response = SocketServer.Send("127.0.0.1", 2222, command);
+
             if (response is string && response.ToString() == "NULL")
                 return null;
 
