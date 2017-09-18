@@ -91,7 +91,7 @@
         <ActivityFolder>
           <Name>Cash flow</Name>
           <FinanceActivityPayExpense>
-            <Name>General farm maintenance</Name>
+            <Name>Pay general farm maintenance</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
@@ -100,7 +100,7 @@
             <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
-            <Name>Fuel costs</Name>
+            <Name>Pay fuel costs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
@@ -109,7 +109,12 @@
             <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
-            <Name>Pest control</Name>
+            <Name>Pay pest control</Name>
+            <ActivityTimerInterval>
+              <Name>ActivityTimerInterval</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MonthDue>12</MonthDue>
+            </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <MonthDue>12</MonthDue>
@@ -118,7 +123,12 @@
             <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
-            <Name>Contractors</Name>
+            <Name>Pay contractors</Name>
+            <ActivityTimerInterval>
+              <Name>ActivityTimerInterval</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MonthDue>10</MonthDue>
+            </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <MonthDue>10</MonthDue>
@@ -127,7 +137,7 @@
             <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
-            <Name>Administration</Name>
+            <Name>Pay administration</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
@@ -136,7 +146,12 @@
             <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
-            <Name>Rates and Fees</Name>
+            <Name>Pay rates and fees</Name>
+            <ActivityTimerInterval>
+              <Name>ActivityTimerInterval</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MonthDue>6</MonthDue>
+            </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <MonthDue>7</MonthDue>
@@ -145,7 +160,12 @@
             <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
-            <Name>Insurance</Name>
+            <Name>Pay insurance</Name>
+            <ActivityTimerInterval>
+              <Name>ActivityTimerInterval</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MonthDue>12</MonthDue>
+            </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <MonthDue>12</MonthDue>
@@ -154,7 +174,12 @@
             <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
-            <Name>Electricity</Name>
+            <Name>Pay electricity</Name>
+            <ActivityTimerInterval>
+              <Name>ActivityTimerInterval</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Interval>3</Interval>
+            </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>3</PaymentInterval>
@@ -163,7 +188,13 @@
             <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
-            <Name>Living costs</Name>
+            <Name>Pay living costs</Name>
+            <ActivityTimerInterval>
+              <Name>ActivityTimerInterval</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Interval>6</Interval>
+              <MonthDue>6</MonthDue>
+            </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>6</PaymentInterval>

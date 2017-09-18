@@ -20,7 +20,7 @@
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <WholeFarm>
-      <Name>FARMONY</Name>
+      <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
         <Finance>
@@ -177,9 +177,9 @@
         <ActivityFolder>
           <Name>Manage herd</Name>
           <RuminantActivityFeed>
-            <Name>Feed Bos indicus</Name>
+            <Name>Feed rice straw</Name>
             <RuminantFeedGroup>
-              <Name>Filter Bos indicus</Name>
+              <Name>Feed Bos indicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=Bos indicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -362,7 +362,7 @@
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <WholeFarm>
-      <Name>FARMONY</Name>
+      <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
         <Finance>
@@ -529,9 +529,9 @@
         <ActivityFolder>
           <Name>Manage herd</Name>
           <RuminantActivityFeed>
-            <Name>Feed Bos indicus</Name>
+            <Name>Feed rice straw</Name>
             <RuminantFeedGroup>
-              <Name>Filter Bos indicus</Name>
+              <Name>Feed Bos indicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=Bos indicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -698,7 +698,7 @@
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <WholeFarm>
-      <Name>FARMONY</Name>
+      <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
         <Finance>
@@ -865,9 +865,9 @@
         <ActivityFolder>
           <Name>Manage herd</Name>
           <RuminantActivityFeed>
-            <Name>Feed Bos indicus</Name>
+            <Name>Feed rice straw</Name>
             <RuminantFeedGroup>
-              <Name>Filter Bos indicus</Name>
+              <Name>Feed Bos indicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=Bos indicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1040,7 +1040,7 @@
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <WholeFarm>
-      <Name>FARMONY</Name>
+      <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
         <Finance>
@@ -1207,9 +1207,9 @@
         <ActivityFolder>
           <Name>Manage herd</Name>
           <RuminantActivityFeed>
-            <Name>Feed Bos indicus</Name>
+            <Name>Feed rice straw</Name>
             <RuminantFeedGroup>
-              <Name>FIlter Bos indicus</Name>
+              <Name>Feed Bos indicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=Bos indicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
