@@ -80,15 +80,15 @@ namespace Models.Core.Runners
         /// <summary>Create one job runner process for each CPU</summary>
         private void CreateRunners()
         {
-            //int numRunners = Process.GetProcessesByName("APSIMRunner").Length;
-            //for (int i = numRunners; i < MaximumNumOfProcessors; i++)
-            //{
-            //    string workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            //    string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
-            //    ProcessUtilities.ProcessWithRedirectedOutput runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
-            //    runnerProcess.Exited += OnExited;
-            //    runnerProcess.Start(runnerFileName, null, workingDirectory, false);
-            //}
+            int numRunners = Process.GetProcessesByName("APSIMRunner").Length;
+            for (int i = numRunners; i < MaximumNumOfProcessors; i++)
+            {
+                string workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
+                ProcessUtilities.ProcessWithRedirectedOutput runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
+                runnerProcess.Exited += OnExited;
+                runnerProcess.Start(runnerFileName, null, workingDirectory, false);
+            }
         }
 
         /// <summary>Delete any runners that may exist.</summary>
@@ -194,9 +194,12 @@ namespace Models.Core.Runners
         /// <param name="args">The command arguments</param>
         private void OnTransferData(object sender, SocketServer.CommandArgs args)
         {
-            TransferRowInTable row = args.obj as TransferRowInTable;
-            storageWriter.WriteRow(row.simulationName, row.tableName, 
-                                   row.columnNames, row.columnUnits, row.values);
+            List<TransferRowInTable> rows = args.obj as List<TransferRowInTable>;
+            foreach (TransferRowInTable row in rows)
+            {
+                storageWriter.WriteRow(row.simulationName, row.tableName,
+                                       row.columnNames, row.columnUnits, row.values);
+            }
 
             server.Send(args.socket, "OK");
         }
@@ -210,6 +213,7 @@ namespace Models.Core.Runners
             lock (this)
             {
                 SetJobCompleted(arguments.key, arguments.errorMessage);
+                storageWriter.CompletedWritingSimulationData(arguments.simulationName);
             }
             server.Send(args.socket, "OK");
         }
@@ -258,6 +262,9 @@ namespace Models.Core.Runners
 
             /// <summary>Error message</summary>
             public string errorMessage;
+
+            /// <summary>Simulation name of job completed</summary>
+            public string simulationName;
         }
 
         /// <summary>An class for encapsulating a row in a table</summary>

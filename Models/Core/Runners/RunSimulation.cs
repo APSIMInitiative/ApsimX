@@ -15,7 +15,7 @@
     public class RunSimulation : JobManager.IRunnable, JobManager.IComputationalyTimeConsuming
     {
         /// <summary>The simulation to run.</summary>
-        private Simulation simulationToRun;
+        public Simulation simulationToRun { get; private set; }
 
         /// <summary>The .apsimx filename where this simulation resides</summary>
         private string fileName;

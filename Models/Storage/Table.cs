@@ -151,10 +151,17 @@ namespace Models.Storage
         /// <summary>Alter an existing table ensuring all columns exist.</summary>
         private void UpdateColumnsFromRowsToWrite()
         {
+            Dictionary<string, string> allColumnNames = new Dictionary<string, string>();
             foreach (Row row in RowsToWrite)
                 for (int colIndex = 0; colIndex < row.ColumnNames.Count(); colIndex++)
-                    if (Columns.Find(col => col.Name == row.ColumnNames.ElementAt(colIndex)) == null)
-                        Columns.Add(new Column(row.ColumnNames.ElementAt(colIndex), row.ColumnUnits.ElementAt(colIndex)));
+                {
+                    if (!allColumnNames.ContainsKey(row.ColumnNames.ElementAt(colIndex)))
+                        allColumnNames.Add(row.ColumnNames.ElementAt(colIndex), row.ColumnUnits.ElementAt(colIndex));
+                }
+
+            foreach (KeyValuePair<string,string> column in allColumnNames)
+                if (Columns.Find(col => col.Name == column.Key) == null)
+                    Columns.Add(new Column(column.Key, column.Value));
         }
 
         /// <summary>Ensure columns exist in .db file</summary>

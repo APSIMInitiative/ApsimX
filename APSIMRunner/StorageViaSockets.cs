@@ -1,18 +1,21 @@
-﻿using APSIM.Shared.Utilities;
-using Models.Core;
-using System.Collections.Generic;
-using System.Linq;
-using Models.Core.Runners;
-using System;
-
-namespace APSIMRunner
+﻿namespace APSIMRunner
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Core.Runners;
+    using System.Collections.Generic;
+    using System.Linq;
+
     class StorageViaSockets : Model, IStorageWriter
     {
+        List<JobManagerMultiProcess.TransferRowInTable> data = new List<JobManagerMultiProcess.TransferRowInTable>();
+
+        /// <summary>We have completed the simulation - write remaining data</summary>
+        /// <param name="simulationName"></param>
         public void CompletedWritingSimulationData(string simulationName)
         {
-            throw new NotImplementedException();
-        }
+            WriteAllData();
+        } 
 
         /// <summary>Write to permanent storage.</summary>
         /// <param name="simulationName">Name of simulation</param>
@@ -25,14 +28,22 @@ namespace APSIMRunner
             JobManagerMultiProcess.TransferRowInTable rowData = new JobManagerMultiProcess.TransferRowInTable()
             {
                 simulationName = simulationName,
-                tableName = tableName,
+                tableName = tableName, 
                 columnNames = columnNames.ToArray(),
                 values = valuesToWrite
             };
 
-            SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = rowData };
+            data.Add(rowData);
+            if (data.Count == 100)
+                WriteAllData();
+        }
 
+        /// <summary>Write all the data we stored</summary>
+        private void WriteAllData()
+        {
+            SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = data };
             SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
+            data.Clear();
         }
     }
 }
