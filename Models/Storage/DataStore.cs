@@ -100,12 +100,13 @@
         /// <param name="valuesToWrite">Values of row to write</param>
         public void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
         {
-            SimulationData simData = dataToWrite.Find(s => s.simulationName == simulationName);
-            if (simData == null)
+            SimulationData simData;
+            lock (dataToWrite)
             {
-                simData = new SimulationData(simulationName);
-                lock (dataToWrite)
+                simData = dataToWrite.Find(s => s.simulationName == simulationName);
+                if (simData == null)
                 {
+                    simData = new SimulationData(simulationName);
                     dataToWrite.Add(simData);
                 }
             }
@@ -116,7 +117,11 @@
         /// <param name="simulationName"></param>
         public void CompletedWritingSimulationData(string simulationName)
         {
-            SimulationData simData = dataToWrite.Find(s => s.simulationName == simulationName);
+            SimulationData simData;
+            lock (dataToWrite)
+            {
+                simData = dataToWrite.Find(s => s.simulationName == simulationName);
+            }
             if (simData != null)
                 simData.complete = true;
         }
