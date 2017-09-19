@@ -74,8 +74,6 @@ namespace Models.Storage
         /// <param name="simulationIDs">A dictionary of simulation IDs</param>
         public void WriteRows(SQLite connection, Dictionary<string, int> simulationIDs)
         { 
-            connection.ExecuteNonQuery("BEGIN");
-
             IntPtr preparedInsertQuery = IntPtr.Zero;
             try
             {
@@ -105,7 +103,6 @@ namespace Models.Storage
             }
             finally
             {
-                connection.ExecuteNonQuery("END");
                 if (preparedInsertQuery != IntPtr.Zero)
                     connection.Finalize(preparedInsertQuery);
             }
