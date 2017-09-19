@@ -15,6 +15,10 @@
     /// <summary>
     /// A storage service for reading and writing to/from a SQLITE database.
     /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.DataStoreView")]
+    [PresenterName("UserInterface.Presenters.DataStorePresenter")]
+    [ValidParent(ParentType = typeof(Simulations))]
     public class DataStore : Model, IStorageReader, IStorageWriter, IDisposable
     {
         /// <summary>A SQLite connection shared between all instances of this DataStore.</summary>
@@ -449,15 +453,23 @@
                     }
                     else
                     {
-                        foreach (Table tableWithRows in dataToWriteToDB.tables)
+                        connection.ExecuteNonQuery("BEGIN");
+                        try
                         {
-                            tableWithRows.WriteRows(connection, simulationIDs);
+                            foreach (Table tableWithRows in dataToWriteToDB.tables)
+                            {
+                                tableWithRows.WriteRows(connection, simulationIDs);
 
-                            Table table = tables.Find(t => t.Name == tableWithRows.Name);
-                            if (table == null)
-                                tables.Add(tableWithRows);
-                            else
-                                table.MergeColumns(tableWithRows);
+                                Table table = tables.Find(t => t.Name == tableWithRows.Name);
+                                if (table == null)
+                                    tables.Add(tableWithRows);
+                                else
+                                    table.MergeColumns(tableWithRows);
+                            }
+                        }
+                        finally
+                        {
+                            connection.ExecuteNonQuery("END");
                         }
                         lock (dataToWrite)
                         {
@@ -472,7 +484,15 @@
             }
             finally   
             {
-                WriteUnitsTable();
+                connection.ExecuteNonQuery("BEGIN");
+                try
+                {
+                    WriteUnitsTable();
+                }
+                finally
+                {
+                    connection.ExecuteNonQuery("END");
+                }
                 Close();
                 Open(readOnly: true);
             }
