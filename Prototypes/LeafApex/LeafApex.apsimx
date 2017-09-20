@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -1614,11 +1614,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       </Root>
       <Leaf>
         <Name>Leaf</Name>
-        <ArrayFunction>
-          <Name>AgeMultiplier</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Values>0.5 0.75 1 1 1 1 1 1 1 1 1 1</Values>
-        </ArrayFunction>
         <ApexTiller>
           <Name>ApexTiller</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1633,7 +1628,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <ShadeInducedSenRate>0</ShadeInducedSenRate>
           <SenescedFrac>0</SenescedFrac>
           <DeltaPotentialArea>0</DeltaPotentialArea>
-          <DeltaStressConstrainedArea>0</DeltaStressConstrainedArea>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
@@ -1650,8 +1645,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -1663,7 +1656,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <ShadeInducedSenRate>0</ShadeInducedSenRate>
           <SenescedFrac>0</SenescedFrac>
           <DeltaPotentialArea>0</DeltaPotentialArea>
-          <DeltaStressConstrainedArea>0</DeltaStressConstrainedArea>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
@@ -1680,8 +1673,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -1715,11 +1706,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </ArrayBiomass>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
-          <ArrayFunction>
-            <Name>AgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>0.5 0.75 1 1 1 1 1 1 1 1 1 1</Values>
-          </ArrayFunction>
           <Constant>
             <Name>NReallocationFactor</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2205,21 +2191,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
-          <ArrayFunction>
-            <Name>LagDurationAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1</Values>
-          </ArrayFunction>
-          <ArrayFunction>
-            <Name>SenescenceDurationAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1</Values>
-          </ArrayFunction>
-          <ArrayFunction>
-            <Name>LeafSizeAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
-          </ArrayFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </LeafCohortParameters>
         <RUEModel>
@@ -2411,6 +2382,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
+        <ApexStandard>
+          <Name>ApexStandard</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </ApexStandard>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -5139,184 +5114,8 @@ namespace Models
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
-    <Graph>
-      <Name>LAI</Name>
-      <Series>
-        <Name>Series</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>DailyReport</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.Leaf.LAI</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>LeafArea</Name>
-      <Series>
-        <Name>Series</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>DailyReport</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.Leaf.SpecificArea</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-    </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
-  <Graph>
-    <Name>LAI</Name>
-    <Series>
-      <Name>Series</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16777216</ColourArgb>
-      <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>None</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>Solid</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>DailyReport</TableName>
-      <XFieldName>Clock.Today</XFieldName>
-      <YFieldName>Wheat.Leaf.LAI</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
-      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>TopLeft</LegendPosition>
-    <DisabledSeries />
-  </Graph>
-  <Graph>
-    <Name>LeafArea</Name>
-    <Series>
-      <Name>Series</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16777216</ColourArgb>
-      <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>None</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>Solid</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>DailyReport</TableName>
-      <XFieldName>Clock.Today</XFieldName>
-      <YFieldName>Wheat.Leaf.SpecificArea</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
-      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>TopLeft</LegendPosition>
-    <DisabledSeries />
-  </Graph>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>343</ExplorerWidth>
+  <ExplorerWidth>257</ExplorerWidth>
 </Simulations>

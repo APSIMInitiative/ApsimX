@@ -1,31 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Sugarcane</Name>
     <Weather>
       <Name>Weather</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Ingham.met</FileName>
     </Weather>
     <Clock>
       <Name>clock</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartDate>1990-01-01T00:00:00</StartDate>
       <EndDate>2000-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <Zone>
       <Name>Field</Name>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResidueTypes>
           <Name>ResidueTypesList</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <Pools>
@@ -61,7 +56,6 @@
         <Name>Soil</Name>
         <InitialWater>
           <Name>Initial water</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>0</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
@@ -70,7 +64,6 @@
           <Name>Water</Name>
           <SoilCrop>
             <Name>SugarcaneSoil</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -111,7 +104,6 @@
               <double>0</double>
             </XF>
           </SoilCrop>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -193,7 +185,6 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>6</SummerU>
           <SummerCona>3.5</SummerCona>
@@ -240,7 +231,6 @@
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -273,10 +263,17 @@
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
+          <wfpsN2N2O_x>
+            <double>22</double>
+            <double>88</double>
+          </wfpsN2N2O_x>
+          <wfpsN2N2O_y>
+            <double>0.1</double>
+            <double>1</double>
+          </wfpsN2N2O_y>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RootCN>40</RootCN>
           <RootWt>200</RootWt>
           <SoilCN>12.5</SoilCN>
@@ -351,7 +348,6 @@
         </SoilOrganicMatter>
         <Analysis>
           <Name>Analysis</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -383,7 +379,6 @@
         </Analysis>
         <Sample>
           <Name>Initial nitrogen</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -507,11 +502,6 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
-        <CERESSoilTemperature>
-          <Name>CERESSoilTemperature</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </CERESSoilTemperature>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RecordNumber>0</RecordNumber>
         <SoilType>Black Vertosol</SoilType>
         <Site>Jimbour</Site>
@@ -523,11 +513,9 @@
       </Soil>
       <Fertiliser>
         <Name>fertiliser</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Fertiliser>
       <Sugarcane>
         <Name>Sugarcane</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <maxt_lb>0</maxt_lb>
         <crop_type>Sugarcane</crop_type>
         <tt_emerg_to_begcane_ub>2000</tt_emerg_to_begcane_ub>
@@ -2847,7 +2835,6 @@
         <Name>Manager folder</Name>
         <Manager>
           <Name>SUGAR management</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <planting_day>1-apr</planting_day>
             <plantlen>450</plantlen>
@@ -2861,7 +2848,7 @@
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF;
+using Models.PMF.OldPlant;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -2966,7 +2953,6 @@ namespace Models
         </Manager>
         <Manager>
           <Name>Fertilise on fixed date</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <fert_date>1-Sep</fert_date>
             <fert_criteria>1000</fert_criteria>
@@ -2976,7 +2962,7 @@ namespace Models
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF;
+using Models.PMF.OldPlant;
 using Models.Soils;
 using APSIM.Shared.Utilities;
 
@@ -3036,12 +3022,9 @@ namespace Models
 }
 ]]></Code>
         </Manager>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
       <Report>
         <Name>Report</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -3072,22 +3055,14 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
-      <SoluteManager>
-        <Name>SoluteManager</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </SoluteManager>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
-  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

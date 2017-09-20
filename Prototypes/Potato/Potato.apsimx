@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="15">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -948,8 +948,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
           <Rank>1</Rank>
           <Area>900</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf2</Name>
@@ -978,8 +976,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
           <Rank>2</Rank>
           <Area>600</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf3</Name>
@@ -1008,8 +1004,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
           <Rank>3</Rank>
           <Area>300</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
@@ -1250,21 +1244,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
-          <ArrayFunction>
-            <Name>LagDurationAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1</Values>
-          </ArrayFunction>
-          <ArrayFunction>
-            <Name>SenescenceDurationAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1</Values>
-          </ArrayFunction>
-          <ArrayFunction>
-            <Name>LeafSizeAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
-          </ArrayFunction>
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </LeafCohortParameters>
         <RUEModel>
@@ -2333,8 +2312,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>false</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>1000</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>Validation</Name>
@@ -3266,12 +3243,12 @@ namespace Models
                 <Name>PotatoPlantAndHarvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <CultivarName>RussetBurbank</CultivarName>
-                  <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
-                  <PlantingDepth>120</PlantingDepth>
                   <PlantingDate>2003-10-20</PlantingDate>
+                  <CultivarName>RussetBurbank</CultivarName>
                   <RowSpace>280</RowSpace>
                   <RowWidth>770</RowWidth>
+                  <PlantingDepth>120</PlantingDepth>
+                  <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
                   <SetFinalLeafNumber>0</SetFinalLeafNumber>
                   <HarvestDate>2004-06-01</HarvestDate>
                 </Script>
@@ -10620,13 +10597,13 @@ A range of experimental data has been collected by SARDI at Parilla, Penola and 
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <PlantingDate>2007-11-23</PlantingDate>
-                  <HarvestDate>2008-03-05</HarvestDate>
                   <CultivarName>Coliban</CultivarName>
                   <RowSpace>280</RowSpace>
                   <RowWidth>770</RowWidth>
                   <PlantingDepth>170</PlantingDepth>
                   <StemNumberPerSeedTuber>2.4</StemNumberPerSeedTuber>
                   <SetFinalLeafNumber>28</SetFinalLeafNumber>
+                  <HarvestDate>2008-03-05</HarvestDate>
                 </Script>
                 <Code><![CDATA[
 using System;
@@ -11525,12 +11502,12 @@ namespace Models
               <Name>FertiliserRule</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <Day1>27</Day1>
-                <Day2>52</Day2>
-                <Day3>67</Day3>
                 <Fert1>37.5</Fert1>
                 <Fert2>37.5</Fert2>
                 <Fert3>25</Fert3>
+                <Day1>27</Day1>
+                <Day2>52</Day2>
+                <Day3>67</Day3>
               </Script>
               <Code><![CDATA[
 using System;
@@ -13663,8 +13640,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <Rank>1</Rank>
                   <Area>900</Area>
                   <MaintenanceRespiration>0</MaintenanceRespiration>
-                  <ApexGroupSize />
-                  <ApexGroupAge />
                 </LeafCohort>
                 <LeafCohort>
                   <Name>InitialLeaf2</Name>
@@ -13693,8 +13668,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <Rank>2</Rank>
                   <Area>600</Area>
                   <MaintenanceRespiration>0</MaintenanceRespiration>
-                  <ApexGroupSize />
-                  <ApexGroupAge />
                 </LeafCohort>
                 <LeafCohort>
                   <Name>InitialLeaf3</Name>
@@ -13723,8 +13696,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <Rank>3</Rank>
                   <Area>300</Area>
                   <MaintenanceRespiration>0</MaintenanceRespiration>
-                  <ApexGroupSize />
-                  <ApexGroupAge />
                 </LeafCohort>
                 <LeafCohortParameters>
                   <Name>CohortParameters</Name>
@@ -14886,13 +14857,13 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <PlantingDate>2006-10-10</PlantingDate>
-                  <HarvestDate>2007-03-31</HarvestDate>
                   <CultivarName>RussetBurbank</CultivarName>
                   <RowSpace>370</RowSpace>
                   <RowWidth>860</RowWidth>
                   <PlantingDepth>170</PlantingDepth>
                   <StemNumberPerSeedTuber>4.12</StemNumberPerSeedTuber>
                   <SetFinalLeafNumber>0</SetFinalLeafNumber>
+                  <HarvestDate>2007-03-31</HarvestDate>
                 </Script>
                 <Code><![CDATA[
 using System;
@@ -17239,8 +17210,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <Rank>1</Rank>
                   <Area>900</Area>
                   <MaintenanceRespiration>0</MaintenanceRespiration>
-                  <ApexGroupSize />
-                  <ApexGroupAge />
                 </LeafCohort>
                 <LeafCohort>
                   <Name>InitialLeaf2</Name>
@@ -17269,8 +17238,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <Rank>2</Rank>
                   <Area>600</Area>
                   <MaintenanceRespiration>0</MaintenanceRespiration>
-                  <ApexGroupSize />
-                  <ApexGroupAge />
                 </LeafCohort>
                 <LeafCohort>
                   <Name>InitialLeaf3</Name>
@@ -17299,8 +17266,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <Rank>3</Rank>
                   <Area>300</Area>
                   <MaintenanceRespiration>0</MaintenanceRespiration>
-                  <ApexGroupSize />
-                  <ApexGroupAge />
                 </LeafCohort>
                 <LeafCohortParameters>
                   <Name>CohortParameters</Name>
@@ -17515,21 +17480,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <FixedValue>0.2</FixedValue>
                   </Constant>
-                  <ArrayFunction>
-                    <Name>LagDurationAgeMultiplier</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Values>0.5 0.75 1</Values>
-                  </ArrayFunction>
-                  <ArrayFunction>
-                    <Name>SenescenceDurationAgeMultiplier</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Values>0.5 0.75 1</Values>
-                  </ArrayFunction>
-                  <ArrayFunction>
-                    <Name>LeafSizeAgeMultiplier</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Values>0.5 0.75 1 1 1 1 1 1 1 1 1 1</Values>
-                  </ArrayFunction>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                 </LeafCohortParameters>
                 <RUEModel>
@@ -18571,13 +18521,13 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <PlantingDate>2006-10-10</PlantingDate>
-                  <HarvestDate>2007-03-22</HarvestDate>
                   <CultivarName>RussetBurbank</CultivarName>
                   <RowSpace>370</RowSpace>
                   <RowWidth>860</RowWidth>
                   <PlantingDepth>120</PlantingDepth>
                   <StemNumberPerSeedTuber>2</StemNumberPerSeedTuber>
                   <SetFinalLeafNumber>0</SetFinalLeafNumber>
+                  <HarvestDate>2007-03-22</HarvestDate>
                 </Script>
                 <Code><![CDATA[
 using System;

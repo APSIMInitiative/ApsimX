@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="15">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -435,8 +435,6 @@ The proxy tree component of this model is intended also to be a guide for develo
       </SheetNames>
     </ExcelInput>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
     <Name>Moora</Name>
@@ -737,7 +735,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Zone].Area</string>
-            <string>Distance</string>
+            <string>Parent.Distance as Distance</string>
             <string>Radn</string>
             <string>[LocalMicroClimate].Radn</string>
             <string>[TreeProxy].Shade</string>
@@ -753,8 +751,8 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
             <string>sum([TreeProxy].WaterUptake) as WaterUptake</string>
@@ -1203,8 +1201,8 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -1608,8 +1606,8 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -2013,8 +2011,8 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -2418,8 +2416,8 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -2823,8 +2821,8 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -3228,8 +3226,8 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -3633,8 +3631,8 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -4038,8 +4036,8 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -5139,7 +5137,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Zone].Area</string>
-            <string>Distance</string>
+            <string>Parent.Distance as Distance</string>
             <string>Radn</string>
             <string>[LocalMicroClimate].Radn</string>
             <string>[TreeProxy].Shade</string>
@@ -5155,8 +5153,8 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
             <string>sum([TreeProxy].WaterUptake) as WaterUptake</string>
@@ -5582,7 +5580,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Zone].Area</string>
-            <string>Distance</string>
+            <string>Parent.Distance as Distance</string>
             <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             <string>[Wheat].Grain.Wt as GrainWt</string>
             <string>[Wheat].Grain.Size as GrainSize</string>
@@ -5599,8 +5597,8 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
             <string>sum([TreeProxy].WaterUptake) as WaterUptake</string>
@@ -6014,7 +6012,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Zone].Area</string>
-            <string>Distance</string>
+            <string>Parent.Distance as Distance</string>
             <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             <string>[Wheat].Grain.Wt as GrainWt</string>
             <string>[Wheat].Grain.Size as GrainSize</string>
@@ -6031,8 +6029,8 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
             <string>sum([TreeProxy].WaterUptake) as WaterUptake</string>
@@ -6446,7 +6444,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Zone].Area</string>
-            <string>Distance</string>
+            <string>Parent.Distance as Distance</string>
             <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             <string>[Wheat].Grain.Wt as GrainWt</string>
             <string>[Wheat].Grain.Size as GrainSize</string>
@@ -6463,8 +6461,8 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
             <string>sum([TreeProxy].WaterUptake) as WaterUptake</string>
@@ -6878,7 +6876,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Zone].Area</string>
-            <string>Distance</string>
+            <string>Parent.Distance as Distance</string>
             <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             <string>[Wheat].Grain.Wt as GrainWt</string>
             <string>[Wheat].Grain.Size as GrainSize</string>
@@ -6895,8 +6893,8 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
             <string>sum([TreeProxy].WaterUptake) as WaterUptake</string>
@@ -7310,7 +7308,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Zone].Area</string>
-            <string>Distance</string>
+            <string>Parent.Distance as Distance</string>
             <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             <string>[Wheat].Grain.Wt as GrainWt</string>
             <string>[Wheat].Grain.Size as GrainSize</string>
@@ -7327,8 +7325,8 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
             <string>sum([TreeProxy].WaterUptake) as WaterUptake</string>
@@ -7742,7 +7740,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Zone].Area</string>
-            <string>Distance</string>
+            <string>Parent.Distance as Distance</string>
             <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             <string>[Wheat].Grain.Wt as GrainWt</string>
             <string>[Wheat].Grain.Size as GrainSize</string>
@@ -7759,8 +7757,8 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
             <string>sum([TreeProxy].WaterUptake) as WaterUptake</string>
@@ -8174,7 +8172,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Zone].Area</string>
-            <string>Distance</string>
+            <string>Parent.Distance as Distance</string>
             <string>[Wheat].AboveGround.Wt as BiomassWt</string>
             <string>[Wheat].Grain.Wt as GrainWt</string>
             <string>[Wheat].Grain.Size as GrainSize</string>
@@ -8191,8 +8189,8 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>Distance</string>
-            <string>LocalMicroClimate.Wind</string>
+            <string>Parent.Distance as Distance</string>
+            <string>[LocalMicroClimate].Wind</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
             <string>sum([TreeProxy].WaterUptake) as WaterUptake</string>
@@ -10074,7 +10072,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>Radn</string>
               <string>[LocalMicroClimate].Radn</string>
               <string>[TreeProxy].Shade</string>
@@ -10091,8 +10089,8 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <VariableNames>
               <string>[Clock].Today as Date</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -10539,7 +10537,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -10576,8 +10574,8 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <VariableNames>
               <string>[Clock].Today as Date</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -11077,7 +11075,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -11114,8 +11112,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today as Date</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -11615,7 +11613,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -11652,8 +11650,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today as Date</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -12153,7 +12151,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -12190,8 +12188,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today as Date</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -12691,7 +12689,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -12728,8 +12726,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today as Date</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -13229,7 +13227,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -13266,8 +13264,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today as Date</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -13767,7 +13765,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -13804,8 +13802,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today as Date</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -14305,7 +14303,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -14342,8 +14340,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today as Date</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -15607,7 +15605,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>Radn</string>
               <string>[LocalMicroClimate].Radn</string>
               <string>[TreeProxy].Shade</string>
@@ -15623,8 +15621,8 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today as Date</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -16067,7 +16065,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -16103,8 +16101,8 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today as Date</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -16600,7 +16598,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -16636,8 +16634,8 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today as Date</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -17133,7 +17131,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -17169,8 +17167,8 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today as Date</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -17666,7 +17664,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -17702,8 +17700,8 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today as Date</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -18199,7 +18197,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -18235,8 +18233,8 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today as Date</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -18732,7 +18730,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -18768,8 +18766,8 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today as Date</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -19265,7 +19263,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -19301,8 +19299,8 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today as Date</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -19798,7 +19796,7 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
               <string>[Maize].Stem.Live.Wt</string>
@@ -19834,8 +19832,8 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today as Date</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -21309,7 +21307,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>Radn</string>
               <string>[LocalMicroClimate].Radn</string>
               <string>[TreeProxy].Shade</string>
@@ -21325,8 +21323,8 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
               <string>sum([TreeProxy].WaterUptake) as WaterUptake</string>
@@ -21700,7 +21698,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Wheat].Grain.Size as GrainSize</string>
@@ -21718,8 +21716,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -22107,7 +22105,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Wheat].Grain.Size as GrainSize</string>
@@ -22125,8 +22123,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -22514,7 +22512,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Wheat].Grain.Size as GrainSize</string>
@@ -22532,8 +22530,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -22921,7 +22919,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Wheat].Grain.Size as GrainSize</string>
@@ -22939,8 +22937,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -23328,7 +23326,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Wheat].Grain.Size as GrainSize</string>
@@ -23346,8 +23344,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -23735,7 +23733,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Wheat].Grain.Size as GrainSize</string>
@@ -23753,8 +23751,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -24142,7 +24140,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Wheat].Grain.Size as GrainSize</string>
@@ -24160,8 +24158,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -24549,7 +24547,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Wheat].Grain.Size as GrainSize</string>
@@ -24567,8 +24565,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -24956,7 +24954,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Wheat].Grain.Size as GrainSize</string>
@@ -24974,8 +24972,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -25363,7 +25361,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Wheat].Grain.Size as GrainSize</string>
@@ -25381,8 +25379,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -25770,7 +25768,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Wheat].Grain.Size as GrainSize</string>
@@ -25788,8 +25786,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -26161,7 +26159,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
-              <string>Distance</string>
+              <string>Parent.Distance as Distance</string>
               <string>[Wheat].AboveGround.Wt as BiomassWt</string>
               <string>[Wheat].Grain.Wt as GrainWt</string>
               <string>[Wheat].Grain.Size as GrainSize</string>
@@ -26179,8 +26177,8 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Clock].Today.Year as Year</string>
-              <string>Distance</string>
-              <string>LocalMicroClimate.Wind</string>
+              <string>Parent.Distance as Distance</string>
+              <string>[LocalMicroClimate].Wind</string>
               <string>sum([Soil].SoilWater.SWmm[1:4]) as SW90cm</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>

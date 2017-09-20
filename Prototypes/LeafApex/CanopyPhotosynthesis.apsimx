@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1717,8 +1717,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -1747,8 +1745,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -2276,21 +2272,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <RefTemp>60</RefTemp>
             <MaximumTemperatureWeighting>0.71</MaximumTemperatureWeighting>
           </WangEngelTempFunction>
-          <ArrayFunction>
-            <Name>LagDurationAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1</Values>
-          </ArrayFunction>
-          <ArrayFunction>
-            <Name>SenescenceDurationAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1</Values>
-          </ArrayFunction>
-          <ArrayFunction>
-            <Name>LeafSizeAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
-          </ArrayFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </LeafCohortParameters>
         <CanopyPhotosynthesis>
@@ -4270,6 +4251,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Wheat</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>HarvestReport</Name>
@@ -6466,6 +6448,7 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>ResetSW</Name>
@@ -8899,6 +8882,7 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>DailyReport</Name>

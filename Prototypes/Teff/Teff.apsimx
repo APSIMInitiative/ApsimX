@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="10">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -429,7 +429,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <PhaseLookup>
-          <Name>Phyllochron</Name>
+          <Name>MainStemNodeAppearanceRate</Name>
           <PhaseLookupValue>
             <Name>Phyllochron</Name>
             <LinearInterpolationFunction>
@@ -760,7 +760,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <FixedValue>0</FixedValue>
         </Constant>
         <HoldFunction>
-          <Name>FinalLeafNumber</Name>
+          <Name>MainStemFinalNodeNumber</Name>
           <AddFunction>
             <Name>ValueToHold</Name>
             <Constant>
@@ -808,7 +808,7 @@ A function is used to provide flowering date as days after sowing(DAS).
                         <VariableReference>
                           <Name>Phyllochron</Name>
                           <IncludeInDocumentation>true</IncludeInDocumentation>
-                          <VariableName>[Structure].Phyllochron.Value()</VariableName>
+                          <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
                         </VariableReference>
                         <Constant>
                           <Name>LeafTipsPerPrimordia</Name>
@@ -1429,10 +1429,10 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <StorageNReallocated>0</StorageNReallocated>
-          <StorageWtReallocated>0</StorageWtReallocated>
+          <NonStructuralNReallocated>0</NonStructuralNReallocated>
+          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
+          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -1440,8 +1440,6 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Rank>1</Rank>
           <Area>380</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -1459,10 +1457,10 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <StorageNReallocated>0</StorageNReallocated>
-          <StorageWtReallocated>0</StorageWtReallocated>
+          <NonStructuralNReallocated>0</NonStructuralNReallocated>
+          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
+          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -1470,8 +1468,6 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -1570,7 +1566,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].Phyllochron.Phyllochron.Value()</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>NumberOfExpandingLeaves</Name>
@@ -1736,7 +1732,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <FixedValue>0.5</FixedValue>
           </Constant>
           <Constant>
-            <Name>StorageFraction</Name>
+            <Name>NonStructuralFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
@@ -1796,21 +1792,6 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
-          <ArrayFunction>
-            <Name>LagDurationAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1</Values>
-          </ArrayFunction>
-          <ArrayFunction>
-            <Name>SenescenceDurationAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1</Values>
-          </ArrayFunction>
-          <ArrayFunction>
-            <Name>LeafSizeAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
-          </ArrayFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </LeafCohortParameters>
         <RUEModel>
@@ -2895,6 +2876,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Teff</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
@@ -3561,6 +3543,7 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -4389,6 +4372,7 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -5977,6 +5961,7 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -7775,6 +7760,7 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -8731,6 +8717,7 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -10229,6 +10216,7 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -10953,6 +10941,7 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -11705,6 +11694,7 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -12533,6 +12523,7 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -14033,6 +14024,7 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -15703,6 +15695,7 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Report>
             <Name>HarvestReport</Name>

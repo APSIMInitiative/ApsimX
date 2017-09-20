@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -9,20 +9,13 @@
         <Name>Age</Name>
         <Constant>
           <Name>day</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.0027397260273972603</FixedValue>
         </Constant>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <StartStageName>Emergence</StartStageName>
         <EndStageName>Old</EndStageName>
-        <FractionRemovedOnCut>0</FractionRemovedOnCut>
-        <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
-        <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
-        <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
       </AccumulateFunction>
       <PhotoperiodFunction>
         <Name>Photoperiod</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Twilight>-6</Twilight>
         <DayLength>0</DayLength>
       </PhotoperiodFunction>
@@ -30,7 +23,6 @@
         <Name>Phenology</Name>
         <StageBasedInterpolation>
           <Name>StageCode</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Stages>
             <string>Emergence</string>
             <string>EndJuvenile</string>
@@ -47,12 +39,10 @@
         </StageBasedInterpolation>
         <Constant>
           <Name>ThermalTime</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <GerminatingPhase>
           <Name>Germinating</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Sowing</Start>
           <End>Germination</End>
         </GerminatingPhase>
@@ -60,10 +50,8 @@
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Germination</Start>
           <End>Emergence</End>
           <ShootLag>7</ShootLag>
@@ -73,15 +61,12 @@
           <Name>Juvenile</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>365</FixedValue>
           </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>EndJuvenile</End>
         </GenericPhase>
@@ -89,15 +74,12 @@
           <Name>Mature</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1825</FixedValue>
           </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>EndJuvenile</Start>
           <End>Maturity</End>
         </GenericPhase>
@@ -105,15 +87,12 @@
           <Name>Declining</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>27010</FixedValue>
           </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Maturity</Start>
           <End>Old</End>
         </GenericPhase>
@@ -121,31 +100,24 @@
           <Name>Old</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Old</Start>
           <End>Unused</End>
         </EndPhase>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
         <RelativeAllocation>
           <Name>NArbitrator</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RelativeAllocation>
         <RelativeAllocation>
           <Name>DMArbitrator</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RelativeAllocation>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </OrganArbitrator>
       <CompositeBiomass>
         <Name>AboveGround</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -155,7 +127,6 @@
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>AboveGroundLive</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Stem].Live</string>
@@ -163,7 +134,6 @@
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>AboveGroundDead</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Dead</string>
           <string>[Stem].Dead</string>
@@ -171,7 +141,6 @@
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>BelowGround</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Root].Live</string>
           <string>[Root].Dead</string>
@@ -179,7 +148,6 @@
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>Total</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -191,7 +159,6 @@
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>TotalLive</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Stem].Live</string>
@@ -200,7 +167,6 @@
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>TotalDead</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Dead</string>
           <string>[Stem].Dead</string>
@@ -211,27 +177,22 @@
         <Name>Leaf</Name>
         <Memo>
           <Name>Description</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[]]></MemoText>
         </Memo>
         <MultiplyFunction>
           <Name>InitialWtFunction</Name>
           <Constant>
             <Name>InitialPlantWt</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.01</FixedValue>
             <Units>g/plant</Units>
           </Constant>
           <VariableReference>
             <Name>Population</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Plant].Population</VariableName>
           </VariableReference>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <Constant>
           <Name>StructuralFraction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
@@ -241,7 +202,6 @@
             <Name>FRGRFunctionTemp</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>5</double>
                 <double>20</double>
@@ -255,9 +215,7 @@
                 <double>0</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AirTemperatureFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MinimumFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -267,7 +225,6 @@
               <Name>PotentialFraction</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>0.5</double>
@@ -281,14 +238,12 @@
                   <double>0.52</double>
                 </Y>
               </XYPairs>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <XProperty>[Bambatsi].Age.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>PhotoperiodEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>10</double>
                   <double>12</double>
@@ -302,18 +257,14 @@
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <XProperty>[Bambatsi].Photoperiod.Value()</XProperty>
             </LinearInterpolationFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>ExtinctionCoefficient</Name>
           <Memo>
             <Name>Memo</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[Value of 0.57 from 
 Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees
 Author(s): Robin A. Harrington and James H. Fownes
@@ -321,14 +272,12 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.57</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>100</double>
@@ -340,35 +289,29 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>1200</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[AboveGround].Wt</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MaximumNConc</Name>
           <Memo>
             <Name>Memo</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[0.043 gN/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
 (GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
           </Memo>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.025</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.015</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.9</FractionLiveToRemove>
             <FractionDeadToRemove>0.9</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -376,7 +319,6 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -384,7 +326,6 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -392,51 +333,42 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>LeafResidenceTime</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>130</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafDetachmentTime</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>365</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>2</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>8</double>
                 <double>20</double>
@@ -450,7 +382,6 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>0</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
           </WeightedTemperatureFunction>
           <LinearInterpolationFunction>
@@ -461,7 +392,6 @@ But their data suggests a value of 0.3]]></MemoText>
                 <Name>Graph</Name>
                 <Series>
                   <Name>FVPD</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -480,7 +410,6 @@ But their data suggests a value of 0.3]]></MemoText>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Axis>
                   <Type>Left</Type>
                   <Title>Y</Title>
@@ -499,8 +428,8 @@ But their data suggests a value of 0.3]]></MemoText>
                 </Axis>
                 <LegendPosition>BottomRight</LegendPosition>
                 <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
               </Graph>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>10</double>
@@ -512,7 +441,6 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>1</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
@@ -523,7 +451,6 @@ But their data suggests a value of 0.3]]></MemoText>
                 <Name>Graph</Name>
                 <Series>
                   <Name>FN</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -542,7 +469,6 @@ But their data suggests a value of 0.3]]></MemoText>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Axis>
                   <Type>Left</Type>
                   <Title>Y</Title>
@@ -561,8 +487,8 @@ But their data suggests a value of 0.3]]></MemoText>
                 </Axis>
                 <LegendPosition>BottomRight</LegendPosition>
                 <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
               </Graph>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -574,7 +500,6 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>1</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Fn</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
@@ -585,7 +510,6 @@ But their data suggests a value of 0.3]]></MemoText>
                 <Name>Graph</Name>
                 <Series>
                   <Name>FW</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -604,7 +528,6 @@ But their data suggests a value of 0.3]]></MemoText>
                   <Cumulative>false</Cumulative>
                   <CumulativeX>false</CumulativeX>
                 </Series>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Axis>
                   <Type>Left</Type>
                   <Title>Y</Title>
@@ -623,8 +546,8 @@ But their data suggests a value of 0.3]]></MemoText>
                 </Axis>
                 <LegendPosition>BottomRight</LegendPosition>
                 <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
               </Graph>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -636,33 +559,27 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>1</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
           <RUECO2Function>
             <Name>FCO2</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           </RUECO2Function>
           <Memo>
             <Name>Memo</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature conditions for field pea.  Halving this to make it total radiation gives 0.8 g/MJ and adding 20% to account for root and  nodule production and N fixiation costs gives 1.0 g/MJ
 ]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>RadnInt</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].RadIntTot</VariableName>
           </VariableReference>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RUEModel>
         <LinearInterpolationFunction>
           <Name>LeafKillFraction</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>3</double>
@@ -672,12 +589,10 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <double>0</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Weather].MinT</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumLAI</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.1</FixedValue>
           <Units>m2/m2</Units>
         </Constant>
@@ -685,14 +600,12 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>LAIDeadFunction</Name>
           <VariableReference>
             <Name>DeadLeafWt</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].Dead.Wt</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>SLA</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -702,16 +615,13 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
                 <double>0.015</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Bambatsi].Age.Value()</XProperty>
           </LinearInterpolationFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <Constant>
           <Name>ExtinctionCoefficientDead</Name>
           <Memo>
             <Name>Memo</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[Value of 0.57 from 
 Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees
 Author(s): Robin A. Harrington and James H. Fownes
@@ -719,14 +629,12 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.57</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>SpecificLeafAreaFunction</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>1</double>
@@ -736,10 +644,8 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>0.0125</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Bambatsi].Age.Value()</XProperty>
         </LinearInterpolationFunction>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
         <CohortsInitialised>false</CohortsInitialised>
@@ -760,59 +666,49 @@ But their data suggests a value of 0.3]]></MemoText>
         <Name>Root</Name>
         <CompositeBiomass>
           <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Root].LayerLive</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
           <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Root].LayerDead</string>
           </Propertys>
         </CompositeBiomass>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>Old</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>RootFrontVelocity</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>20</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>6</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.008</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1000000</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>3</double>
@@ -822,14 +718,12 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>1</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Leaf].LAI</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.003</double>
@@ -839,14 +733,12 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>0.03</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNH4</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.003</double>
@@ -856,14 +748,12 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>0</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NUptakeSWFactor</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.5</double>
@@ -875,18 +765,15 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>1</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].RWC</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.02</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>100</FixedValue>
           <Units>m/g</Units>
         </Constant>
@@ -894,7 +781,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -902,7 +788,6 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.3</FractionLiveToResidue>
@@ -910,7 +795,6 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -918,7 +802,6 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
@@ -926,40 +809,31 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Thin</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
-        <PartitionFractionDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <LinearInterpolationFunction>
-            <Name>PartitionFraction</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>0</double>
-                <double>1</double>
-                <double>1.1</double>
-                <double>5</double>
-              </X>
-              <Y>
-                <double>0.5</double>
-                <double>0.5</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Bambatsi].Age.Value()</XProperty>
-          </LinearInterpolationFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </PartitionFractionDemandFunction>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <LinearInterpolationFunction>
+          <Name>PartitionFraction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+              <double>1.1</double>
+              <double>5</double>
+            </X>
+            <Y>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.2</double>
+              <double>0.2</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Bambatsi].Age.Value()</XProperty>
+        </LinearInterpolationFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
@@ -970,23 +844,19 @@ But their data suggests a value of 0.3]]></MemoText>
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>Old</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <PartitionFractionDemandFunction>
@@ -995,7 +865,6 @@ But their data suggests a value of 0.3]]></MemoText>
             <Name>PartitionFraction</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -1009,50 +878,40 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>0.27</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Bambatsi].Age.Value()</XProperty>
           </LinearInterpolationFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>SenescenceRate</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.0015</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.0014</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
@@ -1060,7 +919,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.9</FractionLiveToRemove>
             <FractionDeadToRemove>0.9</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1068,7 +926,6 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1076,7 +933,6 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.9</FractionLiveToRemove>
             <FractionDeadToRemove>0.9</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1084,7 +940,6 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
@@ -1092,53 +947,35 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Thin</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
-        <Constant>
-          <Name>DMReallocationFactor</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
-        </Constant>
-        <VariableReference>
-          <Name>CriticalNConc</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
-        </VariableReference>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <Cultivar>
         <Name>Bambatsi</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Command />
       </Cultivar>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Bambatsi</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>Observed</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
@@ -1147,19 +984,16 @@ But their data suggests a value of 0.3]]></MemoText>
     </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
       <Name>PredictedObservedSoilWater</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>ObservedSoilWater</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -1171,23 +1005,19 @@ But their data suggests a value of 0.3]]></MemoText>
         <Name>Hudson</Name>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>Hudson.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
           <Name>Clock</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1994-08-05T00:00:00</StartDate>
           <EndDate>2000-01-23T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>Summary</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </SoilArbitrator>
         <Zone>
           <Name>Field</Name>
@@ -1197,7 +1027,6 @@ But their data suggests a value of 0.3]]></MemoText>
               <Name>Water</Name>
               <SoilCrop>
                 <Name>BambatsiSoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.25</double>
                   <double>0.3</double>
@@ -1253,7 +1082,6 @@ But their data suggests a value of 0.3]]></MemoText>
                   <double>0</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -1383,7 +1211,6 @@ But their data suggests a value of 0.3]]></MemoText>
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>5</SummerCona>
@@ -1440,7 +1267,6 @@ But their data suggests a value of 0.3]]></MemoText>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -1473,10 +1299,17 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
+              <wfpsN2N2O_x>
+                <double>22</double>
+                <double>88</double>
+              </wfpsN2N2O_x>
+              <wfpsN2N2O_y>
+                <double>0.1</double>
+                <double>1</double>
+              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>10</RootWt>
               <SoilCN>14.5</SoilCN>
@@ -1576,7 +1409,6 @@ But their data suggests a value of 0.3]]></MemoText>
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -1618,7 +1450,6 @@ But their data suggests a value of 0.3]]></MemoText>
             </Analysis>
             <Sample>
               <Name>Initial nitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -1681,7 +1512,6 @@ But their data suggests a value of 0.3]]></MemoText>
             </Sample>
             <Sample>
               <Name>Initial water</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -1724,34 +1554,26 @@ But their data suggests a value of 0.3]]></MemoText>
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
-            <CERESSoilTemperature>
-              <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </CERESSoilTemperature>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
+            <CERESSoilTemperature />
           </Soil>
           <Irrigation>
             <Name>Irrigation</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Irrigation>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <TillageTypes>
               <Name>TillageTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <TillageType />
             </TillageTypes>
             <Pools>
@@ -1785,28 +1607,31 @@ But their data suggests a value of 0.3]]></MemoText>
           </SurfaceOrganicMatter>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0.1</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.13</soil_albedo>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.29366217672824863</albedo>
             <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Plant>
             <Name>Bambatsi</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Bambatsi</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Operations>
             <Name>Operations</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>1994-12-08</Date>
               <Action>[Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);</Action>
@@ -1894,7 +1719,6 @@ But their data suggests a value of 0.3]]></MemoText>
           </Operations>
           <Report>
             <Name>Report</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -1964,7 +1788,7 @@ But their data suggests a value of 0.3]]></MemoText>
               <string>Bambatsi.Root.MaximumNConc.Value()</string>
               <string>Bambatsi.TotalLive.Wt</string>
               <string>Bambatsi.Stem.Live.StructuralWt</string>
-              <string>Bambatsi.Stem.Live.StorageWt</string>
+              <string>Bambatsi.Stem.Live.NonStructuralWt</string>
               <string>Bambatsi.Leaf.SpecificArea</string>
               <string>Bambatsi.TotalDead.Wt</string>
               <string>[Soil].SoilWater.SWmm</string>
@@ -1978,21 +1802,15 @@ But their data suggests a value of 0.3]]></MemoText>
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
-          <SoluteManager>
-            <Name>SoluteManager</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoluteManager>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Simulation>
       <Graph>
         <Name>AboveGroundWt</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2014,7 +1832,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2034,7 +1851,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -2053,12 +1869,12 @@ But their data suggests a value of 0.3]]></MemoText>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
         <Series>
           <Name>Leaf</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2080,7 +1896,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2100,7 +1915,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -2119,12 +1933,12 @@ But their data suggests a value of 0.3]]></MemoText>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Biomass</Name>
         <Series>
           <Name>Predicted LiveBiomass</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2146,7 +1960,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Observed LiveBiomass</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2168,7 +1981,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Predicted DeadBiomass</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2190,7 +2002,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Observed DeadBiomass</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2210,7 +2021,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -2229,12 +2039,12 @@ But their data suggests a value of 0.3]]></MemoText>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Stress</Name>
         <Series>
           <Name>Series</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2256,7 +2066,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Series1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2276,7 +2085,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -2295,12 +2103,12 @@ But their data suggests a value of 0.3]]></MemoText>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SW 10 to 50cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2322,7 +2130,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2342,7 +2149,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -2361,12 +2167,12 @@ But their data suggests a value of 0.3]]></MemoText>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SW 50 to 90cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2388,7 +2194,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2408,7 +2213,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -2427,12 +2231,12 @@ But their data suggests a value of 0.3]]></MemoText>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SW 90 to 130cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2454,7 +2258,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2474,7 +2277,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -2493,12 +2295,12 @@ But their data suggests a value of 0.3]]></MemoText>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SW 130 to 170cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2520,7 +2322,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2540,7 +2341,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -2559,12 +2359,12 @@ But their data suggests a value of 0.3]]></MemoText>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SW 170 to 210cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2586,7 +2386,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2606,7 +2405,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -2625,12 +2423,12 @@ But their data suggests a value of 0.3]]></MemoText>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SW 210 to 250cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2652,7 +2450,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2672,7 +2469,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -2691,12 +2487,12 @@ But their data suggests a value of 0.3]]></MemoText>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SW 10 to 250cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2718,7 +2514,6 @@ But their data suggests a value of 0.3]]></MemoText>
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2738,7 +2533,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -2757,6 +2551,7 @@ But their data suggests a value of 0.3]]></MemoText>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Pre vs Obs TotalSoilWater</Name>
@@ -2764,10 +2559,8 @@ But their data suggests a value of 0.3]]></MemoText>
           <Name>Series</Name>
           <Regression>
             <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2787,7 +2580,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -2806,15 +2598,13 @@ But their data suggests a value of 0.3]]></MemoText>
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
       <Name>Dalby</Name>
       <Manager>
         <Name>Wet</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script>
           <StartDate>1-Nov</StartDate>
           <EndDate>30-Mar</EndDate>
@@ -2823,7 +2613,7 @@ But their data suggests a value of 0.3]]></MemoText>
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF;
+using Models.PMF.OldPlant;
 using Models.Soils;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
@@ -2892,7 +2682,6 @@ namespace Models
             <Name>Irr</Name>
             <Operations>
               <Name>Wet</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>1982-01-12</Date>
                 <Action>[Irrigation].Apply(5);</Action>
@@ -2920,7 +2709,6 @@ namespace Models
             </Operations>
             <Operations>
               <Name>Dry</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>1982-01-12</Date>
                 <Action>[Irrigation].Apply(5);</Action>
@@ -2946,34 +2734,28 @@ namespace Models
                 <Action>[Irrigation].Apply(5);</Action>
               </Operation>
             </Operations>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Specifications>
               <string>[IrrigationSchedule]</string>
             </Specifications>
           </Factor>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Factors>
         <Simulation>
           <Name>DalbyBase</Name>
           <Weather>
             <Name>Weather</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FileName>DALBYCOL.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <Clock>
             <Name>Clock</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <StartDate>1982-01-12T00:00:00</StartDate>
             <EndDate>1984-04-29T00:00:00</EndDate>
           </Clock>
           <Summary>
             <Name>Summary</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Summary>
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoilArbitrator>
           <Zone>
             <Name>Field</Name>
@@ -2983,7 +2765,6 @@ namespace Models
                 <Name>Water</Name>
                 <SoilCrop>
                   <Name>BambatsiSoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
                     <double>0.27</double>
                     <double>0.29</double>
@@ -3015,7 +2796,6 @@ namespace Models
                     <double>1</double>
                   </XF>
                 </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
                   <double>100</double>
                   <double>125</double>
@@ -3089,7 +2869,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>4</SummerCona>
@@ -3130,7 +2909,6 @@ namespace Models
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <fom_type>
                   <string>default</string>
                   <string>manure</string>
@@ -3163,10 +2941,17 @@ namespace Models
                   <double>0.08</double>
                   <double>0.9</double>
                 </fract_lign>
+                <wfpsN2N2O_x>
+                  <double>22</double>
+                  <double>88</double>
+                </wfpsN2N2O_x>
+                <wfpsN2N2O_y>
+                  <double>0.1</double>
+                  <double>1</double>
+                </wfpsN2N2O_y>
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <RootCN>60</RootCN>
                 <RootWt>2000</RootWt>
                 <SoilCN>14</SoilCN>
@@ -3226,7 +3011,6 @@ namespace Models
               </SoilOrganicMatter>
               <Analysis>
                 <Name>Analysis</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
                   <double>100</double>
                   <double>200</double>
@@ -3268,7 +3052,6 @@ namespace Models
               </Analysis>
               <Sample>
                 <Name>Initial nitrogen</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
                   <double>100</double>
                   <double>125</double>
@@ -3307,7 +3090,6 @@ namespace Models
               </Sample>
               <Sample>
                 <Name>Initial water</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
                   <double>100</double>
                   <double>125</double>
@@ -3334,34 +3116,26 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </CERESSoilTemperature>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
+              <CERESSoilTemperature />
             </Soil>
             <Irrigation>
               <Name>Irrigation</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
             </Irrigation>
             <Fertiliser>
               <Name>Fertiliser</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
             </Fertiliser>
             <SurfaceOrganicMatter>
               <Name>SurfaceOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResidueTypes>
                 <Name>ResidueTypes</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LoadFromResource>ResidueTypes</LoadFromResource>
               </ResidueTypes>
               <TillageTypes>
                 <Name>TillageTypes</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <TillageType />
               </TillageTypes>
               <Pools>
@@ -3395,28 +3169,31 @@ namespace Models
             </SurfaceOrganicMatter>
             <MicroClimate>
               <Name>MicroClimate</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <a_interception>0</a_interception>
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.13</soil_albedo>
+              <air_pressure>1010</air_pressure>
+              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
+              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.29366217672824863</albedo>
               <emissivity>0.96</emissivity>
+              <gsmax>0.01</gsmax>
+              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Bambatsi</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <CropType>Bambatsi</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Operations>
               <Name>Operations</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>1982-01-12</Date>
                 <Action>[Bambatsi].Sow(population: 200, cultivar: Bambatsi, depth: 100, rowSpacing: 100);</Action>
@@ -3476,7 +3253,6 @@ namespace Models
             </Operations>
             <Report>
               <Name>Report</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
@@ -3545,7 +3321,7 @@ namespace Models
                 <string>Bambatsi.Root.MaximumNConc.Value()</string>
                 <string>Bambatsi.TotalLive.Wt</string>
                 <string>Bambatsi.Stem.Live.StructuralWt</string>
-                <string>Bambatsi.Stem.Live.StorageWt</string>
+                <string>Bambatsi.Stem.Live.NonStructuralWt</string>
                 <string>Bambatsi.Leaf.SpecificArea</string>
                 <string>Bambatsi.TotalDead.Wt</string>
                 <string>[Soil].SoilWater.SWmm</string>
@@ -3565,23 +3341,16 @@ namespace Models
             </Report>
             <Operations>
               <Name>IrrigationSchedule</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
             </Operations>
-            <SoluteManager>
-              <Name>SoluteManager</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </SoluteManager>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Simulation>
         <Graph>
           <Name>WaterStress</Name>
           <Series>
             <Name>Series1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3601,7 +3370,6 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Title />
@@ -3620,12 +3388,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>NStress</Name>
           <Series>
             <Name>Series1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3647,7 +3415,6 @@ namespace Models
           </Series>
           <Series>
             <Name>Series</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
@@ -3667,7 +3434,6 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Title />
@@ -3693,12 +3459,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>ET</Name>
           <Series>
             <Name>Ep</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3720,7 +3486,6 @@ namespace Models
           </Series>
           <Series>
             <Name>Es</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3742,7 +3507,6 @@ namespace Models
           </Series>
           <Series>
             <Name>PotentialEP</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3762,7 +3526,6 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -3779,12 +3542,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Runoff</Name>
           <Series>
             <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Bar</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3804,7 +3567,6 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -3821,12 +3583,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Cover</Name>
           <Series>
             <Name>Total</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3848,7 +3610,6 @@ namespace Models
           </Series>
           <Series>
             <Name>Green</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3868,7 +3629,6 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -3885,12 +3645,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Height</Name>
           <Series>
             <Name>Total</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3910,7 +3670,6 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -3927,12 +3686,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>PET</Name>
           <Series>
             <Name>Total</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3954,7 +3713,6 @@ namespace Models
           </Series>
           <Series>
             <Name>Total1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3974,7 +3732,6 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -3991,12 +3748,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>NO3</Name>
           <Series>
             <Name>Series</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4016,7 +3773,6 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -4033,12 +3789,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>LAI</Name>
           <Series>
             <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4060,7 +3816,6 @@ namespace Models
           </Series>
           <Series>
             <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4082,7 +3837,6 @@ namespace Models
           </Series>
           <Series>
             <Name>Predicted1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
@@ -4102,7 +3856,6 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -4126,12 +3879,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>RUE</Name>
           <Series>
             <Name>Series</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4153,7 +3906,6 @@ namespace Models
           </Series>
           <Series>
             <Name>Series1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
@@ -4173,7 +3925,6 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -4197,14 +3948,13 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Experiment>
       <Graph>
         <Name>LAI</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4226,7 +3976,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4246,7 +3995,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4263,12 +4011,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Biomass</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4290,7 +4038,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4312,7 +4059,6 @@ namespace Models
         </Series>
         <Series>
           <Name>PredictedStem</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4334,7 +4080,6 @@ namespace Models
         </Series>
         <Series>
           <Name>ObservedStem</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4354,7 +4099,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4371,12 +4115,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>RootWt</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4398,7 +4142,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4418,7 +4161,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4435,12 +4177,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SW 0 to 190cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4462,7 +4204,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4482,7 +4223,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4499,12 +4239,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SW 0 to 42cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4526,7 +4266,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4546,7 +4285,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4563,12 +4301,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SW 42 to 100cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4590,7 +4328,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4610,7 +4347,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4627,12 +4363,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SW 100 to 190cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4654,7 +4390,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4674,7 +4409,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4691,6 +4425,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Pre vs Obs TotalSoilWater</Name>
@@ -4698,10 +4433,8 @@ namespace Models
           <Name>Series</Name>
           <Regression>
             <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>true</ForEachSeries>
           </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4721,7 +4454,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -4740,12 +4472,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>RootLengthDensity10cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4767,7 +4499,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4787,7 +4518,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4804,12 +4534,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>RootLengthDensity20cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4831,7 +4561,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4851,7 +4580,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4868,12 +4596,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>RootLengthDensity40cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4895,7 +4623,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4915,7 +4642,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4932,12 +4658,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>RootLengthDensity70cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4959,7 +4685,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4979,7 +4704,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4996,12 +4720,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>RootLengthDensity100cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5023,7 +4747,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5043,7 +4766,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -5060,12 +4782,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>RootLengthDensity130cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5087,7 +4809,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5107,7 +4828,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -5124,12 +4844,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>RootLengthDensity160cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5151,7 +4871,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5171,7 +4890,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -5188,12 +4906,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>RootLengthDensity190cm</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5215,7 +4933,6 @@ namespace Models
         </Series>
         <Series>
           <Name>Observed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5235,7 +4952,6 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -5252,9 +4968,8 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
       <Name>ResidueTest</Name>
@@ -5262,23 +4977,19 @@ namespace Models
         <Name>ResidueTest</Name>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>Hudson.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
           <Name>Clock</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1994-08-05T00:00:00</StartDate>
           <EndDate>2000-01-23T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>Summary</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </SoilArbitrator>
         <Zone>
           <Name>Field</Name>
@@ -5288,7 +4999,6 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>BambatsiSoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.25</double>
                   <double>0.3</double>
@@ -5344,7 +5054,6 @@ namespace Models
                   <double>0</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -5474,7 +5183,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>5</SummerCona>
@@ -5531,7 +5239,6 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -5564,10 +5271,17 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
+              <wfpsN2N2O_x>
+                <double>22</double>
+                <double>88</double>
+              </wfpsN2N2O_x>
+              <wfpsN2N2O_y>
+                <double>0.1</double>
+                <double>1</double>
+              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>10</RootWt>
               <SoilCN>14.5</SoilCN>
@@ -5667,7 +5381,6 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -5709,7 +5422,6 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Initial nitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -5772,7 +5484,6 @@ namespace Models
             </Sample>
             <Sample>
               <Name>Initial water</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -5815,34 +5526,26 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
-            <CERESSoilTemperature>
-              <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </CERESSoilTemperature>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
+            <CERESSoilTemperature />
           </Soil>
           <Irrigation>
             <Name>Irrigation</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Irrigation>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <TillageTypes>
               <Name>TillageTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <TillageType />
             </TillageTypes>
             <Pools>
@@ -5876,28 +5579,31 @@ namespace Models
           </SurfaceOrganicMatter>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0.1</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.13</soil_albedo>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.29366217672824863</albedo>
             <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Plant>
             <Name>Bambatsi</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Bambatsi</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Operations>
             <Name>Operations</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>1994-12-08</Date>
               <Action>[Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);</Action>
@@ -5985,7 +5691,6 @@ namespace Models
           </Operations>
           <Report>
             <Name>Report</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -6055,7 +5760,7 @@ namespace Models
               <string>Bambatsi.Root.MaximumNConc.Value()</string>
               <string>Bambatsi.TotalLive.Wt</string>
               <string>Bambatsi.Stem.Live.StructuralWt</string>
-              <string>Bambatsi.Stem.Live.StorageWt</string>
+              <string>Bambatsi.Stem.Live.NonStructuralWt</string>
               <string>Bambatsi.Leaf.SpecificArea</string>
               <string>Bambatsi.TotalDead.Wt</string>
               <string>[Soil].SoilWater.SWmm</string>
@@ -6071,7 +5776,6 @@ namespace Models
           </Report>
           <Manager>
             <Name>CuttingManagement</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script />
             <Code><![CDATA[
 using System;
@@ -6131,7 +5835,6 @@ namespace Models
             <Name>Biomass</Name>
             <Series>
               <Name>Leaf</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
@@ -6153,7 +5856,6 @@ namespace Models
             </Series>
             <Series>
               <Name>Stem</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
@@ -6173,7 +5875,6 @@ namespace Models
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
@@ -6190,12 +5891,12 @@ namespace Models
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>LAI</Name>
             <Series>
               <Name>Series</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
@@ -6215,7 +5916,6 @@ namespace Models
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
@@ -6232,23 +5932,14 @@ namespace Models
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
-          <SoluteManager>
-            <Name>SoluteManager</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoluteManager>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Simulation>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
-  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>362</ExplorerWidth>
 </Simulations>

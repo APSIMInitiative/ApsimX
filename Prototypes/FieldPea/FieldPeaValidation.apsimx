@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="14">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -1466,8 +1466,6 @@
           <Rank>1</Rank>
           <Area>100</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf2</Name>
@@ -1496,8 +1494,6 @@
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <VariableReference>
           <Name>ThermalTime</Name>
@@ -1862,21 +1858,6 @@
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
-          <ArrayFunction>
-            <Name>LagDurationAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1</Values>
-          </ArrayFunction>
-          <ArrayFunction>
-            <Name>SenescenceDurationAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1</Values>
-          </ArrayFunction>
-          <ArrayFunction>
-            <Name>LeafSizeAgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
-          </ArrayFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </LeafCohortParameters>
         <LinearInterpolationFunction>
@@ -13561,12 +13542,12 @@ namespace Models
           <Name>FieldPeaSowingRule</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <RowSpacing>150</RowSpacing>
+            <SowingFert>300</SowingFert>
             <SowingDepth>20</SowingDepth>
+            <RowSpacing>150</RowSpacing>
             <SowingRate>50</SowingRate>
             <CultivarName>Primo</CultivarName>
             <SowingDate>1997-12-23</SowingDate>
-            <SowingFert>300</SowingFert>
           </Script>
           <Code><![CDATA[
         using System;
