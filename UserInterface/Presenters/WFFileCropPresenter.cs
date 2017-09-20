@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models;
+using Models.Core;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -52,7 +53,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                ExplorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                ExplorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
             }
         }
 
