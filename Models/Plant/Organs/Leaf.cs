@@ -330,6 +330,15 @@ namespace Models.PMF.Organs
             /// </summary>
             [Link]
             public IFunction MaintenanceRespirationFunction = null;
+            /// <summary>Modify leaf size by age</summary>
+            [Link]
+            public IFunction LeafSizeAgeMultiplier = null;
+            /// <summary>Modify lag duration by age</summary>
+            [Link]
+            public IFunction LagDurationAgeMultiplier = null;
+            /// <summary>Modify senescence duration by age</summary>
+            [Link]
+            public IFunction SenescenceDurationAgeMultiplier = null;
         }
         #endregion
 
@@ -661,6 +670,46 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets lag duration</summary>
+        [Units("oCd")]
+        public double[] CohortLagDuration
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.LagDuration;
+                    ;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+        /// <summary>Gets fraction of leaf senescence.</summary>
+        [Units("")]
+        public double[] CohortSenescedFrac
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.SenescedFrac;
+                    ;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
         /// <summary>Gets the cohort sla.</summary>
         [Units("mm2/g")]
         public double[] CohortSLA
@@ -697,11 +746,11 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the live stem  number.</summary>
+        /// <summary>Gets the live stem  number to represent the observed stem numbers in an experiment.</summary>
         /// <value>Stem number.</value>
         [Units("0-1")]
         [XmlIgnore]
-        [Description("Live stem number")]
+        [Description("In the field experiment, we count stem number according whether a stem number has a green leaf. A green leaf is definied as a leaf has more than half green part.")]
         public double LiveStemNumber
         {
             get
@@ -710,7 +759,8 @@ namespace Models.PMF.Organs
 
                 foreach (LeafCohort L in Leaves)
                 {
-                    if (L.LiveArea > 0)
+                    
+                    if (L.Age < L.GrowthDuration + L.LagDuration + L.SenescenceDuration / 2)
                     {
                         sn = Math.Max(sn, L.CohortPopulation);
                     }
@@ -880,7 +930,9 @@ namespace Models.PMF.Organs
             Leaves = new List<LeafCohort>();
             foreach (LeafCohort Leaf in InitialLeaves)
             {
-                Leaves.Add(Leaf.Clone());
+                LeafCohort NewLeaf = Leaf.Clone();
+                DoApexCalculations(ref NewLeaf);
+                Leaves.Add(NewLeaf);
             }
             foreach (LeafCohort Leaf in Leaves)
             {
@@ -904,12 +956,11 @@ namespace Models.PMF.Organs
             NewLeaf.Rank = InitParams.Rank;
             NewLeaf.Area = 0.0;
             NewLeaf.DoInitialisation();
+            DoApexCalculations(ref NewLeaf);
             Leaves.Add(NewLeaf);
-            DoApexCalculations();
-
         }
 
-        private void DoApexCalculations()
+        private void DoApexCalculations(ref LeafCohort NewLeaf)
         {
             for (int i = 0; i < apexGroupAge.Count; i++)
                 apexGroupAge[i]++;
@@ -936,6 +987,8 @@ namespace Models.PMF.Organs
                         break;
                 }
             }
+            NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
+            NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
         }
 
         /// <summary>Method to make leaf cohort appear and start expansion</summary>
