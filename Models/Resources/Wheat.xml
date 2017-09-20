@@ -2184,6 +2184,21 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
         </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </MultiplyFunction>
+      <ArrayFunction>
+        <Name>LagDurationAgeMultiplier</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Values>1 1 1</Values>
+      </ArrayFunction>
+      <ArrayFunction>
+        <Name>SenescenceDurationAgeMultiplier</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Values>1 1 1</Values>
+      </ArrayFunction>
+      <ArrayFunction>
+        <Name>LeafSizeAgeMultiplier</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+      </ArrayFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </LeafCohortParameters>
     <RUEModel>
