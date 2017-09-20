@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Glade;
 using Gtk;
 using WebKit;
 using MonoMac.AppKit;
@@ -101,6 +100,9 @@ namespace UserInterface.Views
             /// into the HTML Script added when loading Google Maps
             /// I am taking the belts-and-braces approach of doing both, primarily because the 
             /// meta tag, while probably the technically better" solution, sometimes doesn't work.
+            /// 10/8/17 - I've added yet another "fix" for this problem: the installer now writes a 
+            /// registry key requesting that IE 11 be used for ApsimNG.exe (and for ApsimNG.vshost.exe,
+            /// so it also works when run from Visual Studio).
 
             wb.DocumentText = @"<!DOCTYPE html>
                    <html>
@@ -336,13 +338,9 @@ namespace UserInterface.Views
         /// </summary>
         public string ImagePath { get; set; }
 
-        [Widget]
         private VPaned vpaned1 = null;
-        [Widget]
         private VBox vbox2 = null;
-        [Widget]
         private Frame frame1 = null;
-        [Widget]
         private HBox hbox1 = null;
 
         protected IBrowserWidget browser = null;
@@ -354,8 +352,11 @@ namespace UserInterface.Views
         /// </summary>
         public HTMLView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.HTMLView.glade", "vpaned1");
-            gxml.Autoconnect(this);
+            Builder builder = new Builder("ApsimNG.Resources.Glade.HTMLView.glade");
+            vpaned1 = (VPaned)builder.GetObject("vpaned1");
+            vbox2 = (VBox)builder.GetObject("vbox2");
+            frame1 = (Frame)builder.GetObject("frame1");
+            hbox1 = (HBox)builder.GetObject("hbox1");
             _mainWidget = vpaned1;
             // Handle a temporary browser created when we want to export a map.
             if (owner == null)
@@ -379,6 +380,7 @@ namespace UserInterface.Views
             hbox1.Visible = false;
             hbox1.NoShowAll = true;
             memoView1.ReadOnly = false;
+            memoView1.WordWrap = true;
             memoView1.MemoChange += this.TextUpdate;
             vpaned1.ShowAll();
             frame1.ExposeEvent += OnWidgetExpose;

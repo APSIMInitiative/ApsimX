@@ -2,6 +2,8 @@
 {
     using APSIM.Shared.Utilities;
     using Factorial;
+    using Storage;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     /// <summary>
@@ -32,24 +34,22 @@
         {
             JobSequence parentJob = new JobSequence();
             JobParallel simulationJobs = new JobParallel();
-            List<string> simulationNames = new List<string>();
-            FindAllSimulationsToRun(model, simulationJobs, simulationNames);
+            List<string> simulationNamesToRun = new List<string>();
+            FindAllSimulationsToRun(model, simulationJobs, simulationNamesToRun);
             parentJob.Jobs.Add(simulationJobs);
             parentJob.Jobs.Add(new RunAllCompletedEvent(simulations));
 
-            // IF we are going to run all simulations, we can delete all tables in the DataStore. This
-            // will clean up order of columns in the tables and removed unused ones.
-            // Otherwise just remove the unwanted simulations from the DataStore.
-            DataStore store = Apsim.Child(simulations, typeof(DataStore)) as DataStore;
-            if (store != null)
-            {
-                if (model is Simulations)
-                    store.DeleteAllTables(true);
-                else
-                    store.RemoveUnwantedSimulations(simulations, simulationNames);
-                store.Disconnect();
-            }
+            ILocator locator = simulations.GetLocatorService(simulations);
+            IStorageReader store = locator.Get(typeof(IStorageReader)) as IStorageReader;
 
+            if (store == null)
+                throw new Exception("Cannot find a DataStore.");
+
+            List<string> allSimulationNames = new List<string>(simulations.FindAllSimulationNames());
+            allSimulationNames.Sort();
+            simulationNamesToRun.Sort();
+            store.BeginWriting(allSimulationNames, simulationNamesToRun);
+            
             if (runTests)
             {
                 foreach (Tests tests in Apsim.ChildrenRecursively(model, typeof(Tests)))
@@ -69,16 +69,14 @@
 
             if (model is Experiment)
             {
+                simulations.Links.Resolve(model, recurse:false); // experiments have a IStorage link that needs resolving.
                 parentJob.Jobs.Add(model as Experiment);
                 simulationNames.AddRange((model as Experiment).Names());
             }
             else if (model is Simulation)
             {
                 simulationNames.Add(model.Name);
-                if (model.Parent == null)
-                    parentJob.Jobs.Add(model as Simulation);
-                else
-                    parentJob.Jobs.Add(new RunClonedSimulation(model as Simulation));
+                parentJob.Jobs.Add(new RunSimulation(model as Simulation, simulations, doClone: model.Parent != null));
             }
             else
             {

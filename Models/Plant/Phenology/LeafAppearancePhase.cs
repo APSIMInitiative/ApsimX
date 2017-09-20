@@ -5,12 +5,12 @@ using Models.Core;
 using Models.PMF.Organs;
 using System.Xml.Serialization;
 using Models.PMF.Functions;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase extends from the end of the previous phase until the final main-stem leaf has finished expansion.  The duration of this phase is determined by leaf appearance rate and the final main stem node number.  
-    /// As such, the model parameterisation of leaf appearance and final leaf number (set in the Structure object) are important for predicting the duration of the crop correctly.
+    /// It continues until the final main-stem leaf has finished expansion.  The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron) and the number of leaves produced on the mainstem (Structure.FinalLeafNumber). As such, the model parameterisation of leaf appearance and final leaf number (set in the Structure model) are important for predicting the duration of the crop correctly.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -71,7 +71,7 @@ namespace Models.PMF.Phen
                 if (Leaf != null)
                 {
                     LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
-                    TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value() - RemainingLeaves - LeafNoAtStart;
+                    TargetLeafForCompletion = Structure.FinalLeafNumber.Value() - RemainingLeaves - LeafNoAtStart;
                 }
                 else
                 {
@@ -112,7 +112,7 @@ namespace Models.PMF.Phen
                 if (Leaf != null)
                 {
                     LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
-                    TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value() - RemainingLeaves - LeafNoAtStart;
+                    TargetLeafForCompletion = Structure.FinalLeafNumber.Value() - RemainingLeaves - LeafNoAtStart;
                 }
                 else
                 {
@@ -168,20 +168,22 @@ namespace Models.PMF.Phen
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
 
-            // Describe the start and end stages
-            tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
+                // Describe the start and end stages
+                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // get description of this class.
+                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
 
-            // get description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
+            }
         }
-
     }
 }
 

@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="15">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Maize</Name>
     <Clock>
       <Name>Clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartDate>1990-01-01T00:00:00</StartDate>
       <EndDate>2000-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>SummaryFile</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <Weather>
       <Name>Weather</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
     </Weather>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </SoilArbitrator>
     <Zone>
       <Name>Field</Name>
       <Report>
         <Name>Report</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>Maize.Phenology.CurrentStageName</string>
-          <string>Maize.AboveGround.Wt</string>
-          <string>Maize.AboveGround.N</string>
-          <string>Maize.Grain.Wt</string>
-          <string>Maize.Grain.Size</string>
-          <string>Maize.Grain.NumberFunction.Value()</string>
-          <string>Maize.Grain.N</string>
-          <string>Maize.Total.Wt</string>
+          <string>[Maize].Phenology.CurrentStageName</string>
+          <string>[Maize].AboveGround.Wt</string>
+          <string>[Maize].AboveGround.N</string>
+          <string>[Maize].Grain.Wt</string>
+          <string>[Maize].Grain.Size</string>
+          <string>[Maize].Grain.NumberFunction.Value()</string>
+          <string>[Maize].Grain.N</string>
+          <string>[Maize].Total.Wt</string>
         </VariableNames>
         <EventNames>
           <string>[Maize].Harvesting</string>
@@ -41,6 +46,7 @@
       </Report>
       <Fertiliser>
         <Name>Fertiliser</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Fertiliser>
       <Soil>
         <Name>Soil</Name>
@@ -48,6 +54,7 @@
           <Name>Water</Name>
           <SoilCrop>
             <Name>MaizeSoil</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LL>
               <double>0.261</double>
               <double>0.248</double>
@@ -76,6 +83,7 @@
               <double>1</double>
             </XF>
           </SoilCrop>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -142,6 +150,7 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -180,7 +189,7 @@
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
-          <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -213,10 +222,10 @@
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <isResetting>false</isResetting>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RootCN>40</RootCN>
           <RootWt>1000</RootWt>
           <SoilCN>12</SoilCN>
@@ -271,6 +280,7 @@
         </SoilOrganicMatter>
         <Analysis>
           <Name>Analysis</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -294,12 +304,14 @@
         </Analysis>
         <InitialWater>
           <Name>InitialWater</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <PercentMethod>EvenlyDistributed</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
         </InitialWater>
         <Sample>
           <Name>InitialN</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -389,7 +401,9 @@
         </Sample>
         <CERESSoilTemperature>
           <Name>CERESSoilTemperature</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </CERESSoilTemperature>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RecordNumber>0</RecordNumber>
         <ASCOrder>Vertosol</ASCOrder>
         <ASCSubOrder>Black</ASCSubOrder>
@@ -410,8 +424,10 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <Pools>
@@ -445,12 +461,13 @@
       </SurfaceOrganicMatter>
       <Plant>
         <Name>Maize</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>Maize</ResourceName>
         <CropType>Maize</CropType>
-        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -466,6 +483,7 @@
       </MicroClimate>
       <Manager>
         <Name>SowingFertiliser</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script>
           <Amount>160</Amount>
           <CropName>maize</CropName>
@@ -506,6 +524,7 @@ namespace Models
       </Manager>
       <Manager>
         <Name>SowingRule</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script>
           <StartDate>1-nov</StartDate>
           <EndDate>10-jan</EndDate>
@@ -570,7 +589,7 @@ namespace Models
 			
 			if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
 			    !Maize.IsAlive &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 				Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
@@ -584,6 +603,7 @@ namespace Models
       </Manager>
       <Manager>
         <Name>Harvesting</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script />
         <Code><![CDATA[using System;
 using Models.Core;
@@ -630,7 +650,9 @@ namespace Models
       </Manager>
       <SoluteManager>
         <Name>SoluteManager</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </SoluteManager>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -638,6 +660,7 @@ namespace Models
       <Name>Maize Yield Time Series</Name>
       <Series>
         <Name>Maize Yield</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -657,6 +680,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title>Date</Title>
@@ -675,13 +699,13 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </DataStore>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>296</ExplorerWidth>
 </Simulations>

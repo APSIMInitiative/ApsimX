@@ -6,7 +6,6 @@
 namespace UserInterface.Views
 {
     using System;
-    using Glade;
     using Gtk;
 
     /// <summary>
@@ -95,17 +94,11 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler IntervalChanged;
 
-        [Widget]
         private Table table1 = null;
-        [Widget]
         private Entry entryMin = null;
-        [Widget]
         private Entry entryMax = null;
-        [Widget]
         private Entry entryInterval = null;
-        [Widget]
         private Entry entryTitle = null;
-        [Widget]
         private CheckButton checkbutton1 = null;
 
         /// <summary>
@@ -113,8 +106,13 @@ namespace UserInterface.Views
         /// </summary>
         public AxisView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.AxisView.glade", "table1");
-            gxml.Autoconnect(this);
+            Builder builder = new Builder("ApsimNG.Resources.Glade.AxisView.glade");
+            table1 = (Table)builder.GetObject("table1");
+            entryMin = (Entry)builder.GetObject("entryMin");
+            entryMax = (Entry)builder.GetObject("entryMax");
+            entryInterval = (Entry)builder.GetObject("entryInterval");
+            entryTitle = (Entry)builder.GetObject("entryTitle");
+            checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             _mainWidget = table1;
             entryTitle.Changed += TitleTextBox_TextChanged;
             entryMin.Changed += OnMinimumChanged;

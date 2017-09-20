@@ -8,17 +8,15 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
+    using APSIM.Shared.Utilities;
     using EventArguments;
-    using ICSharpCode.NRefactory;
     using ICSharpCode.NRefactory.CSharp;
     using Models;
-    using Models.Core;
     using Views;
-    using APSIM.Shared.Utilities;
-    using System.Drawing;
+    using Models.Core;
 
     /// <summary>
     /// Presenter for the Manager component
@@ -63,8 +61,8 @@ namespace UserInterface.Presenters
             this.managerView.Editor.ContextItemsNeeded += this.OnNeedVariableNames;
             this.managerView.Editor.LeaveEditor += this.OnEditorLeave;
             this.managerView.Editor.AddContextSeparator();
-            this.managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
-            this.managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
+            this.managerView.Editor.AddContextActionWithAccel("Test compile", this.OnDoCompile, "Ctrl+T");
+            this.managerView.Editor.AddContextActionWithAccel("Reformat", this.OnDoReformat, "Ctrl+R");
             this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
         }
 
@@ -74,7 +72,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.BuildScript();  // compiles and saves the script
-            propertyPresenter.Detach();
+            this.propertyPresenter.Detach();
 
             this.explorerPresenter.CommandHistory.ModelChanged -= this.CommandHistory_ModelChanged;
             this.managerView.Editor.ContextItemsNeeded -= this.OnNeedVariableNames;
@@ -102,8 +100,10 @@ namespace UserInterface.Presenters
             string fieldName = e.ObjectName;
             int posPeriod = e.ObjectName.IndexOf('.');
             if (posPeriod != -1)
+            {
                 fieldName = e.ObjectName.Substring(0, posPeriod);
-                
+            }
+               
             // Look for the field name.
             foreach (FieldDeclaration field in fields)
             {
@@ -131,6 +131,45 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// The user has changed the code script.
+        /// </summary>
+        /// <param name="sender">Sending object</param>
+        /// <param name="e">The arguments</param>
+        public void OnEditorLeave(object sender, EventArgs e)
+        {
+            // this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
+            this.BuildScript();
+            if (this.manager.Script != null)
+            {
+                this.propertyPresenter.FindAllProperties(this.manager.Script);
+                this.propertyPresenter.PopulateGrid(this.manager.Script);
+            }
+        }
+
+        /// <summary>
+        /// The model has changed so update our view.
+        /// </summary>
+        /// <param name="changedModel">The changed manager model</param>
+        public void CommandHistory_ModelChanged(object changedModel)
+        {
+            if (changedModel == this.manager)
+            {
+                this.managerView.Editor.Text = this.manager.Code;
+            }
+            else if (changedModel == this.manager.Script)
+            {
+                this.propertyPresenter.UpdateModel(this.manager.Script);
+            }
+        }
+
+        /// <summary>Get a screen shot of the manager grid.</summary>
+        /// <returns>An Image object</returns>
+        public Image GetScreenshot()
+        {
+            return this.managerView.GridView.GetScreenshot();
+        }
+
+        /// <summary>
         /// Find the type in the name
         /// </summary>
         /// <param name="t">Type to find</param>
@@ -143,9 +182,13 @@ namespace UserInterface.Presenters
             {
                 PropertyInfo property = t.GetProperty(childTypeName);
                 if (property == null)
+                {
                     return null;
+                }
+
                 t = property.PropertyType;
             }
+
             return t;
         }
 
@@ -159,6 +202,7 @@ namespace UserInterface.Presenters
             try
             {
                 string code = this.managerView.Editor.Text;
+
                 // set the code property manually first so that compile error can be trapped via
                 // an exception.
                 bool codeChanged = this.manager.Code != code;
@@ -166,62 +210,43 @@ namespace UserInterface.Presenters
 
                 // If it gets this far then compiles ok.
                 if (codeChanged)
+                {
                     this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", code));
+                }
 
-                this.explorerPresenter.MainPresenter.ShowMessage("Manager script compiled successfully", DataStore.ErrorLevel.Information);
+                this.explorerPresenter.MainPresenter.ShowMessage("Manager script compiled successfully", Simulation.ErrorLevel.Information);
             }
             catch (Models.Core.ApsimXException err)
             {
                 string msg = err.Message;
                 if (err.InnerException != null)
-                    this.explorerPresenter.MainPresenter.ShowMessage(string.Format("[{0}]: {1}", err.model.Name, err.InnerException.Message), DataStore.ErrorLevel.Error);
+                {
+                    this.explorerPresenter.MainPresenter.ShowMessage(string.Format("[{0}]: {1}", err.model.Name, err.InnerException.Message), Simulation.ErrorLevel.Error);
+                }
                 else
-                    this.explorerPresenter.MainPresenter.ShowMessage(string.Format("[{0}]: {1}", err.model.Name, err.Message), DataStore.ErrorLevel.Error);
+                {
+                    this.explorerPresenter.MainPresenter.ShowMessage(string.Format("[{0}]: {1}", err.model.Name, err.Message), Simulation.ErrorLevel.Error);
+                }
             }
+
             this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
         }
 
         /// <summary>
-        /// The user has changed the code script.
+        /// Perform a compile
         /// </summary>
-        /// <param name="sender">Sending object</param>
-        /// <param name="e">The arguments</param>
-        public void OnEditorLeave(object sender, EventArgs e)
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
+        private void OnDoCompile(object sender, EventArgs e)
         {
-            // this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
-            BuildScript();
-            if (this.manager.Script != null)
-            {
-                this.propertyPresenter.FindAllProperties(manager.Script);
-                this.propertyPresenter.PopulateGrid(manager.Script);
-            }
+            this.BuildScript();
         }
 
         /// <summary>
-        /// The model has changed so update our view.
+        /// Perform a reformat of the text
         /// </summary>
-        /// <param name="changedModel">The changed manager model</param>
-        public void CommandHistory_ModelChanged(object changedModel)
-        {
-            if (changedModel == this.manager)
-                this.managerView.Editor.Text = this.manager.Code;
-            else if (changedModel == this.manager.Script)
-            {
-                this.propertyPresenter.UpdateModel(manager.Script);
-            }
-        }
-
-        /// <summary>Get a screen shot of the manager grid.</summary>
-        public Image GetScreenshot()
-        {
-            return managerView.GridView.GetScreenshot();
-        }
-
-        private void OnDoCompile(object sender, EventArgs e)
-        {
-            BuildScript();
-        }
-
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
         private void OnDoReformat(object sender, EventArgs e)
         {
             CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());

@@ -11,7 +11,6 @@ namespace UserInterface.Forms
     using System.Net;
     using System.Reflection;
     using APSIM.Shared.Utilities;
-    using Glade;
     using Gtk;
     using Views;
 
@@ -40,54 +39,33 @@ namespace UserInterface.Forms
         /// Our explorer presenter.
         /// </summary>
         private IMainView tabbedExplorerView;
-        [Widget]
+
+        // Glade widgets
         private Window window1 = null;
-        [Widget]
         private Button button1 = null;
-        [Widget]
         private Button button2 = null;
-        [Widget]
         private Table table1 = null;
-        [Widget]
         private Table table2 = null;
-        [Widget]
         private Entry firstNameBox = null;
-        [Widget]
         private Entry lastNameBox = null;
-        [Widget]
         private Entry organisationBox = null;
-        [Widget]
         private Entry emailBox = null;
-        [Widget]
         private Entry address1Box = null;
-        [Widget]
         private Entry address2Box = null;
-        [Widget]
         private Entry cityBox = null;
-        [Widget]
         private Entry stateBox = null;
-        [Widget]
         private Entry countryBox = null;
-        [Widget]
         private Entry postcodeBox = null;
-        [Widget]
         private Label label1 = null;
-        [Widget]
         private Alignment HTMLalign = null;
-        [Widget]
         private CheckButton checkbutton1 = null;
-        [Widget]
         private TreeView listview1 = null;
-        [Widget]
         private Alignment alignment3 = null;
-        [Widget]
         private Alignment alignment4 = null;
-        [Widget]
         private Alignment alignment5 = null;
-        [Widget]
         private Alignment alignment6 = null;
-        [Widget]
         private Alignment alignment7 = null;
+
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
         private Views.HTMLView HTMLview;
 
@@ -96,8 +74,32 @@ namespace UserInterface.Forms
         /// </summary>
         public UpgradeForm(IMainView explorerPresenter)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.UpgradeForm.glade", "window1");
-            gxml.Autoconnect(this);
+            Builder builder = new Builder("ApsimNG.Resources.Glade.UpgradeForm.glade");
+            window1 = (Window)builder.GetObject("window1");
+            button1 = (Button)builder.GetObject("button1");
+            button2 = (Button)builder.GetObject("button2");
+            table1 = (Table)builder.GetObject("table1");
+            table2 = (Table)builder.GetObject("table2");
+            firstNameBox = (Entry)builder.GetObject("firstNameBox");
+            lastNameBox = (Entry)builder.GetObject("lastNameBox");
+            organisationBox = (Entry)builder.GetObject("organisationBox");
+            emailBox = (Entry)builder.GetObject("emailBox");
+            address1Box = (Entry)builder.GetObject("address1Box");
+            address2Box = (Entry)builder.GetObject("address2Box");
+            cityBox = (Entry)builder.GetObject("cityBox");
+            stateBox = (Entry)builder.GetObject("stateBox");
+            countryBox = (Entry)builder.GetObject("countryBox");
+            postcodeBox = (Entry)builder.GetObject("postcodeBox");
+            label1 = (Label)builder.GetObject("label1");
+            HTMLalign = (Alignment)builder.GetObject("HTMLalign");
+            checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
+            listview1 = (TreeView)builder.GetObject("listview1");
+            alignment3 = (Alignment)builder.GetObject("alignment3");
+            alignment4 = (Alignment)builder.GetObject("alignment4");
+            alignment5 = (Alignment)builder.GetObject("alignment5");
+            alignment6 = (Alignment)builder.GetObject("alignment6");
+            alignment7 = (Alignment)builder.GetObject("alignment7");
+
             listview1.Model = listmodel;
 
             CellRendererText textRender = new Gtk.CellRendererText();

@@ -44,8 +44,6 @@ namespace UserInterface
                         mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
                     else
                         mainWindow.Cursor = null;
-                    while (Gtk.Application.EventsPending())
-                        Gtk.Application.RunIteration();
                     waiting = value;
                 }
             }
@@ -73,26 +71,30 @@ namespace UserInterface
             if (!String.IsNullOrWhiteSpace(initialPath)  && (File.Exists(initialPath) || action == FileChooserAction.Save))
             {
                 dialog.InitialDirectory = Path.GetDirectoryName(initialPath);
-                dialog.FileName = Path.GetFileName(initialPath);
+                dialog.FileName = null;
+                // This almost works, but Windows is buggy.
+                // If the file name is long, it doesn't display in a sensible way
+                // dialog.FileName = Path.GetFileName(initialPath);
             }
             else if (Directory.Exists(initialPath))
                 dialog.InitialDirectory = initialPath;
             else
                 dialog.InitialDirectory = Utility.Configuration.Settings.PreviousFolder;
-
+            /*
             if (!string.IsNullOrEmpty(initialPath))
             {
                 timer.Tick += new EventHandler(WindowsWorkaround);
                 timer.Interval = 50;
                 timer.Tag = dialog;
                 timer.Start();
-            }
+            }*/
             if (dialog.ShowDialog() == DialogResult.OK)
                 fileName = dialog.FileName;
             dialog = null;
             return fileName;
         }
 
+        /*
         /// <summary>
         /// Works around weird Windows bug.
         /// See https://connect.microsoft.com/VisualStudio/feedback/details/525070/openfiledialog-show-part-of-file-name-in-win7
@@ -110,7 +112,7 @@ namespace UserInterface
                 (sender as Timer).Stop();
             }
         }
-
+        */
         /// <summary>Ask user for a filename to open on Windows.</summary>
         /// <param name="prompt">String to use as dialog heading</param>
         /// <param name="fileSpec">The file specification used to filter the files.</param>

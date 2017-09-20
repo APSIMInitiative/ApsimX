@@ -2,8 +2,9 @@
 !experiment number = 2
 !experiment = APS6
 !station name = APS6                                  
-latitude = -27.31  (DECIMAL DEGREES)
-longitude = 0  (DECIMAL DEGREES)
+latitude =  -27.536
+Longitude = 152.336
+
 tav =   21.00 (oC)     ! annual average ambient temperature
 amp =   12.00 (oC)     ! annual amplitude in mean monthly temperature
 

@@ -21,6 +21,14 @@ namespace Models.Core.Runners
     public class JobManagerMultiProcess : JobManager
     {
         private SocketServer server;
+        private IStorageWriter storageWriter;
+
+        /// <summary>Constructor</summary>
+        /// <param name="writer">The writer where all data should be stored</param>
+        public JobManagerMultiProcess(IStorageWriter writer)
+        {
+            storageWriter = writer;
+        }
 
         /// <summary>
         /// Start the jobs asynchronously. If 'waitUntilFinished'
@@ -52,7 +60,7 @@ namespace Models.Core.Runners
         /// <param name="job">Job to run.</param>
         protected override void RunJob(Job job)
         {
-            if (job.RunnableJob is Simulation)
+            if (job.RunnableJob is RunSimulation)
             {
                 try
                 {
@@ -126,15 +134,15 @@ namespace Models.Core.Runners
             Job jobToRun = null;
             lock (this)
             {
-                // Free up memory be removing all child models on completed jobs.
+                // Free up memory by removing all child models on completed jobs.
                 // This helps the garbage collector when there are many jobs.
                 foreach (JobManager.Job job in jobs)
                 {
-                    if (job.IsCompleted && job.RunnableJob is Simulation)
-                        (job.RunnableJob as Simulation).Children.Clear();
+                    //if (job.IsCompleted && job.RunnableJob is RunSimulation)
+                    //    (job.RunnableJob as RunSimulation).Children.Clear();
                 }
 
-                jobToRun = jobs.Find(job => !job.IsRunning && !job.isCompleted && typeof(Simulation).IsAssignableFrom(job.RunnableJob.GetType()));
+                jobToRun = jobs.Find(job => !job.IsRunning && !job.isCompleted && typeof(RunSimulation).IsAssignableFrom(job.RunnableJob.GetType()));
                 if (jobToRun != null)
                 {
                     jobToRun.IsRunning = true;
@@ -145,10 +153,13 @@ namespace Models.Core.Runners
                 server.Send(args.socket, "NULL");
             else
             {
+                RunSimulation runner = jobToRun.RunnableJob as RunSimulation;
+                IModel savedParent = runner.SetParentOfSimulation(null);
                 GetJobReturnData returnData = new GetJobReturnData();
                 returnData.key = jobToRun.Key;
-                returnData.job = jobToRun.RunnableJob;
+                returnData.job = runner;
                 server.Send(args.socket, returnData);
+                runner.SetParentOfSimulation(savedParent);
             }
         }
 
@@ -183,13 +194,16 @@ namespace Models.Core.Runners
         /// <param name="args">The command arguments</param>
         private void OnTransferData(object sender, SocketServer.CommandArgs args)
         {
-            lock (DataStore.TablesToWrite)
+            List<TransferRowInTable> rows = args.obj as List<TransferRowInTable>;
+            foreach (TransferRowInTable row in rows)
             {
-                List<ReportTable> arguments = args.obj as List<ReportTable>;
-                DataStore.TablesToWrite.AddRange(arguments);
+                storageWriter.WriteRow(row.simulationName, row.tableName,
+                                       row.columnNames, row.columnUnits, row.values);
             }
+
             server.Send(args.socket, "OK");
         }
+
         /// <summary>Called by the client to get the next job to run.</summary>
         /// <param name="sender">The sender</param>
         /// <param name="args">The command arguments</param>
@@ -199,6 +213,7 @@ namespace Models.Core.Runners
             lock (this)
             {
                 SetJobCompleted(arguments.key, arguments.errorMessage);
+                storageWriter.CompletedWritingSimulationData(arguments.simulationName);
             }
             server.Send(args.socket, "OK");
         }
@@ -247,8 +262,25 @@ namespace Models.Core.Runners
 
             /// <summary>Error message</summary>
             public string errorMessage;
+
+            /// <summary>Simulation name of job completed</summary>
+            public string simulationName;
         }
 
-
+        /// <summary>An class for encapsulating a row in a table</summary>
+        [Serializable]
+        public class TransferRowInTable
+        {
+            /// <summary>Simulation name</summary>
+            public string simulationName;
+            /// <summary>Table name</summary>
+            public string tableName;
+            /// <summary>Column names</summary>
+            public IEnumerable<string> columnNames;
+            /// <summary>Column units</summary>
+            public IEnumerable<string> columnUnits;
+            /// <summary>Row values for each column</summary>
+            public IEnumerable<object> values;
+        }
     }
 }

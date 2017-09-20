@@ -171,13 +171,15 @@ namespace Models
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoCommence")]
-        private void OnDoCommence(object sender, Simulation.CommenceArgs e)
+        private void OnDoCommence(object sender, EventArgs e)
         {
-            if (DoInitialSummary != null)
-                DoInitialSummary.Invoke(this, args);
+            try
+            {
+                if (DoInitialSummary != null)
+                    DoInitialSummary.Invoke(this, args);
 
-            if (StartOfSimulation != null)
-                StartOfSimulation.Invoke(this, args);
+                if (StartOfSimulation != null)
+                    StartOfSimulation.Invoke(this, args);
 
 			if (WFInitialiseResource != null)
 				WFInitialiseResource.Invoke(this, args);
@@ -185,152 +187,154 @@ namespace Models
 			if (WFInitialiseActivity != null)
 				WFInitialiseActivity.Invoke(this, args);
 
-			while (Today <= EndDate)
-            {
-                // If this is being run on a background worker thread then check for cancellation
-                if (e != null && e.workerThread != null && e.workerThread.CancellationPending)
+            while (Today <= EndDate)
                 {
-                    Summary.WriteMessage(this, "Simulation cancelled");
-                    return;
-                }
+                    if (DoWeather != null)
+                        DoWeather.Invoke(this, args);
 
-                if (DoWeather != null)
-                    DoWeather.Invoke(this, args);
+                    if (DoDailyInitialisation != null)
+                        DoDailyInitialisation.Invoke(this, args);
 
-                if (DoDailyInitialisation != null)
-                    DoDailyInitialisation.Invoke(this, args);
+                    if (StartOfDay != null)
+                        StartOfDay.Invoke(this, args);
 
-                if (StartOfDay != null)
-                    StartOfDay.Invoke(this, args);
+                    if (Today.Day == 1 && StartOfMonth != null)
+                        StartOfMonth.Invoke(this, args);
 
-                if (Today.Day == 1 && StartOfMonth != null)
-                    StartOfMonth.Invoke(this, args);
+                    if (Today.DayOfYear == 1 && StartOfYear != null)
+                        StartOfYear.Invoke(this, args);
 
-                if (Today.DayOfYear == 1 && StartOfYear != null)
-                    StartOfYear.Invoke(this, args);
+                    if (Today.DayOfWeek == DayOfWeek.Sunday && StartOfWeek != null)
+                        StartOfWeek.Invoke(this, args);
 
-                if (Today.DayOfWeek == DayOfWeek.Sunday && StartOfWeek != null)
-                    StartOfWeek.Invoke(this, args);
+                    if (Today.DayOfWeek == DayOfWeek.Saturday && EndOfWeek != null)
+                        EndOfWeek.Invoke(this, args);
 
-                if (Today.DayOfWeek == DayOfWeek.Saturday && EndOfWeek != null)
-                    EndOfWeek.Invoke(this, args);
+                    if (DoManagement != null)
+                        DoManagement.Invoke(this, args);
 
-                if (DoManagement != null)
-                    DoManagement.Invoke(this, args);
+                    if (DoEnergyArbitration != null)
+                        DoEnergyArbitration.Invoke(this, args);
 
-                if (DoEnergyArbitration != null)
-                    DoEnergyArbitration.Invoke(this, args);
+                    if (DoSoilWaterMovement != null)
+                        DoSoilWaterMovement.Invoke(this, args);
 
-                if (DoSoilWaterMovement != null)
-                    DoSoilWaterMovement.Invoke(this, args);
+                    if (DoSoilTemperature != null)
+                        DoSoilTemperature.Invoke(this, args);
 
-                if (DoSoilTemperature != null)
-                    DoSoilTemperature.Invoke(this, args);
+                    if (DoSoilOrganicMatter != null)
+                        DoSoilOrganicMatter.Invoke(this, args);
 
-                if (DoSoilOrganicMatter != null)
-                    DoSoilOrganicMatter.Invoke(this, args);
+                    if (DoSurfaceOrganicMatterDecomposition != null)
+                        DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
+                    if (Today.DayOfYear == 16)
+                    { }
+                    if (DoWaterArbitration != null)
+                        DoWaterArbitration.Invoke(this, args);
 
-                if (DoSurfaceOrganicMatterDecomposition != null)
-                    DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
-                if (Today.DayOfYear == 16)
-                { }
-                if (DoWaterArbitration != null)
-                    DoWaterArbitration.Invoke(this, args);
+                    if (DoPhenology != null)
+                        DoPhenology.Invoke(this, args);
 
-                if (DoPhenology != null)
-                    DoPhenology.Invoke(this, args);
+                    if (DoPotentialPlantGrowth != null)
+                        DoPotentialPlantGrowth.Invoke(this, args);
 
-                if (DoPotentialPlantGrowth != null)
-                    DoPotentialPlantGrowth.Invoke(this, args);
+                    if (DoPotentialPlantPartioning != null)
+                        DoPotentialPlantPartioning.Invoke(this, args);
 
-                if (DoPotentialPlantPartioning != null)
-                    DoPotentialPlantPartioning.Invoke(this, args);
+                    if (DoNutrientArbitration != null)
+                        DoNutrientArbitration.Invoke(this, args);
 
-                if (DoNutrientArbitration != null)
-                    DoNutrientArbitration.Invoke(this, args);
+                    if (DoActualPlantPartioning != null)
+                        DoActualPlantPartioning.Invoke(this, args);
 
-                if (DoActualPlantPartioning != null)
-                    DoActualPlantPartioning.Invoke(this, args);
+                    if (DoActualPlantGrowth != null)
+                        DoActualPlantGrowth.Invoke(this, args);
 
-                if (DoActualPlantGrowth != null)
-                    DoActualPlantGrowth.Invoke(this, args);
+                    if (DoPlantGrowth != null)
+                        DoPlantGrowth.Invoke(this, args);
 
-                if (DoPlantGrowth != null)
-                    DoPlantGrowth.Invoke(this, args);
+                    if (DoUpdate != null)
+                        DoUpdate.Invoke(this, args);
 
-                if (DoUpdate != null)
-                    DoUpdate.Invoke(this, args);
+                    if (DoManagementCalculations != null)
+                        DoManagementCalculations.Invoke(this, args);
 
-                if (DoManagementCalculations != null)
-                    DoManagementCalculations.Invoke(this, args);
+                    if (DoStock != null)
+                        DoStock.Invoke(this, args);
 
-                if (DoStock != null)
-                    DoStock.Invoke(this, args);
+                    if (DoLifecycle != null)
+                        DoLifecycle.Invoke(this, args);
 
-                if (DoLifecycle != null)
-                    DoLifecycle.Invoke(this, args);
+                    if (DoReportCalculations != null)
+                        DoReportCalculations.Invoke(this, args);
 
-                if (DoReportCalculations != null)
-                    DoReportCalculations.Invoke(this, args);
+                    if (Today == EndDate && EndOfSimulation != null)
+                        EndOfSimulation.Invoke(this, args);
 
-                if (Today == EndDate && EndOfSimulation != null)
-                    EndOfSimulation.Invoke(this, args);
+                    if (Today.Day == 31 && Today.Month == 12 && EndOfYear != null)
+                        EndOfYear.Invoke(this, args);
 
-                if (Today.Day == 31 && Today.Month == 12 && EndOfYear != null)
-                    EndOfYear.Invoke(this, args);
-
-				if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
-				{
-					// WholeFarm events performed before APSIM EndOfMonth
-					if (WFUpdatePasture != null)
-						WFUpdatePasture.Invoke(this, args);
-					if (WFDoCutAndCarry != null)
-						WFDoCutAndCarry.Invoke(this, args);
-					if (WFAnimalBreeding != null)
-						WFAnimalBreeding.Invoke(this, args);
+                    if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
+                    {
+                        // WholeFarm events performed before APSIM EndOfMonth
+                        if (WFUpdatePasture != null)
+                            WFUpdatePasture.Invoke(this, args);
+                        if (WFDoCutAndCarry != null)
+                            WFDoCutAndCarry.Invoke(this, args);
+                        if (WFAnimalBreeding != null)
+                            WFAnimalBreeding.Invoke(this, args);
 					if (WFAnimalMilkProduction != null)
 						WFAnimalMilkProduction.Invoke(this, args);
-					if (WFPotentialIntake != null)
-						WFPotentialIntake.Invoke(this, args);
-					if (WFGetResourcesRequired != null)
-						WFGetResourcesRequired.Invoke(this, args);
-					if (WFAnimalWeightGain != null)
-						WFAnimalWeightGain.Invoke(this, args);
+                        if (WFPotentialIntake != null)
+                            WFPotentialIntake.Invoke(this, args);
+                        if (WFGetResourcesRequired != null)
+                            WFGetResourcesRequired.Invoke(this, args);
+                        if (WFAnimalWeightGain != null)
+                            WFAnimalWeightGain.Invoke(this, args);
 					if (WFCalculateManure != null)
 						WFCalculateManure.Invoke(this, args);
 					if (WFCollectManure != null)
 						WFCollectManure.Invoke(this, args);
-					if (WFAnimalDeath != null)
-						WFAnimalDeath.Invoke(this, args);
-					if (WFAnimalMilking != null)
-						WFAnimalMilking.Invoke(this, args);
+                        if (WFAnimalDeath != null)
+                            WFAnimalDeath.Invoke(this, args);
+                        if (WFAnimalMilking != null)
+                            WFAnimalMilking.Invoke(this, args);
 					if (WFCalculateEcologicalState != null)
 						WFCalculateEcologicalState.Invoke(this, args);
-					if (WFAnimalManage != null)
-						WFAnimalManage.Invoke(this, args);
-					if (WFAnimalStock != null)
-						WFAnimalStock.Invoke(this, args);
-					if (WFAnimalSell != null)
-						WFAnimalSell.Invoke(this, args);
+                        if (WFAnimalManage != null)
+                            WFAnimalManage.Invoke(this, args);
+                        if (WFAnimalStock != null)
+                            WFAnimalStock.Invoke(this, args);
+                        if (WFAnimalSell != null)
+                            WFAnimalSell.Invoke(this, args);
 					if (WFHerdSummary != null)
 						WFHerdSummary.Invoke(this, args);
-					if (WFAgeResources != null)
-						WFAgeResources.Invoke(this, args);
+                        if (WFAgeResources != null)
+                            WFAgeResources.Invoke(this, args);
 					if (WFAnimalBuy != null)
 						WFAnimalBuy.Invoke(this, args);
-					EndOfMonth.Invoke(this, args);
-				}
+                        EndOfMonth.Invoke(this, args);
+                    }
 
-                if (EndOfDay != null)
-                    EndOfDay.Invoke(this, args);
+                    if (EndOfDay != null)
+                        EndOfDay.Invoke(this, args);
 
-                if (DoReport != null)
-                    DoReport.Invoke(this, args);
+                    if (DoReport != null)
+                        DoReport.Invoke(this, args);
 
-                Today = Today.AddDays(1);
+                    Today = Today.AddDays(1);
+                }
+                Summary.WriteMessage(this, "Simulation terminated normally");
             }
-
-            Summary.WriteMessage(this, "Simulation terminated normally");
+            catch (Exception ex)
+            {
+                Summary.WriteMessage(this, "Simulation terminated due to exception: " + ex.Message);
+                // Is there a good mechanism for letting our invoker know that an error has occurred?
+                // Throwing this back to the caller doesn't seem to work. This seems to be a consequence
+                // of the Invoke method used to call us crossing the native/managed boundary. I'm not
+                // sure why this is so...
+                // throw ex;
+            }
         }
     }
 }

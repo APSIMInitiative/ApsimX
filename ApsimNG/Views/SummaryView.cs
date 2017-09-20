@@ -1,5 +1,4 @@
-﻿using Glade;
-using Gtk;
+﻿using Gtk;
 using System;
 using System.Collections.Generic;
 
@@ -10,9 +9,7 @@ namespace UserInterface.Views
     /// </summary>
     public class SummaryView : ViewBase, ISummaryView
     {
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private ComboBox combobox1 = null;
         private ListStore comboModel = new ListStore(typeof(string));
         private CellRendererText comboRender = new CellRendererText();
@@ -21,8 +18,9 @@ namespace UserInterface.Views
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.SummaryView.glade", "vbox1");
-            gxml.Autoconnect(this);
+            Builder builder = new Builder("ApsimNG.Resources.Glade.SummaryView.glade");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            combobox1 = (ComboBox)builder.GetObject("combobox1");
             _mainWidget = vbox1;
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);

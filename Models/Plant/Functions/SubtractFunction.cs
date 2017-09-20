@@ -46,7 +46,8 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            DocumentMathFunction(this, '-', tags, headingLevel, indent);
+            if (IncludeInDocumentation)
+                DocumentMathFunction(this, '-', tags, headingLevel, indent);
         }
 
         /// <summary>

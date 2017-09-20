@@ -147,12 +147,14 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-            string st = Expression.Replace(".Value()", "");
-            st = st.Replace("*", "x");
-            tags.Add(new AutoDocumentation.Paragraph(Name + " = " + st, indent));
-
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+                string st = Expression.Replace(".Value()", "");
+                st = st.Replace("*", "x");
+                tags.Add(new AutoDocumentation.Paragraph(Name + " = " + st, indent));
+            }
         }
 
     }

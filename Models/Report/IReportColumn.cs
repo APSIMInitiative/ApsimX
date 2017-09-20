@@ -17,7 +17,8 @@ namespace Models.Report
         /// <summary>Units of measurement</summary>
         string Units { get; }
 
-        /// <summary>Values for each row of this column.</summary>
-        List<object> Values { get; }
+        /// <summary>Retrieve the current value</summary>
+        object GetValue();
+
     }
 }

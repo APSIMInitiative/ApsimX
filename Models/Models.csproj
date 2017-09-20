@@ -136,6 +136,7 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
+    <Compile Include="Core\APSIMFileConverterUtilities.cs" />
     <Compile Include="Core\APSIMFileConverter.cs" />
     <Compile Include="Core\APSIMFileReader.cs" />
     <Compile Include="Core\APSIMFileWriter.cs" />
@@ -146,6 +147,9 @@
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\FileFormat.cs" />
+    <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
+    <Compile Include="Core\IStorageWriter.cs" />
+    <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobManagerMultiProcess.cs" />
     <Compile Include="Core\Links.cs" />
     <Compile Include="Core\ModelNode.cs" />
@@ -153,12 +157,13 @@
     <Compile Include="Core\Property.cs" />
     <Compile Include="Core\Runner.cs" />
     <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />
-    <Compile Include="Core\Runners\RunClonedSimulation.cs" />
+    <Compile Include="Core\Runners\RunSimulation.cs" />
     <Compile Include="Core\Runners\RunAllCompletedEvent.cs" />
     <Compile Include="Core\Runners\RunExternal.cs" />
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
+    <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
@@ -193,6 +198,7 @@
     <Compile Include="Plant\Arbitrator\RelativeAllocationSinglePass.cs" />
     <Compile Include="Plant\Arbitrator\RelativeAllocation.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
+    <Compile Include="Plant\Functions\DemandFunctions\InternodeCohortDemandFunction.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\LeafLightUseEfficiency.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\LeafMaxGrossPhotosynthesis.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\CanopyGrossPhotosynthesisHourly.cs" />
@@ -215,8 +221,8 @@
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Interfaces\IUptake.cs" />
     <Compile Include="Plant\Library\BiomassRemoval.cs" />
-    <Compile Include="Plant\Organs\ApexStandard.cs" />
-    <Compile Include="Plant\Organs\ApexTiller.cs" />
+    <Compile Include="Plant\Structure\ApexStandard.cs" />
+    <Compile Include="Plant\Structure\ApexTiller.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />
     <Compile Include="Plant\Organs\RootZoneState.cs" />
     <Compile Include="Plant\Phenology\ExpressionPhase.cs" />
@@ -270,11 +276,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Core\IEvent.cs" />
+    <Compile Include="Core\ILocator.cs" />
     <Compile Include="Report\IReportColumn.cs" />
+    <Compile Include="Core\IStorageReader.cs" />
     <Compile Include="Report\ReportColumnWithValues.cs" />
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
-    <Compile Include="Report\ReportTable.cs" />
     <Compile Include="Soils\Nutrient\NFlow.cs" />
     <Compile Include="Soils\Nutrient\CFlow.cs" />
     <Compile Include="Soils\Nutrient\NutrientPool.cs" />
@@ -324,6 +332,8 @@
     <Compile Include="Stock\stock_vars.cs" />
     <Compile Include="Stock\typedval.cs" />
     <Compile Include="Stock\xmlpsr.cs" />
+    <Compile Include="Storage\Row.cs" />
+    <Compile Include="Storage\Table.cs" />
     <Compile Include="Sugarcane\CropConstants.cs" />
     <Compile Include="Sugarcane\CultivarConstants.cs" />
     <Compile Include="Sugarcane\MathUtil.cs" />
@@ -371,43 +381,20 @@
     <Compile Include="Plant\Functions\PhotoperiodFunction.cs" />
     <Compile Include="Plant\Functions\PowerFunction.cs" />
     <Compile Include="Plant\Functions\SigmoidFunction.cs" />
-    <Compile Include="Plant\Functions\SigmoidFunction2.cs" />
     <Compile Include="Plant\Functions\SoilTemperatureDepthFunction.cs" />
     <Compile Include="Plant\Functions\SoilTemperatureFunction.cs" />
     <Compile Include="Plant\Functions\SoilTemperatureWeightedFunction.cs" />
     <Compile Include="Plant\Functions\SplineInterpolationFunction.cs" />
     <Compile Include="Plant\Functions\StageBasedInterpolation.cs" />
-    <Compile Include="Plant\Functions\StructureFunctions\HeightFunction.cs" />
-    <Compile Include="Plant\Functions\StructureFunctions\InPhaseTemperatureFunction.cs" />
+    <Compile Include="Plant\Structure\HeightFunction.cs" />
     <Compile Include="Plant\Functions\SubtractFunction.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUECO2Function.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUEModel.cs" />
     <Compile Include="Plant\Functions\Variable.cs" />
     <Compile Include="Plant\Functions\WeightedTemperatureFunction.cs" />
     <Compile Include="Plant\Functions\XYPairs.cs" />
-    <Compile Include="Plant\Functions\Zadok.cs" />
     <Compile Include="Plant\InterpolationSet.cs" />
     <Compile Include="Plant\OilPalm\OilPalm.cs" />
-    <Compile Include="Plant\OldPlant\BaseOrgan1.cs" />
-    <Compile Include="Plant\OldPlant\Conversions.cs" />
-    <Compile Include="Plant\OldPlant\Environment.cs" />
-    <Compile Include="Plant\OldPlant\GenericArbitratorXY.cs" />
-    <Compile Include="Plant\OldPlant\Grain.cs" />
-    <Compile Include="Plant\OldPlant\Leaf1.cs" />
-    <Compile Include="Plant\OldPlant\LeafNumberPotential3.cs" />
-    <Compile Include="Plant\OldPlant\NStress.cs" />
-    <Compile Include="Plant\OldPlant\NUptake3.cs" />
-    <Compile Include="Plant\OldPlant\Organ1.cs" />
-    <Compile Include="Plant\OldPlant\Plant15.cs" />
-    <Compile Include="Plant\OldPlant\PlantSpatial1.cs" />
-    <Compile Include="Plant\OldPlant\Pod.cs" />
-    <Compile Include="Plant\OldPlant\Population1.cs" />
-    <Compile Include="Plant\OldPlant\PStress.cs" />
-    <Compile Include="Plant\OldPlant\RadiationPartitioning.cs" />
-    <Compile Include="Plant\OldPlant\Root1.cs" />
-    <Compile Include="Plant\OldPlant\RUEModel1.cs" />
-    <Compile Include="Plant\OldPlant\Stem1.cs" />
-    <Compile Include="Plant\OldPlant\SWStress.cs" />
     <Compile Include="Plant\Organs\BaseOrgan.cs" />
     <Compile Include="Plant\Organs\GenericOrgan.cs" />
     <Compile Include="Plant\Organs\HIReproductiveOrgan.cs" />
@@ -432,7 +419,7 @@
     <Compile Include="Plant\Phenology\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\VernalisationCW.cs" />
     <Compile Include="Plant\Plant.cs" />
-    <Compile Include="Plant\Structure.cs" />
+    <Compile Include="Plant\Structure\Structure.cs" />
     <Compile Include="Plant\Utility.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
     <Compile Include="Soils\RunoffEventType.cs" />
@@ -460,7 +447,6 @@
     <Compile Include="Core\ISummary.cs" />
     <Compile Include="Core\Model.cs" />
     <Compile Include="Core\Zone.cs" />
-    <Compile Include="DataStore.cs" />
     <Compile Include="Core\Simulations.cs" />
     <Compile Include="Graph\Axis.cs" />
     <Compile Include="Graph\Series.cs" />

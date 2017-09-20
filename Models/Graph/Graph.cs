@@ -85,13 +85,14 @@ namespace Models.Graph
 
         /// <summary>Gets the definitions to graph.</summary>
         /// <returns>A list of series definitions.</returns>
-        public List<SeriesDefinition> GetDefinitionsToGraph()
+        /// <param name="storage">Storage service</param>
+        public List<SeriesDefinition> GetDefinitionsToGraph(IStorageReader storage)
         {
             EnsureAllAxesExist();
 
             List<SeriesDefinition> definitions = new List<SeriesDefinition>();
             foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
-                series.GetSeriesToPutOnGraph(definitions);
+                series.GetSeriesToPutOnGraph(storage, definitions);
 
             return definitions;
         }

@@ -16,7 +16,6 @@ namespace UserInterface.Views
     using Classes;
     //using DataGridViewAutoFilter;
     using EventArguments;
-    using Glade;
     using Gtk;
     using Interfaces;
     using Models.Core;
@@ -86,19 +85,10 @@ namespace UserInterface.Views
         /// </summary>
         private bool selfCursorMove = false;
 
-        [Widget]
         private ScrolledWindow scrolledwindow1 = null;
-        // [Widget]
-        // private ScrolledWindow scrolledwindow2 = null;
-
-        [Widget]
         public TreeView gridview = null;
-        [Widget]
         public TreeView fixedcolview = null;
-
-        [Widget]
         private HBox hbox1 = null;
-        [Widget]
         private Gtk.Image image1 = null;
 
         private Gdk.Pixbuf imagePixbuf;
@@ -116,8 +106,12 @@ namespace UserInterface.Views
         /// </summary>
         public GridView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.GridView.glade", "hbox1");
-            gxml.Autoconnect(this);
+            Builder builder = new Builder("ApsimNG.Resources.Glade.GridView.glade");
+            hbox1 = (HBox)builder.GetObject("hbox1");
+            scrolledwindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
+            gridview = (TreeView)builder.GetObject("gridview");
+            fixedcolview = (TreeView)builder.GetObject("fixedcolview");
+            image1 = (Gtk.Image)builder.GetObject("image1");
             _mainWidget = hbox1;
             gridview.Model = gridmodel;
             gridview.Selection.Mode = SelectionMode.Multiple;
@@ -140,6 +134,7 @@ namespace UserInterface.Views
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
+
 
         /// <summary>
         /// Does cleanup when the main widget is destroyed
@@ -511,32 +506,25 @@ namespace UserInterface.Views
             }
             gridview.Model = gridmodel;
 
-            gridview.Show();
-
-            // Now let's apply center-justification to all the column headers, just for the heck of it
-            // It seems that on Windows, it's best to do this after gridview has been shown
-            // Note that this affects the justification of wrapped lines, not justification of the
-            // header as a whole, which is handled with column.Alignment
             for (int i = 0; i < nCols; i++)
             {
-                Label label = GetColumnHeaderLabel(i);
-                if (label != null)
-                {
-                    label.Wrap = true;
-                    label.Justify = Justification.Center;
-                    if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
-                        (label.Parent as Alignment).LeftPadding = 2;
-                    label.Style.FontDescription.Weight = Pango.Weight.Bold;
-                }
-
-                label = GetColumnHeaderLabel(i, fixedcolview);
-                if (label != null)
-                {
-                    label.Wrap = true;
-                    label.Justify = Justification.Center;
-                    label.Style.FontDescription.Weight = Pango.Weight.Bold;
-                }
+                /// We apply center-justification to all the column headers, just for the heck of it
+                /// Note that "justification" here refers to justification of wrapped lines, not 
+                /// justification of the header as a whole, which is handled with column.Alignment
+                /// We create new Labels here, and use markup to make them bold, since other approaches 
+                /// don't seem to work consistently
+                Label newLabel = new Label();
+                gridview.Columns[i].Widget = newLabel;
+                newLabel.Wrap = true;
+                newLabel.Justify = Justification.Center;
+                if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
+                    (newLabel.Parent as Alignment).LeftPadding = 2;
+                newLabel.UseMarkup = true;
+                newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(gridview.Columns[i].Title) + "</b>";
+                newLabel.Show();
             }
+
+            gridview.Show();
 
             if (mainWindow != null)
                 mainWindow.Cursor = null;

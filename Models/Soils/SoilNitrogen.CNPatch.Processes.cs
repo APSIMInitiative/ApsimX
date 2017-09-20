@@ -44,8 +44,8 @@ namespace Models.Soils
                 dlt_n_decomp = new double[g.nResidues][];
                 for (int residue = 0; residue < g.nResidues; residue++)
                 {
-                    dlt_c_decomp[residue] = new double[nLayers];
-                    dlt_n_decomp[residue] = new double[nLayers];
+                    dlt_c_decomp[residue] = new double[g.nLayers];
+                    dlt_n_decomp[residue] = new double[g.nLayers];
                 }
 
                 // 2. get the amounts of C decomposed
@@ -66,8 +66,8 @@ namespace Models.Soils
                     //{
                         // Surface OM sent some potential decomposition, here we verify the C-N balance over the immobilisation layer
 
-                        double[] no3_available = new double[nLayers];           // no3 available for mineralisation
-                        double[] nh4_available = new double[nLayers];           // nh4 available for mineralisation
+                        double[] no3_available = new double[g.nLayers];           // no3 available for mineralisation
+                        double[] nh4_available = new double[g.nLayers];           // nh4 available for mineralisation
                         double[] dltC_into_biom = new double[g.nResidues];      // C mineralized converted to biomass
                         double[] dltC_into_hum = new double[g.nResidues];       // C mineralized converted to humus
                         int ImmobilisationLayer = g.getCumulativeIndex(g.ResiduesDecompDepth, g.dlayer);  // soil layer down to which soil N is available for decemposition
@@ -84,7 +84,7 @@ namespace Models.Soils
                         // 2.2.1. get the available mineral N in the soil close to surface (mineralisation depth)
                         double MineralNAvailable = 0.0;
                         double cumDepth = 0.0;
-                        double[] fracLayer = new double[nLayers];
+                        double[] fracLayer = new double[g.nLayers];
                         for (int layer = 0; layer <= ImmobilisationLayer; layer++)
                         {
                             fracLayer[layer] = Math.Min(1.0, MathUtilities.Divide(g.ResiduesDecompDepth - cumDepth, g.dlayer[layer], 0.0));
@@ -175,7 +175,7 @@ namespace Models.Soils
                 // 4. Update variables - add/remove C and N in appropriate pools
                 if (g.SumDoubleArray(dlt_c_res_to_biom) + g.SumDoubleArray(dlt_c_res_to_hum) >= g.epsilon)
                 {
-                    for (int layer = 0; layer < nLayers; layer++)
+                    for (int layer = 0; layer < g.nLayers; layer++)
                     {
                         // organic C pools
                         biom_c[layer] += dlt_c_res_to_biom[layer];
@@ -204,54 +204,54 @@ namespace Models.Soils
                 if (g.SumDoubleArray(hum_c) >= g.epsilon)
                 {
                     poolsComputed += 1;
-                    for (int layer = 0; layer < nLayers; layer++)
+                    for (int layer = 0; layer < g.nLayers; layer++)
                         MineraliseHumus(layer);
                 }
                 else
                 {
-                    Array.Clear(dlt_c_hum_to_biom, 0, nLayers);
-                    Array.Clear(dlt_c_hum_to_atm, 0, nLayers);
-                    Array.Clear(dlt_n_hum_to_min, 0, nLayers);
+                    Array.Clear(dlt_c_hum_to_biom, 0, g.nLayers);
+                    Array.Clear(dlt_c_hum_to_atm, 0, g.nLayers);
+                    Array.Clear(dlt_n_hum_to_min, 0, g.nLayers);
                 }
 
                 // 2. get the mineralisation of m. biomass pool
                 if (g.SumDoubleArray(biom_c) >= g.epsilon)
                 {
                     poolsComputed += 1;
-                    for (int layer = 0; layer < nLayers; layer++)
+                    for (int layer = 0; layer < g.nLayers; layer++)
                         MineraliseMBiomass(layer);
                 }
                 else
                 {
-                    Array.Clear(dlt_c_biom_to_hum, 0, nLayers);
-                    Array.Clear(dlt_c_biom_to_atm, 0, nLayers);
-                    Array.Clear(dlt_n_biom_to_min, 0, nLayers);
+                    Array.Clear(dlt_c_biom_to_hum, 0, g.nLayers);
+                    Array.Clear(dlt_c_biom_to_atm, 0, g.nLayers);
+                    Array.Clear(dlt_n_biom_to_min, 0, g.nLayers);
                 }
 
                 // 3. get the decomposition of FOM pools
                 if ((g.SumDoubleArray(fom_c[0]) + g.SumDoubleArray(fom_c[1]) + g.SumDoubleArray(fom_c[2])) >= g.epsilon)
                 {
                     poolsComputed += 1;
-                    for (int layer = 0; layer < nLayers; layer++)
+                    for (int layer = 0; layer < g.nLayers; layer++)
                         DecomposeFOM(layer);
                 }
                 else
                 {
                     for (int pool = 0; pool < 3; pool++)
                     {
-                        Array.Clear(dlt_c_fom_to_biom[pool], 0, nLayers);
-                        Array.Clear(dlt_c_fom_to_hum[pool], 0, nLayers);
-                        Array.Clear(dlt_c_fom_to_atm[pool], 0, nLayers);
-                        Array.Clear(dlt_n_fom[pool], 0, nLayers);
+                        Array.Clear(dlt_c_fom_to_biom[pool], 0, g.nLayers);
+                        Array.Clear(dlt_c_fom_to_hum[pool], 0, g.nLayers);
+                        Array.Clear(dlt_c_fom_to_atm[pool], 0, g.nLayers);
+                        Array.Clear(dlt_n_fom[pool], 0, g.nLayers);
                     }
-                    Array.Clear(dlt_n_fom_to_min, 0, nLayers);
+                    Array.Clear(dlt_n_fom_to_min, 0, g.nLayers);
                 }
 
                 // 4. make changes effective
                 if (poolsComputed > 0)
                 {
                     // some of the OM pools has potentially changed
-                    for (int layer = 0; layer < nLayers; layer++)
+                    for (int layer = 0; layer < g.nLayers; layer++)
                     {
                         // 4.1. update SOM pools
                         biom_c[layer] += dlt_c_hum_to_biom[layer] - dlt_c_biom_to_hum[layer] - dlt_c_biom_to_atm[layer] +
@@ -484,7 +484,7 @@ namespace Models.Soils
                 if (g.SumDoubleArray(urea) >= g.epsilon)
                 {
                     // there is some urea in the soil
-                    for (int layer = 0; layer < nLayers; layer++)
+                    for (int layer = 0; layer < g.nLayers; layer++)
                     {
                         // get amount hydrolysed
                         dlt_urea_hydrolysis[layer] = UreaHydrolysis(layer);
@@ -494,7 +494,7 @@ namespace Models.Soils
                     }
                 }
                 else
-                    Array.Clear(dlt_urea_hydrolysis, 0, nLayers);
+                    Array.Clear(dlt_urea_hydrolysis, 0, g.nLayers);
             }
 
             /// <summary>
@@ -505,7 +505,7 @@ namespace Models.Soils
                 if (g.SumDoubleArray(nh4) >= g.epsilon)
                 {
                     // there is some ammonium in the soil
-                    for (int layer = 0; layer < nLayers; layer++)
+                    for (int layer = 0; layer < g.nLayers; layer++)
                     {
                         if (g.usingNewNitrification)
                         {
@@ -554,8 +554,8 @@ namespace Models.Soils
                 }
                 else
                 {
-                    Array.Clear(dlt_nitrification, 0, nLayers);
-                    Array.Clear(dlt_n2o_nitrif, 0, nLayers);
+                    Array.Clear(dlt_nitrification, 0, g.nLayers);
+                    Array.Clear(dlt_n2o_nitrif, 0, g.nLayers);
                 }
             }
 
@@ -567,7 +567,7 @@ namespace Models.Soils
                 if (g.SumDoubleArray(no3) >= g.epsilon)
                 {
                     // there is some nitrate in the soil
-                    for (int layer = 0; layer < nLayers; layer++)
+                    for (int layer = 0; layer < g.nLayers; layer++)
                     {
                         // get the denitrification amount
                         dlt_no3_dnit[layer] = Denitrification(layer);
@@ -580,8 +580,8 @@ namespace Models.Soils
                 }
                 else
                 {
-                    Array.Clear(dlt_no3_dnit, 0, nLayers);
-                    Array.Clear(dlt_n2o_dnit, 0, nLayers);
+                    Array.Clear(dlt_no3_dnit, 0, g.nLayers);
+                    Array.Clear(dlt_n2o_dnit, 0, g.nLayers);
                 }
             }
 

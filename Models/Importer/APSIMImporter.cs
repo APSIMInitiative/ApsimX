@@ -14,10 +14,38 @@ namespace Importer
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml;
+    using Microsoft.CSharp;
     using Models.Core;
     using APSIM.Shared.Utilities;
     using APSIM.Shared.OldAPSIM;
     using Models.Interfaces;
+
+    /// <summary>
+    /// Manager script parameter
+    /// </summary>
+    public class ScriptParameter
+    {
+        /// <summary>
+        /// The name of the extracted parameter
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// The value as a string
+        /// </summary>
+        public string Value { get; set; }
+        /// <summary>
+        /// The type name extracted from the original script
+        /// </summary>
+        public string TypeName { get; set; }
+        /// <summary>
+        /// The description for the parameter
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
+        /// An enumeration
+        /// </summary>
+        public string ListValues { get; set; }
+    }
 
     /// <summary>
     /// This is a worker class for the import process that converts
@@ -149,7 +177,7 @@ namespace Importer
         /// <returns>An APSIMX Simulations object</returns>
         public Simulations CreateSimulations(string filename)
         {
-            string xfile = Path.GetTempFileName(); 
+            string xfile = Path.GetTempFileName();
             Simulations newSimulations = null;
 
             try
@@ -342,7 +370,7 @@ namespace Importer
                     this.AddChildComponents(compNode, newPaddockNode);
 
                     // if it contains a soilwater then
-                    if (this.soilWaterExists && !this.surfOMExists)   
+                    if (this.soilWaterExists && !this.surfOMExists)
                     {
                         Console.WriteLine("Added SurfaceOM to " + XmlUtilities.FullPathUsingName(newPaddockNode));
                         Models.SurfaceOM.SurfaceOrganicMatter mysom = new Models.SurfaceOM.SurfaceOrganicMatter();
@@ -391,7 +419,7 @@ namespace Importer
             {
                 throw new Exception("Cannot import " + compNode.Name + " :Error - " + exp.ToString() + "\n");
             }
-            return newNode; 
+            return newNode;
         }
 
         /// <summary>
@@ -408,7 +436,7 @@ namespace Importer
             Model plantModel;
             if (name == "wheat")
             {
-                plantModel = new Models.PMF.OldPlant.Plant15();
+                plantModel = new Models.PMF.Plant();
             }
             else if (name == "OilPalm")
             {
@@ -452,8 +480,8 @@ namespace Importer
                         object obj = Activator.CreateInstance(field.FieldType);
                         this.AddLinkedObjects(newNode, obj);
                     }
-                } 
-            } 
+                }
+            }
         }
 
         /// <summary>
@@ -482,7 +510,7 @@ namespace Importer
             this.microClimateExists = true; // has been added
 
             return newNode;
-        }     
+        }
 
         /// <summary>
         /// Import the soil crop object
@@ -502,7 +530,7 @@ namespace Importer
             string name = XmlUtilities.NameAttr(compNode);
             if (name == "SoilCrop")
                 name = XmlUtilities.Value(compNode, "Name");
-            
+
             newNode = ImportObject(destParent, newNode, mycrop, name);
 
             return newNode;
@@ -628,7 +656,7 @@ namespace Importer
             this.CopyNodeAndValueArray(childNode, newNode, "FBiom", "FBiom");
             childNode = XmlUtilities.Find(compNode, "FInert");
             this.CopyNodeAndValueArray(childNode, newNode, "FInert", "FInert");
-            
+
             return newNode;
         }
 
@@ -834,7 +862,7 @@ namespace Importer
             int i = 0;
             foreach (XmlNode var in nodes)
             {
-                if (var.InnerText.Contains("yyyy")) 
+                if (var.InnerText.Contains("yyyy"))
                 {
                     myreport.VariableNames[i] = "[Clock].Today";
                 }
@@ -874,6 +902,131 @@ namespace Importer
         }
 
         /// <summary>
+        /// Find all the Manager script parameters and populate the list
+        /// </summary>
+        /// <param name="compNode">Manager component node</param>
+        /// <param name="scriptParams">The list of extracted parameters</param>
+        private void GetManagerParams(XmlNode compNode, List<ScriptParameter> scriptParams)
+        {
+            CSharpCodeProvider cs = new CSharpCodeProvider();
+            List<XmlNode> nodes = new List<XmlNode>();
+            XmlUtilities.FindAllRecursivelyByType(compNode, "ui", ref nodes);
+            foreach (XmlNode ui in nodes)
+            {
+                foreach (XmlNode init in ui)
+                {
+                    string typeName = XmlUtilities.Attribute(init, "type");
+                    if ((String.Compare(init.Name, "category", true) != 0) && (String.Compare(typeName, "category", true) != 0))
+                    {
+                        ScriptParameter param = new ScriptParameter();
+                        param.Name = init.Name;
+                        string item = param.Name.Trim();
+                        if (!cs.IsValidIdentifier(item))    // returns false if this should not be used
+                        {
+                            param.Name = "_" + param.Name;
+                        }
+                        param.Value = init.InnerText;
+                        param.ListValues = XmlUtilities.Attribute(init, "listvalues");
+                        param.Description = XmlUtilities.Attribute(init, "description");
+                        param.TypeName = typeName;
+                        // Convert any boolean values 
+                        if (String.Compare(param.TypeName, "yesno") == 0)
+                        {
+                            if (param.Value.Contains("o"))
+                            {
+                                param.Value = "false";
+                            }
+                            else
+                            {
+                                param.Value = "true";
+                            }
+                        }
+                        else if (String.Compare(param.TypeName, "list") == 0)
+                        {
+                            // some enumerated types contain invalid identifiers for C#
+                            // - in fact there are some lists of strings which do not convert
+                            //   over at all. Not sure what to do with those.
+                            string[] items = param.ListValues.Split(',');
+                            foreach (string s in items)
+                            {
+                                item = s.Trim();
+                                if (!cs.IsValidIdentifier(item))    // returns false if this should not be used
+                                {
+                                    param.ListValues = param.ListValues.Replace(item, "_" + item + " /*replaces " + item + "*/");
+                                }
+                            }
+                        }
+                        scriptParams.Add(param);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// All the extracted Manager parameters are added to an XmlElement[]
+        /// </summary>
+        /// <param name="scriptParams"></param>
+        /// <returns></returns>
+        private XmlElement[] AddManagerParams(List<ScriptParameter> scriptParams)
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlElement[] parameters = new XmlElement[1];
+            parameters[0] = doc.CreateElement("Script");
+            foreach (ScriptParameter param in scriptParams)
+            {
+                XmlNode newChild = doc.CreateElement(param.Name);
+                XmlText text = doc.CreateTextNode(param.Value);
+                newChild.AppendChild(text);
+                parameters[0].AppendChild(newChild);
+            }
+
+            return parameters;
+        }
+
+        /// <summary>
+        /// Write the Manager parameter declarations and enumerated types
+        /// into a Manager C# string
+        /// </summary>
+        /// <param name="scriptParams"></param>
+        /// <returns>Manager script section</returns>
+        private string WriteManagerParams(List<ScriptParameter> scriptParams)
+        {
+            StringBuilder code = new StringBuilder();
+            List<string> enumTypes = new List<string>();
+            // write the declarations of the parameters
+            foreach (ScriptParameter param in scriptParams)
+            {
+                string atype = "string ";   //ddmmmdate, crop, text, cultivar
+                if (String.Compare(param.TypeName, "yesno") == 0)
+                {
+                    atype = "bool ";
+                }
+                else if (String.Compare(param.TypeName, "list") == 0)
+                {
+                    //create an enumeration
+                    atype = param.Name + "Type ";
+                    enumTypes.Add("\t\tpublic enum " + atype + "\n\t\t{\n\t\t\t" + param.ListValues + "\n\t\t}\n");
+                }
+
+                code.Append("\n\t\t[Description(\"" + param.Description + "\")]\n");
+                if (String.Compare(param.TypeName, "cultivars") == 0)
+                {
+                    code.Append("\t\t[Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]\n");
+                }
+                code.Append("\t\tpublic " + atype + param.Name + " { get; set; }\n");
+            }
+
+            // write the enumerated types in a block
+            foreach (string enumType in enumTypes)
+            {
+                code.Append(enumType);
+            }
+            code.Append("\n");
+
+            return code.ToString();
+        }
+
+        /// <summary>
         /// Import a Manager(1) component.
         /// </summary>
         /// <param name="compNode">The node being imported from the apsim file xml</param>
@@ -896,8 +1049,15 @@ namespace Importer
             List<string> endofdayScripts = new List<string>();
             List<string> initScripts = new List<string>();
             List<string> unknownHandlerScripts = new List<string>();
-
             List<XmlNode> nodes = new List<XmlNode>();
+
+            // Convert the <ui> section
+            List<ScriptParameter> scriptParams = new List<ScriptParameter>();
+            this.GetManagerParams(compNode, scriptParams);
+            mymanager.elements = this.AddManagerParams(scriptParams);
+            code.Append(this.WriteManagerParams(scriptParams));
+
+            // Convert the <script> section 
             XmlUtilities.FindAllRecursivelyByType(compNode, "script", ref nodes);
             foreach (XmlNode script in nodes)
             {
@@ -1028,6 +1188,48 @@ namespace Importer
             Models.Manager mymanager = new Models.Manager();
 
             // copy code here
+            StringBuilder code = new StringBuilder();
+
+            // Convert the <ui> section
+            List<ScriptParameter> scriptParams = new List<ScriptParameter>();
+            this.GetManagerParams(compNode, scriptParams);
+            mymanager.elements = this.AddManagerParams(scriptParams);
+            
+            // find the <text> node
+            XmlNode textNode = XmlUtilities.Find(compNode, "text");
+            if ((textNode != null) && (textNode.InnerText.Length > 0))
+            {
+                // comment out depricated includes
+                string csharpCode = textNode.InnerText.Replace("using ModelFramework;", "//using ModelFramework;");
+                csharpCode = csharpCode.Replace("using CSGeneral;", "//using CSGeneral;");
+                csharpCode = csharpCode.Replace("using System.Linq;", "//using System.Linq;");
+
+                // This code comments out the core of the Script class
+                // If it is necessary to manipulate the code to make it APSIMX compatible
+                // then this is the place to do it.
+
+                int classPos = csharpCode.IndexOf("class Script");
+                int startBody = csharpCode.IndexOf("{", classPos) + 1;
+                int pos = csharpCode.LastIndexOf("public", classPos-1);
+                string prefix = csharpCode.Substring(0, pos);
+                code.Append(prefix);
+                // replace the includes and setup the namespace
+                code.Append("\nusing Models.Core;\nnamespace Models\n{\n");
+                code.Append("\t[Serializable]\n");
+                code.Append("\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\n");
+                code.Append("\tpublic class Script : Model\n");
+                code.Append("\t{\n");
+                code.Append(this.WriteManagerParams(scriptParams));       // this could be used in the Scipt class
+                code.Append("\t/*\n");
+
+                int endPos = csharpCode.LastIndexOf("}");
+                code.Append(csharpCode.Substring(startBody, endPos - startBody));
+                code.Append("\n*/\n\t}\n}");
+                string suffix = csharpCode.Substring(endPos + 1, csharpCode.Length - endPos - 1);
+                code.Append(suffix);
+            }
+
+            mymanager.Code = code.ToString();
 
             // import this object into the new xml document
             newNode = ImportObject(destParent, newNode, mymanager, XmlUtilities.NameAttr(compNode));
