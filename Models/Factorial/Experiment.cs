@@ -41,6 +41,7 @@
                 return null;
 
             var combination = allCombinations[0];
+            allCombinations.RemoveAt(0);
             string newSimulationName = Name;
             foreach (FactorValue value in combination)
                 newSimulationName += value.Name;
@@ -70,17 +71,15 @@
         public IEnumerable<string> GetSimulationNames()
         {
             List<string> names = new List<string>();
-            if (allCombinations != null)
+            allCombinations = AllCombinations();
+            foreach (List<FactorValue> combination in allCombinations)
             {
-                foreach (List<FactorValue> combination in allCombinations)
-                {
-                    string newSimulationName = Name;
+                string newSimulationName = Name;
 
-                    foreach (FactorValue value in combination)
-                        newSimulationName += value.Name;
+                foreach (FactorValue value in combination)
+                    newSimulationName += value.Name;
 
-                    names.Add(newSimulationName);
-                }
+                names.Add(newSimulationName);
             }
             return names;
         }

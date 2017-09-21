@@ -24,7 +24,7 @@ namespace APSIMRunner
                 object response = GetNextJob();
                 while (response != null)
                 {
-                    JobManagerMultiProcess.GetJobReturnData job = response as JobManagerMultiProcess.GetJobReturnData;
+                    JobRunnerMultiProcess.GetJobReturnData job = response as JobRunnerMultiProcess.GetJobReturnData;
 
                     // Run the simulation.
                     string errorMessage = null;
@@ -48,7 +48,7 @@ namespace APSIMRunner
                     }
 
                     // Signal end of job.
-                    JobManagerMultiProcess.EndJobArguments endJobArguments = new JobManagerMultiProcess.EndJobArguments();
+                    JobRunnerMultiProcess.EndJobArguments endJobArguments = new JobRunnerMultiProcess.EndJobArguments();
                     endJobArguments.key = job.key;
                     endJobArguments.errorMessage = errorMessage;
                     endJobArguments.simulationName = simulationName;

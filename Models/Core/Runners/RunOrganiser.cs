@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.Runners
 {
     using APSIM.Shared.Utilities;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -36,11 +37,11 @@
             // First time through there. Get a list of things to run.
             if (modelsToRun == null)
             {
+                GetListOfModelsToRun(modelSelectedByUser);
+
                 // Send event telling all models that we're about to begin running.
                 Events events = new Events(simulations);
                 events.Publish("BeginRun", new object[] { SimulationNamesBeingRun, AllSimulationNames });
-
-                GetListOfModelsToRun(modelSelectedByUser);
 
                 modelsToRun.ForEach(model => simulations.Links.Resolve(model));
             }
@@ -71,7 +72,7 @@
         public void Completed()
         {
             Events events = new Events(simulations);
-            events.Publish("EndRun", null);
+            events.Publish("EndRun", new object[] {this, new EventArgs() });
 
             // Optionally run the tests
             if (runTests)

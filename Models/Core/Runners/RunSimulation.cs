@@ -69,10 +69,12 @@
         /// <param name="cancelToken">The token to check if job has been cancelled</param>
         public void Run(CancellationTokenSource cancelToken)
         {
-            fileName = simulationEngine.FileName;
-
-            Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(fileName) + 
-                              ", Simulation " + simulationToRun.Name + " has commenced.");
+            if (simulationEngine != null)
+            {
+                fileName = simulationEngine.FileName;
+                Console.Write("File: " + Path.GetFileNameWithoutExtension(fileName) + ", ");
+            }
+            Console.WriteLine("Simulation " + simulationToRun.Name + " has commenced.");
 
             // Start timer to record how long it takes to run
             timer = new Stopwatch();

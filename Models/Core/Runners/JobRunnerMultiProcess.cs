@@ -16,7 +16,7 @@ namespace Models.Core.Runners
 
     /// <summary>A class for managing asynchronous running of jobs transferred via a socket connection</summary>
     [Serializable]
-    public class JobManagerMultiProcess : IJobRunner
+    public class JobRunnerMultiProcess : IJobRunner
     {
         private SocketServer server;
         private IStorageWriter storageWriter;
@@ -38,7 +38,7 @@ namespace Models.Core.Runners
 
         /// <summary>Constructor</summary>
         /// <param name="writer">The writer where all data should be stored</param>
-        public JobManagerMultiProcess(IStorageWriter writer)
+        public JobRunnerMultiProcess(IStorageWriter writer)
         {
             storageWriter = writer;
         }
@@ -79,20 +79,31 @@ namespace Models.Core.Runners
             if (wait)
                 while (!t.IsCompleted)
                     Thread.Sleep(200);
-
-            jobs.Completed();
-            if (AllJobsCompleted != null)
-                AllJobsCompleted.Invoke(this, new AllCompletedArgs() { exceptionThrown = new Exception(errors) });
         }
 
         /// <summary>Stop all jobs currently running</summary>
         public void Stop()
         {
-            cancelToken.Cancel();
-            server.StopListening();
-            server = null;
-            DeleteRunners();
-            runningJobs.Clear();
+            lock (this)
+            {
+                if (server != null)
+                {
+                    cancelToken.Cancel();
+                    server.StopListening();
+                    server = null;
+                    DeleteRunners();
+                    runningJobs.Clear();
+
+                    jobs.Completed();
+                    if (AllJobsCompleted != null)
+                    {
+                        AllCompletedArgs args = new AllCompletedArgs();
+                        if (errors != null)
+                            args.exceptionThrown = new Exception(errors);
+                        AllJobsCompleted.Invoke(this, args);
+                    }
+                }
+            }
         }
 
         /// <summary>Create one job runner process for each CPU</summary>
@@ -196,6 +207,8 @@ namespace Models.Core.Runners
                 EndJobArguments arguments = args.obj as EndJobArguments;
                 JobCompleteArgs jobCompleteArguments = new JobCompleteArgs();
                 jobCompleteArguments.job = runningJobs[arguments.key];
+                if (arguments.errorMessage != null)
+                    jobCompleteArguments.exceptionThrowByJob = new Exception(arguments.errorMessage);
                 lock (this)
                 {
                     if (JobCompleted != null)

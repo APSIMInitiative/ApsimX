@@ -140,7 +140,7 @@
 
         /// <summary>Finish writing to DB file</summary>
         [EventSubscribe("EndRun")]
-        private void OnEndRun()
+        private void OnEndRun(object sender, EventArgs e)
         {
             foreach (SimulationData data in dataToWrite)
                 data.complete = true;
@@ -285,7 +285,7 @@
                 foreach (string simulationName in simulationNames)
                     if (simulationName != null && simulationName != string.Empty)
                         CompletedWritingSimulationData(simulationName);
-                OnEndRun();
+                OnEndRun(null, null);
             }
         }
 

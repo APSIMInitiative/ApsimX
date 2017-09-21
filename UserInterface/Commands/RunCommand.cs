@@ -54,7 +54,7 @@
             jobManager = Runner.ForSimulations(explorerPresenter.ApsimXFile, model, false);
 
             if (multiProcess)
-                jobRunner = new JobManagerMultiProcess(storage);
+                jobRunner = new JobRunnerMultiProcess(storage);
             else
                 jobRunner = new JobRunnerAsync();
             jobRunner.JobCompleted += OnJobCompleded;
@@ -97,7 +97,7 @@
                 errors.Add(e.exceptionThrown);
 
             Stop();
-            if (errors.Count > 0)
+            if (errors.Count == 0)
                 explorerPresenter.MainPresenter.ShowMessage(jobName + " complete "
                         + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Simulation.ErrorLevel.Information);
             else
@@ -106,7 +106,6 @@
                 errors.ForEach(error => errorMessage += error.ToString() + Environment.NewLine);
                 explorerPresenter.MainPresenter.ShowMessage(errorMessage, Simulation.ErrorLevel.Error);
             }
-            explorerPresenter.MainPresenter.ShowProgress(100);
 
             SoundPlayer player = new SoundPlayer();
             if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)

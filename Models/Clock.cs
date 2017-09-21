@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 using Models.Core;
+using System.Threading;
 
 namespace Models
 {
@@ -158,7 +159,7 @@ namespace Models
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoCommence")]
-        private void OnDoCommence(object sender, EventArgs e)
+        private void OnDoCommence(object sender, Core.Runners.RunSimulation.CommenceArgs e)
         {
             try
             {
@@ -168,7 +169,7 @@ namespace Models
                 if (StartOfSimulation != null)
                     StartOfSimulation.Invoke(this, args);
 
-                while (Today <= EndDate)
+                while (Today <= EndDate && !e.CancelToken.IsCancellationRequested)
                 {
                     if (DoWeather != null)
                         DoWeather.Invoke(this, args);
@@ -208,8 +209,7 @@ namespace Models
 
                     if (DoSurfaceOrganicMatterDecomposition != null)
                         DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
-                    if (Today.DayOfYear == 16)
-                    { }
+
                     if (DoWaterArbitration != null)
                         DoWaterArbitration.Invoke(this, args);
 

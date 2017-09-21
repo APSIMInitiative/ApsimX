@@ -247,6 +247,8 @@
                     new string[] { "Sim1", "Sim4" }, // knownSimulationNames
                     new string[] { "Sim4" }  // simulationNamesBeingRun
                 };
+                Utilities.CallEvent(storage, "BeginRun", arguments);
+
                 storage.WriteRow("Sim4", "Report1", columnNames1, new string[] { null }, new object[] { 4 });
                 storage.CompletedWritingSimulationData("Sim4");
                 Utilities.CallEvent(storage, "EndRun");

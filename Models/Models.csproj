@@ -150,7 +150,7 @@
     <Compile Include="Core\IJobGenerator.cs" />
     <Compile Include="Core\IStorageWriter.cs" />
     <Compile Include="Core\Locator.cs" />
-    <Compile Include="Core\Runners\JobManagerMultiProcess.cs" />
+    <Compile Include="Core\Runners\JobRunnerMultiProcess.cs" />
     <Compile Include="Core\Links.cs" />
     <Compile Include="Core\ModelNode.cs" />
     <Compile Include="Core\ModelTypes.cs" />
@@ -467,7 +467,7 @@
     <Compile Include="Weather\ControlledEnvironment.cs" />
     <Compile Include="Weather\Weather.cs" />
     <Compile Include="Report\Report.cs" />
-    <Compile Include="Project.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
     <Compile Include="WholeFarm\Activities\ActivitiesHolder.cs" />
