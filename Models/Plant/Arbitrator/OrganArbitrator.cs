@@ -9,8 +9,8 @@ using APSIM.Shared.Utilities;
 
 namespace Models.PMF
 {
-    ///<summary>    /// The Arbitrator class determines the allocation of dry matter (DM) and Nitrogen between each of the organs in the crop model. Each organ can have up to three differnt pools of biomass:    ///     /// * **Structural biomass** which remains within an organ once it is partitioned there    /// * **Metabolic biomass** which generally remains within an organ but is able to be re-allocated when the organ senesses and may be re-translocated when demand is high relative to supply.    /// * **Non-structural biomass** which is partitioned to organs when supply is high relative to demand and is available for re-translocation to other organs whenever supply from uptake, fixation and re-allocation is lower than demand .    ///     /// The process followed for biomass arbitration is shown in Figure 1. Arbitration responds to events broadcast daily by the central APSIM infrastructure:     ///     /// 1. **doPotentialPlantGrowth**.  When this event is broadcast each organ class executes code to determine their potential growth, biomass supplies and demands.  In addition to demands for structural, non-structural and metabolic biomass (DM and N) each organ may have the following biomass supplies:     /// 	* **Fixation supply**.  From photosynthesis (DM) or symbiotic fixation (N)    /// 	* **Uptake supply**.  Typically uptake of N from the soil by the roots but could also be uptake by other organs (eg foliage application of N).    /// 	* **Retranslocation supply**.  Non-structural biomass that may be moved from organs to meet demands of other organs.    /// 	* **Reallocation supply**. Biomass that can be moved from senescing organs to meet the demands of other organs.    /// 2. **doPotentialPlantPartitioning.** On this event the Arbitrator first executes the DoDMSetup() method to establish the DM supplies and demands from each organ.  It then executes the DoPotentialDMAllocation() method which works out how much biomass each organ would be allocated assuming N supply is not limiting and sends these allocations to the organs.  Each organ then uses their potential DM allocation to determine their N demand (how much N is needed to produce that much DM) and the arbitrator calls DoNSetup() establish N supplies and Demands and begin N arbitration.  Firstly DoNReallocation() is called to redistribute N that the plant has available from senescing organs.  After this step any unmet N demand is considered the plants demand for N uptake from the soil (N Uptake Demand).    /// 3. **doNutrientArbitration.** When this event is broadcast by the model framework the soil arbitrator gets the N uptake demands from each plant (where multiple plants are growing in competition) and their potential uptake from the soil and determines how nuch of their demand that the soil is able to provide.  This value is then passed back to each plant instance as their Nuptake and doNUptakeAllocation() is called to distribute this N between organs.      /// 4. **doActualPlantPartitioning.**  On this event the arbitrator call DoNRetranslocation() and DoNFixation() to satisify any unmet N demands from these sources.  Finally, DoActualDMAllocation is called where DM allocations to each organ are reduced if the N allocation is insufficient to achieve the organs minimum N conentration and final allocations are sent to organs.     /// 
-    /// ![Alt Text](..\\..\\Documentation\\Images\\ArbitrationDiagram.PNG)    ///     /// **Figure 1.**  Schematic showing procedure for arbitration of biomass partitioning.  Pink boxes are events that are broadcast each day by the model infrastructure and their numbering shows the order of procedure. Blue boxes are methods that are called when these events are broadcast.  Orange boxes contain properties that make up the organ/arbitrator interface.  Green boxes are organ specific properties.    /// </summary>
+    ///<summary>    /// The Arbitrator class determines the allocation of dry matter (DM) and Nitrogen between each of the organs in the crop model. Each organ can have up to three differnt pools of biomass:    ///     /// * **Structural biomass** which remains within an organ once it is partitioned there    /// * **Metabolic biomass** which generally remains within an organ but is able to be re-allocated when the organ senesses and may be re-translocated when demand is high relative to supply.    /// * **Storage biomass** which is partitioned to organs when supply is high relative to demand and is available for re-translocation to other organs whenever supply from uptake, fixation and re-allocation is lower than demand .    ///     /// The process followed for biomass arbitration is shown in Figure 1. Arbitration responds to events broadcast daily by the central APSIM infrastructure:     ///     /// 1. **doPotentialPlantGrowth**.  When this event is broadcast each organ class executes code to determine their potential growth, biomass supplies and demands.  In addition to demands for structural, non-structural and metabolic biomass (DM and N) each organ may have the following biomass supplies:     /// 	* **Fixation supply**.  From photosynthesis (DM) or symbiotic fixation (N)    /// 	* **Uptake supply**.  Typically uptake of N from the soil by the roots but could also be uptake by other organs (eg foliage application of N).    /// 	* **Retranslocation supply**.  Storage biomass that may be moved from organs to meet demands of other organs.    /// 	* **Reallocation supply**. Biomass that can be moved from senescing organs to meet the demands of other organs.    /// 2. **doPotentialPlantPartitioning.** On this event the Arbitrator first executes the DoDMSetup() method to establish the DM supplies and demands from each organ.  It then executes the DoPotentialDMAllocation() method which works out how much biomass each organ would be allocated assuming N supply is not limiting and sends these allocations to the organs.  Each organ then uses their potential DM allocation to determine their N demand (how much N is needed to produce that much DM) and the arbitrator calls DoNSetup() establish N supplies and Demands and begin N arbitration.  Firstly DoNReallocation() is called to redistribute N that the plant has available from senescing organs.  After this step any unmet N demand is considered the plants demand for N uptake from the soil (N Uptake Demand).    /// 3. **doNutrientArbitration.** When this event is broadcast by the model framework the soil arbitrator gets the N uptake demands from each plant (where multiple plants are growing in competition) and their potential uptake from the soil and determines how nuch of their demand that the soil is able to provide.  This value is then passed back to each plant instance as their Nuptake and doNUptakeAllocation() is called to distribute this N between organs.      /// 4. **doActualPlantPartitioning.**  On this event the arbitrator call DoNRetranslocation() and DoNFixation() to satisify any unmet N demands from these sources.  Finally, DoActualDMAllocation is called where DM allocations to each organ are reduced if the N allocation is insufficient to achieve the organs minimum N conentration and final allocations are sent to organs.     /// 
+    /// ![Alt Text](..\\..\\Documentation\\Images\\ArbitrationDiagram.PNG)    ///     /// **Figure [FigureNumber]:**  Schematic showing procedure for arbitration of biomass partitioning.  Pink boxes are events that are broadcast each day by the model infrastructure and their numbering shows the order of procedure. Blue boxes are methods that are called when these events are broadcast.  Orange boxes contain properties that make up the organ/arbitrator interface.  Green boxes are organ specific properties.    /// </summary>
 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -365,7 +365,7 @@ namespace Models.PMF
         virtual public void SendPotentialDMAllocations(IArbitration[] Organs)
         {
             //  Allocate to meet Organs demands
-            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
+            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalStorageAllocation;
 
             // Then check it all adds up
             if (MathUtilities.IsGreaterThan(DM.Allocated, DM.TotalPlantSupply) )
@@ -379,7 +379,7 @@ namespace Models.PMF
                 {
                     Structural = DM.StructuralAllocation[i],  //Need to seperate metabolic and structural allocations
                     Metabolic = DM.MetabolicAllocation[i],  //This wont do anything currently
-                    NonStructural = DM.NonStructuralAllocation[i], //Nor will this do anything
+                    Storage = DM.StorageAllocation[i], //Nor will this do anything
                 };
         }
 
@@ -474,14 +474,14 @@ namespace Models.PMF
                 if (DM.TotalRespiration <= DM.SinkLimitation)
                 { } //Cost of N fixation can be met by DM supply that was not allocated
                 else
-                {//claw back todays NonStructuralDM allocation to cover the cost
+                {//claw back todays StorageDM allocation to cover the cost
                     double UnallocatedRespirationCost = DM.TotalRespiration - DM.SinkLimitation;
-                    if (DM.TotalNonStructuralAllocation > 0)
+                    if (DM.TotalStorageAllocation > 0)
                         for (int i = 0; i < Organs.Length; i++)
                         {
-                            double proportion = DM.NonStructuralAllocation[i] / DM.TotalNonStructuralAllocation;
-                            double Clawback = Math.Min(UnallocatedRespirationCost * proportion, DM.NonStructuralAllocation[i]);
-                            DM.NonStructuralAllocation[i] -= Clawback;
+                            double proportion = DM.StorageAllocation[i] / DM.TotalStorageAllocation;
+                            double Clawback = Math.Min(UnallocatedRespirationCost * proportion, DM.StorageAllocation[i]);
+                            DM.StorageAllocation[i] -= Clawback;
                             UnallocatedRespirationCost -= Clawback;
                         }
                     if (UnallocatedRespirationCost == 0)
@@ -530,7 +530,7 @@ namespace Models.PMF
         {
             double PreNStressDMAllocation = DM.Allocated;
             for (int i = 0; i < Organs.Length; i++)
-                N.TotalAllocation[i] = N.StructuralAllocation[i] + N.MetabolicAllocation[i] + N.NonStructuralAllocation[i];
+                N.TotalAllocation[i] = N.StructuralAllocation[i] + N.MetabolicAllocation[i] + N.StorageAllocation[i];
 
             N.Allocated = MathUtilities.Sum(N.TotalAllocation);
 
@@ -538,7 +538,7 @@ namespace Models.PMF
             // Calculate posible growth based on Minimum N requirement of organs
             for (int i = 0; i < Organs.Length; i++)
             {
-                double TotalNDemand = N.StructuralDemand[i] + N.MetabolicDemand[i] + N.NonStructuralDemand[i];
+                double TotalNDemand = N.StructuralDemand[i] + N.MetabolicDemand[i] + N.StorageDemand[i];
                 if (N.TotalAllocation[i] >= TotalNDemand)
                     N.ConstrainedGrowth[i] = 100000000; //given high value so where there is no N deficit in organ and N limitation to growth  
                 else
@@ -552,17 +552,17 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Length; i++)
                 if ((DM.MetabolicAllocation[i] + DM.StructuralAllocation[i]) != 0)
                 {
-                    double MetabolicProportion = DM.MetabolicAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.NonStructuralAllocation[i]);
-                    double StructuralProportion = DM.StructuralAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.NonStructuralAllocation[i]);
-                    double NonStructuralProportion = DM.NonStructuralAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.NonStructuralAllocation[i]);
+                    double MetabolicProportion = DM.MetabolicAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.StorageAllocation[i]);
+                    double StructuralProportion = DM.StructuralAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.StorageAllocation[i]);
+                    double StorageProportion = DM.StorageAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.StorageAllocation[i]);
                     DM.MetabolicAllocation[i] = Math.Min(DM.MetabolicAllocation[i], N.ConstrainedGrowth[i] * MetabolicProportion);
                     DM.StructuralAllocation[i] = Math.Min(DM.StructuralAllocation[i], N.ConstrainedGrowth[i] * StructuralProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
-                    DM.NonStructuralAllocation[i] = Math.Min(DM.NonStructuralAllocation[i], N.ConstrainedGrowth[i] * NonStructuralProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
+                    DM.StorageAllocation[i] = Math.Min(DM.StorageAllocation[i], N.ConstrainedGrowth[i] * StorageProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
 
                     //Question.  Why do I not restrain non-structural DM allocations.  I think this may be wrong and require further thought HEB 15-1-2015
                 }
             //Recalculated DM Allocation totals
-            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
+            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalStorageAllocation;
             DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
         }
 
@@ -578,7 +578,7 @@ namespace Models.PMF
                     Reallocation = DM.Reallocation[i],
                     Retranslocation = DM.Retranslocation[i],
                     Structural = DM.StructuralAllocation[i],
-                    NonStructural = DM.NonStructuralAllocation[i],
+                    Storage = DM.StorageAllocation[i],
                     Metabolic = DM.MetabolicAllocation[i],
                 };
         }
@@ -590,19 +590,19 @@ namespace Models.PMF
             // Send N allocations to all Plant Organs
             for (int i = 0; i < Organs.Length; i++)
             {
-                if ((N.StructuralAllocation[i] < -0.00000001) || (N.MetabolicAllocation[i] < -0.00000001) || (N.NonStructuralAllocation[i] < -0.00000001))
+                if ((N.StructuralAllocation[i] < -0.00000001) || (N.MetabolicAllocation[i] < -0.00000001) || (N.StorageAllocation[i] < -0.00000001))
                     throw new Exception("-ve N Allocation");
                 if (N.StructuralAllocation[i] < 0.0)
                     N.StructuralAllocation[i] = 0.0;
                 if (N.MetabolicAllocation[i] < 0.0)
                     N.MetabolicAllocation[i] = 0.0;
-                if (N.NonStructuralAllocation[i] < 0.0)
-                    N.NonStructuralAllocation[i] = 0.0;
+                if (N.StorageAllocation[i] < 0.0)
+                    N.StorageAllocation[i] = 0.0;
                 Organs[i].NAllocation = new BiomassAllocationType
                 {
                     Structural = N.StructuralAllocation[i], //This needs to be seperated into components
                     Metabolic = N.MetabolicAllocation[i],
-                    NonStructural = N.NonStructuralAllocation[i],
+                    Storage = N.StorageAllocation[i],
                     Fixation = N.Fixation[i],
                     Reallocation = N.Reallocation[i],
                     Retranslocation = N.Retranslocation[i],
@@ -626,9 +626,9 @@ namespace Models.PMF
             DM.BalanceError = (DM.End - (DM.Start + DM.TotalPlantSupply));
             if (DM.BalanceError > 0.0001)
                 throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than DM supplied by photosynthesis and DM remobilisation");
-            DM.BalanceError = (DM.End - (DM.Start + DM.TotalStructuralDemand + DM.TotalMetabolicDemand + DM.TotalNonStructuralDemand));
+            DM.BalanceError = (DM.End - (DM.Start + DM.TotalStructuralDemand + DM.TotalMetabolicDemand + DM.TotalStorageDemand));
             if (DM.BalanceError > 0.0001)
-                throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than the sum of structural DM demand, metabolic DM demand and NonStructural DM capacity");
+                throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than the sum of structural DM demand, metabolic DM demand and Storage DM capacity");
         }
 
         #endregion

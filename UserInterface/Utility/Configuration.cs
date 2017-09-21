@@ -67,6 +67,8 @@ namespace Utility
         public string Country { get; set; }
         public string Email { get; set; }
 
+        /// <summary>The maximum number of rows to show on a report grid</summary>
+        public int MaximumRowsOnReportGrid { get; set; }
 
         /// <summary>Add a filename to the list.</summary>
         /// <param name="filename">File path</param>

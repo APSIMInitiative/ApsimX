@@ -10,7 +10,6 @@ namespace Models.PMF
     using System.Xml.Serialization;
     using Models.Core;
     using APSIM.Shared.Utilities;
-    using OldPlant;
 
     /// <summary>
     /// Cultivar class for holding cultivar overrides.
@@ -26,7 +25,6 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    [ValidParent(ParentType = typeof(Plant15))]
     [ValidParent(ParentType = typeof(CultivarFolder))]
     public class Cultivar : Model
     {
@@ -148,6 +146,5 @@ namespace Models.PMF
             this.properties.Clear();
             this.oldPropertyValues.Clear();
         }
-
     }
 }

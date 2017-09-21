@@ -77,15 +77,17 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            Name = this.Name;
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-            tags.Add(new AutoDocumentation.Paragraph(Name + " is calculated from a moving sum of " + (ChildFunction as IModel).Name + " over a series of " + NumberOfDays.ToString()+" days.", indent));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                Name = this.Name;
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+                tags.Add(new AutoDocumentation.Paragraph(Name + " is calculated from a moving sum of " + (ChildFunction as IModel).Name + " over a series of " + NumberOfDays.ToString() + " days.", indent));
 
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                child.Document(tags, headingLevel + 1, indent + 1);
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                    child.Document(tags, headingLevel + 1, indent + 1);
+            }
         }
-
     }
 }

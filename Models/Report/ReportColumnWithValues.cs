@@ -12,14 +12,14 @@ namespace Models.Report
     [Serializable]
     public class ReportColumnWithValues : IReportColumn
     {
+        /// <summary>The values</summary>
+        private List<object> Values { get; set; }
+
         /// <summary>Name of column</summary>
         public string Name { get; private set; }
 
         /// <summary>Units of measurement</summary>
         public string Units { get; private set; }
-
-        /// <summary>The values</summary>
-        public List<object> Values { get; set; }
 
         /// <summary>Constructor for a report column that has simple values.</summary>
         /// <param name="columnName">The column name to write to the output</param>
@@ -49,5 +49,15 @@ namespace Models.Report
         {
             Values.Add(value);
         }
+
+
+        /// <summary>Return the next value</summary>
+        public object GetValue()
+        {
+            object value = Values[0];
+            Values.RemoveAt(0);
+            return value;
+        }
+
     }
 }

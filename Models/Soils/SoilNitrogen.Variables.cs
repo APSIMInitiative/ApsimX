@@ -2444,21 +2444,18 @@ namespace Models.Soils
 
                 return null;
             }
-            set
+            set  // should this be private?
             {
-                /*if (hasValues(value, EPSILON))
-                {
-                    double[] delta = MathUtilities.Subtract(value, urea);
-                    // 3.1- send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(delta, "Urea", NPartitionApproach.ToLower());
-                    // 3.2- send dlt's to each patch
+                //double sumOld = MathUtilities.Sum(urea);
+
+                for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
                     for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].dlt_urea = newDelta[k];
-                }*/
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].urea = value;
+                        Patch[k].urea[layer] = value[layer];
+
+                // SendExternalMassFlowN(MathUtilities.Sum(urea) - sumOld); //TODO:is this still needed?
             }
         }
+
         /// <summary>
         /// Soil ammonium nitrogen amount (kgN/ha)
         /// </summary>
@@ -2478,12 +2475,13 @@ namespace Models.Soils
             }
             set  // should this be private?
             {
-                double sumOld = MathUtilities.Sum(NH4);
+                //double sumOld = MathUtilities.Sum(NH4);
 
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].nh4 = value;
+                for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].nh4[layer] = value[layer];
 
-                SendExternalMassFlowN(MathUtilities.Sum(NH4) - sumOld);
+                // SendExternalMassFlowN(MathUtilities.Sum(NH4) - sumOld); //TODO:is this still needed?
             }
         }
 
@@ -2509,19 +2507,15 @@ namespace Models.Soils
 
                 return null;
             }
-            set
+            set  // should this be private?
             {
-                /* if (hasValues(value, EPSILON))
-                 {
-                     double[] delta = MathUtilities.Subtract(value, NO3);
-                     // 3.1- send incoming dlt to be partitioned amongst patches
-                     double[][] newDelta = partitionDelta(delta, "NO3", NPartitionApproach.ToLower());
-                     // 3.2- send dlt's to each patch
-                     for (int k = 0; k < Patch.Count; k++)
-                         Patch[k].dlt_no3 = newDelta[k];
-                 } */
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].no3 = value;
+                //double sumOld = MathUtilities.Sum(NO3);
+
+                for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].no3[layer] = value[layer];
+
+                // SendExternalMassFlowN(MathUtilities.Sum(NO3) - sumOld); //TODO:is this still needed?
             }
         }
 

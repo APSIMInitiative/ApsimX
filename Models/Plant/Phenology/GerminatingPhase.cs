@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
-using Models.PMF.OldPlant;
 
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This model assumes that germination will be complete on any day after sowing if the extractable soil water is greater than zero.
+    /// This model assumes that germination will be completed on any day after sowing if the extractable soil water is greater than zero.
     /// </summary>
     /// \pre A \ref Models.Soils.Soil "Soil" function has to exist to 
     /// provide the \ref Models.Soils.SoilWater.esw "extractable soil water (ESW)" 
@@ -32,11 +31,8 @@ namespace Models.PMF.Phen
         [Link]
         Phenology phenology = null;
 
-        [Link(IsOptional = true)]
+        [Link]
         private Plant Plant = null;
-
-        [Link(IsOptional = true)]
-        private Plant15 Plant15 = null;    // This can be deleted once we get rid of plant15.
 
         /// <summary>
         /// The soil layer in which the seed is sown
@@ -57,8 +53,6 @@ namespace Models.PMF.Phen
             double accumDepth = 0;
             if (Plant != null)
                 SowDepth = Plant.SowingData.Depth;  
-            if (Plant15 != null)
-                SowDepth = Plant15.SowingData.Depth;
             bool layerfound = false;
             for (int layer = 0; layerfound; layer++)
             {

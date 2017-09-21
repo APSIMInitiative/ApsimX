@@ -1,10 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="10">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
     <Report>
       <Name>DailyReport</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today as Date</string>
         <string>Distance</string>
@@ -35,12 +38,13 @@
       <EventNames>
         <string>[Clock].DoReport</string>
       </EventNames>
-      <ResultsPerPage>0</ResultsPerPage>
     </Report>
     <SurfaceOrganicMatter>
       <Name>SurfaceOrganicMatter</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ResidueTypes>
         <Name>ResidueTypes</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <LoadFromResource>ResidueTypes</LoadFromResource>
       </ResidueTypes>
       <Pools>
@@ -73,9 +77,11 @@
       <FractionFaecesAdded>0.5</FractionFaecesAdded>
     </SurfaceOrganicMatter>
     <Plant>
-        <Name>Maize</Name>
-        <ResourceName>Maize</ResourceName>
-        <CropType>Maize</CropType>
+      <Name>Maize</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ResourceName>Maize</ResourceName>
+      <CropType>Maize</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Soil>
       <Name>Soil</Name>
@@ -83,6 +89,7 @@
         <Name>Water</Name>
         <SoilCrop>
           <Name>MaizeSoil</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LL>
             <double>0.1</double>
             <double>0.1</double>
@@ -114,6 +121,7 @@
             <double>1</double>
           </XF>
         </SoilCrop>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Thickness>
           <double>200</double>
           <double>200</double>
@@ -177,7 +185,7 @@
       </Water>
       <SoilWater>
         <Name>SoilWater</Name>
-        <residueinterception>0</residueinterception>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <SummerDate>1-Nov</SummerDate>
         <SummerU>9</SummerU>
         <SummerCona>2.5</SummerCona>
@@ -202,9 +210,11 @@
           <double>0.7</double>
           <double>0.7</double>
         </SWCON>
+        <residueinterception>0</residueinterception>
       </SoilWater>
       <SoilNitrogen>
         <Name>SoilNitrogen</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <fom_type>
           <string>default</string>
           <string>manure</string>
@@ -237,17 +247,10 @@
           <double>0.08</double>
           <double>0.9</double>
         </fract_lign>
-        <wfpsN2N2O_x>
-          <double>22</double>
-          <double>88</double>
-        </wfpsN2N2O_x>
-        <wfpsN2N2O_y>
-          <double>0.1</double>
-          <double>1</double>
-        </wfpsN2N2O_y>
       </SoilNitrogen>
       <SoilOrganicMatter>
         <Name>SoilOrganicMatter</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RootCN>45</RootCN>
         <RootWt>500</RootWt>
         <SoilCN>12</SoilCN>
@@ -307,6 +310,7 @@
       </SoilOrganicMatter>
       <Analysis>
         <Name>Analysis</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Thickness>
           <double>200</double>
           <double>200</double>
@@ -332,6 +336,7 @@
       </Analysis>
       <Sample>
         <Name>Sample</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Thickness>
           <double>200</double>
           <double>200</double>
@@ -378,6 +383,11 @@
         <OCUnits>Total</OCUnits>
         <PHUnits>Water</PHUnits>
       </Sample>
+      <CERESSoilTemperature>
+        <Name>CERESSoilTemperature</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </CERESSoilTemperature>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <RecordNumber>0</RecordNumber>
       <Site>ICRAF Machakos Research Station</Site>
       <NearestTown>Machakos</NearestTown>
@@ -385,11 +395,13 @@
       <Latitude>-1.55</Latitude>
       <Longitude>37.13</Longitude>
     </Soil>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
-    <Model xsi:type="ExcelInput">
+    <ExcelInput>
       <Name>Observed</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>OdhiamboObserved.xlsx</FileName>
       <SheetNames>
         <string>OBSCrop</string>
@@ -397,29 +409,10 @@
         <string>OBSSW55cm</string>
         <string>OBSSW75cm</string>
       </SheetNames>
-    </Model>
-    <PredictedObserved>
-      <Name>PvO35cm</Name>
-      <PredictedTableName>DailyReport</PredictedTableName>
-      <ObservedTableName>OBSSW35cm</ObservedTableName>
-      <FieldNameUsedForMatch>ZoneName</FieldNameUsedForMatch>
-      <FieldName2UsedForMatch>Date</FieldName2UsedForMatch>
-    </PredictedObserved>
-    <PredictedObserved>
-      <Name>PvO55cm</Name>
-      <PredictedTableName>DailyReport</PredictedTableName>
-      <ObservedTableName>OBSSW55cm</ObservedTableName>
-      <FieldNameUsedForMatch>ZoneName</FieldNameUsedForMatch>
-      <FieldName2UsedForMatch>Date</FieldName2UsedForMatch>
-    </PredictedObserved>
-    <PredictedObserved>
-      <Name>PvO75cm</Name>
-      <PredictedTableName>DailyReport</PredictedTableName>
-      <ObservedTableName>OBSSW75cm</ObservedTableName>
-      <FieldNameUsedForMatch>ZoneName</FieldNameUsedForMatch>
-      <FieldName2UsedForMatch>Date</FieldName2UsedForMatch>
-    </PredictedObserved>
+    </ExcelInput>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>Grevillea</Name>
@@ -427,23 +420,30 @@
       <Name>Grevillea</Name>
       <Clock>
         <Name>Clock</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <StartDate>1996-03-01T00:00:00</StartDate>
         <EndDate>1997-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Summary>
       <Weather>
         <Name>Weather</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FileName>Machakos1992-1998 PS1509020.met</FileName>
       </Weather>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </SoilArbitrator>
       <AgroforestrySystem>
         <Name>WindbreakSystem</Name>
         <Report>
           <Name>TreeReport</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[TreeProxy].heightToday</string>
@@ -453,10 +453,10 @@
           <EventNames>
             <string>[Clock].DoReport</string>
           </EventNames>
-          <ResultsPerPage>0</ResultsPerPage>
         </Report>
         <Manager>
           <Name>Sowing1996</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <SowDate>13/03/1996</SowDate>
             <CultivarName>Katumani</CultivarName>
@@ -537,6 +537,7 @@ namespace Models
         </Manager>
         <Manager>
           <Name>Sowing1997</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <SowDate>02/04/1997</SowDate>
             <CultivarName>Katumani</CultivarName>
@@ -617,6 +618,7 @@ namespace Models
         </Manager>
         <TreeProxy>
           <Name>TreeProxy</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Table>
             <ArrayOfString>
               <string>Parameter</string>
@@ -776,6 +778,7 @@ namespace Models
             </ArrayOfString>
           </Table>
           <RootRadius>0.02</RootRadius>
+          <NumberOfTrees>0</NumberOfTrees>
           <Kd>1E-07</Kd>
           <BaseKL>0.01</BaseKL>
           <KValue>0</KValue>
@@ -1024,28 +1027,29 @@ namespace Models
           <Name>TreeRow</Name>
           <LocalMicroClimate>
             <Name>LocalMicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </LocalMicroClimate>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>0</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
@@ -1057,10 +1061,12 @@ namespace Models
             <EventNames>
               <string />
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Distance</string>
@@ -1082,15 +1088,17 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -1128,6 +1136,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.1</double>
                   <double>0.1</double>
@@ -1159,6 +1168,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -1222,7 +1232,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -1247,9 +1257,11 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -1282,17 +1294,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>45</RootCN>
               <RootWt>500</RootWt>
               <SoilCN>12</SoilCN>
@@ -1352,6 +1357,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -1377,6 +1383,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Sample</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -1423,6 +1430,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -1430,6 +1442,11 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>0.005</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -1439,28 +1456,29 @@ namespace Models
           <Name>1m</Name>
           <LocalMicroClimate>
             <Name>LocalMicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </LocalMicroClimate>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>0</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
@@ -1492,10 +1510,12 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Distance</string>
@@ -1512,15 +1532,17 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -1554,11 +1576,14 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant>
             <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -1609,6 +1634,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.1</double>
                   <double>0.1</double>
@@ -1640,6 +1666,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -1703,7 +1730,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -1728,9 +1755,11 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -1763,17 +1792,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>45</RootCN>
               <RootWt>500</RootWt>
               <SoilCN>12</SoilCN>
@@ -1833,6 +1855,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -1858,6 +1881,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Sample</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -1904,6 +1928,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -1911,6 +1940,11 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>0.01</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -1920,28 +1954,29 @@ namespace Models
           <Name>2m</Name>
           <LocalMicroClimate>
             <Name>LocalMicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </LocalMicroClimate>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>0</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
@@ -1973,10 +2008,12 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Distance</string>
@@ -1993,15 +2030,17 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -2035,11 +2074,14 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant>
             <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -2090,6 +2132,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.1</double>
                   <double>0.1</double>
@@ -2121,6 +2164,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -2184,7 +2228,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -2209,9 +2253,11 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -2244,17 +2290,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>45</RootCN>
               <RootWt>500</RootWt>
               <SoilCN>12</SoilCN>
@@ -2314,6 +2353,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -2339,6 +2379,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Sample</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -2385,6 +2426,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -2392,6 +2438,11 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>0.01</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -2401,28 +2452,29 @@ namespace Models
           <Name>3m</Name>
           <LocalMicroClimate>
             <Name>LocalMicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </LocalMicroClimate>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>0</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
@@ -2454,10 +2506,12 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Distance</string>
@@ -2474,15 +2528,17 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -2516,11 +2572,14 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant>
             <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -2571,6 +2630,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.1</double>
                   <double>0.1</double>
@@ -2602,6 +2662,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -2665,7 +2726,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -2690,9 +2751,11 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -2725,17 +2788,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>45</RootCN>
               <RootWt>500</RootWt>
               <SoilCN>12</SoilCN>
@@ -2795,6 +2851,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -2820,6 +2877,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Sample</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -2866,6 +2924,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -2873,6 +2936,11 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>0.01</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -2882,28 +2950,29 @@ namespace Models
           <Name>4m</Name>
           <LocalMicroClimate>
             <Name>LocalMicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </LocalMicroClimate>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>0</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
@@ -2935,10 +3004,12 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Distance</string>
@@ -2955,15 +3026,17 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -2997,11 +3070,14 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant>
             <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -3052,6 +3128,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.1</double>
                   <double>0.1</double>
@@ -3083,6 +3160,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -3146,7 +3224,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -3171,9 +3249,11 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -3206,17 +3286,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>45</RootCN>
               <RootWt>500</RootWt>
               <SoilCN>12</SoilCN>
@@ -3276,6 +3349,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -3301,6 +3375,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Sample</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -3347,6 +3422,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -3354,6 +3434,11 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>0.01</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -3363,28 +3448,29 @@ namespace Models
           <Name>5m</Name>
           <LocalMicroClimate>
             <Name>LocalMicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </LocalMicroClimate>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>0</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
@@ -3416,10 +3502,12 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Distance</string>
@@ -3436,15 +3524,17 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -3478,11 +3568,14 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant>
             <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -3533,6 +3626,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.1</double>
                   <double>0.1</double>
@@ -3564,6 +3658,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -3627,7 +3722,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -3652,9 +3747,11 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -3687,17 +3784,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>45</RootCN>
               <RootWt>500</RootWt>
               <SoilCN>12</SoilCN>
@@ -3757,6 +3847,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -3782,6 +3873,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Sample</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -3828,6 +3920,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -3835,6 +3932,11 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>0.01</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -3844,28 +3946,29 @@ namespace Models
           <Name>6m</Name>
           <LocalMicroClimate>
             <Name>LocalMicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </LocalMicroClimate>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>0</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
@@ -3897,10 +4000,12 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Distance</string>
@@ -3917,15 +4022,17 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -3959,11 +4066,14 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant>
             <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -4014,6 +4124,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.1</double>
                   <double>0.1</double>
@@ -4045,6 +4156,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -4108,7 +4220,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -4133,9 +4245,11 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -4168,17 +4282,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>45</RootCN>
               <RootWt>500</RootWt>
               <SoilCN>12</SoilCN>
@@ -4238,6 +4345,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -4263,6 +4371,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Sample</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -4309,6 +4418,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -4316,6 +4430,11 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>0.01</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -4325,28 +4444,29 @@ namespace Models
           <Name>7m</Name>
           <LocalMicroClimate>
             <Name>LocalMicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </LocalMicroClimate>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>0</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
@@ -4378,10 +4498,12 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Distance</string>
@@ -4398,15 +4520,17 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -4440,11 +4564,14 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant>
             <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -4495,6 +4622,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.1</double>
                   <double>0.1</double>
@@ -4526,6 +4654,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -4589,7 +4718,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -4614,9 +4743,11 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -4649,17 +4780,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>45</RootCN>
               <RootWt>500</RootWt>
               <SoilCN>12</SoilCN>
@@ -4719,6 +4843,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -4744,6 +4869,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Sample</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -4790,6 +4916,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -4797,6 +4928,11 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>0.01</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -4806,28 +4942,29 @@ namespace Models
           <Name>8m</Name>
           <LocalMicroClimate>
             <Name>LocalMicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </LocalMicroClimate>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>0</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Zone].Area</string>
@@ -4859,10 +4996,12 @@ namespace Models
             <EventNames>
               <string>[Maize].Harvesting</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Report>
             <Name>DailyReport</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Distance</string>
@@ -4880,15 +5019,17 @@ namespace Models
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
-            <ResultsPerPage>0</ResultsPerPage>
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -4922,11 +5063,14 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant>
             <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -4977,6 +5121,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.1</double>
                   <double>0.1</double>
@@ -5008,6 +5153,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -5071,7 +5217,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -5096,9 +5242,11 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -5131,17 +5279,10 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>45</RootCN>
               <RootWt>500</RootWt>
               <SoilCN>12</SoilCN>
@@ -5201,6 +5342,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -5226,6 +5368,7 @@ namespace Models
             </Analysis>
             <Sample>
               <Name>Sample</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -5272,6 +5415,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -5279,6 +5427,11 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>0.01</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -5288,6 +5441,7 @@ namespace Models
           <Name>SW35cm</Name>
           <Series>
             <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -5296,16 +5450,20 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>Circle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>OBSSW35cm</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>SW35cm</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
             <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -5314,14 +5472,18 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>SW35cm</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Title />
@@ -5347,12 +5509,12 @@ namespace Models
             <string>6m</string>
             <string>8m</string>
           </DisabledSeries>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SW55cm</Name>
           <Series>
             <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -5361,16 +5523,20 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>Circle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>OBSSW55cm</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>SW55cm</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
             <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -5379,14 +5545,18 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>SW55cm</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Title />
@@ -5412,12 +5582,12 @@ namespace Models
             <string>6m</string>
             <string>8m</string>
           </DisabledSeries>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SW75cm</Name>
           <Series>
             <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -5426,16 +5596,20 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>Circle</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>OBSSW75cm</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>SW75cm</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
             <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -5444,14 +5618,18 @@ namespace Models
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>SW75cm</YFieldName>
             <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Title />
@@ -5477,13 +5655,14 @@ namespace Models
             <string>6m</string>
             <string>8m</string>
           </DisabledSeries>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Area>0.084999999999999992</Area>
         <Slope>0</Slope>
+        <RainfallInterceptionFraction>0</RainfallInterceptionFraction>
+        <RainShaddowWidth>0</RainShaddowWidth>
       </AgroforestrySystem>
-      <Area>0</Area>
-      <Slope>0</Slope>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Simulation>
     <Graph>
       <Name>SW35cm</Name>
@@ -5491,8 +5670,10 @@ namespace Models
         <Name>PvsO</Name>
         <Regression>
           <Name>Regression</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ForEachSeries>false</ForEachSeries>
         </Regression>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5501,14 +5682,18 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>PvO35cm</TableName>
         <XFieldName>Observed.SW35cm</XFieldName>
         <YFieldName>Predicted.SW35cm</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -5527,7 +5712,6 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>SW55cm</Name>
@@ -5535,8 +5719,10 @@ namespace Models
         <Name>PvsO</Name>
         <Regression>
           <Name>Regression</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ForEachSeries>false</ForEachSeries>
         </Regression>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5545,14 +5731,18 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>PvO55cm</TableName>
         <XFieldName>Observed.SW55cm</XFieldName>
         <YFieldName>Predicted.SW55cm</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -5571,7 +5761,6 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>SW75cm</Name>
@@ -5579,8 +5768,10 @@ namespace Models
         <Name>PvsO</Name>
         <Regression>
           <Name>Regression</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ForEachSeries>false</ForEachSeries>
         </Regression>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5589,14 +5780,18 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>PvO75cm</TableName>
         <XFieldName>Observed.SW75cm</XFieldName>
         <YFieldName>Predicted.SW75cm</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -5615,12 +5810,12 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>TreeGrowth</Name>
       <Series>
         <Name>Height</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5629,14 +5824,18 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>TreeReport</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>TreeProxy.heightToday</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -5655,12 +5854,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>YieldTransect</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5669,16 +5868,20 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>Circle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>HarvestReport</TableName>
         <XFieldName>Distance</XFieldName>
         <YFieldName>GrainWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5687,14 +5890,18 @@ namespace Models
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
         <TableName>OBSCrop</TableName>
         <XFieldName>Distance</XFieldName>
         <YFieldName>GrainWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -5713,8 +5920,10 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>278</ExplorerWidth>
 </Simulations>

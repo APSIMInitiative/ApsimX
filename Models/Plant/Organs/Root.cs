@@ -18,16 +18,18 @@ namespace Models.PMF.Organs
     /// 
     /// Roots grow downwards through the soil profile, with initial depth determined by sowng depth and the growth rate determined by RootFrontVelocity. 
     /// The RootFrontVelocity is modified by multiplying it by the soil's XF value; which represents any resistance posed by the soil to root extension. 
+    /// Root depth is also constrained by a maximum root depth.
+    /// 
+    /// Root length growth is calculated using the daily DM partitioned to roots and a specific root length.  Root proliferation in layers is calculated using an approach similar to the generalised equimarginal criterion used in economics.  The uptake of water and N per unit root length is used to partition new root material into layers of higher 'return on investment'.
     /// 
     /// **Dry Matter Demands**
     /// 
-    /// By default, 100% of the dry matter (DM) demanded from the root is structural, but this can be modified by using StructuralFraction different than one.  
-    /// The daily DM demand from root is calculated as a proportion of total DM supply using a PartitionFraction function.  
+    /// A daily DM demand is provided to the organ abitrator and a DM supply returned. By default, 100% of the dry matter (DM) demanded from the root is structural.  
     /// The daily loss of roots is calculated using a SenescenceRate function.  All senesced material is automatically detached and added to the soil FOM.  
     /// 
     /// **Nitrogen Demands**
     /// 
-    /// The daily structural N demand from root is the product of total DM demand and the minimum N concentration.  Any N above this is considered NonStructural 
+    /// The daily structural N demand from root is the product of total DM demand and the minimum N concentration.  Any N above this is considered Storage 
     /// and can be used for retranslocation and/or reallocation is the respective factors are set to values other then zero.  
     /// 
     /// **Nitrogen Uptake**
@@ -35,6 +37,11 @@ namespace Models.PMF.Organs
     /// Potential N uptake by the root system is calculated for each soil layer that the roots have extended into.  
     /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction
     /// (kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries.  
+    /// 
+    ///     _NO3 uptake = NO3<sub>i</sub> x KNO3 x NO3<sub>ppm, i</sub> x NUptakeSWFactor_
+    ///     
+    ///     _NH4 uptake = NH4<sub>i</sub> x KNH4 x NH4<sub>ppm, i</sub> x NUptakeSWFactor_
+    /// 
     /// Nitrogen uptake demand is limited to the maximum daily potential uptake (MaxDailyNUptake) and the plants N demand. 
     /// The demand for soil N is then passed to the soil arbitrator which determines how much of the N uptake demand
     /// each plant instance will be allowed to take up.
@@ -46,6 +53,8 @@ namespace Models.PMF.Organs
     /// and a factor controlling the rate of extraction (KL).  The values of both LL and KL are set in the soil interface and
     /// KL may be further modified by the crop via the KLModifier function.  
     /// 
+    /// _SW uptake = (SW<sub>i</sub> - LL<sub>i</sub>) x KL<sub>i</sub> x KLModifier_
+    /// 
     ///</summary>
     [Serializable]
     [Description("Root Class")]
@@ -54,13 +63,14 @@ namespace Models.PMF.Organs
     public class Root : BaseOrgan, IWaterNitrogenUptake
     {
         #region Links
-        /// <summary>The arbitrator</summary>
-        [Link]
-        OrganArbitrator Arbitrator = null;
 
         #endregion
 
         #region Parameters
+        /// <summary>The DM demand function</summary>
+        [Link]
+        [Units("g/m2/d")]
+        IFunction DMDemandFunction = null;
 
         /// <summary>Link to the KNO3 link</summary>
         [Link]
@@ -112,7 +122,7 @@ namespace Models.PMF.Organs
         [Link]
         [Units("/d")]
         IFunction SenescenceRate = null;
-        
+
         /// <summary>The root front velocity</summary>
         [Link]
         [Units("mm/d")]
@@ -123,11 +133,6 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         IFunction StructuralFraction = null;
 
-        /// <summary>The biomass partition fraction</summary>
-        [Link]
-        [Units("0-1")]
-        IFunction PartitionFraction = null;
-        
         /// <summary>The maximum N concentration</summary>
         [Link]
         [Units("g/g")]
@@ -147,15 +152,15 @@ namespace Models.PMF.Organs
         [Link]
         [Units("kg N/ha")]
         IFunction MaxDailyNUptake = null;
-        
+
         /// <summary>The kl modifier</summary>
         [Link]
         [Units("0-1")]
         IFunction KLModifier = null;
-        
+
         /// <summary>The Maximum Root Depth</summary>
         [Link]
-        [Units("0-1")]
+        [Units("mm")]
         public IFunction MaximumRootDepth = null;
 
         /// <summary>Link to biomass removal model</summary>
@@ -201,7 +206,7 @@ namespace Models.PMF.Organs
         private double StructuralDMDemand = 0.0;
 
         /// <summary>The non structural DM demand</summary>
-        private double NonStructuralDMDemand = 0.0;
+        private double StorageDMDemand = 0.0;
 
         /// <summary>The metabolic DM demand</summary>
         private double MetabolicDMDemand = 0.0;
@@ -210,7 +215,7 @@ namespace Models.PMF.Organs
         private double StructuralNDemand = 0.0;
 
         /// <summary>The non structural N demand</summary>
-        private double NonStructuralNDemand = 0.0;
+        private double StorageNDemand = 0.0;
 
         /// <summary>The metabolic N demand</summary>
         private double MetabolicNDemand = 0.0;
@@ -250,7 +255,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Root depth.</summary>
         [XmlIgnore]
-        public double Depth { get { return PlantZone.Depth; } }
+        public double Depth { get { return (PlantZone != null )? PlantZone.Depth:0; } }
 
         /// <summary>Layer live</summary>
         [XmlIgnore]
@@ -258,7 +263,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Layer dead.</summary>
         [XmlIgnore]
-        public Biomass[] LayerDead { get { return PlantZone.LayerDead; } }
+        public Biomass[] LayerDead { get { if (PlantZone != null) return PlantZone.LayerDead; else return new Biomass[0]; } }
 
         /// <summary>Gets or sets the length.</summary>
         [XmlIgnore]
@@ -344,8 +349,8 @@ namespace Models.PMF.Organs
             ZoneState zone = Zones.Find(z => z.Name == zoneName);
             if (zone == null)
                 throw new Exception("Cannot find a zone called " + zoneName);
-				
-			zone.Uptake = MathUtilities.Multiply_Value(Amount, -1.0);
+
+            zone.Uptake = MathUtilities.Multiply_Value(Amount, -1.0);
             zone.soil.SoilWater.dlt_sw_dep = zone.Uptake;
         }
 
@@ -390,11 +395,11 @@ namespace Models.PMF.Organs
             get
             {
                 double MeanWTF = 0;
-                
+
                 if (Live.Wt > 0)
-                   foreach (ZoneState Z in Zones)
-                       for (int i = 0; i < Z.LayerLive.Length; i++)
-                           MeanWTF += Z.LayerLive[i].Wt/ Live.Wt * MathUtilities.Bound(2 * Z.soil.PAW[i] / Z.soil.PAWC[i], 0, 1);
+                    foreach (ZoneState Z in Zones)
+                        for (int i = 0; i < Z.LayerLive.Length; i++)
+                            MeanWTF += Z.LayerLive[i].Wt / Live.Wt * MathUtilities.Bound(2 * Z.soil.PAW[i] / Z.soil.PAWC[i], 0, 1);
 
                 return MeanWTF;
             }
@@ -463,8 +468,8 @@ namespace Models.PMF.Organs
             if (Plant.SowingData.Depth < PlantZone.Depth)
             {
                 StructuralDMDemand = DemandedDMStructural();
-                NonStructuralDMDemand = DemandedDMNonStructural();
-                TotalDMDemand = StructuralDMDemand + NonStructuralDMDemand + MetabolicDMDemand;
+                StorageDMDemand = DemandedDMStorage();
+                TotalDMDemand = StructuralDMDemand + StorageDMDemand + MetabolicDMDemand;
                 ////This sum is currently not necessary as demand is not calculated on a layer basis.
                 //// However it might be some day... and can consider non structural too
             }
@@ -478,7 +483,7 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
             {
-                foreach(ZoneState Z in Zones)
+                foreach (ZoneState Z in Zones)
                     Z.GrowRootDepth();
                 // Do Root Senescence
                 DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value() });
@@ -514,7 +519,7 @@ namespace Models.PMF.Organs
                 return new BiomassPoolType
                 {
                     Structural = StructuralDMDemand,
-                    NonStructural = NonStructuralDMDemand,
+                    Storage = StorageDMDemand,
                     Metabolic = 0.0
                 };
             }
@@ -525,7 +530,7 @@ namespace Models.PMF.Organs
         {
             if (DMConversionEfficiency > 0.0)
             {
-                double demandedDM = Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value();
+                double demandedDM = DMDemandFunction.Value();
                 if (StructuralFraction != null)
                     demandedDM *= StructuralFraction.Value() / DMConversionEfficiency;
                 else
@@ -533,31 +538,31 @@ namespace Models.PMF.Organs
 
                 return demandedDM;
             }
-             // Conversion efficiency is zero!!!!
-                return 0.0;
+            // Conversion efficiency is zero!!!!
+            return 0.0;
         }
 
         /// <summary>Computes the amount of non structural DM demanded.</summary>
-        public double DemandedDMNonStructural()
+        public double DemandedDMStorage()
         {
             if ((DMConversionEfficiency > 0.0) && (StructuralFraction != null))
             {
                 double rootLiveStructuralWt = 0.0;
-                double rootLiveNonStructuralWt = 0.0;
+                double rootLiveStorageWt = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
                     {
                         rootLiveStructuralWt += Z.LayerLive[i].StructuralWt;
-                        rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
+                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
                     }
 
                 double theoreticalMaximumDM = (rootLiveStructuralWt + StructuralDMDemand) / StructuralFraction.Value();
-                double baseAllocated = rootLiveStructuralWt + rootLiveNonStructuralWt + StructuralDMDemand;
+                double baseAllocated = rootLiveStructuralWt + rootLiveStorageWt + StructuralDMDemand;
                 double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency;
                 return demandedDM;
             }
-             // Either there is no NonStructural fraction or conversion efficiency is zero!!!!
-                return 0.0;
+            // Either there is no Storage fraction or conversion efficiency is zero!!!!
+            return 0.0;
         }
 
         /// <summary>Gets the DM supply for this computation round.</summary>
@@ -579,12 +584,12 @@ namespace Models.PMF.Organs
         {
             if (DMRetranslocationFactor != null)
             {
-                double rootLiveNonStructuralWt = 0.0;
+                double rootLiveStorageWt = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
+                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
 
-                double availableDM = Math.Max(0.0, rootLiveNonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
+                double availableDM = Math.Max(0.0, rootLiveStorageWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
 
@@ -601,12 +606,12 @@ namespace Models.PMF.Organs
         {
             if (DMReallocationFactor != null)
             {
-                double rootLiveNonStructuralWt = 0.0;
+                double rootLiveStorageWt = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
+                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
 
-                double availableDM = rootLiveNonStructuralWt*SenescenceRate.Value() * DMReallocationFactor.Value();
+                double availableDM = rootLiveStorageWt * SenescenceRate.Value() * DMReallocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM reallocation value computed for " + Name);
                 return availableDM;
@@ -622,19 +627,19 @@ namespace Models.PMF.Organs
             {
                 if (PlantZone.Uptake == null)
                     throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
-           
+
                 if (PlantZone.Depth <= 0)
                     return; //cannot allocate growth where no length
 
                 if (DMDemand.Structural == 0 && value.Structural > 0.000000000001)
                     throw new Exception("Invalid allocation of potential DM in" + Name);
-                
+
 
                 double TotalRAw = 0;
                 foreach (ZoneState Z in Zones)
                     TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
-                if (TotalRAw==0 && value.Structural>0)
+                if (TotalRAw == 0 && value.Structural > 0)
                     throw new Exception("Error trying to partition potential root biomass");
 
                 if (TotalRAw > 0)
@@ -659,10 +664,10 @@ namespace Models.PMF.Organs
                     TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
                 Allocated.StructuralWt = value.Structural;
-                Allocated.NonStructuralWt = value.NonStructural;
+                Allocated.StorageWt = value.Storage;
                 Allocated.MetabolicWt = value.Metabolic;
 
-                if (TotalRAw==0 && Allocated.Wt>0)
+                if (TotalRAw == 0 && Allocated.Wt > 0)
                     throw new Exception("Error trying to partition root biomass");
 
                 foreach (ZoneState Z in Zones)
@@ -682,7 +687,7 @@ namespace Models.PMF.Organs
                 {
                     Structural = StructuralNDemand,
                     Metabolic = MetabolicNDemand,
-                    NonStructural = NonStructuralNDemand
+                    Storage = StorageNDemand
                 };
             }
         }
@@ -699,11 +704,11 @@ namespace Models.PMF.Organs
 
             StructuralNDemand = 0.0;
             MetabolicNDemand = 0.0;
-            NonStructuralNDemand = 0.0;
+            StorageNDemand = 0.0;
             foreach (ZoneState Z in Zones)
             {
                 Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
-                Z.NonStructuralNDemand = new double[Z.soil.Thickness.Length];
+                Z.StorageNDemand = new double[Z.soil.Thickness.Length];
                 //Note: MetabolicN is assumed to be zero
 
                 double NDeficit = 0.0;
@@ -711,10 +716,10 @@ namespace Models.PMF.Organs
                 {
                     Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * MinimumNConc.Value() * NitrogenSwitch;
                     NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
-                    Z.NonStructuralNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
+                    Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
 
                     StructuralNDemand += Z.StructuralNDemand[i];
-                    NonStructuralNDemand += Z.NonStructuralNDemand[i];
+                    StorageNDemand += Z.StorageNDemand[i];
                 }
             }
         }
@@ -745,7 +750,7 @@ namespace Models.PMF.Organs
                 double labileN = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        labileN += Math.Max(0.0, Z.LayerLive[i].NonStructuralN - Z.LayerLive[i].NonStructuralWt * MinimumNConc.Value());
+                        labileN += Math.Max(0.0, Z.LayerLive[i].StorageN - Z.LayerLive[i].StorageWt * MinimumNConc.Value());
 
                 double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)
@@ -764,12 +769,12 @@ namespace Models.PMF.Organs
         {
             if (NReallocationFactor != null)
             {
-                double rootLiveNonStructuralN = 0.0;
+                double rootLiveStorageN = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveNonStructuralN += Z.LayerLive[i].NonStructuralN;
+                        rootLiveStorageN += Z.LayerLive[i].StorageN;
 
-                double availableN = rootLiveNonStructuralN * SenescenceRate.Value() * NReallocationFactor.Value();
+                double availableN = rootLiveStorageN * SenescenceRate.Value() * NReallocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N reallocation value computed for " + Name);
 
@@ -828,11 +833,11 @@ namespace Models.PMF.Organs
                 foreach (ZoneState Z in Zones)
                 {
                     totalStructuralNDemand += MathUtilities.Sum(Z.StructuralNDemand);
-                    totalNDemand += MathUtilities.Sum(Z.StructuralNDemand) + MathUtilities.Sum(Z.NonStructuralNDemand);
+                    totalNDemand += MathUtilities.Sum(Z.StructuralNDemand) + MathUtilities.Sum(Z.StorageNDemand);
                 }
                 NTakenUp = value.Uptake;
                 Allocated.StructuralN = value.Structural;
-                Allocated.NonStructuralN = value.NonStructural;
+                Allocated.StorageN = value.Storage;
                 Allocated.MetabolicN = value.Metabolic;
 
                 double surplus = Allocated.N - totalNDemand;
@@ -850,12 +855,12 @@ namespace Models.PMF.Organs
                             Z.LayerLive[i].StructuralN += value.Structural * StructFrac;
                             NAllocated += value.Structural * StructFrac;
                         }
-                        double totalNonStructuralNDemand = MathUtilities.Sum(Z.NonStructuralNDemand);
-                        if (totalNonStructuralNDemand > 0)
+                        double totalStorageNDemand = MathUtilities.Sum(Z.StorageNDemand);
+                        if (totalStorageNDemand > 0)
                         {
-                            double NonStructFrac = Z.NonStructuralNDemand[i] / totalNonStructuralNDemand;
-                            Z.LayerLive[i].NonStructuralN += value.NonStructural * NonStructFrac;
-                            NAllocated += value.NonStructural * NonStructFrac;
+                            double NonStructFrac = Z.StorageNDemand[i] / totalStorageNDemand;
+                            Z.LayerLive[i].StorageN += value.Storage * NonStructFrac;
+                            NAllocated += value.Storage * NonStructFrac;
                         }
                     }
                 }
@@ -906,5 +911,22 @@ namespace Models.PMF.Organs
             biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, removal, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
         }
         #endregion
+
+//        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+//        /// <param name="tags">The list of tags to add to.</param>
+//        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+//        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+//        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+//        {
+//            // add a heading.
+//            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+//
+//            // write description of this class.
+//            AutoDocumentation.GetClassDescription(this, tags, indent);
+//
+//
+//
+//        }
+
     }
 }

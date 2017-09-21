@@ -83,7 +83,7 @@ namespace Models.PMF.Interfaces
         public double Structural { get; set; }
         /// <summary>Gets or sets the non structural.</summary>
         /// <value>The non structural.</value>
-        public double NonStructural { get; set; }
+        public double Storage { get; set; }
         /// <summary>Gets or sets the metabolic.</summary>
         /// <value>The metabolic.</value>
         public double Metabolic { get; set; }
@@ -118,7 +118,7 @@ namespace Models.PMF.Interfaces
         public double Structural { get; set; }
         /// <summary>Gets or sets the non structural.</summary>
         /// <value>The non structural.</value>
-        public double NonStructural { get; set; }
+        public double Storage { get; set; }
         /// <summary>Gets or sets the metabolic.</summary>
         /// <value>The metabolic.</value>
         public double Metabolic { get; set; }

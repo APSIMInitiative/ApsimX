@@ -12,6 +12,7 @@ namespace Models.PostSimulationTools
     using Models.Core;
     using System.Xml.Serialization;
     using APSIM.Shared.Utilities;
+    using Storage;
 
     /// <summary>
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
@@ -81,7 +82,7 @@ namespace Models.PostSimulationTools
         /// Main run method for performing our calculations and storing data.
         /// </summary>
         /// <param name="dataStore">The data store to store the data</param>
-        public void Run(DataStore dataStore)
+        public void Run(IStorageReader dataStore)
         {
             string fullFileName = AbsoluteFileName;
             if (fullFileName != null && File.Exists(fullFileName))
@@ -110,9 +111,7 @@ namespace Models.PostSimulationTools
                 {
                     bool keep = StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
                     if (keep)
-                    {
-                        dataStore.WriteTable(null, table.TableName, table);
-                    }
+                        dataStore.WriteTableRaw(table);
                 }
 
                 // Close the reader and free resources.

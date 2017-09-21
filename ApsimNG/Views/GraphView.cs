@@ -8,12 +8,10 @@ namespace UserInterface.Views
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Drawing;
     using System.IO;
     using System.Reflection;
     using Gtk;
-    using Glade;
     using Interfaces;
     using Models.Graph;
     using OxyPlot;
@@ -59,17 +57,11 @@ namespace UserInterface.Views
         private bool inRightClick = false;
 
         private OxyPlot.GtkSharp.PlotView plot1;
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private Expander expander1 = null;
-        [Widget]
         private VBox vbox2 = null;
-        [Widget]
         private Label captionLabel = null;
-        [Widget]
         private EventBox captionEventBox = null;
-        [Widget]
         private Label label2 = null;
         private Menu Popup = new Menu();
 
@@ -78,8 +70,13 @@ namespace UserInterface.Views
         /// </summary>
         public GraphView(ViewBase owner = null) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.GraphView.glade", "vbox1");
-            gxml.Autoconnect(this);
+            Builder builder = new Builder("ApsimNG.Resources.Glade.GraphView.glade");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            expander1 = (Expander)builder.GetObject("expander1");
+            vbox2 = (VBox)builder.GetObject("vbox2");
+            captionLabel = (Label)builder.GetObject("captionLabel");
+            captionEventBox = (EventBox)builder.GetObject("captionEventBox");
+            label2 = (Label)builder.GetObject("label2");
             _mainWidget = vbox1;
 
             plot1 = new PlotView();
@@ -610,7 +607,8 @@ namespace UserInterface.Views
         {
             this.plot1.Model.Title = text;
             this.plot1.Model.TitleFont = Font;
-            this.plot1.Model.TitleFontSize = FontSize;
+            this.plot1.Model.TitleFontSize = 30;
+            this.plot1.Model.TitleFontWeight = OxyPlot.FontWeights.Bold;
         }
 
         /// <summary>
@@ -663,7 +661,11 @@ namespace UserInterface.Views
             pngExporter.Width = r.Width;
             pngExporter.Height = r.Height;
             pngExporter.Export(plot1.Model, stream);
-            bitmap = new Bitmap(stream);
+            using (Graphics gfx = Graphics.FromImage(bitmap))
+            {
+                Bitmap newBitmap = new Bitmap(stream);
+                gfx.DrawImage(newBitmap, r);
+            }
         }
 
         /// <summary>

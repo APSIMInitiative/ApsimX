@@ -19,6 +19,9 @@ namespace UserInterface.Presenters
     /// </summary>
     class GraphPresenter : IPresenter, IExportable
     {
+        [Link]
+        IStorageReader storage = null;
+        
         /// <summary>The graph view</summary>
         private IGraphView graphView;
 
@@ -74,7 +77,14 @@ namespace UserInterface.Presenters
             if (graph != null && graph.Series != null)
             {
                 // Get a list of series definitions.
-                seriesDefinitions = graph.GetDefinitionsToGraph();
+                try
+                {
+                    seriesDefinitions = graph.GetDefinitionsToGraph(storage);
+                }
+                catch (SQLiteException e)
+                {
+                    explorerPresenter.MainPresenter.ShowMessage("Error obtaining data from database: " + e.Message, Simulation.ErrorLevel.Error);
+                }
                 foreach (SeriesDefinition definition in seriesDefinitions)
                     DrawOnView(definition);
 

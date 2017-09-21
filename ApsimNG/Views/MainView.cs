@@ -6,13 +6,11 @@
 namespace UserInterface.Views
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Drawing;
     using System.IO;
     using Gtk;
-    using Glade;
     using System.Reflection;
+    using Models.Core;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -79,7 +77,7 @@ namespace UserInterface.Views
         /// Add a status message. A message of null will clear the status message.
         /// </summary>
         /// <param name="Message"></param>
-        void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel);
+        void ShowMessage(string Message, Simulation.ErrorLevel errorLevel);
 
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
@@ -151,25 +149,15 @@ namespace UserInterface.Views
         private Views.ListButtonView listButtonView1;
         private Views.ListButtonView listButtonView2;
 
-        [Widget]
         private Window window1 = null;
-        [Widget]
         private ProgressBar progressBar = null;
-        [Widget]
         private TextView StatusWindow = null;
-        [Widget]
         private Button stopButton = null;
-        [Widget]
         private Notebook notebook1 = null;
-        [Widget]
         private Notebook notebook2 = null;
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private VBox vbox2 = null;
-        [Widget]
         private HPaned hpaned1 = null;
-        [Widget]
         private HBox hbox1 = null;
 
         /// <summary>Constructor</summary>
@@ -181,8 +169,17 @@ namespace UserInterface.Views
                                       ".gtkrc"));
             }
 
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.MainView.glade", "window1");
-            gxml.Autoconnect(this);
+            Builder builder = new Builder("ApsimNG.Resources.Glade.MainView.glade");
+            window1 = (Window)builder.GetObject("window1");
+            progressBar = (ProgressBar)builder.GetObject("progressBar");
+            StatusWindow = (TextView)builder.GetObject("StatusWindow");
+            stopButton = (Button)builder.GetObject("stopButton");
+            notebook1 = (Notebook)builder.GetObject("notebook1");
+            notebook2 = (Notebook)builder.GetObject("notebook2");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            vbox2 = (VBox)builder.GetObject("vbox2");
+            hpaned1 = (HPaned)builder.GetObject("hpaned1");
+            hbox1 = (HBox)builder.GetObject("hbox1");
             _mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
@@ -568,7 +565,7 @@ namespace UserInterface.Views
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
-        public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
+        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel)
         {
             Gtk.Application.Invoke(delegate
             {
@@ -579,11 +576,11 @@ namespace UserInterface.Views
                 {
                     string tagName;
                     // Output the message
-                    if (errorLevel == Models.DataStore.ErrorLevel.Error)
+                    if (errorLevel == Simulation.ErrorLevel.Error)
                     {
                         tagName = "error";
                     }
-                    else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
+                    else if (errorLevel == Simulation.ErrorLevel.Warning)
                     {
                         tagName = "warning";
                     }
