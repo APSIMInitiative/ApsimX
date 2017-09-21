@@ -143,19 +143,19 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public override void DoActivity()
 		{
-            if (this.TimingOK)
-            {
-                // if occurred
-//                if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
- //               {
-                    ResourceRequest thisRequest = ResourceRequestList.FirstOrDefault();
-                    if (thisRequest != null)
-                    {
-                        // update next due date
-                        this.NextDueDate = this.NextDueDate.AddMonths(this.PaymentInterval);
-                    }
-  //              }
-            }
+//            if (this.TimingOK)
+//            {
+//                // if occurred
+////                if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
+// //               {
+//                    ResourceRequest thisRequest = ResourceRequestList.FirstOrDefault();
+//                    if (thisRequest != null)
+//                    {
+//                        // update next due date
+//                        this.NextDueDate = this.NextDueDate.AddMonths(this.PaymentInterval);
+//                    }
+//  //              }
+//            }
 		}
 
 		/// <summary>
