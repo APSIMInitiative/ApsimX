@@ -6,22 +6,35 @@
 namespace Models.Core.Runners
 {
     using APSIM.Shared.Utilities;
-    using Report;
     using System;
     using System.Collections.Generic;
-    using System.Data;
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
 
-    /// <summary>A class for managing asynchronous running of jobs.</summary>
+    /// <summary>A class for managing asynchronous running of jobs transferred via a socket connection</summary>
     [Serializable]
-    public class JobManagerMultiProcess : JobManager
+    public class JobManagerMultiProcess : IJobRunner
     {
         private SocketServer server;
         private IStorageWriter storageWriter;
+        private IJobManager jobs;
+
+        /// <summary>A token for cancelling running of jobs</summary>
+        private CancellationTokenSource cancelToken;
+
+        /// <summary>Non simulation errors thrown by runners or this class on socket threads</summary>
+        private string errors;
+
+        private Dictionary<Guid, IRunnable> runningJobs = new Dictionary<Guid, IRunnable>();
+
+        /// <summary>Occurs when all jobs completed.</summary>
+        public event EventHandler<AllCompletedArgs> AllJobsCompleted;
+
+        /// <summary>Invoked when a job is completed.</summary>
+        public event EventHandler<JobCompleteArgs> JobCompleted;
 
         /// <summary>Constructor</summary>
         /// <param name="writer">The writer where all data should be stored</param>
@@ -30,58 +43,64 @@ namespace Models.Core.Runners
             storageWriter = writer;
         }
 
-        /// <summary>
-        /// Start the jobs asynchronously. If 'waitUntilFinished'
-        /// is true then control won't return until all jobs have finished.
-        /// </summary>
-        /// <param name="waitUntilFinished">if set to <c>true</c> [wait until finished].</param>
-        public override void Start(bool waitUntilFinished)
+        /// <summary>Run the specified jobs</summary>
+        /// <param name="jobManager">An instance of a class that manages all jobs.</param>
+        /// <param name="wait">Wait until all jobs finished before returning?</param>
+        /// <param name="numberOfProcessors">The maximum number of cores to use.</param>
+        public void Run(IJobManager jobManager, bool wait = false, int numberOfProcessors = -1)
         {
+            jobs = jobManager;
+
+            // Determine number of threads to use
+            if (numberOfProcessors == -1)
+            {
+                string numOfProcessorsString = Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS");
+                if (numOfProcessorsString != null)
+                    numberOfProcessors = Convert.ToInt32(numOfProcessorsString);
+                numberOfProcessors = System.Math.Max(numberOfProcessors, 1);
+            }
+
+            cancelToken = new CancellationTokenSource();
+
             DeleteRunners();
+            CreateRunners(numberOfProcessors);
 
             AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
 
             // Spin up a job manager server.
             server = new SocketServer();
             server.AddCommand("GetJob", OnGetJob);
-            server.AddCommand("GetJobFailed", OnGetJobFailed);
             server.AddCommand("TransferData", OnTransferData);
             server.AddCommand("EndJob", OnEndJob);
-            server.AddCommand("Error", OnError);
 
             // Tell server to start listening.
-            Task.Run(() => server.StartListening(2222));
+            Task t = Task.Run(() => server.StartListening(2222));
 
-            // Call base to begin running jobs.
-            base.Start(waitUntilFinished);
+            if (wait)
+                while (!t.IsCompleted)
+                    Thread.Sleep(200);
+
+            jobs.Completed();
+            if (AllJobsCompleted != null)
+                AllJobsCompleted.Invoke(this, new AllCompletedArgs() { exceptionThrown = new Exception(errors) });
         }
 
-        /// <summary>Run the specified job.</summary>
-        /// <param name="job">Job to run.</param>
-        protected override void RunJob(Job job)
+        /// <summary>Stop all jobs currently running</summary>
+        public void Stop()
         {
-            if (job.RunnableJob is RunSimulation)
-            {
-                try
-                {
-                    CreateRunners();
-                }
-                catch (Exception err)
-                {
-                    job.Error = err;
-                    job.isCompleted = true;
-                    job.IsRunning = false;
-                }
-            }
-            else
-                base.RunJob(job);
+            cancelToken.Cancel();
+            server.StopListening();
+            server = null;
+            DeleteRunners();
+            runningJobs.Clear();
         }
 
         /// <summary>Create one job runner process for each CPU</summary>
-        private void CreateRunners()
+        /// <param name="numberOfProcessors">The maximum number of cores to use</param>
+        private void CreateRunners(int numberOfProcessors)
         {
             int numRunners = Process.GetProcessesByName("APSIMRunner").Length;
-            for (int i = numRunners; i < MaximumNumOfProcessors; i++)
+            for (int i = numRunners; i < numberOfProcessors; i++)
             {
                 string workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
@@ -98,134 +117,98 @@ namespace Models.Core.Runners
                 runner.Kill();
         }
 
-        /// <summary>Stop all jobs currently running in the scheduler.</summary>
-        public override void Stop()
-        {
-            lock (this)
-            {
-                server.StopListening();
-                server = null;
-                DeleteRunners();
-                base.Stop();
-            }
-        }
-
-        /// <summary>An error has occurred in the socket server.</summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="e">The event arguments</param>
-        private void OnSocketServerError(object sender, SocketServer.ErrorArgs e)
-        {
-            internalExceptions.Add(new Exception(e.message + Environment.NewLine));
-            Stop();
-        }
-
         /// <summary>A runner process has exited. Check for errors</summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="e">The event arguments</param>
         private void OnExited(object sender, EventArgs e)
         {
+            ProcessUtilities.ProcessWithRedirectedOutput p = sender as ProcessUtilities.ProcessWithRedirectedOutput;
+            if (p.ExitCode != 0)
+                errors += p.StdOut + Environment.NewLine;
+
+            if (Process.GetProcessesByName("APSIMRunner").Length == 0)
+                Stop();
         }
 
-        /// <summary>Called by the client to get the next job to run.</summary>
+        /// <summary>Called by a runner process to get the next job to run.</summary>
         /// <param name="sender">The sender</param>
         /// <param name="args">The command arguments</param>
         private void OnGetJob(object sender, SocketServer.CommandArgs args)
         {
-            Job jobToRun = null;
-            lock (this)
+            try
             {
-                // Free up memory by removing all child models on completed jobs.
-                // This helps the garbage collector when there are many jobs.
-                foreach (JobManager.Job job in jobs)
+                IRunnable jobToRun;
+                Guid jobKey;
+                lock (this)
                 {
-                    //if (job.IsCompleted && job.RunnableJob is RunSimulation)
-                    //    (job.RunnableJob as RunSimulation).Children.Clear();
+                    jobToRun = jobs.GetNextJobToRun();
+                    jobKey = Guid.NewGuid();
+                    runningJobs.Add(jobKey, jobToRun);
                 }
 
-                jobToRun = jobs.Find(job => !job.IsRunning && !job.isCompleted && typeof(RunSimulation).IsAssignableFrom(job.RunnableJob.GetType()));
-                if (jobToRun != null)
+                if (jobToRun == null)
+                    server.Send(args.socket, "NULL");
+                else
                 {
-                    jobToRun.IsRunning = true;
+                    RunSimulation runner = jobToRun as RunSimulation;
+                    IModel savedParent = runner.SetParentOfSimulation(null);
+                    GetJobReturnData returnData = new GetJobReturnData();
+                    returnData.key = jobKey;
+                    returnData.job = runner;
+                    server.Send(args.socket, returnData);
+                    runner.SetParentOfSimulation(savedParent);
                 }
             }
-
-            if (jobToRun == null)
-                server.Send(args.socket, "NULL");
-            else
+            catch (Exception err)
             {
-                RunSimulation runner = jobToRun.RunnableJob as RunSimulation;
-                IModel savedParent = runner.SetParentOfSimulation(null);
-                GetJobReturnData returnData = new GetJobReturnData();
-                returnData.key = jobToRun.Key;
-                returnData.job = runner;
-                server.Send(args.socket, returnData);
-                runner.SetParentOfSimulation(savedParent);
+                errors += err.ToString() + Environment.NewLine;
             }
         }
 
-        /// <summary>Called by the client when a socket fails to get a job</summary>
-        /// <param name="sender">The sender</param>
-        /// <param name="args">The command arguments</param>
-        private void OnGetJobFailed(object sender, SocketServer.CommandArgs args)
-        {
-            Job jobToRun = null;
-            lock (this)
-            {
-                if (jobs.Count > 0)
-                {
-                    jobToRun = jobs[0];
-                    jobs.RemoveAt(0);
-                }
-            }
-
-            if (jobToRun == null)
-                server.Send(args.socket, "NULL");
-            else
-            {
-                GetJobReturnData returnData = new GetJobReturnData();
-                returnData.key = jobToRun.Key;
-                returnData.job = jobToRun.RunnableJob;
-                server.Send(args.socket, returnData);
-            }
-        }
-
-        /// <summary>Called by the client to send its output data.</summary>
+        /// <summary>Called by a runner process to send its output data.</summary>
         /// <param name="sender">The sender</param>
         /// <param name="args">The command arguments</param>
         private void OnTransferData(object sender, SocketServer.CommandArgs args)
         {
-            List<TransferRowInTable> rows = args.obj as List<TransferRowInTable>;
-            foreach (TransferRowInTable row in rows)
+            try
             {
-                storageWriter.WriteRow(row.simulationName, row.tableName,
-                                       row.columnNames, row.columnUnits, row.values);
+                List<TransferRowInTable> rows = args.obj as List<TransferRowInTable>;
+                foreach (TransferRowInTable row in rows)
+                {
+                    storageWriter.WriteRow(row.simulationName, row.tableName,
+                                           row.columnNames, row.columnUnits, row.values);
+                }
+                server.Send(args.socket, "OK");
             }
-
-            server.Send(args.socket, "OK");
+            catch (Exception err)
+            {
+                errors += err.ToString() + Environment.NewLine;
+            }
         }
 
-        /// <summary>Called by the client to get the next job to run.</summary>
+        /// <summary>Called by a runner process to signal end of job</summary>
         /// <param name="sender">The sender</param>
         /// <param name="args">The command arguments</param>
         private void OnEndJob(object sender, SocketServer.CommandArgs args)
         {
-            EndJobArguments arguments = args.obj as EndJobArguments;
-            lock (this)
+            try
             {
-                SetJobCompleted(arguments.key, arguments.errorMessage);
-                storageWriter.CompletedWritingSimulationData(arguments.simulationName);
+                EndJobArguments arguments = args.obj as EndJobArguments;
+                JobCompleteArgs jobCompleteArguments = new JobCompleteArgs();
+                jobCompleteArguments.job = runningJobs[arguments.key];
+                lock (this)
+                {
+                    if (JobCompleted != null)
+                        JobCompleted.Invoke(this, jobCompleteArguments);
+                    storageWriter.CompletedWritingSimulationData(arguments.simulationName);
+                    runningJobs.Remove(arguments.key);
+                }
+                server.Send(args.socket, "OK");
             }
-            server.Send(args.socket, "OK");
-        }
-
-        /// <summary>Called by the client to get the next job to run.</summary>
-        /// <param name="sender">The sender</param>
-        /// <param name="args">The command arguments</param>
-        private void OnError(object sender, SocketServer.CommandArgs args)
-        {
-            string errorMessage = args.obj as string;
-            internalExceptions.Add(new Exception(errorMessage));
-            server.Send(args.socket, "OK");
+            catch (Exception err)
+            {
+                errors += err.ToString() + Environment.NewLine;
+            }
         }
 
         /// <summary>An class for encapsulating a response to a GetJob command</summary>
@@ -237,20 +220,6 @@ namespace Models.Core.Runners
 
             /// <summary>Table name</summary>
             public IRunnable job;
-        }
-
-        /// <summary>An integer / DataTable pair</summary>
-        [Serializable]
-        public class TransferArguments
-        {
-            /// <summary>Simulation name</summary>
-            public string simulationName;
-
-            /// <summary>Table name</summary>
-            public string tableName;
-
-            /// <summary>Data</summary>
-            public string fileName;
         }
 
         /// <summary>An class for encapsulating arguments to an EndJob command</summary>

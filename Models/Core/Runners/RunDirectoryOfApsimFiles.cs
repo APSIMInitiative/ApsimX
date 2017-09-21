@@ -2,7 +2,6 @@
 {
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -12,7 +11,7 @@
     /// the constructor. If 'recurse' is true then it will also recursively
     /// look for files in sub directories.
     /// </summary>
-    class RunDirectoryOfApsimFiles : JobManager.IRunnable
+    class RunDirectoryOfApsimFiles : IJobManager
     {
         /// <summary>Gets or sets the filespec that we will look for.</summary>
         private string fileSpec;
@@ -20,8 +19,11 @@
         /// <summary>Run the test nodes?</summary>
         private bool runTests;
 
-        /// <summary>Gets or sets a value indicating whether we search recursively for files matching </summary>
+        /// <summary>Search recursively for files?</summary>
         private bool recurse;
+
+        /// <summary>List of files found that need running</summary>
+        private List<string> files;
 
         /// <summary>Constructor</summary>
         /// <param name="fileSpec">The filespec to search for simulations.</param>
@@ -34,38 +36,46 @@
             this.runTests = runTests;
         }
 
-        /// <summary>Called to start the job.</summary>
-        /// <param name="jobManager">The job manager running this job.</param>
-        /// <param name="workerThread">The thread this job is running on.</param>
-        public void Run(JobManager jobManager, BackgroundWorker workerThread)
+        /// <summary>Return the index of next job to run or -1 if nothing to run.</summary>
+        /// <returns>Job to run or null if no more</returns>
+        public IRunnable GetNextJobToRun()
         {
-            // Extract the path from the filespec. If non specified then assume
-            // current working directory.
-            string path = Path.GetDirectoryName(fileSpec);
-            if (path == null | path == "")
-                path = Directory.GetCurrentDirectory();
+            if (files == null)
+            {
+                // Extract the path from the filespec. If non specified then assume
+                // current working directory.
+                string path = Path.GetDirectoryName(fileSpec);
+                if (path == null | path == "")
+                    path = Directory.GetCurrentDirectory();
 
-            List<string> files = Directory.GetFiles(
-                path,
-                Path.GetFileName(fileSpec),
-                recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToList();
+                files = Directory.GetFiles(
+                    path,
+                    Path.GetFileName(fileSpec),
+                    recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToList();
 
-            // See above. FIXME!
-            files.RemoveAll(s => s.Contains("UnitTests"));
-            files.RemoveAll(s => s.Contains("UserInterface"));
-            files.RemoveAll(s => s.Contains("ApsimNG"));
+                // See above. FIXME!
+                files.RemoveAll(s => s.Contains("UnitTests"));
+                files.RemoveAll(s => s.Contains("UserInterface"));
+                files.RemoveAll(s => s.Contains("ApsimNG"));
+            }
+
+            if (files.Count == 0)
+                return null;
 
             // For each .apsimx file - read it in and create a job for each simulation it contains.
             string workingDirectory = Directory.GetCurrentDirectory();
             string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string apsimExe = Path.Combine(binDirectory, "Models.exe");
-            foreach (string apsimxFileName in files)
-            {
-                string arguments = StringUtilities.DQuote(apsimxFileName);
-                if (runTests)
-                    arguments += " /RunTests";
-                jobManager.AddChildJob(this, new RunExternal(apsimExe, arguments, workingDirectory));
-            }
+
+            string arguments = StringUtilities.DQuote(files[0]);
+            if (runTests)
+                arguments += " /RunTests";
+            return new RunExternal(apsimExe, arguments, workingDirectory);
+        }
+
+        /// <summary>Called by the job runner when all jobs completed</summary>
+        public void Completed()
+        {
         }
     }
 }

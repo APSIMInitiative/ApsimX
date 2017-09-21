@@ -7,6 +7,7 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.IO;
+    using System.Linq;
     using Models;
     using Models.Core;
     using Views;
@@ -45,7 +46,7 @@ namespace UserInterface.Presenters
                 if (simulation.Parent is Experiment)
                 {
                     Experiment experiment = simulation.Parent as Experiment;
-                    string[] simulationNames = experiment.Names();
+                    string[] simulationNames = experiment.GetSimulationNames().ToArray();
                     this.view.SimulationNames = simulationNames;
                     if (simulationNames.Length > 0)
                         this.view.SimulationName = simulationNames[0];

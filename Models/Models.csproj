@@ -147,6 +147,7 @@
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\FileFormat.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
+    <Compile Include="Core\IJobGenerator.cs" />
     <Compile Include="Core\IStorageWriter.cs" />
     <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobManagerMultiProcess.cs" />
@@ -157,7 +158,6 @@
     <Compile Include="Core\Runner.cs" />
     <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />
     <Compile Include="Core\Runners\RunSimulation.cs" />
-    <Compile Include="Core\Runners\RunAllCompletedEvent.cs" />
     <Compile Include="Core\Runners\RunExternal.cs" />
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
@@ -600,10 +600,6 @@
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
       <Project>{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}</Project>
       <Name>APSIM.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ApServer\ApServer.csproj">
-      <Project>{7726F6D0-1CE6-475E-8790-E93999818545}</Project>
-      <Name>ApServer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,7 @@
     using System.IO;
     using System.Reflection;
     using System.Linq;
+    using Models.Core;
 
     [TestFixture]
     public class TestDataStore
@@ -82,8 +83,13 @@
         {
             using (DataStore storage = new DataStore(fileName))
             {
-                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim2" },
-                                     simulationNamesBeingRun: new string[] { "Sim1", "Sim2" });
+                object[] arguments = new object[]
+                {
+                    new string[] { "Sim1", "Sim2" }, // knownSimulationNames
+                    new string[] { "Sim1", "Sim2" }  // simulationNamesBeingRun
+                };
+
+                Utilities.CallEvent(storage, "BeginRun", arguments);
 
                 string[] columnNames1 = new string[] { "Col1", "Col2" };
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 1.0, 11.0 });
@@ -92,10 +98,10 @@
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 4.0, 14.0 });
                 storage.CompletedWritingSimulationData("Sim1");
                 storage.CompletedWritingSimulationData("Sim2");
-                storage.EndWriting();
+                Utilities.CallEvent(storage, "EndRun");
             }
 
-            Assert.AreEqual(TableToString(fileName, "Report1"),
+            Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
                            "SimulationID, Col1,  Col2\r\n" +
                            "           1,1.000,11.000\r\n" +
                            "           1,2.000,12.000\r\n" +
@@ -109,8 +115,13 @@
         {
             using (DataStore storage = new DataStore(fileName))
             {
-                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim2" },
-                                     simulationNamesBeingRun: new string[] { "Sim1", "Sim2" });
+                object[] arguments = new object[]
+                {
+                    new string[] { "Sim1", "Sim2" }, // knownSimulationNames
+                    new string[] { "Sim1", "Sim2" }  // simulationNamesBeingRun
+                };
+
+                Utilities.CallEvent(storage, "BeginRun", arguments);
 
                 string[] columnNames1 = new string[] { "Col1", "Col2" };
                 string[] columnNames2 = new string[] { "Col3", "Col4" };
@@ -120,10 +131,10 @@
                 storage.WriteRow("Sim2", "Report1", columnNames2, new string[] { null, "(g)" }, new object[] { 4.0, 14.0 });
                 storage.CompletedWritingSimulationData("Sim1");
                 storage.CompletedWritingSimulationData("Sim2");
-                storage.EndWriting();
+                Utilities.CallEvent(storage, "EndRun");
             }
 
-            Assert.AreEqual(TableToString(fileName, "Report1"),
+            Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
                            "SimulationID, Col1,  Col2, Col3,  Col4\r\n" +
                            "           1,1.000,11.000,     ,      \r\n" +
                            "           1,2.000,12.000,     ,      \r\n" +
@@ -137,18 +148,23 @@
         {
             using (DataStore storage = new DataStore(fileName))
             {
-                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1" },
-                                     simulationNamesBeingRun: new string[] { "Sim1" });
+                object[] arguments = new object[]
+                {
+                    new string[] { "Sim1" }, // knownSimulationNames
+                    new string[] { "Sim1" }  // simulationNamesBeingRun
+                };
+
+                Utilities.CallEvent(storage, "BeginRun", arguments);
 
                 string[] columnNames1 = new string[] { "Col" };
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 1.0 } });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 2.0, 2.1} });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 3.0, 3.1, 3.2} });
                 storage.CompletedWritingSimulationData("Sim1");
-                storage.EndWriting();
+                Utilities.CallEvent(storage, "EndRun");
             }
 
-            Assert.AreEqual(TableToString(fileName, "Report1"),
+            Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
                            "SimulationID,Col(1),Col(2),Col(3)\r\n" +
                            "           1, 1.000,      ,      \r\n" +
                            "           1, 2.000, 2.100,      \r\n" +
@@ -177,17 +193,22 @@
 
             using (DataStore storage = new DataStore(fileName))
             {
-                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1" },
-                                     simulationNamesBeingRun: new string[] { "Sim1" });
+                object[] arguments = new object[]
+                {
+                    new string[] { "Sim1" }, // knownSimulationNames
+                    new string[] { "Sim1" }  // simulationNamesBeingRun
+                };
+
+                Utilities.CallEvent(storage, "BeginRun", arguments);
 
                 string[] columnNames1 = new string[] { "Col" };
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { record1 });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { record2 });
                 storage.CompletedWritingSimulationData("Sim1");
-                storage.EndWriting();
+                Utilities.CallEvent(storage, "EndRun");
             }
 
-            Assert.AreEqual(TableToString(fileName, "Report1"),
+            Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
                             "SimulationID,     Col.c,Col.d(1),Col.d(2),Col.e(1).a,Col.e(1).b,Col.e(2).a,Col.e(2).b,Col.e(3).a,Col.e(3).b\r\n" +
                             "           1,2017-01-01, 100.000, 101.000,        10,        11,        12,        13,          ,          \r\n" +
                             "           1,2017-01-02, 102.000, 103.000,        16,        17,        18,        19,        20,        21\r\n");
@@ -195,14 +216,19 @@
 
         /// <summary>Ensure that begin writing method does cleanup</summary>
         [Test]
-        public void BeginWriting_Cleanup()
+        public void OnBeginRun_Cleanup()
         {
             string[] columnNames1 = new string[] { "Col" };
             using (DataStore storage = new DataStore(fileName))
             {
                 // Create a database with 3 sims.
-                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim2", "Sim3" },
-                                     simulationNamesBeingRun: new string[] { "Sim1" });
+                object[] arguments = new object[]
+                {
+                    new string[] { "Sim1", "Sim2", "Sim3" }, // knownSimulationNames
+                    new string[] { "Sim1" }  // simulationNamesBeingRun
+                };
+
+                Utilities.CallEvent(storage, "BeginRun", arguments);
 
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { 1 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null }, new object[] { 2 });
@@ -210,19 +236,23 @@
                 storage.CompletedWritingSimulationData("Sim1");
                 storage.CompletedWritingSimulationData("Sim2");
                 storage.CompletedWritingSimulationData("Sim3");
-                storage.EndWriting();
+                Utilities.CallEvent(storage, "EndRun");
             }
             using (DataStore storage = new DataStore(fileName))
-            { 
+            {
                 // Now do it again this time with another sim.
-                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim4" },
-                                     simulationNamesBeingRun: new string[] { "Sim4" });
+                // Create a database with 3 sims.
+                object[] arguments = new object[]
+                {
+                    new string[] { "Sim1", "Sim4" }, // knownSimulationNames
+                    new string[] { "Sim4" }  // simulationNamesBeingRun
+                };
                 storage.WriteRow("Sim4", "Report1", columnNames1, new string[] { null }, new object[] { 4 });
                 storage.CompletedWritingSimulationData("Sim4");
-                storage.EndWriting();
+                Utilities.CallEvent(storage, "EndRun");
             }
 
-            Assert.AreEqual(TableToString(fileName, "Report1"),
+            Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
                            "SimulationID,Col\r\n" +
                            "           1,  1\r\n" +
                            "           2,  4\r\n");
@@ -235,7 +265,7 @@
             using (DataStore storage = new DataStore(fileName))
             {
                 CreateTable(storage);
-                Assert.AreEqual(TableToString(storage.GetData("Report2")),
+                Assert.AreEqual(Utilities.TableToString(storage.GetData("Report2")),
                                 "SimulationName,SimulationID,      Col1,  Col2\r\n" +
                                 "          Sim1,           1,2017-01-01,21.000\r\n" +
                                 "          Sim1,           1,2017-01-02,22.000\r\n" +
@@ -253,7 +283,7 @@
                 CreateTable(storage);
                 DataTable data = storage.GetData(tableName:"Report2",
                                                  simulationName: "Sim1");
-                Assert.AreEqual(TableToString(data),
+                Assert.AreEqual(Utilities.TableToString(data),
                                 "SimulationName,SimulationID,      Col1,  Col2\r\n" +
                                 "          Sim1,           1,2017-01-01,21.000\r\n" +
                                 "          Sim1,           1,2017-01-02,22.000\r\n");
@@ -270,7 +300,7 @@
                 DataTable data = storage.GetData(tableName: "Report2",
                                                  simulationName: "Sim1",
                                                  fieldNames: new string[] { "Col2" });
-                Assert.AreEqual(TableToString(data),
+                Assert.AreEqual(Utilities.TableToString(data),
                                 "SimulationName,SimulationID,  Col2\r\n" +
                                 "          Sim1,           1,21.000\r\n" +
                                 "          Sim1,           1,22.000\r\n");
@@ -291,7 +321,7 @@
                                                  simulationName: "Sim1",
                                                  fieldNames: new string[] { "Col2" },
                                                  filter: "Col2=22");
-                Assert.AreEqual(TableToString(data),
+                Assert.AreEqual(Utilities.TableToString(data),
                                 "SimulationName,SimulationID,  Col2\r\n" +
                                 "          Sim1,           1,22.000\r\n");
             }
@@ -330,7 +360,7 @@
                 row["Col2"] = 21;
                 data.Rows.Add(row);
                 storage.WriteTableRaw(data);
-                Assert.AreEqual(TableToString(fileName, "Test"),
+                Assert.AreEqual(Utilities.TableToString(fileName, "Test"),
                                            "Col1,Col2\r\n" +
                                            "  10,  20\r\n" +
                                            "  11,  21\r\n");
@@ -389,7 +419,7 @@
                 data = storage.RunQuery("SELECT Col1 FROM Report1");
             }
 
-            Assert.AreEqual(TableToString(data),
+            Assert.AreEqual(Utilities.TableToString(data),
                                            "      Col1\r\n" +
                                            "2017-01-01\r\n" +
                                            "2017-01-02\r\n" +
@@ -397,29 +427,17 @@
                                            "2017-01-02\r\n");
         }
 
-        /// <summary>Convert a SQLite table to a string.</summary>
-        private static string TableToString(string fileName, string tableName)
-        {
-            SQLite database = new SQLite();
-            database.OpenDatabase(fileName, true);
-            DataTable data = database.ExecuteQuery("SELECT * FROM " + tableName);
-            database.CloseDatabase();
-            return TableToString(data);
-        }
-
-        /// <summary>Convert a DataTable to a string.</summary>
-        private static string TableToString(DataTable data)
-        {
-            StringWriter writer = new StringWriter();
-            DataTableUtilities.DataTableToText(data, 0, ",", true, writer);
-            return writer.ToString();
-        }
-
         /// <summary>Create a table that we can test</summary>
         private static void CreateTable(DataStore storage)
         {
-            storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim2" },
-                                 simulationNamesBeingRun: new string[] { "Sim1", "Sim2" });
+            // Create a database with 3 sims.
+            object[] arguments = new object[]
+            {
+                    new string[] { "Sim1", "Sim2" }, // knownSimulationNames
+                    new string[] { "Sim1", "Sim2" }  // simulationNamesBeingRun
+            };
+
+            Utilities.CallEvent(storage, "BeginRun", arguments);
 
             string[] columnNames1 = new string[] { "Col1", "Col2" };
             storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 1.0 });
@@ -432,7 +450,7 @@
             storage.WriteRow("Sim2", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 2), 32.0 });
             storage.CompletedWritingSimulationData("Sim1");
             storage.CompletedWritingSimulationData("Sim2");
-            storage.EndWriting();
+            Utilities.CallEvent(storage, "EndRun");
         }
         
     }

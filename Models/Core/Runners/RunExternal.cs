@@ -2,15 +2,14 @@
 {
     using APSIM.Shared.Utilities;
     using System;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
-
+    using System.Threading;
 
     /// <summary>
     /// This runnable class runs an external process.
     /// </summary>
-    class RunExternal : JobManager.IRunnable, JobManager.IComputationalyTimeConsuming
+    class RunExternal : IRunnable, IComputationalyTimeConsuming
     {
         /// <summary>Gets or sets the executable file.</summary>
         private string executable;
@@ -33,9 +32,8 @@
         }
 
         /// <summary>Called to start the job.</summary>
-        /// <param name="jobManager">The job manager running this job.</param>
-        /// <param name="workerThread">The thread this job is running on.</param>
-        public void Run(JobManager jobManager, BackgroundWorker workerThread)
+        /// <param name="cancelToken">The thread this job is running on.</param>
+        public void Run(CancellationTokenSource cancelToken)
         {
             // Start the external process to run APSIM and wait for it to finish.
             Process p = new Process();

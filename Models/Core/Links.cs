@@ -77,6 +77,8 @@ namespace Models.Core
                     object match = services.Find(s => field.FieldType.IsAssignableFrom(s.GetType()));
                     if (match != null)
                         field.SetValue(GetModel(obj), GetModel(match));
+                    else
+                        throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                 }
             }
         }
@@ -260,8 +262,10 @@ namespace Models.Core
         {
             if (obj is IModel)
                 return Apsim.FullPath(obj as IModel);
-            else
+            else if (obj is ModelWrapper)
                 return (obj as ModelWrapper).Name;
+            else
+                return obj.GetType().FullName;
         }
 
         /// <summary>
