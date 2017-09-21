@@ -776,6 +776,31 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantFee.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerDateRange.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerInterval.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerMonthRange.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FinanceActivityCalculateInterest.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FinanceActivityPayExpense.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityBreed.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantFeedGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantFilter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityGrow.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TransmutationCost.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Transmutation.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityFeed.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantInitialCohorts.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantTypeCohort.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantHerd.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AnimalFoodStoreType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AnimalFoodStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ActivityFolder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WholeFarm.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Finance.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ActivitiesHolder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FinanceType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ResourcesHolder.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CarbonFlow.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Solute.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NFlow.png" />

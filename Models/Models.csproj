@@ -571,6 +571,7 @@
     <Compile Include="WholeFarm\Groupings\RuminantFilter.cs" />
     <Compile Include="WholeFarm\Groupings\RuminantFeedGroup.cs" />
     <Compile Include="WholeFarm\Groupings\ListFilterExtensions.cs" />
+    <Compile Include="WholeFarm\Resources\RuminantInitialCohorts.cs" />
     <Compile Include="WholeFarm\Resources\RuminantMale.cs" />
     <Compile Include="WholeFarm\Resources\AnimalPricing.cs" />
     <Compile Include="WholeFarm\Resources\RuminantTypeCohort.cs" />
