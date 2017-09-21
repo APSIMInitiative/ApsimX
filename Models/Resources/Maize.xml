@@ -1612,6 +1612,21 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
         <FixedValue>0</FixedValue>
         <Units>g/g</Units>
       </Constant>
+      <ArrayFunction>
+        <Name>LagDurationAgeMultiplier</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Values>1 1 1</Values>
+      </ArrayFunction>
+      <ArrayFunction>
+        <Name>SenescenceDurationAgeMultiplier</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Values>1 1 1</Values>
+      </ArrayFunction>
+      <ArrayFunction>
+        <Name>LeafSizeAgeMultiplier</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+      </ArrayFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </LeafCohortParameters>
     <RUEModel>
