@@ -1,28 +1,12 @@
 ﻿namespace UnitTests
 {
-    using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Report;
     using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
 
     [TestFixture]
     public class TestReport
     {
-        private static void CallEvent(IModel model, string eventName)
-        {
-            MethodInfo eventToInvoke = model.GetType().GetMethod("On" + eventName, BindingFlags.Instance | BindingFlags.NonPublic);
-            if (eventToInvoke != null)
-                eventToInvoke.Invoke(model, new object[] { model, new EventArgs() });
-        }
-
-        private static void InjectLink(IModel model, string linkFieldName, object linkFieldValue)
-        {
-            ReflectionUtilities.SetValueOfFieldOrProperty(linkFieldName, model, linkFieldValue);
-        }
-
         [Test]
         public void EnsureReportWritesToStorage()
         {
@@ -33,13 +17,13 @@
             report.VariableNames = new string[] { "A", "B", "C" };
             report.EventNames = new string[0];
 
-            InjectLink(report, "simulation", new Simulation() { Name = "Sim1" });
-            InjectLink(report, "clock", new MockClock());
-            InjectLink(report, "storage", storage);
-            InjectLink(report, "locator", locator);
-            InjectLink(report, "events", new MockEvents());
+            Utilities.InjectLink(report, "simulation", new Simulation() { Name = "Sim1" });
+            Utilities.InjectLink(report, "clock", new MockClock());
+            Utilities.InjectLink(report, "storage", storage);
+            Utilities.InjectLink(report, "locator", locator);
+            Utilities.InjectLink(report, "events", new MockEvents());
 
-            CallEvent(report, "Commencing");
+            Utilities.CallEvent(report, "Commencing");
 
             locator.Values["A"] = new VariableObject(10);
             locator.Values["B"] = new VariableObject(20);
@@ -50,7 +34,7 @@
             locator.Values["B"] = new VariableObject(50);
             locator.Values["C"] = new VariableObject(60);
             report.DoOutput(null, null);
-            CallEvent(report, "Completed");
+            Utilities.CallEvent(report, "Completed");
 
 
             Assert.AreEqual(storage.columnNames.ToArray(), new string[] { "Zone", "A", "B", "C" });

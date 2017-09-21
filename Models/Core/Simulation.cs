@@ -9,6 +9,7 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using Models.Factorial;
 using System.ComponentModel;
+using Models.Core.Runners;
 
 namespace Models.Core
 {
@@ -19,10 +20,13 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Experiment))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model
+    public class Simulation : Model, IJobGenerator
     {
         [NonSerialized]
         private ScopingRules scope = null;
+
+        /// <summary>Has this simulation been run?</summary>
+        private bool hasRun;
 
         /// <summary>
         /// An enum that is used to indicate message severity when writing messages to the .db
@@ -118,6 +122,31 @@ namespace Models.Core
         {
             Scope.Clear();
             Locater.Clear();
+        }
+
+
+        /// <summary>Simulation runs are about to begin.</summary>
+        [EventSubscribe("BeginRun")]
+        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        {
+            hasRun = false;
+        }
+
+        /// <summary>Gets the next job to run</summary>
+        public IRunnable NextJobToRun()
+        {
+            if (Parent is IJobGenerator || hasRun)
+                return null;
+            hasRun = true;
+            return new RunSimulation(this, doClone: Parent != null);
+        }
+
+        /// <summary>Gets a list of simulation names</summary>
+        public IEnumerable<string> GetSimulationNames()
+        {
+            if (Parent is IJobGenerator)
+                return new string[0];
+            return new string[] { Name };
         }
     }
 }

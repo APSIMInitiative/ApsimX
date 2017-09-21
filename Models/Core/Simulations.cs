@@ -185,8 +185,9 @@ namespace Models.Core
         public void Run(Simulation simulation, bool doClone)
         {
             Apsim.ParentAllChildren(simulation);
-            RunSimulation simulationRunner = new RunSimulation(simulation, this, doClone);
-            simulationRunner.Run(null, null);
+            RunSimulation simulationRunner = new RunSimulation(simulation, doClone);
+            Links.Resolve(simulationRunner);
+            simulationRunner.Run(new System.Threading.CancellationTokenSource());
         }
 
         /// <summary>Make model substitutions if necessary.</summary>
@@ -275,7 +276,7 @@ namespace Models.Core
             foreach (Model experiment in Apsim.ChildrenRecursively(this))
             {
                 if (experiment is Experiment)
-                    simulations.AddRange((experiment as Experiment).Names());
+                    simulations.AddRange((experiment as Experiment).GetSimulationNames());
             }
 
             return simulations.ToArray();
@@ -309,6 +310,7 @@ namespace Models.Core
             IStorageReader storage = Apsim.Find(this, typeof(IStorageReader)) as IStorageReader;
             if (storage != null)
                 services.Add(storage);
+            services.Add(this);
             links = new Links(services);
         }
 

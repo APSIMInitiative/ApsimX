@@ -71,13 +71,5 @@ namespace Models.Core
 
         /// <summary>Delete all tables</summary>
         void DeleteAllTables();
-
-        /// <summary>Begin writing to DB file</summary>
-        /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file. If null no cleanup will be performed.</param>
-        /// <param name="simulationNamesBeingRun">Collection of simulation names being run. If null no cleanup will be performed.</param>
-        void BeginWriting(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null);
-
-        /// <summary>Finish writing to DB file</summary>
-        void EndWriting();
     }
 }

@@ -130,23 +130,31 @@
                 simData.complete = true;
         }
 
-        /// <summary>Begin writing to DB file</summary>
-        /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file. If null no cleanup will be performed.</param>
-        /// <param name="simulationNamesBeingRun">Collection of simulation names being run. If null no cleanup will be performed.</param>
-        public void BeginWriting(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        /// <summary>Simulation runs are about to begin.</summary>
+        [EventSubscribe("BeginRun")]
+        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
             stoppingWriteToDB = false;
             writeTask = Task.Run(() => WriteDBWorker(knownSimulationNames, simulationNamesBeingRun));
         }
 
         /// <summary>Finish writing to DB file</summary>
-        public void EndWriting()
+        [EventSubscribe("EndRun")]
+        private void OnEndRun(object sender, EventArgs e)
         {
             foreach (SimulationData data in dataToWrite)
                 data.complete = true;
 
             stoppingWriteToDB = true;
             writeTask.Wait();
+
+            // Call the all completed event in all models
+            if (Parent != null)
+            {
+                object[] args = new object[] { this, new EventArgs() };
+                foreach (IPostSimulationTool tool in Apsim.FindAll(Parent, typeof(IPostSimulationTool)))
+                    tool.Run(this);
+            }
         }
 
         /// <summary>
@@ -253,7 +261,7 @@
 
             bool startWriteThread = writeTask == null || writeTask.IsCompleted;
             if (startWriteThread)
-                BeginWriting();
+                OnBeginRun(null, null);
 
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in data.Columns)
@@ -277,7 +285,7 @@
                 foreach (string simulationName in simulationNames)
                     if (simulationName != null && simulationName != string.Empty)
                         CompletedWritingSimulationData(simulationName);
-                EndWriting();
+                OnEndRun(null, null);
             }
         }
 
