@@ -139,6 +139,7 @@
     <Compile Include="Core\APSIMFileConverter.cs" />
     <Compile Include="Core\APSIMFileReader.cs" />
     <Compile Include="Core\APSIMFileWriter.cs" />
+    <Compile Include="Core\Attributes\BriefLabelAttribute.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Core\Attributes\ScopedModelAttribute.cs" />
     <Compile Include="Core\Attributes\SoluteAttribute.cs" />

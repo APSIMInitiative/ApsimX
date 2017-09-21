@@ -351,9 +351,11 @@ namespace UserInterface.Presenters
             foreach (VariableProperty property in this.propertiesInGrid)
             {
                 string columnName = property.Description;
+                string columnCaption = property.Caption;
                 if (property.UnitsLabel != null)
                 {
                     columnName += "\r\n" + property.UnitsLabel;
+                    columnCaption += "\r\n" + property.UnitsLabel;
                 }
 
                 // add a total to the column header if necessary.
@@ -361,6 +363,7 @@ namespace UserInterface.Presenters
                 if (!double.IsNaN(total))
                 {
                     columnName = columnName + "\r\n" + total.ToString("N1");
+                    columnCaption = columnCaption + "\r\n" + total.ToString("N1");
                 }
 
                 Array values = null;
@@ -374,7 +377,8 @@ namespace UserInterface.Presenters
 
                 if (table.Columns.IndexOf(columnName) == -1)
                 {
-                    table.Columns.Add(columnName, property.DataType.GetElementType());
+                    DataColumn newCol = table.Columns.Add(columnName, property.DataType.GetElementType());
+                    newCol.Caption = columnCaption;
                 }
                 else
                 {

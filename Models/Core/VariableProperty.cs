@@ -129,6 +129,27 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Gets the text to use as a label for the property.
+        /// This is derived from the BriefLabel attribute or,
+        /// if that does not exist, from the Description attribute
+        /// </summary>
+        public override string Caption
+        {
+            get
+            {
+                CaptionAttribute labelAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(CaptionAttribute), false) as CaptionAttribute;
+                if (labelAttribute == null)
+                {
+                    return Description;
+                }
+                else
+                {
+                    return labelAttribute.ToString();
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the units of the property
         /// </summary>
         public override string Units

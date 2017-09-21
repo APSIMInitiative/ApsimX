@@ -245,7 +245,9 @@
             {
                 Table.Column column = table.Columns.Find(c => c.Name == columnHeading);
                 if (column != null)
-                    return "(" + column.Units + ")";
+                {
+                    return column.Units;
+                }
             }
             return null;
         }

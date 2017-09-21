@@ -50,7 +50,8 @@ namespace Models.Soils
         /// The summer date.
         /// </value>
         [Units("dd-mmm")]
-        [Description("Start date for switch to summer parameters for soil water evaporation (dd-mmm)")]
+        [Caption("Summer date")]
+        [Description("Start date for switch to summer parameters for soil water evaporation")]
         public string SummerDate { get; set; }
 
         /// <summary>
@@ -61,7 +62,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 40.0)]
         [Units("mm")]
-        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in summer (a.k.a. U) (mm)")]
+        [Caption("Summer U")]
+        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in summer (a.k.a. U)")]
         public double SummerU { get; set; }
 
         /// <summary>
@@ -71,6 +73,7 @@ namespace Models.Soils
         /// The summer cona.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Caption("Summer ConA")]
         [Description("Drying coefficient for stage 2 soil water evaporation in summer (a.k.a. ConA)")]
         public double SummerCona { get; set; }
 
@@ -83,7 +86,8 @@ namespace Models.Soils
         /// The winter date.
         /// </value>
         [Units("dd-mmm")]
-        [Description("Start date for switch to winter parameters for soil water evaporation (dd-mmm)")]
+        [Caption("Winter date")]
+        [Description("Start date for switch to winter parameters for soil water evaporation")]
         public string WinterDate { get; set; }
 
         /// <summary>
@@ -94,7 +98,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
-        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in winter (a.k.a. U) (mm).")]
+        [Caption("Winter U")]
+        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in winter (a.k.a. U).")]
         public double WinterU { get; set; }
 
         /// <summary>
@@ -104,6 +109,7 @@ namespace Models.Soils
         /// The winter cona.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Caption("Winter ConA")]
         [Description("Drying coefficient for stage 2 soil water evaporation in winter (a.k.a. ConA)")]
         public double WinterCona { get; set; }
 
@@ -115,7 +121,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm2/day")]
-        [Description("Constant in the soil water diffusivity calculation (mm2/day)")]
+        [Caption("Diffusivity constant")]
+        [Description("Constant in the soil water diffusivity calculation")]
         public double DiffusConst { get; set; }
 
         /// <summary>
@@ -126,7 +133,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("/mm")]
-        [Description("Effect of soil water storage above the lower limit on soil water diffusivity (/mm)")]
+        [Caption("Diffusivity slope")]
+        [Description("Effect of soil water storage above the lower limit on soil water diffusivity")]
         public double DiffusSlope { get; set; }
 
         /// <summary>
@@ -136,6 +144,7 @@ namespace Models.Soils
         /// The salb.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Caption("Albedo")]
         [Description("Fraction of incoming radiation reflected from bare soil")]
         public double Salb { get; set; }
 
@@ -148,6 +157,7 @@ namespace Models.Soils
         /// The c n2 bare.
         /// </value>
         [Bounds(Lower = 1.0, Upper = 100.0)]
+        [Caption("CN bare")]
         [Description("Runoff Curve Number (CN) for bare soil with average moisture")]
         public double CN2Bare { get; set; }
 
@@ -158,6 +168,7 @@ namespace Models.Soils
         /// The cn red.
         /// </value>
         [Bounds(Lower = 1.0, Upper = 100.0)]
+        [Caption("CN reduction")]
         [Description("Maximum reduction in runoff Curve Number due to cover")]
         public double CNRed { get; set; }
 
@@ -168,6 +179,7 @@ namespace Models.Soils
         /// The cn cov.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]        
+        [Caption("CN cover")]
         [Description("Fractional cover at which maximum reduction of Curve Number occurs")]
         public double CNCov { get; set; }
 
@@ -184,7 +196,8 @@ namespace Models.Soils
         /// The slope.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Description("Slope of the catchment area for lateral flow calculations (0-1)")]
+        [Caption("Slope")]
+        [Description("Slope of the catchment area for lateral flow calculations")]
         public double slope { get; set; }
 
         /// <summary>
@@ -195,7 +208,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]     //1.0e8F = 100000000
         [Units("m")]
-        [Description("Basal width of the downslope boundary of the catchment for lateral flow calculations (m)")]
+        [Caption("Basal width")]
+        [Description("Basal width of the downslope boundary of the catchment for lateral flow calculations")]
         public double discharge_width { get; set; }
 
         /// <summary>
@@ -206,7 +220,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]     //1.0e8F = 100000000
         [Units("m2")]
-        [Description("Catchment area for later flow calculations (m2)")]
+        [Caption("Catchment")]
+        [Description("Catchment area for lateral flow calculations")]
         public double catchment_area { get; set; }
 
 
@@ -220,7 +235,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
-        [Description("Maximum ponding depth of water (e.g. of a rice paddy) (mm)")]
+        [Caption("Max pond")]
+        [Description("Maximum ponding depth of water (e.g. of a rice paddy)")]
         public double max_pond { get; set; }
 
 
@@ -270,7 +286,8 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("cm")]
-        [Description("Soil layer thickness for each layer (cm)")]
+        [Caption("Depth")]
+        [Description("Soil layer thickness for each layer")]
         public string[] Depth
             {
             get
@@ -297,7 +314,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/d")]
-        [Description("Fractional amount of water above DUL that can drain under gravity per day (SWCON) (/d)")]
+        [Caption("SWCON")]
+        [Description("Fractional amount of water above DUL that can drain under gravity per day (SWCON)")]
         public double[] SWCON { get; set; }
 
 
@@ -314,7 +332,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0, Upper = 1.0e3F)] //1.0e3F = 1000
         [Units("mm/d")]
-        [Description("Lateral saturated hydraulic conductivity (KLAT) (mm/d)")]
+        [Caption("Klat")]
+        [Description("Lateral saturated hydraulic conductivity (KLAT)")]
         public double[] KLAT { get; set; }
 
         #endregion

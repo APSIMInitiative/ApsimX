@@ -314,6 +314,8 @@ namespace UserInterface.Views
         public void ShowWaitCursor(bool wait)
         {
             WaitCursor = wait;
+            while (GLib.MainContext.Iteration())
+                ;
         }
 
         /// <summary>Close the application.</summary>

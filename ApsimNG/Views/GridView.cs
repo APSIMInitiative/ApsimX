@@ -458,7 +458,7 @@ namespace UserInterface.Views
                 textRender.Xalign = ((i == 0) || (i == 1) && isPropertyMode) ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
                 TreeViewColumn column = new TreeViewColumn();
-                column.Title = this.DataSource.Columns[i].ColumnName;
+                column.Title = this.DataSource.Columns[i].Caption;
                 column.PackStart(textRender, true);     // 0
                 column.PackStart(toggleRender, true);   // 1
                 column.PackStart(comboRender, true);    // 2
@@ -521,6 +521,8 @@ namespace UserInterface.Views
                     (newLabel.Parent as Alignment).LeftPadding = 2;
                 newLabel.UseMarkup = true;
                 newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(gridview.Columns[i].Title) + "</b>";
+                if (this.DataSource.Columns[i].Caption != this.DataSource.Columns[i].ColumnName)
+                    newLabel.Parent.Parent.Parent.TooltipText = this.DataSource.Columns[i].ColumnName;
                 newLabel.Show();
             }
 
