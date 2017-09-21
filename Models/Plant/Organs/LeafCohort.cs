@@ -907,7 +907,7 @@ namespace Models.PMF.Organs
             double deltaActualArea = Math.Min(DeltaStressConstrainedArea, DeltaCarbonConstrainedArea);
 
             //Modify leaf area using tillering approach
-            double totalf = 1;
+            double totalf = ApexGroupSize[0];
             for(int i=1; i< ApexGroupAge.Count;i++)
             {
                 double f = leafCohortParameters.LeafSizeAgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
