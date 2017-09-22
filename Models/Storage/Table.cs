@@ -46,6 +46,9 @@ namespace Models.Storage
         /// <summary>Column names in table</summary>
         public List<Column> Columns { get; private set; }
 
+        /// <summary>Gets the number of rows that need writing</summary>
+        public int NumRowsToWrite {  get { return RowsToWrite.Count;  } }
+
         /// <summary>Constructor</summary>
         /// <param name="tableName">Name of table</param>
         public Table(string tableName)
@@ -70,35 +73,44 @@ namespace Models.Storage
 
             // Ensure the row's columns are in this table's columns.
             for (int i = 0; i < rowColumnNames.Count(); i++)
-                if (!sortedColumnNames.Contains(rowColumnNames.ElementAt(i)))
+            {
+                lock (this)
                 {
-                    sortedColumnNames.Add(rowColumnNames.ElementAt(i));
-                    object value = rowValues.ElementAt(i);
-                    string dataType = GetSQLiteDataType(value);
-                    Columns.Add(new Column(rowColumnNames.ElementAt(i), 
-                                           rowColumnUnits.ElementAt(i),
-                                           dataType));
-
-                    // Add extra column to all rows currently in table
-                    for (int rowIndex = 0; rowIndex < RowsToWrite.Count; rowIndex++)
+                    if (!sortedColumnNames.Contains(rowColumnNames.ElementAt(i)))
                     {
-                        object[] values = RowsToWrite[rowIndex];
-                        Array.Resize(ref values, values.Length + 1);
-                        RowsToWrite[rowIndex] = values;
+                        object value = rowValues.ElementAt(i);
+                        string dataType = GetSQLiteDataType(value);
+
+                        sortedColumnNames.Add(rowColumnNames.ElementAt(i));
+                        Columns.Add(new Column(rowColumnNames.ElementAt(i),
+                                                rowColumnUnits.ElementAt(i),
+                                                dataType));
+
+                        // Add extra column to all rows currently in table
+                        for (int rowIndex = 0; rowIndex < RowsToWrite.Count; rowIndex++)
+                        {
+                            object[] values = RowsToWrite[rowIndex];
+                            Array.Resize(ref values, values.Length + 1);
+                            RowsToWrite[rowIndex] = values;
+                        }
                     }
                 }
+            }
 
             // Add new row to our values in correct order.
-            object[] newRow = new object[Columns.Count];
-            newRow[0] = simulationID;
-            for (int i = 0; i < rowColumnNames.Count(); i++)
+            lock (this)
             {
-                int columnIndex = Columns.FindIndex(column => column.Name == rowColumnNames.ElementAt(i));
-                newRow[columnIndex] = rowValues.ElementAt(i);
-                if (Columns[columnIndex].SQLiteDataType == null)
-                    Columns[columnIndex].SQLiteDataType = GetSQLiteDataType(newRow[columnIndex]);
+                object[] newRow = new object[Columns.Count];
+                newRow[0] = simulationID;
+                for (int i = 0; i < rowColumnNames.Count(); i++)
+                {
+                    int columnIndex = Columns.FindIndex(column => column.Name == rowColumnNames.ElementAt(i));
+                    newRow[columnIndex] = rowValues.ElementAt(i);
+                    if (Columns[columnIndex].SQLiteDataType == null)
+                        Columns[columnIndex].SQLiteDataType = GetSQLiteDataType(newRow[columnIndex]);
+                }
+                RowsToWrite.Add(newRow);
             }
-            RowsToWrite.Add(newRow);
         }
 
         /// <summary>Set the connection</summary>
@@ -112,14 +124,17 @@ namespace Models.Storage
         /// <param name="connection">The SQLite connection to open</param>
         private void Open(SQLite connection)
         {
-            Columns.Clear();
-            DataTable data = connection.ExecuteQuery("pragma table_info('" + Name + "')");
-            foreach (DataRow row in data.Rows)
+            lock (this)
             {
-                string columnName = row["Name"].ToString();
-                string units = null;
-                units = LookupUnitsForColumn(connection, columnName);
-                Columns.Add(new Column(columnName, units, null));
+                Columns.Clear();
+                DataTable data = connection.ExecuteQuery("pragma table_info('" + Name + "')");
+                foreach (DataRow row in data.Rows)
+                {
+                    string columnName = row["Name"].ToString();
+                    string units = null;
+                    units = LookupUnitsForColumn(connection, columnName);
+                    Columns.Add(new Column(columnName, units, null));
+                }
             }
         }
 
@@ -132,16 +147,26 @@ namespace Models.Storage
             try
             {
                 // If the table exists, make sure it has the required columns, otherwise create the table
+                int numRows = RowsToWrite.Count;
                 if (TableExists(connection, Name))
                     AlterTable(connection);
                 else
                     CreateTable(connection);
 
-                // Create an insert query
-                preparedInsertQuery = CreateInsertQuery(connection);
+                List<string> columnNames = new List<string>();
+                List<object[]> values = new List<object[]>();
+                lock(this)
+                {
+                    columnNames.AddRange(Columns.Select(column => column.Name));
+                    values.AddRange(RowsToWrite.GetRange(0, numRows));
+                    RowsToWrite.RemoveRange(0, numRows);
+                }
 
-                for (int rowIndex = 0; rowIndex < RowsToWrite.Count; rowIndex++)
-                    connection.BindParametersAndRunQuery(preparedInsertQuery, RowsToWrite[rowIndex]);
+                // Create an insert query
+                preparedInsertQuery = CreateInsertQuery(connection, columnNames);
+
+                for (int rowIndex = 0; rowIndex < values.Count; rowIndex++)
+                    connection.BindParametersAndRunQuery(preparedInsertQuery, values[rowIndex]);
             }
             finally
             {
@@ -192,18 +217,21 @@ namespace Models.Storage
         private void CreateTable(SQLite connection)
         {
             StringBuilder sql = new StringBuilder();
-            foreach (Column col in Columns)
+            lock (this)
             {
-                if (sql.Length > 0)
-                    sql.Append(',');
+                foreach (Column col in Columns)
+                {
+                    if (sql.Length > 0)
+                        sql.Append(',');
 
-                sql.Append("[");
-                sql.Append(col.Name);
-                sql.Append("] ");
-                if (col.SQLiteDataType == null)
-                    sql.Append("integer");
-                else
-                    sql.Append(col.SQLiteDataType);
+                    sql.Append("[");
+                    sql.Append(col.Name);
+                    sql.Append("] ");
+                    if (col.SQLiteDataType == null)
+                        sql.Append("integer");
+                    else
+                        sql.Append(col.SQLiteDataType);
+                }
             }
             sql.Insert(0, "CREATE TABLE " + Name + " (");
             sql.Append(')');
@@ -217,18 +245,21 @@ namespace Models.Storage
             DataTable columnData = connection.ExecuteQuery("pragma table_info('" + Name + "')");
             List<string> existingColumns = DataTableUtilities.GetColumnAsStrings(columnData, "Name").ToList();
 
-            foreach (Column col in Columns)
+            lock (this)
             {
-                if (!existingColumns.Contains(col.Name))
+                foreach (Column col in Columns)
                 {
-                    string dataTypeString;
-                    if (col.SQLiteDataType == null)
-                        dataTypeString = "integer";
-                    else
-                        dataTypeString = col.SQLiteDataType;
+                    if (!existingColumns.Contains(col.Name))
+                    {
+                        string dataTypeString;
+                        if (col.SQLiteDataType == null)
+                            dataTypeString = "integer";
+                        else
+                            dataTypeString = col.SQLiteDataType;
 
-                    string sql = "ALTER TABLE " + Name + " ADD COLUMN [" + col.Name + "] " + dataTypeString;
-                    connection.ExecuteNonQuery(sql);
+                        string sql = "ALTER TABLE " + Name + " ADD COLUMN [" + col.Name + "] " + dataTypeString;
+                        connection.ExecuteNonQuery(sql);
+                    }
                 }
             }
         }
@@ -259,29 +290,31 @@ namespace Models.Storage
 
         /// <summary>Create a prepared insert query</summary>
         /// <param name="connection">The SQLite connection to write to</param>
-        private IntPtr CreateInsertQuery(SQLite connection)
+        /// <param name="columnNames">Column names</param>
+        private IntPtr CreateInsertQuery(SQLite connection, List<string> columnNames)
         {
             StringBuilder sql = new StringBuilder();
             sql.Append("INSERT INTO ");
             sql.Append(Name);
             sql.Append('(');
 
-            for (int i = 0; i < Columns.Count; i++)
+            for (int i = 0; i < columnNames.Count; i++)
             {
                 if (i > 0)
                     sql.Append(',');
                 sql.Append('[');
-                sql.Append(Columns[i].Name);
+                sql.Append(columnNames[i]);
                 sql.Append(']');
             }
             sql.Append(") VALUES (");
 
-            for (int i = 0; i < Columns.Count; i++)
+            for (int i = 0; i < columnNames.Count; i++)
             {
                 if (i > 0)
                     sql.Append(',');
                 sql.Append('?');
             }
+
             sql.Append(')');
             return connection.Prepare(sql.ToString());
         }
