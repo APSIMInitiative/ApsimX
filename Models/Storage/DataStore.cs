@@ -27,10 +27,10 @@
 
         private class SimulationData
         {
-            public string simulationName;
+            public int simulationID;
             public bool complete = false;
             public List<Table> tables = new List<Table>();
-            public SimulationData(string simName) { simulationName = simName; }
+            public SimulationData(int simID) { simulationID = simID; }
             public void AddRowToTable(string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
             {
                 Table table = tables.Find(t => t.Name == tableName);
@@ -39,7 +39,7 @@
                     table = new Table(tableName);
                     tables.Add(table);
                 }
-                table.RowsToWrite.Add(new Row(simulationName, columnNames, columnUnits, valuesToWrite));
+                table.AddRow(simulationID, columnNames, columnUnits, valuesToWrite);
             }
         }
 
@@ -105,12 +105,13 @@
         public void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
         {
             SimulationData simData;
+            int simulationID = simulationIDs[simulationName];
             lock (dataToWrite)
             {
-                simData = dataToWrite.Find(s => s.simulationName == simulationName);
+                simData = dataToWrite.Find(s => s.simulationID == simulationID);
                 if (simData == null)
                 {
-                    simData = new SimulationData(simulationName);
+                    simData = new SimulationData(simulationID);
                     dataToWrite.Add(simData);
                 }
             }
@@ -122,9 +123,10 @@
         public void CompletedWritingSimulationData(string simulationName)
         {
             SimulationData simData;
+            int simulationID = simulationIDs[simulationName];
             lock (dataToWrite)
             {
-                simData = dataToWrite.Find(s => s.simulationName == simulationName);
+                simData = dataToWrite.Find(s => s.simulationID == simulationID);
             }
             if (simData != null)
                 simData.complete = true;
@@ -135,6 +137,11 @@
         private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
             stoppingWriteToDB = false;
+            if (knownSimulationNames != null && simulationNamesBeingRun != null)
+            {
+                Open(readOnly: false);
+                CleanupDB(knownSimulationNames, simulationNamesBeingRun);
+            }
             writeTask = Task.Run(() => WriteDBWorker(knownSimulationNames, simulationNamesBeingRun));
         }
 
@@ -439,11 +446,6 @@
         {
             try
             {
-                Open(readOnly: false);
-
-                if (knownSimulationNames != null && simulationNamesBeingRun != null)
-                    CleanupDB(knownSimulationNames, simulationNamesBeingRun);
-
                 while (true)
                 {
                     SimulationData dataToWriteToDB = null;
@@ -756,7 +758,11 @@
             tables.RemoveAll(table => table.Name == tableName);
 
             Table newTable = new Table(tableName);
-            names.ForEach(name => newTable.Columns.Add(new Table.Column(name, null)));
+            foreach (string columnName in names)
+            {
+                if (columnName != "SimulationID")
+                    newTable.Columns.Add(new Table.Column(columnName, null, null));
+            }
             tables.Add(newTable);
         }
 
