@@ -17,9 +17,6 @@ namespace Models.WholeFarm.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	public class Relationship: Model, IValidatableObject
 	{
-		[Link]
-		ISummary Summary = null;
-
 		/// <summary>
 		/// Current value
 		/// </summary>
