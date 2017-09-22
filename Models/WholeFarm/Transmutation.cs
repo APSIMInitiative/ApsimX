@@ -2,6 +2,7 @@
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,8 @@ namespace Models.WholeFarm
 		/// Amount of this resource per unit purchased
 		/// </summary>
 		[Description("Amount of this resource per unit purchased")]
-		public double AmountPerUnitPurchase { get; set; }
+        [Required, Range(1, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
+        public double AmountPerUnitPurchase { get; set; }
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -34,7 +36,7 @@ namespace Models.WholeFarm
 		{
 			if (Apsim.Children(this, typeof(TransmutationCost)).Count()==0)
 			{
-				throw new Exception("Invalid costs povided in Transmutation:"+this.Name+" for ResourceType:"+this.Parent.Name);
+				throw new Exception("Invalid costs provided in Transmutation:"+this.Name+" for ResourceType:"+this.Parent.Name);
 			}
 		}
 	}

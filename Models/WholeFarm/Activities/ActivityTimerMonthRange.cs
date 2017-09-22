@@ -22,9 +22,6 @@ namespace Models.WholeFarm.Activities
 		[XmlIgnore]
 		[Link]
 		Clock Clock = null;
-		[XmlIgnore]
-		[Link]
-		ISummary Summary = null;
 
 		/// <summary>
 		/// Start month of annual period to perform activities
@@ -70,26 +67,6 @@ namespace Models.WholeFarm.Activities
 					return true;
 				}
 				return false;
-			}
-		}
-
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			if ((StartMonth < 1) | (StartMonth > 12))
-			{
-				string error = String.Format("Start month must be a value between 1 and 12 in ({0})", this.Name);
-				Summary.WriteWarning(this, error);
-				throw new Exception(error);
-			}
-			if ((EndMonth < 1) | (EndMonth > 12))
-			{
-				string error = String.Format("End month must be a value between 1 and 12 in ({0})", this.Name);
-				Summary.WriteWarning(this, error);
-				throw new Exception(error);
 			}
 		}
 

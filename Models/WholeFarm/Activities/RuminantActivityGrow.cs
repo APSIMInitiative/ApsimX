@@ -51,14 +51,14 @@ namespace Models.WholeFarm.Activities
 			this.SetDefaults();
 		}
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			methaneEmissions = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning) as GreenhouseGasesType;
-			manureStore = Resources.GetResourceItem(this, typeof(ProductStoreType), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning) as ProductStoreTypeManure;
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            methaneEmissions = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning) as GreenhouseGasesType;
+			manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning) as ProductStoreTypeManure;
 		}
 
 		/// <summary>Function to determine all individuals potential intake and suckling intake after milk consumption from mother</summary>
@@ -329,7 +329,7 @@ namespace Models.WholeFarm.Activities
 				foreach (var item in Resources.RuminantHerd().Herd.GroupBy(a => a.Location))
 				{
 					double manureProduced = item.Sum(a => a.Intake * ((100 - a.DietDryMatterDigestibility) / 100));
-					manureStore.AddUncollectedManure(item.Key, manureProduced);
+					manureStore.AddUncollectedManure(item.Key??"", manureProduced);
 				}
 			}
 		}

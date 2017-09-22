@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="15">
+  <Name>Simulations</Name>
+  <DataStore>
+    <Name>DataStore</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </DataStore>
+  <Simulation>
+    <Name>SimpleManureCollection</Name>
+    <Clock>
+      <Name>clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <StartDate>1995-01-01T00:00:00</StartDate>
+      <EndDate>2009-12-31T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>summaryfile</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Summary>
+    <WholeFarm>
+      <Name>CLEM</Name>
+      <ResourcesHolder>
+        <Name>Resources</Name>
+        <Finance>
+          <Name>Finances</Name>
+          <FinanceType>
+            <Name>General account</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OpeningBalance>10000000</OpeningBalance>
+            <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
+            <WithdrawalLimit>0</WithdrawalLimit>
+            <InterestRateCharged>7.5</InterestRateCharged>
+            <InterestRatePaid>2</InterestRatePaid>
+          </FinanceType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Finance>
+        <AnimalFoodStore>
+          <Name>AnimalFoodStore</Name>
+          <AnimalFoodStoreType>
+            <Name>RiceStraw</Name>
+            <Transmutation>
+              <Name>Purchase</Name>
+              <TransmutationCost>
+                <Name>Money</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ResourceName>Finances</ResourceName>
+                <ResourceTypeName>General account</ResourceTypeName>
+                <CostPerUnit>100</CostPerUnit>
+              </TransmutationCost>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <AmountPerUnitPurchase>10000</AmountPerUnitPurchase>
+            </Transmutation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <DryMatter>89.5</DryMatter>
+            <DMD>45</DMD>
+            <Nitrogen>0.75</Nitrogen>
+            <StartingAmount>10000</StartingAmount>
+          </AnimalFoodStoreType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </AnimalFoodStore>
+        <ProductStore>
+          <Name>Products</Name>
+          <ProductStoreTypeManure>
+            <Name>Manure</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <StartingAmount>0</StartingAmount>
+            <UncollectedStores />
+            <DecayRate>0.9</DecayRate>
+            <MoistureDecayRate>0.5</MoistureDecayRate>
+            <ProportionMoistureFresh>0.3</ProportionMoistureFresh>
+            <MaximumAge>12</MaximumAge>
+          </ProductStoreTypeManure>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </ProductStore>
+        <RuminantHerd>
+          <Name>Ruminants</Name>
+          <RuminantType>
+            <Name>Bos indicus</Name>
+            <RuminantInitialCohorts>
+              <Name>Initial cohorts</Name>
+              <RuminantTypeCohort>
+                <Name>Heifers</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Gender>Female</Gender>
+                <StartingAge>12</StartingAge>
+                <StartingNumber>10</StartingNumber>
+                <StartingWeight>250</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </RuminantInitialCohorts>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Breed>Bos indicus</Breed>
+            <EMaintEfficiencyCoefficient>0.35</EMaintEfficiencyCoefficient>
+            <EMaintEfficiencyIntercept>0.503</EMaintEfficiencyIntercept>
+            <EGrowthEfficiencyCoefficient>0.79</EGrowthEfficiencyCoefficient>
+            <EGrowthEfficiencyIntercept>0</EGrowthEfficiencyIntercept>
+            <ELactationEfficiencyCoefficient>0.35</ELactationEfficiencyCoefficient>
+            <ELactationEfficiencyIntercept>0.42</ELactationEfficiencyIntercept>
+            <EMaintExponent>8.2E-05</EMaintExponent>
+            <EMaintIntercept>0.09</EMaintIntercept>
+            <EMaintCoefficient>0.26</EMaintCoefficient>
+            <Kme>1</Kme>
+            <GrowthEnergyIntercept1>6.7</GrowthEnergyIntercept1>
+            <GrowthEnergyIntercept2>20.3</GrowthEnergyIntercept2>
+            <GrowthEfficiency>1.09</GrowthEfficiency>
+            <SRWFemale>500</SRWFemale>
+            <SRWMaleMultiplier>1.2</SRWMaleMultiplier>
+            <SRWBirth>0.08</SRWBirth>
+            <AgeGrowthRateCoefficient>0.0115</AgeGrowthRateCoefficient>
+            <SRWGrowthScalar>0.32</SRWGrowthScalar>
+            <IntakeCoefficient>0.024</IntakeCoefficient>
+            <IntakeIntercept>1.7</IntakeIntercept>
+            <ProteinCoefficient>120</ProteinCoefficient>
+            <ProteinDegradability>0.9</ProteinDegradability>
+            <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
+            <GreenDietMax>98</GreenDietMax>
+            <GreenDietCoefficient>0.15</GreenDietCoefficient>
+            <GreenDietZero>4</GreenDietZero>
+            <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
+            <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
+            <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
+            <StrictFeedingLimits>true</StrictFeedingLimits>
+            <MilkIntakeCoefficient>0.1206</MilkIntakeCoefficient>
+            <MilkIntakeIntercept>3.8146</MilkIntakeIntercept>
+            <MilkIntakeMaximum>20</MilkIntakeMaximum>
+            <MilkLWTFodderSubstitutionProportion>0.2</MilkLWTFodderSubstitutionProportion>
+            <MaxJuvenileIntake>0.035</MaxJuvenileIntake>
+            <ProportionalDiscountDueToMilk>0.3</ProportionalDiscountDueToMilk>
+            <ProportionOfMaxWeightToSurvive>0.5</ProportionOfMaxWeightToSurvive>
+            <LactatingPotentialModifierConstantA>0.42</LactatingPotentialModifierConstantA>
+            <LactatingPotentialModifierConstantB>61</LactatingPotentialModifierConstantB>
+            <LactatingPotentialModifierConstantC>1.7</LactatingPotentialModifierConstantC>
+            <MaximumSizeOfIndividual>1.2</MaximumSizeOfIndividual>
+            <MortalityBase>0.03</MortalityBase>
+            <MortalityCoefficient>2.5</MortalityCoefficient>
+            <MortalityIntercept>0.05</MortalityIntercept>
+            <MortalityExponent>3</MortalityExponent>
+            <JuvenileMortalityCoefficient>3</JuvenileMortalityCoefficient>
+            <JuvenileMortalityMaximum>0.2</JuvenileMortalityMaximum>
+            <JuvenileMortalityExponent>1.8</JuvenileMortalityExponent>
+            <WoolCoefficient>0</WoolCoefficient>
+            <CashmereCoefficient>0</CashmereCoefficient>
+            <MilkCurveSuckling>0.6</MilkCurveSuckling>
+            <MilkCurveNonSuckling>0.11</MilkCurveNonSuckling>
+            <MilkingDays>300</MilkingDays>
+            <MilkPeakYield>20</MilkPeakYield>
+            <MilkOffsetDay>4</MilkOffsetDay>
+            <MilkPeakDay>45</MilkPeakDay>
+            <InterParturitionIntervalIntercept>10.847</InterParturitionIntervalIntercept>
+            <InterParturitionIntervalCoefficient>-0.7994</InterParturitionIntervalCoefficient>
+            <GestationLength>9</GestationLength>
+            <MinimumAge1stMating>24</MinimumAge1stMating>
+            <MinimumSize1stMating>0.5</MinimumSize1stMating>
+            <MinimumDaysBirthToConception>61</MinimumDaysBirthToConception>
+            <TwinRate>0</TwinRate>
+            <CriticalCowWeight>0.5</CriticalCowWeight>
+            <ConceptionRateCoefficent>
+              <double>-12.634</double>
+              <double>-14.247</double>
+              <double>-11</double>
+              <double>-9.8353</double>
+            </ConceptionRateCoefficent>
+            <ConceptionRateIntercept>
+              <double>7.073</double>
+              <double>5.182</double>
+              <double>8.6</double>
+              <double>6.754</double>
+            </ConceptionRateIntercept>
+            <ConceptionRateAsymptote>
+              <double>90</double>
+              <double>90</double>
+              <double>90</double>
+              <double>95</double>
+            </ConceptionRateAsymptote>
+            <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
+            <PrenatalMortality>7.9</PrenatalMortality>
+            <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
+            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
+            <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
+          </RuminantType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </RuminantHerd>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </ResourcesHolder>
+      <ActivitiesHolder>
+        <Name>Activities</Name>
+        <ActivityFolder>
+          <Name>Manage herd</Name>
+          <RuminantActivityFeed>
+            <Name>Feed rice straw</Name>
+            <RuminantFeedGroup>
+              <Name>Feed Bos indicus</Name>
+              <RuminantFilter>
+                <Name>Filter[HerdName=Bos indicus]</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Parameter>HerdName</Parameter>
+                <Operator>Equal</Operator>
+                <Value>Bos indicus</Value>
+              </RuminantFilter>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MonthlyValues>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+              </MonthlyValues>
+            </RuminantFeedGroup>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <FeedTypeName>RiceStraw</FeedTypeName>
+            <ProportionTramplingWastage>0</ProportionTramplingWastage>
+            <FeedStyle>ProportionOfWeight</FeedStyle>
+          </RuminantActivityFeed>
+          <RuminantActivityGrow>
+            <Name>Grow all ruminants</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+          </RuminantActivityGrow>
+          <RuminantActivityCollectManureAll>
+            <Name>Collect all manure</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+          </RuminantActivityCollectManureAll>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+        </ActivityFolder>
+        <SummariseRuminantHerd>
+          <Name>SummariseHerd</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SummariseRuminantHerd>
+        <ReportRuminantHerd>
+          <Name>ReportHerd</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </ReportRuminantHerd>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </ActivitiesHolder>
+      <Folder>
+        <Name>Reports</Name>
+        <Report>
+          <Name>HerdSummary</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Activities].SummariseHerd.ReportDetails.Breed as Breed</string>
+            <string>[Activities].SummariseHerd.ReportDetails.Herd as Herd</string>
+            <string>[Activities].SummariseHerd.ReportDetails.Age as AgeGroup</string>
+            <string>[Activities].SummariseHerd.ReportDetails.Sex as Sex</string>
+            <string>[Activities].SummariseHerd.ReportDetails.Number as Num</string>
+            <string>[Activities].SummariseHerd.ReportDetails.AverageWeight as AvgWt</string>
+            <string>[Activities].SummariseHerd.ReportDetails.AverageWeightGain as AvgWtGn</string>
+            <string>[Activities].SummariseHerd.ReportDetails.AverageIntake as AvgIntake</string>
+            <string>[Activities].SummariseHerd.ReportDetails.AdultEquivalents as AE</string>
+            <string>[Activities].SummariseHerd.ReportDetails.NumberPregnant as NoPregnant</string>
+            <string>[Activities].SummariseHerd.ReportDetails.NumberOfBirths as Births</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Activities].SummariseHerd.OnReportItemGenerated</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>HerdReport</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.ID as RumID</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.Weight as Weight</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Activities].ReportHerd.OnReportItemGenerated</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>FinancesLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].Finances.LastTransaction.Credit as Credit</string>
+            <string>[Resources].Finances.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Finances.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].Finances.LastTransaction.Activity as Activity</string>
+            <string>[Resources].Finances.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].Finances.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>AnimalFoodLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].AnimalFoodStore.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>ResourceShortfallLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource</string>
+            <string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
+            <string>[Activities].LastShortfallResourceRequest.Reason as Reason</string>
+            <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
+            <string>[Activities].LastShortfallResourceRequest.Available as Available</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Activities].ResourceShortfallOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>HerdLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.ID as UId</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.Breed as Breed</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.HerdName as Herd</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.GenderAsString as Sex</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.Age as Age</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.Weight as Weight</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.SaleFlagAsString as Reason</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.PopulationChangeDirection as Change</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].Ruminants.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>ProductsLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].Products.LastTransaction.Credit as Credit</string>
+            <string>[Resources].Products.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Products.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].Products.LastTransaction.Activity as Activity</string>
+            <string>[Resources].Products.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].Products.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Area>1</Area>
+      <Slope>0</Slope>
+      <ClimateRegion>0</ClimateRegion>
+      <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
+      <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
+    </WholeFarm>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Simulation>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
+  <ExplorerWidth>281</ExplorerWidth>
+</Simulations>

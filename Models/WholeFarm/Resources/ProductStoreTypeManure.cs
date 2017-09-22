@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Models.WholeFarm.Resources
 {
@@ -15,18 +16,19 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(ProductStore))]
-	public class ProductStoreTypeManure: ProductStoreType
-	{
-		/// <summary>
-		/// List of all uncollected manure stores
-		/// These present manure in the field and yards
-		/// </summary>
-		public List<ManureStoreUncollected> UncollectedStores = new List<ManureStoreUncollected>();
+	public class ProductStoreTypeManure: ProductStoreType, IResourceWithTransactionType, IResourceType
+    {
+        /// <summary>
+        /// List of all uncollected manure stores
+        /// These present manure in the field and yards
+        /// </summary>
+        [NonSerialized]
+        public List<ManureStoreUncollected> UncollectedStores;
 
-		/// <summary>
-		/// Biomass decay rate each time step
-		/// </summary>
-		[Description("Biomass decay rate each time step")]
+        /// <summary>
+        /// Biomass decay rate each time step
+        /// </summary>
+        [Description("Biomass decay rate each time step")]
         [Required, Range(0, 100, ErrorMessage = "Value must be a proportion in the range 0 to 1")]
         public double DecayRate { get; set; }
 
@@ -51,12 +53,20 @@ namespace Models.WholeFarm.Resources
         [Required]
         public int MaximumAge { get; set; }
 
-		/// <summary>
-		/// Method to add uncollected manure to stores
-		/// </summary>
-		/// <param name="storeName">Name of store to add manure to</param>
-		/// <param name="amount">Amount (dry weight) of manure to add</param>
-		public void AddUncollectedManure(string storeName, double amount)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ProductStoreTypeManure()
+        {
+            UncollectedStores = new List<ManureStoreUncollected>();
+        }
+
+        /// <summary>
+        /// Method to add uncollected manure to stores
+        /// </summary>
+        /// <param name="storeName">Name of store to add manure to</param>
+        /// <param name="amount">Amount (dry weight) of manure to add</param>
+        public void AddUncollectedManure(string storeName, double amount)
 		{
 			ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.ToLower() == storeName.ToLower()).FirstOrDefault();
 			if(store == null)
@@ -67,7 +77,7 @@ namespace Models.WholeFarm.Resources
 			ManurePool pool = store.Pools.Where(a => a.Age == 0).FirstOrDefault();
 			if(pool == null)
 			{
-				pool = new ManurePool() { Age = 0 };
+				pool = new ManurePool() { Age = 0, ProportionMoisture= ProportionMoistureFresh };
 				store.Pools.Add(pool);
 			}
 			pool.Amount += amount;
@@ -87,7 +97,8 @@ namespace Models.WholeFarm.Resources
 				foreach (ManurePool pool in store.Pools)
 				{
 					pool.Age++;
-					pool.Amount *= DecayRate; 
+					pool.Amount *= DecayRate;
+                    pool.ProportionMoisture *= MoistureDecayRate;
 				}
 				store.Pools.RemoveAll(a => a.Age > MaximumAge);
 			}
@@ -121,12 +132,34 @@ namespace Models.WholeFarm.Resources
 				this.Add(amountMoved, activityName, ((storeName=="")?"Unknown":storeName));
 			}
 		}
-	}
 
-	/// <summary>
-	/// Individual store of uncollected manure
-	/// </summary>
-	public class ManureStoreUncollected
+        /// <summary>
+        /// Back account transaction occured
+        /// </summary>
+        public new event EventHandler TransactionOccurred;
+
+        /// <summary>
+        /// Transcation occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected new virtual void OnTransactionOccurred(EventArgs e)
+        {
+            if (TransactionOccurred != null)
+                TransactionOccurred(this, e);
+        }
+
+        /// <summary>
+        /// Last transaction received
+        /// </summary>
+        [XmlIgnore]
+        public new ResourceTransaction LastTransaction { get; set; }
+
+    }
+
+    /// <summary>
+    /// Individual store of uncollected manure
+    /// </summary>
+    public class ManureStoreUncollected
 	{
 		/// <summary>
 		/// Name of store (eg yards, paddock name etc)
@@ -151,15 +184,19 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Amount (dry weight) in pool
 		/// </summary>
-		public double  Amount { get; set; }
+		public double Amount { get; set; }
+        /// <summary>
+        /// Proportion water in pool
+        /// </summary>
+        public double ProportionMoisture { get; set; }
 
-		/// <summary>
-		/// Acluclate wet weight of pool
-		/// </summary>
-		/// <param name="MoistureDecayRate"></param>
-		/// <param name="ProportionMoistureFresh"></param>
-		/// <returns></returns>
-		public double WetWeight(double MoistureDecayRate, double ProportionMoistureFresh)
+        /// <summary>
+        /// Acluclate wet weight of pool
+        /// </summary>
+        /// <param name="MoistureDecayRate"></param>
+        /// <param name="ProportionMoistureFresh"></param>
+        /// <returns></returns>
+        public double WetWeight(double MoistureDecayRate, double ProportionMoistureFresh)
 		{
 			double moisture = ProportionMoistureFresh;
 			for (int i = 0; i < Age; i++)

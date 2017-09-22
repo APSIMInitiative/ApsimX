@@ -85,30 +85,13 @@ namespace Models.WholeFarm.Activities
 			this.SetDefaults();
 		}
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			//if (MonthDue >= Clock.StartDate.Month)
-			//{
-			//	NextDueDate = new DateTime(Clock.StartDate.Year, MonthDue, Clock.StartDate.Day);
-			//}
-			//else
-			//{
-			//	NextDueDate = new DateTime(Clock.StartDate.Year, MonthDue, Clock.StartDate.Day);
-			//	while (Clock.StartDate > NextDueDate)
-			//	{
-			//		NextDueDate = NextDueDate.AddMonths(PaymentInterval);
-			//	}
-			//}
-
-			Finance finance = Resources.FinanceResource();
-			if (finance != null)
-			{
-				bankAccount = Resources.GetResourceItem(this, typeof(Finance), AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
-			}
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+			bankAccount = Resources.GetResourceItem(this, typeof(Finance), AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
 		}
 
 		/// <summary>

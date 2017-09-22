@@ -66,19 +66,19 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		private bool financesExist = false;
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			financesExist = ((Resources.FinanceResource() != null));
-		}
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            financesExist = ((Resources.FinanceResource() != null));
+        }
 
-		/// <summary>An event handler to allow us to make all payments when needed</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("EndOfMonth")]
+        /// <summary>An event handler to allow us to make all payments when needed</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndOfMonth")]
 		private void OnEndOfMonth(object sender, EventArgs e)
 		{
 			if (financesExist)

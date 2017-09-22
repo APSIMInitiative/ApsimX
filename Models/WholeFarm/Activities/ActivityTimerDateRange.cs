@@ -38,6 +38,7 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[Description("End date of period to perform activities")]
         [Required]
+        [DateGreaterThanAttribute("StartDate", ErrorMessage = "Start date must be less than end date")]
         public DateTime EndDate { get; set; }
 
 		/// <summary>
@@ -58,19 +59,19 @@ namespace Models.WholeFarm.Activities
 			this.SetDefaults();
 		}
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			if (StartDate >= EndDate)
-			{
-				string error = String.Format("Start date must be less than end date in ({0})", this.Name);
-				Summary.WriteWarning(this, error);
-				throw new Exception(error);
-			}
-			endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            //if (StartDate >= EndDate)
+            //{
+            //	string error = String.Format("Start date must be less than end date in ({0})", this.Name);
+            //	Summary.WriteWarning(this, error);
+            //	throw new Exception(error);
+            //}
+            endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
 			startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
 		}
 

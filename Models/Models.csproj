@@ -571,6 +571,7 @@
     <Compile Include="WholeFarm\Reporting\SummariseRuminantHerd.cs" />
     <Compile Include="WholeFarm\Transmutation.cs" />
     <Compile Include="WholeFarm\Activities\WFActivityBase.cs" />
+    <Compile Include="WholeFarm\Validation.cs" />
     <Compile Include="WholeFarm\WFModel.cs" />
     <Compile Include="WholeFarm\WholeFarm.cs" />
     <Compile Include="Zones\CircularZone.cs" />

@@ -56,15 +56,15 @@ namespace Models.WholeFarm.Activities
 		private GrazeFoodStoreType pasture { get; set; }
 		private List<LabourFilterGroupSpecified> labour { get; set; }
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			// link to graze food store type pasture to muster to
-			// blank is general yards.
-			if (ManagedPastureName != "")
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            // link to graze food store type pasture to muster to
+            // blank is general yards.
+            if (ManagedPastureName != "")
 			{
 				pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 			}

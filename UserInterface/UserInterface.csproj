@@ -776,6 +776,22 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\GrazeFoodStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GrazeFoodStoreType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GreenhouseGases.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GreenhouseGasesType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\HumanFoodStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\HumanFoodStoreType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Labour.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LabourType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Land.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LandType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OtherAnimals.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OtherAnimalsType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ProductStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityCollectManureAll.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityCollectManurePaddock.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ProductStoreTypeManure.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RuminantFee.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerDateRange.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerInterval.png" />

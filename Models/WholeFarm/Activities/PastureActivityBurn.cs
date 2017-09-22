@@ -35,7 +35,7 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(24)]
 		[Description("The burn interval (in months, 12 annual, 24 biennially)")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
         public int BurnInterval { get; set; }
 
 		/// <summary>
@@ -80,19 +80,12 @@ namespace Models.WholeFarm.Activities
 			this.SetDefaults();
 		}
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			// check payment interval > 0
-			if (BurnInterval <= 0)
-			{
-				Summary.WriteWarning(this, String.Format("Overhead payment interval must be greater than 1 ({0})", this.Name));
-				throw new Exception(String.Format("Invalid payment interval supplied for overhead {0}", this.Name));
-			}
-
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
 			if (BurnMonth >= Clock.StartDate.Month)
 			{
 				NextDueDate = new DateTime(Clock.StartDate.Year, BurnMonth, Clock.StartDate.Day);

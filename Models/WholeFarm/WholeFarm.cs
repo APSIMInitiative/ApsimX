@@ -82,10 +82,13 @@ namespace Models.WholeFarm
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            if (!Validate(this))
+            // validation is performed here
+            // commencing is too early as Summary has not been created fro reporting.
+            // some values assigned in commencing will not be checked bfore processing, but will be caught here
+            if (!Validate(this, ""))
             {
                 string error = "Invalid parameters in model (see summary for details)";
-                throw new Exception(error);
+                throw new ApsimXException(this, error);
             }
 
             if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
@@ -109,12 +112,6 @@ namespace Models.WholeFarm
         [EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			if (RandomSeed < Int32.MinValue || RandomSeed > Int32.MaxValue)
-			{
-                string error = "Random generator seed in ["+this.Name+"] must be an integer between 0 and "+ Int32.MaxValue.ToString();
-                throw new Exception(error);
-            }
-
             if (RandomSeed==0)
 			{
 				randomGenerator = new Random();
@@ -135,27 +132,29 @@ namespace Models.WholeFarm
         /// Internal method to iterate through all children in CLEM and report any parameter setting errors
         /// </summary>
         /// <param name="model"></param>
+        /// <param name="ModelPath">Pass blank string. Used for tracking model path</param>
         /// <returns>Boolean indicating whether validation was successful</returns>
-        private bool Validate(Model model)
+        private bool Validate(Model model, string ModelPath)
         {
+            ModelPath += "["+model.Name+"]";
             bool valid = true;
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(model, validationContext, validationResults, true);
-            if(validationResults.Count > 0)
+            if (validationResults.Count > 0)
             {
                 valid = false;
                 // report all errors
                 foreach (var validateError in validationResults)
                 {
-                    string error = String.Format("Invalid parameter in model object ["+this.Name+ "]"+Environment.NewLine + "PARAMETER: "+validateError.MemberNames.FirstOrDefault()+ Environment.NewLine +"PROBLEM: "+validateError.ErrorMessage+Environment.NewLine );
+                    string error = String.Format("Invalid parameter value in model object " + ModelPath + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault() + Environment.NewLine + "PROBLEM: " + validateError.ErrorMessage + Environment.NewLine);
                     Summary.WriteWarning(this, error);
                 }
             }
             foreach (var child in model.Children)
             {
-                bool result = Validate(child);
-                if(valid & !result)
+                bool result = Validate(child, ModelPath);
+                if (valid & !result)
                 {
                     valid = false;
                 }

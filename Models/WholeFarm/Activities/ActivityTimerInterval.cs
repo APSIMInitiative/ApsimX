@@ -22,16 +22,13 @@ namespace Models.WholeFarm.Activities
 		[XmlIgnore]
 		[Link]
 		Clock Clock = null;
-		[XmlIgnore]
-		[Link]
-		ISummary Summary = null;
 
 		/// <summary>
 		/// The payment interval (in months, 1 monthly, 12 annual)
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(12)]
 		[Description("The interval (in months, 1 monthly, 12 annual)")]
-        [Required]
+        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
         public int Interval { get; set; }
 
 		/// <summary>
@@ -39,7 +36,7 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(1)]
 		[Description("First month to start interval (1-12)")]
-        [Required]
+        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
         public int MonthDue { get; set; }
 
 		/// <summary>
@@ -77,19 +74,12 @@ namespace Models.WholeFarm.Activities
 			}
 		}
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
 		{
-			// check payment interval > 0
-			if (Interval <= 0)
-			{
-				Summary.WriteWarning(this, String.Format("Timer interval must be greater than 1 ({0})", this.Name));
-				throw new Exception(String.Format("Invalid timer interval supplied for {0}", this.Name));
-			}
-
 			if (MonthDue >= Clock.StartDate.Month)
 			{
 				NextDueDate = new DateTime(Clock.StartDate.Year, MonthDue, Clock.StartDate.Day);

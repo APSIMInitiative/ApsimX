@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="15">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
     <Name>BankTest</Name>
@@ -83,7 +81,6 @@
           <Name>Pay mechanic</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-          <MonthDue>7</MonthDue>
           <Amount>999</Amount>
           <AccountName>Overheads account</AccountName>
           <IsOverhead>true</IsOverhead>
@@ -94,7 +91,6 @@
             <Name>Pay general farm maintenance</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <PaymentInterval>1</PaymentInterval>
             <Amount>3333.33</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -103,7 +99,6 @@
             <Name>Pay fuel costs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <PaymentInterval>1</PaymentInterval>
             <Amount>2500</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -113,11 +108,10 @@
             <ActivityTimerInterval>
               <Name>ActivityTimerInterval</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MonthDue>12</MonthDue>
+              <MonthDue>14</MonthDue>
             </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <MonthDue>12</MonthDue>
             <Amount>5000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -131,7 +125,6 @@
             </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <MonthDue>10</MonthDue>
             <Amount>30000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -140,7 +133,6 @@
             <Name>Pay administration</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <PaymentInterval>1</PaymentInterval>
             <Amount>1666.67</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -154,7 +146,6 @@
             </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <MonthDue>7</MonthDue>
             <Amount>15000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -168,7 +159,6 @@
             </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <MonthDue>12</MonthDue>
             <Amount>20000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -182,7 +172,6 @@
             </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <PaymentInterval>3</PaymentInterval>
             <Amount>2000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -197,8 +186,6 @@
             </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <PaymentInterval>6</PaymentInterval>
-            <MonthDue>6</MonthDue>
             <Amount>1000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>

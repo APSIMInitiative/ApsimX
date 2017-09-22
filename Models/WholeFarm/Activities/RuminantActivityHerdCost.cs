@@ -86,20 +86,13 @@ namespace Models.WholeFarm.Activities
 			this.SetDefaults();
 		}
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			// check payment interval > 0
-			if (PaymentInterval <= 0)
-			{
-				Summary.WriteWarning(this, String.Format("Herd cost payment interval must be greater than 1 ({0})", this.Name));
-				throw new Exception(String.Format("Invalid payment interval supplied for overhead {0}", this.Name));
-			}
-
-			if (MonthDue >= Clock.StartDate.Month)
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            if (MonthDue >= Clock.StartDate.Month)
 			{
 				NextDueDate = new DateTime(Clock.StartDate.Year, MonthDue, Clock.StartDate.Day);
 			}

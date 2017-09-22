@@ -121,14 +121,14 @@ namespace Models.WholeFarm.Activities
         private List<PastureDataType> PastureDataList;
 
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-       [EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			//get the units of area for this run from the Land resource.
-			unitsOfArea2Ha = Resources.Land().UnitsOfAreaToHaConversion ; 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            //get the units of area for this run from the Land resource.
+            unitsOfArea2Ha = Resources.Land().UnitsOfAreaToHaConversion ; 
 
             // Get Land condition relationship from children
             LandConditionIndex = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name=="LandConditionIndex").FirstOrDefault() as Relationship;
