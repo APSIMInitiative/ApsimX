@@ -30,10 +30,6 @@ namespace Models.WholeFarm.Activities
 		[Link]
 		private ResourcesHolder Resources = null;
 
-		[XmlIgnore]
-		[Link]
-		ISummary Summary = null;
-
 		/// <summary>
 		/// The payment interval (in months, 1 monthly, 12 annual)
 		/// </summary>

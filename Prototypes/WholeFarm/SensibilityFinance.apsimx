@@ -108,7 +108,7 @@
             <ActivityTimerInterval>
               <Name>ActivityTimerInterval</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MonthDue>14</MonthDue>
+              <MonthDue>12</MonthDue>
             </ActivityTimerInterval>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>

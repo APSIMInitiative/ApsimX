@@ -22,9 +22,6 @@ namespace Models.WholeFarm.Activities
 		[XmlIgnore]
 		[Link]
 		Clock Clock = null;
-		[XmlIgnore]
-		[Link]
-		ISummary Summary = null;
 
 		/// <summary>
 		/// Start date of period to perform activities
