@@ -114,6 +114,17 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Gets the text to use as a label for the property.
+        /// </summary>
+        public override string Caption
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Gets the units of the property or null if not found.
         /// </summary>
         public override string Units

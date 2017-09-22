@@ -139,6 +139,7 @@ namespace Models.Soils
         public double Runoff { get; set; }
         ///<summary>Soil Albedo</summary>
         [Units("0-1")]
+        [Caption("Albedo")]
         [Description("The proportion of incoming radiation that is reflected by the soil surface")]
         public double Salb { get; set; }
         ///<summary> Who knows</summary>
