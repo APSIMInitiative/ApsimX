@@ -1,11 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="15">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
     <Name>IndividualGrowth</Name>
@@ -49,6 +47,19 @@
                 <ResourceTypeName>General account</ResourceTypeName>
                 <CostPerUnit>100</CostPerUnit>
               </TransmutationCost>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <AmountPerUnitPurchase>10000</AmountPerUnitPurchase>
+            </Transmutation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <DryMatter>89.5</DryMatter>
+            <DMD>45</DMD>
+            <Nitrogen>0.75</Nitrogen>
+            <StartingAmount>10000</StartingAmount>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>RiceStraw1</Name>
+            <Transmutation>
+              <Name>Purchase</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <AmountPerUnitPurchase>10000</AmountPerUnitPurchase>
             </Transmutation>

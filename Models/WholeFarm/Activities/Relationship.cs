@@ -15,7 +15,7 @@ namespace Models.WholeFarm.Activities
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class Relationship: Model
+	public class Relationship: Model, IValidatableObject
 	{
 		[Link]
 		ISummary Summary = null;
@@ -60,12 +60,6 @@ namespace Models.WholeFarm.Activities
 		[Description("Y values of relationship")]
         [Required]
         public double[] YValues { get; set; }
-
-		///// <summary>
-		///// List of points to define relationship 
-		///// </summary>
-		//[XmlIgnore]
-		//public List<Point> Points { get; set; }
 
 		/// <summary>
 		/// Solve equation for y given x
@@ -122,60 +116,44 @@ namespace Models.WholeFarm.Activities
 			Value = Math.Max(Value, Minumum);
 		}
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Value = StartingValue;
-			if(XValues == null)
-			{
-				Summary.WriteWarning(this, String.Format("X values are required for relationship ({0})", this.Name));
-				throw new Exception(String.Format("X values are required for relationship ({0})", this.Name));
-			}
-			if (YValues == null)
-			{
-				Summary.WriteWarning(this, String.Format("Y values are required for relationship ({0})", this.Name));
-				throw new Exception(String.Format("Y values are required for relationship ({0})", this.Name));
-			}
-			if (XValues.Length != YValues.Length)
-			{
-				Summary.WriteWarning(this, String.Format("The same number of X and Y values are required for relationship ({0})", this.Name));
-				throw new Exception(String.Format("The same number of X and Y values are required for relationship ({0})", this.Name));
-			}
-			if (XValues.Length == 0)
-			{
-				Summary.WriteWarning(this, String.Format("No data points were provided for relationship ({0})", this.Name));
-				throw new Exception(String.Format("No data points were provided for relationship ({0})", this.Name));
-			}
-			if (XValues.Length < 2)
-			{
-				Summary.WriteWarning(this, String.Format("At least two data points are required for relationship ({0})", this.Name));
-				throw new Exception(String.Format("At least two data points are required for relationship ({0})", this.Name));
-			}
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            Value = StartingValue;
 		}
-	}
 
-	///// <summary>
-	///// Point for relationship
-	///// </summary>
-	//[Serializable]
-	//[ViewName("UserInterface.Views.GridView")]
-	//[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	//public class Point: Model
-	//{
-	//	/// <summary>
-	//	/// X value
-	//	/// </summary>
-	//	[Description("x value")]
-	//	public double X { get; set; }
-
-	//	/// <summary>
-	//	/// Y value
-	//	/// </summary>
-	//	[Description("y value")]
-	//	public double Y { get; set; }
-
-	//}
+        /// <summary>
+        /// Validate this object
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (XValues == null)
+            {
+                results.Add(new ValidationResult("X values are required for relationship"));
+            }
+            if (YValues == null)
+            {
+                results.Add(new ValidationResult("Y values are required for relationship"));
+            }
+            if (XValues.Length != YValues.Length)
+            {
+                results.Add(new ValidationResult("The same number of X and Y values are required for relationship"));
+            }
+            if (XValues.Length == 0)
+            {
+                results.Add(new ValidationResult("No data points were provided for relationship"));
+            }
+            if (XValues.Length < 2)
+            {
+                results.Add(new ValidationResult("At least two data points are required for relationship"));
+            }
+            return results;
+        }
+    }
 }

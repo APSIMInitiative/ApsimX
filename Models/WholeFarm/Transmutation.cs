@@ -19,7 +19,7 @@ namespace Models.WholeFarm
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(IResourceType))]
-	public class Transmutation: WFModel
+	public class Transmutation: WFModel, IValidatableObject
 	{
 		/// <summary>
 		/// Amount of this resource per unit purchased
@@ -28,17 +28,20 @@ namespace Models.WholeFarm
         [Required, Range(1, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
         public double AmountPerUnitPurchase { get; set; }
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			if (Apsim.Children(this, typeof(TransmutationCost)).Count()==0)
-			{
-				throw new Exception("Invalid costs provided in Transmutation:"+this.Name+" for ResourceType:"+this.Parent.Name);
-			}
-		}
+        /// <summary>
+        /// Validate this object
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (Apsim.Children(this, typeof(TransmutationCost)).Count() == 0)
+            {
+                results.Add(new ValidationResult("No costs provided under this transmutation"));
+            }
+            return results;
+        }
 	}
 
 	///<summary>
@@ -49,8 +52,8 @@ namespace Models.WholeFarm
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(Transmutation))]
-	public class TransmutationCost : WFModel
-	{
+	public class TransmutationCost : WFModel, IValidatableObject
+    {
 		[XmlIgnore]
 		[Link]
 		private ResourcesHolder Resources = null;
@@ -59,6 +62,7 @@ namespace Models.WholeFarm
 		/// Name of resource to use
 		/// </summary>
 		[Description("Name of Resource to use")]
+        [Required]
 		public string ResourceName { get; set; }
 
 		/// <summary>
@@ -70,27 +74,48 @@ namespace Models.WholeFarm
 		/// Name of resource type to use
 		/// </summary>
 		[Description("Name of Resource Type to use")]
-		public string ResourceTypeName { get; set; }
+        [Required]
+        public string ResourceTypeName { get; set; }
 
 		/// <summary>
 		/// Cost of transmutation
 		/// </summary>
 		[Description("Cost per unit")]
-		public double CostPerUnit { get; set; }
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        public double CostPerUnit { get; set; }
+
+        /// <summary>
+        /// Validate this object
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            object result = Resources.GetResourceByName(ResourceName);
+            if (result == null)
+            {
+                results.Add(new ValidationResult("Could not find resource " + this.ResourceName + " in transmutation cost"));
+            }
+            return results;
+        }
+
+        // This was in commencing, but I don't thin there is any reason it has to be
+        // could be a problem in future, thus this message.
 
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			// determine resource type from name
-			object result = Resources.GetResourceByName(ResourceName);
-			if(result==null)
-			{
-				throw new Exception("Could not find resource " + this.ResourceName + " in transmutation " + this.Name);
-			}
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            // determine resource type from name
+            object result = Resources.GetResourceByName(ResourceName);
+			//if(result==null)
+			//{
+			//	throw new Exception("Could not find resource " + this.ResourceName + " in transmutation " + this.Name);
+			//}
 			ResourceType = result.GetType();
 		}
 	}
