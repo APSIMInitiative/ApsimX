@@ -21,7 +21,9 @@ namespace Models.WholeFarm.Groupings
 	[ValidParent(ParentType = typeof(RuminantActivityMilking))]
 	[ValidParent(ParentType = typeof(OtherAnimalsActivityBreed))]
 	[ValidParent(ParentType = typeof(OtherAnimalsActivityFeed))]
-	public class LabourFilterGroupSpecified: LabourFilterGroup
+    [ValidParent(ParentType = typeof(RuminantActivityCollectManureAll))]
+    [ValidParent(ParentType = typeof(RuminantActivityCollectManurePaddock))]
+    public class LabourFilterGroupSpecified: LabourFilterGroup
 	{
 
         /// <summary>

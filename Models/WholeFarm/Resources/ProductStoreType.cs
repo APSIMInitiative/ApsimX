@@ -65,8 +65,7 @@ namespace Models.WholeFarm.Resources
 		/// <param name="e"></param>
 		protected virtual void OnTransactionOccurred(EventArgs e)
 		{
-			if (TransactionOccurred != null)
-				TransactionOccurred(this, e);
+            var h = TransactionOccurred; if (h != null) h(this, e);
 		}
 
 		/// <summary>

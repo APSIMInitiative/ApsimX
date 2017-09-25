@@ -39,7 +39,7 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            manureStore = Resources.GetResourceItem(this, typeof(ProductStoreType), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as ProductStoreTypeManure;
+            manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as ProductStoreTypeManure;
 
 			// get labour specifications
 			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
@@ -56,7 +56,7 @@ namespace Models.WholeFarm.Activities
 		/// Method to determine resources required for this activity in the current month
 		/// </summary>
 		/// <returns>List of required resource requests</returns>
-		public override List<ResourceRequest> GetResourcesNeededForActivity()
+		private List<ResourceRequest> GetResourcesNeededForActivityLocal()
 		{
 			ResourceRequestList = null;
 			double amountAvailable = 0;
@@ -119,28 +119,45 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("WFCollectManure")]
 		private void OnWFCollectManure(object sender, EventArgs e)
 		{
-			// check that resources didn't skip the activity.
-			if (this.Status != ActivityStatus.Ignored | this.Status != ActivityStatus.Critical)
-			{
-				if (manureStore != null)
-				{
-					double labourLimit = 1;
-					double labourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
-					double labourProvided = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
-					if (labourNeeded > 0)
-					{
-						labourLimit = labourProvided / labourNeeded;
-						manureStore.Collect(manureStore.Name, labourLimit, this.Name);
-					}
-				}
-			}
+            // is manure in resources
+            if (manureStore != null)
+            {
+                if (this.TimingOK)
+                {
+                    List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal();
+                    bool tookRequestedResources = TakeResources(resourcesneeded);
+                    // get all shortfalls
+                    double labourNeeded = 0;
+                    double labourLimit = 1;
+                    if (tookRequestedResources & (ResourceRequestList != null))
+                    {
+                        labourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
+                        double labourProvided = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
+                        labourLimit = labourProvided / labourNeeded;
+                    }
+
+                    if (labourLimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
+                    {
+                        manureStore.Collect(manureStore.Name, labourLimit, this.Name);
+                    }
+                }
+            }
 		}
 
-		/// <summary>
-		/// Method to determine resources required for initialisation of this activity
-		/// </summary>
-		/// <returns></returns>
-		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        /// <summary>
+        /// Method to determine resources required for this activity in the current month
+        /// </summary>
+        /// <returns>List of required resource requests</returns>
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Method to determine resources required for initialisation of this activity
+        /// </summary>
+        /// <returns></returns>
+        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
 		{
 			return null;
 		}
