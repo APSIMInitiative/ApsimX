@@ -192,30 +192,34 @@ namespace Models.WholeFarm
 		/// Labour per kg
 		/// </summary>
 		perKg,
-	}
+        /// <summary>
+        /// Labour per unit
+        /// </summary>
+        perUnit,
+    }
 
-	// Units of area enum was removed to allow user to use any unit of area
-	// The user must also provide a units of area to hectare conversion
+    // Units of area enum was removed to allow user to use any unit of area
+    // The user must also provide a units of area to hectare conversion
 
-	///// <summary>
-	///// Types of measures of area with value representing the number of hectares
-	///// </summary>
-	//public enum UnitsOfAreaType
-	//{
-	//	/// <summary>
-	//	/// Hectares
-	//	/// </summary>
-	//	Hectares = 1,
-	//	/// <summary>
-	//	/// Square kilometres
-	//	/// </summary>
-	//	SquareKilometres = 100,
-	//}
+    ///// <summary>
+    ///// Types of measures of area with value representing the number of hectares
+    ///// </summary>
+    //public enum UnitsOfAreaType
+    //{
+    //	/// <summary>
+    //	/// Hectares
+    //	/// </summary>
+    //	Hectares = 1,
+    //	/// <summary>
+    //	/// Square kilometres
+    //	/// </summary>
+    //	SquareKilometres = 100,
+    //}
 
-	/// <summary>
-	/// Ruminant feeding styles
-	/// </summary>
-	public enum RuminantFeedActivityTypes
+    /// <summary>
+    /// Ruminant feeding styles
+    /// </summary>
+    public enum RuminantFeedActivityTypes
 	{
 		/// <summary>
 		/// Feed specified amount daily in selected months

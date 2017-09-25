@@ -486,6 +486,7 @@
     <Compile Include="WholeFarm\Activities\OtherAnimalsActivityGrow.cs" />
     <Compile Include="WholeFarm\Activities\PastureActivityBurn.cs" />
     <Compile Include="WholeFarm\Activities\Relationship.cs" />
+    <Compile Include="WholeFarm\Activities\ResourceActivitySell.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityCollectManureAll.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityCollectManurePaddock.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityGrazeAll.cs" />
@@ -499,6 +500,7 @@
     <Compile Include="WholeFarm\Activities\TruckingSettings.cs" />
     <Compile Include="WholeFarm\FileCrop.cs" />
     <Compile Include="WholeFarm\Groupings\LabourFilterGroupSpecified.cs" />
+    <Compile Include="WholeFarm\Groupings\LabourFilterGroupUnit.cs" />
     <Compile Include="WholeFarm\Groupings\RuminantFilterGroup.cs" />
     <Compile Include="WholeFarm\Groupings\LabourFilterGroup.cs" />
     <Compile Include="WholeFarm\FileGRASP.cs" />
