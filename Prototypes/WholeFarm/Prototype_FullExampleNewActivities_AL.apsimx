@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="15">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Simulation</Name>
@@ -521,7 +521,7 @@
             <Amount>3333.33</Amount>
             <AccountName>General account</AccountName>
           </FinanceActivityPayExpense>
-					<FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Fuel costs</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
@@ -529,7 +529,7 @@
             <Amount>2500</Amount>
             <AccountName>General account</AccountName>
           </FinanceActivityPayExpense>
-					<FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Pest control</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
@@ -537,7 +537,7 @@
             <Amount>5000</Amount>
             <AccountName>General account</AccountName>
           </FinanceActivityPayExpense>
-					<FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Contractors</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
@@ -545,7 +545,7 @@
             <Amount>30000</Amount>
             <AccountName>General account</AccountName>
           </FinanceActivityPayExpense>
-					<FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Administration</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
@@ -553,7 +553,7 @@
             <Amount>1666.67</Amount>
             <AccountName>General account</AccountName>
           </FinanceActivityPayExpense>
-					<FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Rates and Fees</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
@@ -561,7 +561,7 @@
             <Amount>15000</Amount>
             <AccountName>General account</AccountName>
           </FinanceActivityPayExpense>
-					<FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Insurance</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
@@ -569,7 +569,7 @@
             <Amount>20000</Amount>
             <AccountName>General account</AccountName>
           </FinanceActivityPayExpense>
-					<FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Electricity</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>3</PaymentInterval>
@@ -577,7 +577,7 @@
             <Amount>2000</Amount>
             <AccountName>General account</AccountName>
           </FinanceActivityPayExpense>
-					<FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Living costs</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>6</PaymentInterval>
@@ -586,8 +586,7 @@
             <AccountName>General account</AccountName>
           </FinanceActivityPayExpense>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-        
-			</ActivityFolder>
+        </ActivityFolder>
         <ActivityFolder>
           <Name>Off farm labour</Name>
           <LabourActivityOffFarm>

@@ -20,14 +20,12 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class PastureActivityManage: WFActivityBase
+	public class PastureActivityManage: WFActivityBase, IValidatableObject
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
 		[Link]
 		Clock Clock = null;
-		[Link]
-		ISummary Summary = null;
         [Link]
         FileGRASP FileGRASP = null;
         [Link]
@@ -57,14 +55,14 @@ namespace Models.WholeFarm.Activities
 		/// Starting amount (kg)
 		/// </summary>
 		[Description("Starting Amount (kg/ha)")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double StartingAmount { get; set; }
 
         /// <summary>
         /// Starting stocking rate (Adult Equivalents/square km)
         /// </summary>
         [Description("Starting stocking rate (Adult Equivalents/sqkm)")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double StartingStockingRate { get; set; }
 
         /// <summary>
@@ -96,7 +94,8 @@ namespace Models.WholeFarm.Activities
 		/// Area requested
 		/// </summary>
 		[Description("Area requested")]
-		public double AreaRequested { get; set; }
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        public double AreaRequested { get; set; }
 
 		/// <summary>
 		/// Feed type
@@ -120,6 +119,28 @@ namespace Models.WholeFarm.Activities
         //EcologicalCalculationIntervals worth of data read from GRASP file 
         private List<PastureDataType> PastureDataList;
 
+        /// <summary>
+        /// Validate this object
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            // Get Land condition relationship from children
+            LandConditionIndex = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as Relationship;
+            if (LandConditionIndex == null)
+            {
+                results.Add(new ValidationResult("Unable to locate Land Condition Index relationship in user interface"));
+            }
+            // Get Grass basal area relationship from children
+            GrassBasalArea = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as Relationship;
+            if (GrassBasalArea == null)
+            {
+                results.Add(new ValidationResult("Unable to locate grass Basal Area relationship in user interface"));
+            }
+            return results;
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -129,19 +150,6 @@ namespace Models.WholeFarm.Activities
         {
             //get the units of area for this run from the Land resource.
             unitsOfArea2Ha = Resources.Land().UnitsOfAreaToHaConversion ; 
-
-            // Get Land condition relationship from children
-            LandConditionIndex = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name=="LandConditionIndex").FirstOrDefault() as Relationship;
-			if (LandConditionIndex == null)
-			{
-				Summary.WriteWarning(this, String.Format("Unable to locate Land Condition Index relationship for {0}", this.Name));
-			}
-			// Get Grass basal area relationship fron children
-			GrassBasalArea = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as Relationship;
-			if (GrassBasalArea == null)
-			{
-				Summary.WriteWarning(this, String.Format("Unable to locate Grass Basal Area relationship for {0}", this.Name));
-			}
 			// locate Pasture Type resource
 			LinkedNativeFoodType = Resources.GetResourceItem(this, typeof(GrazeFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 		}
@@ -493,6 +501,6 @@ namespace Models.WholeFarm.Activities
 				ActivityPerformed(this, e);
 		}
 
-	}
+    }
 
 }

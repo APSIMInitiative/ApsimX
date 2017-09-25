@@ -26,12 +26,6 @@ namespace Models.WholeFarm.Resources
 		Clock Clock = null;
 
 		/// <summary>
-		/// Get the Summary object.
-		/// </summary>
-		[Link]
-		ISummary Summary = null;
-
-		/// <summary>
 		/// Labour types currently available.
 		/// </summary>
 		[XmlIgnore]
@@ -44,10 +38,10 @@ namespace Models.WholeFarm.Resources
         [Required]
 		public bool AllowAging { get; set; }
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Items = new List<LabourType>();
@@ -92,12 +86,6 @@ namespace Models.WholeFarm.Resources
 			int currentmonth = Clock.Today.Month;
 			foreach (var item in Items)
 			{
-				if (item.MaxLabourSupply.Length != 12)
-				{
-					string message = "Invalid number of values provided for MaxLabourSupply for " + item.Name;
-					Summary.WriteWarning(this, message);
-					throw new Exception("Invalid entry");
-				}
 				item.SetAvailableDays(currentmonth);
 			}
 		}
@@ -141,7 +129,8 @@ namespace Models.WholeFarm.Resources
 			OnTransactionOccurred(e);
 		}
 
-		#endregion
 
-	}
+        #endregion
+
+    }
 }

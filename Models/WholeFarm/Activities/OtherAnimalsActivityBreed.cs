@@ -19,19 +19,10 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class OtherAnimalsActivityBreed : WFActivityBase
+	public class OtherAnimalsActivityBreed : WFActivityBase, IValidatableObject
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
-		[XmlIgnore]
-		[Link]
-		ISummary Summary = null;
-
-		/// <summary>
-		/// Get the Clock.
-		/// </summary>
-		[Link]
-		Clock Clock = null;
 
 		/// <summary>
 		/// name of other animal type
@@ -44,37 +35,21 @@ namespace Models.WholeFarm.Activities
 		/// Offspring per female breeder
 		/// </summary>
 		[Description("Offspring per female breeder")]
-        [Required]
+        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
         public double OffspringPerBreeder { get; set; }
-
-		/// <summary>
-		/// Start breeding month
-		/// </summary>
-		[System.ComponentModel.DefaultValueAttribute(1)]
-		[Description("First month of breeding")]
-        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
-        public int StartBreedingMonth { get; set; }
-
-		/// <summary>
-		/// Breeding interval (months)
-		/// </summary>
-		[System.ComponentModel.DefaultValueAttribute(12)]
-		[Description("Breeding interval (months)")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
-        public int BreedingInterval { get; set; }
 
 		/// <summary>
 		/// Cost per female breeder
 		/// </summary>
 		[Description("Cost per female breeder")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public int CostPerBreeder { get; set; }
 
 		/// <summary>
 		/// Breeding female age
 		/// </summary>
 		[Description("Breeding age (months)")]
-        [Required]
+        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
         public int BreedingAge { get; set; }
 
 		/// <summary>
@@ -108,37 +83,28 @@ namespace Models.WholeFarm.Activities
 			this.SetDefaults();
 		}
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
+        /// <summary>
+        /// Object validation
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            SelectedOtherAnimalsType = Resources.OtherAnimalsStore().GetByName(AnimalType) as OtherAnimalsType;
+            if (SelectedOtherAnimalsType == null)
+            {
+                results.Add(new ValidationResult("Unknown other animal type: " + AnimalType));
+            }
+            return results;
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
-			SelectedOtherAnimalsType = Resources.OtherAnimalsStore().GetByName(AnimalType) as OtherAnimalsType;
-			if (SelectedOtherAnimalsType == null)
-			{
-				throw new Exception("Unknown other animal type: " + AnimalType + " in OtherAnimalsActivityFeed : " + this.Name);
-			}
-
-			if (BreedingInterval <= 0)
-			{
-				Summary.WriteWarning(this, String.Format("Breeding interval must be greater than 0 ({0})", this.Name));
-				throw new Exception(String.Format("Invalid breeding interval supplied for overhead {0}", this.Name));
-			}
-
-			if (StartBreedingMonth >= Clock.StartDate.Month)
-			{
-				NextDueDate = new DateTime(Clock.StartDate.Year, StartBreedingMonth, Clock.StartDate.Day);
-			}
-			else
-			{
-				NextDueDate = new DateTime(Clock.StartDate.Year, StartBreedingMonth, Clock.StartDate.Day);
-				while (Clock.StartDate > NextDueDate)
-				{
-					NextDueDate = NextDueDate.AddMonths(BreedingInterval);
-				}
-			}
-
 			// get labour specifications
 			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
@@ -150,7 +116,7 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("WFAnimalBreeding")]
 		private void OnWFAnimalBreeding(object sender, EventArgs e)
 		{
-			if (this.NextDueDate.Month == Clock.Today.Month)
+            if(this.TimingOK)
 			{
 				double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Male).Sum(b => b.Number);
 				if (!UseLocalMales || malebreeders > 0)
@@ -181,7 +147,6 @@ namespace Models.WholeFarm.Activities
 						SelectedOtherAnimalsType.Add(newfemales, this.Name, SelectedOtherAnimalsType.Name);
 					}
 				}
-				this.NextDueDate = this.NextDueDate.AddMonths(this.BreedingInterval);
 			}
 		}
 
@@ -200,39 +165,43 @@ namespace Models.WholeFarm.Activities
 		/// <returns></returns>
 		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
-			double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge).Sum(b => b.Number);
-			if (breeders == 0) return null;
+            ResourceRequestList = null;
+            if (this.TimingOK)
+            {
+                double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge).Sum(b => b.Number);
+                if (breeders == 0) return null;
 
-			// for each labour item specified
-			foreach (var item in labour)
-			{
-				double daysNeeded = 0;
-				switch (item.UnitType)
-				{
-					case LabourUnitType.Fixed:
-						daysNeeded = item.LabourPerUnit;
-						break;
-					case LabourUnitType.perHead:
-						daysNeeded = Math.Ceiling(breeders / item.UnitSize) * item.LabourPerUnit;
-						break;
-					default:
-						throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-				}
-				if (daysNeeded > 0)
-				{
-					if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-					ResourceRequestList.Add(new ResourceRequest()
-					{
-						AllowTransmutation = false,
-						Required = daysNeeded,
-						ResourceType = typeof(Labour),
-						ResourceTypeName = "",
-						ActivityModel = this,
-						FilterDetails = new List<object>() { item }
-					}
-					);
-				}
-			}
+                // for each labour item specified
+                foreach (var item in labour)
+                {
+                    double daysNeeded = 0;
+                    switch (item.UnitType)
+                    {
+                        case LabourUnitType.Fixed:
+                            daysNeeded = item.LabourPerUnit;
+                            break;
+                        case LabourUnitType.perHead:
+                            daysNeeded = Math.Ceiling(breeders / item.UnitSize) * item.LabourPerUnit;
+                            break;
+                        default:
+                            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+                    }
+                    if (daysNeeded > 0)
+                    {
+                        if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+                        ResourceRequestList.Add(new ResourceRequest()
+                        {
+                            AllowTransmutation = false,
+                            Required = daysNeeded,
+                            ResourceType = typeof(Labour),
+                            ResourceTypeName = "",
+                            ActivityModel = this,
+                            FilterDetails = new List<object>() { item }
+                        }
+                        );
+                    }
+                }
+            }
 			return ResourceRequestList;
 		}
 
@@ -285,5 +254,5 @@ namespace Models.WholeFarm.Activities
 				ActivityPerformed(this, e);
 		}
 
-	}
+    }
 }

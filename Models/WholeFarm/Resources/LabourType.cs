@@ -17,14 +17,14 @@ namespace Models.WholeFarm.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
-    public class LabourType : WFModel, IResourceWithTransactionType, IResourceType
+    public class LabourType : WFModel, IResourceWithTransactionType, IResourceType, IValidatableObject
 	{
 
         /// <summary>
         /// Age in years.
         /// </summary>
         [Description("Initial Age")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double InitialAge { get; set; }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Models.WholeFarm.Resources
 		/// Number of individuals
 		/// </summary>
 		[Description("Number of individuals")]
-        [Required]
+        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
         public int Individuals { get; set; }
 
 		/// <summary>
@@ -91,59 +91,30 @@ namespace Models.WholeFarm.Resources
 			availableDays = Math.Min(30.4, this.MaxLabourSupply[month - 1]);
 		}
 
-		/// <summary>
-		/// Initialise the current state to the starting time available
-		/// </summary>
-		public void Initialise()
-		{
-		}
+        /// <summary>
+        /// Validate object
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (MaxLabourSupply.Length != 12)
+            {
+                results.Add(new ValidationResult("Invalid number of values provided (expecting 12 months of values)"));
+            }
+            return results;
+        }
 
-		///// <summary>An event handler to allow us to initialise ourselves.</summary>
-		///// <param name="sender">The sender.</param>
-		///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		//[EventSubscribe("StartOfMonth")]
-		//private void OnStartOfMonth(object sender, EventArgs e)
-		//{
-		//	ResetAvailabilityEachMonth();
-		//}
+        #region Transactions
 
-		///// <summary>
-		///// Reset the Available Labour (in days) in the current month 
-		///// to the appropriate value for this month.
-		///// </summary>
-		//public void ResetAvailabilityEachMonth()
-		//{
-		//	if (MaxLabourSupply.Length != 12)
-		//	{
-		//		string message = "Invalid number of values provided for MaxLabourSupply for " + this.Name;
-		//		Summary.WriteWarning(this, message);
-		//		throw new Exception("Invalid entry");
-		//	}
-		//	int currentmonth = Clock.Today.Month;
-		//	this.availableDays = Math.Min(30.4, this.MaxLabourSupply[currentmonth - 1])*Individuals;
-		//}
-
-		///// <summary>Age individuals</summary>
-		///// <param name="sender">The sender.</param>
-		///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		//[EventSubscribe("WFAgeResources")]
-		//private void ONWFAgeResources(object sender, EventArgs e)
-		//{
-		//	if((Parent as Labour).AllowAging)
-		//	{
-		//		AgeInMonths++;
-		//	}
-		//}
-
-		#region Transactions
-
-		/// <summary>
-		/// Add to labour store of this type
-		/// </summary>
-		/// <param name="ResourceAmount"></param>
-		/// <param name="ActivityName"></param>
-		/// <param name="Reason"></param>
-		public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <summary>
+        /// Add to labour store of this type
+        /// </summary>
+        /// <param name="ResourceAmount"></param>
+        /// <param name="ActivityName"></param>
+        /// <param name="Reason"></param>
+        public void Add(object ResourceAmount, string ActivityName, string Reason)
 		{
 			if (ResourceAmount.GetType().ToString() != "System.Double")
 			{
@@ -222,10 +193,18 @@ namespace Models.WholeFarm.Resources
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// Last transaction received
-		/// </summary>
-		[XmlIgnore]
+        /// <summary>
+        /// Implemented Initialise method
+        /// </summary>
+        public void Initialise()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Last transaction received
+        /// </summary>
+        [XmlIgnore]
 		public ResourceTransaction LastTransaction { get; set; }
 
 		/// <summary>

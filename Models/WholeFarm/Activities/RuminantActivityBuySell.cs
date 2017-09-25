@@ -38,7 +38,7 @@ namespace Models.WholeFarm.Activities
 		/// Price of breeding sire
 		/// </summary>
 		[Description("Price of breeding sire")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double BreedingSirePrice { get; set; }
 
 		/// <summary>

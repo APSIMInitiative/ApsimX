@@ -29,8 +29,8 @@ namespace Models.WholeFarm.Resources
 				{
 					(child as IResourceWithTransactionType).TransactionOccurred += Resource_TransactionOccurred; ;
 				}
-			}
-		}
+            }
+        }
 
 		#region Transactions
 

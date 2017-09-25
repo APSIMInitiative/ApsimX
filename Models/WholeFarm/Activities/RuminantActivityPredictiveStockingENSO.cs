@@ -48,7 +48,7 @@ namespace Models.WholeFarm.Activities
 		/// Minimum estimated feed (kg/ha) before restocking
 		/// </summary>
 		[Description("Minimum estimated feed (kg/ha) before restocking")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MinimumFeedBeforeRestock { get; set; }
 
 		// restock proportion. I don't understand this.
@@ -99,14 +99,14 @@ namespace Models.WholeFarm.Activities
 		/// Minimum mean SOI for La Nina
 		/// </summary>
 		[Description("Minimum mean SOI for La Nina")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MeanSOIForLaNina { get; set; }
 
 		/// <summary>
 		/// Minimum mean SOI (absolute) for El Nino
 		/// </summary>
 		[Description("Minimum mean SOI (absolute) for El Nino")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MeanSOIForElNino { get; set; }
 
 		/// <summary>
@@ -139,8 +139,8 @@ namespace Models.WholeFarm.Activities
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
 			ForecastSequence = new Dictionary<DateTime, double>();
 			// load ENSO file into memory
