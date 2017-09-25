@@ -776,6 +776,10 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\LabourFilterGroupSpecified.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LabourFilter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LabourFilterGroupUnit.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ResourceActivitySell.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GrazeFoodStore.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GrazeFoodStoreType.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GreenhouseGases.png" />
