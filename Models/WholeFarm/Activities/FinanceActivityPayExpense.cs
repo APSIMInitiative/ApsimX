@@ -22,28 +22,9 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(ActivityFolder))]
 	public class FinanceActivityPayExpense : WFActivityBase
 	{
-		//[XmlIgnore]
-		//[Link]
-		//Clock Clock = null;
 		[XmlIgnore]
 		[Link]
 		private ResourcesHolder Resources = null;
-
-		///// <summary>
-		///// The payment interval (in months, 1 monthly, 12 annual)
-		///// </summary>
-		//[System.ComponentModel.DefaultValueAttribute(12)]
-		//[Description("The payment interval (in months, 1 monthly, 12 annual)")]
-  //      [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
-  //      public int PaymentInterval { get; set; }
-
-		///// <summary>
-		///// First month to pay overhead
-		///// </summary>
-		//[System.ComponentModel.DefaultValueAttribute(1)]
-		//[Description("First month to pay overhead (1-12)")]
-  //      [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
-  //      public int MonthDue { get; set; }
 
 		/// <summary>
 		/// Amount payable
@@ -103,20 +84,17 @@ namespace Models.WholeFarm.Activities
             ResourceRequestList = new List<ResourceRequest>();
             if (this.TimingOK)
             {
-//                if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
-//                {
-                    ResourceRequestList.Add(new ResourceRequest()
-                    {
-                        Resource = bankAccount,
-                        ResourceType = typeof(Finance),
-                        AllowTransmutation = false,
-                        Required = this.Amount,
-                        ResourceTypeName = this.AccountName,
-                        ActivityModel = this,
-                        Reason = ((IsOverhead) ? "Overhead" : "Expense")
-                    }
-                    );
-//                }
+                ResourceRequestList.Add(new ResourceRequest()
+                {
+                    Resource = bankAccount,
+                    ResourceType = typeof(Finance),
+                    AllowTransmutation = false,
+                    Required = this.Amount,
+                    ResourceTypeName = this.AccountName,
+                    ActivityModel = this,
+                    Reason = ((IsOverhead) ? "Overhead" : "Expense")
+                }
+                );
             }
 			return ResourceRequestList;
 		}
