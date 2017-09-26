@@ -22,20 +22,18 @@ namespace Models.WholeFarm.Activities
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
-		[Link]
-		Clock Clock = null;
 
-		/// <summary>
-		/// Name of herd to breed
-		/// </summary>
-		[Description("Name of herd to manage")]
+        /// <summary>
+        /// Name of herd to breed
+        /// </summary>
+        [Description("Name of herd to manage")]
         [Required]
         public string HerdName { get; set; }
 
-		/// <summary>
-		/// Maximum number of breeders that can be kept
-		/// </summary>
-		[Description("Maximum number of breeders to be kept")]
+        /// <summary>
+        /// Maximum number of breeders that can be kept
+        /// </summary>
+        [Description("Maximum number of breeders to be kept")]
         [Required]
         public int MaximumBreedersKept { get; set; }
 
@@ -46,10 +44,17 @@ namespace Models.WholeFarm.Activities
         [Required]
         public int MinimumBreedersKept { get; set; }
 
-		/// <summary>
-		/// Maximum breeder age (months) for culling
-		/// </summary>
-		[Description("Maximum breeder age (months) for culling")]
+        /// <summary>
+        /// Allow breeder purchases
+        /// </summary>
+        [Description("Allow breeder purchases")]
+        [Required]
+        public bool AllowBreederPurchases { get; set; }
+
+        /// <summary>
+        /// Maximum breeder age (months) for culling
+        /// </summary>
+        [Description("Maximum breeder age (months) for culling")]
         [Required]
         public double MaximumBreederAge { get; set; }
 
@@ -88,20 +93,20 @@ namespace Models.WholeFarm.Activities
         [Required]
         public double MaleSellingWeight { get; set; }
 
-		/// <summary>
-		/// Month to undertake management (1-12) and assign costs
-		/// </summary>
-		[Description("Month to undertake management (1-12) and assign costs")]
-		[System.ComponentModel.DefaultValueAttribute(12)]
-        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
-        public int ManagementMonth { get; set; }
+		///// <summary>
+		///// Month to undertake management (1-12) and assign costs
+		///// </summary>
+		//[Description("Month to undertake management (1-12) and assign costs")]
+		//[System.ComponentModel.DefaultValueAttribute(12)]
+  //      [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+  //      public int ManagementMonth { get; set; }
 
-		/// <summary>
-		/// Manage every month
-		/// </summary>
-		[Description("Manage every month")]
-        [Required]
-        public bool MonthlyManagement { get; set; }
+		///// <summary>
+		///// Manage every month
+		///// </summary>
+		//[Description("Manage every month")]
+  //      [Required]
+  //      public bool MonthlyManagement { get; set; }
 
 		/// <summary>
 		/// Weaning age (months)
@@ -208,7 +213,7 @@ namespace Models.WholeFarm.Activities
 			}
 
 			// if management month
-			if ((Clock.Today.Month == ManagementMonth) || MonthlyManagement)
+			if (this.TimingOK)
 			{
 				bool sufficientFood = true;
 				if(foodStore != null)
@@ -322,7 +327,7 @@ namespace Models.WholeFarm.Activities
 						}
 
 						// if still insufficient buy breeders.
-						if (numberFemaleInHerd < MinimumBreedersKept & sufficientFood)
+						if (numberFemaleInHerd < MinimumBreedersKept & sufficientFood & AllowBreederPurchases)
 						{
 							int ageOfHeifer = 12;
 							double weightOfHeifer = 260;
