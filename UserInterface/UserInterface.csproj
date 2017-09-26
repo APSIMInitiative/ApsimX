@@ -776,6 +776,11 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityHerdCost.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantFilterGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ReportRuminantHerd.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SummariseRuminantHerd.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityManage.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LabourFilterGroupSpecified.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LabourFilter.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LabourFilterGroupUnit.png" />

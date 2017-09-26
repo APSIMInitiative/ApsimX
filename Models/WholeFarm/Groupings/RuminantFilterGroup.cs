@@ -1,4 +1,6 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Activities;
+using Models.WholeFarm.Reporting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +14,13 @@ namespace Models.WholeFarm.Groupings
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class RuminantFilterGroup : WFModel
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
+    [ValidParent(ParentType = typeof(WFActivityBase))]
+    [ValidParent(ParentType = typeof(WFRuminantActivityBase))]
+    [ValidParent(ParentType = typeof(ReportRuminantHerd))]
+
+    public class RuminantFilterGroup : WFModel
 	{
 
 	}
