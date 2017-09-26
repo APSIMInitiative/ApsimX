@@ -41,7 +41,7 @@ namespace Models.WholeFarm.Activities
 		/// Maximum value possible
 		/// </summary>
 		[Description("Maximum value possible")]
-        [Required]
+        [Required, GreaterThan("Minimum", ErrorMessage = "Maximum value must be greater than minimum value")]
         public double Maximum { get; set; }
 
 		/// <summary>
