@@ -79,6 +79,13 @@
         </ActivityFolder>
         <FinanceActivityPayExpense>
           <Name>Pay mechanic</Name>
+          <ActivityTimerDateRange>
+            <Name>Between98and04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <StartDate>1998-01-01T00:00:00</StartDate>
+            <EndDate>2004-01-01T00:00:00</EndDate>
+            <Invert>false</Invert>
+          </ActivityTimerDateRange>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
           <Amount>999</Amount>
@@ -105,11 +112,12 @@
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
             <Name>Pay pest control</Name>
-            <ActivityTimerInterval>
-              <Name>ActivityTimerInterval</Name>
+            <ActivityTimerMonthRange>
+              <Name>BetweenAprAndSept</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MonthDue>12</MonthDue>
-            </ActivityTimerInterval>
+              <StartMonth>4</StartMonth>
+              <EndMonth>9</EndMonth>
+            </ActivityTimerMonthRange>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <Amount>5000</Amount>

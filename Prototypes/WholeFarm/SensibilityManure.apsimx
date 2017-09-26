@@ -191,13 +191,6 @@
             <Name>Feed rice straw</Name>
             <RuminantFeedGroup>
               <Name>Feed Bos indicus</Name>
-              <RuminantFilter>
-                <Name>Filter[HerdName=Bos indicus]</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Parameter>HerdName</Parameter>
-                <Operator>Equal</Operator>
-                <Value>Bos indicus</Value>
-              </RuminantFilter>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthlyValues>
                 <double>0.02</double>
@@ -216,6 +209,7 @@
             </RuminantFeedGroup>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <HerdFilters />
             <FeedTypeName>RiceStraw</FeedTypeName>
             <ProportionTramplingWastage>0</ProportionTramplingWastage>
             <FeedStyle>ProportionOfWeight</FeedStyle>
@@ -529,13 +523,6 @@
             <Name>Feed rice straw</Name>
             <RuminantFeedGroup>
               <Name>Feed Bos indicus</Name>
-              <RuminantFilter>
-                <Name>Filter[HerdName=Bos indicus]</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Parameter>HerdName</Parameter>
-                <Operator>Equal</Operator>
-                <Value>Bos indicus</Value>
-              </RuminantFilter>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthlyValues>
                 <double>0.02</double>
@@ -554,6 +541,7 @@
             </RuminantFeedGroup>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <HerdFilters />
             <FeedTypeName>RiceStraw</FeedTypeName>
             <ProportionTramplingWastage>0</ProportionTramplingWastage>
             <FeedStyle>ProportionOfWeight</FeedStyle>
