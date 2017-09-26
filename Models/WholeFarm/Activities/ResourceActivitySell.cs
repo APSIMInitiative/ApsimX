@@ -127,6 +127,21 @@ namespace Models.WholeFarm.Activities
                         break;
                 }
             }
+
+            labour = Apsim.Children(this, typeof(LabourFilterGroupUnit)).Cast<LabourFilterGroupUnit>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+            if (labour == null) labour = new List<LabourFilterGroupUnit>();
+            foreach (var item in labour)
+            {
+                switch (item.UnitType)
+                {
+                    case LabourUnitType.Fixed:
+                    case LabourUnitType.perUnit:
+                        break;
+                    default:
+                        results.Add(new ValidationResult("Labour unit type " + item.UnitType.ToString() + " is not supported for item "+item.Name));
+                        break;
+                }
+            }
             return results;
         }
 
@@ -172,7 +187,8 @@ namespace Models.WholeFarm.Activities
                                 daysNeeded = units * item.LabourPerUnit;
                                 break;
                             default:
-                                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+                                break;
+//                                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
                         }
                         if (daysNeeded > 0)
                         {
