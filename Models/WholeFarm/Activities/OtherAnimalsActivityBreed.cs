@@ -94,7 +94,8 @@ namespace Models.WholeFarm.Activities
             SelectedOtherAnimalsType = Resources.OtherAnimalsStore().GetByName(AnimalType) as OtherAnimalsType;
             if (SelectedOtherAnimalsType == null)
             {
-                results.Add(new ValidationResult("Unknown other animal type: " + AnimalType));
+                string[] memberNames = new string[] { "AnimalType" };
+                results.Add(new ValidationResult("Unknown other animal type: " + AnimalType, memberNames));
             }
             return results;
         }

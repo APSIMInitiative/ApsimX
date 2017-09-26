@@ -51,14 +51,15 @@ namespace Models.WholeFarm.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            switch (PaymentStyle.GetType().ToString())
+            switch (PaymentStyle)
             {
-                case "AnimalPaymentStyleType.Fixed":
-                case "AnimalPaymentStyleType.perHead":
-                case "AnimalPaymentStyleType.perAE":
+                case AnimalPaymentStyleType.Fixed:
+                case AnimalPaymentStyleType.perHead:
+                case AnimalPaymentStyleType.perAE:
                     break;
                 default:
-                    results.Add(new ValidationResult("Payment style " + PaymentStyle.GetType().ToString() + " is not supported"));
+                    string[] memberNames = new string[] { "PaymentStyle" };
+                    results.Add(new ValidationResult("Payment style " + PaymentStyle.ToString() + " is not supported", memberNames));
                     break;
             }
             return results;

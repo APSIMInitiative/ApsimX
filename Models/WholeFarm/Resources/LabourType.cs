@@ -101,7 +101,8 @@ namespace Models.WholeFarm.Resources
             var results = new List<ValidationResult>();
             if (MaxLabourSupply.Length != 12)
             {
-                results.Add(new ValidationResult("Invalid number of values provided (expecting 12 months of values)"));
+                string[] memberNames = new string[] { "MaxLabourSupply" };
+                results.Add(new ValidationResult("Invalid number of values provided (expecting 12 months of values)", memberNames));
             }
             return results;
         }

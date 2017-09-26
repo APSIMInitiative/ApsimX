@@ -132,23 +132,28 @@ namespace Models.WholeFarm.Activities
             var results = new List<ValidationResult>();
             if (XValues == null)
             {
-                results.Add(new ValidationResult("X values are required for relationship"));
+                string[] memberNames = new string[] { "XValues" };
+                results.Add(new ValidationResult("X values are required for relationship", memberNames));
             }
             if (YValues == null)
             {
-                results.Add(new ValidationResult("Y values are required for relationship"));
+                string[] memberNames = new string[] { "YValues" };
+                results.Add(new ValidationResult("Y values are required for relationship", memberNames));
             }
             if (XValues.Length != YValues.Length)
             {
-                results.Add(new ValidationResult("The same number of X and Y values are required for relationship"));
+                string[] memberNames = new string[] { "XValues and YValues" };
+                results.Add(new ValidationResult("The same number of X and Y values are required for relationship", memberNames));
             }
             if (XValues.Length == 0)
             {
-                results.Add(new ValidationResult("No data points were provided for relationship"));
+                string[] memberNames = new string[] { "XValues" };
+                results.Add(new ValidationResult("No data points were provided for relationship", memberNames));
             }
             if (XValues.Length < 2)
             {
-                results.Add(new ValidationResult("At least two data points are required for relationship"));
+                string[] memberNames = new string[] { "XValues" };
+                results.Add(new ValidationResult("At least two data points are required for relationship", memberNames));
             }
             return results;
         }

@@ -123,7 +123,8 @@ namespace Models.WholeFarm.Activities
                 {
                     case "Resources.Labour":
                     case "Resources.Ruminant":
-                        results.Add(new ValidationResult("Sales of resource type "+ resourceGroup.GetType().ToString() + " are not supported"));
+                        string[] memberNames = new string[] { "ResourceGroupName" };
+                        results.Add(new ValidationResult("Sales of resource type "+ resourceGroup.GetType().ToString() + " are not supported", memberNames));
                         break;
                 }
             }
@@ -138,7 +139,8 @@ namespace Models.WholeFarm.Activities
                     case LabourUnitType.perUnit:
                         break;
                     default:
-                        results.Add(new ValidationResult("Labour unit type " + item.UnitType.ToString() + " is not supported for item "+item.Name));
+                        string[] memberNames = new string[] { item.Name };
+                        results.Add(new ValidationResult("Labour unit type " + item.UnitType.ToString() + " is not supported for item "+item.Name, memberNames));
                         break;
                 }
             }

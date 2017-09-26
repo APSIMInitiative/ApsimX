@@ -86,7 +86,8 @@ namespace Models.WholeFarm
             var results = new List<ValidationResult>();
             if (Clock.StartDate.Day != 1)
             {
-                results.Add(new ValidationResult(String.Format("WholeFarm must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString())));
+                string[] memberNames = new string[] { "Clock.StartDate" };
+                results.Add(new ValidationResult(String.Format("WholeFarm must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString(), memberNames)));
             }
             return results;
         }

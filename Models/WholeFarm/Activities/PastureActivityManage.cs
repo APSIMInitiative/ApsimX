@@ -131,12 +131,14 @@ namespace Models.WholeFarm.Activities
             LandConditionIndex = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as Relationship;
             if (LandConditionIndex == null)
             {
-                results.Add(new ValidationResult("Unable to locate Land Condition Index relationship in user interface"));
+                string[] memberNames = new string[] { "LandConditionIndexRelationship" };
+                results.Add(new ValidationResult("Unable to locate Land Condition Index relationship in user interface", memberNames));
             }
             // Get Grass basal area relationship from children
             GrassBasalArea = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as Relationship;
             if (GrassBasalArea == null)
             {
+                string[] memberNames = new string[] { "GrassBasalAreaRelationship" };
                 results.Add(new ValidationResult("Unable to locate grass Basal Area relationship in user interface"));
             }
             return results;

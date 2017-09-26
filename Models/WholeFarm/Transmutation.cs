@@ -38,7 +38,8 @@ namespace Models.WholeFarm
             var results = new List<ValidationResult>();
             if (Apsim.Children(this, typeof(TransmutationCost)).Count() == 0)
             {
-                results.Add(new ValidationResult("No costs provided under this transmutation"));
+                string[] memberNames = new string[] { "TransmutationCosts" };
+                results.Add(new ValidationResult("No costs provided under this transmutation", memberNames));
             }
             return results;
         }
@@ -95,7 +96,8 @@ namespace Models.WholeFarm
             object result = Resources.GetResourceByName(ResourceName);
             if (result == null)
             {
-                results.Add(new ValidationResult("Could not find resource " + this.ResourceName + " in transmutation cost"));
+                string[] memberNames = new string[] { "ResourceTypeName" };
+                results.Add(new ValidationResult("Could not find resource " + this.ResourceName + " in transmutation cost", memberNames));
             }
             return results;
         }

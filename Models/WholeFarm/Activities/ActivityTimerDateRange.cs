@@ -35,7 +35,7 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[Description("End date of period to perform activities")]
         [Required]
-        [DateGreaterThanAttribute("StartDate", ErrorMessage = "Start date must be less than end date")]
+        [DateGreaterThanAttribute("StartDate", ErrorMessage = "End date must be greater than Start date")]
         public DateTime EndDate { get; set; }
 
 		/// <summary>
