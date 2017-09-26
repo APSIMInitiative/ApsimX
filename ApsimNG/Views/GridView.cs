@@ -165,7 +165,7 @@ namespace UserInterface.Views
             // This may break if Gtk# changes the way they implement event handlers.
             foreach (Widget w in Popup)
             {
-                if (w is ImageMenuItem)
+                if (w is MenuItem)
                 {
                     PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
                     if (pi != null)
@@ -174,7 +174,7 @@ namespace UserInterface.Views
                         if (handlers != null && handlers.ContainsKey("activate"))
                         {
                             EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as ImageMenuItem).Activated -= handler;
+                            (w as MenuItem).Activated -= handler;
                         }
                     }
                 }
