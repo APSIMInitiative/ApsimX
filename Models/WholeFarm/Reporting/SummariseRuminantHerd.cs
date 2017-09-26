@@ -17,7 +17,7 @@ namespace Models.WholeFarm
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	public class SummariseRuminantHerd:Model
+	public class SummariseRuminantHerd: WFModel
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
@@ -57,7 +57,6 @@ namespace Models.WholeFarm
 
 			// one individual
 			herd = herd.ToList();
-//			herd = herd.Where(a => a.ID == 3).ToList();
 
 			// group by breed
 			foreach (var breedGroup in herd.GroupBy(a => a.Breed))
@@ -95,24 +94,13 @@ namespace Models.WholeFarm
 								ReportDetails.NumberOfBirths = 0;
 							}
 							
-//							if (sexGroup.Key == Sex.Female)
-//							{
-//								ReportItemGenerated(ReportDetails);
-//							}
-
-//							if (sexGroup.Key == Sex.Male && ReportDetails.Age == 0)
-//							{
-								ReportItemGenerated(ReportDetails);
-//							}
-
+							ReportItemGenerated(ReportDetails);
 
 							// reset birth count
 							if (sexGroup.Key == Sex.Female)
 							{
 								ageGroup.Cast<RuminantFemale>().ToList().ForEach(a => a.NumberOfBirthsThisTimestep = 0);
 							}
-
-
 						}
 					}
 				}

@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using Models.WholeFarm.Activities;
+using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Models.WholeFarm.Reporting
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	public class ReportRuminantHerd : Model
+	public class ReportRuminantHerd : WFModel
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
@@ -44,29 +45,67 @@ namespace Models.WholeFarm.Reporting
 		}
 
 		/// <summary>
-		/// Function to summarise the herd based on cohorts each month
+		/// Function to report herd individuals each month
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("WFHerdSummary")]
 		private void OnWFHerdSummary(object sender, EventArgs e)
 		{
-			RuminantHerd ruminantHerd = Resources.RuminantHerd();
-			List<Ruminant> herd = ruminantHerd.Herd;
-			ReportDetails = new RuminantReportItemEventArgs();
-			foreach (Ruminant item in herd)
-			{
-				if(item.GetType() == typeof(RuminantFemale))
-				{
-					ReportDetails.RumObj = item as RuminantFemale;
-				}
-				else
-				{
-					ReportDetails.RumObj = item as RuminantMale;
-				}
-				ReportItemGenerated(ReportDetails);
-			}
-		}
+            // warning if the same individual is in multiple filter groups it will be entered more than once
+
+            ReportDetails = new RuminantReportItemEventArgs();
+            if (this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)).Count() > 0)
+            {
+                // get all filter groups below.
+                foreach (var fgroup in this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)))
+                {
+                    foreach (Ruminant item in Resources.RuminantHerd().Herd.Filter(fgroup))
+                    {
+                        if (item.GetType() == typeof(RuminantFemale))
+                        {
+                            ReportDetails.RumObj = item as RuminantFemale;
+                        }
+                        else
+                        {
+                            ReportDetails.RumObj = item as RuminantMale;
+                        }
+                        ReportItemGenerated(ReportDetails);
+                    }
+                }
+            }
+            else // no filter. Use entire herd
+            {
+                foreach (Ruminant item in Resources.RuminantHerd().Herd)
+                {
+                    if (item.GetType() == typeof(RuminantFemale))
+                    {
+                        ReportDetails.RumObj = item as RuminantFemale;
+                    }
+                    else
+                    {
+                        ReportDetails.RumObj = item as RuminantMale;
+                    }
+                    ReportItemGenerated(ReportDetails);
+                }
+            }
+
+            //         RuminantHerd ruminantHerd = Resources.RuminantHerd();
+            //List<Ruminant> herd = ruminantHerd.Herd;
+            //ReportDetails = new RuminantReportItemEventArgs();
+            //foreach (Ruminant item in herd)
+            //{
+            //	if(item.GetType() == typeof(RuminantFemale))
+            //	{
+            //		ReportDetails.RumObj = item as RuminantFemale;
+            //	}
+            //	else
+            //	{
+            //		ReportDetails.RumObj = item as RuminantMale;
+            //	}
+            //	ReportItemGenerated(ReportDetails);
+            //}
+        }
 	}
 
 	/// <summary>
