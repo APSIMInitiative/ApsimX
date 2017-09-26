@@ -16,7 +16,7 @@ namespace Models.WholeFarm
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(Simulation))]
-	public class WholeFarm: Zone
+	public class WholeFarm: Zone, IValidatableObject
 	{
 		[Link]
 		ISummary Summary = null;
@@ -76,6 +76,21 @@ namespace Models.WholeFarm
 			this.SetDefaults();
 		}
 
+        /// <summary>
+        /// Validate object
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (Clock.StartDate.Day != 1)
+            {
+                results.Add(new ValidationResult(String.Format("WholeFarm must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString())));
+            }
+            return results;
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -119,12 +134,6 @@ namespace Models.WholeFarm
 			else
 			{
 				randomGenerator = new Random(RandomSeed);
-			}
-
-			if(Clock.StartDate.Day != 1)
-			{
-				string error = String.Format("WholeFarm must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString());
-				Summary.WriteWarning(this, error);
 			}
         }
 
@@ -217,6 +226,5 @@ namespace Models.WholeFarm
 			}
 		}
 
-
-	}
+    }
 }

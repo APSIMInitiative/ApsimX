@@ -82,7 +82,7 @@
           <ActivityTimerDateRange>
             <Name>Between98and04</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartDate>1998-01-01T00:00:00</StartDate>
+            <StartDate>2005-01-01T00:00:00</StartDate>
             <EndDate>2004-01-01T00:00:00</EndDate>
             <Invert>false</Invert>
           </ActivityTimerDateRange>

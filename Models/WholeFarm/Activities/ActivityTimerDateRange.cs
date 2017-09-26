@@ -31,7 +31,7 @@ namespace Models.WholeFarm.Activities
         public DateTime StartDate { get; set; }
 		
 		/// <summary>
-		/// Start date of period to perform activities
+		/// End date of period to perform activities
 		/// </summary>
 		[Description("End date of period to perform activities")]
         [Required]

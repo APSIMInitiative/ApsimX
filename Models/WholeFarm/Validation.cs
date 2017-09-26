@@ -13,6 +13,9 @@ namespace Models.WholeFarm
     [AttributeUsage(AttributeTargets.Property)]
     public class DateGreaterThanAttribute : ValidationAttribute
     {
+        private const string DefaultErrorMessage =
+            "Date is less than the specified date";
+
         /// <summary>
         /// 
         /// </summary>
@@ -32,9 +35,9 @@ namespace Models.WholeFarm
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            DateTime earlierDate = (DateTime)value;
-
-            DateTime laterDate = (DateTime)validationContext.ObjectType.GetProperty(DateToCompareToFieldName).GetValue(validationContext.ObjectInstance, null);
+            DateTime laterDate = (DateTime)value;
+            DateTime earlierDate = (DateTime)validationContext.ObjectType.GetProperty(DateToCompareToFieldName).GetValue(validationContext.ObjectInstance, null);
+            string[] memberNames = new string[] { validationContext.MemberName };
 
             if (laterDate > earlierDate)
             {
@@ -42,7 +45,7 @@ namespace Models.WholeFarm
             }
             else
             {
-                return new ValidationResult("Date is not later");
+                return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
     }
@@ -53,6 +56,9 @@ namespace Models.WholeFarm
     [AttributeUsage(AttributeTargets.Property)]
     public class GreaterThanAttribute : ValidationAttribute
     {
+        private const string DefaultErrorMessage =
+            "Value is less than the specified date";
+
         /// <summary>
         /// 
         /// </summary>
@@ -73,6 +79,7 @@ namespace Models.WholeFarm
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             double minvalue = Convert.ToDouble(value);
+            string[] memberNames = new string[] { validationContext.MemberName };
 
             double maxvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(CompareToFieldName).GetValue(validationContext.ObjectInstance, null));
 
@@ -82,7 +89,7 @@ namespace Models.WholeFarm
             }
             else
             {
-                return new ValidationResult("Value is smaller than compared value");
+                return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
     }
