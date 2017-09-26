@@ -179,10 +179,10 @@ namespace UserInterface.Views
                     if (pi != null)
                     {
                         System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (w is ImageMenuItem && handlers != null && handlers.ContainsKey("activate"))
+                        if (handlers != null && handlers.ContainsKey("activate"))
                         {
                             EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as ImageMenuItem).Activated -= handler;
+                            (w as MenuItem).Activated -= handler;
                         }
                     }
                     Popup.Remove(w);
