@@ -21,17 +21,17 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivityBreed : WFActivityBase
+	public class RuminantActivityBreed : WFRuminantActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
 
-		/// <summary>
-		/// Name of herd to breed
-		/// </summary>
-		[Description("Name of herd to breed")]
-        [Required]
-        public string HerdName { get; set; }
+		///// <summary>
+		///// Name of herd to breed
+		///// </summary>
+		//[Description("Name of herd to breed")]
+  //      [Required]
+  //      public string HerdName { get; set; }
 
 		/// <summary>
 		/// Labour settings
@@ -71,8 +71,8 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("WFAnimalBreeding")]
 		private void OnWFAnimalBreeding(object sender, EventArgs e)
 		{
-			RuminantHerd ruminantHerd = Resources.RuminantHerd();
-			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
+//			RuminantHerd ruminantHerd = Resources.RuminantHerd();
+            List<Ruminant> herd = CurrentHerd(); //ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
 
 			// get list of all individuals of breeding age and condition
 			// grouped by location
@@ -173,7 +173,7 @@ namespace Models.WholeFarm.Activities
 							newCalfRuminant.BreedParams = female.BreedParams;
 							newCalfRuminant.Breed = female.BreedParams.Breed;
 							newCalfRuminant.Gender = (isMale) ? Sex.Male : Sex.Female;
-							newCalfRuminant.ID = ruminantHerd.NextUniqueID;
+							newCalfRuminant.ID = Resources.RuminantHerd().NextUniqueID;
 							newCalfRuminant.Location = female.Location;
 							newCalfRuminant.Mother = female;
 							newCalfRuminant.Number = 1;
@@ -182,7 +182,7 @@ namespace Models.WholeFarm.Activities
 							newCalfRuminant.Weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
 							newCalfRuminant.HighWeight = newCalfRuminant.Weight;
 							newCalfRuminant.SaleFlag = HerdChangeReason.Born;
-							ruminantHerd.AddRuminant(newCalfRuminant);
+                            Resources.RuminantHerd().AddRuminant(newCalfRuminant);
 
 							// add to sucklings
 							female.SucklingOffspring.Add(newCalfRuminant);
@@ -319,8 +319,8 @@ namespace Models.WholeFarm.Activities
 
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
-			// get only breeders for labour calculations
-			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName & a.Gender == Sex.Female &
+            // get only breeders for labour calculations
+            List<Ruminant> herd = CurrentHerd().Where(a => a.Gender == Sex.Female &
 							a.Age >= a.BreedParams.MinimumAge1stMating & a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).ToList();
 			int head = herd.Count();
 			double AE = herd.Sum(a => a.AdultEquivalent);

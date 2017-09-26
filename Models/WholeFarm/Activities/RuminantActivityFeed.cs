@@ -20,7 +20,7 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivityFeed : WFActivityBase
+	public class RuminantActivityFeed : WFRuminantActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
@@ -86,6 +86,9 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            // get all ui tree herd filters that relate to this activity
+            GetHerdFilters();
+
             // locate FeedType resource
             FeedType = Resources.GetResourceItem(this, typeof(AnimalFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
 			FoodSource = FeedType;
@@ -102,14 +105,14 @@ namespace Models.WholeFarm.Activities
 		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			ResourceRequestList = null;
-			List<Ruminant> herd;
+			List<Ruminant> herd = CurrentHerd();
 			int head = 0;
 			double AE = 0;
 			foreach (RuminantFeedGroup child in Apsim.Children(this, typeof(RuminantFeedGroup)))
 			{
-				herd = Resources.RuminantHerd().Herd.Filter(child).ToList();
-				head += herd.Count();
-				AE += herd.Sum(a => a.AdultEquivalent);
+				var subherd = herd.Filter(child).ToList();
+				head += subherd.Count();
+				AE += subherd.Sum(a => a.AdultEquivalent);
 			}
 
 			// for each labour item specified
@@ -197,9 +200,10 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public override void DoActivity()
 		{
-			RuminantHerd ruminantHerd = Resources.RuminantHerd();
-			List<Ruminant> herd = ruminantHerd.Herd;
-			if (herd != null && herd.Count > 0)
+//			RuminantHerd ruminantHerd = Resources.RuminantHerd();
+//			List<Ruminant> herd = ruminantHerd.Herd;
+            List<Ruminant> herd = CurrentHerd();
+            if (herd != null && herd.Count > 0)
 			{
 				// calculate labour limit
 				double labourLimit = 1;

@@ -19,33 +19,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivityHerdCost : WFActivityBase
+	public class RuminantActivityHerdCost : WFRuminantActivityBase, IValidatableObject
 	{
-		/// <summary>
-		/// Get the Clock.
-		/// </summary>
-		[XmlIgnore]
-		[Link]
-		Clock Clock = null;
-		[Link]
-		private ResourcesHolder Resources = null;
-
-		/// <summary>
-		/// The payment interval (in months, 1 monthly, 12 annual)
-		/// </summary>
-		[System.ComponentModel.DefaultValueAttribute(12)]
-		[Description("The payment interval (in months, 1 monthly, 12 annual)")]
-        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
-        public int PaymentInterval { get; set; }
-
-		/// <summary>
-		/// First month to pay overhead
-		/// </summary>
-		[System.ComponentModel.DefaultValueAttribute(6)]
-		[Description("First month to pay expense (1-12)")]
-        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
-        public int MonthDue { get; set; }
-
 		/// <summary>
 		/// Amount payable
 		/// </summary>
@@ -68,16 +43,31 @@ namespace Models.WholeFarm.Activities
         [Required]
         public string AccountName { get; set; }
 
-		/// <summary>
-		/// Month this overhead is next due.
-		/// </summary>
-		[XmlIgnore]
-		public DateTime NextDueDate { get; set; }
+        /// <summary>
+        /// Validate object
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            switch (PaymentStyle.GetType().ToString())
+            {
+                case "AnimalPaymentStyleType.Fixed":
+                case "AnimalPaymentStyleType.perHead":
+                case "AnimalPaymentStyleType.perAE":
+                    break;
+                default:
+                    results.Add(new ValidationResult("Payment style " + PaymentStyle.GetType().ToString() + " is not supported"));
+                    break;
+            }
+            return results;
+        }
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public RuminantActivityHerdCost()
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantActivityHerdCost()
 		{
 			this.SetDefaults();
 		}
@@ -88,18 +78,7 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            if (MonthDue >= Clock.StartDate.Month)
-			{
-				NextDueDate = new DateTime(Clock.StartDate.Year, MonthDue, Clock.StartDate.Day);
-			}
-			else
-			{
-				NextDueDate = new DateTime(Clock.StartDate.Year, MonthDue, Clock.StartDate.Day);
-				while (Clock.StartDate > NextDueDate)
-				{
-					NextDueDate = NextDueDate.AddMonths(PaymentInterval);
-				}
-			}
+            GetHerdFilters();
 		}
 
 		/// <summary>
@@ -110,35 +89,23 @@ namespace Models.WholeFarm.Activities
 		{
 			ResourceRequestList = new List<ResourceRequest>();
 
-			if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
+			if (this.TimingOK)
 			{
 				double amountNeeded = 0;
-				List<Ruminant> herd = new List<Ruminant>();
+                List<Ruminant> herd = this.CurrentHerd();
 				switch (PaymentStyle)
 				{
 					case AnimalPaymentStyleType.Fixed:
 						amountNeeded = Amount;
 						break;
 					case AnimalPaymentStyleType.perHead:
-						herd = Resources.RuminantHerd().Herd;
-						// check for Ruminant filter group
-						if(Apsim.Children(this, typeof(RuminantFilterGroup)).Count() > 0)
-						{
-							herd = herd.Filter(Apsim.Children(this, typeof(RuminantFilterGroup)).FirstOrDefault() as RuminantFilterGroup);
-						}
 						amountNeeded = Amount*herd.Count();
 						break;
 					case AnimalPaymentStyleType.perAE:
-						herd = Resources.RuminantHerd().Herd;
-						// check for Ruminant filter group
-						if (Apsim.Children(this, typeof(RuminantFilterGroup)).Count() > 0)
-						{
-							herd = herd.Filter(Apsim.Children(this, typeof(RuminantFilterGroup)).FirstOrDefault() as RuminantFilterGroup);
-						}
 						amountNeeded = Amount * herd.Sum(a => a.AdultEquivalent);
 						break;
 					default:
-						throw new Exception(String.Format("Unknown Payment style {0} in {1}",PaymentStyle, this.Name));
+                        break;
 				}
 
 				if (amountNeeded == 0) return ResourceRequestList;
@@ -170,16 +137,7 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public override void DoActivity()
 		{
-			// if occurred
-			if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
-			{
-				ResourceRequest thisRequest = ResourceRequestList.FirstOrDefault();
-				if (thisRequest != null)
-				{
-					// update next due date
-					this.NextDueDate = this.NextDueDate.AddMonths(this.PaymentInterval);
-				}
-			}
+            return;
 		}
 
 		/// <summary>
@@ -231,6 +189,5 @@ namespace Models.WholeFarm.Activities
 				ActivityPerformed(this, e);
 		}
 
-
-	}
+    }
 }
