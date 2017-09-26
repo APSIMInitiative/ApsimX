@@ -165,6 +165,41 @@
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
     <Compile Include="Plant\Functions\ArrayFunction.cs" />
+    <Compile Include="Plant\Interfaces\IPhotosynthesis.cs" />
+    <Compile Include="Plant\Photosynthesis\Angle.cs" />
+    <Compile Include="Plant\Photosynthesis\ApsimC3PhotoLink.cs" />
+    <Compile Include="Plant\Photosynthesis\ApsimC4PhotoLink.cs" />
+    <Compile Include="Plant\Photosynthesis\C3MethodExtensions.cs" />
+    <Compile Include="Plant\Photosynthesis\C4MethodExtensions.cs" />
+    <Compile Include="Plant\Photosynthesis\EnvironmentModel.cs" />
+    <Compile Include="Plant\Photosynthesis\LayerModel.cs" />
+    <Compile Include="Plant\Photosynthesis\LeafCanopy.cs" />
+    <Compile Include="Plant\Photosynthesis\LightVar.cs" />
+    <Compile Include="Plant\Photosynthesis\LookupTable.cs" />
+    <Compile Include="Plant\Photosynthesis\ModArrhehenius.cs" />
+    <Compile Include="Plant\Photosynthesis\ModelPar.cs" />
+    <Compile Include="Plant\Photosynthesis\ModelVar.cs" />
+    <Compile Include="Plant\Photosynthesis\NaturalSpline.cs" />
+    <Compile Include="Plant\Photosynthesis\NotifyablePropertyClass.cs" />
+    <Compile Include="Plant\Photosynthesis\PathwayParameters.cs" />
+    <Compile Include="Plant\Photosynthesis\PathwayParamtersC3.cs" />
+    <Compile Include="Plant\Photosynthesis\PathwayParamtersC4.cs" />
+    <Compile Include="Plant\Photosynthesis\PhotoLayerSolver.cs" />
+    <Compile Include="Plant\Photosynthesis\PhotoLayerSolverC3.cs" />
+    <Compile Include="Plant\Photosynthesis\PhotoLayerSolverC4.cs" />
+    <Compile Include="Plant\Photosynthesis\PhotosynthesisModel.cs" />
+    <Compile Include="Plant\Photosynthesis\PhotosynthesisModelC3.cs" />
+    <Compile Include="Plant\Photosynthesis\PhotosynthesisModelC4.cs" />
+    <Compile Include="Plant\Photosynthesis\ReflectionHelper.cs" />
+    <Compile Include="Plant\Photosynthesis\ShadedCanopy.cs" />
+    <Compile Include="Plant\Photosynthesis\SunlitCanopy.cs" />
+    <Compile Include="Plant\Photosynthesis\SunlitShadedCanopy.cs" />
+    <Compile Include="Plant\Photosynthesis\SunlitShadedCanopyC3.cs" />
+    <Compile Include="Plant\Photosynthesis\SunlitShadedCanopyC4.cs" />
+    <Compile Include="Plant\Photosynthesis\TableFunction.cs" />
+    <Compile Include="Plant\Photosynthesis\TempFunctionExp.cs" />
+    <Compile Include="Plant\Photosynthesis\TempFunctionNormal.cs" />
+    <Compile Include="Plant\Photosynthesis\TrapezoidLayer.cs" />
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />
@@ -611,7 +646,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Maize.xml" />
+    <None Include="Resources\Maize.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Resources\Chicory.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
