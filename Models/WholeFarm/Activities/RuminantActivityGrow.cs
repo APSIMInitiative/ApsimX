@@ -43,10 +43,16 @@ namespace Models.WholeFarm.Activities
         [Units("MJ/kg DM")]
 		public double EnergyGross { get; set; }
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public RuminantActivityGrow()
+        /// <summary>
+        /// Perform Activity with partial resources available
+        /// </summary>
+        [XmlIgnore]
+        public new OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantActivityGrow()
 		{
 			this.SetDefaults();
 		}

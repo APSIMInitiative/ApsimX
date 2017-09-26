@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Models.WholeFarm.Activities
 {
@@ -20,11 +21,17 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(ActivityFolder))]
 	public class ActivityFolder : WFActivityBase
 	{
-		/// <summary>
-		/// Method to determine resources required for this activity in the current month
-		/// </summary>
-		/// <returns></returns>
-		public override List<ResourceRequest> GetResourcesNeededForActivity()
+        /// <summary>
+        /// Perform Activity with partial resources available
+        /// </summary>
+        [XmlIgnore]
+        public new OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
+
+        /// <summary>
+        /// Method to determine resources required for this activity in the current month
+        /// </summary>
+        /// <returns></returns>
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			return null;
 		}

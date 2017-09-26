@@ -17,10 +17,10 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WholeFarm))]
 	public class ActivitiesHolder: WFModel
 	{
-		/// <summary>
-		/// List of the all the Activities.
-		/// </summary>
-		[XmlIgnore]
+        /// <summary>
+        /// List of the all the Activities.
+        /// </summary>
+        [XmlIgnore]
 		private List<IModel> activities;
 
 		private void BindEvents(List<IModel> root)
