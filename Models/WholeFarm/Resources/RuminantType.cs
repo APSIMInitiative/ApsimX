@@ -50,6 +50,7 @@ namespace Models.WholeFarm.Resources
 
 			foreach (AnimalPricing priceGroup in Apsim.Children(this, typeof(AnimalPricing)))
 			{
+                SirePrice = priceGroup.BreedingSirePrice;
 				foreach (AnimalPriceEntry price in Apsim.Children(priceGroup, typeof(AnimalPriceEntry)))
 				{
 					AnimalPriceValue val = new AnimalPriceValue();
@@ -71,11 +72,17 @@ namespace Models.WholeFarm.Resources
 		/// <returns>boolean</returns>
 		public bool PricingAvailable() {  return (PriceList.Count>0); }
 
-		/// <summary>
-		/// Get value of a specific individual
-		/// </summary>
-		/// <returns>value</returns>
-		public double ValueofIndividual(Ruminant ind, bool PurchasePrice)
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public double SirePrice { get; set; }
+
+        /// <summary>
+        /// Get value of a specific individual
+        /// </summary>
+        /// <returns>value</returns>
+        public double ValueofIndividual(Ruminant ind, bool PurchasePrice)
 		{
 			if (PricingAvailable())
 			{

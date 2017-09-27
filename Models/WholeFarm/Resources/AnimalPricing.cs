@@ -15,8 +15,8 @@ namespace Models.WholeFarm.Resources
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(RuminantActivityBuySell))]
-	public class AnimalPricing: Model
+	[ValidParent(ParentType = typeof(RuminantType))]
+	public class AnimalPricing: WFModel
 	{
 		/// <summary>
 		/// Style of pricing animals
@@ -24,16 +24,23 @@ namespace Models.WholeFarm.Resources
 		[Description("Style of pricing animals")]
         [Required]
         public PricingStyleType PricingStyle { get; set; }
-	}
 
-	/// <summary>
-	/// Individual price entry
-	/// </summary>
-	[Serializable]
+        /// <summary>
+        /// Price of individual breeding sire
+        /// </summary>
+        [Description("Price of individual breeding sire")]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        public double BreedingSirePrice { get; set; }
+    }
+
+    /// <summary>
+    /// Individual price entry
+    /// </summary>
+    [Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(AnimalPricing))]
-	public class AnimalPriceEntry: Model
+	public class AnimalPriceEntry: WFModel
 	{
 		/// <summary>
 		/// Gender
@@ -53,14 +60,14 @@ namespace Models.WholeFarm.Resources
 		/// Purchase value of individual
 		/// </summary>
 		[Description("Purchase value of individual")]
-		[Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double PurchaseValue { get; set; }
 
 		/// <summary>
 		/// Sell value of individual
 		/// </summary>
 		[Description("Sell value of individual")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double SellValue { get; set; }
 	}
 
