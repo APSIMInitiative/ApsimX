@@ -35,13 +35,6 @@ namespace Models.WholeFarm.Activities
         public string BreedName { get; set; }
 
 		/// <summary>
-		/// Price of breeding sire
-		/// </summary>
-		[Description("Price of breeding sire")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
-        public double BreedingSirePrice { get; set; }
-
-		/// <summary>
 		/// name of account to use
 		/// </summary>
 		[Description("Name of bank account to use")]
@@ -56,10 +49,10 @@ namespace Models.WholeFarm.Activities
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("WFInitialiseActivity")]
+        private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
-			bankAccount = Resources.GetResourceItem(this, typeof(Finance), BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+            bankAccount = Resources.GetResourceItem(this, typeof(Finance), BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
 
 			// get labour specifications
 			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
@@ -83,75 +76,6 @@ namespace Models.WholeFarm.Activities
 			{
 				BuyWithTrucking();
 			}
-
-			// old code with finances broken down and reported by purchase reason
-
-			//// This activity will purchase animals based on available funds.
-			//RuminantHerd ruminantHerd = Resources.RuminantHerd();
-
-			//var newRequests = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == BreedName).ToList();
-			//foreach (var newgroup in newRequests.GroupBy(a => a.SaleFlag))
-			//{
-			//	double fundsAvailable = 0;
-			//	if (bankAccount != null)
-			//	{
-			//		fundsAvailable = bankAccount.FundsAvailable;
-			//	}
-			//	double cost = 0;
-			//	double shortfall = 0;
-			//	bool fundsexceeded = false;
-			//	foreach (var newind in newgroup)
-			//	{
-			//		if(finance!=null)  // perform with purchasing
-			//		{
-			//			double value = 0;
-			//			if (newgroup.Key == HerdChangeReason.SirePurchase)
-			//			{
-			//				value = BreedingSirePrice;
-			//			}
-			//			else
-			//			{
-			//				value = newind.BreedParams.ValueofIndividual(newind, true);
-			//			}
-			//			if (cost + value <= fundsAvailable & fundsexceeded == false)
-			//			{
-			//				ruminantHerd.AddRuminant(newind);
-			//				cost += value;
-			//			}
-			//			else
-			//			{
-			//				fundsexceeded = true;
-			//				shortfall += value;
-			//			}
-			//		}
-			//		else // no financial transactions
-			//		{
-			//			ruminantHerd.AddRuminant(newind);
-			//		}
-			//	}
-
-			//	if (bankAccount != null)
-			//	{
-			//		ResourceRequest purchaseRequest = new ResourceRequest();
-			//		purchaseRequest.ActivityName = this.Name;
-			//		purchaseRequest.Required = cost;
-			//		purchaseRequest.AllowTransmutation = false;
-			//		purchaseRequest.Reason = newgroup.Key.ToString();
-			//		bankAccount.Remove(purchaseRequest);
-
-			//		// report any financial shortfall in purchases
-			//		if (shortfall > 0)
-			//		{
-			//			purchaseRequest.Available = bankAccount.Amount;
-			//			purchaseRequest.Required = cost + shortfall;
-			//			purchaseRequest.Provided = cost;
-			//			purchaseRequest.ResourceType = typeof(Finance);
-			//			purchaseRequest.ResourceTypeName = BankAccountName;
-			//			ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
-			//			OnShortfallOccurred(rre);
-			//		}
-			//	}
-			//}
 		}
 
 		/// <summary>An event handler to call for animal sales</summary>
@@ -283,7 +207,7 @@ namespace Models.WholeFarm.Activities
 					double value = 0;
 					if (newind.SaleFlag == HerdChangeReason.SirePurchase)
 					{
-						value = BreedingSirePrice;
+						value = newind.BreedParams.SirePrice;
 					}
 					else
 					{
@@ -374,7 +298,7 @@ namespace Models.WholeFarm.Activities
 								double value = 0;
 								if (ind.SaleFlag == HerdChangeReason.SirePurchase)
 								{
-									value = BreedingSirePrice;
+									value = ind.BreedParams.SirePrice;
 								}
 								else
 								{

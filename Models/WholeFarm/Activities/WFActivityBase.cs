@@ -309,10 +309,10 @@ namespace Models.WholeFarm.Activities
 			this.OnActivityPerformed(activitye);
 		}
 
-		/// <summary>
-		/// Perform Activity with partial resources available
-		/// </summary>
-		[Description("Perform Activity with partial resources available")]
+        /// <summary>
+        /// Insufficient resources available action
+        /// </summary>
+        [Description("Insufficient resources available action")]
 		public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
 		/// <summary>

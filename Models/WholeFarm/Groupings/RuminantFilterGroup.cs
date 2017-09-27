@@ -19,7 +19,6 @@ namespace Models.WholeFarm.Groupings
     [ValidParent(ParentType = typeof(WFActivityBase))]
     [ValidParent(ParentType = typeof(WFRuminantActivityBase))]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
-
     public class RuminantFilterGroup : WFModel
 	{
 

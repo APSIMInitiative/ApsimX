@@ -50,5 +50,7 @@ namespace Models.WholeFarm.Activities
 		[Description("Minimum proportion of truck load before selling (0 continuous sales)")]
         [Required]
         public double MinimumLoadBeforeSelling { get; set; }
+
+        //TODO: add emissions values per km
 	}
 }

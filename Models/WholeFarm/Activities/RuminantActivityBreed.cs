@@ -25,18 +25,7 @@ namespace Models.WholeFarm.Activities
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
-
-		///// <summary>
-		///// Name of herd to breed
-		///// </summary>
-		//[Description("Name of herd to breed")]
-  //      [Required]
-  //      public string HerdName { get; set; }
-
-		/// <summary>
-		/// Labour settings
-		/// </summary>
-		private List<LabourFilterGroupSpecified> labour { get; set; }
+        private List<LabourFilterGroupSpecified> labour;
 
 		/// <summary>
 		/// Maximum conception rate for uncontrolled matings
@@ -52,25 +41,30 @@ namespace Models.WholeFarm.Activities
         [Required]
         public bool UseAI { get; set; }
 
-		/// <summary>An event handler to allow us to initialise herd breeding status.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFInitialiseActivity")]
-		private void OnWFInitialiseActivity(object sender, EventArgs e)
-		{
-			// Assignment of mothers was moved to RuminantHerd resource to ensure this is done even if no breeding activity is included
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("WFInitialiseActivity")]
+        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        {
+            // Assignment of mothers was moved to RuminantHerd resource to ensure this is done even if no breeding activity is included
 
-			// get labour specifications
-			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-			if (labour.Count() == 0) labour = new List<LabourFilterGroupSpecified>();
-		}
+            this.InitialiseHerd(false);
 
-		/// <summary>An event handler to perform herd breeding </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFAnimalBreeding")]
+            // get labour specifications
+            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+            if (labour.Count() == 0) labour = new List<LabourFilterGroupSpecified>();
+        }
+
+        /// <summary>An event handler to perform herd breeding </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("WFAnimalBreeding")]
 		private void OnWFAnimalBreeding(object sender, EventArgs e)
 		{
+            // check herd ok for breeding
+            this.CheckHerdIsSingleBreed();
+
 //			RuminantHerd ruminantHerd = Resources.RuminantHerd();
             List<Ruminant> herd = CurrentHerd(); //ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
 
