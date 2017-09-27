@@ -496,6 +496,7 @@
     <Compile Include="WholeFarm\Activities\IATGrowCropLabour.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityMilking.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityPredictiveStockingENSO.cs" />
+    <Compile Include="WholeFarm\Activities\RuminantActivityWean.cs" />
     <Compile Include="WholeFarm\Activities\RuminantFee.cs" />
     <Compile Include="WholeFarm\Activities\TruckingSettings.cs" />
     <Compile Include="WholeFarm\Activities\WFRuminantActivityBase.cs" />

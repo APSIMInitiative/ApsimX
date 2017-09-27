@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
@@ -18,17 +19,17 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivityManage: WFActivityBase
+	public class RuminantActivityManage: WFRuminantActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
 
-        /// <summary>
-        /// Name of herd to breed
-        /// </summary>
-        [Description("Name of herd to manage")]
-        [Required]
-        public string HerdName { get; set; }
+        ///// <summary>
+        ///// Name of herd to breed
+        ///// </summary>
+        //[Description("Name of herd to manage")]
+        //[Required]
+        //public string HerdName { get; set; }
 
         /// <summary>
         /// Maximum number of breeders that can be kept
@@ -93,40 +94,10 @@ namespace Models.WholeFarm.Activities
         [Required]
         public double MaleSellingWeight { get; set; }
 
-		///// <summary>
-		///// Month to undertake management (1-12) and assign costs
-		///// </summary>
-		//[Description("Month to undertake management (1-12) and assign costs")]
-		//[System.ComponentModel.DefaultValueAttribute(12)]
-  //      [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
-  //      public int ManagementMonth { get; set; }
-
-		///// <summary>
-		///// Manage every month
-		///// </summary>
-		//[Description("Manage every month")]
-  //      [Required]
-  //      public bool MonthlyManagement { get; set; }
-
-		/// <summary>
-		/// Weaning age (months)
-		/// </summary>
-		[Description("Weaning age (months)")]
-        [Required]
-        public double WeaningAge { get; set; }
-
-		/// <summary>
-		/// Weaning weight (kg)
-		/// </summary>
-		[Description("Weaning weight (kg)")]
-        [Required]
-        public double WeaningWeight { get; set; }
-
 		/// <summary>
 		/// Name of GrazeFoodStore (paddock) to place purchases in for grazing (leave blank for general yards)
 		/// </summary>
 		[Description("Name of GrazeFoodStore (paddock) to place purchases in (leave blank for general yards)")]
-        [Required]
         public string GrazeFoodStoreName { get; set; }
 
 		/// <summary>
@@ -148,10 +119,20 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		private GrazeFoodStoreType foodStore;
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public RuminantActivityManage()
+        /// <summary>
+        /// Breed params for this activity
+        /// </summary>
+        private RuminantType breedParams;
+
+        /// <summary>
+        /// Name of Breed for this activity
+        /// </summary>
+        private string breedName;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantActivityManage()
 		{
 			this.SetDefaults();
 		}
@@ -159,46 +140,46 @@ namespace Models.WholeFarm.Activities
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("WFInitialiseActivity")]
+        private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
+            this.InitialiseHerd(false);
+            breedParams = Resources.GetResourceItem(this, typeof(RuminantHerd), breedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+
             // check GrazeFoodStoreExists
             if (GrazeFoodStoreName == null) GrazeFoodStoreName = "";
 			if(GrazeFoodStoreName!="")
 			{
 				foodStore = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 			}
-		}
+        }
 
-		/// <summary>An event handler to call for all herd management activities</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFAnimalManage")]
+        /// <summary>An event handler to call for all herd management activities</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("WFAnimalManage")]
 		private void OnWFAnimalManage(object sender, EventArgs e)
 		{
-			RuminantHerd ruminantHerd = Resources.RuminantHerd();
-			// clear store of individuals to try and purchase
-			ruminantHerd.PurchaseIndividuals.Clear();
+            List<Ruminant> localHerd = this.CurrentHerd();
+            // check for multiple breeds
+            this.CheckHerdIsSingleBreed();
 
-			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.HerdName == HerdName).ToList();
+            RuminantHerd ruminantHerd = Resources.RuminantHerd();
+            // clear store of individuals to try and purchase
+            //			ruminantHerd.PurchaseIndividuals.Clear();
 
-			RuminantType breedParams;
-			// get breedParams when no herd remaining
-			if (herd.Count() == 0)
-			{
-				breedParams = Resources.GetResourceItem(this, typeof(RuminantHerd), HerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
-			}
-			else
-			{
-				breedParams = herd.FirstOrDefault().BreedParams;
-			}
+            // remove only the individuals that are affected by this activity.
+            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Breed == breedName);
 
-			// can sell off males any month as per NABSA
-			// if we don't need this monthly, then it goes into next if statement with herd declaration
-			// NABSA MALES - weaners, 1-2, 2-3 and 3-4 yo, we check for any male weaned and not a breeding sire.
-			// check for sell age/weight of young males
-			// if SellYoungFemalesLikeMales then all apply to both sexes else only males.
-			foreach (var ind in herd.Where(a => a.Weaned & (SellFemalesLikeMales ? true : (a.Gender == Sex.Male)) & (a.Age >= MaleSellingAge || a.Weight >= MaleSellingWeight)))
+            List<Ruminant> herd = this.CurrentHerd();
+//			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.HerdName == HerdName).ToList();
+
+            // can sell off males any month as per NABSA
+            // if we don't need this monthly, then it goes into next if statement with herd declaration
+            // NABSA MALES - weaners, 1-2, 2-3 and 3-4 yo, we check for any male weaned and not a breeding sire.
+            // check for sell age/weight of young males
+            // if SellYoungFemalesLikeMales then all apply to both sexes else only males.
+            foreach (var ind in herd.Where(a => a.Weaned & (SellFemalesLikeMales ? true : (a.Gender == Sex.Male)) & (a.Age >= MaleSellingAge || a.Weight >= MaleSellingWeight)))
 			{
 				bool sell = true;
 				if (ind.GetType() == typeof(RuminantMale))
@@ -221,14 +202,14 @@ namespace Models.WholeFarm.Activities
 					sufficientFood = (foodStore.TonnesPerHectare * 1000) > MinimumPastureBeforeRestock;
 				}
 
-				// Perform weaning
-				foreach (var ind in herd.Where(a => a.Weaned == false))
-				{
-					if (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight)
-					{
-						ind.Wean();
-					}
-				}
+				//// Perform weaning
+				//foreach (var ind in herd.Where(a => a.Weaned == false))
+				//{
+				//	if (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight)
+				//	{
+				//		ind.Wean();
+				//	}
+				//}
 
 				// check for maximum age (females and males have different cutoffs)
 				foreach (var ind in herd.Where(a => a.Age >= ((a.Gender == Sex.Female) ? MaximumBreederAge : MaximumBullAge)))
@@ -283,7 +264,7 @@ namespace Models.WholeFarm.Activities
 								newbull.Location = GrazeFoodStoreName;
 								newbull.Age = 48;
 								newbull.Breed = breedParams.Breed;
-								newbull.HerdName = HerdName;
+								newbull.HerdName = breedName;
 								newbull.BreedingSire = true;
 								newbull.BreedParams = breedParams;
 								newbull.Gender = Sex.Male;
@@ -341,7 +322,7 @@ namespace Models.WholeFarm.Activities
 								newheifer.Location = GrazeFoodStoreName;
 								newheifer.Age = ageOfHeifer;
 								newheifer.Breed = breedParams.Breed;
-								newheifer.HerdName = HerdName;
+								newheifer.HerdName = breedName;
 								newheifer.BreedParams = breedParams;
 								newheifer.Gender = Sex.Female;
 								newheifer.ID = 0;// ruminantHerd.NextUniqueID;
