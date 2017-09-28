@@ -31,14 +31,14 @@ namespace Models.WholeFarm.Activities
 
 		private OtherAnimalsType animalType { get; set; }
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			// locate OtherAnimalsType resource
-			animalType = Resources.GetResourceItem(this, typeof(OtherAnimals), OtherAnimalType, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as OtherAnimalsType;
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("WFInitialiseActivity")]
+        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        {
+            // locate OtherAnimalsType resource
+            animalType = Resources.GetResourceItem(this, typeof(OtherAnimals), OtherAnimalType, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as OtherAnimalsType;
 		}
 
 		/// <summary>

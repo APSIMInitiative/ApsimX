@@ -90,21 +90,6 @@ namespace Models.WholeFarm.Reporting
                 }
             }
 
-            //         RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            //List<Ruminant> herd = ruminantHerd.Herd;
-            //ReportDetails = new RuminantReportItemEventArgs();
-            //foreach (Ruminant item in herd)
-            //{
-            //	if(item.GetType() == typeof(RuminantFemale))
-            //	{
-            //		ReportDetails.RumObj = item as RuminantFemale;
-            //	}
-            //	else
-            //	{
-            //		ReportDetails.RumObj = item as RuminantMale;
-            //	}
-            //	ReportItemGenerated(ReportDetails);
-            //}
         }
 	}
 

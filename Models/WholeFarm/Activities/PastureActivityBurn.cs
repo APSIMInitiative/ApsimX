@@ -80,10 +80,10 @@ namespace Models.WholeFarm.Activities
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("WFInitialiseActivity")]
+        private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
-			if (BurnMonth >= Clock.StartDate.Month)
+            if (BurnMonth >= Clock.StartDate.Month)
 			{
 				NextDueDate = new DateTime(Clock.StartDate.Year, BurnMonth, Clock.StartDate.Day);
 			}

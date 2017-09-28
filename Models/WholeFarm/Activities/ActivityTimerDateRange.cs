@@ -59,15 +59,9 @@ namespace Models.WholeFarm.Activities
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("WFInitialiseActivity")]
+        private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
-            //if (StartDate >= EndDate)
-            //{
-            //	string error = String.Format("Start date must be less than end date in ({0})", this.Name);
-            //	Summary.WriteWarning(this, error);
-            //	throw new Exception(error);
-            //}
             endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
 			startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
 		}

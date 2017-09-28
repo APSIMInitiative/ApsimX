@@ -89,14 +89,14 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public List<GrazeBreedPoolLimit> PoolFeedLimits { get; set; }
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			// limit to 8 hours grazing max
-			HoursGrazed = Math.Min(8.0, HoursGrazed);
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("WFInitialiseActivity")]
+        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        {
+            // limit to 8 hours grazing max
+            HoursGrazed = Math.Min(8.0, HoursGrazed);
 
 			// If GrazeFoodStoreType model has not been set use name
 			if (GrazeFoodStoreModel == null)

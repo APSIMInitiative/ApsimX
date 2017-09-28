@@ -31,12 +31,7 @@ namespace Models.WholeFarm.Activities
         [Link]
 		WholeFarm WholeFarm = null;
 
-        ///// <summary>
-        ///// Number for the Climate Region for the pasture.
-        ///// </summary>
-        //[Description("Climate Region Number")]
-        //public int Region { get; set; }
-
+ 
         /// <summary>
         /// Name of land type where pasture is located
         /// </summary>
@@ -147,8 +142,8 @@ namespace Models.WholeFarm.Activities
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("WFInitialiseActivity")]
+        private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
             //get the units of area for this run from the Land resource.
             unitsOfArea2Ha = Resources.Land().UnitsOfAreaToHaConversion ; 
