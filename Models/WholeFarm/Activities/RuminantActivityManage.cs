@@ -125,11 +125,6 @@ namespace Models.WholeFarm.Activities
         private RuminantType breedParams;
 
         /// <summary>
-        /// Name of Breed for this activity
-        /// </summary>
-        private string breedName;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public RuminantActivityManage()
@@ -144,7 +139,7 @@ namespace Models.WholeFarm.Activities
         private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(false);
-            breedParams = Resources.GetResourceItem(this, typeof(RuminantHerd), breedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+            breedParams = Resources.GetResourceItem(this, typeof(RuminantHerd), this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
             // check GrazeFoodStoreExists
             if (GrazeFoodStoreName == null) GrazeFoodStoreName = "";
@@ -169,7 +164,7 @@ namespace Models.WholeFarm.Activities
             //			ruminantHerd.PurchaseIndividuals.Clear();
 
             // remove only the individuals that are affected by this activity.
-            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Breed == breedName);
+            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdName);
 
             List<Ruminant> herd = this.CurrentHerd();
 //			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.HerdName == HerdName).ToList();
@@ -264,7 +259,7 @@ namespace Models.WholeFarm.Activities
 								newbull.Location = GrazeFoodStoreName;
 								newbull.Age = 48;
 								newbull.Breed = breedParams.Breed;
-								newbull.HerdName = breedName;
+								newbull.HerdName = this.PredictedHerdName;
 								newbull.BreedingSire = true;
 								newbull.BreedParams = breedParams;
 								newbull.Gender = Sex.Male;
@@ -322,7 +317,7 @@ namespace Models.WholeFarm.Activities
 								newheifer.Location = GrazeFoodStoreName;
 								newheifer.Age = ageOfHeifer;
 								newheifer.Breed = breedParams.Breed;
-								newheifer.HerdName = breedName;
+								newheifer.HerdName = this.PredictedHerdName;
 								newheifer.BreedParams = breedParams;
 								newheifer.Gender = Sex.Female;
 								newheifer.ID = 0;// ruminantHerd.NextUniqueID;

@@ -60,6 +60,7 @@ namespace Models.WholeFarm.Resources
         private void OnWFInitialiseResource(object sender, EventArgs e)
         {
             UncollectedStores = new List<ManureStoreUncollected>();
+            Initialise();
         }
 
         /// <summary>
@@ -140,15 +141,6 @@ namespace Models.WholeFarm.Resources
         /// </summary>
         public double Amount { get { return amount; } }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFInitialiseResource")]
-        private void OnWFInitialiseResource(object sender, EventArgs e)
-        {
-            Initialise();
-        }
-
         /// <summary>
         /// Initialise resource type
         /// </summary>
@@ -160,8 +152,6 @@ namespace Models.WholeFarm.Resources
             //    Add(StartingAmount, this.Name, "Starting value");
             //}
         }
-
-
 
         #region transactions
 
