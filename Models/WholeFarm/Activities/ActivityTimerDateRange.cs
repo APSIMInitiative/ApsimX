@@ -70,14 +70,17 @@ namespace Models.WholeFarm.Activities
 		/// Method to determine whether the activity is due
 		/// </summary>
 		/// <returns>Whether the activity is due in the current month</returns>
-		public bool ActivityDue()
+		public bool ActivityDue
 		{
-			bool inrange = ((Clock.Today >= startDate) && (Clock.Today <= endDate));
-			if(Invert)
-			{
-				inrange = !inrange;
-			}
-			return inrange;
+            get
+            {
+                bool inrange = ((Clock.Today >= startDate) && (Clock.Today <= endDate));
+                if (Invert)
+                {
+                    inrange = !inrange;
+                }
+                return inrange;
+            }
 		}
 	}
 }

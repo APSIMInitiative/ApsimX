@@ -57,9 +57,12 @@ namespace Models.WholeFarm.Activities
 		/// Method to determine whether the activity is due
 		/// </summary>
 		/// <returns>Whether the activity is due in the current month</returns>
-		public bool ActivityDue()
+		public bool ActivityDue
 		{
-			return (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month);
+			get
+            {
+                return (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month);
+            }
 		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -68,7 +71,7 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("EndOfMonth")]
 		private void OnEndOfMonth(object sender, EventArgs e)
 		{
-			if (this.ActivityDue())
+			if (this.ActivityDue)
 			{
 				NextDueDate = NextDueDate.AddMonths(Interval);
 			}

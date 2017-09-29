@@ -41,15 +41,24 @@ namespace Models.WholeFarm.Activities
 		public ActivityStatus Status { get; set; }
 
 		/// <summary>
-		/// Method to check if timing of this activity is ok based on child ActivityTimers
+		/// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
 		/// </summary>
 		/// <returns>T/F</returns>
 		public bool TimingOK
 		{
 			get
 			{
+                int result = 0;
+                IModel current = this;
+                while (current.GetType() != typeof(WholeFarm))
+                {
+                    result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                    current = current.Parent as IModel;
+                }
+                return (result == 0);
+
 				// sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
-				return this.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.ActivityDue() ? 0 : 1) == 0;
+				// return this.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.ActivityDue() ? 0 : 1) == 0;
 			}
 		}
 

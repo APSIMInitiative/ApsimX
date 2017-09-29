@@ -15,6 +15,6 @@ namespace Models.WholeFarm
 		/// Method to determine whether the activity is due
 		/// </summary>
 		/// <returns>Whether the activity is due in the current month</returns>
-		bool ActivityDue();
+		bool ActivityDue { get; }
 	}
 }
