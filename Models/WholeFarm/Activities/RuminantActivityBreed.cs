@@ -49,7 +49,7 @@ namespace Models.WholeFarm.Activities
         {
             // Assignment of mothers was moved to RuminantHerd resource to ensure this is done even if no breeding activity is included
 
-            this.InitialiseHerd(false);
+            this.InitialiseHerd(false, true);
 
             // get labour specifications
             labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
@@ -63,10 +63,12 @@ namespace Models.WholeFarm.Activities
 		private void OnWFAnimalBreeding(object sender, EventArgs e)
 		{
             // check herd ok for breeding
-            this.CheckHerdIsSingleBreed();
+            // now done in CurrentHerd so less easy to forget to include.
+            // slight additional overhead.
+//            this.CheckHerd();
 
 //			RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            List<Ruminant> herd = CurrentHerd(); //ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
+            List<Ruminant> herd = CurrentHerd(true); //ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
 
 			// get list of all individuals of breeding age and condition
 			// grouped by location
@@ -117,13 +119,22 @@ namespace Models.WholeFarm.Activities
 					double limiter = Math.Min(cashlimit, labourlimit);
 					numberPossible = Convert.ToInt32(limiter * breedersCount);
 
-					// TODO: determine if fixed payments were not possible
-					// TODO: determine limits by insufficient labour or cash for per head payments
-				}
-			}
+                    // TODO: determine if fixed payments were not possible
+                    // TODO: determine limits by insufficient labour or cash for per head payments
 
-			// for each location where parts of this herd are located
-			foreach (var location in breeders)
+                }
+                // report that this activity was performed as it does not use base GetResourcesRequired
+                this.TriggerOnActivityPerformed();
+            }
+            
+            if(!UseAI)
+            {
+                // report that this activity was performed as it does not use base GetResourcesRequired
+                this.TriggerOnActivityPerformed();
+            }
+
+            // for each location where parts of this herd are located
+            foreach (var location in breeders)
 			{
 				// determine all foetus and newborn mortality.
 				foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
@@ -212,9 +223,9 @@ namespace Models.WholeFarm.Activities
 							}
 						}
 					}
-				}
-				// controlled conception
-				else
+                }
+                // controlled conception
+                else
 				{
 					if (this.TimingOK)
 					{
@@ -234,9 +245,9 @@ namespace Models.WholeFarm.Activities
 								}
 							}
 						}
-					}
+                    }
 
-				}
+                }
 			}
 		}
 
@@ -314,7 +325,7 @@ namespace Models.WholeFarm.Activities
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
             // get only breeders for labour calculations
-            List<Ruminant> herd = CurrentHerd().Where(a => a.Gender == Sex.Female &
+            List<Ruminant> herd = CurrentHerd(true).Where(a => a.Gender == Sex.Female &
 							a.Age >= a.BreedParams.MinimumAge1stMating & a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).ToList();
 			int head = herd.Count();
 			double AE = herd.Sum(a => a.AdultEquivalent);

@@ -33,16 +33,25 @@ namespace Models.WholeFarm.Activities
         /// </summary>
         public string PredictedHerdName { get; set; }
 
-        private string herdName = "N/A";
+        /// <summary>
+        /// Breed determined for this activity
+        /// </summary>
+        public string PredictedHerdBreed { get; set; }
+
+        private bool reportedRestrictedBreed = false;
         private bool reportedRestrictedHerd = false;
+        private bool allowMultipleBreeds;
+        private bool allowMultipleHerds;
 
         /// <summary>
         /// Method to get the set herd filters
         /// </summary>
-        public void InitialiseHerd(bool AllowMultipleBreeds)
+        public void InitialiseHerd(bool AllowMultipleBreeds, bool AllowMultipleHerds)
         {
             GetHerdFilters();
-            PredictedHerdName = DetermineHerdName(AllowMultipleBreeds);
+            allowMultipleBreeds = AllowMultipleBreeds;
+            allowMultipleHerds = AllowMultipleHerds;
+            DetermineHerdName();
         }
 
         /// <summary>
@@ -70,11 +79,15 @@ namespace Models.WholeFarm.Activities
         /// <summary>
         /// Gets the current herd from all herd filters above
         /// </summary>
-        public List<Ruminant> CurrentHerd()
+        public List<Ruminant> CurrentHerd(bool IncludeCheckHeadMeetsCriteria)
         {
             if (HerdFilters == null)
             {
                 throw new ApsimXException(this, "Herd filters have not been defined for ["+ this.Name +"]"+ Environment.NewLine + "You need to perfrom InitialiseHerd() in WFInitialiseActivity for this activity.");
+            }
+            if(IncludeCheckHeadMeetsCriteria)
+            {
+                CheckHerd();
             }
             List<Ruminant> herd = Resources.RuminantHerd().Herd;
             foreach (RuminantFilterGroup filter in HerdFilters)
@@ -87,24 +100,36 @@ namespace Models.WholeFarm.Activities
         /// <summary>
         /// Determines the herd name from individuals available, filter details or resources
         /// </summary>
-        private string DetermineHerdName(bool AllowMultipleBreeds)
+        private void DetermineHerdName()
         {
-            //string herdName = "";
-            // get herd name for use if no individuals are available.
-            var herd = CurrentHerd();
+            PredictedHerdBreed = "N/A";
+            PredictedHerdName = "N/A";
+
+            // get herd name and breed for use if no individuals are available.
+
+            var herd = CurrentHerd(false);
             // check for multiple breeds
-            if (herd.Select(a => a.Breed).Distinct().Count() > 1 & !AllowMultipleBreeds)
+            if (herd.Select(a => a.Breed).Distinct().Count() > 1)
             {
-                if (!AllowMultipleBreeds)
+                if (!allowMultipleBreeds)
                 {
-                    throw new ApsimXException(this, "Multiple breeds or herd types were detected in current herd for [" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
+                    throw new ApsimXException(this, "Multiple breeds were detected in current herd for [" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single breed for this activity.");
                 }
-                herdName = "Multiple";
+                PredictedHerdBreed = "Multiple";
+            }
+            if (herd.Select(a => a.HerdName).Distinct().Count() > 1)
+            {
+                if (!allowMultipleHerds)
+                {
+                    throw new ApsimXException(this, "Multiple herd names were detected in current herd for [" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
+                }
+                PredictedHerdName = "Multiple";
             }
 
             if (herd.Count() > 0)
             {
-                herdName = herd.FirstOrDefault().Breed;
+                PredictedHerdBreed = herd.FirstOrDefault().Breed;
+                PredictedHerdName = herd.FirstOrDefault().HerdName;
             }
             else
             {
@@ -115,7 +140,8 @@ namespace Models.WholeFarm.Activities
                 // try use the only herd in the model
                 else if (Resources.RuminantHerd().Children.Count == 1)
                 {
-                    herdName = (Resources.RuminantHerd().Children[0] as RuminantType).Breed;
+                    PredictedHerdBreed = (Resources.RuminantHerd().Children[0] as RuminantType).Breed;
+                    PredictedHerdName = (Resources.RuminantHerd().Children[0] as RuminantType).Name;
                 }
                 else
                 // look through filters for a herd name
@@ -126,36 +152,63 @@ namespace Models.WholeFarm.Activities
                         {
                             if (filter.Parameter == RuminantFilterParameters.Breed)
                             {
-                                if (herdName != "N/A" & !AllowMultipleBreeds)
+                                if (PredictedHerdBreed != "N/A" & !allowMultipleBreeds)
                                 {
                                     // multiple breeds in filter.
-                                    throw new ApsimXException(this, "Multiple breed names are used to filter the herd for Activity [" + this.Name + "]" + Environment.NewLine + "Ensure the herd comprises of a single breed or herd type for this activity.");
+                                    throw new ApsimXException(this, "Multiple breeds are used to filter the herd for Activity [" + this.Name + "]" + Environment.NewLine + "Ensure the herd comprises of a single breed for this activity.");
                                 }
-                                herdName = filter.Value;
+                                PredictedHerdBreed = filter.Value;
+                            }
+                            if (filter.Parameter == RuminantFilterParameters.HerdName)
+                            {
+                                if (PredictedHerdName != "N/A" & !allowMultipleHerds)
+                                {
+                                    // multiple breeds in filter.
+                                    throw new ApsimXException(this, "Multiple herd names are used to filter the herd for Activity [" + this.Name + "]" + Environment.NewLine + "Ensure the herd comprises of a single herd for this activity.");
+                                }
+                                PredictedHerdName = filter.Value;
                             }
                         }
                     }
                 }
             }
-            return herdName;
         }
 
         /// <summary>
         /// Method to check single breed status of herd for activities.
         /// </summary>
-        public void CheckHerdIsSingleBreed()
+        private void CheckHerd()
         {
-            // check for multiple breeds
-            if (this.CurrentHerd().Select(a => a.Breed).Distinct().Count() > 1)
+            List<Ruminant> herd = CurrentHerd(false);
+            if (!allowMultipleBreeds)
             {
-                throw new ApsimXException(this, "Multiple breeds or herd types were detected in current herd for Manage Activity [" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
+                // check for multiple breeds
+                if (herd.Select(a => a.Breed).Distinct().Count() > 1)
+                {
+                    throw new ApsimXException(this, "Multiple breeds were detected in current herd for Manage Activity [" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single breed for this activity.");
+                }
+                // check for filter limited herd and set warning
+                List<Ruminant> fullHerd = Resources.RuminantHerd().Herd.Where(a => a.Breed == PredictedHerdBreed).ToList();
+                if (fullHerd.Count() != herd.Count() & !reportedRestrictedBreed)
+                {
+                    Summary.WriteWarning(this, String.Format("Warning! The herd being used for Manage Activity [" + this.Name + "] is a subset of the available herd for the breed." + Environment.NewLine + "Check that Ruminant Group Filtering is not restricting the herd as the activity is not considering all individuals."));
+                    reportedRestrictedHerd = true;
+                }
             }
-            // check for filter limited herd and set warning
-            List<Ruminant> fullHerd = Resources.RuminantHerd().Herd.Where(a => a.Breed == herdName).ToList();
-            if (fullHerd.Count() != this.CurrentHerd().Count() & !reportedRestrictedHerd)
+            if (!allowMultipleHerds)
             {
-                Summary.WriteWarning(this, String.Format("Warning! The herd being used for Manage Activity [" + this.Name + "] is a subset of the available herd for the breed." + Environment.NewLine + "Check that Ruminant Group Filtering is not restricting the herd as the activity is not considering all individuals."));
-                reportedRestrictedHerd = true;
+                // check for multiple breeds
+                if (herd.Select(a => a.HerdName).Distinct().Count() > 1)
+                {
+                    throw new ApsimXException(this, "Multiple herd types were detected in current herd for Manage Activity [" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
+                }
+                // check for filter limited herd and set warning
+                List<Ruminant> fullHerd = Resources.RuminantHerd().Herd.Where(a => a.HerdName == PredictedHerdName).ToList();
+                if (fullHerd.Count() != herd.Count() & !reportedRestrictedHerd)
+                {
+                    Summary.WriteWarning(this, String.Format("Warning! The herd being used for Manage Activity [" + this.Name + "] is a subset of the available herd for the herd name." + Environment.NewLine + "Check that Ruminant Group Filtering is not restricting the herd as the activity is not considering all individuals."));
+                    reportedRestrictedHerd = true;
+                }
             }
         }
 

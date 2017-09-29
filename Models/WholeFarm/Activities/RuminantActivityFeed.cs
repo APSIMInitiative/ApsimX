@@ -87,7 +87,7 @@ namespace Models.WholeFarm.Activities
         private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
             // get all ui tree herd filters that relate to this activity
-            this.InitialiseHerd(true);
+            this.InitialiseHerd(true, true);
 
             // locate FeedType resource
             FeedType = Resources.GetResourceItem(this, typeof(AnimalFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
@@ -105,7 +105,7 @@ namespace Models.WholeFarm.Activities
 		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			ResourceRequestList = null;
-			List<Ruminant> herd = CurrentHerd();
+			List<Ruminant> herd = CurrentHerd(false);
 			int head = 0;
 			double AE = 0;
 			foreach (RuminantFeedGroup child in Apsim.Children(this, typeof(RuminantFeedGroup)))
@@ -202,7 +202,7 @@ namespace Models.WholeFarm.Activities
 		{
 //			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 //			List<Ruminant> herd = ruminantHerd.Herd;
-            List<Ruminant> herd = CurrentHerd();
+            List<Ruminant> herd = CurrentHerd(false);
             if (herd != null && herd.Count > 0)
 			{
 				// calculate labour limit

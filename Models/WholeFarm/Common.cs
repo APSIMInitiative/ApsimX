@@ -59,10 +59,14 @@ namespace Models.WholeFarm
 		/// Excess breeder sold
 		/// </summary>
 		ExcessBreederSale,
-		/// <summary>
-		/// Excess bull sold
-		/// </summary>
-		ExcessBullSale,
+        /// <summary>
+        /// Excess heifer sold
+        /// </summary>
+        ExcessHeiferSale,
+        /// <summary>
+        /// Excess bull sold
+        /// </summary>
+        ExcessBullSale,
 		/// <summary>
 		/// Individual reached maximim age and sold
 		/// </summary>

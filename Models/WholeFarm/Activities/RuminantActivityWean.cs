@@ -56,7 +56,7 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("WFInitialiseActivity")]
         private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(false);
+            this.InitialiseHerd(false, true);
             // check GrazeFoodStoreExists
             if ((GrazeFoodStoreName??"") != "")
             {
@@ -73,9 +73,8 @@ namespace Models.WholeFarm.Activities
             // if management month
             if (this.TimingOK)
             {
-                this.CheckHerdIsSingleBreed();
                 // Perform weaning
-                foreach (var ind in this.CurrentHerd().Where(a => a.Weaned == false))
+                foreach (var ind in this.CurrentHerd(true).Where(a => a.Weaned == false))
                 {
                     if (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight)
                     {
@@ -83,6 +82,8 @@ namespace Models.WholeFarm.Activities
                         ind.Location = GrazeFoodStoreName;
                     }
                 }
+                // report that this activity was performed as it does not use base GetResourcesRequired
+                this.TriggerOnActivityPerformed();
             }
         }
 

@@ -79,7 +79,7 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("WFInitialiseActivity")]
         private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(true);
+            this.InitialiseHerd(true, true);
 		}
 
 		/// <summary>
@@ -93,7 +93,7 @@ namespace Models.WholeFarm.Activities
 			if (this.TimingOK)
 			{
 				double amountNeeded = 0;
-                List<Ruminant> herd = this.CurrentHerd();
+                List<Ruminant> herd = this.CurrentHerd(false);
 				switch (PaymentStyle)
 				{
 					case AnimalPaymentStyleType.Fixed:
