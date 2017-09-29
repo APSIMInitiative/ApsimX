@@ -776,6 +776,10 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivitySellDryBreeders.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityTrade.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityPredictiveStocking.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityPredictiveStockingENSO.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityMilking.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityMuster.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AnimalPriceEntry.png" />
