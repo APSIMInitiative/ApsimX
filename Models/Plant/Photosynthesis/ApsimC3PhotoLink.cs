@@ -6,37 +6,37 @@ using Models.Core;
 namespace Models.PMF.Phenology
 {
     /// <summary>
-    /// 
+    /// Entry point for Photosynthesis model
     /// </summary>
     public class ApsimC3PhotoLink : Model
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="DOY"></param>
-        /// <param name="latitude"></param>
-        /// <param name="maxT"></param>
-        /// <param name="minT"></param>
-        /// <param name="radn"></param>
-        /// <param name="lai"></param>
-        /// <param name="SLN"></param>
-        /// <param name="soilWaterAvail"></param>
-        /// <param name="B"></param>
-        /// <param name="RootShootRatio"></param>
-        /// <param name="LeafAngle"></param>
-        /// <param name="SLNRatioTop"></param>
-        /// <param name="psiVc"></param>
-        /// <param name="psiJ"></param>
-        /// <param name="psiRd"></param>
-        /// <param name="psiFactor"></param>
-        /// <param name="Ca"></param>
-        /// <param name="CiCaRatio"></param>
-        /// <param name="gm25"></param>
-        /// <param name="structuralN"></param>
+        /// <param name="DOY">Day of year</param>
+        /// <param name="latitude">Latitude</param>
+        /// <param name="maxT">Maximum temp</param>
+        /// <param name="minT">Minimum temp</param>
+        /// <param name="radn">Radiation</param>
+        /// <param name="lai">LAI</param>
+        /// <param name="SLN">SLN</param>
+        /// <param name="soilWaterAvail">Soil Water Supply</param>
+        /// <param name="B">Unknown. Set to 1 for now.</param>
+        /// <param name="RootShootRatio">Root Shoot Ratio</param>
+        /// <param name="LeafAngle">Leaf Angle 0 horizontal, 90 vertical</param>
+        /// <param name="SLNRatioTop">The ratio of SLN concentration at the top as a multiplier on avg SLN from Apsim</param>
+        /// <param name="psiVc">Slope of linear relationship between Vmax per leaf are at 25°C and N, μmol CO2 mmol-1 N s-1</param>
+        /// <param name="psiJ">Slope of linear relationship between Jmax per leaf are at 25°C and N, μmol CO2 mmol-1 N s-1</param>
+        /// <param name="psiRd">Slope of linear relationship between Rd per leaf are at 25°C and N, μmol CO2 mmol-1 N s-1</param>
+        /// <param name="psiFactor">Psi reduction factor that applies to all psi values. Can use as a genetic factor</param>
+        /// <param name="Ca">Air CO2 partial pressure</param>
+        /// <param name="CiCaRatio">Ratio of Ci to Ca, μbar</param>
+        /// <param name="gm25">Mesophyll conductance for CO2 @ 25degrees, mol CO2 m-2 ground s-1 bar-1</param>
+        /// <param name="structuralN">Amount of N needed to retain structure. Below this photosynthesis does not occur</param>
         /// <returns></returns>
         public double[] calc(int DOY, double latitude, double maxT, double minT, double radn, double lai, double SLN, double soilWaterAvail,
-            double B, double RootShootRatio, double LeafAngle, double SLNRatioTop, double psiVc, double psiJ, double psiRd,
-            double psiFactor, double Ca, double CiCaRatio, double gm25, double structuralN) //0 = simple conductance
+            double B, double RootShootRatio, double LeafAngle, double SLNRatioTop = 1.32, double psiVc = 1.16, double psiJ = 2.4, double psiRd = 0.0116,
+            double psiFactor = 1, double Ca = 400, double CiCaRatio = 0.7, double gm25 = 0.55, double structuralN = 25)
         {
             PhotosynthesisModelC3 PM = new PhotosynthesisModelC3();
             PM.initialised = false;
