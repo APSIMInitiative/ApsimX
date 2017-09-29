@@ -609,6 +609,9 @@ namespace UserInterface.Presenters
                     this.presenters2.RemoveAt(e.Index - 1);
                 }
             }
+            // We've just closed Simulations
+            // This is a good time to force garbage collection 
+            GC.Collect();
         }
 
         /// <summary>Event handler invoked when user clicks on 'Standard toolbox'</summary>
