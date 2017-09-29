@@ -21,11 +21,13 @@ namespace Models.WholeFarm.Resources
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
+        [Link]
+        ISummary Summary = null;
 
-		/// <summary>
-		/// Gender
-		/// </summary>
-		[Description("Gender")]
+        /// <summary>
+        /// Gender
+        /// </summary>
+        [Description("Gender")]
         [Required]
         public Sex Gender { get; set; }
 
@@ -64,11 +66,18 @@ namespace Models.WholeFarm.Resources
         [Required]
         public bool Suckling { get; set; }
 
-		/// <summary>
-		/// Create the individual ruminant animals using the Cohort parameterisations.
-		/// </summary>
-		/// <returns></returns>
-		public List<Ruminant> CreateIndividuals()
+        /// <summary>
+        /// Breeding sire?
+        /// </summary>
+        [Description("breeding sire?")]
+        [Required]
+        public bool Sire { get; set; }
+
+        /// <summary>
+        /// Create the individual ruminant animals using the Cohort parameterisations.
+        /// </summary>
+        /// <returns></returns>
+        public List<Ruminant> CreateIndividuals()
 		{
 			List<Ruminant> Individuals = new List<Ruminant>();
 
@@ -101,6 +110,18 @@ namespace Models.WholeFarm.Resources
 					ruminant.Age = StartingAge;
 					ruminant.SaleFlag = HerdChangeReason.None;
 					if (Suckling) ruminant.SetUnweaned();
+                    if (Sire)
+                    {
+                        if(this.Gender == Sex.Male)
+                        {
+                            RuminantMale ruminantMale = ruminantBase as RuminantMale;
+                            ruminantMale.BreedingSire = true;
+                        }
+                        else
+                        {
+                            Summary.WriteWarning(this, "Breeding sire switch is not valid for individual females");
+                        }
+                    }
 
 					double u1 = WholeFarm.RandomGenerator.NextDouble();
 					double u2 = WholeFarm.RandomGenerator.NextDouble();

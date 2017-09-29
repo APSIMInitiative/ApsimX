@@ -169,7 +169,9 @@ namespace Models.WholeFarm.Resources
 						return 1;
 					case HerdChangeReason.HeiferPurchase:
 						return 1;
-					case HerdChangeReason.SirePurchase:
+                    case HerdChangeReason.ExcessHeiferSale:
+                        return -1;
+                    case HerdChangeReason.SirePurchase:
 						return 1;
 					case HerdChangeReason.Consumed:
 						return -1;
