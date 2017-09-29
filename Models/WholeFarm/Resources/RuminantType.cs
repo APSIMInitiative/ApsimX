@@ -17,6 +17,9 @@ namespace Models.WholeFarm.Resources
     [ValidParent(ParentType = typeof(RuminantHerd))]
     public class RuminantType : WFModel
     {
+        [Link]
+        ISummary Summary = null;
+
         /// <summary>
         /// Breed
         /// </summary>
@@ -88,8 +91,14 @@ namespace Models.WholeFarm.Resources
 			{
 				// ordering now done when the list is created for speed
 				//AnimalPriceValue getvalue = PriceList.Where(a => a.Age < ind.Age).OrderBy(a => a.Age).LastOrDefault();
-				AnimalPriceValue getvalue = PriceList.Where(a => a.Age < ind.Age).LastOrDefault();
-				if(PurchasePrice)
+				AnimalPriceValue getvalue = PriceList.Where(a => a.Age <= ind.Age).LastOrDefault();
+                if(getvalue == null)
+                {
+                    getvalue = PriceList.OrderBy(a => a.Age).FirstOrDefault();
+                    Summary.WriteWarning(this, "No pricing was found for indiviudal [" + ind.HerdName + "] of age [" + ind.Age + "]");
+                    Summary.WriteWarning(this, "Using pricing for individual of age [" + getvalue.Age + "]");
+                }
+                if (PurchasePrice)
 				{
 					return getvalue.PurchaseValue * ((getvalue.Style == PricingStyleType.perKg) ? ind.Weight : 1.0);
 				}
