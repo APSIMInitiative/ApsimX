@@ -99,23 +99,23 @@ namespace Models.WholeFarm.Activities
 			{
 				// calculate dry season pasture available for each managed paddock holding stock not flagged for sale
 				RuminantHerd ruminantHerd = Resources.RuminantHerd();
-				foreach (var newgroup in ruminantHerd.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
+				foreach (var paddockGroup in ruminantHerd.Herd.Where(a => a.Location != "" & a.SaleFlag == HerdChangeReason.None).GroupBy(a => a.Location))
 				{
 					// total adult equivalents of all breeds on pasture for utilisation
-					double AETotal = newgroup.Sum(a => a.AdultEquivalent);
+					double AETotal = paddockGroup.Sum(a => a.AdultEquivalent);
 					// determine AE marked for sale and purchase of managed herd
-					double AEmarkedForSale = newgroup.Where(a => a.ReadyForSale & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
-					double AEPurchase = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == newgroup.Key & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
+					double AEmarkedForSale = paddockGroup.Where(a => a.ReadyForSale & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
+					double AEPurchase = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == paddockGroup.Key & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
 
 					double ShortfallAE = 0;
 					// Determine total feed requirements for dry season for all ruminants on the pasture
 					// We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
 					ShortfallAE = 0;
-					GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), newgroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+					GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), paddockGroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 					double pastureBiomass = pasture.Amount;
 
-					// and Adjust fodder balance for detachment rate (6%/month)
-					double feedRequiredAE = newgroup.FirstOrDefault().BreedParams.BaseAnimalEquivalent * 0.02 * 30.4; //  2% of AE animal per day
+					// Adjust fodder balance for detachment rate (6%/month)
+					double feedRequiredAE = paddockGroup.FirstOrDefault().BreedParams.BaseAnimalEquivalent * 0.02 * 30.4; //  2% of AE animal per day
 					for (int i = 0; i < this.DrySeasonLength; i++)
 					{
 						pastureBiomass *= (1.0 - pasture.DetachRate);
@@ -134,7 +134,7 @@ namespace Models.WholeFarm.Activities
 					ShortfallAE = pastureShortFallKg / feedRequiredAE;
 
 					// get prediction
-					HandleDestocking(ShortfallAE, newgroup.Key);
+					HandleDestocking(ShortfallAE, paddockGroup.Key);
 				}
 			}
 		}

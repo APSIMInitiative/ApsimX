@@ -18,10 +18,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivityMuster: WFActivityBase
+	public class RuminantActivityMuster: WFRuminantActivityBase
 	{
-		[Link]
-		Clock Clock = null;
 		[Link]
 		private ResourcesHolder Resources = null;
 
@@ -53,7 +51,7 @@ namespace Models.WholeFarm.Activities
         [Required]
         public bool MoveSucklings { get; set; }
 
-		private GrazeFoodStoreType pasture { get; set; }
+		private GrazeFoodStoreType Pasture { get; set; }
 		private List<LabourFilterGroupSpecified> labour { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -62,11 +60,13 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("WFInitialiseActivity")]
         private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
+            this.InitialiseHerd(true, true);
+
             // link to graze food store type pasture to muster to
             // blank is general yards.
             if (ManagedPastureName != "")
 			{
-				pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+				Pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 			}
 
 			// get labour specifications
@@ -76,40 +76,29 @@ namespace Models.WholeFarm.Activities
 
 		private void Muster()
 		{
-			// get herd to muster
-			RuminantHerd ruminantHerd = Resources.RuminantHerd();
-			List<Ruminant> herd = ruminantHerd.Herd;
+            foreach (Ruminant ind in this.CurrentHerd(false))
+            {
+                // set new location ID
+                ind.Location = Pasture.Name;
 
-			if (herd == null && herd.Count == 0) return;
-
-			// get filters for individuals to muster
-			foreach (RuminantFilterGroup filtergroup in Apsim.Children(this, typeof(RuminantFilterGroup)))
-			{
-				// get list from filters
-				foreach (Ruminant ind in herd.Filter(filtergroup))
-				{
-					// set new location ID
-					ind.Location = pasture.Name;
-
-					// check if sucklings are to be moved with mother
-					if (MoveSucklings)
-					{
-						// if female
-						if (ind.GetType() == typeof(RuminantFemale))
-						{
-							RuminantFemale female = ind as RuminantFemale;
-							// check if mother with sucklings
-							if (female.SucklingOffspring.Count > 0)
-							{
-								foreach (var suckling in female.SucklingOffspring)
-								{
-									suckling.Location = pasture.Name;
-								}
-							}
-						}
-					}
-				}
-			}
+                // check if sucklings are to be moved with mother
+                if (MoveSucklings)
+                {
+                    // if female
+                    if (ind.GetType() == typeof(RuminantFemale))
+                    {
+                        RuminantFemale female = ind as RuminantFemale;
+                        // check if mother with sucklings
+                        if (female.SucklingOffspring.Count > 0)
+                        {
+                            foreach (var suckling in female.SucklingOffspring)
+                            {
+                                suckling.Location = Pasture.Name;
+                            }
+                        }
+                    }
+                }
+            }
 		}
 
 		/// <summary>
@@ -119,17 +108,11 @@ namespace Models.WholeFarm.Activities
 		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			ResourceRequestList = null;
-			if (Clock.Today.Month == Month)
+			if (this.TimingOK)
 			{
-
-				int head = 0;
-				double AE = 0;
-				foreach (var item in this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)))
-				{
-					List<Ruminant> herd = Resources.RuminantHerd().Herd.Filter(item);
-					head += herd.Count();
-					AE += herd.Sum(a => a.AdultEquivalent);
-				}
+                List<Ruminant> herd = this.CurrentHerd(false);
+                int head = herd.Count();
+                double AE = herd.Sum(a => a.AdultEquivalent);
 
 				if (head == 0) return null;
 
@@ -177,7 +160,7 @@ namespace Models.WholeFarm.Activities
 		{
 			// check if labour provided or PartialResources allowed
 
-			if (Clock.Today.Month == Month)
+			if (this.TimingOK)
 			{
 				// move individuals
 				Muster();

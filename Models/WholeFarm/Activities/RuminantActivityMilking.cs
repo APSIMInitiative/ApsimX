@@ -17,17 +17,17 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivityMilking: WFActivityBase
+	public class RuminantActivityMilking: WFRuminantActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
 
-		/// <summary>
-		/// Herd to milk
-		/// </summary>
-		[Description("Name of herd to milk")]
-        [Required]
-        public string HerdName { get; set; }
+		///// <summary>
+		///// Herd to milk
+		///// </summary>
+		//[Description("Name of herd to milk")]
+  //      [Required]
+  //      public string HerdName { get; set; }
 
 		/// <summary>
 		/// Labour settings
@@ -42,6 +42,8 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("WFInitialiseActivity")]
         private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
+            this.InitialiseHerd(false, true);
+
             // get labour specifications
             labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
@@ -57,8 +59,9 @@ namespace Models.WholeFarm.Activities
 		private void OnWFMilking(object sender, EventArgs e)
 		{
 			// take all milk
-			List<RuminantFemale> herd = Resources.RuminantHerd().Herd.Where(a => a.HerdName == HerdName & a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
-			double milkTotal = herd.Sum(a => a.MilkAmount);
+//			List<RuminantFemale> herd = Resources.RuminantHerd().Herd.Where(a => a.HerdName == HerdName & a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
+            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
+            double milkTotal = herd.Sum(a => a.MilkAmount);
 			if (milkTotal > 0)
 			{
 				// set these females to state milking perfomred so they switch to the non-suckling milk production curves.
@@ -74,7 +77,7 @@ namespace Models.WholeFarm.Activities
 					labourLimit = labourProvided / labourNeeded;
 				}
 
-				milkStore.Add(milkTotal * labourLimit, this.Name, HerdName);
+				milkStore.Add(milkTotal * labourLimit, this.Name, this.PredictedHerdName);
 			}
 		}
 
@@ -86,8 +89,9 @@ namespace Models.WholeFarm.Activities
 		{
 			ResourceRequestList = null;
 
-			List<RuminantFemale> herd = Resources.RuminantHerd().Herd.Where(a => a.HerdName == HerdName & a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
-			int head = herd.Count();
+//			List<RuminantFemale> herd = Resources.RuminantHerd().Herd.Where(a => a.HerdName == HerdName & a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
+            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
+            int head = herd.Count();
 			if (head > 0)
 			{
 				// for each labour item specified
