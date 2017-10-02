@@ -4505,8 +4505,8 @@
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
               <HerdFilters />
-              <MinMonthsKept>0</MinMonthsKept>
-              <TradeWeight>0</TradeWeight>
+              <MinMonthsKept>12</MinMonthsKept>
+              <TradeWeight>520</TradeWeight>
             </RuminantActivityTrade>
             <RuminantActivityBuySell>
               <Name>Buy and sell</Name>

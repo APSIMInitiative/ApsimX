@@ -35,7 +35,7 @@ namespace Models.WholeFarm.Activities
         public string BankAccountName { get; set; }
 
 		private FinanceType bankAccount = null;
-		private Finance finance = null;
+//		private Finance finance = null;
 		private List<LabourFilterGroupSpecified> labour = null;
 		private TruckingSettings trucking = null;
 
@@ -55,12 +55,27 @@ namespace Models.WholeFarm.Activities
 
 			// get trucking settings
 			trucking = Apsim.Children(this, typeof(TruckingSettings)).FirstOrDefault() as TruckingSettings;
-		}
 
-		/// <summary>An event handler to call for animal purchases</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFAnimalBuy")]
+            // check if pricing is present
+            if (bankAccount != null)
+            {
+                RuminantHerd ruminantHerd = Resources.RuminantHerd();
+                var breeds = ruminantHerd.Herd.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).GroupBy(a => a.HerdName);
+                foreach (var herd in breeds)
+                {
+                    if (!herd.FirstOrDefault().BreedParams.PricingAvailable())
+                    {
+                        Summary.WriteWarning(this, String.Format("No pricing schedule has been provided for herd ({0}). No transactions will be recorded for activity ({1}).", herd.Key, this.Name));
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>An event handler to call for animal purchases</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("WFAnimalBuy")]
 		private void OnWFAnimalBuy(object sender, EventArgs e)
 		{
             if (TimingOK)
@@ -144,11 +159,13 @@ namespace Models.WholeFarm.Activities
                     }
 				}
             }
-            if (bankAccount != null && (trucks > 0 || trucking == null))
+            if (bankAccount != null && head > 0) //(trucks > 0 || trucking == null)
             {
-                ResourceRequest expenseRequest = new ResourceRequest();
-                expenseRequest.ActivityModel = this;
-                expenseRequest.AllowTransmutation = false;
+                ResourceRequest expenseRequest = new ResourceRequest
+                {
+                    ActivityModel = this,
+                    AllowTransmutation = false
+                };
 
                 // calculate transport costs
                 if (trucking != null)
@@ -182,7 +199,10 @@ namespace Models.WholeFarm.Activities
                 }
 
                 // add and remove from bank
-                bankAccount.Add(saleValue, this.Name, "Sales");
+                if(saleValue > 0)
+                {
+                    bankAccount.Add(saleValue, this.Name, this.PredictedHerdName+" sales");
+                }
             }
 
         }
@@ -205,7 +225,7 @@ namespace Models.WholeFarm.Activities
 			bool fundsexceeded = false;
 			foreach (var newind in herd)
 			{
-				if (finance != null)  // perform with purchasing
+				if (bankAccount != null)  // perform with purchasing
 				{
 					double value = 0;
 					if (newind.SaleFlag == HerdChangeReason.SirePurchase)
@@ -218,6 +238,8 @@ namespace Models.WholeFarm.Activities
 					}
 					if (cost + value <= fundsAvailable & fundsexceeded == false)
 					{
+                        ruminantHerd.PurchaseIndividuals.Remove(newind);
+                        newind.ID = ruminantHerd.NextUniqueID;
 						ruminantHerd.AddRuminant(newind);
 						cost += value;
 					}
@@ -229,18 +251,22 @@ namespace Models.WholeFarm.Activities
 				}
 				else // no financial transactions
 				{
-					ruminantHerd.AddRuminant(newind);
+                    ruminantHerd.PurchaseIndividuals.Remove(newind);
+                    newind.ID = ruminantHerd.NextUniqueID;
+                    ruminantHerd.AddRuminant(newind);
 				}
 			}
 
 			if (bankAccount != null)
 			{
-				ResourceRequest purchaseRequest = new ResourceRequest();
-				purchaseRequest.ActivityModel = this;
-				purchaseRequest.Required = cost;
-				purchaseRequest.AllowTransmutation = false;
-				purchaseRequest.Reason = "Purchases";
-				bankAccount.Remove(purchaseRequest);
+                ResourceRequest purchaseRequest = new ResourceRequest
+                {
+                    ActivityModel = this,
+                    Required = cost,
+                    AllowTransmutation = false,
+                    Reason = this.PredictedHerdName + " purchases"
+                };
+                bankAccount.Remove(purchaseRequest);
 
 				// report any financial shortfall in purchases
 				if (shortfall > 0)
@@ -296,7 +322,7 @@ namespace Models.WholeFarm.Activities
 							AESum += ind.AdultEquivalent;
 							load450kgs += ind.Weight / 450.0;
 
-							if (finance != null)  // perform with purchasing
+							if (bankAccount != null)  // perform with purchasing
 							{
 								double value = 0;
 								if (ind.SaleFlag == HerdChangeReason.SirePurchase)
@@ -309,7 +335,8 @@ namespace Models.WholeFarm.Activities
 								}
 								if (cost + value <= fundsAvailable & fundsexceeded == false)
 								{
-									ruminantHerd.AddRuminant(ind);
+                                    ind.ID = ruminantHerd.NextUniqueID;
+                                    ruminantHerd.AddRuminant(ind);
 									ruminantHerd.PurchaseIndividuals.Remove(ind);
 									cost += value;
 								}
@@ -321,7 +348,8 @@ namespace Models.WholeFarm.Activities
 							}
 							else // no financial transactions
 							{
-								ruminantHerd.AddRuminant(ind);
+                                ind.ID = ruminantHerd.NextUniqueID;
+                                ruminantHerd.AddRuminant(ind);
 								ruminantHerd.PurchaseIndividuals.Remove(ind);
 							}
 
@@ -338,12 +366,14 @@ namespace Models.WholeFarm.Activities
 
 				if (bankAccount != null && (trucks > 0 || trucking == null))
 				{
-					ResourceRequest purchaseRequest = new ResourceRequest();
-					purchaseRequest.ActivityModel = this;
-					purchaseRequest.Required = cost;
-					purchaseRequest.AllowTransmutation = false;
-					purchaseRequest.Reason = "Purchases";
-					bankAccount.Remove(purchaseRequest);
+                    ResourceRequest purchaseRequest = new ResourceRequest
+                    {
+                        ActivityModel = this,
+                        Required = cost,
+                        AllowTransmutation = false,
+                        Reason = this.PredictedHerdName + " purchases"
+                    };
+                    bankAccount.Remove(purchaseRequest);
 
 					// report any financial shortfall in purchases
 					if (shortfall > 0)
@@ -357,12 +387,14 @@ namespace Models.WholeFarm.Activities
 						OnShortfallOccurred(rre);
 					}
 
-					ResourceRequest expenseRequest = new ResourceRequest();
-					expenseRequest.ActivityModel = this;
-					expenseRequest.AllowTransmutation = false;
+                    ResourceRequest expenseRequest = new ResourceRequest
+                    {
+                        ActivityModel = this,
+                        AllowTransmutation = false
+                    };
 
-					// calculate transport costs
-					if (trucking != null)
+                    // calculate transport costs
+                    if (trucking != null)
 					{
 						expenseRequest.Required = trucks * trucking.DistanceToMarket * trucking.CostPerKmTrucking;
 						expenseRequest.Reason = "Transport purchases";
@@ -463,21 +495,8 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public override void DoInitialisation()
 		{
-			// This must occur in ActivityInitialisation to ensure the herd has been created
-
-			// check if pricing is present
-			if (finance != null)
-			{
-				RuminantHerd ruminantHerd = Resources.RuminantHerd();
-				var breeds = ruminantHerd.Herd.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).GroupBy(a => a.HerdName);
-				foreach (var herd in breeds)
-				{
-					if (!herd.FirstOrDefault().BreedParams.PricingAvailable())
-					{
-						Summary.WriteWarning(this, String.Format("No pricing schedule has been provided for herd ({0}). No transactions will be recorded for activity ({1}).", herd.Key, this.Name));
-					}
-				}
-			}
+            // This must occur in ActivityInitialisation to ensure the herd has been created
+            return;
 		}
 
 		/// <summary>
