@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
+using Models.WholeFarm.Activities;
 
 namespace Models.WholeFarm.Resources
 {
@@ -17,7 +18,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantInitialCohorts))]
-	public class RuminantTypeCohort : WFModel
+    [ValidParent(ParentType = typeof(RuminantActivityTrade))]
+    public class RuminantTypeCohort : WFModel
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
@@ -34,30 +36,30 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Starting Age (Months)
 		/// </summary>
-		[Description("Starting Age")]
+		[Description("Age")]
         [Required]
-        public int StartingAge { get; set; }
+        public int Age { get; set; }
 
 		/// <summary>
 		/// Starting Number
 		/// </summary>
-		[Description("Starting Number")]
+		[Description("Number of individuals")]
         [Required]
-        public double StartingNumber { get; set; }
+        public double Number { get; set; }
 
 		/// <summary>
 		/// Starting Weight
 		/// </summary>
-		[Description("Starting Weight (kg)")]
+		[Description("Weight (kg)")]
         [Required]
-        public double StartingWeight { get; set; }
+        public double Weight { get; set; }
 
 		/// <summary>
 		/// Standard deviation of starting weight. Use 0 to use starting weight only
 		/// </summary>
-		[Description("Standard deviation of starting weight")]
+		[Description("Standard deviation of weight (0 weight only)")]
         [Required]
-        public double StartingWeightSD { get; set; }
+        public double WeightSD { get; set; }
 
 		/// <summary>
 		/// Is suckling?
@@ -69,7 +71,7 @@ namespace Models.WholeFarm.Resources
         /// <summary>
         /// Breeding sire?
         /// </summary>
-        [Description("breeding sire?")]
+        [Description("Breeding sire?")]
         [Required]
         public bool Sire { get; set; }
 
@@ -86,9 +88,9 @@ namespace Models.WholeFarm.Resources
 			// get Ruminant Herd resource for unique ids
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
-			if (StartingNumber > 0)
+			if (Number > 0)
 			{
-				for (int i = 1; i <= StartingNumber; i++)
+				for (int i = 1; i <= Number; i++)
 				{
 					object ruminantBase = null;
 					if(this.Gender == Sex.Male)
@@ -107,7 +109,7 @@ namespace Models.WholeFarm.Resources
 					ruminant.Breed = parent.Breed;
 					ruminant.HerdName = parent.Name;
 					ruminant.Gender = Gender;
-					ruminant.Age = StartingAge;
+					ruminant.Age = Age;
 					ruminant.SaleFlag = HerdChangeReason.None;
 					if (Suckling) ruminant.SetUnweaned();
                     if (Sire)
@@ -127,14 +129,14 @@ namespace Models.WholeFarm.Resources
 					double u2 = WholeFarm.RandomGenerator.NextDouble();
 					double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
 								 Math.Sin(2.0 * Math.PI * u2);
-					ruminant.Weight = StartingWeight + StartingWeightSD * randStdNormal;
+					ruminant.Weight = Weight + WeightSD * randStdNormal;
 					ruminant.PreviousWeight = ruminant.Weight;
 
 					if(this.Gender == Sex.Female)
 					{
 						RuminantFemale ruminantFemale = ruminantBase as RuminantFemale;
 						ruminantFemale.DryBreeder = true;
-						ruminantFemale.WeightAtConception = this.StartingWeight;
+						ruminantFemale.WeightAtConception = ruminant.Weight;
 						ruminantFemale.NumberOfBirths = 0;
 					}
 

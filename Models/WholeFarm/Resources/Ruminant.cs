@@ -53,11 +53,17 @@ namespace Models.WholeFarm.Resources
 		/// <units>Months</units>
 		public double Age { get; set; }
 
-		/// <summary>
-		/// Will return 0.1 if Age is 0 for calculations (Months)
-		/// </summary>
-		/// <units>Months</units>
-		public double AgeZeroCorrected
+        /// <summary>
+        /// Purchase age (Months)
+        /// </summary>
+        /// <units>Months</units>
+        public double PurchaseAge { get; set; }
+
+        /// <summary>
+        /// Will return 0.1 if Age is 0 for calculations (Months)
+        /// </summary>
+        /// <units>Months</units>
+        public double AgeZeroCorrected
 		{  get { return ((Age == 0) ? 0.1 : Age); } }
 
 		/// <summary>
