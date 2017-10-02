@@ -4758,7 +4758,7 @@ namespace Models.AgPasture
             {
                 // N demand is greater than fixation and remobilisation, N uptake is needed
                 senescedNRemobilised = RemobilisableSenescedN;
-                mySoilNDemand = demandLuxuryN - (fixedN + senescedNRemobilised);
+                mySoilNDemand = demandLuxuryN * GlfSoilFertility - (fixedN + senescedNRemobilised);
                 fracRemobilised = 1.0;
             }
 
