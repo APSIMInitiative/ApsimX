@@ -57,7 +57,7 @@ namespace Models.WholeFarm
     public class GreaterThanAttribute : ValidationAttribute
     {
         private const string DefaultErrorMessage =
-            "Value is less than the specified date";
+            "Value is less than the specified number";
 
         /// <summary>
         /// 
@@ -78,10 +78,10 @@ namespace Models.WholeFarm
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double minvalue = Convert.ToDouble(value);
+            double maxvalue = Convert.ToDouble(value);
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            double maxvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(CompareToFieldName).GetValue(validationContext.ObjectInstance, null));
+            double minvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(CompareToFieldName).GetValue(validationContext.ObjectInstance, null));
 
             if (maxvalue > minvalue)
             {

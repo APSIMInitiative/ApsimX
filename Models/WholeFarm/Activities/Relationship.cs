@@ -15,7 +15,8 @@ namespace Models.WholeFarm.Activities
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class Relationship: Model, IValidatableObject
+    [ValidParent(ParentType = typeof(PastureActivityManage))]
+    public class Relationship: Model, IValidatableObject
 	{
 		/// <summary>
 		/// Current value
@@ -35,7 +36,7 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[Description("Minimum value possible")]
         [Required]
-        public double Minumum { get; set; }
+        public double Minimum { get; set; }
 
 		/// <summary>
 		/// Maximum value possible
@@ -99,7 +100,7 @@ namespace Models.WholeFarm.Activities
 		{
 			Value += SolveY(x, true);
 			Value = Math.Min(Value, Maximum);
-			Value = Math.Max(Value, Minumum);
+			Value = Math.Max(Value, Minimum);
 		}
 
 		/// <summary>
@@ -110,7 +111,7 @@ namespace Models.WholeFarm.Activities
 		{
 			Value = SolveY(x, true);
 			Value = Math.Min(Value, Maximum);
-			Value = Math.Max(Value, Minumum);
+			Value = Math.Max(Value, Minimum);
 		}
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
