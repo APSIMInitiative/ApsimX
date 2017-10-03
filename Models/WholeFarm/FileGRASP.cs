@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 // -----------------------------------------------------------------------
 // <copyright file="WeatherFile.cs" company="APSIM Initiative">
@@ -37,7 +38,7 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.WFFileView")]
     [PresenterName("UserInterface.Presenters.WFFileGRASPPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
-    public class FileGRASP : Model
+    public class FileGRASP : WFModel
     {
         ///// <summary>
         ///// A link to the clock model.
@@ -174,6 +175,7 @@ namespace Models.WholeFarm
         /// </summary>
         [Summary]
         [Description("Pasture file name")]
+        [Required(AllowEmptyStrings = false, ErrorMessage ="Pasture file name must be supplied.")]
         public string FileName { get; set; }
 
         /// <summary>
@@ -185,7 +187,7 @@ namespace Models.WholeFarm
             get
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                if (simulation != null)
+                if (simulation != null & this.FileName != null)
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                 else
                     return this.FileName;
@@ -853,6 +855,7 @@ namespace Models.WholeFarm
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
+            if (this.FullFileName == null || this.FullFileName == "") return false;
             if (System.IO.File.Exists(this.FullFileName))
             {
                 if (this.reader == null)

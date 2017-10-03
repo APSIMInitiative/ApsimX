@@ -22,6 +22,8 @@ namespace Models.WholeFarm
 		ISummary Summary = null;
 		[Link]
 		Clock Clock = null;
+        [Link]
+        Simulation Simulation = null;
 
 		/// <summary>
 		/// Seed for random number generator (0 uses clock)
@@ -101,7 +103,7 @@ namespace Models.WholeFarm
             // validation is performed here
             // commencing is too early as Summary has not been created fro reporting.
             // some values assigned in commencing will not be checked bfore processing, but will be caught here
-            if (!Validate(this, ""))
+            if (!Validate(Simulation, ""))
             {
                 string error = "Invalid parameters in model (see summary for details)";
                 throw new ApsimXException(this, error);
