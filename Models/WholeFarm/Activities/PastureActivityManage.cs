@@ -134,7 +134,12 @@ namespace Models.WholeFarm.Activities
             if (GrassBasalArea == null)
             {
                 string[] memberNames = new string[] { "GrassBasalAreaRelationship" };
-                results.Add(new ValidationResult("Unable to locate grass Basal Area relationship in user interface"));
+                results.Add(new ValidationResult("Unable to locate grass Basal Area relationship in user interface", memberNames));
+            }
+            if (FileGRASP == null)
+            {
+                string[] memberNames = new string[] { "FileGRASP" };
+                results.Add(new ValidationResult("Unable to locate GRASP file. Add a FileGRASP model component to the user interface tree.", memberNames));
             }
             return results;
         }
