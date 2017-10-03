@@ -35,7 +35,6 @@ namespace Models.WholeFarm.Activities
         public string BankAccountName { get; set; }
 
 		private FinanceType bankAccount = null;
-//		private Finance finance = null;
 		private List<LabourFilterGroupSpecified> labour = null;
 		private TruckingSettings trucking = null;
 
@@ -157,6 +156,8 @@ namespace Models.WholeFarm.Activities
 //						herd = ruminantHerd.Herd.Where(a => a.SaleFlag != HerdChangeReason.None & a.Breed == this.PredictedHerdName).OrderByDescending(a => a.Weight).ToList();
                         herd = this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight).ToList();
                     }
+                    // create trucking emissions
+                    trucking.ReportEmissions(trucks, true);
 				}
             }
             if (bankAccount != null && head > 0) //(trucks > 0 || trucking == null)
@@ -363,6 +364,12 @@ namespace Models.WholeFarm.Activities
 					if (shortfall > 0) break;
 					herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
 				}
+
+                // create trucking emissions
+                if(trucking != null & trucks > 0 )
+                {
+                    trucking.ReportEmissions(trucks, false);
+                }
 
 				if (bankAccount != null && (trucks > 0 || trucking == null))
 				{
