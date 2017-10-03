@@ -148,7 +148,9 @@
         /// <param name="e"></param>
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
-            int numSimulations = jobManager.SimulationNamesBeingRun.Count;
+            int numSimulations = 0;
+            if (jobManager.SimulationNamesBeingRun != null)
+                numSimulations = jobManager.SimulationNamesBeingRun.Count;
             double percentComplete = (numSimulationsRun * 1.0 / numSimulations) * 100.0;
 
             if (numSimulations > 0)

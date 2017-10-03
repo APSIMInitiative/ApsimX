@@ -518,20 +518,10 @@
                         try
                         {
                             dataToWriteToDB.WriteRows(connection, simulationIDs);
-
-                            //Table table = tables.Find(t => t.Name == dataToWriteToDB.Name);
-                            //if (table == null)
-                            //    tables.Add(dataToWriteToDB);
-                            //else
-                            //    table.MergeColumns(dataToWriteToDB);
                         }
                         finally
                         {
                             connection.ExecuteNonQuery("END");
-                        }
-                        lock (dataToWrite)
-                        {
-                            dataToWrite.Remove(dataToWriteToDB);
                         }
                     }
                 }
@@ -553,6 +543,8 @@
                 }
                 Open(readOnly: true);
             }
+
+            dataToWrite.Clear();
         }
 
         /// <summary>Write a _units table to .db</summary>

@@ -31,6 +31,9 @@ namespace Models.Storage
             }
         }
 
+        /// <summary>Lock object</summary>
+        private object lockObject = new object();
+
         /// <summary>Rows to write to .db file</summary>
         private List<object[]> RowsToWrite = new List<object[]>();
 
@@ -74,7 +77,7 @@ namespace Models.Storage
             // Ensure the row's columns are in this table's columns.
             for (int i = 0; i < rowColumnNames.Count(); i++)
             {
-                lock (this)
+                lock (lockObject)
                 {
                     if (!sortedColumnNames.Contains(rowColumnNames.ElementAt(i)))
                     {
@@ -98,7 +101,7 @@ namespace Models.Storage
             }
 
             // Add new row to our values in correct order.
-            lock (this)
+            lock (lockObject)
             {
                 object[] newRow = new object[Columns.Count];
                 newRow[0] = simulationID;
@@ -124,7 +127,7 @@ namespace Models.Storage
         /// <param name="connection">The SQLite connection to open</param>
         private void Open(SQLite connection)
         {
-            lock (this)
+            lock (lockObject)
             {
                 Columns.Clear();
                 DataTable data = connection.ExecuteQuery("pragma table_info('" + Name + "')");
@@ -146,6 +149,8 @@ namespace Models.Storage
             IntPtr preparedInsertQuery = IntPtr.Zero;
             try
             {
+                List<string> columnNames = new List<string>();
+                List<object[]> values = new List<object[]>();
                 // If the table exists, make sure it has the required columns, otherwise create the table
                 int numRows = RowsToWrite.Count;
                 if (TableExists(connection, Name))
@@ -153,9 +158,7 @@ namespace Models.Storage
                 else
                     CreateTable(connection);
 
-                List<string> columnNames = new List<string>();
-                List<object[]> values = new List<object[]>();
-                lock(this)
+                lock (lockObject)
                 {
                     columnNames.AddRange(Columns.Select(column => column.Name));
                     values.AddRange(RowsToWrite.GetRange(0, numRows));
@@ -217,7 +220,7 @@ namespace Models.Storage
         private void CreateTable(SQLite connection)
         {
             StringBuilder sql = new StringBuilder();
-            lock (this)
+            lock (lockObject)
             {
                 foreach (Column col in Columns)
                 {
@@ -245,7 +248,7 @@ namespace Models.Storage
             DataTable columnData = connection.ExecuteQuery("pragma table_info('" + Name + "')");
             List<string> existingColumns = DataTableUtilities.GetColumnAsStrings(columnData, "Name").ToList();
 
-            lock (this)
+            lock (lockObject)
             {
                 foreach (Column col in Columns)
                 {
@@ -323,7 +326,7 @@ namespace Models.Storage
         /// 'Flatten' the row passed in, into a list of columns ready to be added
         /// to a data table.
         /// </summary>
-        public void Flatten(ref IEnumerable<string> columnNames, ref IEnumerable<string> columnUnits, ref IEnumerable<object> columnValues)
+        public static void Flatten(ref IEnumerable<string> columnNames, ref IEnumerable<string> columnUnits, ref IEnumerable<object> columnValues)
         {
             List<string> newColumnNames = new List<string>();
             List<string> newColumnUnits = new List<string>();
