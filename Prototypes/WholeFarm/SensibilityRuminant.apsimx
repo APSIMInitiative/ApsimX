@@ -902,6 +902,21 @@
           <Name>SummariseHerd</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </SummariseRuminantHerd>
+        <ReportRuminantHerd>
+          <Name>ReportHerd</Name>
+          <RuminantFilterGroup>
+            <Name>FirstFemaleOnly</Name>
+            <RuminantFilter>
+              <Name>Filter[ID=1]</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Parameter>ID</Parameter>
+              <Operator>Equal</Operator>
+              <Value>1</Value>
+            </RuminantFilter>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </RuminantFilterGroup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </ReportRuminantHerd>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ActivitiesHolder>
       <Folder>
@@ -999,6 +1014,24 @@
           </VariableNames>
           <EventNames>
             <string>[Resources].Ruminants.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>HerdReport</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.ID as IndID</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.GenderAsString as Gender</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.Weight as Weight</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.PreviousWeight as PWeight</string>
+            <string>[Activities].ReportHerd.ReportDetails.Female.NumberOfBirths as Births</string>
+            <string>[Activities].ReportHerd.ReportDetails.Female.AgeAtLastBirth as AgeBirth</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Activities].ReportHerd.OnReportItemGenerated</string>
           </EventNames>
         </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3559,6 +3592,9 @@
                 <Number450kgPerTruck>100</Number450kgPerTruck>
                 <MinimumTrucksBeforeSelling>0</MinimumTrucksBeforeSelling>
                 <MinimumLoadBeforeSelling>0</MinimumLoadBeforeSelling>
+                <TruckCO2Emissions>0</TruckCO2Emissions>
+                <TruckMethaneEmissions>0</TruckMethaneEmissions>
+                <TruckNOxEmissions>0</TruckNOxEmissions>
               </TruckingSettings>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
