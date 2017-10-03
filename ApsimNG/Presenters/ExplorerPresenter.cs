@@ -131,7 +131,6 @@ namespace UserInterface.Presenters
             {
                 (this.view as Views.ExplorerView).MainWidget.Destroy();
             }
-
             this.contextMenu = null;
             this.mainMenu = null;
             this.CommandHistory.Clear();
@@ -758,8 +757,6 @@ namespace UserInterface.Presenters
         {
             if (e.Keys == ConsoleKey.F5)
             {
-                ContextMenu contextMenu = new ContextMenu(this);
-                ApsimXFile.Links.Resolve(contextMenu);
                 contextMenu.RunAPSIM(sender, null);
             }
         }
