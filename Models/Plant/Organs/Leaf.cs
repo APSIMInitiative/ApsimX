@@ -743,7 +743,23 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
+        /// <summary>Gets the cohort MaxArea.</summary> 
+        [Units("mm2")]
+        public double[] CohortMaxArea
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
 
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.MaxArea;
+                    i++;
+                }
+                return values;
+            }
+        }
         //General Leaf State variables
         /// <summary>Returns the area of the largest leaf.</summary>
         /// <value>The area of the largest leaf</value>
