@@ -2,36 +2,52 @@ using System;
 using System.Collections.Generic;
 using Utilities;
 
-namespace Models.PMF.Phenology
+namespace Models.PMF.Photosynthesis
 {
+    /// <summary></summary>
     public class EnvironmentModel
     {
         //Location variables
+        /// <summary></summary>
         protected Angle _latitude;
+        /// <summary></summary>
         protected Angle _longitude;
 
         //Daily Variables
+        /// <summary></summary>
         protected double _DOY;
+        /// <summary></summary>
         protected double _maxT;
+        /// <summary></summary>
         protected double _minT;
+        /// <summary></summary>
         protected double Sg;
+        /// <summary></summary>
         protected double _vpd;
+        /// <summary></summary>
         protected double _maxRH = -1;
+        /// <summary></summary>
         protected double _minRH;
+        /// <summary></summary>
         protected double _xLag = 1.8;
+        /// <summary></summary>
         protected double _yLag = 2.2;
+        /// <summary></summary>
         protected double _zLag = 1;
+        /// <summary></summary>
         protected double _ATM = 1.013;
 
         //protected HourlyMet hm;
 
+        /// <summary></summary>
         public delegate void Notify();
 
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public Notify notify;
 
         //Timestep variables
         //-------------------------------------------------------------------------
+        /// <summary></summary>
         public EnvironmentModel()
         {
             _latitude = new Angle();
@@ -44,6 +60,7 @@ namespace Models.PMF.Phenology
             //hm = new HourlyMet();
         }
         //-------------------------------------------------------------------------
+        /// <summary></summary>
         public EnvironmentModel(double Latitude, double Longitude, int NumberLayers)
             : this()
         {
@@ -52,6 +69,7 @@ namespace Models.PMF.Phenology
             _longitude = new Angle(Longitude, AngleType.Deg);
         }
         //-------------------------------------------------------------------------
+        /// <summary></summary>
         public EnvironmentModel(double Latitude, int NumberLayers)
             : this()
         {
@@ -61,6 +79,7 @@ namespace Models.PMF.Phenology
         }
 
         //---------------------------------------------------------------------------
+        /// <summary></summary>
         protected int calcStandardLongitude(double longitude)
         {
             return (int)((longitude / 15) + 0.5) * 15;
@@ -68,6 +87,7 @@ namespace Models.PMF.Phenology
         //------------------------------------------------------------------------------------------------
         // Properties
         //------------------------------------------------------------------------------------------------
+        /// <summary></summary>
         [ModelPar("MjNwl", "Longitude", "Le", "", "°")]
         public Angle longitude
         {
@@ -79,6 +99,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("hjFzy", "Latitude", "Lat", "", "°")]
         public Angle latitude
         {
@@ -95,6 +116,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("vmCd9", "Latitude", "Lat", "", "°")]
         public double latitudeD
         {
@@ -111,6 +133,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("AlMfK", "Day of year", "Day", "", "")]
         public double DOY
         {
@@ -127,6 +150,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("ArrfK", "Atmospheric pressure", "ATM", "", "")]
         public double ATM
         {
@@ -137,6 +161,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("5hHkF", "Maximum air temperature for the day", "T", "a_max", "°C")]
         public double maxT
         {
@@ -153,6 +178,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("lI6iy", "Minimum air temperature for the day", "T", "a_min", "°C")]
         public double minT
         {
@@ -169,6 +195,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("RyHP0", "Daily min RH", "RHMin", "", "%")]
         public double minRH
         {
@@ -185,6 +212,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("CjkRT", "Daily max RH", "RHMax", "", "%")]
         public double maxRH
         {
@@ -201,6 +229,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("vWD3R", "X Lag", "xLag", "", "")]
         public double xLag
         {
@@ -216,6 +245,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("r5C7r", "Y Lag", "yLag", "", "")]
         public double yLag
         {
@@ -231,6 +261,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("JKzC3", "Z Lag", "zLag", "", "")]
         public double zLag
         {
@@ -246,6 +277,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("sdkGj", "Daily VPD", "vpd", "", "kPa")]
         public double vpd
         {
@@ -261,6 +293,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("goJzH", "Daily solar radiation reaching Earth's surface", "S", "g", "MJ/m2/day", "", "m2 of ground")]
         public double radn
         {
@@ -280,6 +313,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelPar("uMZ2C", "Total daily incident solar radiation", "S", "g", "MJ/m2/day", "", "m2 of ground")]
         public double Sg2
         {
@@ -299,17 +333,21 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelVar("drKhV", "Solar declination angle", "δ", "", "radian")]
         public Angle solarDeclination { get; set; }
 
+        /// <summary></summary>
         [ModelVar("EwOhQ", "Solar elevation angle", "β", "", "radian")]
         public Angle solarElevation { get; set; }
 
+        /// <summary></summary>
         [ModelVar("UHXoS", "Standard longitude of time zone", "Ls", "", "degree")]
         public double standardLongitude { get; set; }
 
         #region Solar Geometry
         private double _solarConstant = 1360;
+        /// <summary></summary>
         [ModelPar("7eMZa", "Solar constant", "I0", "", "J m-2 s-1")]
         public double solarConstant
         {
@@ -321,7 +359,9 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         protected double _atmTransmissionRatio = 0.75;
+        /// <summary></summary>
         [ModelPar("AoRO2", "Atmospheric transmission coefficient", "Ratio", "", "")]
         public double atmTransmissionRatio
         {
@@ -346,7 +386,9 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         protected double[] _ratios_;
+        /// <summary></summary>
         [ModelPar("a1Pb4", "", "", "", "")]
         public double[] ratios_
         {
@@ -367,18 +409,23 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelVar("ob6iX", "Hour angle of sun", "W2", "", "radian")]
         public Angle hourAngle { get; set; }
 
+        /// <summary></summary>
         [ModelVar("3ywo3", "Sunset hour angle of sun", "W1", "", "radian")]
         public Angle sunsetAngle { get; set; }
 
+        /// <summary></summary>
         [ModelVar("XidUS", "Day angle", "Γd", "", "")]
         public Angle dayAngle { get; set; }
 
+        /// <summary></summary>
         [ModelVar("a4REK", "Solar elevation", "α", "", "°", "t")]
         public Angle sunAngle { get; set; }
 
+        /// <summary></summary>
         [ModelVar("RTS4t", "Solar elevation", "α", "", "°", "t")]
         public double sunAngleD
         {
@@ -388,28 +435,36 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelVar("CBMOF", "Zenith angle", "Z", "", "radian")]
         public Angle zenithAngle { get; set; }
 
+        /// <summary></summary>
         [ModelVar("nEqsb", "Radius vector", "R1", "", "")]
         public double radiusVector { get; set; }
 
+        /// <summary></summary>
         [ModelVar("t2rN0", "Day length", "L1", "", "h")]
         public double dayLength { get; set; }
 
+        /// <summary></summary>
         [ModelVar("4lcLb", "", "tfrac", "", "")]
         public double tfrac { get; set; }
 
+        /// <summary></summary>
         [ModelVar("JfTav", "Daily extra-terrestrial irradiance", "So", "", "MJ/m2/day")]
         public double So { get; set; }
 
+        /// <summary></summary>
         [ModelVar("eaehB", "Sunrise", "", "", "")]
         public double sunrise { get; set; }
 
+        /// <summary></summary>
         [ModelVar("0yWWK", "Sunset", "", "", "")]
         public double sunset { get; set; }
 
         private bool _initilised = false;
+        /// <summary></summary>
         public bool initilised
         {
             get
@@ -426,6 +481,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         public void calcRatios(double ratio)
         {
             _ratios_ = new double[24];
@@ -439,6 +495,7 @@ namespace Models.PMF.Phenology
         }
 
 
+        /// <summary></summary>
         public void calcRatios()
         {
             double[] times = new double[24];
@@ -452,11 +509,13 @@ namespace Models.PMF.Phenology
         }
 
         //---------------------------------------------------------------------------
+        /// <summary></summary>
         public double getTemp(double time)
         {
             return temps.value(time - 1);
         }
         //---------------------------------------------------------------------------
+        /// <summary></summary>
         public double getVPD(double time)
         {
             return vpds.value(time);
@@ -477,6 +536,7 @@ namespace Models.PMF.Phenology
             return new Angle(2 * Math.PI * (DOY - 1) / 365, AngleType.Rad);
         }
         //---------------------------------------------------------------------------
+        /// <summary></summary>
         protected double calcDayLength(double latitudeRadians, double solarDecRadians)
         {
             sunsetAngle = new Angle(Math.Acos(-1 * Math.Tan(latitudeRadians) * Math.Tan(solarDecRadians)), AngleType.Rad);
@@ -502,6 +562,7 @@ namespace Models.PMF.Phenology
                +Math.Sin(sunsetAngleRadians) * Math.Cos(latitudeRadians) * Math.Cos(solarDecRadians)) / 1000000.0);
         }
         //---------------------------------------------------------------------------
+        /// <summary></summary>
         public void calcSolarGeometry()
         {
             solarDeclination = calcSolarDeclination((int)DOY);
@@ -520,6 +581,7 @@ namespace Models.PMF.Phenology
 
         }
         //---------------------------------------------------------------------------
+        /// <summary></summary>
         public void calcSolarGeometryTimestep(double hour)
         {
             tfrac = (hour - sunrise) / dayLength;
@@ -530,6 +592,7 @@ namespace Models.PMF.Phenology
 
         }
         //---------------------------------------------------------------------------
+        /// <summary></summary>
         public void run()
         {
             conversionFactor = 2413.0 / 1360.0;
@@ -578,6 +641,7 @@ namespace Models.PMF.Phenology
             Idirs_PAR = new TableFunction(time.ToArray(), idir_par.ToArray(), false);
         }
 
+        /// <summary></summary>
         public void run(double time)
         {
             calcSolarGeometry();
@@ -591,7 +655,9 @@ namespace Models.PMF.Phenology
         #endregion
 
         #region Incident Radiation
+        /// <summary></summary>
         protected double _fracDiffuseATM = 0.1725;
+        /// <summary></summary>
         [ModelPar("nU58A", "Fraction of diffuse irradiance in the atmosphere", "", "", "")]
         public double fracDiffuseATM
         {
@@ -603,57 +669,45 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         [ModelVar("oh5kh", "Total PAR at canopy top ", "I", "o", "μmol PAR/m2/s", "t", "m2 of ground")]
         public double totalIncidentRadiation { get; set; }
 
+        /// <summary></summary>
         [ModelVar("LuYdw", "Direct PAR at canopy top", "I", "dir", "μmol PAR/m2/s", "t", "m2 of ground")]
         public double directRadiationPAR { get; set; }
 
+        /// <summary></summary>
         [ModelVar("aqmpo", "Diffuse PAR at canopy top", "I", "dif", "μmol PAR/m2/s", "t", "m2 of ground")]
         public double diffuseRadiationPAR { get; set; }
 
+        /// <summary></summary>
         [ModelVar("8WKRv", "Total PAR at canopy top", "I", "o", "μmol PAR/m2/s", "t", "m2 of ground")]
         public double totalRadiationPAR { get; set; }
 
+        /// <summary></summary>
         [ModelVar("4HlHU", "", "", "", "")]
         public double conversionFactor { get; set; }
 
         //---------------------------------------------------------------------------
 
+        /// <summary></summary>
         public void calcIncidentRadiation(double hour)
         {
             totalIncidentRadiation = Ios.value(hour);
             totalRadiationPAR = Ios_PAR.value(hour);
             diffuseRadiationPAR = Idiffs_PAR.value(hour);
             directRadiationPAR = Idirs_PAR.value(hour);
-
-            //double S0 = calcExtraTerestrialRadiation2(hour);
-
-            //totalIncidentRadiation = S0 * ratio / conversionFactor * 1E12;
-            ////totalIncidentRadiation = calcTotalIncidentRadiation(hour, dayLength, sunrise);
-            ////diffuseRadiation = calcDiffuseRadiation(sunAngle.rad) / conversionFactor * 10E12;
-            //diffuseRadiation = fracDiffuseATM * solarConstant * Math.Sin(sunAngle.rad) / 1000000 / conversionFactor * 1E12;
-
-            //if (diffuseRadiation > totalIncidentRadiation)
-            //{
-            //    diffuseRadiation = totalIncidentRadiation;
-            //}
-
-            ////totalIncidentRadiation = totalIncidentRadiation / conversionFactor * 10E12;
-            //directRadiation = (totalIncidentRadiation - diffuseRadiation);
         }
 
         //---------------------------------------------------------------------------
+        /// <summary></summary>
         public double calcInstantaneousIncidentRadiation(double hour)
         {
-
-            // return So * ratios.value(hour) * (1 + Math.Sin(2 * Math.PI * (hour - sunrise) / dayLength + 1.5 * Math.PI)) / 
-            //     (dayLength * 3600);
-
             return (So * ratios.value(hour) * Math.PI * Math.Sin(Math.PI * (hour - sunrise) / dayLength)) / (2 * dayLength * 3600);
-
         }
         //---------------------------------------------------------------------------
+        /// <summary></summary>
         public double calcExtraTerestrialRadiation2(double hour, bool external = false)
         {
             if (external)
@@ -662,41 +716,13 @@ namespace Models.PMF.Phenology
             }
 
             Angle hourAngle2 = new Angle(0.25 * Math.Abs((hour - 12) * 60) / (180 / Math.PI), AngleType.Rad);
-
-            //zenithAngle = new Angle(calcZenithAngle(latitude.rad, solarDeclination.rad, hourAngle.rad), AngleType.Rad);
-
             zenithAngle = new Angle(calcZenithAngle(latitude.rad, solarDeclination.rad, hourAngle2.rad), AngleType.Rad);
-
             return (solarConstant / Math.Pow(radiusVector, 2) * Math.Cos(zenithAngle.rad) / 1000000);
         }
-        //---------------------------------------------------------------------------
-        // void calcETRadns()
-        // {
-        //     // calculates SVP at the air temperature
-        //     List<double> eTs = new List<double>();
-        //     List<double> time = new List<double>();
 
-        //     for (int i = 0; i < 24; i++)
-        //     {
-        //         time.Add(i);
-        //         if ((double)i >= (12.0 - dayLength / 2) && (double)i <= (12.0 + dayLength / 2))
-        //         {
-        //             //eTs.Add(Math.Max(calcExtraTerestrialRadiation2(i) / conversionFactor * 1E12, 0));
-        //             eTs.Add(Math.Max(calcInstantaneousIncidentRadiation(i) , 0));
-        //         }
-        //         else
-        //         {
-        //             eTs.Add(0);
-        //         }
-        //     }
-        //     ETs = new TableFunction(time.ToArray(), eTs.ToArray(), false);
-        // }
-        //---------------------------------------------------------------------------
         void calcIncidentRadns()
         {
             List<double> ios = new List<double>();
-            //List<double> ets = new List<double>();
-
             List<double> time = new List<double>();
 
             int preDawn = (int)Math.Floor(12 - dayLength / 2.0);
@@ -716,10 +742,8 @@ namespace Models.PMF.Phenology
                     ios.Add(0);
                 }
 
-                //ets.Add(ios[i] / 0.75);
             }
             Ios = new TableFunction(time.ToArray(), ios.ToArray(), false);
-            //ETs = new TableFunction(time.ToArray(), ets.ToArray(), false);
         }
         //---------------------------------------------------------------------------
         void calcDiffuseRadns()
@@ -772,38 +796,40 @@ namespace Models.PMF.Phenology
 
         //---------------------------------------------------------------------------
         #endregion
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction Ios { get; set; }
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction Idirs { get; set; }
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction Idiffs { get; set; }
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction Ios_PAR { get; set; }
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction Idirs_PAR { get; set; }
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction Idiffs_PAR { get; set; }
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction ETs { get; set; }
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction ratios { get; set; }
 
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction temps { get; set; }
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction radns { get; set; }
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction svps { get; set; }
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction vpds { get; set; }
-        //[System.Xml.Serialization.XmlIgnore]
+        /// <summary></summary>
         public TableFunction rhs { get; set; }
 
 
 
+        /// <summary></summary>
         public virtual void doUpdate() { }
         //------------------------------------------------------------------------------------------------
+        /// <summary></summary>
         public double calcSVP(double TAir)
         {
             // calculates SVP at the air temperature
@@ -811,6 +837,7 @@ namespace Models.PMF.Phenology
             return 610.7 * Math.Exp(17.4 * TAir / (239 + TAir)) / 1000;
         }
         //------------------------------------------------------------------------------------------------
+        /// <summary></summary>
         protected void calcSVPs()
         {
             // calculates SVP at the air temperature
@@ -825,6 +852,7 @@ namespace Models.PMF.Phenology
             svps = new TableFunction(time.ToArray(), svp.ToArray(), false);
         }
         //------------------------------------------------------------------------------------------------
+        /// <summary></summary>
         protected void calcRHs()
         {
             List<double> time = new List<double>();
@@ -849,6 +877,7 @@ namespace Models.PMF.Phenology
 
         }
         //------------------------------------------------------------------------------------------------
+        /// <summary></summary>
         protected void calcVPDs()
         {
             List<double> time = new List<double>();
@@ -867,6 +896,7 @@ namespace Models.PMF.Phenology
             vpds = new TableFunction(time.ToArray(), vpd.ToArray(), false);
         }
         //------------------------------------------------------------------------------------------------
+        /// <summary></summary>
         public void calcTemps()
         {
             List<double> hours = new List<double>();

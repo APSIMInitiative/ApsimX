@@ -1,5 +1,5 @@
 
-namespace Models.PMF.Phenology
+namespace Models.PMF.Photosynthesis
 {
     class LightVar
     {

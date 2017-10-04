@@ -6,12 +6,22 @@ using System.Text;
 using System.Threading.Tasks;
 using C3MethodExtensions;
 
-namespace Models.PMF.Phenology
+namespace Models.PMF.Photosynthesis
 {
+    /// <summary></summary>
     public class PhotosynthesisModelC3 : PhotosynthesisModel
     {
+        /// <summary></summary>
         public PhotosynthesisModelC3() : base() { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sendNotification"></param>
+        /// <param name="swAvail"></param>
+        /// <param name="maxHourlyT"></param>
+        /// <param name="sunlitFraction"></param>
+        /// <param name="shadedFraction"></param>
         public override void run(bool sendNotification, double swAvail = 0, double maxHourlyT = -1, double sunlitFraction = 0, double shadedFraction = 0)
         {
             if (!initialised)
@@ -90,6 +100,10 @@ namespace Models.PMF.Phenology
            // writeScenario(swAvail);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="swAvail"></param>
         public void writeScenario(double swAvail)
         {
             StreamWriter sr = new StreamWriter("scenario.csv",true);

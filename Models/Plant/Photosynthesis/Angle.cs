@@ -1,20 +1,28 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace Models.PMF.Phenology
+namespace Models.PMF.Photosynthesis
 {
-    public enum AngleType { Deg, Rad };
+    /// <summary></summary>
+    public enum AngleType
+    {   /// <summary></summary>
+        Deg,
+        /// <summary></summary>
+        Rad
+    };
     
+    /// <summary></summary>
     public class Angle:INotifyPropertyChanged
     {
         private double _rad;
         private double _deg;
 
-        //------------------------------------------------------------------------------------------------
+        /// <summary></summary>
         public Angle()
         {
         }
-       //------------------------------------------------------------------------------------------------
+
+        /// <summary></summary>
         public Angle(double val, AngleType type)
         {
             if (type == AngleType.Deg)
@@ -38,14 +46,15 @@ namespace Models.PMF.Phenology
         {
             return rads * 180.0 / Math.PI;
         }
-        
+
         //------------------------------------------------------------------------------------------------
         // Properties
         //------------------------------------------------------------------------------------------------
-         //Property changed event handler
+        /// <summary></summary>
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         // Create the OnPropertyChanged method to raise the event 
+        /// <summary></summary>
         protected virtual void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
@@ -55,6 +64,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         public double rad
         {
             get { return _rad; }
@@ -67,6 +77,7 @@ namespace Models.PMF.Phenology
             }
         }
 
+        /// <summary></summary>
         public double deg
         {
             get { return _deg; }

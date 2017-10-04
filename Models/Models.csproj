@@ -165,7 +165,6 @@
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
     <Compile Include="Plant\Functions\ArrayFunction.cs" />
-    <Compile Include="Plant\Interfaces\IPhotosynthesis.cs" />
     <Compile Include="Plant\Photosynthesis\Angle.cs" />
     <Compile Include="Plant\Photosynthesis\ApsimC3PhotoLink.cs" />
     <Compile Include="Plant\Photosynthesis\ApsimC4PhotoLink.cs" />

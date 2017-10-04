@@ -1,10 +1,10 @@
 using System;
-using Models.PMF.Phenology;
+using Models.PMF.Photosynthesis;
 using System.Linq;
 
 namespace C3MethodExtensions
 {
-
+    /// <summary></summary>
     public static class C3MethodExtensions
     {
 
@@ -12,11 +12,11 @@ namespace C3MethodExtensions
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="s"></param>
         /// <param name="PM"></param>
         /// <param name="useAirTemp"></param>
         /// <param name="layer"></param>
         /// <param name="leafTemperature"></param>
-        /// <param name="cm"></param>
         /// <param name="mode"></param>
         /// <param name="maxHourlyT"></param>
         /// <param name="Tfraction"></param>
@@ -175,6 +175,7 @@ namespace C3MethodExtensions
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="s"></param>
         /// <param name="canopy"></param>
         /// <param name="layer"></param>
         /// <param name="mode"></param>
@@ -203,6 +204,7 @@ namespace C3MethodExtensions
         /// <param name="x_2"></param>
         /// <param name="layer"></param>
         /// <param name="canopy"></param>
+        /// <param name="s"></param>
         /// <returns></returns>
         public static double calcAssimilation(SunlitShadedCanopy s, double x_1, double x_2, int layer, LeafCanopy canopy)
         {
@@ -225,6 +227,7 @@ namespace C3MethodExtensions
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="s"></param>
         /// <param name="x_1"></param>
         /// <param name="x_2"></param>
         /// <param name="layer"></param>
@@ -251,6 +254,7 @@ namespace C3MethodExtensions
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="s"></param>
         /// <param name="canopy"></param>
         /// <param name="layer"></param>
         /// <param name="mode"></param>

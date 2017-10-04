@@ -1,10 +1,19 @@
 
-namespace Models.PMF.Phenology
+namespace Models.PMF.Photosynthesis
 {
+    /// <summary></summary>
     public class TrapezoidLayer
     {
+        /// <summary></summary>
         public TrapezoidLayer() { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nLayers"></param>
+        /// <param name="final"></param>
+        /// <param name="intermediate"></param>
+        /// <param name="LAIs"></param>
         public static void integrate(int nLayers, double[] final, double[] intermediate, double[] LAIs)
         {
             if (nLayers == 1)

@@ -1,15 +1,19 @@
 using System;
-using Models.PMF.Phenology;
+using Models.PMF.Photosynthesis;
 using System.Linq;
 
 namespace C4MethodExtensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class C4MethodExtensions
     {
         //---------------------------------------------------------------------------------------------------------
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="s"></param>
         /// <param name="PM"></param>
         /// <param name="useAirTemp"></param>
         /// <param name="layer"></param>
@@ -222,6 +226,7 @@ namespace C4MethodExtensions
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="s"></param>
         /// <param name="canopy"></param>
         /// <param name="layer"></param>
         /// <param name="mode"></param>
@@ -249,6 +254,7 @@ namespace C4MethodExtensions
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="s"></param>
         /// <param name="x_1"></param>
         /// <param name="x_2"></param>
         /// <param name="x_3"></param>
@@ -286,6 +292,7 @@ namespace C4MethodExtensions
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="s"></param>
         /// <param name="x_1"></param>
         /// <param name="x_2"></param>
         /// <param name="x_3"></param>
@@ -321,6 +328,7 @@ namespace C4MethodExtensions
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="s"></param>
         /// <param name="canopy"></param>
         /// <param name="layer"></param>
         /// <param name="mode"></param>
