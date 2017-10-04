@@ -1233,6 +1233,7 @@ namespace Models.PMF.Organs
                         double Allocation = Math.Min(L.StructuralDMDemand * DemandFraction, DMsupply);
                         StructuralDMAllocationCohort[i] = Allocation;
                         DMallocated += Allocation;
+                        Allocated.StructuralWt += Allocation;
                         DMsupply -= Allocation;
                     }
                     if (DMsupply > 0.0000000001)
@@ -1259,6 +1260,7 @@ namespace Models.PMF.Organs
                         double Allocation = Math.Min(L.MetabolicDMDemand * DemandFraction, DMsupply);
                         MetabolicDMAllocationCohort[i] = Allocation;
                         DMallocated += Allocation;
+                        Allocated.MetabolicWt += Allocation;
                         DMsupply -= Allocation;
                     }
                     if (DMsupply > 0.0000000001)
