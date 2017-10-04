@@ -3,17 +3,26 @@ using System.Collections.Generic;
 
 namespace Utilities
    {
-   public class LookupTable
+    /// <summary></summary>
+    public class LookupTable
       {
       private List<double> _XVals;
       private List<double> _YVals;
       //---------------------------------------------------------------------------
+      /// <summary>
+      /// 
+      /// </summary>
       public LookupTable()
          {
          _XVals = new List<double>();
          _YVals = new List<double>();
          }
       //---------------------------------------------------------------------------
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="_xVals"></param>
+      /// <param name="_yVals"></param>
       public LookupTable(double[] _xVals, double[] _yVals)
          : this()
          {
@@ -21,6 +30,11 @@ namespace Utilities
          _YVals.InsertRange(0, _yVals);
          }
       //---------------------------------------------------------------------------
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="fileName"></param>
+      /// <param name="headerRow"></param>
       public LookupTable(String fileName, bool headerRow) : this()
          {
          //StreamReader sr = new StreamReader(fileName);
@@ -74,6 +88,11 @@ namespace Utilities
             }*/
          }
       //---------------------------------------------------------------------------
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="xVal"></param>
+      /// <returns></returns>
       public double getYVal(double xVal)
          {
          if(xVal == _XVals[_XVals.Count - 1])
@@ -103,8 +122,9 @@ namespace Utilities
             throw (new IndexOutOfRangeException());
             }
          }
-      //---------------------------------------------------------------------------
-      public double maxX
+        //---------------------------------------------------------------------------
+        /// <summary></summary>
+        public double maxX
          {
          get
             {

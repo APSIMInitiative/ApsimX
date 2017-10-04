@@ -1,7 +1,7 @@
 //using System;
 //using System.Linq;
 
-//namespace Models.PMF.Phenology
+//namespace Models.PMF.Photosynthesis
 //{
 
 //    public class SunlitShadedCanopyC3 : SunlitShadedCanopy

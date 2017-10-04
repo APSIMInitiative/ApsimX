@@ -2,24 +2,39 @@
 
 namespace Utilities
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class TableFunction
     {
         private double[] _xVals;
         private double[] _yVals;
         private bool _flatEnds;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public double[] yVals
         {
             get { return _yVals; }
             set { _yVals = value; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public double[] xVals
         {
             get { return _xVals; }
             set { _xVals = value; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="flatEnds"></param>
         public TableFunction(double[] x, double[] y, bool flatEnds = true)
         {
             _xVals = x;
@@ -31,6 +46,11 @@ namespace Utilities
         // Get the y value of the function
         //--------------------------------------------------------------------
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public double value(double v)
         {
             // Find which sector of the function that v falls in
@@ -79,7 +99,7 @@ namespace Utilities
                 slope = (_xVals[sector] == _xVals[sector - 1]) ? 0 :
                                  (_yVals[sector] - _yVals[sector - 1]) / (_xVals[sector] - _xVals[sector - 1]);
             }
-            catch(DivideByZeroException dbz)
+            catch (DivideByZeroException)
             {
                 slope = 0;
             }

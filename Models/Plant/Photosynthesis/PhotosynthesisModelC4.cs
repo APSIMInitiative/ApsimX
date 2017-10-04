@@ -6,18 +6,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.PMF.Phenology
+namespace Models.PMF.Photosynthesis
 {
+    /// <summary></summary>
     public class PhotosynthesisModelC4 : PhotosynthesisModel
     {
 
+        /// <summary></summary>
         public SunlitCanopy sunlitAC2;
+        /// <summary></summary>
         public ShadedCanopy shadedAC2;
 
 
+        /// <summary></summary>
         public PhotosynthesisModelC4() : base() { }
 
         //---------------------------------------------------------------------------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sendNotification"></param>
+        /// <param name="swAvail"></param>
+        /// <param name="maxHourlyT"></param>
+        /// <param name="sunlitFraction"></param>
+        /// <param name="shadedFraction"></param>
         public override void run(bool sendNotification, double swAvail = 0, double maxHourlyT = -1, double sunlitFraction = 0, double shadedFraction = 0)
         {
             if (!initialised)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
 
-namespace Models.PMF.Phenology
+namespace Models.PMF.Photosynthesis
 {
     /// <summary>
     /// Entry point for Photosynthesis model

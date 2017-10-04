@@ -4,36 +4,89 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.PMF.Phenology
+namespace Models.PMF.Photosynthesis
 {
 
     // Interface declaration.
-    [System.Runtime.InteropServices.Guid("8f9e78bf-de86-4151-868b-db5c23608eba")]
-    [System.Runtime.InteropServices.ComVisible(true)]
+/// <summary>
+/// 
+/// </summary>
     public interface IApsimC4PhotoLink
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="DOY"></param>
+        /// <param name="latitude"></param>
+        /// <param name="maxT"></param>
+        /// <param name="minT"></param>
+        /// <param name="radn"></param>
+        /// <param name="lai"></param>
+        /// <param name="SLN"></param>
+        /// <param name="soilWaterAvail"></param>
+        /// <param name="B"></param>
+        /// <param name="RootShootRatio"></param>
+        /// <param name="LeafAngle"></param>
+        /// <param name="SLNRatioTop"></param>
+        /// <param name="psiVc"></param>
+        /// <param name="psiJ"></param>
+        /// <param name="psiRd"></param>
+        /// <param name="psiVp"></param>
+        /// <param name="psiFactor"></param>
+        /// <param name="Ca"></param>
+        /// <param name="gbs"></param>
+        /// <param name="gm25"></param>
+        /// <param name="Vpr"></param>
+        /// <returns></returns>
         double[] calc(int DOY, double latitude, double maxT, double minT, double radn, double lai, double SLN, double soilWaterAvail,
             double B, double RootShootRatio, double LeafAngle, double SLNRatioTop, double psiVc, double psiJ, double psiRd, double psiVp, 
             double psiFactor, double Ca, double gbs, double gm25, double Vpr);
     };
-    
+
     // Interface implementation.
-    [System.Runtime.InteropServices.Guid("5657ad55-ddca-4d7e-a2bc-1b0d119a85e2")]
-    [System.Runtime.InteropServices.ComVisible(true)]
+    /// <summary></summary>
     public class ApsimC4PhotoLink : IApsimC4PhotoLink
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public void calc() { } //deliberately empty 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="DOY"></param>
+        /// <param name="latitude"></param>
+        /// <param name="maxT"></param>
+        /// <param name="minT"></param>
+        /// <param name="radn"></param>
+        /// <param name="lai"></param>
+        /// <param name="SLN"></param>
+        /// <param name="soilWaterAvail"></param>
+        /// <param name="B"></param>
+        /// <param name="RootShootRatio"></param>
+        /// <param name="LeafAngle"></param>
+        /// <param name="SLNRatioTop"></param>
+        /// <param name="psiVc"></param>
+        /// <param name="psiJ"></param>
+        /// <param name="psiRd"></param>
+        /// <param name="psiVp"></param>
+        /// <param name="psiFactor"></param>
+        /// <param name="Ca"></param>
+        /// <param name="gbs"></param>
+        /// <param name="gm25"></param>
+        /// <param name="Vpr"></param>
+        /// <returns></returns>
         public double[] calc(int DOY, double latitude, double maxT, double minT, double radn, double lai, double SLN, double soilWaterAvail,
             double B, double RootShootRatio, double LeafAngle, double SLNRatioTop, double psiVc, double psiJ, double psiRd, double psiVp, 
             double psiFactor, double Ca, double gbs, double gm25, double Vpr) //0 = simple conductance
         {
 
-            Models.PMF.Phenology.PhotosynthesisModelC4 PM = new Models.PMF.Phenology.PhotosynthesisModelC4();
+            Models.PMF.Photosynthesis.PhotosynthesisModelC4 PM = new Models.PMF.Photosynthesis.PhotosynthesisModelC4();
             PM.initialised = false;
-            PM.photoPathway = Models.PMF.Phenology.PhotosynthesisModel.PhotoPathway.C4;
+            PM.photoPathway = Models.PMF.Photosynthesis.PhotosynthesisModel.PhotoPathway.C4;
 
-            PM.conductanceModel = Models.PMF.Phenology.PhotosynthesisModel.ConductanceModel.SIMPLE;
-            PM.electronTransportModel = Models.PMF.Phenology.PhotosynthesisModel.ElectronTransportModel.EMPIRICAL;
+            PM.conductanceModel = Models.PMF.Photosynthesis.PhotosynthesisModel.ConductanceModel.SIMPLE;
+            PM.electronTransportModel = Models.PMF.Photosynthesis.PhotosynthesisModel.ElectronTransportModel.EMPIRICAL;
 
             PM.canopy.nLayers = 1;
 

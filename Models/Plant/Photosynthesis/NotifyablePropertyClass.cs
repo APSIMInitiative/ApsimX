@@ -1,19 +1,23 @@
 using System.ComponentModel;
 
-namespace Models.PMF.Phenology
+namespace Models.PMF.Photosynthesis
 {
+    /// <summary></summary>
     public class NotifyablePropertyClass : INotifyPropertyChanged
     {
-        //Property changed event handler
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-        
+        /// <summary>
+        /// Property changed event handler
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged { add { } remove { } }
+
+        /// <summary></summary>
         public NotifyablePropertyClass() { }
 
-        //-------------------------------------------------------------------
-        // Create the OnPropertyChanged method to raise the event 
-        //-------------------------------------------------------------------
 
+        /// <summary>
+        /// Create the OnPropertyChanged method to raise the event
+        /// </summary>
+        /// <param name="name"></param>
         protected virtual void OnPropertyChanged(string name)
         {
             //PropertyChangedEventHandler handler = PropertyChanged;

@@ -1,13 +1,26 @@
 
 using System;
 
-namespace Models.PMF.Phenology
+namespace Models.PMF.Photosynthesis
 {
+    /// <summary></summary>
     public class ShadedCanopy : SunlitShadedCanopy
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_nLayers"></param>
+        /// <param name="type"></param>
         public ShadedCanopy(int _nLayers, SSType type) : base(_nLayers, type) { }
+        /// <summary></summary>
+
         public ShadedCanopy() { }
         //---------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="canopy"></param>
+        /// <param name="sunlit"></param>
         public override void calcLAI(LeafCanopy canopy, SunlitShadedCanopy sunlit)
         {
             LAIS = new double[canopy.nLayers];
@@ -17,7 +30,12 @@ namespace Models.PMF.Phenology
                 LAIS[i] = canopy.LAIs[i] - sunlit.LAIS[i];
             }
         }
-        //----------------------------------------------------------------------
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="PM"></param>
+        /// <param name="canopy"></param>
         public override void calcConductanceResistance(PhotosynthesisModel PM, LeafCanopy canopy)
         {
             for (int i = 0; i < canopy.nLayers; i++)
@@ -31,6 +49,12 @@ namespace Models.PMF.Phenology
             base.calcConductanceResistance(PM, canopy);
         }
         //----------------------------------------------------------------------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="EM"></param>
+        /// <param name="canopy"></param>
+        /// <param name="sunlit"></param>
         public override void calcIncidentRadiation(EnvironmentModel EM, LeafCanopy canopy, SunlitShadedCanopy sunlit)
         {
             for (int i = 0; i < _nLayers; i++)
@@ -40,6 +64,12 @@ namespace Models.PMF.Phenology
             }
         }
         //----------------------------------------------------------------------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="EM"></param>
+        /// <param name="canopy"></param>
+        /// <param name="sunlit"></param>
         public override void calcAbsorbedRadiation(EnvironmentModel EM, LeafCanopy canopy, SunlitShadedCanopy sunlit)
         {
             for (int i = 0; i < _nLayers; i++)
@@ -52,6 +82,12 @@ namespace Models.PMF.Phenology
             }
         }
         //----------------------------------------------------------------------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="canopy"></param>
+        /// <param name="sunlit"></param>
+        /// <param name="PM"></param>
         public void calcRubiscoActivity25(LeafCanopy canopy, SunlitShadedCanopy sunlit, PhotosynthesisModel PM)
         {
             for (int i = 0; i < _nLayers; i++)
@@ -60,6 +96,12 @@ namespace Models.PMF.Phenology
             }
         }
         //----------------------------------------------------------------------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="canopy"></param>
+        /// <param name="sunlit"></param>
+        /// <param name="PM"></param>
         public void calcRdActivity25(LeafCanopy canopy, SunlitShadedCanopy sunlit, PhotosynthesisModel PM)
         {
             for (int i = 0; i < _nLayers; i++)
@@ -68,6 +110,12 @@ namespace Models.PMF.Phenology
             }
         }
         //---------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="canopy"></param>
+        /// <param name="sunlit"></param>
+        /// <param name="PM"></param>
         public void calcElectronTransportRate25(LeafCanopy canopy, SunlitShadedCanopy sunlit, PhotosynthesisModel PM)
         {
             for (int i = 0; i < _nLayers; i++)
@@ -79,6 +127,12 @@ namespace Models.PMF.Phenology
         }
 
         //---------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="canopy"></param>
+        /// <param name="sunlit"></param>
+        /// <param name="PM"></param>
         public void calcPRate25(LeafCanopy canopy, SunlitShadedCanopy sunlit, PhotosynthesisModel PM)
         {
             for (int i = 0; i < _nLayers; i++)
@@ -87,7 +141,12 @@ namespace Models.PMF.Phenology
             }
         }
         //---------------------------------------------------------------------------------------------------------
-       
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="canopy"></param>
+       /// <param name="counterpart"></param>
+       /// <param name="PM"></param>
         public override void calcMaxRates(LeafCanopy canopy, SunlitShadedCanopy counterpart, PhotosynthesisModel PM)
         {
             calcRubiscoActivity25(canopy, counterpart, PM);

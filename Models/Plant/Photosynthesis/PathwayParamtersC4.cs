@@ -1,8 +1,10 @@
 
-namespace Models.PMF.Phenology
+namespace Models.PMF.Photosynthesis
 {
+    /// <summary></summary>
     public class PathwayParametersC4 : PathwayParameters
     {
+        /// <summary></summary>
         public PathwayParametersC4()
             : base()
         {

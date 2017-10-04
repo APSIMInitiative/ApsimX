@@ -1,6 +1,6 @@
 using System;
 
-namespace Models.PMF.Phenology
+namespace Models.PMF.Photosynthesis
 {
     class NaturalSpline
     {
