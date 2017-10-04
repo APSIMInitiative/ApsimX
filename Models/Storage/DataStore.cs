@@ -530,7 +530,7 @@
             {
                 Console.WriteLine(err.ToString());
             }
-            finally   
+            finally
             {
                 connection.ExecuteNonQuery("BEGIN");
                 try
@@ -544,7 +544,16 @@
                 Open(readOnly: true);
             }
 
+            foreach (Table table in dataToWrite)
+            {
+                Table foundTable = tables.Find(t => t.Name == table.Name);
+                if (foundTable == null)
+                    tables.Add(table);
+                else
+                    foundTable.MergeColumns(table);
+            }
             dataToWrite.Clear();
+
         }
 
         /// <summary>Write a _units table to .db</summary>
