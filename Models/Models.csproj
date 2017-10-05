@@ -472,11 +472,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
     <Compile Include="WholeFarm\Activities\ActivitiesHolder.cs" />
+    <Compile Include="WholeFarm\Activities\ActivityTimerCropHarvest.cs" />
     <Compile Include="WholeFarm\Activities\ActivityTimerDateRange.cs" />
     <Compile Include="WholeFarm\Activities\ActivityTimerMonthRange.cs" />
     <Compile Include="WholeFarm\Activities\ActivityTimerInterval.cs" />
-    <Compile Include="WholeFarm\Activities\CropActivityManage.cs" />
-    <Compile Include="WholeFarm\Activities\CropActivityCollectProduct.cs" />
+    <Compile Include="WholeFarm\Activities\CropActivityManageCrop.cs" />
+    <Compile Include="WholeFarm\Activities\CropActivityManageProduct.cs" />
+    <Compile Include="WholeFarm\Activities\CropActivityTask.cs" />
     <Compile Include="WholeFarm\Activities\IATCropLand.cs" />
     <Compile Include="WholeFarm\Activities\IATGrowCropCost.cs" />
     <Compile Include="WholeFarm\Activities\ActivityFolder.cs" />
@@ -499,7 +501,8 @@
     <Compile Include="WholeFarm\Activities\RuminantActivityMilking.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityPredictiveStockingENSO.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityWean.cs" />
-    <Compile Include="WholeFarm\Activities\RuminantFee.cs" />
+    <Compile Include="WholeFarm\Activities\CropActivityFee.cs" />
+    <Compile Include="WholeFarm\Activities\RuminantActivityFee.cs" />
     <Compile Include="WholeFarm\Activities\TruckingSettings.cs" />
     <Compile Include="WholeFarm\Activities\WFRuminantActivityBase.cs" />
     <Compile Include="WholeFarm\FileCrop.cs" />

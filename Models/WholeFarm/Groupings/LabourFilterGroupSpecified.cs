@@ -23,6 +23,8 @@ namespace Models.WholeFarm.Groupings
 	[ValidParent(ParentType = typeof(OtherAnimalsActivityFeed))]
     [ValidParent(ParentType = typeof(RuminantActivityCollectManureAll))]
     [ValidParent(ParentType = typeof(RuminantActivityCollectManurePaddock))]
+    [ValidParent(ParentType = typeof(CropActivityTask))]
+    [ValidParent(ParentType = typeof(ResourceActivitySell))]
     public class LabourFilterGroupSpecified: LabourFilterGroup
 	{
 

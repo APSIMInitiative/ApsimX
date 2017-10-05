@@ -27,7 +27,7 @@
             <Name>Field</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <LandArea>100</LandArea>
-            <SoilType>0</SoilType>
+            <SoilType>3</SoilType>
           </LandType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Land>
@@ -47,171 +47,78 @@
         <AnimalFoodStore>
           <Name>AnimalFoodStore</Name>
           <AnimalFoodStoreType>
-            <Name>RiceStraw</Name>
-            <Transmutation>
-              <Name>Purchase</Name>
-              <TransmutationCost>
-                <Name>Money</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ResourceName>Finances</ResourceName>
-                <ResourceTypeName>General account</ResourceTypeName>
-                <CostPerUnit>100</CostPerUnit>
-              </TransmutationCost>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <AmountPerUnitPurchase>10000</AmountPerUnitPurchase>
-            </Transmutation>
+            <Name>Maize</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>89.5</DryMatter>
-            <DMD>45</DMD>
-            <Nitrogen>0.75</Nitrogen>
-            <StartingAmount>10000</StartingAmount>
+            <DryMatter>0</DryMatter>
+            <DMD>0</DMD>
+            <Nitrogen>0</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>Maize stover</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <DryMatter>0</DryMatter>
+            <DMD>0</DMD>
+            <Nitrogen>0</Nitrogen>
+            <StartingAmount>0</StartingAmount>
           </AnimalFoodStoreType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </AnimalFoodStore>
-        <RuminantHerd>
-          <Name>Ruminants</Name>
-          <RuminantType>
-            <Name>Bos indicus</Name>
-            <RuminantInitialCohorts>
-              <Name>Initial cohorts</Name>
-              <RuminantTypeCohort>
-                <Name>Heifers</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Gender>Female</Gender>
-                <Age>0</Age>
-                <Number>0</Number>
-                <Weight>0</Weight>
-                <WeightSD>0</WeightSD>
-                <Suckling>false</Suckling>
-                <Sire>false</Sire>
-              </RuminantTypeCohort>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </RuminantInitialCohorts>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Breed>Bos indicus</Breed>
-            <EMaintEfficiencyCoefficient>0.35</EMaintEfficiencyCoefficient>
-            <EMaintEfficiencyIntercept>0.503</EMaintEfficiencyIntercept>
-            <EGrowthEfficiencyCoefficient>0.79</EGrowthEfficiencyCoefficient>
-            <EGrowthEfficiencyIntercept>0</EGrowthEfficiencyIntercept>
-            <ELactationEfficiencyCoefficient>0.35</ELactationEfficiencyCoefficient>
-            <ELactationEfficiencyIntercept>0.42</ELactationEfficiencyIntercept>
-            <EMaintExponent>8.2E-05</EMaintExponent>
-            <EMaintIntercept>0.09</EMaintIntercept>
-            <EMaintCoefficient>0.26</EMaintCoefficient>
-            <Kme>1</Kme>
-            <GrowthEnergyIntercept1>6.7</GrowthEnergyIntercept1>
-            <GrowthEnergyIntercept2>20.3</GrowthEnergyIntercept2>
-            <GrowthEfficiency>1.09</GrowthEfficiency>
-            <SRWFemale>500</SRWFemale>
-            <SRWMaleMultiplier>1.2</SRWMaleMultiplier>
-            <SRWBirth>0.08</SRWBirth>
-            <AgeGrowthRateCoefficient>0.0115</AgeGrowthRateCoefficient>
-            <SRWGrowthScalar>0.32</SRWGrowthScalar>
-            <IntakeCoefficient>0.024</IntakeCoefficient>
-            <IntakeIntercept>1.7</IntakeIntercept>
-            <ProteinCoefficient>120</ProteinCoefficient>
-            <ProteinDegradability>0.9</ProteinDegradability>
-            <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
-            <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
-            <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
-            <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
-            <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
-            <StrictFeedingLimits>true</StrictFeedingLimits>
-            <MilkIntakeCoefficient>0.1206</MilkIntakeCoefficient>
-            <MilkIntakeIntercept>3.8146</MilkIntakeIntercept>
-            <MilkIntakeMaximum>20</MilkIntakeMaximum>
-            <MilkLWTFodderSubstitutionProportion>0.2</MilkLWTFodderSubstitutionProportion>
-            <MaxJuvenileIntake>0.035</MaxJuvenileIntake>
-            <ProportionalDiscountDueToMilk>0.3</ProportionalDiscountDueToMilk>
-            <ProportionOfMaxWeightToSurvive>0.5</ProportionOfMaxWeightToSurvive>
-            <LactatingPotentialModifierConstantA>0.42</LactatingPotentialModifierConstantA>
-            <LactatingPotentialModifierConstantB>61</LactatingPotentialModifierConstantB>
-            <LactatingPotentialModifierConstantC>1.7</LactatingPotentialModifierConstantC>
-            <MaximumSizeOfIndividual>1.2</MaximumSizeOfIndividual>
-            <MortalityBase>0.03</MortalityBase>
-            <MortalityCoefficient>2.5</MortalityCoefficient>
-            <MortalityIntercept>0.05</MortalityIntercept>
-            <MortalityExponent>3</MortalityExponent>
-            <JuvenileMortalityCoefficient>3</JuvenileMortalityCoefficient>
-            <JuvenileMortalityMaximum>0.2</JuvenileMortalityMaximum>
-            <JuvenileMortalityExponent>1.8</JuvenileMortalityExponent>
-            <WoolCoefficient>0</WoolCoefficient>
-            <CashmereCoefficient>0</CashmereCoefficient>
-            <MilkCurveSuckling>0.6</MilkCurveSuckling>
-            <MilkCurveNonSuckling>0.11</MilkCurveNonSuckling>
-            <MilkingDays>300</MilkingDays>
-            <MilkPeakYield>20</MilkPeakYield>
-            <MilkOffsetDay>4</MilkOffsetDay>
-            <MilkPeakDay>45</MilkPeakDay>
-            <InterParturitionIntervalIntercept>10.847</InterParturitionIntervalIntercept>
-            <InterParturitionIntervalCoefficient>-0.7994</InterParturitionIntervalCoefficient>
-            <GestationLength>9</GestationLength>
-            <MinimumAge1stMating>24</MinimumAge1stMating>
-            <MinimumSize1stMating>0.5</MinimumSize1stMating>
-            <MinimumDaysBirthToConception>61</MinimumDaysBirthToConception>
-            <TwinRate>0</TwinRate>
-            <CriticalCowWeight>0.5</CriticalCowWeight>
-            <ConceptionRateCoefficent>
-              <double>-12.634</double>
-              <double>-14.247</double>
-              <double>-11</double>
-              <double>-9.8353</double>
-            </ConceptionRateCoefficent>
-            <ConceptionRateIntercept>
-              <double>7.073</double>
-              <double>5.182</double>
-              <double>8.6</double>
-              <double>6.754</double>
-            </ConceptionRateIntercept>
-            <ConceptionRateAsymptote>
-              <double>90</double>
-              <double>90</double>
-              <double>90</double>
-              <double>95</double>
-            </ConceptionRateAsymptote>
-            <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
-            <PrenatalMortality>7.9</PrenatalMortality>
-            <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
-            <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
-          </RuminantType>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </RuminantHerd>
-        <ProductStore>
-          <Name>Products</Name>
-          <ProductStoreTypeManure>
-            <Name>Manure</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <UncollectedStores />
-            <DecayRate>0.9</DecayRate>
-            <MoistureDecayRate>0.5</MoistureDecayRate>
-            <ProportionMoistureFresh>0.3</ProportionMoistureFresh>
-            <MaximumAge>12</MaximumAge>
-          </ProductStoreTypeManure>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </ProductStore>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ResourcesHolder>
       <ActivitiesHolder>
         <Name>Activities</Name>
-        <CropActivityManage>
+        <CropActivityManageCrop>
           <Name>Manage maize</Name>
-          <CropActivityCollectProduct>
-            <Name>CropActivityCollectProduct</Name>
+          <CropActivityManageProduct>
+            <Name>Manage grain</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Store>HumanFoodStore</Store>
-            <PercentKept>0</PercentKept>
+            <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
+            <CropName>Maize_local</CropName>
+            <Store>AnimalFoodStore</Store>
+            <StoreItemName>Maize</StoreItemName>
+            <PercentKept>100</PercentKept>
             <TreesPerHa>0</TreesPerHa>
-          </CropActivityCollectProduct>
+            <UnitsToHaConverter>0</UnitsToHaConverter>
+          </CropActivityManageProduct>
+          <CropActivityManageProduct>
+            <Name>Manage residue</Name>
+            <ActivityTimerCropHarvest>
+              <Name>Perfrom at harvest</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MonthsBeforeHarvestStart>0</MonthsBeforeHarvestStart>
+              <MonthsBeforeHarvestStop>0</MonthsBeforeHarvestStop>
+              <Invert>false</Invert>
+            </ActivityTimerCropHarvest>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
+            <CropName>Maize_local_Stover</CropName>
+            <Store>AnimalFoodStore</Store>
+            <StoreItemName>Maize stover</StoreItemName>
+            <PercentKept>100</PercentKept>
+            <TreesPerHa>0</TreesPerHa>
+            <UnitsToHaConverter>0</UnitsToHaConverter>
+          </CropActivityManageProduct>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           <LandItemNameToUse>Field</LandItemNameToUse>
           <AreaRequested>0</AreaRequested>
           <UseAreaAvailable>true</UseAreaAvailable>
-        </CropActivityManage>
+        </CropActivityManageCrop>
+        <ResourceActivitySell>
+          <Name>Sell maize</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+          <AccountName>General account</AccountName>
+          <ResourceGroupName>AnimalFoodStore</ResourceGroupName>
+          <ResourceTypeName>Maize</ResourceTypeName>
+          <SellWholeUnitsOnly>true</SellWholeUnitsOnly>
+          <AmountReserved>0</AmountReserved>
+          <UnitSize>1000</UnitSize>
+          <UnitPrice>800</UnitPrice>
+        </ResourceActivitySell>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ActivitiesHolder>
       <Folder>
@@ -251,20 +158,20 @@
           </EventNames>
         </Report>
         <Report>
-          <Name>ProductsLedger</Name>
+          <Name>AnimalFoodStoreLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Products.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Products.LastTransaction.Debit as Debit</string>
-            <string>[Resources].Products.LastTransaction.ResourceType as Resource</string>
-            <string>[Resources].Products.LastTransaction.Activity as Activity</string>
-            <string>[Resources].Products.LastTransaction.Reason as Reason</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
           </VariableNames>
           <EventNames>
-            <string>[Resources].Products.TransactionOccurred</string>
+            <string>[Resources].AnimalFoodStore.TransactionOccurred</string>
           </EventNames>
         </Report>
         <Report>
@@ -284,6 +191,20 @@
             <string>[Resources].Land.TransactionOccurred</string>
           </EventNames>
         </Report>
+        <Report>
+          <Name>ActivityLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Activities].LastActivityPerformed.Name as Name</string>
+            <string>[Activities].LastActivityPerformed.Status.ToString() as Status</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Activities].ActivityPerformed</string>
+          </EventNames>
+        </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -294,10 +215,20 @@
       <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </WholeFarm>
+    <FileCrop>
+      <Name>FileCrop</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
+    <FileCrop>
+      <Name>FileCropResidue</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
-    <Name>SimpleManureCollectionLabour</Name>
+    <Name>GrowCropWithTasks</Name>
     <Clock>
       <Name>clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -312,6 +243,16 @@
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
+        <Land>
+          <Name>Land</Name>
+          <LandType>
+            <Name>Field</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <LandArea>100</LandArea>
+            <SoilType>3</SoilType>
+          </LandType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Land>
         <Finance>
           <Name>Finances</Name>
           <FinanceType>
@@ -325,6 +266,26 @@
           </FinanceType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Finance>
+        <AnimalFoodStore>
+          <Name>AnimalFoodStore</Name>
+          <AnimalFoodStoreType>
+            <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <DryMatter>0</DryMatter>
+            <DMD>0</DMD>
+            <Nitrogen>0</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>Maize stover</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <DryMatter>0</DryMatter>
+            <DMD>0</DMD>
+            <Nitrogen>0</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+          </AnimalFoodStoreType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </AnimalFoodStore>
         <Labour>
           <Name>Labour</Name>
           <LabourType>
@@ -333,262 +294,221 @@
             <InitialAge>42</InitialAge>
             <Gender>Male</Gender>
             <MaxLabourSupply>
-              <double>1.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
+              <double>24</double>
+              <double>24</double>
+              <double>24</double>
+              <double>24</double>
+              <double>24</double>
+              <double>24</double>
+              <double>24</double>
+              <double>24</double>
+              <double>24</double>
+              <double>24</double>
+              <double>24</double>
+              <double>24</double>
             </MaxLabourSupply>
             <Individuals>1</Individuals>
           </LabourType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <AllowAging>true</AllowAging>
         </Labour>
-        <AnimalFoodStore>
-          <Name>AnimalFoodStore</Name>
-          <AnimalFoodStoreType>
-            <Name>RiceStraw</Name>
-            <Transmutation>
-              <Name>Purchase</Name>
-              <TransmutationCost>
-                <Name>Money</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ResourceName>Finances</ResourceName>
-                <ResourceTypeName>General account</ResourceTypeName>
-                <CostPerUnit>100</CostPerUnit>
-              </TransmutationCost>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <AmountPerUnitPurchase>10000</AmountPerUnitPurchase>
-            </Transmutation>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>89.5</DryMatter>
-            <DMD>45</DMD>
-            <Nitrogen>0.75</Nitrogen>
-            <StartingAmount>10000</StartingAmount>
-          </AnimalFoodStoreType>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </AnimalFoodStore>
-        <RuminantHerd>
-          <Name>Ruminants</Name>
-          <RuminantType>
-            <Name>Bos indicus</Name>
-            <RuminantInitialCohorts>
-              <Name>Initial cohorts</Name>
-              <RuminantTypeCohort>
-                <Name>Heifers</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Gender>Female</Gender>
-                <Age>12</Age>
-                <Number>10</Number>
-                <Weight>250</Weight>
-                <WeightSD>0</WeightSD>
-                <Suckling>false</Suckling>
-                <Sire>false</Sire>
-              </RuminantTypeCohort>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </RuminantInitialCohorts>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Breed>Bos indicus</Breed>
-            <EMaintEfficiencyCoefficient>0.35</EMaintEfficiencyCoefficient>
-            <EMaintEfficiencyIntercept>0.503</EMaintEfficiencyIntercept>
-            <EGrowthEfficiencyCoefficient>0.79</EGrowthEfficiencyCoefficient>
-            <EGrowthEfficiencyIntercept>0</EGrowthEfficiencyIntercept>
-            <ELactationEfficiencyCoefficient>0.35</ELactationEfficiencyCoefficient>
-            <ELactationEfficiencyIntercept>0.42</ELactationEfficiencyIntercept>
-            <EMaintExponent>8.2E-05</EMaintExponent>
-            <EMaintIntercept>0.09</EMaintIntercept>
-            <EMaintCoefficient>0.26</EMaintCoefficient>
-            <Kme>1</Kme>
-            <GrowthEnergyIntercept1>6.7</GrowthEnergyIntercept1>
-            <GrowthEnergyIntercept2>20.3</GrowthEnergyIntercept2>
-            <GrowthEfficiency>1.09</GrowthEfficiency>
-            <SRWFemale>500</SRWFemale>
-            <SRWMaleMultiplier>1.2</SRWMaleMultiplier>
-            <SRWBirth>0.08</SRWBirth>
-            <AgeGrowthRateCoefficient>0.0115</AgeGrowthRateCoefficient>
-            <SRWGrowthScalar>0.32</SRWGrowthScalar>
-            <IntakeCoefficient>0.024</IntakeCoefficient>
-            <IntakeIntercept>1.7</IntakeIntercept>
-            <ProteinCoefficient>120</ProteinCoefficient>
-            <ProteinDegradability>0.9</ProteinDegradability>
-            <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
-            <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
-            <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
-            <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
-            <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
-            <StrictFeedingLimits>true</StrictFeedingLimits>
-            <MilkIntakeCoefficient>0.1206</MilkIntakeCoefficient>
-            <MilkIntakeIntercept>3.8146</MilkIntakeIntercept>
-            <MilkIntakeMaximum>20</MilkIntakeMaximum>
-            <MilkLWTFodderSubstitutionProportion>0.2</MilkLWTFodderSubstitutionProportion>
-            <MaxJuvenileIntake>0.035</MaxJuvenileIntake>
-            <ProportionalDiscountDueToMilk>0.3</ProportionalDiscountDueToMilk>
-            <ProportionOfMaxWeightToSurvive>0.5</ProportionOfMaxWeightToSurvive>
-            <LactatingPotentialModifierConstantA>0.42</LactatingPotentialModifierConstantA>
-            <LactatingPotentialModifierConstantB>61</LactatingPotentialModifierConstantB>
-            <LactatingPotentialModifierConstantC>1.7</LactatingPotentialModifierConstantC>
-            <MaximumSizeOfIndividual>1.2</MaximumSizeOfIndividual>
-            <MortalityBase>0.03</MortalityBase>
-            <MortalityCoefficient>2.5</MortalityCoefficient>
-            <MortalityIntercept>0.05</MortalityIntercept>
-            <MortalityExponent>3</MortalityExponent>
-            <JuvenileMortalityCoefficient>3</JuvenileMortalityCoefficient>
-            <JuvenileMortalityMaximum>0.2</JuvenileMortalityMaximum>
-            <JuvenileMortalityExponent>1.8</JuvenileMortalityExponent>
-            <WoolCoefficient>0</WoolCoefficient>
-            <CashmereCoefficient>0</CashmereCoefficient>
-            <MilkCurveSuckling>0.6</MilkCurveSuckling>
-            <MilkCurveNonSuckling>0.11</MilkCurveNonSuckling>
-            <MilkingDays>300</MilkingDays>
-            <MilkPeakYield>20</MilkPeakYield>
-            <MilkOffsetDay>4</MilkOffsetDay>
-            <MilkPeakDay>45</MilkPeakDay>
-            <InterParturitionIntervalIntercept>10.847</InterParturitionIntervalIntercept>
-            <InterParturitionIntervalCoefficient>-0.7994</InterParturitionIntervalCoefficient>
-            <GestationLength>9</GestationLength>
-            <MinimumAge1stMating>24</MinimumAge1stMating>
-            <MinimumSize1stMating>0.5</MinimumSize1stMating>
-            <MinimumDaysBirthToConception>61</MinimumDaysBirthToConception>
-            <TwinRate>0</TwinRate>
-            <CriticalCowWeight>0.5</CriticalCowWeight>
-            <ConceptionRateCoefficent>
-              <double>-12.634</double>
-              <double>-14.247</double>
-              <double>-11</double>
-              <double>-9.8353</double>
-            </ConceptionRateCoefficent>
-            <ConceptionRateIntercept>
-              <double>7.073</double>
-              <double>5.182</double>
-              <double>8.6</double>
-              <double>6.754</double>
-            </ConceptionRateIntercept>
-            <ConceptionRateAsymptote>
-              <double>90</double>
-              <double>90</double>
-              <double>90</double>
-              <double>95</double>
-            </ConceptionRateAsymptote>
-            <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
-            <PrenatalMortality>7.9</PrenatalMortality>
-            <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
-            <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
-          </RuminantType>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </RuminantHerd>
-        <ProductStore>
-          <Name>Products</Name>
-          <ProductStoreTypeManure>
-            <Name>Manure</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <UncollectedStores />
-            <DecayRate>0.9</DecayRate>
-            <MoistureDecayRate>0.5</MoistureDecayRate>
-            <ProportionMoistureFresh>0.3</ProportionMoistureFresh>
-            <MaximumAge>12</MaximumAge>
-          </ProductStoreTypeManure>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </ProductStore>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ResourcesHolder>
       <ActivitiesHolder>
         <Name>Activities</Name>
-        <ActivityFolder>
-          <Name>Manage herd</Name>
-          <RuminantActivityFeed>
-            <Name>Feed rice straw</Name>
-            <RuminantFeedGroup>
-              <Name>Feed Bos indicus</Name>
+        <CropActivityManageCrop>
+          <Name>Manage maize</Name>
+          <CropActivityManageProduct>
+            <Name>Manage grain</Name>
+            <CropActivityTask>
+              <Name>Prepare field</Name>
+              <ActivityTimerCropHarvest>
+                <Name>7 mths before harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <MonthsBeforeHarvestStart>7</MonthsBeforeHarvestStart>
+                <MonthsBeforeHarvestStop>7</MonthsBeforeHarvestStop>
+                <Invert>false</Invert>
+              </ActivityTimerCropHarvest>
+              <LabourFilterGroupSpecified>
+                <Name>Define labour</Name>
+                <LabourFilter>
+                  <Name>Filter[Name=Joe B]</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Parameter>Name</Parameter>
+                  <Operator>Equal</Operator>
+                  <Value>Joe B</Value>
+                </LabourFilter>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>1</LabourPerUnit>
+                <UnitSize>0</UnitSize>
+                <UnitType>Fixed</UnitType>
+              </LabourFilterGroupSpecified>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MonthlyValues>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-              </MonthlyValues>
-            </RuminantFeedGroup>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-            <HerdFilters />
-            <FeedTypeName>RiceStraw</FeedTypeName>
-            <ProportionTramplingWastage>0</ProportionTramplingWastage>
-            <FeedStyle>ProportionOfWeight</FeedStyle>
-          </RuminantActivityFeed>
-          <RuminantActivityGrow>
-            <Name>Grow all ruminants</Name>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
+            <CropActivityTask>
+              <Name>Sow seeds</Name>
+              <ActivityTimerCropHarvest>
+                <Name>6 mths before harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <MonthsBeforeHarvestStart>6</MonthsBeforeHarvestStart>
+                <MonthsBeforeHarvestStop>6</MonthsBeforeHarvestStop>
+                <Invert>false</Invert>
+              </ActivityTimerCropHarvest>
+              <CropActivityFee>
+                <Name>Purchase seeds</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Amount>100</Amount>
+              </CropActivityFee>
+              <LabourFilterGroupSpecified>
+                <Name>Define labour</Name>
+                <LabourFilter>
+                  <Name>Filter[Name=Joe B]</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Parameter>Name</Parameter>
+                  <Operator>Equal</Operator>
+                  <Value>Joe B</Value>
+                </LabourFilter>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>0.1</LabourPerUnit>
+                <UnitSize>1</UnitSize>
+                <UnitType>perHa</UnitType>
+              </LabourFilterGroupSpecified>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
+            <CropActivityTask>
+              <Name>Perform irrigation</Name>
+              <ActivityTimerCropHarvest>
+                <Name>From plant to harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <MonthsBeforeHarvestStart>5</MonthsBeforeHarvestStart>
+                <MonthsBeforeHarvestStop>0</MonthsBeforeHarvestStop>
+                <Invert>false</Invert>
+              </ActivityTimerCropHarvest>
+              <LabourFilterGroupSpecified>
+                <Name>Define labour</Name>
+                <LabourFilter>
+                  <Name>Filter[Name=Joe B]</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Parameter>Name</Parameter>
+                  <Operator>Equal</Operator>
+                  <Value>Joe B</Value>
+                </LabourFilter>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>0.1</LabourPerUnit>
+                <UnitSize>1</UnitSize>
+                <UnitType>perHa</UnitType>
+              </LabourFilterGroupSpecified>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
+            <CropActivityTask>
+              <Name>Harvest</Name>
+              <ActivityTimerCropHarvest>
+                <Name>At harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <MonthsBeforeHarvestStart>0</MonthsBeforeHarvestStart>
+                <MonthsBeforeHarvestStop>0</MonthsBeforeHarvestStop>
+                <Invert>false</Invert>
+              </ActivityTimerCropHarvest>
+              <LabourFilterGroupSpecified>
+                <Name>Define labour</Name>
+                <LabourFilter>
+                  <Name>Filter[Name=Joe B]</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Parameter>Name</Parameter>
+                  <Operator>Equal</Operator>
+                  <Value>Joe B</Value>
+                </LabourFilter>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>0.1</LabourPerUnit>
+                <UnitSize>1</UnitSize>
+                <UnitType>perHa</UnitType>
+              </LabourFilterGroupSpecified>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          </RuminantActivityGrow>
+            <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
+            <CropName>Maize_local</CropName>
+            <Store>AnimalFoodStore</Store>
+            <StoreItemName>Maize</StoreItemName>
+            <PercentKept>100</PercentKept>
+            <TreesPerHa>0</TreesPerHa>
+            <UnitsToHaConverter>0</UnitsToHaConverter>
+          </CropActivityManageProduct>
+          <CropActivityManageProduct>
+            <Name>Manage residue</Name>
+            <CropActivityTask>
+              <Name>Cut and carry</Name>
+              <ActivityTimerCropHarvest>
+                <Name>At harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <MonthsBeforeHarvestStart>0</MonthsBeforeHarvestStart>
+                <MonthsBeforeHarvestStop>0</MonthsBeforeHarvestStop>
+                <Invert>false</Invert>
+              </ActivityTimerCropHarvest>
+              <LabourFilterGroupSpecified>
+                <Name>Define labour</Name>
+                <LabourFilter>
+                  <Name>Filter[Name=Joe B]</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Parameter>Name</Parameter>
+                  <Operator>Equal</Operator>
+                  <Value>Joe B</Value>
+                </LabourFilter>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>0.1</LabourPerUnit>
+                <UnitSize>1</UnitSize>
+                <UnitType>perHa</UnitType>
+              </LabourFilterGroupSpecified>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
+            <CropName>Maize_local_Stover</CropName>
+            <Store>AnimalFoodStore</Store>
+            <StoreItemName>Maize stover</StoreItemName>
+            <PercentKept>100</PercentKept>
+            <TreesPerHa>0</TreesPerHa>
+            <UnitsToHaConverter>0</UnitsToHaConverter>
+          </CropActivityManageProduct>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-        </ActivityFolder>
-        <ActivityFolder>
-          <Name>Manage manure</Name>
-          <RuminantActivityCollectManureAll>
-            <Name>Collect all manure</Name>
-            <LabourFilterGroupSpecified>
-              <Name>Define labour</Name>
-              <LabourFilter>
-                <Name>Filter[Name=Joe B]</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Parameter>Name</Parameter>
-                <Operator>Equal</Operator>
-                <Value>Joe B</Value>
-              </LabourFilter>
+          <LandItemNameToUse>Field</LandItemNameToUse>
+          <AreaRequested>0</AreaRequested>
+          <UseAreaAvailable>true</UseAreaAvailable>
+        </CropActivityManageCrop>
+        <ResourceActivitySell>
+          <Name>Sell maize</Name>
+          <LabourFilterGroupSpecified>
+            <Name>Define labour</Name>
+            <LabourFilter>
+              <Name>Filter[Name=Joe B]</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <LabourPerUnit>1</LabourPerUnit>
-              <UnitSize>500</UnitSize>
-              <UnitType>perKg</UnitType>
-            </LabourFilterGroupSpecified>
+              <Parameter>Name</Parameter>
+              <Operator>Equal</Operator>
+              <Value>Joe B</Value>
+            </LabourFilter>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-          </RuminantActivityCollectManureAll>
-          <ResourceActivitySell>
-            <Name>Sell manure</Name>
-            <LabourFilterGroupUnit>
-              <Name>Define labour</Name>
-              <LabourFilter>
-                <Name>Filter[Name=Joe B]</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Parameter>Name</Parameter>
-                <Operator>Equal</Operator>
-                <Value>Joe B</Value>
-              </LabourFilter>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <LabourPerUnit>0.5</LabourPerUnit>
-              <UnitType>Fixed</UnitType>
-            </LabourFilterGroupUnit>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-            <AccountName>General account</AccountName>
-            <ResourceGroupName>Products</ResourceGroupName>
-            <ResourceTypeName>Manure</ResourceTypeName>
-            <SellWholeUnitsOnly>true</SellWholeUnitsOnly>
-            <AmountReserved>0</AmountReserved>
-            <UnitSize>10</UnitSize>
-            <UnitPrice>1</UnitPrice>
-          </ResourceActivitySell>
+            <LabourPerUnit>1</LabourPerUnit>
+            <UnitSize>1</UnitSize>
+            <UnitType>perUnit</UnitType>
+          </LabourFilterGroupSpecified>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-        </ActivityFolder>
+          <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+          <AccountName>General account</AccountName>
+          <ResourceGroupName>AnimalFoodStore</ResourceGroupName>
+          <ResourceTypeName>Maize</ResourceTypeName>
+          <SellWholeUnitsOnly>true</SellWholeUnitsOnly>
+          <AmountReserved>0</AmountReserved>
+          <UnitSize>1000</UnitSize>
+          <UnitPrice>800</UnitPrice>
+        </ResourceActivitySell>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ActivitiesHolder>
       <Folder>
@@ -628,37 +548,51 @@
           </EventNames>
         </Report>
         <Report>
-          <Name>ProductsLedger</Name>
+          <Name>AnimalFoodStoreLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Products.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Products.LastTransaction.Debit as Debit</string>
-            <string>[Resources].Products.LastTransaction.ResourceType as Resource</string>
-            <string>[Resources].Products.LastTransaction.Activity as Activity</string>
-            <string>[Resources].Products.LastTransaction.Reason as Reason</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
           </VariableNames>
           <EventNames>
-            <string>[Resources].Products.TransactionOccurred</string>
+            <string>[Resources].AnimalFoodStore.TransactionOccurred</string>
           </EventNames>
         </Report>
         <Report>
-          <Name>LabourLedger</Name>
+          <Name>LandLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Labour.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Labour.LastTransaction.Debit as Debit</string>
-            <string>[Resources].Labour.LastTransaction.ResourceType as Resource</string>
-            <string>[Resources].Labour.LastTransaction.Activity as Activity</string>
-            <string>[Resources].Labour.LastTransaction.Reason as Reason</string>
+            <string>[Resources].Land.LastTransaction.Credit as Credit</string>
+            <string>[Resources].Land.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Land.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].Land.LastTransaction.Activity as Activity</string>
+            <string>[Resources].Land.LastTransaction.Reason as Reason</string>
           </VariableNames>
           <EventNames>
-            <string>[Resources].Labour.TransactionOccurred</string>
+            <string>[Resources].Land.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>ActivityLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Activities].LastActivityPerformed.Name as Name</string>
+            <string>[Activities].LastActivityPerformed.Status.ToString() as Status</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Activities].ActivityPerformed</string>
           </EventNames>
         </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -671,6 +605,16 @@
       <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </WholeFarm>
+    <FileCrop>
+      <Name>FileCrop</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
+    <FileCrop>
+      <Name>FileCropResidue</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <IncludeInDocumentation>true</IncludeInDocumentation>

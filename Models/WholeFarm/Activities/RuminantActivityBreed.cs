@@ -328,7 +328,7 @@ namespace Models.WholeFarm.Activities
 			if (head == 0) return null;
 
 			// get all fees for breeding
-			foreach (RuminantFee item in Apsim.Children(this, typeof(RuminantFee)))
+			foreach (RuminantActivityFee item in Apsim.Children(this, typeof(RuminantActivityFee)))
 			{
 				if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
 				double sumneeded = 0;

@@ -107,8 +107,10 @@ namespace Models
         public event EventHandler WFInitialiseResource;
 		/// <summary>WholeFarm initialise Activity occurs once at start of simulation</summary>
 		public event EventHandler WFInitialiseActivity;
-		/// <summary>WholeFarm update pasture</summary>
-		public event EventHandler WFUpdatePasture;
+        /// <summary>WholeFarm start of timestep event</summary>
+        public event EventHandler WFStartOfTimeStep;
+        /// <summary>WholeFarm update pasture</summary>
+        public event EventHandler WFUpdatePasture;
 		/// <summary>WholeFarm cut and carry</summary>
 		public event EventHandler WFDoCutAndCarry;
 		/// <summary>WholeFarm Do Animal (Ruminant and Other) Breeding and milk calculations</summary>
@@ -277,6 +279,8 @@ namespace Models
                     if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
                     {
                         // WholeFarm events performed before APSIM EndOfMonth
+                        if (WFStartOfTimeStep != null)
+                            WFStartOfTimeStep.Invoke(this, args);
                         if (WFUpdatePasture != null)
                             WFUpdatePasture.Invoke(this, args);
                         if (WFDoCutAndCarry != null)

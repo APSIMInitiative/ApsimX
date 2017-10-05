@@ -176,7 +176,7 @@ namespace Models.WholeFarm.Activities
                     bankAccount.Remove(expenseRequest);
                 }
 
-                foreach (RuminantFee item in Apsim.Children(this, typeof(RuminantFee)))
+                foreach (RuminantActivityFee item in Apsim.Children(this, typeof(RuminantActivityFee)))
                 {
                     switch (item.PaymentStyle)
                     {

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="15">
   <Name>Simulations</Name>
   <Simulation>
@@ -180,171 +180,188 @@
                 <Name>CalfF</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>5</StartingAge>
-                <StartingNumber>200</StartingNumber>
-                <StartingWeight>40</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>true</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>CalfM</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
-                <StartingAge>5</StartingAge>
-                <StartingNumber>200</StartingNumber>
-                <StartingWeight>40</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>true</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>WeanerF</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>5</StartingAge>
-                <StartingNumber>500</StartingNumber>
-                <StartingWeight>180</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>WeanerM</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
-                <StartingAge>5</StartingAge>
-                <StartingNumber>500</StartingNumber>
-                <StartingWeight>180</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female1_2</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>18</StartingAge>
-                <StartingNumber>200</StartingNumber>
-                <StartingWeight>270</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female2_3</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>30</StartingAge>
-                <StartingNumber>200</StartingNumber>
-                <StartingWeight>400</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female3_4</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>42</StartingAge>
-                <StartingNumber>200</StartingNumber>
-                <StartingWeight>450</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female4_5</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>54</StartingAge>
-                <StartingNumber>180</StartingNumber>
-                <StartingWeight>460</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female5_6</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>66</StartingAge>
-                <StartingNumber>180</StartingNumber>
-                <StartingWeight>470</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female6_7</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>78</StartingAge>
-                <StartingNumber>150</StartingNumber>
-                <StartingWeight>480</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female7_8</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>90</StartingAge>
-                <StartingNumber>150</StartingNumber>
-                <StartingWeight>480</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female8_9</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>102</StartingAge>
-                <StartingNumber>150</StartingNumber>
-                <StartingWeight>490</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female9_10</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>114</StartingAge>
-                <StartingNumber>150</StartingNumber>
-                <StartingWeight>500</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Male1_2</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
-                <StartingAge>18</StartingAge>
-                <StartingNumber>200</StartingNumber>
-                <StartingWeight>350</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Male2_3</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
-                <StartingAge>30</StartingAge>
-                <StartingNumber>200</StartingNumber>
-                <StartingWeight>520</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Male3_4</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
-                <StartingAge>42</StartingAge>
-                <StartingNumber>0</StartingNumber>
-                <StartingWeight>610</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Breeding_sires</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
-                <StartingAge>36</StartingAge>
-                <StartingNumber>60</StartingNumber>
-                <StartingWeight>720</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </RuminantInitialCohorts>
@@ -416,6 +433,7 @@
               </AnimalPriceEntry>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <PricingStyle>perKg</PricingStyle>
+              <BreedingSirePrice>0</BreedingSirePrice>
             </AnimalPricing>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Breed>Bos indicus</Breed>
@@ -718,7 +736,6 @@
             <Name>General farm maintenance</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <PaymentInterval>1</PaymentInterval>
             <Amount>40000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>true</IsOverhead>
@@ -727,7 +744,6 @@
             <Name>Fuel costs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <PaymentInterval>1</PaymentInterval>
             <Amount>30000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>true</IsOverhead>
@@ -736,7 +752,6 @@
             <Name>Pest control</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <MonthDue>12</MonthDue>
             <Amount>5000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -745,7 +760,6 @@
             <Name>Contractors</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <MonthDue>10</MonthDue>
             <Amount>30000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -754,7 +768,6 @@
             <Name>Administration</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <PaymentInterval>1</PaymentInterval>
             <Amount>1666.67</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -763,7 +776,6 @@
             <Name>Rates and Fees</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <MonthDue>7</MonthDue>
             <Amount>15000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -772,7 +784,6 @@
             <Name>Insurance</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <MonthDue>12</MonthDue>
             <Amount>20000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -781,7 +792,6 @@
             <Name>Electricity</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <PaymentInterval>3</PaymentInterval>
             <Amount>2000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -790,8 +800,6 @@
             <Name>Living costs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <PaymentInterval>6</PaymentInterval>
-            <MonthDue>6</MonthDue>
             <Amount>1000</Amount>
             <AccountName>General account</AccountName>
             <IsOverhead>false</IsOverhead>
@@ -830,6 +838,7 @@
             </RuminantFeedGroup>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <HerdFilters />
             <FeedTypeName>Lucerne</FeedTypeName>
             <ProportionTramplingWastage>0</ProportionTramplingWastage>
             <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
@@ -841,58 +850,36 @@
           </RuminantActivityGrow>
           <RuminantActivityBreed>
             <Name>Breed Bos indicus</Name>
-            <ControlledMatingSettings>
-              <Name>Controlled mating</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MonthDue>8</MonthDue>
-            </ControlledMatingSettings>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <HerdName>BosIndicus</HerdName>
+            <HerdFilters />
             <MaximumConceptionRateUncontrolled>0.8</MaximumConceptionRateUncontrolled>
+            <UseAI>false</UseAI>
           </RuminantActivityBreed>
           <RuminantActivityManage>
             <Name>Manage Bos indicus herd</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <HerdName>BosIndicus</HerdName>
+            <HerdFilters />
             <MaximumBreedersKept>1800</MaximumBreedersKept>
             <MinimumBreedersKept>0</MinimumBreedersKept>
             <MaximumBreederAge>120</MaximumBreederAge>
+            <MaximumBreedersPerPurchase>0</MaximumBreedersPerPurchase>
             <MaximumSiresKept>60</MaximumSiresKept>
             <MaximumBullAge>96</MaximumBullAge>
             <AllowSireReplacement>false</AllowSireReplacement>
+            <MaximumSiresPerPurchase>0</MaximumSiresPerPurchase>
             <MaleSellingAge>0</MaleSellingAge>
             <MaleSellingWeight>0</MaleSellingWeight>
-            <ManagementMonth>10</ManagementMonth>
-            <MonthlyManagement>false</MonthlyManagement>
-            <WeaningAge>9</WeaningAge>
-            <WeaningWeight>250</WeaningWeight>
             <MinimumPastureBeforeRestock>0</MinimumPastureBeforeRestock>
             <SellFemalesLikeMales>false</SellFemalesLikeMales>
+            <ContinuousMaleSales>false</ContinuousMaleSales>
           </RuminantActivityManage>
           <RuminantActivityBuySell>
             <Name>Buy and sell Bos indicus</Name>
-            <RuminantSaleFee>
-              <Name>MLA Fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Amount>2</Amount>
-            </RuminantSaleFee>
-            <RuminantSaleFee>
-              <Name>Yard Fees</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Amount>2</Amount>
-            </RuminantSaleFee>
-            <RuminantSaleFee>
-              <Name>Sales commission</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <PaymentStyle>ProportionOfTotalSales</PaymentStyle>
-              <Amount>0.02</Amount>
-            </RuminantSaleFee>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <BreedName>Bos indicus</BreedName>
-            <BreedingSirePrice>1</BreedingSirePrice>
+            <HerdFilters />
             <BankAccountName>General account</BankAccountName>
           </RuminantActivityBuySell>
           <RuminantActivityHerdCost>
@@ -910,8 +897,7 @@
             </RuminantFilterGroup>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <PaymentInterval>6</PaymentInterval>
-            <MonthDue>2</MonthDue>
+            <HerdFilters />
             <Amount>2</Amount>
             <AccountName>General account</AccountName>
           </RuminantActivityHerdCost>
@@ -919,8 +905,7 @@
             <Name>Vaccines and drenches</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <PaymentInterval>5</PaymentInterval>
-            <MonthDue>7</MonthDue>
+            <HerdFilters />
             <Amount>200</Amount>
             <PaymentStyle>Fixed</PaymentStyle>
             <AccountName>General account</AccountName>
@@ -940,7 +925,7 @@
             </RuminantFilterGroup>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <MonthDue>5</MonthDue>
+            <HerdFilters />
             <Amount>5</Amount>
             <PaymentStyle>perAE</PaymentStyle>
             <AccountName>General account</AccountName>
@@ -1228,8 +1213,6 @@
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>281</ExplorerWidth>

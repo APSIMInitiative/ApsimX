@@ -776,8 +776,11 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\TreeViewImages\CropActivityCollectProduct.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CropActivityManage.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CropActivityManageProduct.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CropActivityFee.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerCropHarvest.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CropActivityTask.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CropActivityManageCrop.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Relationship.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FileCrop.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FileGRASP.png" />
@@ -818,7 +821,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityCollectManureAll.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityCollectManurePaddock.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ProductStoreTypeManure.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\RuminantFee.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityFee.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerDateRange.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerInterval.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerMonthRange.png" />
