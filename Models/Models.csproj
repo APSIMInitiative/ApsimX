@@ -475,6 +475,8 @@
     <Compile Include="WholeFarm\Activities\ActivityTimerDateRange.cs" />
     <Compile Include="WholeFarm\Activities\ActivityTimerMonthRange.cs" />
     <Compile Include="WholeFarm\Activities\ActivityTimerInterval.cs" />
+    <Compile Include="WholeFarm\Activities\CropActivityManage.cs" />
+    <Compile Include="WholeFarm\Activities\CropActivityCollectProduct.cs" />
     <Compile Include="WholeFarm\Activities\IATCropLand.cs" />
     <Compile Include="WholeFarm\Activities\IATGrowCropCost.cs" />
     <Compile Include="WholeFarm\Activities\ActivityFolder.cs" />

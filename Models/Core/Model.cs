@@ -237,6 +237,8 @@ namespace Models.Core
 		[XmlElement(typeof(Models.WholeFarm.Resources.AnimalFoodStoreType))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.AnimalPricing))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.AnimalPriceEntry))]
+        [XmlElement(typeof(Models.WholeFarm.Activities.CropActivityManage))]
+        [XmlElement(typeof(Models.WholeFarm.Activities.CropActivityCollectProduct))]
         [XmlElement(typeof(Models.WholeFarm.FileCrop))]
         [XmlElement(typeof(Models.WholeFarm.FileGRASP))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.Finance))]

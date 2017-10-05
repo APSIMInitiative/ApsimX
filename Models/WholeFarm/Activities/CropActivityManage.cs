@@ -1,0 +1,166 @@
+﻿using Models.Core;
+using Models.WholeFarm.Resources;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+
+namespace Models.WholeFarm.Activities
+{
+    /// <summary>Grow management activity</summary>
+    /// <summary>This activity sets aside land for the crop</summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(WFActivityBase))]
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
+    public class CropActivityManage: WFActivityBase
+    {
+        [Link]
+        private ResourcesHolder Resources = null;
+
+        /// <summary>
+        /// Name of land type where crop is located
+        /// </summary>
+        [Description("Land type where crop is to be grown")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of land resource type required")]
+        public string LandItemNameToUse { get; set; }
+
+        /// <summary>
+        /// Area of land requested
+        /// </summary>
+        [Description("Area of crop")]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        public double AreaRequested { get; set; }
+
+        /// <summary>
+        /// Use entire area available
+        /// </summary>
+        [Description("Use entire area available")]
+        public bool UseAreaAvailable { get; set; }
+        
+        /// <summary>
+        /// Area of land actually received (maybe less than requested)
+        /// </summary>
+        [XmlIgnore]
+        public double Area;
+
+        /// <summary>
+        /// Land item
+        /// </summary>
+        [XmlIgnore]
+        public LandType LinkedLandItem { get; set; }
+
+        private bool gotLandRequested = false; //was this crop able to get the land it requested ?
+
+        /// <summary>An event handler to allow us to initialise</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("WFInitialiseActivity")]
+        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        {
+            // locate Land Type resource for this forage.
+            LinkedLandItem = Resources.GetResourceItem(this, typeof(Land), LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
+
+            // used to check for Area = 0 and AreaRequested > 0. these are now validated and Area cannot be set before now.
+            ResourceRequestList = new List<ResourceRequest>
+            {
+                new ResourceRequest()
+                {
+                    AllowTransmutation = false,
+                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
+                    ResourceType = typeof(Land),
+                    ResourceTypeName = LandItemNameToUse,
+                    ActivityModel = this,
+                    Reason = "Assign",
+                    FilterDetails = null
+                }
+            };
+
+            gotLandRequested = TakeResources(ResourceRequestList);
+
+            //Now the Land has been allocated we have an Area 
+            if (gotLandRequested)
+            {
+                //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
+                Area = ResourceRequestList.FirstOrDefault().Provided;
+            }
+        }
+
+
+        /// <summary>
+        /// Method to determine resources required for this activity in the current month
+        /// </summary>
+        /// <returns>A list of resource requests</returns>
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Method used to perform activity if it can occur as soon as resources are available.
+        /// </summary>
+        public override void DoActivity()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Method to determine resources required for initialisation of this activity
+        /// </summary>
+        /// <returns></returns>
+        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Method used to perform initialisation of this activity.
+        /// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+        /// It is the responsibility of this activity to determine resources provided.
+        /// </summary>
+        public override void DoInitialisation()
+        {
+            return;
+        }
+
+
+        /// <summary>
+        /// Resource shortfall event handler
+        /// </summary>
+        public override event EventHandler ResourceShortfallOccurred;
+
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnShortfallOccurred(EventArgs e)
+        {
+            if (ResourceShortfallOccurred != null)
+                ResourceShortfallOccurred(this, e);
+        }
+
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public override event EventHandler ActivityPerformed;
+
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
+
+
+
+
+    }
+}

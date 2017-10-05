@@ -68,11 +68,12 @@
                 <Name>Heifers</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>12</StartingAge>
-                <StartingNumber>10</StartingNumber>
-                <StartingWeight>250</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>0</Age>
+                <Number>0</Number>
+                <Weight>0</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </RuminantInitialCohorts>
@@ -400,11 +401,12 @@
                 <Name>Heifers</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>12</StartingAge>
-                <StartingNumber>10</StartingNumber>
-                <StartingWeight>250</StartingWeight>
-                <StartingWeightSD>0</StartingWeightSD>
+                <Age>12</Age>
+                <Number>10</Number>
+                <Weight>250</Weight>
+                <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
+                <Sire>false</Sire>
               </RuminantTypeCohort>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </RuminantInitialCohorts>

@@ -776,6 +776,8 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CropActivityCollectProduct.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CropActivityManage.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Relationship.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FileCrop.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FileGRASP.png" />
