@@ -313,10 +313,26 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public void TriggerOnActivityPerformed()
 		{
-			ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs();
-			activitye.Activity = this;
-			this.OnActivityPerformed(activitye);
+            ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+            {
+                Activity = this
+            };
+            this.OnActivityPerformed(activitye);
 		}
+
+        /// <summary>
+        /// Method to trigger an Activity Performed event 
+        /// </summary>
+        public void TriggerOnActivityPerformed(ActivityStatus status)
+        {
+            this.Status = status;
+            ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+            {
+                Activity = this
+            };
+            this.OnActivityPerformed(activitye);
+        }
+
 
         /// <summary>
         /// Insufficient resources available action

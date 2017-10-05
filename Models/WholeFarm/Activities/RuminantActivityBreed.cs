@@ -62,11 +62,6 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("WFAnimalBreeding")]
 		private void OnWFAnimalBreeding(object sender, EventArgs e)
 		{
-            // check herd ok for breeding
-            // now done in CurrentHerd so less easy to forget to include.
-            // slight additional overhead.
-//            this.CheckHerd();
-
 //			RuminantHerd ruminantHerd = Resources.RuminantHerd();
             List<Ruminant> herd = CurrentHerd(true); //ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
 
