@@ -94,6 +94,50 @@ namespace Models.WholeFarm
         }
     }
 
+    /// <summary>
+    /// Tests if date greater than specified property name
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    public class GreaterThanEqualAttribute : ValidationAttribute
+    {
+        private const string DefaultErrorMessage =
+            "Value is less than the specified number";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="compareToFieldName"></param>
+        public GreaterThanEqualAttribute(string compareToFieldName)
+        {
+            CompareToFieldName = compareToFieldName;
+        }
+
+        private string CompareToFieldName { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            double maxvalue = Convert.ToDouble(value);
+            string[] memberNames = new string[] { validationContext.MemberName };
+
+            double minvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(CompareToFieldName).GetValue(validationContext.ObjectInstance, null));
+
+            if (maxvalue >= minvalue)
+            {
+                return ValidationResult.Success;
+            }
+            else
+            {
+                return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
+            }
+        }
+    }
+
 
 
 }
