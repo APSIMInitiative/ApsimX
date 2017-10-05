@@ -114,7 +114,7 @@ namespace Models.WholeFarm.Activities
                 );
             }
 
-            gotLandRequested = TakeResources(ResourceRequestList);
+            gotLandRequested = TakeResources(ResourceRequestList, false);
 
 
             //Now the Land has been allocated we have an Area 

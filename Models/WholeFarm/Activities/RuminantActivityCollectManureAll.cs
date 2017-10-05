@@ -111,7 +111,7 @@ namespace Models.WholeFarm.Activities
                 if (this.TimingOK)
                 {
                     List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal();
-                    bool tookRequestedResources = TakeResources(resourcesneeded);
+                    bool tookRequestedResources = TakeResources(resourcesneeded, true);
                     // get all shortfalls
                     double labourNeeded = 0;
                     double labourLimit = 1;

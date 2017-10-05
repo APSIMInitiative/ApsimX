@@ -181,7 +181,7 @@ namespace Models.WholeFarm.Activities
 			if (ResourceRequestList != null || ResourceRequestList.Count() > 0)
 			{
 				soilIndex = ((LandType)ResourceRequestList[0].Resource).SoilType;
-				gotLandRequested = TakeResources(ResourceRequestList);
+				gotLandRequested = TakeResources(ResourceRequestList, false);
 			}
 
             //Now the Land has been allocated we have an Area 

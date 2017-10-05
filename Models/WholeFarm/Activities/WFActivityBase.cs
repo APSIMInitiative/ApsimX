@@ -145,7 +145,7 @@ namespace Models.WholeFarm.Activities
 			// determine what resources are needed for initialisation
 			ResourceRequestList = GetResourcesNeededForinitialisation();
 
-			bool tookRequestedResources = TakeResources(ResourceRequestList);
+			bool tookRequestedResources = TakeResources(ResourceRequestList, false);
 
 			// no resources required perform Activity if code is present.
 			// if resources are returned (all available or UseResourcesAvailable action) perform Activity
@@ -174,7 +174,7 @@ namespace Models.WholeFarm.Activities
 			// determine what resources are needed
 			ResourceRequestList = GetResourcesNeededForActivity();
 
-			bool tookRequestedResources = TakeResources(ResourceRequestList);
+			bool tookRequestedResources = TakeResources(ResourceRequestList, true);
 
 			// if no resources required perform Activity if code is present.
 			// if resources are returned (all available or UseResourcesAvailable action) perform Activity
@@ -183,13 +183,14 @@ namespace Models.WholeFarm.Activities
 				DoActivity();
 		}
 
-		/// <summary>
-		/// Try to take the Resources based on Resource Request List provided.
-		/// Returns true if it was able to take the resources it needed.
-		/// Returns false if it was unable to take the resources it needed.
-		/// </summary>
-		/// <param name="ResourceRequestList"></param>
-		public bool TakeResources(List<ResourceRequest> ResourceRequestList)
+        /// <summary>
+        /// Try to take the Resources based on Resource Request List provided.
+        /// Returns true if it was able to take the resources it needed.
+        /// Returns false if it was unable to take the resources it needed.
+        /// </summary>
+        /// <param name="ResourceRequestList"></param>
+        /// <param name="TriggerActivityPerformed"></param>
+        public bool TakeResources(List<ResourceRequest> ResourceRequestList, bool TriggerActivityPerformed)
         {
 			this.Status = ActivityStatus.Success;
             bool resourceAvailable = false;
@@ -304,8 +305,11 @@ namespace Models.WholeFarm.Activities
             }
 
 			// report activity occurred
-			this.TriggerOnActivityPerformed();
-			return Status != ActivityStatus.Ignored;
+            if(TriggerActivityPerformed)
+            {
+                this.TriggerOnActivityPerformed();
+            }
+            return Status != ActivityStatus.Ignored;
         }
 
 		/// <summary>

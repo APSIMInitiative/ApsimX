@@ -86,7 +86,7 @@ namespace Models.WholeFarm.Activities
 			{
 				// attempt to get required resources
 				List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal();
-				bool tookRequestedResources = TakeResources(resourcesneeded);
+				bool tookRequestedResources = TakeResources(resourcesneeded, true);
 				// get all shortfalls
 				if (tookRequestedResources & (ResourceRequestList != null))
 				{
