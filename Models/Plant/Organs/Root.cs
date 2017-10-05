@@ -398,8 +398,14 @@ namespace Models.PMF.Organs
 
                 if (Live.Wt > 0)
                     foreach (ZoneState Z in Zones)
+                    {
+                        double[] paw = Z.soil.PAW;
+                        double[] pawc = Z.soil.PAWC;
+                        Biomass[] layerLiveForZone = Z.LayerLive;
+                        double liveWt = Live.Wt;
                         for (int i = 0; i < Z.LayerLive.Length; i++)
-                            MeanWTF += Z.LayerLive[i].Wt / Live.Wt * MathUtilities.Bound(2 * Z.soil.PAW[i] / Z.soil.PAWC[i], 0, 1);
+                            MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(2 * paw[i] / pawc[i], 0, 1);
+                    }
 
                 return MeanWTF;
             }
