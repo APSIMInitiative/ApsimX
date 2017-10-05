@@ -124,6 +124,17 @@
         private void OnStopSimulation(object sender, EventArgs e)
         {
             Stop();
+            string msg = jobName + " aborted";
+            if (errors.Count == 0)
+                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Information);
+            else
+            {
+                string errorMessage = null;
+                errors.ForEach(error => errorMessage += error.ToString() + Environment.NewLine);
+                explorerPresenter.MainPresenter.ShowMessage(errorMessage, Simulation.ErrorLevel.Error);
+                msg += Environment.NewLine + errorMessage;
+                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
+            }
         }
 
         /// <summary>
