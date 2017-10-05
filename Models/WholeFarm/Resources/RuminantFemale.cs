@@ -161,7 +161,9 @@ namespace Models.WholeFarm.Resources
 			{
 				if(IsLactating)
 				{
-					return (((this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays)? (this.Age - this.AgeAtLastBirth) * 30.4 : 0);
+                    double dl = (((this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays) ? (this.Age - this.AgeAtLastBirth) * 30.4 : 0);
+                    // add half a timestep
+                    return dl+15;
 				}
 				else
 				{
