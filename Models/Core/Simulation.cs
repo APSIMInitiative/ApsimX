@@ -138,7 +138,12 @@ namespace Models.Core
             if (Parent is IJobGenerator || hasRun)
                 return null;
             hasRun = true;
-            return new RunSimulation(this, doClone: Parent != null);
+
+            Simulations simulationEngine = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            Simulation simulationToRun = Apsim.Clone(this) as Simulation;
+            simulationEngine.MakeSubstitutions(simulationToRun);
+
+            return new RunSimulation(simulationToRun, doClone: false);
         }
 
         /// <summary>Gets a list of simulation names</summary>

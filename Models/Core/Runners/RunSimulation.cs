@@ -112,7 +112,6 @@
                 object[] commenceArgs = new object[] { null, new CommenceArgs() { CancelToken = cancelToken } };
                 events.Publish("Commencing", args);
                 events.Publish("DoCommence", commenceArgs);
-                events.Publish("Completed", args);
             }
             catch (Exception err)
             {
@@ -128,6 +127,8 @@
             }
             finally
             {
+                events.Publish("Completed", new object[] { null, new EventArgs() });
+
                 // Cleanup the simulation
                 if (events != null)
                     events.DisconnectEvents();
