@@ -18,15 +18,16 @@ namespace Models.WholeFarm.Activities
     [ValidParent(ParentType = typeof(CropActivityTask))]
     public class ActivityTimerCropHarvest : WFModel, IActivityTimer, IValidatableObject
     {
-//		[XmlIgnore]
-//		[Link]
-//		Clock Clock = null;
+        [Link]
+        Clock Clock = null;
+
+
 
         /// <summary>
         /// Months before harvest to start performing activities
         /// </summary>
         [Description("Months before harvest to start performing activities")]
-        [Required]
+        [Required, GreaterThanEqual("MonthsBeforeHarvestStop", ErrorMessage = "Months before harvest to start must be greater than or equal to Months before harvest to stop.")]
         public int MonthsBeforeHarvestStart { get; set; }
 
         /// <summary>
@@ -36,14 +37,14 @@ namespace Models.WholeFarm.Activities
         [Required]
         public int MonthsBeforeHarvestStop { get; set; }
 	
-		/// <summary>
-		/// Invert (NOT in selected range)
-		/// </summary>
-		[Description("Invert (NOT in selected range)")]
-        [Required]
-        public bool Invert { get; set; }
+		///// <summary>
+		///// Invert (NOT in selected range)
+		///// </summary>
+		//[Description("Invert (NOT in selected range)")]
+  //      [Required]
+  //      public bool Invert { get; set; }
 
-        private CropActivityManageProduct collectProductActivity;
+        private CropActivityManageProduct ManageProductActivity;
 
 		/// <summary>
 		/// Constructor
@@ -68,47 +69,53 @@ namespace Models.WholeFarm.Activities
             {
                 if(current.GetType() == typeof(CropActivityManageProduct))
                 {
-                    collectProductActivity = current as CropActivityManageProduct;
+                    ManageProductActivity = current as CropActivityManageProduct;
                 }
                 current = current.Parent as Model;
             }
 
-            if (collectProductActivity == null)
+            if (ManageProductActivity == null)
             {
                 string[] memberNames = new string[] { "CropActivityCollectProduct parent" };
                 results.Add(new ValidationResult("This crop timer be below a parent of the type Crop Activity Collect Product", memberNames));
             }
+
             return results;
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFInitialiseActivity")]
-        private void OnWFInitialiseActivity(object sender, EventArgs e)
-        {
-//            endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
-//			startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
-		}
-
         /// <summary>
-        /// Method to determine whether the activity is due
+        /// Method to determine whether the activity is due based on harvest details form parent.
         /// </summary>
         /// <returns>Whether the activity is due in the current month</returns>
         public bool ActivityDue
 		{
             get
             {
-                //collectProductActivity.Due
-
-
-                //bool inrange = ((Clock.Today >= startDate) && (Clock.Today <= endDate));
-                //if (Invert)
-                //{
-                //    inrange = !inrange;
-                //}
-                return true; // inrange;
+                int[] range = new int[2] { MonthsBeforeHarvestStart, MonthsBeforeHarvestStop };
+                int[] month = new int[2];
+                for (int i = 0; i < 2; i++)
+                {
+                    if(range[i] >= 0)
+                    {
+                        if(ManageProductActivity.NextHarvest == null)
+                        {
+                            return false;
+                        }
+                        month[i] = (ManageProductActivity.NextHarvest.HarvestDate.Year * 100 + ManageProductActivity.NextHarvest.HarvestDate.Month) - range[i];
+                    }
+                    else
+                    {
+                        if (ManageProductActivity.PreviousHarvest == null)
+                        {
+                            return false;
+                        }
+                        month[i] = (ManageProductActivity.PreviousHarvest.HarvestDate.Year * 100 + ManageProductActivity.PreviousHarvest.HarvestDate.Month) - range[i];
+                    }
+                }
+                int today = Clock.Today.Year * 100 + Clock.Today.Month;
+                return (month[0] <= today && month[1] >= today);
             }
+
 		}
 
     }

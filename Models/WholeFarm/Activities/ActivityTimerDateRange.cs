@@ -17,7 +17,8 @@ namespace Models.WholeFarm.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class ActivityTimerDateRange : WFModel, IActivityTimer
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    public class ActivityTimerDateRange : WFModel, IActivityTimer
 	{
 		[XmlIgnore]
 		[Link]
@@ -27,6 +28,7 @@ namespace Models.WholeFarm.Activities
 		/// Start date of period to perform activities
 		/// </summary>
 		[Description("Start date of period to perform activities")]
+        [System.ComponentModel.DefaultValue(typeof(DateTime), "1/1/1900")]
         [Required]
         public DateTime StartDate { get; set; }
 		
@@ -34,7 +36,7 @@ namespace Models.WholeFarm.Activities
 		/// End date of period to perform activities
 		/// </summary>
 		[Description("End date of period to perform activities")]
-        [Required]
+        [System.ComponentModel.DefaultValue(typeof(DateTime), "1/1/1900")]
         [DateGreaterThanAttribute("StartDate", ErrorMessage = "End date must be greater than Start date")]
         public DateTime EndDate { get; set; }
 

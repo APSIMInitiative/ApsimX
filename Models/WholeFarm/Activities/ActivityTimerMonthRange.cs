@@ -17,7 +17,8 @@ namespace Models.WholeFarm.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class ActivityTimerMonthRange: WFModel, IActivityTimer
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    public class ActivityTimerMonthRange: WFModel, IActivityTimer
 	{
 		[XmlIgnore]
 		[Link]

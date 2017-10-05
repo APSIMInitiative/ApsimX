@@ -110,6 +110,12 @@ namespace Models.WholeFarm.Activities
         public CropDataType NextHarvest { get; set; }
 
         /// <summary>
+        /// Stores the next harvest details
+        /// </summary>
+        [XmlIgnore]
+        public CropDataType PreviousHarvest { get; set; }
+
+        /// <summary>
         /// Model for the crop input file
         /// </summary>
         private FileCrop fileCrop;
@@ -202,6 +208,7 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("WFStartOfTimeStep")]
         private void OnWFStartOfTimeStep(object sender, EventArgs e)
         {
+            PreviousHarvest = NextHarvest;
             NextHarvest = HarvestData.FirstOrDefault();
         }
 
@@ -214,102 +221,41 @@ namespace Models.WholeFarm.Activities
             int year = Clock.Today.Year;
             int month = Clock.Today.Month;
 
-            if (HarvestData == null) return;
-
-            //nb. we are relying on the fact that the HarvestData list is sorted by date.
-            // this is now ordered upon loading! AL
-            CropDataType nextHarvest = HarvestData.FirstOrDefault();
-
-            if (nextHarvest != null)
+            if (NextHarvest != null)
             {
                 //if this month is a harvest month for this crop
                 if ((year == NextHarvest.HarvestDate.Year) && (month == NextHarvest.HarvestDate.Month))
                 {
-                    double totalamount;
-                    if (IsTreeCrop)
-                        totalamount = nextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * (PercentKept / 100);
-                    else
-                        totalamount = nextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * (PercentKept / 100);
-
-                    if (totalamount > 0)
+                    if (this.TimingOK)
                     {
-                        //if Npct column was not in the file 
-                        if (nextHarvest.Npct == double.NaN)
-                        {
-                            //Add without adding any new nitrogen.
-                            //The nitrogen value for this feed item in the store remains the same.
-                            LinkedResourceItem.Add(totalamount, this.Name, "Harvest");
-                        }
+                        double totalamount;
+                        if (IsTreeCrop)
+                            totalamount = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * (PercentKept / 100);
                         else
+                            totalamount = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * (PercentKept / 100);
+
+                        if (totalamount > 0)
                         {
-                            FoodResourcePacket packet = new FoodResourcePacket()
+                            //if Npct column was not in the file 
+                            if (NextHarvest.Npct == double.NaN)
                             {
-                                Amount = totalamount,
-                                PercentN = nextHarvest.Npct
-                            };
-                            LinkedResourceItem.Add(packet, this.Name, "Harvest");
+                                //Add without adding any new nitrogen.
+                                //The nitrogen value for this feed item in the store remains the same.
+                                LinkedResourceItem.Add(totalamount, this.Name, "Harvest");
+                            }
+                            else
+                            {
+                                FoodResourcePacket packet = new FoodResourcePacket()
+                                {
+                                    Amount = totalamount,
+                                    PercentN = NextHarvest.Npct
+                                };
+                                LinkedResourceItem.Add(packet, this.Name, "Harvest");
+                            }
                         }
+                        this.TriggerOnActivityPerformed(ActivityStatus.Success);
                     }
-
-                    //switch (Store)
-                    //{
-                    //    case StoresForCrops.HumanFoodStore:
-                    //        if (totalamount > 0)
-                    //        {
-                    //            //TODO: check that there is no N provided with grain
-                    //            LinkedHumanFoodItem.Add(totalamount, this.Name, "Harvest");
-                    //        }
-                    //        break;
-
-                    //    case StoresForCrops.AnimalFoodStore:
-                    //        if (totalamount > 0)
-                    //        {
-                    //            //if Npct column was not in the file 
-                    //            if (nextHarvest.Npct == double.NaN)
-                    //            {
-                    //                //Add without adding any new nitrogen.
-                    //                //The nitrogen value for this feed item in the store remains the same.
-                    //                LinkedAnimalFoodItem.Add(totalamount, this.Name, "Harvest");
-                    //            }
-                    //            else
-                    //            {
-                    //                FoodResourcePacket packet = new FoodResourcePacket()
-                    //                {
-                    //                    Amount = totalamount,
-                    //                    PercentN = nextHarvest.Npct
-                    //                };
-                    //                LinkedAnimalFoodItem.Add(packet, this.Name, "Harvest");
-                    //            }
-                    //        }
-                    //        break;
-
-                    //    case StoresForCrops.ProductStore:
-                    //        if (totalamount > 0)
-                    //        {
-                    //            LinkedProductItem.Add(totalamount, this.Name, "Harvest");
-                    //        }
-                    //        break;
-
-                    //    default:
-                    //        throw new Exception(String.Format("Store {0} is not supported for {1}", Enum.GetName(typeof(StoresForCrops), Store), this.Name));
-                    //}
-
-
-
-                    //Now remove the first item from the harvest data list because it has happened.
-
-                    //This causes a problem for the children of this model 
-                    //because of a race condition that occurs if user sets MthsBeforeHarvest = 0 
-                    //for any of the children of this model. 
-                    //Then because this model and children are all executing on the harvest month and 
-                    //this executes first and it removes the harvest from the harvest list, 
-                    //then the chidren never get the Clock.Today == harvest date (aka costdate).
-                    //So to fix this problem, in the children we store the next harvest date (aka costdate) 
-                    //in a global variable and don't update its value
-                    //until after we have done the Clock.Today == harvest date (aka costdate) comparison.
-
                     HarvestData.RemoveAt(0);
-                    this.TriggerOnActivityPerformed(ActivityStatus.Success);
                 }
             }
         }
