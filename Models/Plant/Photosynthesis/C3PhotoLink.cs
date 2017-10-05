@@ -8,7 +8,7 @@ namespace Models.PMF.Photosynthesis
     /// <summary>
     /// Entry point for Photosynthesis model
     /// </summary>
-    public class ApsimC3PhotoLink : Model
+    public class C3PhotoLink : Model
     {
         /// <summary>
         /// 
@@ -35,7 +35,7 @@ namespace Models.PMF.Photosynthesis
         /// <param name="structuralN">Amount of N needed to retain structure. Below this photosynthesis does not occur</param>
         /// <returns></returns>
         public double[] calc(int DOY, double latitude, double maxT, double minT, double radn, double lai, double SLN, double soilWaterAvail,
-            double B, double RootShootRatio, double LeafAngle, double SLNRatioTop = 1.32, double psiVc = 1.16, double psiJ = 2.4, double psiRd = 0.0116,
+            double RootShootRatio, double LeafAngle, double B = 1, double SLNRatioTop = 1.32, double psiVc = 1.16, double psiJ = 2.4, double psiRd = 0.0116,
             double psiFactor = 1, double Ca = 400, double CiCaRatio = 0.7, double gm25 = 0.55, double structuralN = 25)
         {
             PhotosynthesisModelC3 PM = new PhotosynthesisModelC3();

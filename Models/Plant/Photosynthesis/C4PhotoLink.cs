@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.PMF.Photosynthesis
 {
@@ -11,7 +9,7 @@ namespace Models.PMF.Photosynthesis
 /// <summary>
 /// 
 /// </summary>
-    public interface IApsimC4PhotoLink
+    public interface IC4PhotoLink
     {
         /// <summary>
         /// 
@@ -45,7 +43,7 @@ namespace Models.PMF.Photosynthesis
 
     // Interface implementation.
     /// <summary></summary>
-    public class ApsimC4PhotoLink : IApsimC4PhotoLink
+    public class ApsimC4PhotoLink : IC4PhotoLink
     {
         /// <summary>
         /// 

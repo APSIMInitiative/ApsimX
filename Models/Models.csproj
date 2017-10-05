@@ -165,9 +165,10 @@
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
     <Compile Include="Plant\Functions\ArrayFunction.cs" />
+    <Compile Include="Plant\Functions\SupplyFunctions\Photosynthesis.cs" />
     <Compile Include="Plant\Photosynthesis\Angle.cs" />
-    <Compile Include="Plant\Photosynthesis\ApsimC3PhotoLink.cs" />
-    <Compile Include="Plant\Photosynthesis\ApsimC4PhotoLink.cs" />
+    <Compile Include="Plant\Photosynthesis\C3PhotoLink.cs" />
+    <Compile Include="Plant\Photosynthesis\C4PhotoLink.cs" />
     <Compile Include="Plant\Photosynthesis\C3MethodExtensions.cs" />
     <Compile Include="Plant\Photosynthesis\C4MethodExtensions.cs" />
     <Compile Include="Plant\Photosynthesis\EnvironmentModel.cs" />
