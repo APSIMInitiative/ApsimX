@@ -270,7 +270,7 @@ namespace Models.PMF.Struct
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (Phenology != null && Phenology.OnDayOf("Emergence"))
-                     LeafTipsAppeared = 1.0;
+                     LeafTipsAppeared = Leaf.TipsAtEmergence;
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
