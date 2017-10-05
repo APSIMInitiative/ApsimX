@@ -776,6 +776,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\ProductStoreType.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CropActivityManageProduct.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CropActivityFee.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerCropHarvest.png" />
