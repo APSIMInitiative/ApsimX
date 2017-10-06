@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="16">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -3072,8 +3072,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
       <FieldName2UsedForMatch>LAI</FieldName2UsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>New Zealand</Name>
@@ -7321,9 +7319,9 @@ namespace Models
             </Operations>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Specifications>
-              <string>[LucerneSowingRule].Script.SowingDate = 2011-02-17</string>
+              <string>[LucerneSowingRule].Script.SowingDate = 2011-02-07</string>
               <string>[Cutting]</string>
-              <string>[Clock].StartDate = 2011-02-17</string>
+              <string>[Clock].StartDate = 2011-02-7</string>
             </Specifications>
           </Factor>
           <Factor>
@@ -10313,6 +10311,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries>
+              <string>SD1</string>
               <string>SD2</string>
               <string>SD3</string>
               <string>SD4</string>
@@ -10341,7 +10340,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Lucerne.Root.Live.Wt</YFieldName>
+              <YFieldName>Lucerne.Leaf.CoverTotal</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -10458,16 +10457,7 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
-            <DisabledSeries>
-              <string>SD2</string>
-              <string>SD3</string>
-              <string>SD4</string>
-              <string>SD5</string>
-              <string>SD6</string>
-              <string>SD7</string>
-              <string>SD8</string>
-              <string>SD9</string>
-            </DisabledSeries>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Cover</Name>
@@ -10670,17 +10660,7 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries>
-              <string>SD2</string>
-              <string>SD3</string>
-              <string>SD4</string>
-              <string>SD5</string>
-              <string>SD6</string>
-              <string>SD7</string>
-              <string>SD8</string>
-              <string>SD9</string>
-              <string>SD10</string>
-            </DisabledSeries>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafWt</Name>
@@ -47892,11 +47872,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1988-05-26</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>300</SowingRate>
               <CultivarName>Trifecta</CultivarName>
-              <SowingDate>1988-05-26</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
