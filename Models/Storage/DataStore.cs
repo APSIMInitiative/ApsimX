@@ -25,29 +25,11 @@
         [NonSerialized]
         private SQLite connection = null;
 
-        private class SimulationData
-        {
-            public int simulationID;
-            public bool complete = false;
-            public List<Table> tables = new List<Table>();
-            public SimulationData(int simID) { simulationID = simID; }
-            public void AddRowToTable(string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
-            {
-                Table table = tables.Find(t => t.Name == tableName);
-                if (table == null)
-                {
-                    table = new Table(tableName);
-                    tables.Add(table);
-                }
-                table.AddRow(simulationID, columnNames, columnUnits, valuesToWrite);
-            }
-        }
-
         /// <summary>A List of tables that needs writing.</summary>
         private List<Table> tables = new List<Table>();
 
         /// <summary>Data that needs writing</summary>
-        private List<SimulationData> dataToWrite = new List<SimulationData>();
+        private List<Table> dataToWrite = new List<Table>();
 
         /// <summary>The simulations table in the .db</summary>
         private Dictionary<string, int> simulationIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -165,32 +147,31 @@
         /// <param name="valuesToWrite">Values of row to write</param>
         public void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
         {
-            SimulationData simData;
+            Table t;
             int simulationID = simulationIDs[simulationName];
             lock (dataToWrite)
             {
-                simData = dataToWrite.Find(s => s.simulationID == simulationID);
-                if (simData == null)
+                t = dataToWrite.Find(table => table.Name == tableName);
+                if (t == null)
                 {
-                    simData = new SimulationData(simulationID);
-                    dataToWrite.Add(simData);
+                    t = new Table(tableName);
+                    dataToWrite.Add(t);
                 }
             }
-            simData.AddRowToTable(tableName, columnNames, columnUnits, valuesToWrite);
+            t.AddRow(simulationID, columnNames, columnUnits, valuesToWrite);
         }
 
         /// <summary>Completed writing data for simulation</summary>
         /// <param name="simulationName"></param>
         public void CompletedWritingSimulationData(string simulationName)
         {
-            SimulationData simData;
-            int simulationID = simulationIDs[simulationName];
-            lock (dataToWrite)
-            {
-                simData = dataToWrite.Find(s => s.simulationID == simulationID);
-            }
-            if (simData != null)
-                simData.complete = true;
+            //int simulationID = simulationIDs[simulationName];
+            //lock (dataToWrite)
+            //{
+            //    simData = dataToWrite.Find(s => s.simulationID == simulationID);
+            //}
+            //if (simData != null)
+            //    simData.complete = true;
         }
 
         /// <summary>Simulation runs are about to begin.</summary>
@@ -210,8 +191,8 @@
         [EventSubscribe("EndRun")]
         private void OnEndRun(object sender, EventArgs e)
         {
-            foreach (SimulationData data in dataToWrite)
-                data.complete = true;
+            //foreach (SimulationData data in dataToWrite)
+            //    data.complete = true;
 
             stoppingWriteToDB = true;
             writeTask.Wait();
@@ -492,9 +473,9 @@
         /// <summary>Is there data to be written?</summary>
         private bool IsDataToWrite()
         {
-            foreach (SimulationData data in dataToWrite)
+            foreach (Table data in dataToWrite)
             {
-                if (data.tables.Find(table => table.HasRowsToWrite) != null)
+                if (data.NumRowsToWrite > 0)
                     return true;
             }
             return false;
@@ -509,10 +490,19 @@
             {
                 while (true)
                 {
-                    SimulationData dataToWriteToDB = null;
+                    Table dataToWriteToDB = null;
                     lock (dataToWrite)
                     {
-                        dataToWriteToDB = dataToWrite.Find(d => d.complete);
+                        // Find the table with the most number of rows to write.
+                        int maxNumRows = 0;
+                        foreach (Table t in dataToWrite)
+                        {
+                            if (t.NumRowsToWrite > maxNumRows)
+                            {
+                                maxNumRows = t.NumRowsToWrite;
+                                dataToWriteToDB = t;
+                            }
+                        }
                     }
 
                     if (dataToWriteToDB == null)
@@ -527,24 +517,11 @@
                         connection.ExecuteNonQuery("BEGIN");
                         try
                         {
-                            foreach (Table tableWithRows in dataToWriteToDB.tables)
-                            {
-                                tableWithRows.WriteRows(connection, simulationIDs);
-
-                                Table table = tables.Find(t => t.Name == tableWithRows.Name);
-                                if (table == null)
-                                    tables.Add(tableWithRows);
-                                else
-                                    table.MergeColumns(tableWithRows);
-                            }
+                            dataToWriteToDB.WriteRows(connection, simulationIDs);
                         }
                         finally
                         {
                             connection.ExecuteNonQuery("END");
-                        }
-                        lock (dataToWrite)
-                        {
-                            dataToWrite.Remove(dataToWriteToDB);
                         }
                     }
                 }
@@ -553,7 +530,7 @@
             {
                 Console.WriteLine(err.ToString());
             }
-            finally   
+            finally
             {
                 connection.ExecuteNonQuery("BEGIN");
                 try
@@ -566,6 +543,17 @@
                 }
                 Open(readOnly: true);
             }
+
+            foreach (Table table in dataToWrite)
+            {
+                Table foundTable = tables.Find(t => t.Name == table.Name);
+                if (foundTable == null)
+                    tables.Add(table);
+                else
+                    foundTable.MergeColumns(table);
+            }
+            dataToWrite.Clear();
+
         }
 
         /// <summary>Write a _units table to .db</summary>

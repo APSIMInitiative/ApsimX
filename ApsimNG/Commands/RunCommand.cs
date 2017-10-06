@@ -124,6 +124,17 @@
         private void OnStopSimulation(object sender, EventArgs e)
         {
             Stop();
+            string msg = jobName + " aborted";
+            if (errors.Count == 0)
+                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Information);
+            else
+            {
+                string errorMessage = null;
+                errors.ForEach(error => errorMessage += error.ToString() + Environment.NewLine);
+                explorerPresenter.MainPresenter.ShowMessage(errorMessage, Simulation.ErrorLevel.Error);
+                msg += Environment.NewLine + errorMessage;
+                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
+            }
         }
 
         /// <summary>
@@ -148,7 +159,9 @@
         /// <param name="e"></param>
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
-            int numSimulations = jobManager.SimulationNamesBeingRun.Count;
+            int numSimulations = 0;
+            if (jobManager.SimulationNamesBeingRun != null)
+                numSimulations = jobManager.SimulationNamesBeingRun.Count;
             double percentComplete = (numSimulationsRun * 1.0 / numSimulations) * 100.0;
 
             if (numSimulations > 0)

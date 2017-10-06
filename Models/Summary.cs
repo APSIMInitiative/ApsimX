@@ -52,11 +52,6 @@ namespace Models
                                                                              "DisplayFormat",
                                                                              "Total",
                                                                              "Value" };
-        /// <summary>Full model path.</summary>
-        private string modelPath;
-
-        /// <summary>Relative model path.</summary>
-        private string relativeModelPath;
 
         /// <summary>
         /// Enumeration used to indicate the format of the output string
@@ -85,8 +80,6 @@ namespace Models
         [EventSubscribe("DoInitialSummary")]
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
-            modelPath = Apsim.FullPath(this);
-            relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
             CreateInitialConditionsTable();
         }
 
@@ -95,6 +88,9 @@ namespace Models
         /// <param name="message">The message to write</param>
         public void WriteMessage(IModel model, string message)
         {
+            string modelPath = Apsim.FullPath(model);
+            string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+
             object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Information) };
             storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
         }
@@ -104,6 +100,9 @@ namespace Models
         /// <param name="message">The warning message to write</param>
         public void WriteWarning(IModel model, string message)
         {
+            string modelPath = Apsim.FullPath(model);
+            string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+
             object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Warning) };
             storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
         }

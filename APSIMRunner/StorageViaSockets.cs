@@ -41,9 +41,12 @@
         /// <summary>Write all the data we stored</summary>
         private void WriteAllData()
         {
-            SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = data };
-            SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
-            data.Clear();
+            if (data.Count > 0)
+            {
+                SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = data };
+                SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
+                data.Clear();
+            }
         }
     }
 }
