@@ -399,7 +399,8 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsSenescing
         {
-            get { return Age > GrowthDuration + LagDuration; }
+            get { return Age > GrowthDuration + LagDuration & Age < GrowthDuration + LagDuration + SenescenceDuration; }
+
         }
         /// <summary>Gets a value indicating whether this instance is not senescing.</summary>
         /// <value>
