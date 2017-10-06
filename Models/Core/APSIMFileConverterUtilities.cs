@@ -90,12 +90,27 @@ namespace Models.Core
         /// <param name="node">The XML Nnde to search</param>
         /// <param name="name">The name of the element to search for</param>
         /// <returns>The node or null if not found</returns>
-        internal static XmlNode FindPMFNode(XmlNode node, string name)
+        internal static XmlNode FindModelNode(XmlNode node, string name)
         {
             foreach (XmlNode child in node.ChildNodes)
                 if (XmlUtilities.Value(child, "Name") == name)
                     return child;
             return null;
+        }
+
+        /// <summary>
+        /// Find model nodes of the specified type and name
+        /// </summary>
+        /// <param name="node">The node to search under</param>
+        /// <param name="modelType">The type name of the model to look for</param>
+        /// <param name="modelName">The name of the model to look for</param>
+        internal static List<XmlNode> FindModelNodes(XmlNode node, string modelType, string modelName)
+        {
+            List<XmlNode> modelNodes = new List<XmlNode>();
+            foreach (XmlNode child in XmlUtilities.FindAllRecursivelyByType(node, modelType))
+                if (XmlUtilities.Value(child, "Name") == modelName)
+                    modelNodes.Add(child);
+            return modelNodes;
         }
 
         /// <summary>
@@ -190,7 +205,7 @@ namespace Models.Core
         /// <param name="fixedValue">The fixed value of the constant function</param>
         internal static void AddConstantFuntionIfNotExists(XmlNode node, string name, string fixedValue)
         {
-            if (FindPMFNode(node, name) == null)
+            if (FindModelNode(node, name) == null)
             {
                 XmlNode constant = node.AppendChild(node.OwnerDocument.CreateElement("Constant"));
                 XmlUtilities.SetValue(constant, "Name", name);
@@ -206,7 +221,7 @@ namespace Models.Core
         /// <param name="reference">The reference to put into the function</param>
         internal static void AddVariableReferenceFuntionIfNotExists(XmlNode node, string name, string reference)
         {
-            if (FindPMFNode(node, name) == null)
+            if (FindModelNode(node, name) == null)
             {
                 XmlNode critNConc = node.AppendChild(node.OwnerDocument.CreateElement("VariableReference"));
                 XmlUtilities.SetValue(critNConc, "Name", name);
@@ -238,7 +253,7 @@ namespace Models.Core
         {
             foreach (XmlNode child in XmlUtilities.FindAllRecursivelyByType(node, parentName))
             {
-                XmlNode pmfNode = FindPMFNode(child, oldName);
+                XmlNode pmfNode = FindModelNode(child, oldName);
                 if (pmfNode != null)
                     XmlUtilities.SetValue(pmfNode, "Name", newName);
             }

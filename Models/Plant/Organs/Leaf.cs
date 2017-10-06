@@ -32,7 +32,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand
+    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration
     {
 
         /// <summary>The met data</summary>
@@ -526,7 +526,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the cohort live.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
-        public Biomass CohortLive
+        public Biomass Live
         {
             get
             {
@@ -541,7 +541,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the cohort dead.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
-        public Biomass CohortDead
+        public Biomass Dead
         {
             get
             {
@@ -916,7 +916,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Clears this instance.</summary>
-        protected override void Clear()
+        protected void Clear()
         {
             Leaves = new List<LeafCohort>();
             WaterAllocation = 0;
@@ -1517,6 +1517,9 @@ namespace Models.PMF.Organs
                 return CohortParameters.CriticalNConc.Value();
             }
         }
+
+        /// <summary>Gets the total biomass</summary>
+        public Biomass Total { get { return Live + Dead; } }
         #endregion
 
         #region Event handlers
@@ -1600,11 +1603,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (Wt > 0.0)
+            Biomass total = Live + Dead;
+            if (total.Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
             }
 
             Clear();

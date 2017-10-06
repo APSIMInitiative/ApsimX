@@ -205,9 +205,9 @@ namespace Models.PMF
                 FixationSupply[i] = Supply.Fixation;
                 RetranslocationSupply[i] = Supply.Retranslocation;
                 if (Type == "DM")
-                    Start += Organs[i].Wt;
+                    Start += Organs[i].Total.Wt;
                 else
-                    Start += Organs[i].N;
+                    Start += Organs[i].Total.N;
             }
 
             // SET OTHER ORGAN VARIABLES AND CALCULATE TOTALS

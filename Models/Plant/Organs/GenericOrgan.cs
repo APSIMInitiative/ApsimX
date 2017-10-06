@@ -24,15 +24,14 @@ namespace Models.PMF.Organs
     {
         #region Class Parameter Function Links
 
-        /// <summary>The live</summary>
-        [Link]
-        [DoNotDocument]
-        public Biomass Live = null;
+        /// <summary>The live biomass</summary>
+        public Biomass Live { get; set; }
 
-        /// <summary>The dead</summary>
-        [Link]
-        [DoNotDocument]
-        public Biomass Dead = null;
+        /// <summary>The dead biomass</summary>
+        public Biomass Dead { get; set; }
+
+        /// <summary>Gets the total biomass</summary>
+        public Biomass Total { get { return Live + Dead; } }
 
         /// <summary>The plant</summary>
         [Link]
@@ -166,11 +165,17 @@ namespace Models.PMF.Organs
         /// <summary>The potential metabolic DM allocation</summary>
         protected double PotentialMetabolicDMAllocation = 0.0;
 
+        /// <summary>Constructor</summary>
+        public GenericOrgan()
+        {
+            Live = new Biomass();
+            Dead = new Biomass();
+        }
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
-            Live.Clear();
-            Dead.Clear();
+            Live = new Biomass();
+            Dead = new Biomass();
             DMRetranslocationSupply = 0.0;
             DMReallocationSupply = 0.0;
             NRetranslocationSupply = 0.0;
@@ -520,6 +525,8 @@ namespace Models.PMF.Organs
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
+            Live = new Biomass();
+            Dead = new Biomass();
             Clear();
         }
 
