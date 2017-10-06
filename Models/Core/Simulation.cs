@@ -139,10 +139,15 @@ namespace Models.Core
                 return null;
             hasRun = true;
 
-            Simulations simulationEngine = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-            Simulation simulationToRun = Apsim.Clone(this) as Simulation;
-            simulationEngine.MakeSubstitutions(simulationToRun);
-
+            Simulation simulationToRun;
+            if (this.Parent == null)
+                simulationToRun = this;
+            else
+            {
+                Simulations simulationEngine = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                simulationToRun = Apsim.Clone(this) as Simulation;
+                simulationEngine.MakeSubstitutions(simulationToRun);
+            }
             return new RunSimulation(simulationToRun, doClone: false);
         }
 
