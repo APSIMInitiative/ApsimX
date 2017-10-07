@@ -1265,17 +1265,6 @@
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthDue>8</MonthDue>
             </ActivityTimerInterval>
-            <RuminantFee>
-              <Name>Vet callout fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <PaymentStyle>Fixed</PaymentStyle>
-              <Amount>300</Amount>
-            </RuminantFee>
-            <RuminantFee>
-              <Name>AI fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Amount>10</Amount>
-            </RuminantFee>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdFilters />
@@ -1668,17 +1657,6 @@
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthDue>8</MonthDue>
             </ActivityTimerInterval>
-            <RuminantFee>
-              <Name>Vet callout fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <PaymentStyle>Fixed</PaymentStyle>
-              <Amount>300</Amount>
-            </RuminantFee>
-            <RuminantFee>
-              <Name>AI fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Amount>10</Amount>
-            </RuminantFee>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdFilters />
@@ -2124,17 +2102,6 @@
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthDue>8</MonthDue>
             </ActivityTimerInterval>
-            <RuminantFee>
-              <Name>Vet callout fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <PaymentStyle>Fixed</PaymentStyle>
-              <Amount>300</Amount>
-            </RuminantFee>
-            <RuminantFee>
-              <Name>AI fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Amount>10</Amount>
-            </RuminantFee>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdFilters />
@@ -2524,17 +2491,6 @@
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthDue>8</MonthDue>
             </ActivityTimerInterval>
-            <RuminantFee>
-              <Name>Vet callout fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <PaymentStyle>Fixed</PaymentStyle>
-              <Amount>300</Amount>
-            </RuminantFee>
-            <RuminantFee>
-              <Name>AI fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Amount>10</Amount>
-            </RuminantFee>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdFilters />
@@ -3013,17 +2969,6 @@
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthDue>8</MonthDue>
             </ActivityTimerInterval>
-            <RuminantFee>
-              <Name>Vet callout fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <PaymentStyle>Fixed</PaymentStyle>
-              <Amount>300</Amount>
-            </RuminantFee>
-            <RuminantFee>
-              <Name>AI fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Amount>10</Amount>
-            </RuminantFee>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdFilters />
@@ -3525,17 +3470,6 @@
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthDue>8</MonthDue>
             </ActivityTimerInterval>
-            <RuminantFee>
-              <Name>Vet callout fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <PaymentStyle>Fixed</PaymentStyle>
-              <Amount>300</Amount>
-            </RuminantFee>
-            <RuminantFee>
-              <Name>AI fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Amount>10</Amount>
-            </RuminantFee>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdFilters />
@@ -4049,17 +3983,6 @@
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthDue>8</MonthDue>
             </ActivityTimerInterval>
-            <RuminantFee>
-              <Name>Vet callout fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <PaymentStyle>Fixed</PaymentStyle>
-              <Amount>300</Amount>
-            </RuminantFee>
-            <RuminantFee>
-              <Name>AI fee</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Amount>10</Amount>
-            </RuminantFee>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdFilters />
@@ -4310,7 +4233,7 @@
             <DryMatter>89.5</DryMatter>
             <DMD>49</DMD>
             <Nitrogen>1.3</Nitrogen>
-            <StartingAmount>10000</StartingAmount>
+            <StartingAmount>10001</StartingAmount>
           </AnimalFoodStoreType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </AnimalFoodStore>
@@ -4389,7 +4312,7 @@
               <BreedingSirePrice>6000</BreedingSirePrice>
             </AnimalPricing>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Breed>Bos indicus</Breed>
+            <Breed>Bos indicus2</Breed>
             <EMaintEfficiencyCoefficient>0.35</EMaintEfficiencyCoefficient>
             <EMaintEfficiencyIntercept>0.503</EMaintEfficiencyIntercept>
             <EGrowthEfficiencyCoefficient>0.79</EGrowthEfficiencyCoefficient>

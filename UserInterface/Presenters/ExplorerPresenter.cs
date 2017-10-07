@@ -821,6 +821,11 @@ namespace UserInterface.Presenters
                     ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
 
+                    if(model.GetType().ToString().Contains("WholeFarm."))
+                    {
+                        viewName = new ViewNameAttribute("UserInterface.Views.WFMasterView");
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.WFMasterPresenter");
+                    }
                     if (this.advancedMode)
                     {
                         viewName = new ViewNameAttribute("UserInterface.Views.GridView");

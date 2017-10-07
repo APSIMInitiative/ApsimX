@@ -2,9 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\UserInterface",
-    "\\UserInterface\\Resources",
-    "\\UserInterface\\Resources\\TreeViewImages"
+    "\\UserInterface\\Presenters",
+    "\\UserInterface\\Views"
   ],
-  "SelectedNode": "\\UserInterface\\Resources\\TreeViewImages\\ActivityTimerMonthRange.png",
+  "SelectedNode": "\\UserInterface\\Views\\WFMasterView.resx",
   "PreviewInSolutionExplorer": false
 }

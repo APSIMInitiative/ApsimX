@@ -235,6 +235,7 @@
     <Compile Include="Presenters\WFFileGRASPPresenter.cs" />
     <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
+    <Compile Include="Presenters\WFMasterPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -354,6 +355,12 @@
     </Compile>
     <Compile Include="Views\TreeProxyView.Designer.cs">
       <DependentUpon>TreeProxyView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WFMasterView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\WFMasterView.Designer.cs">
+      <DependentUpon>WFMasterView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\XYPairsView.cs">
       <SubType>UserControl</SubType>
@@ -534,6 +541,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\TreeProxyView.resx">
       <DependentUpon>TreeProxyView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\WFMasterView.resx">
+      <DependentUpon>WFMasterView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\XYPairsView.resx">
       <DependentUpon>XYPairsView.cs</DependentUpon>
