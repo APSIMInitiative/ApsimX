@@ -86,7 +86,7 @@ namespace Models.WholeFarm.Activities
         /// <summary>
         /// Labour settings
         /// </summary>
-        private List<LabourFilterGroupUnit> labour { get; set; }
+        private List<LabourFilterGroupUnit> Labour { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -100,8 +100,8 @@ namespace Models.WholeFarm.Activities
             var resourceGroup = Resources.GetResourceByName(ResourceGroupName);
             resourceToSell = Resources.GetResourceItem(this, resourceGroup.GetType(), ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
             // get labour required for sale
-            labour = Apsim.Children(this, typeof(LabourFilterGroupUnit)).Cast<LabourFilterGroupUnit>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour == null) labour = new List<LabourFilterGroupUnit>();
+            Labour = Apsim.Children(this, typeof(LabourFilterGroupUnit)).Cast<LabourFilterGroupUnit>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+            if (Labour == null) Labour = new List<LabourFilterGroupUnit>();
         }
 
         /// <summary>
@@ -129,9 +129,9 @@ namespace Models.WholeFarm.Activities
                 }
             }
 
-            labour = Apsim.Children(this, typeof(LabourFilterGroupUnit)).Cast<LabourFilterGroupUnit>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour == null) labour = new List<LabourFilterGroupUnit>();
-            foreach (var item in labour)
+            Labour = Apsim.Children(this, typeof(LabourFilterGroupUnit)).Cast<LabourFilterGroupUnit>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+            if (Labour == null) Labour = new List<LabourFilterGroupUnit>();
+            foreach (var item in Labour)
             {
                 switch (item.UnitType)
                 {
@@ -177,7 +177,7 @@ namespace Models.WholeFarm.Activities
                 if (units > 0)
                 {
                     // for each labour item specified
-                    foreach (var item in labour)
+                    foreach (var item in Labour)
                     {
                         double daysNeeded = 0;
                         switch (item.UnitType)

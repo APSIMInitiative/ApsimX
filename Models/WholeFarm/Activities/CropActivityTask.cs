@@ -33,6 +33,19 @@ namespace Models.WholeFarm.Activities
                 string[] memberNames = new string[] { "Parent model" };
                 results.Add(new ValidationResult("A crop activity task must be placed immediately below a CropActivityManageProduct model component", memberNames));
             }
+
+            CropActivityManageProduct ProductParent = Parent as CropActivityManageProduct;
+            foreach (CropActivityFee item in Apsim.Children(this, typeof(CropActivityFee)))
+            {
+                if (!ProductParent.IsTreeCrop)
+                {
+                    if (item.PaymentStyle == CropPaymentStyleType.perTree)
+                    {
+                        string[] memberNames = new string[] { item.Name + ".PaymentStyle" };
+                        results.Add(new ValidationResult("The payment style " + item.PaymentStyle.ToString() + " is not supported for crops defined non tree crops", memberNames));
+                    }
+                }
+            }
             return results;
         }
 

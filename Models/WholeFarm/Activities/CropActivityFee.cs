@@ -39,5 +39,5 @@ namespace Models.WholeFarm.Activities
 			this.SetDefaults();
 		}
 
-	}
+    }
 }
