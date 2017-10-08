@@ -506,15 +506,31 @@ namespace UserInterface.Views
             }
             gridview.Model = gridmodel;
 
+            SetColumnHeaders(gridview);
+            SetColumnHeaders(fixedcolview);
+
+            gridview.Show();
+
+            if (mainWindow != null)
+                mainWindow.Cursor = null;
+        }
+
+        /// <summary>
+        /// Modify the settings of all column headers
+        /// We apply center-justification to all the column headers, just for the heck of it
+        /// Note that "justification" here refers to justification of wrapped lines, not 
+        /// justification of the header as a whole, which is handled with column.Alignment
+        /// We create new Labels here, and use markup to make them bold, since other approaches 
+        /// don't seem to work consistently
+        /// </summary>
+        /// <param name="view">The treeview for which headings are to be modified</param>
+        private void SetColumnHeaders(TreeView view)
+        {
+            int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
             for (int i = 0; i < nCols; i++)
             {
-                /// We apply center-justification to all the column headers, just for the heck of it
-                /// Note that "justification" here refers to justification of wrapped lines, not 
-                /// justification of the header as a whole, which is handled with column.Alignment
-                /// We create new Labels here, and use markup to make them bold, since other approaches 
-                /// don't seem to work consistently
                 Label newLabel = new Label();
-                gridview.Columns[i].Widget = newLabel;
+                view.Columns[i].Widget = newLabel;
                 newLabel.Wrap = true;
                 newLabel.Justify = Justification.Center;
                 if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
@@ -525,19 +541,15 @@ namespace UserInterface.Views
                     newLabel.Parent.Parent.Parent.TooltipText = this.DataSource.Columns[i].ColumnName;
                 newLabel.Show();
             }
-
-            gridview.Show();
-
-            if (mainWindow != null)
-                mainWindow.Cursor = null;
         }
 
-        /// <summary>
-        /// Clean up "stuff" when the editing control is closed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TextRender_EditingCanceled(object sender, EventArgs e)
+
+    /// <summary>
+    /// Clean up "stuff" when the editing control is closed
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void TextRender_EditingCanceled(object sender, EventArgs e)
         {
             this.userEditingCell = false;
             (this.editControl as Widget).KeyPressEvent -= Gridview_KeyPressEvent;
