@@ -1041,14 +1041,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
   </Structure>
   <ReproductiveOrgan>
     <Name>Grain</Name>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <HoldFunction>
       <Name>NumberFunction</Name>
       <MultiplyFunction>
@@ -1319,20 +1311,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
   </ReproductiveOrgan>
   <Root>
     <Name>Root</Name>
-    <CompositeBiomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Root].LayerLive</string>
-      </Propertys>
-    </CompositeBiomass>
-    <CompositeBiomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Root].LayerDead</string>
-      </Propertys>
-    </CompositeBiomass>
     <Constant>
       <Name>KLModifier</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1665,20 +1643,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <Area>0</Area>
       <MaintenanceRespiration>0</MaintenanceRespiration>
     </LeafCohort>
-    <CompositeBiomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Leaf].CohortLive</string>
-      </Propertys>
-    </CompositeBiomass>
-    <CompositeBiomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Leaf].CohortDead</string>
-      </Propertys>
-    </CompositeBiomass>
     <ArrayBiomass>
       <Name>CohortArrayLive</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2461,14 +2425,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       </AddFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PopulationBasedDemandFunction>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2619,14 +2575,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Stem</Name>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <PhaseLookup>
       <Name>StructuralFraction</Name>
       <PhaseLookupValue>

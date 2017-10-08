@@ -60,7 +60,7 @@ namespace Models.PMF.Organs
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Root : BaseOrgan, IWaterNitrogenUptake
+    public class Root : BaseOrgan, IWaterNitrogenUptake, IArbitration
     {
         #region Links
 
@@ -224,6 +224,45 @@ namespace Models.PMF.Organs
 
         #region Outputs
 
+        /// <summary>Gets the live biomass.</summary>
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public Biomass Live
+        {
+            get
+            {
+                if (PlantZone != null)
+                {
+                    Biomass biomass = new Biomass();
+                    foreach (Biomass b in PlantZone.LayerLive)
+                        biomass += b;
+                    return biomass;
+                }
+                else
+                    return new Biomass();
+            }
+        }
+
+        /// <summary>Gets the dead biomass.</summary>
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public Biomass Dead
+        {
+            get
+            {
+                if (PlantZone != null)
+                {
+                    Biomass biomass = new Biomass();
+                    foreach (Biomass b in PlantZone.LayerDead)
+                        biomass += b;
+                    return biomass;
+                }
+                else
+                    return new Biomass();
+            }
+        }
+
+
         /// <summary>Gets the root length density.</summary>
         [Units("mm/mm3")]
         public double[] LengthDensity
@@ -381,9 +420,10 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Clears this instance.</summary>
-        protected override void Clear()
+        protected void Clear()
         {
-            base.Clear();
+            Live.Clear();
+            Dead.Clear();
             PlantZone.Clear();
             Zones.Clear();
         }
@@ -502,11 +542,13 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (Wt > 0.0)
+            Biomass total = Live + Dead;
+
+            if (total.Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
             }
             Clear();
         }
@@ -880,6 +922,9 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the minimum nconc.</summary>
         public override double MinNconc { get { return MinimumNConc.Value(); } }
 
+        /// <summary>Gets the total biomass</summary>
+        public Biomass Total { get { return Live + Dead; } }
+
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         public double[] CalculateWaterSupply(ZoneWaterAndN zone)
@@ -917,22 +962,6 @@ namespace Models.PMF.Organs
             biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, removal, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
         }
         #endregion
-
-//        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-//        /// <param name="tags">The list of tags to add to.</param>
-//        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-//        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-//        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-//        {
-//            // add a heading.
-//            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-//
-//            // write description of this class.
-//            AutoDocumentation.GetClassDescription(this, tags, indent);
-//
-//
-//
-//        }
 
     }
 }
