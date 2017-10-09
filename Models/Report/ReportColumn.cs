@@ -133,7 +133,11 @@ namespace Models.Report
             {
                 IVariable var = locator.GetObject(variableName);
                 if (var != null)
+                {
                     Units = var.UnitsLabel;
+                    if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
+                        Units = Units.Substring(1, Units.Length - 2);
+                }
             }
             catch (Exception) { }
 
@@ -413,7 +417,11 @@ namespace Models.Report
                     {
                         IVariable var = locator.GetObject(variableName);
                         if (var != null)
+                        {
                             Units = var.UnitsLabel;
+                            if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
+                                Units = Units.Substring(1, Units.Length - 2);
+                        }
                         haveGotUnits = true;
                     }
 

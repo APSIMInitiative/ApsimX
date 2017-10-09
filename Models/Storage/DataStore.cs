@@ -560,7 +560,7 @@
         private void WriteUnitsTable()
         {
             connection.ExecuteQuery("DELETE FROM _Units");
-            foreach (Table table in tables)
+            foreach (Table table in dataToWrite)
             {
                 foreach (Table.Column column in table.Columns)
                 {
