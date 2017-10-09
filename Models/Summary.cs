@@ -88,6 +88,8 @@ namespace Models
         /// <param name="message">The message to write</param>
         public void WriteMessage(IModel model, string message)
         {
+            if (storage == null)
+                throw new ApsimXException(model, "No datastore is available!");
             string modelPath = Apsim.FullPath(model);
             string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
 
@@ -100,6 +102,8 @@ namespace Models
         /// <param name="message">The warning message to write</param>
         public void WriteWarning(IModel model, string message)
         {
+            if (storage == null)
+                throw new ApsimXException(model, "No datastore is available!");
             string modelPath = Apsim.FullPath(model);
             string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
 
