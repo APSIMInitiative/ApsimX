@@ -592,11 +592,6 @@ namespace Models.PMF.Phen
             if (StartFractionSt != "")
                 StartFraction = Convert.ToDouble(StartFractionSt);
 
-            string EndFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
-            double EndFraction = 0;
-            if (EndFractionSt != "")
-                EndFraction = Convert.ToDouble(EndFractionSt);
-
             int StartPhaseIndex = Phases.IndexOf(PhaseStartingWith(Start));
             int EndPhaseIndex = Phases.IndexOf(PhaseEndingWith(End));
             int CurrentPhaseIndex = 0;
@@ -607,13 +602,10 @@ namespace Models.PMF.Phen
 
             if (StartPhaseIndex == -1 || EndPhaseIndex == -1)
                 throw new Exception("Cannot test between stages " + Start + " " + End);
-
-            if (CurrentPhaseIndex == StartPhaseIndex)
-                return CurrentPhase.FractionComplete >= StartFraction;
-
-            else if (CurrentPhaseIndex == EndPhaseIndex)
-                return CurrentPhase.FractionComplete <= EndPhaseIndex;
-
+            
+            if (CurrentPhaseIndex == StartPhaseIndex && StartFraction > 0)
+                return Stage >= Math.Truncate(Stage) + StartFraction;
+  
             else
                 return CurrentPhaseIndex >= StartPhaseIndex && CurrentPhaseIndex <= EndPhaseIndex;
         }
