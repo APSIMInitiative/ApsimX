@@ -784,68 +784,7 @@ namespace Models.Soils.SoilWaterBackend
             }
         }
 
-
-        /// <summary>
-        /// Gets the dlayer.
-        /// </summary>
-        /// <value>
-        /// The dlayer.
-        /// </value>
-        public double[] dlayer
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.dlayer;
-                    }
-                return result;
-                }
-            }
-
-
-
         //ARRAYS IN MILLIMETERS
-
-        /// <summary>
-        /// Gets the sat_dep.
-        /// </summary>
-        /// <value>
-        /// The sat_dep.
-        /// </value>
-        public double[] sat_dep
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.sat_dep;
-                    }
-                return result;
-                }
-            }
-
-        /// <summary>
-        /// Gets the dul_dep.
-        /// </summary>
-        /// <value>
-        /// The dul_dep.
-        /// </value>
-        public double[] dul_dep
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.dul_dep;
-                    }
-                return result;
-                }
-            }
-
 
         /// <summary>
         /// Gets the sw_dep.
@@ -866,91 +805,7 @@ namespace Models.Soils.SoilWaterBackend
                 }
             }
 
-
-
-        /// <summary>
-        /// Gets the ll15_dep.
-        /// </summary>
-        /// <value>
-        /// The ll15_dep.
-        /// </value>
-        public double[] ll15_dep
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.ll15_dep;
-                    }
-                return result;
-                }
-
-            }
-
-        /// <summary>
-        /// Gets the air_dry_dep.
-        /// </summary>
-        /// <value>
-        /// The air_dry_dep.
-        /// </value>
-        public double[] air_dry_dep
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.air_dry_dep;
-                    }
-                return result;
-                }
-            }
-
-
-
-
         //ARRAYS AS FRACTIONS
-
-
-        /// <summary>
-        /// Gets the sat.
-        /// </summary>
-        /// <value>
-        /// The sat.
-        /// </value>
-        public double[] sat
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.sat;
-                    }
-                return result;
-                }
-            }
-
-        /// <summary>
-        /// Gets the dul.
-        /// </summary>
-        /// <value>
-        /// The dul.
-        /// </value>
-        public double[] dul
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.dul;
-                    }
-                return result;
-                }
-            }
-
 
         /// <summary>
         /// Gets the sw.
@@ -970,52 +825,6 @@ namespace Models.Soils.SoilWaterBackend
                 return result;
                 }
             }
-
-
-
-        /// <summary>
-        /// Gets the LL15.
-        /// </summary>
-        /// <value>
-        /// The LL15.
-        /// </value>
-        public double[] ll15
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.ll15;
-                    }
-                return result;
-                }
-
-            }
-
-        /// <summary>
-        /// Gets the air_dry.
-        /// </summary>
-        /// <value>
-        /// The air_dry.
-        /// </value>
-        public double[] air_dry
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.air_dry;
-                    }
-                return result;
-                }
-            }
-
-
-
-
-
 
 
         /// <summary>

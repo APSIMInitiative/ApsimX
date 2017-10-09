@@ -913,42 +913,6 @@ namespace Models.Soils
         #region Outputs (Layered)
 
         /// <summary>
-        /// Thicknesses of each soil layer (mm)
-        /// </summary>
-        /// <value>
-        /// The dlayer.
-        /// </value>
-        [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 10000.0)]
-        [Units("mm")]
-        public double[] dlayer
-        { get { return SoilObject != null ? SoilObject.dlayer : new double[0]; } }
-
-        //ARRAYS IN MILLIMETERS
-
-        /// <summary>
-        /// Saturated water content for each soil layer expressed as a depth of water (mm)
-        /// </summary>
-        /// <value>
-        /// The sa TMM.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] SATmm
-        { get { return SoilObject != null ? SoilObject.sat_dep : new double[0]; } }
-
-        /// <summary>
-        /// Drained upper limit for each soil layer expressed as a depth of water (mm)
-        /// </summary>
-        /// <value>
-        /// The du LMM.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] DULmm
-        { get { return SoilObject != null ? SoilObject.dul_dep : new double[0]; } }
-
-        /// <summary>
         /// Current soil water content for each soil layer expressed as a depth of water (mm)
         /// </summary>
         /// <value>
@@ -970,55 +934,6 @@ namespace Models.Soils
             }
 
         /// <summary>
-        /// 15 bar lower limit of extractable soil water for each soil layer expressed as a depth of water (mm)
-        /// </summary>
-        /// <value>
-        /// The l L15MM.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] LL15mm
-        { get { return SoilObject != null ? SoilObject.ll15_dep : new double[0]; } }
-
-        /// <summary>
-        /// Air dry soil water content for each soil layer expressed as a depth of water (mm)
-        /// </summary>
-        /// <value>
-        /// The airdr ymm.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] AIRDRYmm
-        { get { return SoilObject != null ? SoilObject.air_dry_dep : new double[0]; } }
-
-
-        //ARRAYS AS FRACTIONS
-
-        /// <summary>
-        /// Saturated water content for each soil layer expressed as a volumetric water content
-        /// </summary>
-        /// <value>
-        /// The sat.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm/mm")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] SAT
-        { get { return SoilObject != null ? SoilObject.sat : new double[0]; } }
-
-        /// <summary>
-        /// Drained upper limit for each soil layer expressed as a volumetric water content
-        /// </summary>
-        /// <value>
-        /// The dul.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm/mm")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] DUL
-        { get { return SoilObject != null ? SoilObject.dul : new double[0]; } }
-
-        /// <summary>
         /// Current soil water content for each soil layer expressed as a volumetric water content
         /// </summary>
         /// <value>
@@ -1032,30 +947,6 @@ namespace Models.Soils
             get { return SoilObject != null ? SoilObject.sw : new double[0]; }
             set { SetWater_frac(value); } //TODO: remove this later, have manager scripts directly use SoilWater.SetWater_frac(amount) instead
             }
-
-        /// <summary>
-        /// 15 bar lower limit of extractable soil water for each soil layer expressed as a volumetric water content
-        /// </summary>
-        /// <value>
-        /// The l L15.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm/mm")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] LL15
-        { get { return SoilObject != null ? SoilObject.ll15 : new double[0]; } }
-
-        /// <summary>
-        /// Air dry soil water content for each soil layer expressed as a volumetric water content
-        /// </summary>
-        /// <value>
-        /// The airdry.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm/mm")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] AIRDRY
-        { get { return SoilObject != null ? SoilObject.air_dry : new double[0]; } }
 
         /// <summary>
         /// Depth of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)

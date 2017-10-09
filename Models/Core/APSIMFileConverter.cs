@@ -24,7 +24,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 17; } }
+        public static int LastestVersion { get { return 18; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -521,5 +521,24 @@ namespace Models.Core
                 childToDelete.ParentNode.RemoveChild(childToDelete);
 
         }
+
+        /// <summary>
+        /// Rename CohortLive. to Live.
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion18(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15", ".LL15");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15mm", ".LL15mm");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.DUL", ".DUL");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.DULmm", ".DULmm");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.SAT", ".SAT");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.SATmm", ".SATmm");
+            }
+        }
+
     }
 }
