@@ -34,7 +34,8 @@ namespace UserInterface.Presenters
                 PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
 
                 View.ModelTypeText = model.GetType().ToString().Substring("Models.WholeFarm.".Length);
-                if (ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) is DescriptionAttribute descAtt)
+                DescriptionAttribute descAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (descAtt != null)
                 {
                     View.ModelDescriptionText = descAtt.ToString();
                 }
