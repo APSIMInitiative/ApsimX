@@ -20,7 +20,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class PastureActivityManage: WFActivityBase, IValidatableObject
+    [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with the GRASP data file.")]
+    public class PastureActivityManage: WFActivityBase, IValidatableObject
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

@@ -16,6 +16,7 @@ namespace Models.WholeFarm.Activities
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
+    [Description("This is a crop task (e.g. sowing) with associated costs and labour requirements.")]
     public class CropActivityTask: WFActivityBase, IValidatableObject
     {
         private List<LabourFilterGroupSpecified> labour;

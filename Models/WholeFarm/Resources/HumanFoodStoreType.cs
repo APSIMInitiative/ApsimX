@@ -17,6 +17,7 @@ namespace Models.WholeFarm.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(HumanFoodStore))]
+    [Description("This resource represents a human food store (e.g. Eggs).")]
     public class HumanFoodStoreType : WFModel, IResourceType, IResourceWithTransactionType
     {
         /// <summary>

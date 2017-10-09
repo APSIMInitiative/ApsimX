@@ -12,9 +12,8 @@ namespace Models.WholeFarm
 	/// WholeFarm base model
 	///</summary> 
 	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public abstract class WFModel: Model
+    [Description("This is the Base WholeFarm model and should not be used directly.")]
+    public abstract class WFModel: Model
 	{
 		[Link]
 		ISummary Summary = null;

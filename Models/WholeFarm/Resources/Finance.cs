@@ -14,7 +14,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(ResourcesHolder))]
-	public class Finance : ResourceBaseWithTransactions
+    [Description("This resource group holds all finance types (bank accounts) for the simulation.")]
+    public class Finance : ResourceBaseWithTransactions
 	{
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

@@ -15,6 +15,7 @@ namespace Models.WholeFarm.Activities
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(WholeFarm))]
+    [Description("This holds all activities used in the CLEM simulation")]
 	public class ActivitiesHolder: WFModel
 	{
         /// <summary>

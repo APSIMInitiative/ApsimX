@@ -14,7 +14,8 @@ namespace Models.WholeFarm.Groupings
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class OtherAnimalsFilterGroup: WFModel
+    [Description("This other animal filter group selects specific individuals from the other animals using any number of Other Animal Filters.")]
+    public class OtherAnimalsFilterGroup: WFModel
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

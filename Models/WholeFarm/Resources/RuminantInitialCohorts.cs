@@ -11,7 +11,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantType))]
-	public class RuminantInitialCohorts : Model
+    [Description("This holds the list of initial cohorts for a given (parent) ruminant herd or type.")]
+    public class RuminantInitialCohorts : Model
 	{
 		/// <summary>
 		/// Create the individual ruminant animals for this Ruminant Type (Breed)

@@ -16,7 +16,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(GreenhouseGases))]
-	public class GreenhouseGasesType : WFModel, IResourceWithTransactionType, IResourceType
+    [Description("This resource represents a greenhouse gas (e.g. CO2).")]
+    public class GreenhouseGasesType : WFModel, IResourceWithTransactionType, IResourceType
 	{
 		/// <summary>
 		/// Starting amount

@@ -12,7 +12,8 @@ namespace Models.WholeFarm.Groupings
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class FodderLimitsFilterGroup: WFModel
+    [Description("This grouping is not currently used.")]
+    public class FodderLimitsFilterGroup: WFModel
 	{
 		/// <summary>
 		/// Monthly values to supply selected individuals

@@ -16,7 +16,8 @@ namespace Models.WholeFarm
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(Simulation))]
-	public class WholeFarm: Zone, IValidatableObject
+    [Description("This manages all WholeFarm resources and activities in the simulation.")]
+    public class WholeFarm: Zone, IValidatableObject
 	{
 		[Link]
 		ISummary Summary = null;

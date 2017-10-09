@@ -18,7 +18,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivityMuster: WFRuminantActivityBase
+    [Description("This activity performs mustering based upon the current herd filtering. It is also used to assign individuals to pastures (paddocks) at the start of the simulation.")]
+    public class RuminantActivityMuster: WFRuminantActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

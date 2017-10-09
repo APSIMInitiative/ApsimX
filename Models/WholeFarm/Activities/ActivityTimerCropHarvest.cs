@@ -16,12 +16,11 @@ namespace Models.WholeFarm.Activities
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityTask))]
+    [Description("This activity timer is used to determine whether an activity (and all sub activities) will be performed based on the harvet dates of the CropActivityManageProduct above.")]
     public class ActivityTimerCropHarvest : WFModel, IActivityTimer, IValidatableObject
     {
         [Link]
         Clock Clock = null;
-
-
 
         /// <summary>
         /// Months before harvest to start performing activities

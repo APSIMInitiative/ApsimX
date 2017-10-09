@@ -14,7 +14,8 @@ namespace Models.WholeFarm.Groupings
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(OtherAnimalsFilterGroup))]
-	public class OtherAnimalsFilter: WFModel
+    [Description("This other animal filter filter rule is used to define specific individuals from the other animals. Multiple filters are additive.")]
+    public class OtherAnimalsFilter: WFModel
 	{
 		/// <summary>
 		/// Name of parameter to filter by

@@ -28,6 +28,7 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.WFFileView")]
     [PresenterName("UserInterface.Presenters.WFFileCropPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
+    [Description("This model holds a crop data file for the WholeFarm simulation.")]
     public class FileCrop : Model
     {
 		///// <summary>

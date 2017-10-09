@@ -17,6 +17,7 @@ namespace Models.WholeFarm.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
+    [Description("This resource group holds all labour types (people) for the simulation.")]
     public class Labour: ResourceBaseWithTransactions
 	{
 		/// <summary>

@@ -14,7 +14,8 @@ namespace Models.WholeFarm.Activities
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(CropActivityTask))]
-	public class CropActivityFee: WFModel
+    [Description("This is a fee required to perfrom a crop amanagement task.")]
+    public class CropActivityFee: WFModel
 	{
 		/// <summary>
 		/// Payment style

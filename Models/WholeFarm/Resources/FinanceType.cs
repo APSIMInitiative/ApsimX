@@ -15,7 +15,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(Finance))]
-	public class FinanceType : WFModel, IResourceWithTransactionType, IResourceType
+    [Description("This resource represents a finance type (e.g. General bank account).")]
+    public class FinanceType : WFModel, IResourceWithTransactionType, IResourceType
 	{
 		/// <summary>
 		/// Opening balance

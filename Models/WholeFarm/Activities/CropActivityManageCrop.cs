@@ -18,6 +18,7 @@ namespace Models.WholeFarm.Activities
     [ValidParent(ParentType = typeof(WFActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
+    [Description("This activity manages a crop by assigning land to be used for child activities.")]
     public class CropActivityManageCrop: WFActivityBase, IValidatableObject
     {
         [Link]

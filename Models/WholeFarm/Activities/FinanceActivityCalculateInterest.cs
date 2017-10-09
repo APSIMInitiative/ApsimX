@@ -17,7 +17,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class FinanceActivityCalculateInterest : WFActivityBase
+    [Description("This activity peforms monthly interest transactions.")]
+    public class FinanceActivityCalculateInterest : WFActivityBase
 	{
 		/// <summary>
 		/// Get the resources.

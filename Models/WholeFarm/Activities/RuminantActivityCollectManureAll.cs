@@ -17,7 +17,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivityCollectManureAll : WFActivityBase
+    [Description("This activity performs the collection of manure from all paddocks and yards in the simulation.")]
+    public class RuminantActivityCollectManureAll : WFActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

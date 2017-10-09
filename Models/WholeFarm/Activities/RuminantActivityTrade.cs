@@ -19,7 +19,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivityTrade : WFRuminantActivityBase, IValidatableObject
+    [Description("This activity manages trade individuals. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    public class RuminantActivityTrade : WFRuminantActivityBase, IValidatableObject
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

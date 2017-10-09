@@ -15,6 +15,7 @@ namespace Models.WholeFarm.Groupings
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourceActivitySell))]
+    [Description("This labour filter group determines the days required for selling a resource based on specific individuals from the labour pool using any number of Labour Filters.")]
     public class LabourFilterGroupUnit : LabourFilterGroup
     {
         /// <summary>

@@ -19,7 +19,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	class RuminantActivityGrazePastureBreed : WFActivityBase
+    [Description("This activity performs grazing of a specified herd and pasture (paddock) in the simulation.")]
+    class RuminantActivityGrazePastureBreed : WFActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

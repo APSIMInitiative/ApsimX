@@ -14,7 +14,8 @@ namespace Models.WholeFarm.Groupings
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantActivityFeed))]
-	public class RuminantFeedGroup: WFModel
+    [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. Multiple filters will select groups of individuals required.")]
+    public class RuminantFeedGroup: WFModel
 	{
 		/// <summary>
 		/// Monthly values to supply selected individuals

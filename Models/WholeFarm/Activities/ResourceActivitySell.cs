@@ -19,6 +19,7 @@ namespace Models.WholeFarm.Activities
     [ValidParent(ParentType = typeof(WFActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
+    [Description("This activity manages the sale of a specified resource.")]
     public class ResourceActivitySell: WFActivityBase, IValidatableObject
     {
         [Link]

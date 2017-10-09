@@ -506,6 +506,7 @@
     <Compile Include="WholeFarm\Activities\TruckingSettings.cs" />
     <Compile Include="WholeFarm\Activities\WFRuminantActivityBase.cs" />
     <Compile Include="WholeFarm\FileCrop.cs" />
+    <Compile Include="WholeFarm\Groupings\LabourFilterGroup - Copy.cs" />
     <Compile Include="WholeFarm\Groupings\LabourFilterGroupSpecified.cs" />
     <Compile Include="WholeFarm\Groupings\LabourFilterGroupUnit.cs" />
     <Compile Include="WholeFarm\Groupings\RuminantFilterGroup.cs" />

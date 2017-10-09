@@ -20,7 +20,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivitySellDryBreeders : WFRuminantActivityBase
+    [Description("This activity flags dry breeders for sale. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    public class RuminantActivitySellDryBreeders : WFRuminantActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

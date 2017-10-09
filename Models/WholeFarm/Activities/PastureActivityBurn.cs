@@ -18,7 +18,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class PastureActivityBurn: WFActivityBase
+    [Description("This activity applies controlled burning to a specified graze food store (i.e. native pasture paddock).")]
+    public class PastureActivityBurn: WFActivityBase
 	{
 		[XmlIgnore]
 		[Link]
@@ -26,22 +27,6 @@ namespace Models.WholeFarm.Activities
 		[XmlIgnore]
 		[Link]
 		private ResourcesHolder Resources = null;
-
-		/// <summary>
-		/// The burn interval (in months, 1 monthly, 12 annual, 24 biennially)
-		/// </summary>
-		[System.ComponentModel.DefaultValueAttribute(24)]
-		[Description("The burn interval (in months, 12 annual, 24 biennially)")]
-        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
-        public int BurnInterval { get; set; }
-
-		/// <summary>
-		/// Month to perform burn
-		/// </summary>
-		[System.ComponentModel.DefaultValueAttribute(9)]
-		[Description("Month to perform burn")]
-        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
-        public int BurnMonth { get; set; }
 
 		/// <summary>
 		/// Minimum proportion green for fire to carry
@@ -57,12 +42,6 @@ namespace Models.WholeFarm.Activities
 		[Description("Name of graze food store/paddock to burn")]
         [Required]
         public string PaddockName { get; set; }
-
-		/// <summary>
-		/// Month this overhead is next due.
-		/// </summary>
-		[XmlIgnore]
-		public DateTime NextDueDate { get; set; }
 
 		private GrazeFoodStoreType pasture { get; set; }
 		private List<LabourFilterGroupSpecified> labour { get; set; }
@@ -83,19 +62,6 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("WFInitialiseActivity")]
         private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
-            if (BurnMonth >= Clock.StartDate.Month)
-			{
-				NextDueDate = new DateTime(Clock.StartDate.Year, BurnMonth, Clock.StartDate.Day);
-			}
-			else
-			{
-				NextDueDate = new DateTime(Clock.StartDate.Year, BurnMonth, Clock.StartDate.Day);
-				while (Clock.StartDate > NextDueDate)
-				{
-					NextDueDate = NextDueDate.AddMonths(BurnInterval);
-				}
-			}
-
 			// get pasture
 			pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 
@@ -114,34 +80,31 @@ namespace Models.WholeFarm.Activities
 		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			ResourceRequestList = null;
-			if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
+			// for each labour item specified
+			foreach (var item in labour)
 			{
-				// for each labour item specified
-				foreach (var item in labour)
+				double daysNeeded = 0;
+				switch (item.UnitType)
 				{
-					double daysNeeded = 0;
-					switch (item.UnitType)
+					case LabourUnitType.Fixed:
+						daysNeeded = item.LabourPerUnit;
+						break;
+					default:
+						throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+				}
+				if (daysNeeded > 0)
+				{
+					if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+					ResourceRequestList.Add(new ResourceRequest()
 					{
-						case LabourUnitType.Fixed:
-							daysNeeded = item.LabourPerUnit;
-							break;
-						default:
-							throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+						AllowTransmutation = false,
+						Required = daysNeeded,
+						ResourceType = typeof(Labour),
+						ResourceTypeName = "",
+						ActivityModel = this,
+						FilterDetails = new List<object>() { item }
 					}
-					if (daysNeeded > 0)
-					{
-						if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-						ResourceRequestList.Add(new ResourceRequest()
-						{
-							AllowTransmutation = false,
-							Required = daysNeeded,
-							ResourceType = typeof(Labour),
-							ResourceTypeName = "",
-							ActivityModel = this,
-							FilterDetails = new List<object>() { item }
-						}
-						);
-					}
+					);
 				}
 			}
 			return ResourceRequestList;

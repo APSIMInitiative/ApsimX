@@ -15,7 +15,8 @@ namespace Models.WholeFarm.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantActivityBuySell))]
 	[ValidParent(ParentType = typeof(RuminantActivityBreed))]
-	public class RuminantActivityFee: WFModel
+    [Description("This activity defines a specific herd expense for buying and selling ruminants or breeding and is based upon the current herd filtering for the parent activity.")]
+    public class RuminantActivityFee: WFModel
 	{
 		/// <summary>
 		/// Payment style

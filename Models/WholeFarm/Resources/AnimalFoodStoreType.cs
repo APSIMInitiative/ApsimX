@@ -16,7 +16,7 @@ namespace Models.WholeFarm.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
-    [Description("This represents an individual animal food store type within the animal food store.")]
+    [Description("This resource represents an animal food store (e.g. Lucerne).")]
     public class AnimalFoodStoreType : WFModel, IResourceType, IResourceWithTransactionType, IFeedType
     {
         /// <summary>

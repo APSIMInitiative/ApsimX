@@ -16,6 +16,7 @@ namespace Models.WholeFarm.Activities
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
+    [Description("This model component specifies a relationship to be used by supplying a series of x and y values.")]
     public class Relationship: Model, IValidatableObject
 	{
 		/// <summary>

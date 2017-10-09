@@ -13,7 +13,8 @@ namespace Models.WholeFarm.Groupings
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class LabourFilter: WFModel
+    [Description("This labour filter rule is used to define specific individuals from the current labour pool. Multiple filters are additive.")]
+    public class LabourFilter: WFModel
 	{
 		/// <summary>
 		/// Name of parameter to filter by

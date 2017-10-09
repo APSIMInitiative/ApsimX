@@ -15,7 +15,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(ResourcesHolder))]
-	public class ProductStore : ResourceBaseWithTransactions
+    [Description("This resource group holds all products store types (e.g. wool, timber, manure) for the simulation.")]
+    public class ProductStore : ResourceBaseWithTransactions
 	{
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

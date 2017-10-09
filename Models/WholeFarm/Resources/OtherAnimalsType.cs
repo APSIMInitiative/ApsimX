@@ -16,7 +16,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(OtherAnimals))]
-	public class OtherAnimalsType : WFModel, IResourceWithTransactionType
+    [Description("This resource represents an other animal group (e.g. Chickens).")]
+    public class OtherAnimalsType : WFModel, IResourceWithTransactionType
 	{
 		/// <summary>
 		/// Current cohorts of this Other Animal Type.

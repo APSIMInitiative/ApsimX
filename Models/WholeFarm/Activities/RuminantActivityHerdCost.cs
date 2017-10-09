@@ -19,7 +19,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivityHerdCost : WFRuminantActivityBase, IValidatableObject
+    [Description("This activity will arange payment of a ruminant herd expense such as dips and drenches based on the current herd filtering.")]
+    public class RuminantActivityHerdCost : WFRuminantActivityBase, IValidatableObject
 	{
 		/// <summary>
 		/// Amount payable

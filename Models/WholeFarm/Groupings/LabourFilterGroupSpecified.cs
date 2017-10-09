@@ -25,9 +25,9 @@ namespace Models.WholeFarm.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityCollectManurePaddock))]
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [ValidParent(ParentType = typeof(ResourceActivitySell))]
+    [Description("This labour filter group determines the days required based on labour per unit resource of specific individuals from the labour pool using any number of Labour Filters. This is used by a range of activities.. Multiple filters will select groups of individuals required.")]
     public class LabourFilterGroupSpecified: LabourFilterGroup
 	{
-
         /// <summary>
         /// Days labour required per unit or fixed (days)
         /// </summary>

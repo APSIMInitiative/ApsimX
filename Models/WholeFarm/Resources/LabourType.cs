@@ -17,6 +17,7 @@ namespace Models.WholeFarm.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
+    [Description("This resource represents a labour type (e.g. Joe, Male, 36 years old).")]
     public class LabourType : WFModel, IResourceWithTransactionType, IResourceType, IValidatableObject
 	{
 

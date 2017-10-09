@@ -16,7 +16,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantType))]
-	public class AnimalPricing: WFModel
+    [Description("This is the parent model component holing all Animal Price Entries that define the value of individuals in the breed/herd.")]
+    public class AnimalPricing: WFModel
 	{
 		/// <summary>
 		/// Style of pricing animals
@@ -40,7 +41,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(AnimalPricing))]
-	public class AnimalPriceEntry: WFModel
+    [Description("This is the price entry specifying the value of all individuals of a specified sex and greater than or equal to the specified age.")]
+    public class AnimalPriceEntry: WFModel
 	{
 		/// <summary>
 		/// Gender

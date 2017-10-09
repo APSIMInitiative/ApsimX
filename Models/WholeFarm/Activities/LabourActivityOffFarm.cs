@@ -19,7 +19,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class LabourActivityOffFarm: WFActivityBase
+    [Description("This activity manages labour supplied and income derived from an off-farm task.")]
+    public class LabourActivityOffFarm: WFActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

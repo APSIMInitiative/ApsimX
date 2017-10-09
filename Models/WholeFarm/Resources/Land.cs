@@ -17,6 +17,7 @@ namespace Models.WholeFarm.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
+    [Description("This resource group holds all land types for the simulation.")]
     public class Land: ResourceBaseWithTransactions
 	{
         /// <summary>

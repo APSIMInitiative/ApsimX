@@ -16,7 +16,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(ProductStore))]
-	public class ProductStoreType : WFModel, IResourceWithTransactionType, IResourceType
+    [Description("This resource represents a prodcut store type (e.g. Cotton).")]
+    public class ProductStoreType : WFModel, IResourceWithTransactionType, IResourceType
 	{
 		/// <summary>
 		/// Starting amount

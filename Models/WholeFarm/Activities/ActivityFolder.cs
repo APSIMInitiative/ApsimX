@@ -19,7 +19,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class ActivityFolder : WFActivityBase
+    [Description("This activity folder can ve used to arrange and group activities.")]
+    public class ActivityFolder : WFActivityBase
 	{
         /// <summary>
         /// Perform Activity with partial resources available

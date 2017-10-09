@@ -15,7 +15,8 @@ namespace Models.WholeFarm.Activities
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantActivityBuySell))]
-	public class TruckingSettings : WFModel
+    [Description("This activity provides trucking settings for the Ruminant Buy and Sell Activity and will determine costs and emissions if required.")]
+    public class TruckingSettings : WFModel
 	{
         [Link]
         private ResourcesHolder Resources = null;

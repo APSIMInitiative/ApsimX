@@ -18,7 +18,8 @@ namespace Models.WholeFarm.Reporting
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	public class ReportRuminantHerd : WFModel
+    [Description("This component will generate a report of individual ruminant details. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
+    public class ReportRuminantHerd : WFModel
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

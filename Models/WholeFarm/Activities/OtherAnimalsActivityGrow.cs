@@ -17,7 +17,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class OtherAnimalsActivityGrow : WFActivityBase
+    [Description("This activity performs the growth and aging of a specified type of other animal.")]
+    public class OtherAnimalsActivityGrow : WFActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

@@ -15,7 +15,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(OtherAnimalsType))]
-	public class OtherAnimalsTypeCohort: WFModel
+    [Description("This specifies an other animal cohort at the start of the simulation.")]
+    public class OtherAnimalsTypeCohort: WFModel
 	{
 		/// <summary>
 		/// Gender

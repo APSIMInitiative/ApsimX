@@ -20,7 +20,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class FinanceActivityPayExpense : WFActivityBase
+    [Description("This activity performs payment of a specified expense.")]
+    public class FinanceActivityPayExpense : WFActivityBase
 	{
 		[XmlIgnore]
 		[Link]

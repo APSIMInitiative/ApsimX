@@ -17,6 +17,7 @@ namespace Models.WholeFarm.Activities
     [ValidParent(ParentType = typeof(WFActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
+    [Description("This activity manages weaning of suckling ruminant individuals.")]
     public class RuminantActivityWean: WFRuminantActivityBase
     {
         [Link]

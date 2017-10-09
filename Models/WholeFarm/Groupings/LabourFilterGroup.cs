@@ -12,7 +12,8 @@ namespace Models.WholeFarm.Groupings
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class LabourFilterGroup: WFModel
+    [Description("This labour filter group selects specific individuals from the labour pool using any number of Labour Filters. Multiple filters will select groups of individuals required.")]
+    public class LabourFilterGroup: WFModel
 	{
 
 	}

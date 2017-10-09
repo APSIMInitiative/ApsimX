@@ -14,7 +14,8 @@ namespace Models.WholeFarm.Resources
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class ResourceBaseWithTransactions: WFModel
+    [Description("This is the WholeFarm Resource Base Class and should not be used directly.")]
+    public class ResourceBaseWithTransactions: WFModel
 	{
 		/// <summary>
 		/// Last transaction received

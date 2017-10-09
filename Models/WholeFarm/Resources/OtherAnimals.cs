@@ -15,7 +15,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(ResourcesHolder))]
-	public class OtherAnimals: ResourceBaseWithTransactions
+    [Description("This resource group holds all other animals types (not ruminants) for the simulation.")]
+    public class OtherAnimals: ResourceBaseWithTransactions
 	{
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

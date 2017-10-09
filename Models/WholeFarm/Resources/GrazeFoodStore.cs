@@ -19,6 +19,7 @@ namespace Models.WholeFarm.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
+    [Description("This resource group holds all graze food store types (pastures) for the simulation.")]
     public class GrazeFoodStore: ResourceBaseWithTransactions
     {
         /// <summary>

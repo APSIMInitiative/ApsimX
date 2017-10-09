@@ -19,7 +19,7 @@ namespace Models.WholeFarm.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(WholeFarm))]
-    [Description("Resource groups holder.")]
+    [Description("This holds all resource groups used in the CLEM simulation")]
     public class ResourcesHolder: WFModel
     {
 

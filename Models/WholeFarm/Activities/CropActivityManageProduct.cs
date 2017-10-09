@@ -16,6 +16,7 @@ namespace Models.WholeFarm.Activities
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageCrop))]
+    [Description("This activity is used within a crop management activity to obtain production values from the crop file.")]
     public class CropActivityManageProduct: WFActivityBase, IValidatableObject
     {
         [Link]

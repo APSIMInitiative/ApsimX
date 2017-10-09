@@ -15,7 +15,8 @@ namespace Models.WholeFarm.Groupings
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantFeedGroup))]
 	[ValidParent(ParentType = typeof(RuminantFilterGroup))]
-	public class RuminantFilter: WFModel
+    [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
+    public class RuminantFilter: WFModel
 	{
 		/// <summary>
 		/// Name of parameter to filter by

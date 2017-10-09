@@ -21,7 +21,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivityBreed : WFRuminantActivityBase
+    [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
+    public class RuminantActivityBreed : WFRuminantActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

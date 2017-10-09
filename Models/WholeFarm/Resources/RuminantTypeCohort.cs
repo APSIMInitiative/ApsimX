@@ -19,6 +19,7 @@ namespace Models.WholeFarm.Resources
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantInitialCohorts))]
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
+    [Description("This specifies a ruminant cohort at the start of the simulation.")]
     public class RuminantTypeCohort : WFModel
 	{
 		[Link]

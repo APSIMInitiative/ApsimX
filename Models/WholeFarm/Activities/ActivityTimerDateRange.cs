@@ -18,6 +18,7 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [Description("This activity timer defines a date range to perfrom activities.")]
     public class ActivityTimerDateRange : WFModel, IActivityTimer
 	{
 		[XmlIgnore]

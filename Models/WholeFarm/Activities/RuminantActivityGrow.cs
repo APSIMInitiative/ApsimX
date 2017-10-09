@@ -22,7 +22,8 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class RuminantActivityGrow : WFActivityBase
+    [Description("This activity performs the growth and aging of all ruminants. Only one instance of this activity is permitted.")]
+    public class RuminantActivityGrow : WFActivityBase
 	{
 		[XmlIgnore]
 		[Link]

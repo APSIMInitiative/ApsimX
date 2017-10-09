@@ -38,6 +38,7 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.WFFileView")]
     [PresenterName("UserInterface.Presenters.WFFileGRASPPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
+    [Description("This model holds a GRASP data file for native pasture used in the WholeFarm simulation.")]
     public class FileGRASP : WFModel
     {
         ///// <summary>

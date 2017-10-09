@@ -18,7 +18,8 @@ namespace Models.WholeFarm.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(GrazeFoodStore))]
-	public class GrazeFoodStoreType : WFModel, IResourceWithTransactionType, IResourceType
+    [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
+    public class GrazeFoodStoreType : WFModel, IResourceWithTransactionType, IResourceType
 	{
 		[Link]
 		WholeFarm WholeFarm = null;
