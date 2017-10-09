@@ -303,6 +303,14 @@ namespace Models.Core
                     (simulation as Simulation).FileName = FileName;
         }
 
+        /// <summary>
+        /// Nulls the link object, which will force it to be recreated when it's needed
+        /// </summary>
+        public void ClearLinks()
+        {
+            links = null;
+        }
+
         /// <summary>Create a links object</summary>
         private void CreateLinks()
         {

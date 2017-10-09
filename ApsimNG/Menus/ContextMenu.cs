@@ -25,10 +25,10 @@ namespace UserInterface.Presenters
     /// </summary>
     public class ContextMenu
     {
-        [Link]
+        [Link(IsOptional = true)]
         IStorageReader storage = null;
 
-        [Link]
+        [Link(IsOptional = true)]
         IStorageWriter storageWriter = null;
 
         /// <summary>
