@@ -23,9 +23,6 @@ namespace Models.WholeFarm.Activities
 	{
 		[XmlIgnore]
 		[Link]
-		Clock Clock = null;
-		[XmlIgnore]
-		[Link]
 		private ResourcesHolder Resources = null;
 
 		/// <summary>

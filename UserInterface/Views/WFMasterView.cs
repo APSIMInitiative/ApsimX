@@ -33,10 +33,10 @@ namespace UserInterface.Views
         /// </summary>
         string ModelHelpURL { get; set; }
 
-        /// <summary>
-        /// Property to provide access to the lower presenter.
-        /// </summary>
-        IPresenter LowerPresenter { get; }
+        ///// <summary>
+        ///// Property to provide access to the lower presenter.
+        ///// </summary>
+        //IPresenter LowerPresenter { get; }
 
         /// <summary>
         /// Add a view to the right hand panel.
@@ -93,9 +93,21 @@ namespace UserInterface.Views
 
         public string ModelHelpURL { get; set; }
 
-        IPresenter IWFMasterView.LowerPresenter => throw new NotImplementedException();
+        //IPresenter LowerPresenter
+        //{
+        //    get
+        //    {
+        //        return LowerPanel;
+        //    }
+        //    set
+        //    {
+        //        ModelTypeLabel.ForeColor = value;
+        //    }
+        //}
 
-        private void HelpLinkLabel_Click(object sender, EventArgs e)
+
+
+    private void HelpLinkLabel_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("http://www.csiro.au");
         }
