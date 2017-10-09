@@ -177,7 +177,11 @@ namespace Models.PMF.Organs
         public List<double> ZoneInitialDM { get; set; }
 
         private double BiomassToleranceValue = 0.0000000001;   // 10E-10
-
+        
+        /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
+        private bool needToRecalculateLiveDead = true;
+        private Biomass liveBiomass = new Biomass();
+        private Biomass deadBiomass = new Biomass();
         #endregion
 
         #region States
@@ -231,15 +235,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (PlantZone != null)
-                {
-                    Biomass biomass = new Biomass();
-                    foreach (Biomass b in PlantZone.LayerLive)
-                        biomass += b;
-                    return biomass;
-                }
-                else
-                    return new Biomass();
+                RecalculateLiveDead();
+                return liveBiomass;
             }
         }
 
@@ -250,18 +247,28 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (PlantZone != null)
-                {
-                    Biomass biomass = new Biomass();
-                    foreach (Biomass b in PlantZone.LayerDead)
-                        biomass += b;
-                    return biomass;
-                }
-                else
-                    return new Biomass();
+                RecalculateLiveDead();
+                return deadBiomass;
             }
         }
 
+        /// <summary>Recalculate live and dead biomass if necessary</summary>
+        private void RecalculateLiveDead()
+        {
+            if (needToRecalculateLiveDead)
+            {
+                needToRecalculateLiveDead = false;
+                liveBiomass.Clear();
+                deadBiomass.Clear();
+                if (PlantZone != null)
+                {
+                    foreach (Biomass b in PlantZone.LayerLive)
+                        liveBiomass.Add(b);
+                    foreach (Biomass b in PlantZone.LayerDead)
+                        deadBiomass.Add(b);
+                }
+            }
+        }
 
         /// <summary>Gets the root length density.</summary>
         [Units("mm/mm3")]
@@ -378,6 +385,7 @@ namespace Models.PMF.Organs
                     Zones.Add(newZone);
                 }
             }
+            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Does the water uptake.</summary>
@@ -426,6 +434,7 @@ namespace Models.PMF.Organs
             Dead.Clear();
             PlantZone.Clear();
             Zones.Clear();
+            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
@@ -483,6 +492,7 @@ namespace Models.PMF.Organs
             {
                 PlantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value(), Plant.Population, MaximumNConc.Value());
                 InitialiseZones();
+                needToRecalculateLiveDead = true;
             }
         }
 
@@ -698,6 +708,7 @@ namespace Models.PMF.Organs
                         for (int layer = 0; layer < Z.soil.Thickness.Length; layer++)
                             Z.LayerLive[layer].PotentialDMAllocation = value.Structural * RAw[layer] / TotalRAw;
                     }
+                    needToRecalculateLiveDead = true;
                 }
             }
         }
@@ -720,7 +731,7 @@ namespace Models.PMF.Organs
 
                 foreach (ZoneState Z in Zones)
                     Z.PartitionRootMass(TotalRAw, Allocated.Wt);
-
+                needToRecalculateLiveDead = true;
             }
         }
 
@@ -852,7 +863,7 @@ namespace Models.PMF.Organs
                 {
                     if (myZone.LayerLive[layer].Wt > 0)
                     {
-                        RWC[layer] = (myZone.soil.Water[layer] - myZone.soil.SoilWater.LL15mm[layer]) / (myZone.soil.SoilWater.DULmm[layer] - myZone.soil.SoilWater.LL15mm[layer]);
+                        RWC[layer] = (myZone.soil.Water[layer] - myZone.soil.LL15mm[layer]) / (myZone.soil.DULmm[layer] - myZone.soil.LL15mm[layer]);
                         RWC[layer] = Math.Max(0.0, Math.Min(RWC[layer], 1.0));
                         double SWAF = NUptakeSWFactor.Value(layer);
 
@@ -912,6 +923,7 @@ namespace Models.PMF.Organs
                         }
                     }
                 }
+                needToRecalculateLiveDead = true;
 
                 if (!MathUtilities.FloatsAreEqual(NAllocated - Allocated.N, 0.0))
                     throw new Exception("Error in N Allocation: " + Name);

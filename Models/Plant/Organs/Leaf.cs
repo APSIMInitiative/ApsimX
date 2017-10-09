@@ -400,6 +400,10 @@ namespace Models.PMF.Organs
         /// <summary>The age of apex in age group.</summary>
         private List<double> apexGroupAge = new List<double>();
 
+        /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
+        private bool needToRecalculateLiveDead = true;
+        private Biomass liveBiomass = new Biomass();
+        private Biomass deadBiomass = new Biomass();
         #endregion
 
         #region States
@@ -530,10 +534,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                Biomass biomass = new Biomass();
-                foreach (LeafCohort L in Leaves)
-                    biomass = biomass + L.Live;
-                return biomass;
+                RecalculateLiveDead();
+                return liveBiomass;
             }
 
         }
@@ -545,10 +547,24 @@ namespace Models.PMF.Organs
         {
             get
             {
-                Biomass biomass = new Biomass();
+                RecalculateLiveDead();
+                return deadBiomass;
+            }
+        }
+
+        /// <summary>Recalculate live and dead biomass if necessary</summary>
+        private void RecalculateLiveDead()
+        {
+            if (needToRecalculateLiveDead)
+            {
+                needToRecalculateLiveDead = false;
+                liveBiomass.Clear();
+                deadBiomass.Clear();
                 foreach (LeafCohort L in Leaves)
-                    biomass = biomass + L.Dead;
-                return biomass;
+                {
+                    liveBiomass.Add(L.Live);
+                    deadBiomass.Add(L.Dead);
+                }
             }
         }
 
@@ -934,6 +950,8 @@ namespace Models.PMF.Organs
                 DoApexCalculations(ref NewLeaf);
                 Leaves.Add(NewLeaf);
             }
+            needToRecalculateLiveDead = true;
+
             foreach (LeafCohort Leaf in Leaves)
             {
                 CohortsAtInitialisation += 1;
@@ -958,6 +976,7 @@ namespace Models.PMF.Organs
             NewLeaf.DoInitialisation();
             DoApexCalculations(ref NewLeaf);
             Leaves.Add(NewLeaf);
+            needToRecalculateLiveDead = true;
         }
 
         private void DoApexCalculations(ref LeafCohort NewLeaf)
@@ -1004,6 +1023,7 @@ namespace Models.PMF.Organs
             Leaves[i].CohortPopulation = Apex.LeafTipAppearance(Structure.ApexNum, Plant.Population, CohortParams.TotalStemPopn);
             Leaves[i].Age = CohortParams.CohortAge;
             Leaves[i].DoAppearance(CohortParams.FinalFraction, CohortParameters);
+            needToRecalculateLiveDead = true;
             if (NewLeaf != null)
                 NewLeaf.Invoke();
         }
@@ -1018,6 +1038,7 @@ namespace Models.PMF.Organs
             {
                 foreach (LeafCohort L in Leaves)
                     L.DoActualGrowth(ThermalTime.Value(), CohortParameters);
+                needToRecalculateLiveDead = true;
 
                 Structure.UpdateHeight();
 
@@ -1322,6 +1343,7 @@ namespace Models.PMF.Organs
                         Reallocation = DMReAllocationCohort[a],
                     };
                 }
+                needToRecalculateLiveDead = true;
 
                 double EndWt = Live.StructuralWt + Live.MetabolicWt + Live.StorageWt;
                 double CheckValue = StartWt + value.Structural * DMConversionEfficiency + value.Metabolic * DMConversionEfficiency + value.Storage * DMConversionEfficiency - value.Reallocation - value.Retranslocation - value.Respired;
@@ -1482,6 +1504,7 @@ namespace Models.PMF.Organs
                         Reallocation = NReallocationCohort[a],
                     };
                 }
+                needToRecalculateLiveDead = true;
 
                 double endN = Live.StructuralN + Live.MetabolicN + Live.StorageN;
                 double checkValue = StartN + value.Structural + value.Metabolic + value.Storage -
@@ -1559,6 +1582,7 @@ namespace Models.PMF.Organs
             Summary.WriteMessage(this, "Killing " + KillLeaf.KillFraction + " of leaves on plant");
             foreach (LeafCohort L in Leaves)
                 L.DoKill(KillLeaf.KillFraction);
+            needToRecalculateLiveDead = true;
         }
 
 
