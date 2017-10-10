@@ -221,7 +221,7 @@ namespace Models.Core
                     else if (propertyInfo == null && relativeToObject is Model)
                     {
                         // Not a property, may be a child model.
-                        localModel = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType));
+                        localModel = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(namePathBits[j], compareType));
                         if (localModel == null)
                         {
                             return null;

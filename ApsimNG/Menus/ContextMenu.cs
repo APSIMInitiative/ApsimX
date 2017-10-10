@@ -25,10 +25,10 @@ namespace UserInterface.Presenters
     /// </summary>
     public class ContextMenu
     {
-        [Link]
+        [Link(IsOptional = true)]
         IStorageReader storage = null;
 
-        [Link]
+        [Link(IsOptional = true)]
         IStorageWriter storageWriter = null;
 
         /// <summary>
@@ -174,11 +174,7 @@ namespace UserInterface.Presenters
                 else
                 {
                     Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-
-                    List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
-                    jobs.Add(Runner.ForSimulations(this.explorerPresenter.ApsimXFile, model, false));
-
-                    this.command = new Commands.RunCommand(jobs, model.Name, this.explorerPresenter, multiProcessRunner, storageWriter);
+                    this.command = new Commands.RunCommand(model, this.explorerPresenter, multiProcessRunner, storageWriter);
                     this.command.Do(null);
                 }
             }

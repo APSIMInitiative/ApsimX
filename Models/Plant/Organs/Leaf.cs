@@ -32,7 +32,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand
+    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration
     {
 
         /// <summary>The met data</summary>
@@ -330,6 +330,15 @@ namespace Models.PMF.Organs
             /// </summary>
             [Link]
             public IFunction MaintenanceRespirationFunction = null;
+            /// <summary>Modify leaf size by age</summary>
+            [Link]
+            public IFunction LeafSizeAgeMultiplier = null;
+            /// <summary>Modify lag duration by age</summary>
+            [Link]
+            public IFunction LagDurationAgeMultiplier = null;
+            /// <summary>Modify senescence duration by age</summary>
+            [Link]
+            public IFunction SenescenceDurationAgeMultiplier = null;
         }
         #endregion
 
@@ -391,6 +400,10 @@ namespace Models.PMF.Organs
         /// <summary>The age of apex in age group.</summary>
         private List<double> apexGroupAge = new List<double>();
 
+        /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
+        private bool needToRecalculateLiveDead = true;
+        private Biomass liveBiomass = new Biomass();
+        private Biomass deadBiomass = new Biomass();
         #endregion
 
         #region States
@@ -517,14 +530,12 @@ namespace Models.PMF.Organs
         /// <summary>Gets the cohort live.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
-        public Biomass CohortLive
+        public Biomass Live
         {
             get
             {
-                Biomass biomass = new Biomass();
-                foreach (LeafCohort L in Leaves)
-                    biomass = biomass + L.Live;
-                return biomass;
+                RecalculateLiveDead();
+                return liveBiomass;
             }
 
         }
@@ -532,14 +543,28 @@ namespace Models.PMF.Organs
         /// <summary>Gets the cohort dead.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
-        public Biomass CohortDead
+        public Biomass Dead
         {
             get
             {
-                Biomass biomass = new Biomass();
+                RecalculateLiveDead();
+                return deadBiomass;
+            }
+        }
+
+        /// <summary>Recalculate live and dead biomass if necessary</summary>
+        private void RecalculateLiveDead()
+        {
+            if (needToRecalculateLiveDead)
+            {
+                needToRecalculateLiveDead = false;
+                liveBiomass.Clear();
+                deadBiomass.Clear();
                 foreach (LeafCohort L in Leaves)
-                    biomass = biomass + L.Dead;
-                return biomass;
+                {
+                    liveBiomass.Add(L.Live);
+                    deadBiomass.Add(L.Dead);
+                }
             }
         }
 
@@ -661,6 +686,46 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets lag duration</summary>
+        [Units("oCd")]
+        public double[] CohortLagDuration
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.LagDuration;
+                    ;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+        /// <summary>Gets fraction of leaf senescence.</summary>
+        [Units("")]
+        public double[] CohortSenescedFrac
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.SenescedFrac;
+                    ;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
         /// <summary>Gets the cohort sla.</summary>
         [Units("mm2/g")]
         public double[] CohortSLA
@@ -697,11 +762,11 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the live stem  number.</summary>
+        /// <summary>Gets the live stem  number to represent the observed stem numbers in an experiment.</summary>
         /// <value>Stem number.</value>
         [Units("0-1")]
         [XmlIgnore]
-        [Description("Live stem number")]
+        [Description("In the field experiment, we count stem number according whether a stem number has a green leaf. A green leaf is definied as a leaf has more than half green part.")]
         public double LiveStemNumber
         {
             get
@@ -710,7 +775,8 @@ namespace Models.PMF.Organs
 
                 foreach (LeafCohort L in Leaves)
                 {
-                    if (L.LiveArea > 0)
+                    
+                    if (L.Age < L.GrowthDuration + L.LagDuration + L.SenescenceDuration / 2)
                     {
                         sn = Math.Max(sn, L.CohortPopulation);
                     }
@@ -866,7 +932,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Clears this instance.</summary>
-        protected override void Clear()
+        protected void Clear()
         {
             Leaves = new List<LeafCohort>();
             WaterAllocation = 0;
@@ -880,8 +946,12 @@ namespace Models.PMF.Organs
             Leaves = new List<LeafCohort>();
             foreach (LeafCohort Leaf in InitialLeaves)
             {
-                Leaves.Add(Leaf.Clone());
+                LeafCohort NewLeaf = Leaf.Clone();
+                DoApexCalculations(ref NewLeaf);
+                Leaves.Add(NewLeaf);
             }
+            needToRecalculateLiveDead = true;
+
             foreach (LeafCohort Leaf in Leaves)
             {
                 CohortsAtInitialisation += 1;
@@ -904,12 +974,12 @@ namespace Models.PMF.Organs
             NewLeaf.Rank = InitParams.Rank;
             NewLeaf.Area = 0.0;
             NewLeaf.DoInitialisation();
+            DoApexCalculations(ref NewLeaf);
             Leaves.Add(NewLeaf);
-            DoApexCalculations();
-
+            needToRecalculateLiveDead = true;
         }
 
-        private void DoApexCalculations()
+        private void DoApexCalculations(ref LeafCohort NewLeaf)
         {
             for (int i = 0; i < apexGroupAge.Count; i++)
                 apexGroupAge[i]++;
@@ -936,6 +1006,8 @@ namespace Models.PMF.Organs
                         break;
                 }
             }
+            NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
+            NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
         }
 
         /// <summary>Method to make leaf cohort appear and start expansion</summary>
@@ -951,6 +1023,7 @@ namespace Models.PMF.Organs
             Leaves[i].CohortPopulation = Apex.LeafTipAppearance(Structure.ApexNum, Plant.Population, CohortParams.TotalStemPopn);
             Leaves[i].Age = CohortParams.CohortAge;
             Leaves[i].DoAppearance(CohortParams.FinalFraction, CohortParameters);
+            needToRecalculateLiveDead = true;
             if (NewLeaf != null)
                 NewLeaf.Invoke();
         }
@@ -965,6 +1038,7 @@ namespace Models.PMF.Organs
             {
                 foreach (LeafCohort L in Leaves)
                     L.DoActualGrowth(ThermalTime.Value(), CohortParameters);
+                needToRecalculateLiveDead = true;
 
                 Structure.UpdateHeight();
 
@@ -1269,6 +1343,7 @@ namespace Models.PMF.Organs
                         Reallocation = DMReAllocationCohort[a],
                     };
                 }
+                needToRecalculateLiveDead = true;
 
                 double EndWt = Live.StructuralWt + Live.MetabolicWt + Live.StorageWt;
                 double CheckValue = StartWt + value.Structural * DMConversionEfficiency + value.Metabolic * DMConversionEfficiency + value.Storage * DMConversionEfficiency - value.Reallocation - value.Retranslocation - value.Respired;
@@ -1429,6 +1504,7 @@ namespace Models.PMF.Organs
                         Reallocation = NReallocationCohort[a],
                     };
                 }
+                needToRecalculateLiveDead = true;
 
                 double endN = Live.StructuralN + Live.MetabolicN + Live.StorageN;
                 double checkValue = StartN + value.Structural + value.Metabolic + value.Storage -
@@ -1464,6 +1540,9 @@ namespace Models.PMF.Organs
                 return CohortParameters.CriticalNConc.Value();
             }
         }
+
+        /// <summary>Gets the total biomass</summary>
+        public Biomass Total { get { return Live + Dead; } }
         #endregion
 
         #region Event handlers
@@ -1503,6 +1582,7 @@ namespace Models.PMF.Organs
             Summary.WriteMessage(this, "Killing " + KillLeaf.KillFraction + " of leaves on plant");
             foreach (LeafCohort L in Leaves)
                 L.DoKill(KillLeaf.KillFraction);
+            needToRecalculateLiveDead = true;
         }
 
 
@@ -1547,11 +1627,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (Wt > 0.0)
+            Biomass total = Live + Dead;
+            if (total.Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
             }
 
             Clear();

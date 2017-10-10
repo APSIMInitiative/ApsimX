@@ -630,7 +630,8 @@ namespace Models.Graph
                 fieldNames.Add("Zone");
             if (XFieldName != null && !XFieldName.Equals("SimulationName"))
                 fieldNames.Add(XFieldName);
-            fieldNames.Add(YFieldName);
+            if (YFieldName != null && !fieldNames.Contains(YFieldName))
+                fieldNames.Add(YFieldName);
             if (X2FieldName != null && !fieldNames.Contains(X2FieldName))
                 fieldNames.Add(X2FieldName);
             if (Y2FieldName != null && !fieldNames.Contains(Y2FieldName))

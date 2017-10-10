@@ -46,9 +46,12 @@ namespace UserInterface.Presenters
             this.view.TableList.IsEditable = false;
             this.view.Grid.ReadOnly = true;
             this.view.Grid.NumericFormat = "N3";
-            this.view.TableList.Values = dataStore.TableNames.ToArray();
-            if (dataStore != null && Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
-                this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
+            if (dataStore != null)
+            {
+                this.view.TableList.Values = dataStore.TableNames.ToArray();
+                if (Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
+                    this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
+            }
 
             this.view.Grid.ResizeControls();
             this.view.TableList.Changed += this.OnTableSelected;
@@ -142,7 +145,7 @@ namespace UserInterface.Presenters
                 int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
                 if (ExperimentFilter != null)
                 {
-                    string filter = "NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                    string filter = "NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
                     data = dataStore.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
                 }
                 else if (SimulationFilter != null)

@@ -6,12 +6,9 @@
 namespace UserInterface.Views
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Drawing;
     using System.IO;
     using Gtk;
-    using Glade;
     using System.Reflection;
     using Models.Core;
 
@@ -152,25 +149,15 @@ namespace UserInterface.Views
         private Views.ListButtonView listButtonView1;
         private Views.ListButtonView listButtonView2;
 
-        [Widget]
         private Window window1 = null;
-        [Widget]
         private ProgressBar progressBar = null;
-        [Widget]
         private TextView StatusWindow = null;
-        [Widget]
         private Button stopButton = null;
-        [Widget]
         private Notebook notebook1 = null;
-        [Widget]
         private Notebook notebook2 = null;
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private VBox vbox2 = null;
-        [Widget]
         private HPaned hpaned1 = null;
-        [Widget]
         private HBox hbox1 = null;
 
         /// <summary>Constructor</summary>
@@ -182,8 +169,17 @@ namespace UserInterface.Views
                                       ".gtkrc"));
             }
 
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.MainView.glade", "window1");
-            gxml.Autoconnect(this);
+            Builder builder = new Builder("ApsimNG.Resources.Glade.MainView.glade");
+            window1 = (Window)builder.GetObject("window1");
+            progressBar = (ProgressBar)builder.GetObject("progressBar");
+            StatusWindow = (TextView)builder.GetObject("StatusWindow");
+            stopButton = (Button)builder.GetObject("stopButton");
+            notebook1 = (Notebook)builder.GetObject("notebook1");
+            notebook2 = (Notebook)builder.GetObject("notebook2");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            vbox2 = (VBox)builder.GetObject("vbox2");
+            hpaned1 = (HPaned)builder.GetObject("hpaned1");
+            hbox1 = (HBox)builder.GetObject("hbox1");
             _mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
@@ -318,6 +314,8 @@ namespace UserInterface.Views
         public void ShowWaitCursor(bool wait)
         {
             WaitCursor = wait;
+            while (GLib.MainContext.Iteration())
+                ;
         }
 
         /// <summary>Close the application.</summary>

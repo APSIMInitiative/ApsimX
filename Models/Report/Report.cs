@@ -96,12 +96,12 @@ namespace Models.Report
             foreach (string eventName in EventNames)
             {
                 if (eventName != string.Empty)
-                    events.Subscribe(eventName.Trim(), DoOutput);
+                    events.Subscribe(eventName.Trim(), DoOutputEvent);
             }
         }
 
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
-        public void DoOutput(object sender, EventArgs args)
+        public void DoOutput()
         {
             object[] valuesToWrite = new object[columns.Count];
             for (int i = 0; i < columns.Count; i++)
@@ -125,6 +125,13 @@ namespace Models.Report
                     report.Close();
                 }
             }
+        }
+
+
+        /// <summary>Called when one of our 'EventNames' events are invoked</summary>
+        public void DoOutputEvent(object sender, EventArgs e)
+        {
+            DoOutput();
         }
 
         /// <summary>

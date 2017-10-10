@@ -742,15 +742,6 @@
         </Structure>
         <Leaf>
           <Name>Leaf</Name>
-          <CompositeBiomass>
-            <Name>Live</Name>
-          </CompositeBiomass>
-          <CompositeBiomass>
-            <Name>Dead</Name>
-          </CompositeBiomass>
-          <CompositeBiomass>
-            <Name>Total</Name>
-          </CompositeBiomass>
           <MultiplyFunction>
             <Name>ExtinctionCoeff</Name>
           </MultiplyFunction>

@@ -634,14 +634,6 @@ Though tillering is common in some maize varieties under certain agronomic condi
       </PhaseLookupValue>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PhaseLookup>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -865,20 +857,6 @@ Though tillering is common in some maize varieties under certain agronomic condi
   </ReproductiveOrgan>
   <Root>
     <Name>Root</Name>
-    <CompositeBiomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Root].LayerLive</string>
-      </Propertys>
-    </CompositeBiomass>
-    <CompositeBiomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Root].LayerDead</string>
-      </Propertys>
-    </CompositeBiomass>
     <LinearInterpolationFunction>
       <Name>KLModifier</Name>
       <Memo>
@@ -1209,20 +1187,6 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Area>0</Area>
       <MaintenanceRespiration>0</MaintenanceRespiration>
     </LeafCohort>
-    <CompositeBiomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Leaf].CohortLive</string>
-      </Propertys>
-    </CompositeBiomass>
-    <CompositeBiomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Leaf].CohortDead</string>
-      </Propertys>
-    </CompositeBiomass>
     <ArrayBiomass>
       <Name>CohortArrayLive</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1677,6 +1641,21 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
         <FixedValue>0</FixedValue>
         <Units>g/g</Units>
       </Constant>
+      <ArrayFunction>
+        <Name>LagDurationAgeMultiplier</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Values>1 1 1</Values>
+      </ArrayFunction>
+      <ArrayFunction>
+        <Name>SenescenceDurationAgeMultiplier</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Values>1 1 1</Values>
+      </ArrayFunction>
+      <ArrayFunction>
+        <Name>LeafSizeAgeMultiplier</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+      </ArrayFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </LeafCohortParameters>
     <RUEModel>
@@ -1987,14 +1966,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PopulationBasedDemandFunction>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2187,14 +2158,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PopulationBasedDemandFunction>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2330,14 +2293,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
   </GenericOrgan>
   <GenericOrgan>
     <Name>Stem</Name>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <Constant>
       <Name>StructuralFraction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>

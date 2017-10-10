@@ -175,11 +175,7 @@ namespace UserInterface.Presenters
                 else
                 {
                     Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-
-                    List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
-                    jobs.Add(Runner.ForSimulations(this.explorerPresenter.ApsimXFile, model, false));
-
-                    this.command = new Commands.RunCommand(jobs, model.Name, this.explorerPresenter, multiProcessRunner, storageWriter);
+                    this.command = new Commands.RunCommand(model, this.explorerPresenter, multiProcessRunner, storageWriter);
                     this.command.Do(null);
                 }
             }

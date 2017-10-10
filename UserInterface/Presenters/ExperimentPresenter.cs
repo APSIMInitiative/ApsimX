@@ -28,7 +28,7 @@ namespace UserInterface.Presenters
             ListView = View as IMemoView;
             ExplorerPresenter = explorerPresenter;
 
-            ListView.MemoLines = Experiment.Names();
+            ListView.MemoLines = Experiment.GetSimulationNames().ToArray();
             ListView.LabelText = "Listed below are names of the " + ListView.MemoLines.Length.ToString() + " simulations that this experiment will create";
             ListView.ReadOnly = true;
             ListView.AddContextAction("Run APSIM", OnRunApsimClick);
@@ -47,10 +47,7 @@ namespace UserInterface.Presenters
             try
             {
                 Simulation simulation = Experiment.CreateSpecificSimulation(ListView.MemoLines[ListView.CurrentPosition.Y]);
-                JobManager.IRunnable job = Runner.ForSimulations(ExplorerPresenter.ApsimXFile, simulation, false);
-
-                Commands.RunCommand run = new Commands.RunCommand(job, 
-                                                                  simulation.Name,
+                Commands.RunCommand run = new Commands.RunCommand(simulation,
                                                                   ExplorerPresenter,
                                                                   false,
                                                                   storageWriter);

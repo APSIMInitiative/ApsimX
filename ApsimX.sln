@@ -8,8 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importer", "Models\Importer\Importer.csproj", "{075F2644-F14E-4010-BA52-35E4B0011835}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApServer", "ApServer\ApServer.csproj", "{7726F6D0-1CE6-475E-8790-E93999818545}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{130772DF-A5C9-456A-B917-9F3D717F36D6}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
@@ -59,14 +57,6 @@ Global
 		{075F2644-F14E-4010-BA52-35E4B0011835}.Release|Any CPU.Build.0 = Release|Any CPU
 		{075F2644-F14E-4010-BA52-35E4B0011835}.Release|x86.ActiveCfg = Release|x86
 		{075F2644-F14E-4010-BA52-35E4B0011835}.Release|x86.Build.0 = Release|x86
-		{7726F6D0-1CE6-475E-8790-E93999818545}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7726F6D0-1CE6-475E-8790-E93999818545}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7726F6D0-1CE6-475E-8790-E93999818545}.Debug|x86.ActiveCfg = Debug|x86
-		{7726F6D0-1CE6-475E-8790-E93999818545}.Debug|x86.Build.0 = Debug|x86
-		{7726F6D0-1CE6-475E-8790-E93999818545}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7726F6D0-1CE6-475E-8790-E93999818545}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7726F6D0-1CE6-475E-8790-E93999818545}.Release|x86.ActiveCfg = Release|x86
-		{7726F6D0-1CE6-475E-8790-E93999818545}.Release|x86.Build.0 = Release|x86
 		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45A670BC-4A44-4944-A4B4-6FF4F198454D}.Debug|x86.ActiveCfg = Debug|x86

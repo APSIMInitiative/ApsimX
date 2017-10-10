@@ -1,18 +1,21 @@
-﻿using APSIM.Shared.Utilities;
-using Models.Core;
-using System.Collections.Generic;
-using System.Linq;
-using Models.Core.Runners;
-using System;
-
-namespace APSIMRunner
+﻿namespace APSIMRunner
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Core.Runners;
+    using System.Collections.Generic;
+    using System.Linq;
+
     class StorageViaSockets : Model, IStorageWriter
     {
+        List<JobRunnerMultiProcess.TransferRowInTable> data = new List<JobRunnerMultiProcess.TransferRowInTable>();
+
+        /// <summary>We have completed the simulation - write remaining data</summary>
+        /// <param name="simulationName"></param>
         public void CompletedWritingSimulationData(string simulationName)
         {
-            throw new NotImplementedException();
-        }
+            WriteAllData();
+        } 
 
         /// <summary>Write to permanent storage.</summary>
         /// <param name="simulationName">Name of simulation</param>
@@ -22,17 +25,28 @@ namespace APSIMRunner
         /// <param name="valuesToWrite">Values of row to write</param>
         public void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
         {
-            JobManagerMultiProcess.TransferRowInTable rowData = new JobManagerMultiProcess.TransferRowInTable()
+            JobRunnerMultiProcess.TransferRowInTable rowData = new JobRunnerMultiProcess.TransferRowInTable()
             {
                 simulationName = simulationName,
-                tableName = tableName,
+                tableName = tableName, 
                 columnNames = columnNames.ToArray(),
                 values = valuesToWrite
             };
 
-            SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = rowData };
+            data.Add(rowData);
+            if (data.Count == 100)
+                WriteAllData();
+        }
 
-            SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
+        /// <summary>Write all the data we stored</summary>
+        private void WriteAllData()
+        {
+            if (data.Count > 0)
+            {
+                SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = data };
+                SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
+                data.Clear();
+            }
         }
     }
 }
