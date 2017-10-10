@@ -153,7 +153,14 @@ namespace Models.PMF.Organs
 
         #region Functions
 
-                /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <summary>Initializes a new instance of the <see cref="ReproductiveOrgan"/> class.</summary>
+        public ReproductiveOrgan()
+        {
+            Live = new Biomass();
+            Dead = new Biomass();
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
