@@ -59,6 +59,7 @@ namespace Models
                 else
                     jobRunner = new JobRunnerAsync();
                 jobRunner.JobCompleted += OnJobCompleted;
+                jobRunner.AllJobsCompleted += OnAllJobsCompleted;
                 jobRunner.Run(job, wait: true);
 
                 // If errors occurred, write them to the console.
@@ -87,8 +88,15 @@ namespace Models
         private static void OnJobCompleted(object sender, JobCompleteArgs e)
         {
             if (e.exceptionThrowByJob != null)
-                errors += e.exceptionThrowByJob.ToString() + Environment.NewLine;
+                errors += e.exceptionThrowByJob.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
         }
-                
+
+        /// <summary>All jobs have completed</summary>
+        private static void OnAllJobsCompleted(object sender, AllCompletedArgs e)
+        {
+            if (e.exceptionThrown != null)
+                errors += e.exceptionThrown.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+        }
+
     }
 }

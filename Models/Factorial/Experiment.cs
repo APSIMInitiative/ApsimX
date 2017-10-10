@@ -57,7 +57,8 @@
 
             // Call OnLoaded in all models.
             Events events = new Events(newSimulation);
-            events.Publish("Loaded", null);
+            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+            events.Publish("Loaded", new object[] { newSimulation, loadedArgs });
 
             foreach (FactorValue value in combination)
                 value.ApplyToSimulation(newSimulation);
@@ -198,7 +199,8 @@
 
                     // Connect events and links in our new  simulation.
                     Events events = new Events(newSimulation);
-                    events.Publish("Loaded", null);
+                    LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                    events.Publish("Loaded", new object[] { newSimulation, loadedArgs });
 
                     foreach (FactorValue value in combination)
                         value.ApplyToSimulation(newSimulation);

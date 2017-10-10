@@ -90,7 +90,8 @@
                     simulationToRun = Apsim.Clone(simulationToRun) as Simulation;
                     events = new Events(simulationToRun);
                     simulationEngine.MakeSubstitutions(simulationToRun);
-                    events.Publish("Loaded", null);
+                    LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                    events.Publish("Loaded", new object[] { simulationToRun, loadedArgs });
                 }
                 else
                     events = new Events(simulationToRun);

@@ -268,7 +268,8 @@ namespace Models.Core
             Apsim.EnsureNameIsUnique(modelToAdd);
 
             // Call OnLoaded
-            events.Publish("Loaded", null);
+            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+            events.Publish("Loaded", new object[] { modelToAdd, loadedArgs });
 
             Locator(parent).Clear();
 

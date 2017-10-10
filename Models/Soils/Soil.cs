@@ -147,7 +147,7 @@ namespace Models.Soils
 
         /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             FindChildren();
         }

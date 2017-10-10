@@ -1643,7 +1643,7 @@ namespace Models.Soils
         /// Called when [loaded].
         /// </summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
 
         }
