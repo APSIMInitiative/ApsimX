@@ -26,6 +26,8 @@ namespace Models.Soils
     public class SoilWater : Model, ISoilWater
     {
 
+        private List<IModel> canopyModels;
+
 
         //GUI
         //***
@@ -1501,11 +1503,8 @@ namespace Models.Soils
 
             canopy.ZeroCanopyData();  //make all the arrays (from Yesterday) zero length, ready for the resize below (for Today).
 
-            //Get an array of models that are crop models.
-            List<IModel> models = Apsim.FindAll(paddock, typeof(ICanopy));
-
             //foreach ICanopy model in the simulation
-            foreach (Model m in models)
+            foreach (Model m in canopyModels)
                 {
                     //add an extra element to each of the canopy arrays.
                     Array.Resize(ref canopy.cover_green, canopy.NumberOfCrops + 1);
@@ -1695,6 +1694,8 @@ namespace Models.Soils
                 throw new ApsimXException(this, "SoilWater module has detected that the Soil has no layers.");
                 }
             FindSolutes();
+
+            canopyModels = Apsim.FindAll(paddock, typeof(ICanopy));
         }
 
         /// <summary>
