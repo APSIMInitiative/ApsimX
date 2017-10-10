@@ -20,10 +20,13 @@ namespace Models.PMF.Functions
     {
         /// <summary>The ys are all the same</summary>
         private bool YsAreAllTheSame = false;
+
         /// <summary>Gets the xy pairs.</summary>
-        /// <value>The xy pairs.</value>
         [Link]
-        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+        private XYPairs XYPairs = null;
+
+        [Link]
+        private ILocator locator = null;
 
         /// <summary>The x property</summary>
         [Description("XProperty")]
@@ -72,7 +75,7 @@ namespace Models.PMF.Functions
                 return XYPairs.Y[0];
 
             string PropertyName = XProperty;
-            object v = Apsim.Get(this, PropertyName);
+            object v = locator.Get(PropertyName);
             if (v == null)
                 throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
             double XValue;
