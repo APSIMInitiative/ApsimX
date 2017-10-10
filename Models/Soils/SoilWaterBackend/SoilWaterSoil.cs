@@ -99,7 +99,7 @@ namespace Models.Soils.SoilWaterBackend
     [Serializable]
     public class Layer : IComparable
         {
-
+        SoilWaterSoil parentSoil;
 
         //Default Comparer for a Layer (used by the Soil's List of Layers to do a List.Sort()) 
             /// <summary>
@@ -122,9 +122,10 @@ namespace Models.Soils.SoilWaterBackend
         /// <summary>
         /// Initializes a new instance of the <see cref="Layer"/> class.
         /// </summary>
-        public Layer()
+        public Layer(SoilWaterSoil soil)
             {
             solutes = new List<SoluteInLayer>();
+            parentSoil = soil;
             }
 
 
@@ -245,10 +246,24 @@ namespace Models.Soils.SoilWaterBackend
         //VARIABLES
 
 
+        private double swmm;
+
         /// <summary>
         /// The sw_dep
         /// </summary>
-        public double sw_dep;    // sw * dlayer //see soilwat2_init() for initialisation
+        public double sw_dep
+        {
+            get
+            {
+                return swmm;
+            }
+            set
+            {
+                swmm = value;
+                parentSoil.OnSWChange();
+            }
+        }
+        // sw * dlayer //see soilwat2_init() for initialisation
 
         /// <summary>
         /// Gets or sets the sw.
@@ -259,7 +274,7 @@ namespace Models.Soils.SoilWaterBackend
         public double sw        //! soil water content of layer
             {
             get { return MM2Frac(sw_dep); }
-            set { sw_dep = Frac2MM(value); }
+            set { sw_dep = Frac2MM(value); parentSoil.OnSWChange(); }
             }
 
         /// <summary>
@@ -589,11 +604,13 @@ namespace Models.Soils.SoilWaterBackend
     [Serializable]
     public class SoilWaterSoil : IEnumerable
         {
+        private bool needToCalculateSW = true;
+        private double[] swVolumetric;
+        private double[] swMM;
 
-
-            /// <summary>
-            /// The constants
-            /// </summary>
+        /// <summary>
+        /// The constants
+        /// </summary>
         public Constants Constants;
 
         /// <summary>
@@ -796,13 +813,9 @@ namespace Models.Soils.SoilWaterBackend
             {
             get
                 {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.sw_dep;
-                    }
-                return result;
-                }
+                CalculateSW();
+                return swMM;
+            }
             }
 
         //ARRAYS AS FRACTIONS
@@ -817,15 +830,32 @@ namespace Models.Soils.SoilWaterBackend
             {
             get
                 {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.sw;
-                    }
-                return result;
+                CalculateSW();
+                return swVolumetric;
                 }
             }
 
+        /// <summary>Calculate the SW variables if needed.</summary>
+        private void CalculateSW()
+        {
+            if (needToCalculateSW)
+            {
+                Array.Resize(ref swVolumetric, num_layers);
+                Array.Resize(ref swMM, num_layers);
+                foreach (Layer lyr in this)
+                {
+                    swMM[lyr.number - 1] = lyr.sw_dep;
+                    swVolumetric[lyr.number - 1] = lyr.sw;
+                }
+                needToCalculateSW = false;
+            }
+        }
+
+        /// <summary>Callled to indicate that the SW variables need to be recalculated.</summary>
+        public void OnSWChange()
+        {
+            needToCalculateSW = true;
+        }
 
         /// <summary>
         /// Gets the flow.
@@ -1569,7 +1599,7 @@ namespace Models.Soils.SoilWaterBackend
                 layers = new List<Layer>();
                 for (int i = 0; i < Soil.Thickness.Count(); i++)
                     {
-                    Layer lyr = new Layer();
+                    Layer lyr = new Layer(this);
                     layers.Add(lyr);
                     }
                 }
