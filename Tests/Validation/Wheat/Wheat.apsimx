@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="18">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1243,8 +1243,6 @@ namespace Models
       <FieldNameUsedForMatch>Clock.Today.Year</FieldNameUsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>false</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>10000</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>Validation</Name>
@@ -7472,7 +7470,7 @@ double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
      SWC += Soil.SoilWater.SWmm[layer];
-     DUL += Soil.SoilWater.DULmm[layer];
+     DUL += Soil.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -17513,7 +17511,7 @@ double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
      SWC += Soil.SoilWater.SWmm[layer];
-     DUL += Soil.SoilWater.DULmm[layer];
+     DUL += Soil.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -18812,7 +18810,7 @@ double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
      SWC += Soil.SoilWater.SWmm[layer];
-     DUL += Soil.SoilWater.DULmm[layer];
+     DUL += Soil.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -18911,24 +18909,24 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Clock].Today</string>
-                <string>Wheat.Zadok.Stage</string>
-                <string>Wheat.Phenology.CurrentStageName</string>
-                <string>Wheat.AboveGround.Wt</string>
-                <string>Wheat.AboveGround.N</string>
-                <string>Wheat.Grain.Wt</string>
-                <string>Wheat.Grain.Protein</string>
-                <string>Wheat.Grain.Size</string>
-                <string>Wheat.Grain.Number</string>
-                <string>Wheat.Grain.Live.Wt</string>
-                <string>Wheat.Grain.Live.N</string>
-                <string>Wheat.Leaf.LAI</string>
-                <string>Wheat.Leaf.Live.Wt</string>
-                <string>Wheat.Leaf.Live.N</string>
-                <string>Wheat.Spike.Wt</string>
-                <string>Wheat.Spike.N</string>
-                <string>Wheat.Stem.Live.Wt</string>
-                <string>Wheat.Stem.Live.N</string>
-                <string>Wheat.Root.Depth</string>
+                <string>[Wheat].Zadok.Stage</string>
+                <string>[Wheat].Phenology.CurrentStageName</string>
+                <string>[Wheat].AboveGround.Wt</string>
+                <string>[Wheat].AboveGround.N</string>
+                <string>[Wheat].Grain.Wt</string>
+                <string>[Wheat].Grain.Protein</string>
+                <string>[Wheat].Grain.Size</string>
+                <string>[Wheat].Grain.Number</string>
+                <string>[Wheat].Grain.Live.Wt</string>
+                <string>[Wheat].Grain.Live.N</string>
+                <string>[Wheat].Leaf.LAI</string>
+                <string>[Wheat].Leaf.Live.Wt</string>
+                <string>[Wheat].Leaf.Live.N</string>
+                <string>[Wheat].Spike.Wt</string>
+                <string>[Wheat].Spike.N</string>
+                <string>[Wheat].Stem.Live.Wt</string>
+                <string>[Wheat].Stem.Live.N</string>
+                <string>[Wheat].Root.Depth</string>
                 <string>[Wheat].Root.WaterUptake</string>
                 <string>[Wheat].Leaf.Fw</string>
                 <string>[Wheat].Leaf.Fn</string>
@@ -20311,7 +20309,7 @@ double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
      SWC += Soil.SoilWater.SWmm[layer];
-     DUL += Soil.SoilWater.DULmm[layer];
+     DUL += Soil.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -42822,7 +42820,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 			
 			if ((double)zone.Get("Wheat.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
 			{
@@ -63701,24 +63699,24 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Clock].Today</string>
-                <string>Wheat.Zadok.Stage</string>
-                <string>Wheat.Phenology.CurrentStageName</string>
-                <string>Wheat.AboveGround.Wt</string>
-                <string>Wheat.AboveGround.N</string>
-                <string>Wheat.Grain.Wt</string>
-                <string>Wheat.Grain.Protein</string>
-                <string>Wheat.Grain.Size</string>
-                <string>Wheat.Grain.Number</string>
-                <string>Wheat.Grain.Live.Wt</string>
-                <string>Wheat.Grain.Live.N</string>
-                <string>Wheat.Leaf.LAI</string>
-                <string>Wheat.Leaf.Live.Wt</string>
-                <string>Wheat.Leaf.Live.N</string>
-                <string>Wheat.Spike.Wt</string>
-                <string>Wheat.Spike.N</string>
-                <string>Wheat.Stem.Live.Wt</string>
-                <string>Wheat.Stem.Live.N</string>
-                <string>Wheat.Root.Depth</string>
+                <string>[Wheat].Zadok.Stage</string>
+                <string>[Wheat].Phenology.CurrentStageName</string>
+                <string>[Wheat].AboveGround.Wt</string>
+                <string>[Wheat].AboveGround.N</string>
+                <string>[Wheat].Grain.Wt</string>
+                <string>[Wheat].Grain.Protein</string>
+                <string>[Wheat].Grain.Size</string>
+                <string>[Wheat].Grain.Number</string>
+                <string>[Wheat].Grain.Live.Wt</string>
+                <string>[Wheat].Grain.Live.N</string>
+                <string>[Wheat].Leaf.LAI</string>
+                <string>[Wheat].Leaf.Live.Wt</string>
+                <string>[Wheat].Leaf.Live.N</string>
+                <string>[Wheat].Spike.Wt</string>
+                <string>[Wheat].Spike.N</string>
+                <string>[Wheat].Stem.Live.Wt</string>
+                <string>[Wheat].Stem.Live.N</string>
+                <string>[Wheat].Root.Depth</string>
                 <string>[Wheat].Root.WaterUptake</string>
                 <string>[Wheat].Leaf.Fw</string>
                 <string>[Wheat].Leaf.Fn</string>
@@ -64484,24 +64482,24 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Clock].Today</string>
-                <string>Wheat.Zadok.Stage</string>
-                <string>Wheat.Phenology.CurrentStageName</string>
-                <string>Wheat.AboveGround.Wt</string>
-                <string>Wheat.AboveGround.N</string>
-                <string>Wheat.Grain.Wt</string>
-                <string>Wheat.Grain.Protein</string>
-                <string>Wheat.Grain.Size</string>
-                <string>Wheat.Grain.Number</string>
-                <string>Wheat.Grain.Live.Wt</string>
-                <string>Wheat.Grain.Live.N</string>
-                <string>Wheat.Leaf.LAI</string>
-                <string>Wheat.Leaf.Live.Wt</string>
-                <string>Wheat.Leaf.Live.N</string>
-                <string>Wheat.Spike.Wt</string>
-                <string>Wheat.Spike.N</string>
-                <string>Wheat.Stem.Live.Wt</string>
-                <string>Wheat.Stem.Live.N</string>
-                <string>Wheat.Root.Depth</string>
+                <string>[Wheat].Zadok.Stage</string>
+                <string>[Wheat].Phenology.CurrentStageName</string>
+                <string>[Wheat].AboveGround.Wt</string>
+                <string>[Wheat].AboveGround.N</string>
+                <string>[Wheat].Grain.Wt</string>
+                <string>[Wheat].Grain.Protein</string>
+                <string>[Wheat].Grain.Size</string>
+                <string>[Wheat].Grain.Number</string>
+                <string>[Wheat].Grain.Live.Wt</string>
+                <string>[Wheat].Grain.Live.N</string>
+                <string>[Wheat].Leaf.LAI</string>
+                <string>[Wheat].Leaf.Live.Wt</string>
+                <string>[Wheat].Leaf.Live.N</string>
+                <string>[Wheat].Spike.Wt</string>
+                <string>[Wheat].Spike.N</string>
+                <string>[Wheat].Stem.Live.Wt</string>
+                <string>[Wheat].Stem.Live.N</string>
+                <string>[Wheat].Root.Depth</string>
                 <string>[Wheat].Root.WaterUptake</string>
                 <string>[Wheat].Leaf.Fw</string>
                 <string>[Wheat].Leaf.Fn</string>

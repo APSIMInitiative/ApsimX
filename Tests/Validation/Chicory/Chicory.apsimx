@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="15">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="18">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -691,7 +691,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
             
 			//!!!!!! Plant Harvest !!!!!!
 			if (Clock.Today.DayOfYear == YearStartDate.DayOfYear)
@@ -724,8 +724,8 @@ namespace Models
         <string>[Soil].SoilWater.Runoff as Runoff</string>
         <string>sum([Soil].SoilWater.outflow_lat) as LateralFlow</string>
         <string>sum([Soil].SoilWater.SWmm) as TotalSWC</string>
-        <string>sum([Soil].SoilWater.DULmm) as TotalDUL</string>
-        <string>sum([Soil].SoilWater.LL15mm) as TotalLL15</string>
+        <string>sum([Soil].DULmm) as TotalDUL</string>
+        <string>sum([Soil].LL15mm) as TotalLL15</string>
         <string>[Fertiliser].NitrogenApplied as FertiliserN</string>
         <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
         <string>([Soil].SoilWater.LeachNH4 + [Soil].SoilWater.LeachNO3) as LeachedN</string>
@@ -1474,13 +1474,13 @@ namespace Models
 			//Calculate soil water variables
 			double depthFromSurface = 0.0;
 			double fracLayer = 0.0;
-			nLayers = Soil.SoilWater.Thickness.Length;
+			nLayers = Soil.Thickness.Length;
 			for (int layer = 0; layer < nLayers; layer++)
 			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
-				TopLL += Soil.SoilWater.LL15mm[layer] * fracLayer;
-				TopDUL += Soil.SoilWater.DULmm[layer] * fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
+				TopLL += Soil.LL15mm[layer] * fracLayer;
+				TopDUL += Soil.DULmm[layer] * fracLayer;
+				depthFromSurface += Soil.Thickness[layer];
 				if (depthFromSurface >= depthPAWC)
 					layer = nLayers;
 			}
@@ -1512,9 +1512,9 @@ namespace Models
 			TopSWC = 0.0;
 			for (int layer = 0; layer < nLayers; layer++)
 			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
 				TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
+				depthFromSurface += Soil.Thickness[layer];
 				if (depthFromSurface >= depthPAWC)
 					layer = nLayers;
 			}
@@ -8268,13 +8268,13 @@ namespace Models
 			//Calculate soil water variables
 			double depthFromSurface = 0.0;
 			double fracLayer = 0.0;
-			nLayers = Soil.SoilWater.Thickness.Length;
+			nLayers = Soil.Thickness.Length;
 			for (int layer = 0; layer < nLayers; layer++)
 			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
-				TopLL += Soil.SoilWater.LL15mm[layer] * fracLayer;
-				TopDUL += Soil.SoilWater.DULmm[layer] * fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
+				TopLL += Soil.LL15mm[layer] * fracLayer;
+				TopDUL += Soil.DULmm[layer] * fracLayer;
+				depthFromSurface += Soil.Thickness[layer];
 				if (depthFromSurface >= depthPAWC)
 					layer = nLayers;
 			}
@@ -8306,9 +8306,9 @@ namespace Models
 			TopSWC = 0.0;
 			for (int layer = 0; layer < nLayers; layer++)
 			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
 				TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
+				depthFromSurface += Soil.Thickness[layer];
 				if (depthFromSurface >= depthPAWC)
 					layer = nLayers;
 			}
@@ -21152,13 +21152,13 @@ namespace Models
 			//Calculate soil water variables
 			double depthFromSurface = 0.0;
 			double fracLayer = 0.0;
-			nLayers = Soil.SoilWater.Thickness.Length;
+			nLayers = Soil.Thickness.Length;
 			for (int layer = 0; layer < nLayers; layer++)
 			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
-				TopLL += Soil.SoilWater.LL15mm[layer] * fracLayer;
-				TopDUL += Soil.SoilWater.DULmm[layer] * fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
+				TopLL += Soil.LL15mm[layer] * fracLayer;
+				TopDUL += Soil.DULmm[layer] * fracLayer;
+				depthFromSurface += Soil.Thickness[layer];
 				if (depthFromSurface >= depthPAWC)
 					layer = nLayers;
 			}
@@ -21190,9 +21190,9 @@ namespace Models
 			TopSWC = 0.0;
 			for (int layer = 0; layer < nLayers; layer++)
 			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
 				TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
+				depthFromSurface += Soil.Thickness[layer];
 				if (depthFromSurface >= depthPAWC)
 					layer = nLayers;
 			}
@@ -59462,7 +59462,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 	}
 }
@@ -66187,7 +66187,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 	}
 }
@@ -73014,7 +73014,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 	}
 }
@@ -79765,7 +79765,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 	}
 }

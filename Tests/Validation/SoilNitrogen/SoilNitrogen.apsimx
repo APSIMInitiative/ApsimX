@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="18">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Slurp</Name>
@@ -590,8 +590,6 @@
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>false</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
     <Name>NoSlurp</Name>
@@ -1163,5 +1161,5 @@
     <IncludeInDocumentation>false</IncludeInDocumentation>
   </Simulation>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>250</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

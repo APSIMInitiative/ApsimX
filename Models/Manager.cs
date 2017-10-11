@@ -197,7 +197,7 @@ namespace Models
                         catch (Exception err)
                         {
                             lastCompileFailed = true;
-                            throw new ApsimXException(this, err.Message);
+                            throw new ApsimXException(this, "Error compiling script \"" + this.Name + "\"" + Environment.NewLine + err.Message);
                         }
                     }
 
