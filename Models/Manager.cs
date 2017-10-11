@@ -201,6 +201,28 @@ namespace Models
                             // Get the script 'Type' from the compiled assembly.
                             if (compiledAssembly.GetType("Models.Script") == null)
                                 throw new ApsimXException(this, "Cannot find a public class called 'Script'");
+
+                            assemblyName = compiledAssembly.FullName;
+                            CompiledCode = _Code;
+                            lastCompileFailed = false;
+
+                            // Create a new script model.
+                            Script = compiledAssembly.CreateInstance("Models.Script") as Model;
+                            Script.Children = new System.Collections.Generic.List<Model>();
+                            Script.Name = "Script";
+                            Script.IsHidden = true;
+                            XmlElement parameters;
+
+                            XmlDocument doc = new XmlDocument();
+                            doc.LoadXml(elementsAsXml);
+                            parameters = doc.DocumentElement;
+
+                            SetParametersInObject(Script, parameters);
+
+                            // Add the new script model to our models collection.
+                            Children.Clear();
+                            Children.Add(Script);
+                            Script.Parent = this;
                         }
                         catch (Exception err)
                         {
@@ -208,28 +230,6 @@ namespace Models
                             errors.Add(err);
                         }
                     }
-
-                    assemblyName = compiledAssembly.FullName;
-                    CompiledCode = _Code;
-                    lastCompileFailed = false;
-
-                    // Create a new script model.
-                    Script = compiledAssembly.CreateInstance("Models.Script") as Model;
-                    Script.Children = new System.Collections.Generic.List<Model>();
-                    Script.Name = "Script";
-                    Script.IsHidden = true;
-                    XmlElement parameters;
-
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(elementsAsXml);
-                    parameters = doc.DocumentElement;
-                    
-                    SetParametersInObject(Script, parameters);
-
-                    // Add the new script model to our models collection.
-                    Children.Clear();
-                    Children.Add(Script);
-                    Script.Parent = this;
                 }
             }
         }

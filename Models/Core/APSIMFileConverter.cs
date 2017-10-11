@@ -531,6 +531,7 @@ namespace Models.Core
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.Thickness", ".Thickness");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15", ".LL15");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15mm", ".LL15mm");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.DUL", ".DUL");
