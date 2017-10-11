@@ -539,7 +539,17 @@ namespace Models.Core
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.SAT", ".SAT");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.SATmm", ".SATmm");
             }
-        }
 
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+            {
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.Thickness", ".Thickness");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.LL15", ".LL15");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.LL15mm", ".LL15mm");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.DUL", ".DUL");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.DULmm", ".DULmm");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SAT", ".SAT");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SATmm", ".SATmm");
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace Models
     /// <summary>Class to hold a static main entry point.</summary>
     public class Program
     {
-        private static string errors;
+        private static string errors = string.Empty;
 
         /// <summary>
         /// Main program entry point.
@@ -63,7 +63,7 @@ namespace Models
                 jobRunner.Run(job, wait: true);
 
                 // If errors occurred, write them to the console.
-                if (errors != null)
+                if (errors != string.Empty)
                 {
                     Console.WriteLine("ERRORS FOUND!!");
                     Console.WriteLine(errors);
@@ -87,8 +87,11 @@ namespace Models
         /// <summary>Job has completed</summary>
         private static void OnJobCompleted(object sender, JobCompleteArgs e)
         {
-            if (e.exceptionThrowByJob != null)
-                errors += e.exceptionThrowByJob.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+            lock (errors)
+            {
+                if (e.exceptionThrowByJob != null)
+                    errors += e.exceptionThrowByJob.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+            }
         }
 
         /// <summary>All jobs have completed</summary>

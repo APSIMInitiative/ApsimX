@@ -86,9 +86,12 @@
         /// <summary>Job has completed</summary>
         private void OnJobCompleded(object sender, JobCompleteArgs e)
         {
-            numSimulationsRun++;
-            if (e.exceptionThrowByJob != null)
-                errors.Add(e.exceptionThrowByJob);
+            lock (this)
+            {
+                numSimulationsRun++;
+                if (e.exceptionThrowByJob != null)
+                    errors.Add(e.exceptionThrowByJob);
+            }
         }
 
         /// <summary>All jobs have completed</summary>
