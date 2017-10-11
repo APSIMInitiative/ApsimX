@@ -214,16 +214,7 @@ namespace Models.Core
             /// <param name="args"></param>
             internal void Invoke(object[] args)
             {
-                try
-                {
-                    methodInfo.Invoke(Model, args);
-                }
-                catch (Exception err)
-                {
-                    // The exception will be a "Exception thrown by the target of an invocation".
-                    // Throw the inner exception as this will be the real exception.
-                    throw err.InnerException;
-                }
+                methodInfo.Invoke(Model, args);
             }
 
         }

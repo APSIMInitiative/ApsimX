@@ -117,8 +117,11 @@
             catch (Exception err)
             {
                 string errorMessage = "ERROR in file: " + fileName + "\r\n" +
-                                      "Simulation name: " + simulationToRun.Name + "\r\n" +
-                                      err.ToString();
+                                      "Simulation name: " + simulationToRun.Name + "\r\n";
+                if (err.InnerException == null)
+                    errorMessage += err.ToString();
+                else
+                    errorMessage += err.InnerException.ToString();
 
                 ISummary summary = Apsim.Find(simulationToRun, typeof(Summary)) as ISummary;
                 if (summary != null)
