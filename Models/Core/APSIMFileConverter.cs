@@ -241,7 +241,7 @@ namespace Models.Core
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
                 APSIMFileConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"([\[\]\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
+                APSIMFileConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
         }
 
         /// <summary>
@@ -549,6 +549,12 @@ namespace Models.Core
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.DULmm", ".DULmm");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SAT", ".SAT");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SATmm", ".SATmm");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".Leaf.Wt", ".Leaf.Total.Wt");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".Leaf.N", ".Leaf.Total.N");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".Stem.Wt", ".Stem.Total.Wt");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".Stem.N", ".Stem.Total.N");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".Grain.Wt", ".Grain.Total.Wt");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".Grain.N", ".Grain.Total.N");
             }
         }
     }

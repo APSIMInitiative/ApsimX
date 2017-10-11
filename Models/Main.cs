@@ -7,6 +7,7 @@ namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Runners;
     using System;
     using System.Diagnostics;
     using System.IO;
@@ -90,15 +91,23 @@ namespace Models
             lock (errors)
             {
                 if (e.exceptionThrowByJob != null)
-                    errors += e.exceptionThrowByJob.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+                {
+                    if (e.exceptionThrowByJob is RunExternalException)
+                        errors += e.exceptionThrowByJob.Message + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+                    else
+                        errors += e.exceptionThrowByJob.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+                }
             }
         }
 
         /// <summary>All jobs have completed</summary>
         private static void OnAllJobsCompleted(object sender, AllCompletedArgs e)
         {
-            if (e.exceptionThrown != null)
-                errors += e.exceptionThrown.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+            lock (errors)
+            {
+                if (e.exceptionThrown != null)
+                    errors += e.exceptionThrown.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+            }
         }
 
     }

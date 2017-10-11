@@ -54,6 +54,13 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Initializes a new instance of the <see cref="HIReproductiveOrgan"/> class.</summary>
+        public HIReproductiveOrgan()
+        {
+            Live = new Biomass();
+            Dead = new Biomass();
+        }
+
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
