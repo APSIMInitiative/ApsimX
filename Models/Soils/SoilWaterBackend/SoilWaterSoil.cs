@@ -1726,14 +1726,18 @@ namespace Models.Soils.SoilWaterBackend
 
                 if (Soil.SWCON == null)  //can be blank in the node
                     lyr.SWCON = 0.3;
-                else
+                else if (i < Soil.SWCON.Length)
                     lyr.SWCON = Soil.SWCON[i];  //in standard thickness
+                else
+                    lyr.SWCON = Soil.SWCON[Soil.SWCON.Length - 1];
 
 
                 if (Soil.KLAT == null)   //can be blank in the node
                     lyr.KLAT = 0.0;             //turn off the lateral flow
-                else
+                else if (i < Soil.KLAT.Length)
                     lyr.KLAT = Soil.KLAT[i];    //in standard thickness
+                else
+                    lyr.KLAT = Soil.KLAT[Soil.KLAT.Length - 1];
 
 
 
