@@ -531,6 +531,7 @@ namespace Models.Core
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.dlayer", ".Thickness");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.Thickness", ".Thickness");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15", ".LL15");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15mm", ".LL15mm");
@@ -542,6 +543,7 @@ namespace Models.Core
 
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
             {
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.dlayer", ".Thickness");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.Thickness", ".Thickness");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.LL15", ".LL15");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.LL15mm", ".LL15mm");
