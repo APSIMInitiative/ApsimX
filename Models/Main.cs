@@ -7,6 +7,7 @@ namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Runners;
     using System;
     using System.Diagnostics;
     using System.IO;
@@ -15,7 +16,7 @@ namespace Models
     /// <summary>Class to hold a static main entry point.</summary>
     public class Program
     {
-        private static string errors;
+        private static string errors = string.Empty;
 
         /// <summary>
         /// Main program entry point.
@@ -59,10 +60,11 @@ namespace Models
                 else
                     jobRunner = new JobRunnerAsync();
                 jobRunner.JobCompleted += OnJobCompleted;
+                jobRunner.AllJobsCompleted += OnAllJobsCompleted;
                 jobRunner.Run(job, wait: true);
 
                 // If errors occurred, write them to the console.
-                if (errors != null)
+                if (errors != string.Empty)
                 {
                     Console.WriteLine("ERRORS FOUND!!");
                     Console.WriteLine(errors);
@@ -86,9 +88,27 @@ namespace Models
         /// <summary>Job has completed</summary>
         private static void OnJobCompleted(object sender, JobCompleteArgs e)
         {
-            if (e.exceptionThrowByJob != null)
-                errors += e.exceptionThrowByJob.ToString() + Environment.NewLine;
+            lock (errors)
+            {
+                if (e.exceptionThrowByJob != null)
+                {
+                    if (e.exceptionThrowByJob is RunExternalException)
+                        errors += e.exceptionThrowByJob.Message + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+                    else
+                        errors += e.exceptionThrowByJob.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+                }
+            }
         }
-                
+
+        /// <summary>All jobs have completed</summary>
+        private static void OnAllJobsCompleted(object sender, AllCompletedArgs e)
+        {
+            lock (errors)
+            {
+                if (e.exceptionThrown != null)
+                    errors += e.exceptionThrown.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+            }
+        }
+
     }
 }

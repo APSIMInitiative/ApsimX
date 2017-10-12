@@ -933,6 +933,7 @@ namespace Models.PMF.Organs
             {
                 CurrentRank = L.Rank;
                 L.DoPotentialGrowth(ThermalTime.Value(), CohortParameters);
+                needToRecalculateLiveDead = true;
                 if ((L.IsFullyExpanded == false) && (nextExpandingLeaf == false))
                 {
                     nextExpandingLeaf = true;
@@ -965,8 +966,8 @@ namespace Models.PMF.Organs
                 LeafCohort NewLeaf = Leaf.Clone();
                 DoApexCalculations(ref NewLeaf);
                 Leaves.Add(NewLeaf);
+                needToRecalculateLiveDead = true;
             }
-            needToRecalculateLiveDead = true;
 
             foreach (LeafCohort Leaf in Leaves)
             {
@@ -1053,8 +1054,10 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 foreach (LeafCohort L in Leaves)
+                {
                     L.DoActualGrowth(ThermalTime.Value(), CohortParameters);
-                needToRecalculateLiveDead = true;
+                    needToRecalculateLiveDead = true;
+                }
 
                 Structure.UpdateHeight();
 
@@ -1074,6 +1077,7 @@ namespace Models.PMF.Organs
             Structure.LeafTipsAppeared = 0;
             Structure.Clear();
             Leaves.Clear();
+            needToRecalculateLiveDead = true;
             Summary.WriteMessage(this, "Removing leaves from plant");
         }
 
@@ -1360,8 +1364,8 @@ namespace Models.PMF.Organs
                         Retranslocation = DMRetranslocationCohort[a],
                         Reallocation = DMReAllocationCohort[a],
                     };
+                    needToRecalculateLiveDead = true;
                 }
-                needToRecalculateLiveDead = true;
 
                 double EndWt = Live.StructuralWt + Live.MetabolicWt + Live.StorageWt;
                 double CheckValue = StartWt + value.Structural * DMConversionEfficiency + value.Metabolic * DMConversionEfficiency + value.Storage * DMConversionEfficiency - value.Reallocation - value.Retranslocation - value.Respired;
@@ -1561,6 +1565,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total biomass</summary>
         public Biomass Total { get { return Live + Dead; } }
+
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
+
         #endregion
 
         #region Event handlers
@@ -1574,6 +1587,7 @@ namespace Models.PMF.Organs
         {
             Summary.WriteMessage(this, "Removing lowest Leaf");
             Leaves.RemoveAt(0);
+            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -1599,8 +1613,10 @@ namespace Models.PMF.Organs
         {
             Summary.WriteMessage(this, "Killing " + KillLeaf.KillFraction + " of leaves on plant");
             foreach (LeafCohort L in Leaves)
+            {
                 L.DoKill(KillLeaf.KillFraction);
-            needToRecalculateLiveDead = true;
+                needToRecalculateLiveDead = true;
+            }
         }
 
 
@@ -1620,6 +1636,7 @@ namespace Models.PMF.Organs
             Structure.NextLeafProportion = 1.0;
 
             Leaves.Clear();
+            needToRecalculateLiveDead = true;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
             Structure.Germinated = false;

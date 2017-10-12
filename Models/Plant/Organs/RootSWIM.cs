@@ -37,6 +37,13 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total biomass</summary>
         public Biomass Total { get { return Live + Dead; } }
 
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
 
         /// <summary>Called when [water uptakes calculated].</summary>
         /// <param name="Uptakes">The uptakes.</param>

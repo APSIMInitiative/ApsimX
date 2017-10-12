@@ -241,7 +241,7 @@ namespace Models.Core
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
                 APSIMFileConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"([\[\]\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
+                APSIMFileConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
         }
 
         /// <summary>
@@ -531,6 +531,8 @@ namespace Models.Core
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.dlayer", ".Thickness");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.Thickness", ".Thickness");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15", ".LL15");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15mm", ".LL15mm");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.DUL", ".DUL");
@@ -538,7 +540,18 @@ namespace Models.Core
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.SAT", ".SAT");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.SATmm", ".SATmm");
             }
-        }
 
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+            {
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.dlayer", ".Thickness");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.Thickness", ".Thickness");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.LL15", ".LL15");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.LL15mm", ".LL15mm");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.DUL", ".DUL");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.DULmm", ".DULmm");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SAT", ".SAT");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SATmm", ".SATmm");
+            }
+        }
     }
 }

@@ -944,6 +944,14 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total biomass</summary>
         public Biomass Total { get { return Live + Dead; } }
 
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
+
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         public double[] CalculateWaterSupply(ZoneWaterAndN zone)
@@ -952,24 +960,25 @@ namespace Models.PMF.Organs
             if (myZone == null)
                 return null;
 
-            SoilCrop soilCropParams = myZone.soil.Crop(Plant.Name) as SoilCrop;
-            
-            double[] supply = new double[myZone.soil.Thickness.Length];
-            LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
-            for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+            if (myZone.soil.Weirdo != null)
+                return new double[myZone.soil.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
+            else
             {
-                if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
-                {
-                    if (myZone.soil.Weirdo == null)
-                    {
-                        supply[layer] = Math.Max(0.0, soilCropParams.KL[layer] * KLModifier.Value(layer) *
-                            (zone.Water[layer] - soilCropParams.LL[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
-                    }
-                    else supply[layer] = 0; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
-                }
-            }
+                double[] kl = myZone.soil.KL(Plant.Name);
+                double[] ll = myZone.soil.LL(Plant.Name);
 
-            return supply;
+                double[] supply = new double[myZone.soil.Thickness.Length];
+                LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
+                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                {
+                    if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
+                    {
+                        supply[layer] = Math.Max(0.0, kl[layer] * KLModifier.Value(layer) *
+                            (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
+                    }
+                }
+                return supply;
+            }            
         }
 
         #endregion

@@ -90,7 +90,8 @@
                     simulationToRun = Apsim.Clone(simulationToRun) as Simulation;
                     events = new Events(simulationToRun);
                     simulationEngine.MakeSubstitutions(simulationToRun);
-                    events.Publish("Loaded", null);
+                    LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                    events.Publish("Loaded", new object[] { simulationToRun, loadedArgs });
                 }
                 else
                     events = new Events(simulationToRun);
@@ -116,8 +117,11 @@
             catch (Exception err)
             {
                 string errorMessage = "ERROR in file: " + fileName + "\r\n" +
-                                      "Simulation name: " + simulationToRun.Name + "\r\n" +
-                                      err.ToString();
+                                      "Simulation name: " + simulationToRun.Name + "\r\n";
+                if (err.InnerException == null)
+                    errorMessage += err.ToString();
+                else
+                    errorMessage += err.InnerException.ToString();
 
                 ISummary summary = Apsim.Find(simulationToRun, typeof(Summary)) as ISummary;
                 if (summary != null)

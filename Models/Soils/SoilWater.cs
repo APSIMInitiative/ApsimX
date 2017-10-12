@@ -1643,7 +1643,7 @@ namespace Models.Soils
         /// Called when [loaded].
         /// </summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
 
         }
@@ -1675,19 +1675,12 @@ namespace Models.Soils
 
             if (Soil.Thickness != null)
                 {
-                try
-                    {
-                    SoilObject = new SoilWaterSoil(constants, Soil);  //constructor can throw an Exception
-                    surfaceFactory = new SurfaceFactory();
-                    surface = surfaceFactory.GetSurface(SoilObject, Clock);  //constructor can throw an Exception (Evap class constructor too)
+                SoilObject = new SoilWaterSoil(constants, Soil);  //constructor can throw an Exception
+                surfaceFactory = new SurfaceFactory();
+                surface = surfaceFactory.GetSurface(SoilObject, Clock);  //constructor can throw an Exception (Evap class constructor too)
 
                 //optional inputs (array)
                 inflow_lat = null; 
-                }
-                catch (Exception Ex)
-                    {
-                    throw new ApsimXException(this, Ex.Message);  //catch any constructor Exceptions and rethrow as an ApsimXException.
-                    }
                 }
             else
                 {
