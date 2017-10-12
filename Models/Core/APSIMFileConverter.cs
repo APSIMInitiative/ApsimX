@@ -551,12 +551,6 @@ namespace Models.Core
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.DULmm", ".DULmm");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SAT", ".SAT");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SATmm", ".SATmm");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".Leaf.Wt", ".Leaf.Total.Wt");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".Leaf.N", ".Leaf.Total.N");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".Stem.Wt", ".Stem.Total.Wt");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".Stem.N", ".Stem.Total.N");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".Grain.Wt", ".Grain.Total.Wt");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".Grain.N", ".Grain.Total.N");
             }
         }
     }

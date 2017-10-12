@@ -160,6 +160,14 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total biomass</summary>
         public Biomass Total { get { return Live + Dead; } }
 
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
+
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The fractions of biomass to remove</param>
