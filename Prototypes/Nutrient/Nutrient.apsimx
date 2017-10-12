@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="18">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -1446,20 +1446,6 @@ But their data suggests a value of 0.3]]></MemoText>
       </PerennialLeaf>
       <Root>
         <Name>Root</Name>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1718,14 +1704,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.0014</FixedValue>
         </Constant>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <Constant>
           <Name>InitialWtFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1811,6 +1789,14 @@ But their data suggests a value of 0.3]]></MemoText>
           <VariableName>[Stem].MinimumNConc.Value()</VariableName>
         </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Live>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Live>
+        <Dead>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Dead>
       </GenericOrgan>
       <Cultivar>
         <Name>Bambatsi</Name>
@@ -1863,100 +1849,100 @@ But their data suggests a value of 0.3]]></MemoText>
           <RegrStats>
             <Name>TOC0_10cm</Name>
             <n>148</n>
-            <Slope>0.789591115208841</Slope>
-            <Intercept>3499.9458374701007</Intercept>
-            <SEslope>0.03202823187181484</SEslope>
-            <SEintercept>496.46143115298031</SEintercept>
-            <R2>0.80630671861681136</R2>
-            <RMSE>1669.6680298091187</RMSE>
-            <NSE>0.79789924637132992</NSE>
-            <ME>333.4563601694864</ME>
-            <MAE>1249.7865336607013</MAE>
-            <RSR>0.44803482899886693</RSR>
+            <Slope>0.7874833030590479</Slope>
+            <Intercept>3684.8794087651349</Intercept>
+            <SEslope>0.034354659113398356</SEslope>
+            <SEintercept>532.52278485031718</SEintercept>
+            <R2>0.78255230459360248</R2>
+            <RMSE>1799.1007165602537</RMSE>
+            <NSE>0.76535104578524837</NSE>
+            <ME>486.6690039045</ME>
+            <MAE>1344.8905319095504</MAE>
+            <RSR>0.48276649459950632</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TOC0_30cm</Name>
             <n>199</n>
-            <Slope>0.76646678046981487</Slope>
-            <Intercept>9776.4628310925655</Intercept>
-            <SEslope>0.028551397839589057</SEslope>
-            <SEintercept>1074.9224247192465</SEintercept>
-            <R2>0.78532412454932887</R2>
-            <RMSE>3722.6520698950781</RMSE>
-            <NSE>0.76145648808722033</NSE>
-            <ME>1166.3104117992893</ME>
-            <MAE>2705.3980858199766</MAE>
-            <RSR>0.48718046019687622</RSR>
+            <Slope>0.76695027683107775</Slope>
+            <Intercept>9930.7870148555921</Intercept>
+            <SEslope>0.029438360059518342</SEslope>
+            <SEintercept>1108.3153810094202</SEintercept>
+            <R2>0.77504889285991818</R2>
+            <RMSE>3855.500419094953</RMSE>
+            <NSE>0.74412714038743011</NSE>
+            <ME>1338.4606563386783</ME>
+            <MAE>2821.4659217244866</MAE>
+            <RSR>0.50456621601944884</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TOC10_30cm</Name>
             <n>117</n>
-            <Slope>0.15080472044697157</Slope>
-            <Intercept>16131.511700057976</Intercept>
-            <SEslope>0.024471163525605952</SEslope>
-            <SEintercept>434.53380449442591</SEintercept>
-            <R2>0.24825299629606046</R2>
-            <RMSE>2775.6197029690265</RMSE>
-            <NSE>0.01294605191175191</NSE>
-            <ME>1240.1756974816369</ME>
-            <MAE>2324.6721670271704</MAE>
-            <RSR>0.98925102454209235</RSR>
+            <Slope>0.15159564813148291</Slope>
+            <Intercept>16106.853615861513</Intercept>
+            <SEslope>0.024583927218281971</SEslope>
+            <SEintercept>436.53614640743217</SEintercept>
+            <R2>0.24848954970349291</R2>
+            <RMSE>2769.8207853718541</RMSE>
+            <NSE>0.017066115823270112</NSE>
+            <ME>1229.3871791993774</ME>
+            <MAE>2317.1546420837426</MAE>
+            <RSR>0.98718424818649086</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TOC30_60cm</Name>
             <n>171</n>
-            <Slope>0.88793728135732908</Slope>
-            <Intercept>3667.2364904472925</Intercept>
-            <SEslope>0.030245410180319746</SEslope>
-            <SEintercept>667.48361112859254</SEintercept>
-            <R2>0.836062021332695</R2>
-            <RMSE>3560.3768850356546</RMSE>
-            <NSE>0.80407703643214257</NSE>
-            <ME>1364.2535814040098</ME>
-            <MAE>2871.0488748273015</MAE>
-            <RSR>0.44133571716200265</RSR>
+            <Slope>0.88641356698157081</Slope>
+            <Intercept>3683.941245779366</Intercept>
+            <SEslope>0.030168695877581069</SEslope>
+            <SEintercept>665.79060913219234</SEintercept>
+            <R2>0.83628726212394588</R2>
+            <RMSE>3550.8035069195171</RMSE>
+            <NSE>0.80512924129324326</NSE>
+            <ME>1349.6447276416518</ME>
+            <MAE>2859.8758430651656</MAE>
+            <RSR>0.44014902433903025</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TON0_10cm</Name>
             <n>9</n>
-            <Slope>0.43948975785624295</Slope>
-            <Intercept>765.74593975543291</Intercept>
-            <SEslope>0.071431585338479958</SEslope>
-            <SEintercept>130.51165694295</SEintercept>
-            <R2>0.84393967557348459</R2>
-            <RMSE>382.39390222804</RMSE>
-            <NSE>0.49233910439503259</NSE>
-            <ME>-213.17628092891778</ME>
-            <MAE>329.78007155600659</MAE>
-            <RSR>0.67175451574711254</RSR>
+            <Slope>0.43191903722711572</Slope>
+            <Intercept>783.93930674904789</Intercept>
+            <SEslope>0.070850693133551107</SEslope>
+            <SEintercept>129.45031686753006</SEintercept>
+            <R2>0.84149803212612884</R2>
+            <RMSE>382.65484411769245</RMSE>
+            <NSE>0.49164602225774445</NSE>
+            <ME>-208.20505707063776</ME>
+            <MAE>328.66853034955557</MAE>
+            <RSR>0.6722129145126271</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TON0_30cm</Name>
             <n>61</n>
-            <Slope>0.84578900864805662</Slope>
-            <Intercept>580.21526343634378</Intercept>
-            <SEslope>0.10229576569428622</SEslope>
-            <SEintercept>361.43215038284217</SEintercept>
-            <R2>0.536750070095368</R2>
-            <RMSE>306.15029046735378</RMSE>
-            <NSE>0.34851264772851476</NSE>
-            <ME>38.50459282990407</ME>
-            <MAE>204.46494899428208</MAE>
-            <RSR>0.80050436085160992</RSR>
+            <Slope>0.84343570474735652</Slope>
+            <Intercept>608.42313151044027</Intercept>
+            <SEslope>0.10532457543226971</SEslope>
+            <SEintercept>372.13356318590417</SEintercept>
+            <R2>0.52082203869589527</R2>
+            <RMSE>317.9689670040699</RMSE>
+            <NSE>0.29724149673629086</NSE>
+            <ME>58.445800901281437</ME>
+            <MAE>220.08466532575463</MAE>
+            <RSR>0.83140716382688484</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TON30_60cm</Name>
             <n>54</n>
-            <Slope>0.67351983591575659</Slope>
-            <Intercept>655.9234355860599</Intercept>
-            <SEslope>0.063960247776721268</SEslope>
-            <SEintercept>181.89437679395516</SEintercept>
-            <R2>0.68076021783287888</R2>
-            <RMSE>282.84886906901568</RMSE>
-            <NSE>-3.0262981286543589</NSE>
-            <ME>-271.40114899248186</ME>
-            <MAE>271.40114899248186</MAE>
-            <RSR>1.9878976463082287</RSR>
+            <Slope>0.68093758770541091</Slope>
+            <Intercept>631.95205727547409</Intercept>
+            <SEslope>0.064650045379902349</SEslope>
+            <SEintercept>183.85606877461464</SEintercept>
+            <R2>0.68085851112848661</R2>
+            <RMSE>285.62869601481935</RMSE>
+            <NSE>-3.1058276056315259</NSE>
+            <ME>-274.30336490497172</ME>
+            <MAE>274.30336490497172</MAE>
+            <RSR>2.0074346218701109</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -1968,8 +1954,6 @@ But their data suggests a value of 0.3]]></MemoText>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>Validation</Name>
@@ -3514,8 +3498,8 @@ namespace Models
                 <string>[Wheat].AboveGround.Wt</string>
                 <string>[Wheat].Grain.Wt</string>
                 <string>[Weather].Rain</string>
-                <string>Wheat.AboveGround.N</string>
-                <string>Wheat.BelowGround.N</string>
+                <string>[Wheat].AboveGround.N</string>
+                <string>[Wheat].BelowGround.N</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -5179,8 +5163,8 @@ namespace Models
                 <string>[Wheat].AboveGround.Wt</string>
                 <string>[Wheat].Grain.Wt</string>
                 <string>[Weather].Rain</string>
-                <string>Wheat.AboveGround.N</string>
-                <string>Wheat.BelowGround.N</string>
+                <string>[Wheat].AboveGround.N</string>
+                <string>[Wheat].BelowGround.N</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -6382,9 +6366,9 @@ endif
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Clock].Today</string>
-                <string>Wheat.AboveGround.Wt</string>
-                <string>Wheat.Grain.Wt</string>
-                <string>Wheat.Grain.Protein</string>
+                <string>[Wheat].AboveGround.Wt</string>
+                <string>[Wheat].Grain.Wt</string>
+                <string>[Wheat].Grain.Protein</string>
                 <string>sum([Soil].SoilWater.ESW)</string>
                 <string>sum([Soil].Nutrient.FOMC) as TotalFOMC</string>
               </VariableNames>
@@ -11399,5 +11383,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>296</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

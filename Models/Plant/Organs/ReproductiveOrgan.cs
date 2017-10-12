@@ -347,6 +347,20 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         public double N { get { return Total.N; } }
 
+
+        /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
+        [Units("g/g")]
+        public double Nconc
+        {
+            get
+            {
+                if (Total.Wt > 0.0)
+                    return N / Wt;
+                else
+                    return 0.0;
+            }
+        }
+
         #endregion
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
