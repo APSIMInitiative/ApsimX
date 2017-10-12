@@ -87,6 +87,7 @@ namespace Models.Core
         private Simulations()
         {
             Version = APSIMFileConverter.LastestVersion;
+            LoadErrors = new List<Exception>();
         }
 
         /// <summary>

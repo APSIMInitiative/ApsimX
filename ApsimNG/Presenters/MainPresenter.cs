@@ -125,7 +125,14 @@ namespace UserInterface.Presenters
 
             // Call Execute on our newly created script instance.
             object[] arguments = new object[] { this };
-            executeMethod.Invoke(script, arguments);
+            try
+            {
+                executeMethod.Invoke(script, arguments);
+            }
+            catch (System.Reflection.TargetInvocationException except)
+            {
+                return except.InnerException.ToString();
+            }
             return null;
         }
 
@@ -442,7 +449,11 @@ namespace UserInterface.Presenters
             foreach (string argument in commandLineArguments)
             {
                 if (Path.GetExtension(argument) == ".cs")
-                    ProcessStartupScript(File.ReadAllText(argument));
+                {
+                    string result = ProcessStartupScript(File.ReadAllText(argument));
+                    if (!String.IsNullOrEmpty(result))
+                        throw new Exception(result);
+                }
 
                 else if (Path.GetExtension(argument) == ".apsimx")
                     OpenApsimXFileInTab(argument, onLeftTabControl: true);
@@ -486,6 +497,11 @@ namespace UserInterface.Presenters
                 {
                     Simulations simulations = Simulations.Read(fileName);
                     presenter = CreateNewTab(fileName, simulations, onLeftTabControl);
+                    if (simulations.LoadErrors.Count > 0)
+                    {
+                        foreach (Exception error in simulations.LoadErrors)
+                            this.view.ShowMessage(error.ToString(), Simulation.ErrorLevel.Error);
+                    }
                     // Add to MRU list and update display
                     Utility.Configuration.Settings.AddMruFile(fileName);
                     UpdateMRUDisplay();
