@@ -227,7 +227,7 @@ namespace Models
                         catch (Exception err)
                         {
                             lastCompileFailed = true;
-                            errors.Add(err);
+                            errors.Add(new Exception("Unable to compile \"" + Name + "\"", err));
                         }
                     }
                 }
