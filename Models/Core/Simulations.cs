@@ -108,7 +108,13 @@ namespace Models.Core
             Apsim.ParentAllChildren(newSimulations);
 
             // Call OnLoaded in all models.
-            newSimulations.LoadErrors = events.Publish("Loaded", null);
+            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+            events.Publish("Loaded", new object[] { newSimulations, loadedArgs });
+            if (loadedArgs.errors.Count > 0)
+            {
+                newSimulations.LoadErrors = new List<Exception>();
+                newSimulations.LoadErrors.AddRange(loadedArgs.errors);
+            }
             return newSimulations;
         }
 
@@ -140,7 +146,13 @@ namespace Models.Core
                 Apsim.ParentAllChildren(simulations);
 
                 // Call OnLoaded in all models.
-                simulations.LoadErrors = events.Publish("Loaded", null);
+                LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                events.Publish("Loaded", new object[] { simulations, loadedArgs });
+                if (loadedArgs.errors.Count > 0)
+                {
+                    simulations.LoadErrors = new List<Exception>();
+                    simulations.LoadErrors.AddRange(loadedArgs.errors);
+                }
             }
 
             return simulations;
@@ -172,7 +184,13 @@ namespace Models.Core
                 simulations.Parent = null;
                 Apsim.ParentAllChildren(simulations);
 
-                events.Publish("Loaded", null);
+                LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                events.Publish("Loaded", new object[] { simulations, loadedArgs });
+                if (loadedArgs.errors.Count > 0)
+                {
+                    simulations.LoadErrors = new List<Exception>();
+                    simulations.LoadErrors.AddRange(loadedArgs.errors);
+                }
             }
             else
                 throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
@@ -210,7 +228,8 @@ namespace Models.Core
                             newModel.Parent = match.Parent;
                             match.Parent.Children.Remove(match as Model);
                             Events events = new Events(newModel);
-                            events.Publish("Loaded", null);
+                            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                            events.Publish("Loaded", new object[] { newModel, loadedArgs });
                         }
                     }
                 }

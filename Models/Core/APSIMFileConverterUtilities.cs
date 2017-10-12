@@ -46,11 +46,25 @@ namespace Models.Core
         /// <param name="report">The reportr model.</param>
         /// <param name="searchPattern">The pattern to search for</param>
         /// <param name="replacePattern">The string to replace</param>
-        internal static void SearchReplaceReportCode(XmlNode report, string searchPattern, string replacePattern)
+        internal static void SearchReplaceReportCodeUsingRegEx(XmlNode report, string searchPattern, string replacePattern)
         {
             List<string> variableNames = XmlUtilities.Values(report, "VariableNames/string");
             for (int i = 0; i < variableNames.Count; i++)
                 variableNames[i] = Regex.Replace(variableNames[i], searchPattern, replacePattern, RegexOptions.None);
+            XmlUtilities.SetValues(report, "VariableNames/string", variableNames);
+        }
+
+        /// <summary>
+        /// Perform a search and replace in report variables.
+        /// </summary>
+        /// <param name="report">The reportr model.</param>
+        /// <param name="searchPattern">The pattern to search for</param>
+        /// <param name="replacePattern">The string to replace</param>
+        internal static void SearchReplaceReportCode(XmlNode report, string searchPattern, string replacePattern)
+        {
+            List<string> variableNames = XmlUtilities.Values(report, "VariableNames/string");
+            for (int i = 0; i < variableNames.Count; i++)
+                variableNames[i] = variableNames[i].Replace(searchPattern, replacePattern);
             XmlUtilities.SetValues(report, "VariableNames/string", variableNames);
         }
 

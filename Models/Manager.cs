@@ -7,6 +7,8 @@ using System.Xml.Schema;
 using System.Runtime.Serialization;
 using System.IO;
 using APSIM.Shared.Utilities;
+using System.Collections.Generic;
+
 namespace Models
 {
     /// <summary>
@@ -107,17 +109,20 @@ namespace Models
             set
             {
                 _Code = value;
-                RebuildScriptModel();
+                List<Exception> errors = new List<Exception>();
+                RebuildScriptModel(errors);
+                if (errors.Count > 0)
+                    throw errors[0];  // throw first error
             }
         }
 
         /// <summary>The model has been loaded.</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             HasLoaded = true;
             if (Script == null && Code != string.Empty)
-                RebuildScriptModel();
+                RebuildScriptModel(args.errors);
         }
 
         /// <summary>
@@ -147,7 +152,10 @@ namespace Models
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            RebuildScriptModel();
+            List<Exception> errors = new List<Exception>();
+            RebuildScriptModel(errors);
+            if (errors.Count > 0)
+                throw errors[0];  // throw first error
         }
 
         private bool lastCompileFailed = false;
@@ -156,7 +164,7 @@ namespace Models
         /// <exception cref="ApsimXException">
         /// Cannot find a public class called 'Script'
         /// </exception>
-        public void RebuildScriptModel()
+        public void RebuildScriptModel(List<Exception> errors)
         {
             if (HasLoaded)
             {
@@ -193,35 +201,35 @@ namespace Models
                             // Get the script 'Type' from the compiled assembly.
                             if (compiledAssembly.GetType("Models.Script") == null)
                                 throw new ApsimXException(this, "Cannot find a public class called 'Script'");
+
+                            assemblyName = compiledAssembly.FullName;
+                            CompiledCode = _Code;
+                            lastCompileFailed = false;
+
+                            // Create a new script model.
+                            Script = compiledAssembly.CreateInstance("Models.Script") as Model;
+                            Script.Children = new System.Collections.Generic.List<Model>();
+                            Script.Name = "Script";
+                            Script.IsHidden = true;
+                            XmlElement parameters;
+
+                            XmlDocument doc = new XmlDocument();
+                            doc.LoadXml(elementsAsXml);
+                            parameters = doc.DocumentElement;
+
+                            SetParametersInObject(Script, parameters);
+
+                            // Add the new script model to our models collection.
+                            Children.Clear();
+                            Children.Add(Script);
+                            Script.Parent = this;
                         }
                         catch (Exception err)
                         {
                             lastCompileFailed = true;
-                            throw new ApsimXException(this, "Error compiling script \"" + this.Name + "\"" + Environment.NewLine + err.Message);
+                            errors.Add(err);
                         }
                     }
-
-                    assemblyName = compiledAssembly.FullName;
-                    CompiledCode = _Code;
-                    lastCompileFailed = false;
-
-                    // Create a new script model.
-                    Script = compiledAssembly.CreateInstance("Models.Script") as Model;
-                    Script.Children = new System.Collections.Generic.List<Model>();
-                    Script.Name = "Script";
-                    Script.IsHidden = true;
-                    XmlElement parameters;
-
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(elementsAsXml);
-                    parameters = doc.DocumentElement;
-                    
-                    SetParametersInObject(Script, parameters);
-
-                    // Add the new script model to our models collection.
-                    Children.Clear();
-                    Children.Add(Script);
-                    Script.Parent = this;
                 }
             }
         }

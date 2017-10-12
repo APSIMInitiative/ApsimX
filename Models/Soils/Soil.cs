@@ -147,7 +147,7 @@ namespace Models.Soils
 
         /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             FindChildren();
         }
@@ -373,8 +373,8 @@ namespace Models.Soils
             get 
             {
                 if (SoilWater == null) return null;
-                return SoilWater.SWCON;
-            } 
+                return Map(SoilWater.SWCON, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
+            }
         }
 
         /// <summary>
@@ -386,9 +386,9 @@ namespace Models.Soils
             get
                 {
                 if (SoilWater == null) return null;
-                return SoilWater.KLAT;
-                }
+                return Map(SoilWater.KLAT, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
             }
+        }
 
 
 

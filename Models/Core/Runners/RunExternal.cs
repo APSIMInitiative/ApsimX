@@ -7,6 +7,16 @@
     using System.Threading;
 
     /// <summary>
+    /// An exception class for external exceptions.
+    /// </summary>
+    class RunExternalException : Exception
+    {
+        public RunExternalException(string msg) 
+            : base(msg)
+        { }
+    }
+
+    /// <summary>
     /// This runnable class runs an external process.
     /// </summary>
     class RunExternal : IRunnable, IComputationalyTimeConsuming
@@ -52,7 +62,7 @@
             {
                 string errorMessage = "Error in file: " + arguments + Environment.NewLine;
                 errorMessage += stdout;
-                throw new Exception(errorMessage);
+                throw new RunExternalException(errorMessage);
             }
         }
     }
