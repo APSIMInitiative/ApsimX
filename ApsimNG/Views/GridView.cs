@@ -106,7 +106,7 @@ namespace UserInterface.Views
         /// </summary>
         public GridView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.GridView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             scrolledwindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             gridview = (TreeView)builder.GetObject("gridview");

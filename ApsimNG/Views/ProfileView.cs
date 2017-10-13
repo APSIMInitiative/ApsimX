@@ -48,7 +48,7 @@ namespace UserInterface.Views
 
         public ProfileView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.ProfileView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ProfileView.glade");
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             vpaned2 = (VPaned)builder.GetObject("vpaned2");
             vbox1 = (VBox)builder.GetObject("vbox1");

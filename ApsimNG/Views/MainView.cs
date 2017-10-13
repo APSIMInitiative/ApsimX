@@ -168,8 +168,7 @@ namespace UserInterface.Views
                 Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                                       ".gtkrc"));
             }
-
-            Builder builder = new Builder("ApsimNG.Resources.Glade.MainView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
             window1 = (Window)builder.GetObject("window1");
             progressBar = (ProgressBar)builder.GetObject("progressBar");
             StatusWindow = (TextView)builder.GetObject("StatusWindow");
