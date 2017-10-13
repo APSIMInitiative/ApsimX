@@ -57,8 +57,8 @@ namespace Models.PMF.Organs
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Dry matter conversion efficiency</summary>
-        [Link(IsOptional = true)]
-        public IFunction DMConversionEfficiencyFunction = null;
+        [Link]
+        public new IFunction DMConversionEfficiency = null;
 
         /// <summary>The proportion of biomass repired each day</summary>
         [Link(IsOptional = true)]
@@ -181,15 +181,6 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
                 Clear();
-
-
-            if (DMConversionEfficiencyFunction != null)
-                DMConversionEfficiency = DMConversionEfficiencyFunction.Value();
-            else
-                DMConversionEfficiency = 1.0;
-
-
-
         }
 
         /// <summary>
@@ -276,7 +267,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return new BiomassPoolType { Structural = DMDemandFunction.Value() / DMConversionEfficiency};
+                return new BiomassPoolType { Structural = DMDemandFunction.Value() / DMConversionEfficiency.Value()};
             }
         }
         /// <summary>Sets the dm potential allocation.</summary>
@@ -297,8 +288,8 @@ namespace Models.PMF.Organs
         {
             set
             {
-                GrowthRespiration = value.Structural *(1- DMConversionEfficiency);
-                Live.StructuralWt += value.Structural * DMConversionEfficiency;
+                GrowthRespiration = value.Structural *(1- DMConversionEfficiency.Value());
+                Live.StructuralWt += value.Structural * DMConversionEfficiency.Value();
             }
         }
         /// <summary>Gets or sets the n demand.</summary>
