@@ -51,7 +51,7 @@ namespace UserInterface.Views
         
         public MemoView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.MemoView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MemoView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             textView = (TextView)builder.GetObject("textView");
             label1 = (Label)builder.GetObject("label1");

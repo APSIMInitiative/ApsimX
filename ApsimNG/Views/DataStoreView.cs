@@ -46,7 +46,7 @@ namespace UserInterface.Views
         /// <summary>Initializes a new instance of the <see cref="DataStoreView" /> class.</summary>
         public DataStoreView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.DataStoreView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.DataStoreView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             table1 = (Table)builder.GetObject("table1");
             hbox1 = (HBox)builder.GetObject("hbox1");

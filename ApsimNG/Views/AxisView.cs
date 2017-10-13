@@ -106,7 +106,7 @@ namespace UserInterface.Views
         /// </summary>
         public AxisView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.AxisView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.AxisView.glade");
             table1 = (Table)builder.GetObject("table1");
             entryMin = (Entry)builder.GetObject("entryMin");
             entryMax = (Entry)builder.GetObject("entryMax");
