@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Gtk;
 using Mono.TextEditor;
 using Cairo;
+using UserInterface;
 
 namespace Utility
 {
@@ -26,7 +27,7 @@ namespace Utility
 
         public FindAndReplaceForm()
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.FindAndReplace.glade");
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.FindAndReplace.glade");
             window1 = (Window)builder.GetObject("window1");
             chkMatchCase = (CheckButton)builder.GetObject("chkMatchCase");
             chkMatchWholeWord = (CheckButton)builder.GetObject("chkMatchWholeWord");

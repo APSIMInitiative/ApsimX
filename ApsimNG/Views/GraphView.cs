@@ -70,7 +70,7 @@ namespace UserInterface.Views
         /// </summary>
         public GraphView(ViewBase owner = null) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.GraphView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
             vbox2 = (VBox)builder.GetObject("vbox2");

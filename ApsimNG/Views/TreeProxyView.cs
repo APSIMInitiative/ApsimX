@@ -79,7 +79,7 @@ namespace UserInterface.Views
         /// </summary>
         public TreeProxyView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.TreeProxyView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TreeProxyView.glade");
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             alignment1 = (Alignment)builder.GetObject("alignment1");
             hbox1 = (HBox)builder.GetObject("hbox1");
