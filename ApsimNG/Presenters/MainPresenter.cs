@@ -26,7 +26,7 @@ namespace UserInterface.Presenters
     public class MainPresenter
     {
         /// <summary>A list of presenters for tabs on the left.</summary>
-        private List<ExplorerPresenter> presenters1 = new List<ExplorerPresenter>();
+        public List<ExplorerPresenter> presenters1 = new List<ExplorerPresenter>();
 
         /// <summary>A private reference to the view this presenter will talk to.</summary>
         private IMainView view;
