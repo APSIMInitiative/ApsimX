@@ -15,8 +15,8 @@ namespace UserInterface.Presenters
     using EventArguments;
     using ICSharpCode.NRefactory.CSharp;
     using Models;
-    using Views;
     using Models.Core;
+    using Views;
 
     /// <summary>
     /// Presenter for the Manager component
@@ -220,7 +220,10 @@ namespace UserInterface.Presenters
             {
                 string msg = err.Message;
                 if (err.InnerException != null)
+                {
                     msg += " ---> " + err.InnerException.Message;
+                }
+
                 this.explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
             }
 
