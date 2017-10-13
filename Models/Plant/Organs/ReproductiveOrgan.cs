@@ -57,8 +57,8 @@ namespace Models.PMF.Organs
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Dry matter conversion efficiency</summary>
-        [Link(IsOptional = true)]
-        public IFunction DMConversionEfficiencyFunction = null;
+        [Link]
+        public new IFunction DMConversionEfficiency = null;
 
         /// <summary>The proportion of biomass repired each day</summary>
         [Link(IsOptional = true)]
@@ -181,15 +181,6 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
                 Clear();
-
-
-            if (DMConversionEfficiencyFunction != null)
-                DMConversionEfficiency = DMConversionEfficiencyFunction.Value();
-            else
-                DMConversionEfficiency = 1.0;
-
-
-
         }
 
         /// <summary>
@@ -252,7 +243,7 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         public override BiomassPoolType CalculateDryMatterDemand()
         {
-            dryMatterDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency;
+            dryMatterDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency.Value();
             return dryMatterDemand;
         }
 
@@ -302,8 +293,8 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dry matter allocation.</summary>
         public override void SetDryMatterAllocation(BiomassAllocationType value)
         {
-            GrowthRespiration = value.Structural * (1 - DMConversionEfficiency);
-            Live.StructuralWt += value.Structural * DMConversionEfficiency;
+            GrowthRespiration = value.Structural * (1 - DMConversionEfficiency.Value());
+            Live.StructuralWt += value.Structural * DMConversionEfficiency.Value();
             Allocated.StructuralWt = value.Structural;
         }
         /// <summary>Sets the n allocation.</summary>
