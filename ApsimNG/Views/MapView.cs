@@ -255,7 +255,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
             }
             set
             {
-                browser.ExecJavaScript("SetZoom", new object[] { (int)Math.Truncate(value + 0.5) });
+                _zoom = Math.Truncate(value + 0.5);
+                browser.ExecJavaScript("SetZoom", new object[] { (int)_zoom });
                 if (popupWin != null)
                 {
                     Stopwatch watch = new Stopwatch();
