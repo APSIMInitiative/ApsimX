@@ -8,8 +8,8 @@ namespace UserInterface.Presenters
 {
     using System;
     using Models;
-    using Views;
     using Models.Core;
+    using Views;
 
     /// <summary>
     /// Attaches an Input model to an Input View.
@@ -71,7 +71,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                this.explorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
             }
         }
 

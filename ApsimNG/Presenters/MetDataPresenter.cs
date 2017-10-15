@@ -13,9 +13,9 @@ namespace UserInterface.Presenters
     using System.Text;
     using APSIM.Shared.Utilities;
     using Models;
+    using Models.Core;
     using Models.Graph;
     using Views;
-    using Models.Core;
 
     /// <summary>A presenter for displaying weather data</summary>
     public class MetDataPresenter : IPresenter
