@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="10">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="18">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -429,7 +429,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <PhaseLookup>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <PhaseLookupValue>
             <Name>Phyllochron</Name>
             <LinearInterpolationFunction>
@@ -760,7 +760,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <FixedValue>0</FixedValue>
         </Constant>
         <HoldFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <AddFunction>
             <Name>ValueToHold</Name>
             <Constant>
@@ -808,7 +808,7 @@ A function is used to provide flowering date as days after sowing(DAS).
                         <VariableReference>
                           <Name>Phyllochron</Name>
                           <IncludeInDocumentation>true</IncludeInDocumentation>
-                          <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                          <VariableName>[Structure].Phyllochron.Value()</VariableName>
                         </VariableReference>
                         <Constant>
                           <Name>LeafTipsPerPrimordia</Name>
@@ -971,14 +971,6 @@ A function is used to provide flowering date as days after sowing(DAS).
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <Constant>
           <Name>MinimumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1126,23 +1118,17 @@ A function is used to provide flowering date as days after sowing(DAS).
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
+        <Live>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Live>
+        <Dead>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Dead>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <Memo>
@@ -1423,16 +1409,16 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <ShadeInducedSenRate>0</ShadeInducedSenRate>
           <SenescedFrac>0</SenescedFrac>
           <DeltaPotentialArea>0</DeltaPotentialArea>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaStressConstrainedArea>0</DeltaStressConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -1440,6 +1426,8 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Rank>1</Rank>
           <Area>380</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -1451,16 +1439,16 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <ShadeInducedSenRate>0</ShadeInducedSenRate>
           <SenescedFrac>0</SenescedFrac>
           <DeltaPotentialArea>0</DeltaPotentialArea>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaStressConstrainedArea>0</DeltaStressConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -1468,21 +1456,9 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Leaf].CohortLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Leaf].CohortDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1566,7 +1542,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Phyllochron.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>NumberOfExpandingLeaves</Name>
@@ -1732,7 +1708,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <FixedValue>0.5</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
@@ -1792,6 +1768,21 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
+          <ArrayFunction>
+            <Name>LagDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>SenescenceDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>LeafSizeAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+          </ArrayFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </LeafCohortParameters>
         <RUEModel>
@@ -2184,14 +2175,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </Leaf>
       <GenericOrgan>
         <Name>Panicle</Name>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2354,17 +2337,17 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <VariableName>[Panicle].MinimumNConc.Value()</VariableName>
         </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Live>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Live>
+        <Dead>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Dead>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <Constant>
           <Name>SenescenceRate</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2582,6 +2565,14 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <VariableName>[Stem].MinimumNConc.Value()</VariableName>
         </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Live>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Live>
+        <Dead>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Dead>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2876,7 +2867,6 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Teff</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
@@ -2970,8 +2960,6 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>Ethiopia</Name>
@@ -3543,7 +3531,6 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -4372,7 +4359,6 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -5571,7 +5557,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
-              <string>Teff.Leaf.LAI</string>
+              <string>[Teff].Leaf.LAI</string>
               <string>[Teff].Leaf.Transpiration</string>
               <string>[Teff].Root.Depth</string>
               <string>[Teff].Leaf.Fw</string>
@@ -5961,7 +5947,6 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -7677,7 +7662,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
-              <string>Teff.Leaf.LAI</string>
+              <string>[Teff].Leaf.LAI</string>
               <string>[Teff].Leaf.Transpiration</string>
               <string>[Teff].Root.Depth</string>
               <string>[Teff].Leaf.Fw</string>
@@ -7760,7 +7745,6 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -8285,7 +8269,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Leaf.Transpiration</string>
-              <string>(Teff.Leaf.Transpiration+[Soil].SoilWater.Es) as ET</string>
+              <string>([Teff].Leaf.Transpiration+[Soil].SoilWater.Es) as ET</string>
               <string>[Teff].Root.Depth</string>
               <string>[Teff].Leaf.Fw</string>
               <string>[Teff].Leaf.Fn</string>
@@ -8717,7 +8701,6 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -10123,7 +10106,7 @@ Field Crops Research 116 (2010) 196204
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Leaf.Transpiration</string>
-              <string>(Teff.Leaf.Transpiration+[Soil].SoilWater.Es) as ET</string>
+              <string>([Teff].Leaf.Transpiration+[Soil].SoilWater.Es) as ET</string>
               <string>[Teff].Root.Depth</string>
               <string>[Teff].Leaf.Fw</string>
               <string>[Teff].Leaf.Fn</string>
@@ -10216,7 +10199,6 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -10532,9 +10514,9 @@ namespace Models
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
-              <string>Teff.Leaf.LAI</string>
-              <string>Teff.Leaf.Transpiration</string>
-              <string>(Teff.Leaf.Transpiration+[Soil].SoilWater.Es) as ET</string>
+              <string>[Teff].Leaf.LAI</string>
+              <string>[Teff].Leaf.Transpiration</string>
+              <string>([Teff].Leaf.Transpiration+[Soil].SoilWater.Es) as ET</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -10941,7 +10923,6 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -11285,9 +11266,9 @@ namespace Models
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
-              <string>Teff.Leaf.LAI</string>
-              <string>Teff.Leaf.Transpiration</string>
-              <string>(Teff.Leaf.Transpiration+[Soil].SoilWater.Es) as ET</string>
+              <string>[Teff].Leaf.LAI</string>
+              <string>[Teff].Leaf.Transpiration</string>
+              <string>([Teff].Leaf.Transpiration+[Soil].SoilWater.Es) as ET</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -11694,7 +11675,6 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -12091,7 +12071,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Leaf.Transpiration</string>
-              <string>(Teff.Leaf.Transpiration+[Soil].SoilWater.Es) as ET</string>
+              <string>([Teff].Leaf.Transpiration+[Soil].SoilWater.Es) as ET</string>
               <string>[Teff].Root.Depth</string>
               <string>[Teff].Leaf.Fw</string>
               <string>[Teff].Leaf.Fn</string>
@@ -12523,7 +12503,6 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -13592,7 +13571,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Leaf.Transpiration</string>
-              <string>(Teff.Leaf.Transpiration+[Soil].SoilWater.Es) as ET</string>
+              <string>([Teff].Leaf.Transpiration+[Soil].SoilWater.Es) as ET</string>
               <string>[Teff].Root.Depth</string>
               <string>[Teff].Leaf.Fw</string>
               <string>[Teff].Leaf.Fn</string>
@@ -14024,7 +14003,6 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -15695,7 +15673,6 @@ namespace Models
             <Name>Teff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <CropType>Chickpea</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Report>
             <Name>HarvestReport</Name>

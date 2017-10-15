@@ -18,7 +18,7 @@ namespace UserInterface.Views
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.SummaryView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SummaryView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             combobox1 = (ComboBox)builder.GetObject("combobox1");
             _mainWidget = vbox1;

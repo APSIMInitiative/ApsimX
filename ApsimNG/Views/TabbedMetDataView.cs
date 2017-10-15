@@ -137,7 +137,7 @@ namespace UserInterface.Views
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
         public TabbedMetDataView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.TabbedMetDataView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TabbedMetDataView.glade");
             labelFileName = (Label)builder.GetObject("labelFileName");
             vbox1 = (VBox)builder.GetObject("vbox1");
             notebook1 = (Notebook)builder.GetObject("notebook1");

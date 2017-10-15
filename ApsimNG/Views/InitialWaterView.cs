@@ -31,7 +31,7 @@ namespace UserInterface.Views
         /// </summary>
         public InitialWaterView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.InitialWaterView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.InitialWaterView.glade");
             hpaned1 = (HPaned)builder.GetObject("hpaned1");
             spinbutton1 = (SpinButton)builder.GetObject("spinbutton1");
             entry1 = (Entry)builder.GetObject("entry1");

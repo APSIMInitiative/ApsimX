@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="18">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -208,8 +208,6 @@
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>false</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>1000</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
     <Name>SCRUMTestBase</Name>
@@ -830,7 +828,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 	}
 }
@@ -930,9 +928,9 @@ namespace Models
 			Accumulated_depth = 0;
 			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
 			{
-				Top_LL += Soil.SoilWater.LL15mm[layer];
-				Top_DUL += Soil.SoilWater.DULmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+				Top_LL += Soil.LL15mm[layer];
+				Top_DUL += Soil.DULmm[layer];
+				Accumulated_depth += Soil.Thickness[layer];
 			}
 			Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
 		}
@@ -993,7 +991,7 @@ namespace Models
 			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
 			{
 				Top_SW += Soil.SoilWater.SWmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+				Accumulated_depth += Soil.Thickness[layer];
 			}
 			if (Top_SW <= Top_Trigger)
 				SoilIsDry = true;
@@ -1145,7 +1143,7 @@ namespace Models
 			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
 			{
 				Top_SoilN += Soil.NO3N[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+				Accumulated_depth += Soil.Thickness[layer];
 			}
 			if (Top_SoilN <= TriggerN)
 				SoilNIsLow = true;
@@ -3421,7 +3419,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 	}
 }
@@ -5418,7 +5416,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 	}
 }
@@ -5774,9 +5772,9 @@ namespace Models
 	      Accumulated_depth = 0;
 	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
 	      {
-	         Top_LL += Soil.SoilWater.LL15mm[layer];
-	         Top_DUL += Soil.SoilWater.DULmm[layer];
-	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
+	         Top_LL += Soil.LL15mm[layer];
+	         Top_DUL += Soil.DULmm[layer];
+	         Accumulated_depth += Soil.Thickness[layer];
 	      }
 	      Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
 	   }
@@ -5837,7 +5835,7 @@ namespace Models
 	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
 	      {
 	         Top_SW += Soil.SoilWater.SWmm[layer];
-	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
+	         Accumulated_depth += Soil.Thickness[layer];
 	      }
 	      if (Top_SW <= Top_Trigger)
 	         SoilIsDry = true;
@@ -5989,7 +5987,7 @@ namespace Models
 	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
 	      {
 	         Top_SoilN += Soil.NO3N[layer];
-	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
+	         Accumulated_depth += Soil.Thickness[layer];
 	      }
 	      if (Top_SoilN <= TriggerN)
 	         SoilNIsLow = true;
@@ -8444,7 +8442,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 			
 			
 			
@@ -12682,17 +12680,17 @@ namespace Models
             <Name>Sowing_Yield</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <Crop2>Dried_Peas</Crop2>
-              <SowingDate2>2005-09-28</SowingDate2>
-              <HarvestDate2>2006-02-24</HarvestDate2>
-              <CropNConc>0</CropNConc>
               <YieldFile>%root%\Tests\Validation\SCRUM\YieldsToSet.csv</YieldFile>
               <InitialRootDepth>10</InitialRootDepth>
               <Crop1>Potatoes_Short</Crop1>
               <SowingDate1>2004-10-15</SowingDate1>
               <HarvestDate1>2005-03-14</HarvestDate1>
               <Yield1>5500</Yield1>
+              <Crop2>Dried_Peas</Crop2>
+              <SowingDate2>2005-09-28</SowingDate2>
+              <HarvestDate2>2006-02-24</HarvestDate2>
               <Yield2>958</Yield2>
+              <CropNConc>0</CropNConc>
               <Crop3>Potatoes_Short</Crop3>
               <SowingDate3>2006-10-11</SowingDate3>
               <HarvestDate3>2007-03-12</HarvestDate3>
@@ -12989,22 +12987,22 @@ namespace Models
             <Name>InF</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <NFert>0</NFert>
-              <Irr1>0</Irr1>
-              <Irr2>0</Irr2>
-              <Irr3>0</Irr3>
-              <Irr4>0</Irr4>
-              <IrrFact1>0</IrrFact1>
-              <IrrFact2>0</IrrFact2>
-              <IrrFact3>0</IrrFact3>
-              <IrrFact4>0</IrrFact4>
-              <TreatFact>0</TreatFact>
               <FertDate1>2005-10-26</FertDate1>
               <FertDate2>2005-11-25</FertDate2>
+              <NFert>0</NFert>
+              <TreatFact>0</TreatFact>
               <IrrDate1>2005-11-18</IrrDate1>
+              <Irr1>0</Irr1>
+              <IrrFact1>0</IrrFact1>
               <IrrDate2>2005-11-23</IrrDate2>
+              <Irr2>0</Irr2>
+              <IrrFact2>0</IrrFact2>
               <IrrDate3>2005-12-07</IrrDate3>
+              <Irr3>0</Irr3>
+              <IrrFact3>0</IrrFact3>
               <IrrDate4>2005-12-29</IrrDate4>
+              <Irr4>0</Irr4>
+              <IrrFact4>0</IrrFact4>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -13380,7 +13378,7 @@ namespace Models
 			AccumDrainage += Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 		
 		[EventSubscribe("PlantEnding")]
@@ -13413,15 +13411,14 @@ namespace Models
           <Name>NConcReps</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
+            <NConcFile>%root%\Tests\Validation\SCRUM\NO3.csv</NConcFile>
             <TotalLeach>0</TotalLeach>
+            <Leach_60>0</Leach_60>
             <ObservedLeach1>0</ObservedLeach1>
             <ObservedLeach2>0</ObservedLeach2>
             <ObservedLeach3>0</ObservedLeach3>
             <ObservedLeach4>0</ObservedLeach4>
             <ObservedLeach5>0</ObservedLeach5>
-            <Leach_60>0</Leach_60>
-            <NLeachMean>0</NLeachMean>
-            <NConcFile>%root%\Tests\Validation\SCRUM\NO3.csv</NConcFile>
             <NConc1>0</NConc1>
             <NConc2>0</NConc2>
             <NConc3>0</NConc3>
@@ -13437,6 +13434,7 @@ namespace Models
             </Treat_Rep4>
             <Treat_Rep5>
             </Treat_Rep5>
+            <NLeachMean>0</NLeachMean>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
@@ -17409,5 +17407,5 @@ namespace Models
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>311</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

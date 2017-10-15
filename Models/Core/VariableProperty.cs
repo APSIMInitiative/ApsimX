@@ -297,9 +297,16 @@ namespace Models.Core
             {
                 if (elementPropertyName != null)
                     return ProcessPropertyOfArrayElement();
-                
-                object obj = this.property.GetValue(this.Object, null);
 
+                object obj = null;
+                try
+                {
+                    obj = this.property.GetValue(this.Object, null);
+                }
+                catch (Exception err)
+                {
+                    throw err.InnerException;
+                }
                 if (this.lowerArraySpecifier != 0 && obj != null && obj is IList)
                 {
                     IList array = obj as IList;

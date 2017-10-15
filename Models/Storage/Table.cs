@@ -152,14 +152,15 @@ namespace Models.Storage
                 List<string> columnNames = new List<string>();
                 List<object[]> values = new List<object[]>();
                 // If the table exists, make sure it has the required columns, otherwise create the table
-                int numRows = RowsToWrite.Count;
-                if (TableExists(connection, Name))
-                    AlterTable(connection);
-                else
-                    CreateTable(connection);
 
                 lock (lockObject)
                 {
+                    int numRows = RowsToWrite.Count;
+                    if (TableExists(connection, Name))
+                        AlterTable(connection);
+                    else
+                        CreateTable(connection);
+
                     columnNames.AddRange(Columns.Select(column => column.Name));
                     values.AddRange(RowsToWrite.GetRange(0, numRows));
                     RowsToWrite.RemoveRange(0, numRows);

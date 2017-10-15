@@ -117,7 +117,14 @@ namespace Models
                                 // invoke method.
                                 if (parameterValues != null)
                                 {
-                                    method.Invoke(model, parameterValues);
+                                    try
+                                    {
+                                        method.Invoke(model, parameterValues);
+                                    }
+                                    catch (Exception err)
+                                    {
+                                        throw err.InnerException;
+                                    }
                                     break;
                                 }
                             }

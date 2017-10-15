@@ -49,7 +49,7 @@ namespace Models.PMF.Functions
 
         /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             if (XYPairs != null)
             {

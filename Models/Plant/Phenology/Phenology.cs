@@ -266,7 +266,7 @@ namespace Models.PMF.Phen
         public Phenology() { }
         /// <summary>Initialize the phase list of phenology.</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             Phases = new List<Phase>();
             foreach (Phase phase in Apsim.Children(this, typeof(Phase)))

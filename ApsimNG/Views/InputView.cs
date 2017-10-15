@@ -50,7 +50,7 @@ namespace UserInterface.Views
         /// </summary>
         public InputView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.InputView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.InputView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             button1 = (Button)builder.GetObject("button1");
             label1 = (Label)builder.GetObject("label1");

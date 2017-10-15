@@ -54,6 +54,13 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Initializes a new instance of the <see cref="HIReproductiveOrgan"/> class.</summary>
+        public HIReproductiveOrgan()
+        {
+            Live = new Biomass();
+            Dead = new Biomass();
+        }
+
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -152,6 +159,14 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total biomass</summary>
         public Biomass Total { get { return Live + Dead; } }
+
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
