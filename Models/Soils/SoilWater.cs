@@ -1596,7 +1596,7 @@ namespace Models.Soils
             //!     returns the index number of the first occurrence of specified value
 
             for (int i = 0; i < NameList.Length; i++)
-                if (NameList[i].ToLower() == Name.ToLower())
+                if (String.Equals(NameList[i], Name, StringComparison.OrdinalIgnoreCase))
                     return i;
             return -1;  // Not found
         }

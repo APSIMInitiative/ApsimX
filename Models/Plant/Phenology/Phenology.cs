@@ -352,7 +352,7 @@ namespace Models.PMF.Phen
         public int IndexOfPhase(string Name)
         {
             for (int P = 0; P < Phases.Count; P++)
-                if (Phases[P].Name.ToLower() == Name.ToLower())
+                if (String.Equals(Phases[P].Name, Name, StringComparison.OrdinalIgnoreCase))
                     return P;
             return -1;
         }
@@ -571,7 +571,7 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         public bool InPhase(String PhaseName)
         {
-            return CurrentPhase.Name.ToLower() == PhaseName.ToLower();
+            return String.Equals(CurrentPhase.Name, PhaseName, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
