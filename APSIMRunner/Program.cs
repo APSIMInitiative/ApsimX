@@ -3,20 +3,12 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 //-----------------------------------------------------------------------
-namespace APSIMJobRunner
+namespace APSIMRunner
 {
     using APSIM.Shared.Utilities;
     using Models;
-    using Models.Core;
     using Models.Core.Runners;
-    using Models.Report;
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net.Sockets;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
     using System.Threading;
 
     class Program
@@ -32,19 +24,23 @@ namespace APSIMJobRunner
                 object response = GetNextJob();
                 while (response != null)
                 {
-                    JobManagerMultiProcess.GetJobReturnData job = response as JobManagerMultiProcess.GetJobReturnData;
+                    JobRunnerMultiProcess.GetJobReturnData job = response as JobRunnerMultiProcess.GetJobReturnData;
 
                     // Run the simulation.
                     string errorMessage = null;
-                    Simulation simulation = null;
+                    string simulationName = null;
+                    RunSimulation simulationRunner = null;
                     try
                     {
-                        simulation = job.job as Simulation;
-                        simulation.Run(null, null);
+                        simulationRunner = job.job as RunSimulation;
 
-                        SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
-                        SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
-                        DataStore.TablesToWrite.Clear();
+                        // Replace datastore with a socket writer
+                        simulationRunner.Services = new object[] { new StorageViaSockets() };
+
+                        // Run simulation
+                        simulationName = simulationRunner.simulationToRun.Name;
+                        simulationRunner.cloneSimulationBeforeRun = false;
+                        simulationRunner.Run(new CancellationTokenSource());
                     }
                     catch (Exception err)
                     {
@@ -52,29 +48,20 @@ namespace APSIMJobRunner
                     }
 
                     // Signal end of job.
-                    JobManagerMultiProcess.EndJobArguments endJobArguments = new JobManagerMultiProcess.EndJobArguments();
+                    JobRunnerMultiProcess.EndJobArguments endJobArguments = new JobRunnerMultiProcess.EndJobArguments();
                     endJobArguments.key = job.key;
                     endJobArguments.errorMessage = errorMessage;
+                    endJobArguments.simulationName = simulationName;
                     SocketServer.CommandObject endJobCommand = new SocketServer.CommandObject() { name = "EndJob", data = endJobArguments };
                     SocketServer.Send("127.0.0.1", 2222, endJobCommand);
 
                     // Get next job.
                     response = GetNextJob();
                 }
-
-                //SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
-                //SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
-            }
-            catch (SocketException)
-            {
-                // Couldn't connect to socket. Server not running?
-                return 1;
             }
             catch (Exception err)
             {
-                SocketServer.CommandObject command = new SocketServer.CommandObject() { name = "Error" };
-                command.data = err.ToString();
-                SocketServer.Send("127.0.0.1", 2222, command);
+                Console.WriteLine(err.ToString());
                 return 1;
             }
             finally
@@ -89,6 +76,7 @@ namespace APSIMJobRunner
         {
             SocketServer.CommandObject command = new SocketServer.CommandObject() { name = "GetJob" };
             object response = SocketServer.Send("127.0.0.1", 2222, command);
+
             if (response is string && response.ToString() == "NULL")
                 return null;
 

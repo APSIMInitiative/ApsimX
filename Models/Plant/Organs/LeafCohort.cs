@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.PMF.Struct;
+using Models.PMF.Functions;
 
 namespace Models.PMF.Organs
 {
@@ -302,7 +304,7 @@ namespace Models.PMF.Organs
         public double DeltaPotentialArea;
 
         /// <summary>The delta water constrained area</summary>
-        public double DeltaWaterConstrainedArea;
+        public double DeltaStressConstrainedArea;
 
         /// <summary>The delta carbon constrained area</summary>
         public double DeltaCarbonConstrainedArea;
@@ -397,7 +399,8 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsSenescing
         {
-            get { return Age > GrowthDuration + LagDuration; }
+            get { return Age > GrowthDuration + LagDuration & Age < GrowthDuration + LagDuration + SenescenceDuration; }
+
         }
         /// <summary>Gets a value indicating whether this instance is not senescing.</summary>
         /// <value>
@@ -453,6 +456,13 @@ namespace Models.PMF.Organs
         /// <summary>MaintenanceRespiration</summary>
         public double MaintenanceRespiration { get; set; }
 
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public List<double> ApexGroupSize { get; set; }
+
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public List<double> ApexGroupAge { get; set; }
         #endregion
 
         #region Arbitration methods
@@ -466,7 +476,7 @@ namespace Models.PMF.Organs
                 if (IsGrowing)
                 {
                     double TotalDMDemand = Math.Min(DeltaPotentialArea/((SpecificLeafAreaMax + SpecificLeafAreaMin)/2),
-                        DeltaWaterConstrainedArea/SpecificLeafAreaMin);
+                        DeltaStressConstrainedArea/SpecificLeafAreaMin);
                     if (TotalDMDemand < 0)
                         throw new Exception("Negative DMDemand in" + this);
                     return TotalDMDemand*StructuralFraction;
@@ -485,7 +495,7 @@ namespace Models.PMF.Organs
                 if (IsGrowing)
                 {
                     double TotalDMDemand = Math.Min(DeltaPotentialArea/((SpecificLeafAreaMax + SpecificLeafAreaMin)/2),
-                        DeltaWaterConstrainedArea/SpecificLeafAreaMin);
+                        DeltaStressConstrainedArea/SpecificLeafAreaMin);
                     return TotalDMDemand*(1 - StructuralFraction);
                 }
                 return 0;
@@ -726,49 +736,49 @@ namespace Models.PMF.Organs
 
         /// <summary>Does the appearance.</summary>
         /// <param name="leafFraction">The leaf fraction.</param>
-        /// <param name="leafCohortParameterseafCohortParameters">The leaf cohort parameters.</param>
-        public void DoAppearance(double leafFraction, Leaf.LeafCohortParameters leafCohortParameterseafCohortParameters)
+        /// <param name="leafCohortParameters">The leaf cohort parameters.</param>
+        public void DoAppearance(double leafFraction, Leaf.LeafCohortParameters leafCohortParameters)
         {
             Name = "Leaf" + Rank.ToString();
             IsAppeared = true;
             if (CohortPopulation == 0)
                 CohortPopulation = Apex.Appearance(Structure.ApexNum, Plant.Population, Structure.TotalStemPopn);
-                
-            MaxArea = leafCohortParameterseafCohortParameters.MaxArea.Value() * CellDivisionStressFactor*leafFraction;
+
+            MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor * leafFraction;
             //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
-            GrowthDuration = leafCohortParameterseafCohortParameters.GrowthDuration.Value() * leafFraction;
-            LagDuration = leafCohortParameterseafCohortParameters.LagDuration.Value();
-            SenescenceDuration = leafCohortParameterseafCohortParameters.SenescenceDuration.Value();
-            DetachmentLagDuration = leafCohortParameterseafCohortParameters.DetachmentLagDuration.Value();
-            DetachmentDuration = leafCohortParameterseafCohortParameters.DetachmentDuration.Value();
-            StructuralFraction = leafCohortParameterseafCohortParameters.StructuralFraction.Value();
-            SpecificLeafAreaMax = leafCohortParameterseafCohortParameters.SpecificLeafAreaMax.Value();
-            SpecificLeafAreaMin = leafCohortParameterseafCohortParameters.SpecificLeafAreaMin.Value();
-            MaximumNConc = leafCohortParameterseafCohortParameters.MaximumNConc.Value();
-            MinimumNConc = leafCohortParameterseafCohortParameters.MinimumNConc.Value();
-            StorageFraction = leafCohortParameterseafCohortParameters.StorageFraction.Value();
-            InitialNConc = leafCohortParameterseafCohortParameters.InitialNConc.Value();
+            GrowthDuration = leafCohortParameters.GrowthDuration.Value() * leafFraction;
+            LagDuration = leafCohortParameters.LagDuration.Value();
+            SenescenceDuration = leafCohortParameters.SenescenceDuration.Value();
+            DetachmentLagDuration = leafCohortParameters.DetachmentLagDuration.Value();
+            DetachmentDuration = leafCohortParameters.DetachmentDuration.Value();
+            StructuralFraction = leafCohortParameters.StructuralFraction.Value();
+            SpecificLeafAreaMax = leafCohortParameters.SpecificLeafAreaMax.Value();
+            SpecificLeafAreaMin = leafCohortParameters.SpecificLeafAreaMin.Value();
+            MaximumNConc = leafCohortParameters.MaximumNConc.Value();
+            MinimumNConc = leafCohortParameters.MinimumNConc.Value();
+            StorageFraction = leafCohortParameters.StorageFraction.Value();
+            InitialNConc = leafCohortParameters.InitialNConc.Value();
             if (Area > 0) //Only set age for cohorts that have an area specified in the xml.
-                Age = Area/MaxArea*GrowthDuration;
-                    //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
-            LiveArea = Area*CohortPopulation;
-            Live.StructuralWt = LiveArea/((SpecificLeafAreaMax + SpecificLeafAreaMin)/2)*StructuralFraction;
-            Live.StructuralN = Live.StructuralWt*InitialNConc;
-            FunctionalNConc = (leafCohortParameterseafCohortParameters.CriticalNConc.Value() -
-                               leafCohortParameterseafCohortParameters.MinimumNConc.Value() * StructuralFraction)*
-                              (1/(1 - StructuralFraction));
-            LuxaryNConc = leafCohortParameterseafCohortParameters.MaximumNConc.Value() -
-                           leafCohortParameterseafCohortParameters.CriticalNConc.Value();
-            Live.MetabolicWt = Live.StructuralWt*1/StructuralFraction - Live.StructuralWt;
+                Age = Area / MaxArea * GrowthDuration;
+            //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
+            LiveArea = Area * CohortPopulation;
+            Live.StructuralWt = LiveArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2) * StructuralFraction;
+            Live.StructuralN = Live.StructuralWt * InitialNConc;
+            FunctionalNConc = (leafCohortParameters.CriticalNConc.Value() -
+                               leafCohortParameters.MinimumNConc.Value() * StructuralFraction) *
+                              (1 / (1 - StructuralFraction));
+            LuxaryNConc = leafCohortParameters.MaximumNConc.Value() -
+                           leafCohortParameters.CriticalNConc.Value();
+            Live.MetabolicWt = Live.StructuralWt * 1 / StructuralFraction - Live.StructuralWt;
             Live.StorageWt = 0;
-            Live.StructuralN = Live.StructuralWt*MinimumNConc;
-            Live.MetabolicN = Live.MetabolicWt*FunctionalNConc;
+            Live.StructuralN = Live.StructuralWt * MinimumNConc;
+            Live.MetabolicN = Live.MetabolicWt * FunctionalNConc;
             Live.StorageN = 0;
-            NReallocationFactor = leafCohortParameterseafCohortParameters.NReallocationFactor.Value();
-            DMReallocationFactor = leafCohortParameterseafCohortParameters.DMReallocationFactor.Value();
-            NRetranslocationFactor = leafCohortParameterseafCohortParameters.NRetranslocationFactor.Value();
-            DMRetranslocationFactor = leafCohortParameterseafCohortParameters.DMRetranslocationFactor.Value();
-            LeafSizeShape = leafCohortParameterseafCohortParameters.LeafSizeShapeParameter.Value();
+            NReallocationFactor = leafCohortParameters.NReallocationFactor.Value();
+            DMReallocationFactor = leafCohortParameters.DMReallocationFactor.Value();
+            NRetranslocationFactor = leafCohortParameters.NRetranslocationFactor.Value();
+            DMRetranslocationFactor = leafCohortParameters.DMRetranslocationFactor.Value();
+            LeafSizeShape = leafCohortParameters.LeafSizeShapeParameter.Value();
         }
 
         /// <summary>Does the potential growth.</summary>
@@ -812,13 +822,13 @@ namespace Models.PMF.Organs
                 //Leaf area growth parameters
                 DeltaPotentialArea = PotentialAreaGrowthFunction(thermalTime);
                 //Calculate delta leaf area in the absence of water stress
-                DeltaWaterConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStress.Value();
+                DeltaStressConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStress.Value();
                 //Reduce potential growth for water stress
 
                 CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
                 ShadeInducedSenRate = leafCohortParameters.ShadeInducedSenescenceRate.Value();
                 SenessingLeafRelativeSize = leafCohortParameters.SenessingLeafRelativeSize.Value();
-                SenescedFrac = FractionSenescing(thermalTime, propnStemMortality, SenessingLeafRelativeSize);
+                SenescedFrac = FractionSenescing(thermalTime, propnStemMortality, SenessingLeafRelativeSize, leafCohortParameters);
 
                 // Doing leaf mass growth in the cohort
                 Biomass liveBiomass = new Biomass(Live);
@@ -884,7 +894,7 @@ namespace Models.PMF.Organs
             if (!IsAppeared)
                 return;
 
-            //Acellerate thermal time accumulation if crop is water stressed.
+            //Accellerate thermal time accumulation if crop is water stressed.
             double thermalTime;
             if (IsFullyExpanded && IsNotSenescing)
                 thermalTime = tt * leafCohortParameters.DroughtInducedLagAcceleration.Value();
@@ -894,8 +904,19 @@ namespace Models.PMF.Organs
 
             //Growing leaf area after DM allocated
             DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation)*SpecificLeafAreaMax;
+            //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
+            double deltaActualArea = Math.Min(DeltaStressConstrainedArea, DeltaCarbonConstrainedArea);
+
+            //Modify leaf area using tillering approach
+            double totalf = ApexGroupSize[0];
+            for(int i=1; i< ApexGroupAge.Count;i++)
+            {
+                double f = leafCohortParameters.LeafSizeAgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
+                totalf += f * Leaf.ApexGroupSize[i];
+            }
+
             //Fixme.  Live.Storage should probably be included in DM supply for leaf growth also
-            double deltaActualArea = Math.Min(DeltaWaterConstrainedArea, DeltaCarbonConstrainedArea);
+            deltaActualArea = deltaActualArea * totalf / ApexGroupSize.Sum();
             LiveArea += deltaActualArea;
             
             //Senessing leaf area
@@ -1053,33 +1074,52 @@ namespace Models.PMF.Organs
         /// <param name="tt">The tt.</param>
         /// <param name="stemMortality">The stem mortality.</param>
         /// <param name="senessingLeafRelativeSize">The relative size of senessing tillers leaves relative to the other leaves in the cohort</param>
+        /// <param name="leafCohortParameters">The associated leaf cohort parameters</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Bad Fraction Senescing</exception>
-        public double FractionSenescing(double tt, double stemMortality, double senessingLeafRelativeSize)
+        public double FractionSenescing(double tt, double stemMortality, double senessingLeafRelativeSize, Leaf.LeafCohortParameters leafCohortParameters)
         {
             //Calculate fraction of leaf area senessing based on age and shading.  This is used to to calculate change in leaf area and Nreallocation supply.
             if (!IsAppeared)
                 return 0;
 
-            double fracSenAge;
-            double ttInSenPhase = Math.Max(0.0, Age + tt - LagDuration - GrowthDuration);
-            if (ttInSenPhase > 0)
+            double _lagDuration;
+            double _senescenceDuration;
+            double fracSenAge = 0;
+            for (int i = 0; i < ApexGroupAge.Count; i++)
             {
-                double leafDuration = GrowthDuration + LagDuration + SenescenceDuration;
-                double remainingTt = Math.Max(0, leafDuration - Age);
+                if (i == 0)
+                {
+                    _lagDuration = LagDuration;
+                    _senescenceDuration = SenescenceDuration;
+                } else
+                {
+                    _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                    _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                }
+                
+                double ttInSenPhase = Math.Max(0.0, Age + tt - _lagDuration - GrowthDuration);
+                double _fracSenAge = 0;
+                if (ttInSenPhase > 0)
+                {
+                    double leafDuration = GrowthDuration + _lagDuration + _senescenceDuration;
+                    double remainingTt = Math.Max(0, leafDuration - Age);
 
-                if (remainingTt == 0)
-                    fracSenAge = 1;
+                    if (remainingTt == 0)
+                        _fracSenAge = 1;
+                    else
+                        _fracSenAge = Math.Min(1, Math.Min(tt, ttInSenPhase) / remainingTt);
+                    if ((_fracSenAge > 1) || (_fracSenAge < 0))
+                        throw new Exception("Bad Fraction Senescing");
+                }
                 else
-                    fracSenAge = Math.Min(1, Math.Min(tt, ttInSenPhase)/remainingTt);
-                if ((fracSenAge > 1) || (fracSenAge < 0))
-                    throw new Exception("Bad Fraction Senescing");
-            }
-            else
-            {
-                fracSenAge = 0;
-            }
+                {
+                    _fracSenAge = 0;
+                }
 
+                fracSenAge += _fracSenAge * ApexGroupSize[i];
+            }
+            fracSenAge = fracSenAge / ApexGroupSize.Sum();
             MaxLiveArea = Math.Max(MaxLiveArea, LiveArea);
             MaxCohortPopulation = Math.Max(MaxCohortPopulation, CohortPopulation);
 

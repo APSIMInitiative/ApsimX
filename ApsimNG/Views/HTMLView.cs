@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Glade;
 using Gtk;
 using WebKit;
 using MonoMac.AppKit;
@@ -339,13 +338,9 @@ namespace UserInterface.Views
         /// </summary>
         public string ImagePath { get; set; }
 
-        [Widget]
         private VPaned vpaned1 = null;
-        [Widget]
         private VBox vbox2 = null;
-        [Widget]
         private Frame frame1 = null;
-        [Widget]
         private HBox hbox1 = null;
 
         protected IBrowserWidget browser = null;
@@ -357,8 +352,11 @@ namespace UserInterface.Views
         /// </summary>
         public HTMLView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.HTMLView.glade", "vpaned1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.HTMLView.glade");
+            vpaned1 = (VPaned)builder.GetObject("vpaned1");
+            vbox2 = (VBox)builder.GetObject("vbox2");
+            frame1 = (Frame)builder.GetObject("frame1");
+            hbox1 = (HBox)builder.GetObject("hbox1");
             _mainWidget = vpaned1;
             // Handle a temporary browser created when we want to export a map.
             if (owner == null)

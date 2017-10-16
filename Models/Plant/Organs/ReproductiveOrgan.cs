@@ -13,7 +13,7 @@ namespace Models.PMF.Organs
     /// This organ uses a generic model for plant reproductive components.  Yield is calculated from its components in terms of organ number and size (for example, grain number and grain size).  
     /// </summary>
     [Serializable]
-    public class ReproductiveOrgan : BaseOrgan
+    public class ReproductiveOrgan : BaseOrgan, IArbitration
     {
         #region Parameter Input Classes
         /// <summary>The phenology</summary>
@@ -77,6 +77,12 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Class Properties
+
+        /// <summary>The live biomass</summary>
+        public Biomass Live { get; set; }
+
+        /// <summary>The dead biomass</summary>
+        public Biomass Dead { get; set; }
 
         /// <summary>The number</summary>
         [XmlIgnore]
@@ -147,7 +153,14 @@ namespace Models.PMF.Organs
 
         #region Functions
 
-                /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <summary>Initializes a new instance of the <see cref="ReproductiveOrgan"/> class.</summary>
+        public ReproductiveOrgan()
+        {
+            Live = new Biomass();
+            Dead = new Biomass();
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
@@ -223,11 +236,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (Wt > 0.0)
+            Biomass total = Live + Dead;
+            if (total.Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
             }
 
             Clear();
@@ -321,14 +335,47 @@ namespace Models.PMF.Organs
                 return MinimumNConc.Value();
             }
         }
+
+        /// <summary>Gets the total biomass</summary>
+        public Biomass Total { get { return Live + Dead; } }
+
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
+
+
+        /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
+        [Units("g/g")]
+        public double Nconc
+        {
+            get
+            {
+                if (Total.Wt > 0.0)
+                    return N / Wt;
+                else
+                    return 0.0;
+            }
+        }
+
         #endregion
-        
+
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The fractions of biomass to remove</param>
         public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
+        }
+
+        /// <summary>Clears this instance.</summary>
+        private void Clear()
+        {
+            Live = new Biomass();
+            Dead = new Biomass();
         }
     }
 }

@@ -7,7 +7,6 @@ namespace UserInterface.Views
 {
     using Interfaces;
     using Gtk;
-    using Glade;
 
 
     /// <summary>The interface for a data store view</summary>
@@ -40,18 +39,17 @@ namespace UserInterface.Views
         private DropDownView dropDownView1;
         private EditView editView2;
 
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private Table table1 = null;
-        [Widget]
         private HBox hbox1 = null;
 
         /// <summary>Initializes a new instance of the <see cref="DataStoreView" /> class.</summary>
         public DataStoreView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.DataStoreView.glade", "vbox1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.DataStoreView.glade");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            table1 = (Table)builder.GetObject("table1");
+            hbox1 = (HBox)builder.GetObject("hbox1");
             _mainWidget = vbox1;
             gridView = new GridView(this);
             vbox1.PackStart(gridView.MainWidget, true, true, 0);

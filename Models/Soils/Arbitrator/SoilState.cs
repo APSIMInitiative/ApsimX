@@ -27,9 +27,9 @@ namespace Models.Soils.Arbitrator
         }
 
         /// <summary>Initialises this instance.</summary>
-        public void Initialise()
+        public void Initialise(List<IModel> zones)
         {
-            foreach (Zone Z in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
+            foreach (Zone Z in zones)
             {
                 Soil soil = Apsim.Child(Z, typeof(Soil)) as Soil;
                 if (soil != null)

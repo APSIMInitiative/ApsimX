@@ -16,14 +16,9 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class BaseOrgan : Model, IOrgan, IArbitration
+    public abstract class BaseOrgan : Model, IOrgan
     {
         #region Links to other models or compontnets
-        /// <summary>The live</summary>
-        [Link] [DoNotDocument] public Biomass Live = null;
-        
-        /// <summary>The dead</summary>
-        [Link] [DoNotDocument] public Biomass Dead = null;
 
         /// <summary>The plant</summary>
         [Link]
@@ -70,6 +65,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the minimum nconc.</summary>
         [XmlIgnore]
         virtual public double MinNconc { get { return 0; } }
+
         #endregion
 
         #region Soil Arbitrator interface
@@ -83,24 +79,6 @@ namespace Models.PMF.Organs
 
         /// <summary>Growth Respiration</summary>
         public double GrowthRespiration { get; set; }
-
-        /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
-        public double Wt { get { return Live.Wt + Dead.Wt; } }
-
-        /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
-        public double N { get { return Live.N + Dead.N; } }
-
-        /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
-        public double Nconc
-        {
-            get
-            {
-                if (Wt > 0.0)
-                    return N / Wt;
-                else
-                    return 0.0;
-            }
-        }
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [XmlIgnore]
@@ -150,7 +128,6 @@ namespace Models.PMF.Organs
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
-            Clear();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>
@@ -179,38 +156,6 @@ namespace Models.PMF.Organs
         #endregion
         
         #region Organ functions
-        ///// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        ///// <param name="tags">The list of tags to add to.</param>
-        ///// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        ///// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        //public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        //{
-        //    // add a heading.
-        //    tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-        //    // write description of this class.
-        //    AutoDocumentation.GetClassDescription(this, tags, indent);
-
-        //    // write a list of constant functions.
-        //    foreach (IModel child in Apsim.Children(this, typeof(Constant)))
-        //        child.Document(tags, -1, indent);
-
-        //    // write children.
-        //    foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-        //    {
-        //        if (child is Constant || child is Biomass || child is CompositeBiomass || child is ArrayBiomass)
-        //        { } // don't document.
-        //        else
-        //            child.Document(tags, headingLevel + 1, indent);
-        //    }
-        //}
-
-        /// <summary>Clears this instance.</summary>
-        virtual protected void Clear()
-        {
-            Live.Clear();
-            Dead.Clear();
-        }
 
         /// <summary>Does the zeroing of some variables.</summary>
         virtual protected void DoDailyCleanup()

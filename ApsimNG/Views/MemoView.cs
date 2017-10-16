@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using Glade;
 using Gtk;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace UserInterface.Views
 {
@@ -39,11 +37,8 @@ namespace UserInterface.Views
         public event EventHandler<EditorArgs> MemoLeave;
         public event EventHandler<EditorArgs> MemoChange;
 
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         public TextView textView = null;
-        [Widget]
         private Label label1 = null;
 
         private class MenuInfo
@@ -56,8 +51,10 @@ namespace UserInterface.Views
         
         public MemoView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.MemoView.glade", "vbox1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MemoView.glade");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            textView = (TextView)builder.GetObject("textView");
+            label1 = (Label)builder.GetObject("label1");
             _mainWidget = vbox1;
             textView.ModifyFont(Pango.FontDescription.FromString("monospace"));
             textView.FocusOutEvent += richTextBox1_Leave;

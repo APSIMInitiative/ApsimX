@@ -5,15 +5,13 @@
 //-----------------------------------------------------------------------
 namespace Models.Report
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using Factorial;
-    using System.Xml.Serialization;
     using System.IO;
-    using System.Runtime.Serialization.Formatters.Binary;
+    using System.Linq;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -27,16 +25,34 @@ namespace Models.Report
     [ValidParent(ParentType = typeof(Simulation))]
     public class Report : Model
     {
-        /// <summary>
-        /// The columns to write to the data store.
-        /// </summary>
+        /// <summary>The columns to write to the data store.</summary>
         private List<IReportColumn> columns = null;
 
-        /// <summary>
-        /// A reference to the simulation
-        /// </summary>
+        /// <summary>An array of column names to write to storage.</summary>
+        private IEnumerable<string> columnNames = null;
+
+        /// <summary>An array of columns units to write to storage.</summary>
+        private IEnumerable<string> columnUnits = null;
+
+        /// <summary>Link to a simulation</summary>
         [Link]
         private Simulation simulation = null;
+
+        /// <summary>Link to a clock model.</summary>
+        [Link]
+        private IClock clock = null;
+
+        /// <summary>Link to a storage service.</summary>
+        [Link]
+        private IStorageWriter storage = null;
+
+        /// <summary>Link to a locator service.</summary>
+        [Link]
+        private ILocator locator = null;
+
+        /// <summary>Link to an event service.</summary>
+        [Link]
+        private IEvent events = null;
 
         /// <summary>Experiment factor names</summary>
         public List<string> ExperimentFactorNames { get; set; }
@@ -62,20 +78,11 @@ namespace Models.Report
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private void OnCommencing(object sender, EventArgs e)
         {
-            List<string> eventNames = new List<string>();
-            for (int i = 0; i < this.EventNames.Length; i++)
-            {
-                if (this.EventNames[i] != string.Empty)
-                    eventNames.Add(this.EventNames[i].Trim());
-            }
-
-            this.EventNames = eventNames.ToArray();
-
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
-            variableNames.Add("Name as Zone");
+            variableNames.Add("Parent.Name as Zone");
             for (int i = 0; i < this.VariableNames.Length; i++)
             {
                 bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
@@ -84,16 +91,47 @@ namespace Models.Report
             }
             this.VariableNames = variableNames.ToArray();
             this.FindVariableMembers();
+
+            // Subscribe to events.
+            foreach (string eventName in EventNames)
+            {
+                if (eventName != string.Empty)
+                    events.Subscribe(eventName.Trim(), DoOutputEvent);
+            }
         }
 
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public void DoOutput()
         {
-            foreach (IReportColumn column in columns)
+            object[] valuesToWrite = new object[columns.Count];
+            for (int i = 0; i < columns.Count; i++)
+                valuesToWrite[i] = columns[i].GetValue();
+            storage.WriteRow(simulation.Name, Name, columnNames, columnUnits, valuesToWrite);
+        }
+
+        /// <summary>Create a text report from tables in this data store.</summary>
+        /// <param name="storage">The data store.</param>
+        /// <param name="fileName">Name of the file.</param>
+        public static void WriteAllTables(IStorageReader storage, string fileName)
+        {
+            // Write out each table for this simulation.
+            foreach (string tableName in storage.TableNames)
             {
-                if (column is ReportColumn)
-                    (column as ReportColumn).StoreValue();
+                DataTable data = storage.GetData(tableName);
+                if (data != null && data.Rows.Count > 0)
+                {
+                    StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
+                    DataTableUtilities.DataTableToText(data, 0, ",", true, report);
+                    report.Close();
+                }
             }
+        }
+
+
+        /// <summary>Called when one of our 'EventNames' events are invoked</summary>
+        public void DoOutputEvent(object sender, EventArgs e)
+        {
+            DoOutput();
         }
 
         /// <summary>
@@ -108,8 +146,10 @@ namespace Models.Report
             foreach (string fullVariableName in this.VariableNames)
             {
                 if (fullVariableName != string.Empty)
-                    this.columns.Add(ReportColumn.Create(fullVariableName, this, this.EventNames));
+                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage, locator, events));
             }
+            columnNames = columns.Select(c => c.Name);
+            columnUnits = columns.Select(c => c.Units);
         }
 
         /// <summary>Add the experiment factor levels as columns.</summary>
@@ -130,27 +170,7 @@ namespace Models.Report
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            // Get rid of old data in .db
-            DataStore dataStore = new DataStore(this);
-
-            // Write and store a table in the DataStore
-            if (this.columns != null && this.columns.Count > 0)
-            {
-                ReportTable table = new ReportTable();
-                table.FileName = Path.ChangeExtension(simulation.FileName, ".db");
-                table.SimulationName = simulation.Name;
-                table.TableName = this.Name;
-                table.Columns = new List<IReportColumn>();
-                table.Columns.AddRange(columns);
-                table.Flatten();
-                dataStore.WriteTable(table);
-
-                this.columns.Clear();
-                this.columns = null;
-            }
-
-            dataStore.Disconnect();
-            dataStore = null;
+            storage.CompletedWritingSimulationData(simulation.Name);
         }
     }
 }

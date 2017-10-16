@@ -7,6 +7,7 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.IO;
+    using System.Linq;
     using Models;
     using Models.Core;
     using Views;
@@ -22,7 +23,8 @@ namespace UserInterface.Presenters
         private ISummaryView view;
 
         /// <summary>Our data store</summary>
-        private DataStore dataStore;
+        [Link]
+        private IStorageReader dataStore = null;
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model to work with</param>
@@ -40,7 +42,7 @@ namespace UserInterface.Presenters
                 if (simulation.Parent is Experiment)
                 {
                     Experiment experiment = simulation.Parent as Experiment;
-                    string[] simulationNames = experiment.Names();
+                    string[] simulationNames = experiment.GetSimulationNames().ToArray();
                     this.view.SimulationNames = simulationNames;
                     if (simulationNames.Length > 0)
                         this.view.SimulationName = simulationNames[0];
@@ -50,9 +52,6 @@ namespace UserInterface.Presenters
                     this.view.SimulationNames = new string[] { simulation.Name };
                     this.view.SimulationName = simulation.Name;
                 }
-
-                // create a data store - we'll need it later
-                dataStore = new DataStore(simulation, false);
 
                 // populate the view
                 this.SetHtmlInView();
@@ -65,8 +64,6 @@ namespace UserInterface.Presenters
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            if (dataStore != null)
-                dataStore.Disconnect();
             this.view.SimulationNameChanged -= OnSimulationNameChanged;
         }
 

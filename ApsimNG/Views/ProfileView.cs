@@ -1,5 +1,4 @@
 ﻿using System;
-using Glade;
 using Gtk;
 using UserInterface.Interfaces;
 
@@ -43,17 +42,16 @@ namespace UserInterface.Views
         private GridView ProfileGrid;
         private GridView PropertyGrid;
         private GraphView Graph;
-        [Widget]
         private VPaned vpaned1 = null;
-        [Widget]
         private VPaned vpaned2 = null;
-        [Widget]
         private VBox vbox1 = null;
 
         public ProfileView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.ProfileView.glade", "vpaned1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ProfileView.glade");
+            vpaned1 = (VPaned)builder.GetObject("vpaned1");
+            vpaned2 = (VPaned)builder.GetObject("vpaned2");
+            vbox1 = (VBox)builder.GetObject("vbox1");
             _mainWidget = vpaned1;
             PropertyGrid = new GridView(this);
             vbox1.PackStart(PropertyGrid.MainWidget, true, true, 0);

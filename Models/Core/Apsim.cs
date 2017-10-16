@@ -156,6 +156,16 @@ namespace Models.Core
             {
                 simulation.ClearCaches();
             }
+            else
+            {
+                // If the model didn't have a Simulation object as an ancestor, then it's likely to 
+                // have a Simulations object as one. If so, the Simulations links may need to be updated.
+                var simulations = Apsim.Parent(model, typeof(Simulations)) as Simulations;
+                if (simulations != null)
+                {
+                    simulations.ClearLinks();
+                }
+            }
         }
 
 
@@ -247,10 +257,9 @@ namespace Models.Core
             IModel modelToAdd = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Model;
 
             // Call deserialised
-            Events events = new Events(null);
-            events.AddModelEvents(modelToAdd);
+            Events events = new Events(modelToAdd);
             object[] args = new object[] { true };
-            events.CallEventHandler(modelToAdd, "Deserialised", args);
+            events.Publish("Deserialised", args);
 
             // Correctly parent all models.
             Add(parent, modelToAdd);
@@ -259,7 +268,8 @@ namespace Models.Core
             Apsim.EnsureNameIsUnique(modelToAdd);
 
             // Call OnLoaded
-            events.CallEventHandler(modelToAdd, "Loaded", null);
+            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+            events.Publish("Loaded", new object[] { modelToAdd, loadedArgs });
 
             Locator(parent).Clear();
 
@@ -299,19 +309,18 @@ namespace Models.Core
         /// <returns>The string version of the model</returns>
         public static string Serialise(IModel model)
         {
-            Events events = new Events(null);
-            events.AddModelEvents(model);
+            Events events = new Events(model);
 
             // Let all models know that we're about to serialise.
             object[] args = new object[] { true };
-            events.CallEventHandler(model, "Serialising", args);
+            events.Publish("Serialising", args);
 
             // Do the serialisation
             StringWriter writer = new StringWriter();
             writer.Write(XmlUtilities.Serialise(model, true));
 
             // Let all models know that we have completed serialisation.
-            events.CallEventHandler(model, "Serialised", args);
+            events.Publish("Serialised", args);
 
             // Set the clipboard text.
             return writer.ToString();

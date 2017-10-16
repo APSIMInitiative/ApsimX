@@ -9,6 +9,7 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using Models.Factorial;
 using System.ComponentModel;
+using Models.Core.Runners;
 
 namespace Models.Core
 {
@@ -19,41 +20,28 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Experiment))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model, JobManager.IRunnable, JobManager.IComputationalyTimeConsuming
+    public class Simulation : Model, IJobGenerator
     {
-        /// <summary>The _ is running</summary>
-        private bool _IsRunning = false;
-
-        /// <summary></summary>
-        [NonSerialized]
-        private Events events = null;
-
-        [NonSerialized]
-        private Links links = null;
-
         [NonSerialized]
         private ScopingRules scope = null;
 
-        /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
-        [XmlIgnore]
-        public bool IsCompleted { get; set; }
+        /// <summary>Has this simulation been run?</summary>
+        private bool hasRun;
 
-        /// <summary>Gets the error message. Can be null if no error. Set by JobManager.</summary>
-        [XmlIgnore]
-        public string ErrorMessage { get; set; }
+        /// <summary>
+        /// An enum that is used to indicate message severity when writing messages to the .db
+        /// </summary>
+        public enum ErrorLevel
+        {
+            /// <summary>Information</summary>
+            Information,
 
-        /// <summary>Gets a value indicating whether this instance is computationally time consuming.</summary>
-        public bool IsComputationallyTimeConsuming { get { return true; } }
+            /// <summary>Warning</summary>
+            Warning,
 
-        /// <summary>The timer</summary>
-        [NonSerialized]
-        private Stopwatch timer;
-
-        /// <summary>Occurs when [commencing].</summary>
-        public event EventHandler Commencing;
-
-        /// <summary>Occurs when [completed].</summary>
-        public event EventHandler Completed;
+            /// <summary>Error</summary>
+            Error
+        };
 
         /// <summary>Returns the object responsible for scoping rules.</summary>
         public ScopingRules Scope
@@ -111,122 +99,20 @@ namespace Models.Core
             Locater.Set(namePath, this, value);
         }
 
-
-
-
-        /// <summary>Argument for a DoCommence event.</summary>
-        public class CommenceArgs : EventArgs
-        {
-            /// <summary>Is a cancellation pending?</summary>
-            public BackgroundWorker workerThread;
-        }
-
-        /// <summary>To commence the simulation, this event will be invoked.</summary>
-        public event EventHandler<CommenceArgs> DoCommence;
-
         /// <summary>Return the filename that this simulation sits in.</summary>
         /// <value>The name of the file.</value>
         [XmlIgnore]
         public string FileName { get; set; }
 
-        /// <summary>Return true if the simulation is running.</summary>
-        /// <value>
-        /// <c>true</c> if this instance is running; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsRunning { get { return _IsRunning; } }
-
-
-        /// <summary>Constructor</summary>
-        public Simulation()
+        /// <summary>
+        /// Simulation has completed. Clear scope and locator
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            locater = new Locater();
-            scope = new ScopingRules();
-        }
-
-        /// <summary>Called to start the job.</summary>
-        /// <param name="jobManager">The job manager running this job.</param>
-        /// <param name="workerThread">The thread this job is running on.</param>
-        public void Run(JobManager jobManager, BackgroundWorker workerThread)
-        {
-            try
-            {
-                StartRun();
-                DoRun(jobManager, workerThread);
-                CleanupRun();
-            }
-            catch (ApsimXException err)
-            {
-                ErrorMessage = "ERROR in file: " + FileName + "\r\n" +
-                               "Simulation name: " + Name + "\r\n" +
-                               err.ToString();
-
-                ISummary summary = Apsim.Find(this, typeof(Summary)) as ISummary;
-                if (summary != null)
-                {
-                    summary.WriteMessage(this, ErrorMessage);
-                }
-                CleanupRun();
-
-                throw new Exception(ErrorMessage);
-            }
-            catch (Exception err)
-            {
-                ErrorMessage = "ERROR in file: " + FileName + "\r\n" +
-                               "Simulation name: " + Name + "\r\n" + 
-                               err.ToString();
-
-                ISummary summary = Apsim.Find(this, typeof(Summary)) as ISummary;
-                if (summary != null)
-                {
-                    summary.WriteMessage(this, ErrorMessage);
-                }
-                CleanupRun();
-
-                throw new Exception(ErrorMessage);
-            }
-        }
-
-        /// <summary>Startup the run.</summary>
-        public void StartRun()
-        {
-            timer = new Stopwatch();
-            timer.Start();
-
-            ConnectLinksAndEvents();
-
-            _IsRunning = true;
-
-            Locater.Clear();
-            if (Commencing != null)
-                Commencing.Invoke(this, new EventArgs());
-        }
-
-
-        /// <summary>Perform the run. Will throw if error occurs.</summary>
-        /// <param name="jobManager">The job manager</param>
-        /// <param name="workerThread">The thread this job is running on.</param>
-        public void DoRun(JobManager jobManager, BackgroundWorker workerThread)
-        {
-            Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(this.FileName) + ", Simulation " + this.Name + " has commenced.");
-            if (DoCommence != null)
-                DoCommence.Invoke(jobManager, new CommenceArgs() { workerThread = workerThread } );
-            else
-                throw new ApsimXException(this, "Cannot invoke Commenced");
-        }
-
-        /// <summary>Cleanup after the run.</summary>
-        public void CleanupRun()
-        {
-            _IsRunning = false;
-
-            if (Completed != null)
-                Completed.Invoke(this, null);
-
-            DisconnectLinksAndEvents();
             ClearCaches();
-
-            timer.Stop();
-            Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(this.FileName) + ", Simulation " + this.Name + " complete. Time: " + timer.Elapsed.TotalSeconds.ToString("0.00 sec"));
         }
 
         /// <summary>
@@ -238,40 +124,39 @@ namespace Models.Core
             Locater.Clear();
         }
 
-        /// <summary>Connect all links and events in simulation</summary>
-        public void ConnectLinksAndEvents()
+
+        /// <summary>Simulation runs are about to begin.</summary>
+        [EventSubscribe("BeginRun")]
+        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
-            Scope.Clear();
-            events = new Events(this);
-            events.ConnectEvents();
-            links = new Core.Links();
-            links.Resolve(this);
+            hasRun = false;
         }
 
-        /// <summary>Disconnect all links and events in simulation</summary>
-        public void DisconnectLinksAndEvents()
+        /// <summary>Gets the next job to run</summary>
+        public IRunnable NextJobToRun()
         {
-            events.DisconnectEvents(this);
-            events = null;
-            links.Unresolve(this);
-        }
+            if (Parent is IJobGenerator || hasRun)
+                return null;
+            hasRun = true;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <param name="headingLevel"></param>
-        /// <param name="indent"></param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
+            Simulation simulationToRun;
+            if (this.Parent == null)
+                simulationToRun = this;
+            else
             {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                foreach (IModel model in Children)
-                    model.Document(tags, headingLevel+1, indent);
+                Simulations simulationEngine = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                simulationToRun = Apsim.Clone(this) as Simulation;
+                simulationEngine.MakeSubstitutions(simulationToRun);
             }
+            return new RunSimulation(simulationToRun, doClone: false);
+        }
+
+        /// <summary>Gets a list of simulation names</summary>
+        public IEnumerable<string> GetSimulationNames()
+        {
+            if (Parent is IJobGenerator)
+                return new string[0];
+            return new string[] { Name };
         }
     }
 }

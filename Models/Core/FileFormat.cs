@@ -92,7 +92,7 @@ namespace Models.Core
         /// <param name="node">XML node to read from.</param>
         public ModelWrapper Read(XmlNode node)
         {
-            APSIMFileConverter.ConvertToLatestVersion(node);
+            APSIMFileConverter.ConvertToLatestVersion(node, null);
             
             XmlReader reader = new APSIMFileReader(node);
             reader.Read();

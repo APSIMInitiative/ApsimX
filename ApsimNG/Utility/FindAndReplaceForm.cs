@@ -1,46 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gtk;
-using Glade;
 using Mono.TextEditor;
-using System.IO;
 using Cairo;
+using UserInterface;
 
 namespace Utility
 {
     public class FindAndReplaceForm
     {
-        [Widget]
+        // Gtk Widgets
         private Window window1 = null;
-        [Widget]
         private CheckButton chkMatchCase = null;
-        [Widget]
         private CheckButton chkMatchWholeWord = null;
-        [Widget]
         private Entry txtLookFor = null;
-        [Widget]
         private Entry txtReplaceWith = null;
-        [Widget]
         private Button btnReplace = null;
-        [Widget]
         private Button btnReplaceAll = null;
-        [Widget]
         private Button btnHighlightAll = null;
-        [Widget]
         private Button btnCancel = null;
-        [Widget]
         private Button btnFindPrevious = null;
-        [Widget]
         private Button btnFindNext = null;
-        [Widget]
         private Label lblReplaceWith = null;
 
         private bool selectionOnly = false;
 
         public FindAndReplaceForm()
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.FindAndReplace.glade", "window1");
-            gxml.Autoconnect(this);
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.FindAndReplace.glade");
+            window1 = (Window)builder.GetObject("window1");
+            chkMatchCase = (CheckButton)builder.GetObject("chkMatchCase");
+            chkMatchWholeWord = (CheckButton)builder.GetObject("chkMatchWholeWord");
+            txtLookFor = (Entry)builder.GetObject("txtLookFor");
+            txtReplaceWith = (Entry)builder.GetObject("txtReplaceWith");
+            btnReplace = (Button)builder.GetObject("btnReplace");
+            btnReplaceAll = (Button)builder.GetObject("btnReplaceAll");
+            btnHighlightAll = (Button)builder.GetObject("btnHighlightAll");
+            btnCancel = (Button)builder.GetObject("btnCancel");
+            btnFindPrevious = (Button)builder.GetObject("btnFindPrevious");
+            btnFindNext = (Button)builder.GetObject("btnFindNext");
+            lblReplaceWith = (Label)builder.GetObject("lblReplaceWith");
+
             btnFindNext.Clicked += btnFindNext_Click;
             btnFindPrevious.Clicked += btnFindPrevious_Click;
             btnCancel.Clicked += btnCancel_Click;

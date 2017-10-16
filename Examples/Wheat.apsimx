@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="17">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Wheat</Name>
@@ -31,16 +31,16 @@
         <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Wheat].Zadok.Stage</string>
+          <string>[Wheat].Phenology.Zadok.Stage</string>
           <string>[Wheat].Phenology.CurrentStageName</string>
           <string>[Wheat].AboveGround.Wt</string>
           <string>[Wheat].AboveGround.N</string>
-          <string>[Wheat].Grain.Wt*10 as Yield</string>
+          <string>[Wheat].Grain.Total.Wt*10 as Yield</string>
           <string>[Wheat].Grain.Protein</string>
           <string>[Wheat].Grain.Size</string>
-          <string>[Wheat].Grain.GrainNo</string>
-          <string>[Wheat].Grain.Wt</string>
-          <string>[Wheat].Grain.N</string>
+          <string>[Wheat].Grain.Number</string>
+          <string>[Wheat].Grain.Total.Wt</string>
+          <string>[Wheat].Grain.Total.N</string>
           <string>[Wheat].Total.Wt</string>
         </VariableNames>
         <EventNames>
@@ -606,6 +606,7 @@ namespace Models
 		[Description("Duration of rainfall accumulation (d)")]
 		public int RainDays { get; set;}
 		[Description("Cultivar to be sown")]
+		[Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
 		public string CultivarName { get; set;}
 		[Description("Sowing depth (mm)")]
 		public double SowingDepth { get; set;}		
@@ -694,8 +695,6 @@ namespace Models
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>296</ExplorerWidth>

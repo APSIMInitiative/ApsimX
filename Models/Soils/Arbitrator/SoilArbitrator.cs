@@ -63,6 +63,7 @@ namespace Models.Soils.Arbitrator
     public class SoilArbitrator : Model
     {
         private List<IModel> uptakeModels = null;
+        private List<IModel> zones = null;
 
 
         /// <summary>Called at the start of the simulation.</summary>
@@ -72,6 +73,7 @@ namespace Models.Soils.Arbitrator
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             uptakeModels = Apsim.ChildrenRecursively(Parent, typeof(IUptake));
+            zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone));
         }
 
         /// <summary>Called by clock to do water arbitration</summary>
@@ -99,7 +101,7 @@ namespace Models.Soils.Arbitrator
         private void DoArbitration(Estimate.CalcType arbitrationType)
         {
             SoilState InitialSoilState = new SoilState(this.Parent);
-            InitialSoilState.Initialise();
+            InitialSoilState.Initialise(zones);
 
             Estimate UptakeEstimate1 = new Estimate(this.Parent, arbitrationType, InitialSoilState, uptakeModels);
             Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate1 * 0.5, uptakeModels);

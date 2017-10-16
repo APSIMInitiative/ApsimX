@@ -1,5 +1,4 @@
 ﻿using System;
-using Glade;
 using Gtk;
 
 namespace UserInterface.Views
@@ -25,10 +24,7 @@ namespace UserInterface.Views
 
         public event TitleChangedDelegate OnTitleChanged;
 
-        [Widget]
         private HBox hbox1 = null;
-
-        [Widget]
         private Entry entry1 = null;
 
         /// <summary>
@@ -36,8 +32,9 @@ namespace UserInterface.Views
         /// </summary>
         public TitleView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.TitleView.glade", "hbox1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TitleView.glade");
+            hbox1 = (HBox)builder.GetObject("hbox1");
+            entry1 = (Entry)builder.GetObject("entry1");
             _mainWidget = hbox1;
             entry1.Changed += OnPositionComboChanged;
             _mainWidget.Destroyed += _mainWidget_Destroyed;

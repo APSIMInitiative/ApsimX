@@ -14,7 +14,6 @@
 namespace UserInterface.Views
 {
     using EventArguments;
-    using Glade;
     using Gtk;
     using Interfaces;
     using System;
@@ -57,15 +56,10 @@ namespace UserInterface.Views
         /// <summary>The node path before rename.</summary>
         private string nodePathBeforeRename;
 
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private Toolbar toolStrip = null;
-        [Widget]
         private TreeView treeview1 = null;
-        [Widget]
         private Viewport RightHandView = null;
-        [Widget]
         private Label toolbarlabel = null;
 
         private Menu Popup = new Menu();
@@ -81,8 +75,12 @@ namespace UserInterface.Views
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.ExplorerView.glade", "vbox1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            toolStrip = (Toolbar)builder.GetObject("toolStrip");
+            treeview1 = (TreeView)builder.GetObject("treeview1");
+            RightHandView = (Viewport)builder.GetObject("RightHandView");
+            toolbarlabel = (Label)builder.GetObject("toolbarlabel");
             _mainWidget = vbox1;
             RightHandView.ShadowType = ShadowType.EtchedOut;
 
@@ -181,10 +179,10 @@ namespace UserInterface.Views
                     if (pi != null)
                     {
                         System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (w is ImageMenuItem && handlers != null && handlers.ContainsKey("activate"))
+                        if (handlers != null && handlers.ContainsKey("activate"))
                         {
                             EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as ImageMenuItem).Activated -= handler;
+                            (w as MenuItem).Activated -= handler;
                         }
                     }
                     Popup.Remove(w);

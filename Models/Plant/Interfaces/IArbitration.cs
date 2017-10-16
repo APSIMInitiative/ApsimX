@@ -63,11 +63,8 @@ namespace Models.PMF.Interfaces
         /// <summary>Gets or sets the n fixation cost.</summary>
         double NFixationCost { get; set; }
 
-        /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
-        double Wt { get; }
-
-        /// <summary>Gets the total (live + dead) n (g/m2).</summary>
-        double N { get; }
+        /// <summary>Gets the total biomass</summary>
+        Biomass Total { get; }
     }
 
 

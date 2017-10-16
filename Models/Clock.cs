@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 using Models.Core;
+using System.Threading;
 
 namespace Models
 {
@@ -158,7 +159,7 @@ namespace Models
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoCommence")]
-        private void OnDoCommence(object sender, Simulation.CommenceArgs e)
+        private void OnDoCommence(object sender, Core.Runners.RunSimulation.CommenceArgs e)
         {
             if (DoInitialSummary != null)
                 DoInitialSummary.Invoke(this, args);
@@ -166,15 +167,8 @@ namespace Models
             if (StartOfSimulation != null)
                 StartOfSimulation.Invoke(this, args);
 
-            while (Today <= EndDate)
+            while (Today <= EndDate && !e.CancelToken.IsCancellationRequested)
             {
-                // If this is being run on a background worker thread then check for cancellation
-                if (e != null && e.workerThread != null && e.workerThread.CancellationPending)
-                {
-                    Summary.WriteMessage(this, "Simulation cancelled");
-                    return;
-                }
-
                 if (DoWeather != null)
                     DoWeather.Invoke(this, args);
 
@@ -213,8 +207,7 @@ namespace Models
 
                 if (DoSurfaceOrganicMatterDecomposition != null)
                     DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
-                if (Today.DayOfYear == 16)
-                { }
+
                 if (DoWaterArbitration != null)
                     DoWaterArbitration.Invoke(this, args);
 
@@ -260,38 +253,38 @@ namespace Models
                 if (Today.Day == 31 && Today.Month == 12 && EndOfYear != null)
                     EndOfYear.Invoke(this, args);
 
-				if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
-				{
-					// WholeFarm events performed before APSIM EndOfMonth
-					if (WFUpdatePasture != null)
-						WFUpdatePasture.Invoke(this, args);
-					if (WFDoCutAndCarry != null)
-						WFDoCutAndCarry.Invoke(this, args);
-					if (WFAnimalBreeding != null)
-						WFAnimalBreeding.Invoke(this, args);
-					if (WFPotentialIntake != null)
-						WFPotentialIntake.Invoke(this, args);
-					if (WFGetResourcesRequired != null)
-						WFGetResourcesRequired.Invoke(this, args);
-					if (WFAnimalMilkProduction != null)
-						WFAnimalMilkProduction.Invoke(this, args);
-					if (WFAnimalWeightGain != null)
-						WFAnimalWeightGain.Invoke(this, args);
-					if (WFAnimalDeath != null)
-						WFAnimalDeath.Invoke(this, args);
-					if (WFAnimalMilking != null)
-						WFAnimalMilking.Invoke(this, args);
-					if (WFAnimalManage != null)
-						WFAnimalManage.Invoke(this, args);
-					if (WFAnimalStock != null)
-						WFAnimalStock.Invoke(this, args);
-					if (WFAnimalSell != null)
-						WFAnimalSell.Invoke(this, args);
-					if (WFAgeResources != null)
-						WFAgeResources.Invoke(this, args);
+                if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
+                {
+                    // WholeFarm events performed before APSIM EndOfMonth
+                    if (WFUpdatePasture != null)
+                        WFUpdatePasture.Invoke(this, args);
+                    if (WFDoCutAndCarry != null)
+                        WFDoCutAndCarry.Invoke(this, args);
+                    if (WFAnimalBreeding != null)
+                        WFAnimalBreeding.Invoke(this, args);
+                    if (WFPotentialIntake != null)
+                        WFPotentialIntake.Invoke(this, args);
+                    if (WFGetResourcesRequired != null)
+                        WFGetResourcesRequired.Invoke(this, args);
+                    if (WFAnimalMilkProduction != null)
+                        WFAnimalMilkProduction.Invoke(this, args);
+                    if (WFAnimalWeightGain != null)
+                        WFAnimalWeightGain.Invoke(this, args);
+                    if (WFAnimalDeath != null)
+                        WFAnimalDeath.Invoke(this, args);
+                    if (WFAnimalMilking != null)
+                        WFAnimalMilking.Invoke(this, args);
+                    if (WFAnimalManage != null)
+                        WFAnimalManage.Invoke(this, args);
+                    if (WFAnimalStock != null)
+                        WFAnimalStock.Invoke(this, args);
+                    if (WFAnimalSell != null)
+                        WFAnimalSell.Invoke(this, args);
+                    if (WFAgeResources != null)
+                        WFAgeResources.Invoke(this, args);
 
-					EndOfMonth.Invoke(this, args);
-				}
+                    EndOfMonth.Invoke(this, args);
+                }
 
                 if (EndOfDay != null)
                     EndOfDay.Invoke(this, args);
@@ -301,7 +294,6 @@ namespace Models
 
                 Today = Today.AddDays(1);
             }
-
             Summary.WriteMessage(this, "Simulation terminated normally");
         }
     }

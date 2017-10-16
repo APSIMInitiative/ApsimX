@@ -26,7 +26,8 @@ namespace Models.Soils
         /// <summary>Gets or sets the root wt.</summary>
         /// <value>The root wt.</value>
         [Summary]
-        [Description("Root Weight (kg/ha)")]
+        [Units("kg/ha")]
+        [Description("Root Weight")]
         public double RootWt { get; set; }
 
         /// <summary>Gets or sets the soil cn.</summary>
