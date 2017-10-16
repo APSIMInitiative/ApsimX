@@ -592,13 +592,21 @@ namespace Models.PMF.Phen
             if (StartFractionSt != "")
                 StartFraction = Convert.ToDouble(StartFractionSt);
 
-            int StartPhaseIndex = Phases.IndexOf(PhaseStartingWith(Start));
-            int EndPhaseIndex = Phases.IndexOf(PhaseEndingWith(End));
-            int CurrentPhaseIndex = 0;
-            //Set the index of the current phase, if it is a parallel phase set the index to that of its parallel
-            if (CurrentPhase.PhaseParallel == null)
-                CurrentPhaseIndex = IndexOfPhase(CurrentPhase.Name);
-            else CurrentPhaseIndex = IndexOfPhase(CurrentPhase.PhaseParallel);
+            int StartPhaseIndex = -1;
+            int EndPhaseIndex = -1;
+            for (int i = 0; i < Phases.Count; i++)
+            {
+                if (Phases[i].Start == Start)
+                    StartPhaseIndex = i;
+                if (Phases[i].End == End)
+                    EndPhaseIndex = i;
+            }
+            if (StartPhaseIndex == -1)
+                throw new Exception("Cannot find phase: " + Start);
+            if (EndPhaseIndex == -1)
+                throw new Exception("Cannot find phase: " + End);
+            if (StartPhaseIndex > EndPhaseIndex)
+                throw new Exception("Start phase " + Start + " is after phase " + End);
 
             if (StartPhaseIndex == -1 || EndPhaseIndex == -1)
                 throw new Exception("Cannot test between stages " + Start + " " + End);
