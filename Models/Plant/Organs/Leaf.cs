@@ -298,6 +298,10 @@ namespace Models.PMF.Organs
             /// <summary>The expansion stress</summary>
             [Link]
             public IFunction ExpansionStress = null;
+
+            /// <summary>The expansion stress</summary>
+            public double ExpansionStressValue { get; set; }
+
             /// <summary>The critical n conc</summary>
             [Link]
             public IFunction CriticalNConc = null;
@@ -928,6 +932,7 @@ namespace Models.PMF.Organs
                 foreach (LeafCohort l in Leaves)
                     l.DoFrost(FrostFraction.Value());
 
+            CohortParameters.ExpansionStressValue = CohortParameters.ExpansionStress.Value();
             bool nextExpandingLeaf = false;
             foreach (LeafCohort L in Leaves)
             {
@@ -955,6 +960,7 @@ namespace Models.PMF.Organs
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
+            apexGroupAge.Clear();
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
