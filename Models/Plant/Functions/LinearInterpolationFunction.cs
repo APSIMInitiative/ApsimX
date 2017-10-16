@@ -28,6 +28,8 @@ namespace Models.PMF.Functions
         [Link]
         private ILocator locator = null;
 
+        private Dictionary<double, double> cache = new Dictionary<double, double>();
+
         /// <summary>The x property</summary>
         [Description("XProperty")]
         public string XProperty { get; set; }
@@ -74,6 +76,7 @@ namespace Models.PMF.Functions
             if (YsAreAllTheSame)
                 return XYPairs.Y[0];
 
+            
             string PropertyName = XProperty;
             object v = locator.Get(PropertyName);
             if (v == null)
