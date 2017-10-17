@@ -167,15 +167,6 @@ namespace Models.PMF
             TotalAllocation = new double[Size];
         }
 
-        /// <summary>Create a new biomass allocation type.</summary>
-        /// <param name="organs">The organs.</param>
-        /// <param name="type">The arbitration type</param>
-        public static BiomassArbitrationType Create(string type, IArbitration[] organs)
-        {
-            BiomassArbitrationType BAT = new BiomassArbitrationType();
-            BAT.DoSetup(type, organs);
-            return BAT;
-        }
         /// <summary>Does the dm setup.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="Type">The arbitration type</param>
