@@ -272,8 +272,8 @@ namespace Models.PMF.Organs
                 return new BiomassSupplyType
                 {
                     Fixation = Photosynthesis.Value(),
-                    Retranslocation = DMRetranslocationSupply,
-                    Reallocation = DMReallocationSupply
+                    Retranslocation = DMSupply.Retranslocation,
+                    Reallocation = DMSupply.Reallocation
                 };
             }
         }
