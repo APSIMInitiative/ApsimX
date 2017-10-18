@@ -77,6 +77,13 @@ namespace UserInterface.Views
             combobox1.Changed -= OnPositionComboChanged;
             combobox1.Focused -= OnTitleTextBoxEnter;
             listToggle.Toggled -= OnItemChecked;
+            comboModel.Dispose();
+            comboRender.Dispose();
+            listModel.Dispose();
+            listRender.Dispose();
+            listToggle.Dispose();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private bool settingCombo = false;

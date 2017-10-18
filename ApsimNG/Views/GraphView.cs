@@ -129,6 +129,10 @@ namespace UserInterface.Views
                 }
             }
             Clear();
+            Popup.Dispose();
+            plot1.Destroy();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>

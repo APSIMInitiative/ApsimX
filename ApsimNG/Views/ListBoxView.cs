@@ -111,6 +111,11 @@ namespace UserInterface.Views
             listview.SelectionChanged -= OnSelectionChanged;
             listview.ButtonPressEvent -= OnDoubleClick;
             ClearPopup();
+            listmodel.Dispose();
+            Popup.Dispose();
+            accel.Dispose();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Get or sets the list of valid values.</summary>

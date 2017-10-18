@@ -404,6 +404,10 @@ namespace UserInterface.Views
             {
                 popupWin.Destroy();
             }
+            memoView1.MainWidget.Destroy();
+            memoView1 = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private void Hbox1_Realized(object sender, EventArgs e)

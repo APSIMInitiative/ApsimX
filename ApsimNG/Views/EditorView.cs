@@ -215,7 +215,18 @@
                     }
                 }
             }
+
+            Popup.Dispose();
+            accel.Dispose();
+            scroller.Dispose();
+            completionModel.Dispose();
+            functionPixbuf.Dispose();
+            propertyPixbuf.Dispose();
+            CompletionView.Dispose();
+            CompletionForm.Destroy();
+            textEditor.Destroy();
             _findForm.Destroy();
+            _owner = null;
         }
 
         /// <summary>

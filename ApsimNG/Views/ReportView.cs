@@ -48,6 +48,19 @@ namespace UserInterface.Views
 
             dataStoreView1 = new DataStoreView(this);
             alignment1.Add(dataStoreView1.MainWidget);
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, System.EventArgs e)
+        {
+            VariableEditor.MainWidget.Destroy();
+            VariableEditor = null;
+            FrequencyEditor.MainWidget.Destroy();
+            FrequencyEditor = null;
+            dataStoreView1.MainWidget.Destroy();
+            dataStoreView1 = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Provides access to the variable list.</summary>

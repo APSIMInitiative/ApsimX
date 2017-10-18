@@ -36,6 +36,8 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             textentry1.FocusOutEvent -= OnSelectionChanged;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private string lastText = String.Empty;

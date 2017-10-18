@@ -157,6 +157,8 @@ namespace UserInterface.Views
             cbxRoughage.Toggled -= cbxRoughage_CheckedChanged;
             lbDefaultNames.LeaveNotifyEvent -= lbDefaultNames_Leave;
             lvSupps.CursorChanged -= lvSupps_SelectedIndexChanged;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private void RealEditValidator(object sender, EventArgs e)

@@ -705,7 +705,7 @@ namespace UserInterface.Presenters
 
             // We've just closed Simulations
             // This is a good time to force garbage collection 
-            GC.Collect();
+            GC.Collect(2, GCCollectionMode.Forced, true);
         }
 
         /// <summary>
