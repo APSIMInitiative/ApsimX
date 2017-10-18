@@ -34,6 +34,8 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             checkbutton1.Toggled -= OnCheckChanged;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Gets or sets whether the checkbox is checked.</summary>

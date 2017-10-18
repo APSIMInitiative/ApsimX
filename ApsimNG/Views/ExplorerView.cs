@@ -121,8 +121,8 @@ namespace UserInterface.Views
             treeview1.DragEnd += OnDragEnd;
             treeview1.FocusInEvent += Treeview1_FocusInEvent;
             treeview1.FocusOutEvent += Treeview1_FocusOutEvent;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
             timer.Elapsed += Timer_Elapsed;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -167,6 +167,13 @@ namespace UserInterface.Views
                 }
             }
             ClearPopup();
+            Popup.Dispose();
+            treemodel.Dispose();
+            accel.Dispose();
+            textRender.Dispose();
+            timer.Dispose();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private void ClearPopup()

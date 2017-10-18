@@ -28,6 +28,15 @@ namespace UserInterface.Views
             combobox1.Changed += comboBox1_TextChanged;
             htmlview = new HTMLView(this);
             vbox1.PackEnd(htmlview.MainWidget, true, true, 0);
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            comboModel.Dispose();
+            comboRender.Dispose();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Occurs when the name of the simulation is changed by the user</summary>

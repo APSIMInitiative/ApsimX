@@ -83,6 +83,8 @@ namespace UserInterface.Views
             textView.FocusOutEvent -= richTextBox1_Leave;
             textView.Buffer.Changed -= richTextBox1_TextChanged;
             textView.PopulatePopup -= TextView_PopulatePopup;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>
