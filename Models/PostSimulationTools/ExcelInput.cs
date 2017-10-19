@@ -138,7 +138,8 @@ namespace Models.PostSimulationTools
                 if (table.Columns[icol].DataType == typeof(DateTime))
                 {
                     foreach (DataRow row in table.Rows)
-                        row[icol] = Convert.ToDateTime(row[icol]).Date;
+                        if (!DBNull.Value.Equals(row[icol]))
+                            row[icol] = Convert.ToDateTime(row[icol]).Date;
                 }
         }
     }
