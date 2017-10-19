@@ -39,7 +39,7 @@ namespace UserInterface.Views
 
     }
 
-    public interface IBrowserWidget
+    public interface IBrowserWidget : IDisposable
     {
         void Navigate(string uri);
         void LoadHTML(string html);
@@ -173,6 +173,33 @@ namespace UserInterface.Views
         {
             wb.Document.InvokeScript(command, args);
         }
+
+        // Flag: Has Dispose already been called? 
+        bool disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers. 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern. 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                wb.Dispose();
+                socket.Dispose();
+            }
+
+            // Free any unmanaged objects here. 
+            //
+            disposed = true;
+        }
     }
 
     public class TWWebBrowserSafari : IBrowserWidget
@@ -267,6 +294,34 @@ namespace UserInterface.Views
             }
             wb.StringByEvaluatingJavaScriptFromString(command + "(" + argString + ");");
         }
+
+        // Flag: Has Dispose already been called? 
+        bool disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers. 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern. 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                wb.Dispose();
+                socket.Dispose();
+                scrollWindow.Destroy();
+            }
+
+            // Free any unmanaged objects here. 
+            //
+            disposed = true;
+        }
     }
 
     public class TWWebBrowserWK : IBrowserWidget
@@ -325,6 +380,32 @@ namespace UserInterface.Views
                 argString += obj.ToString();
             }
             wb.ExecuteScript(command + "(" + argString + ")");
+        }
+        // Flag: Has Dispose already been called? 
+        bool disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers. 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern. 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                wb.Dispose();
+                scrollWindow.Destroy();
+            }
+
+            // Free any unmanaged objects here. 
+            //
+            disposed = true;
         }
     }
 
@@ -400,6 +481,8 @@ namespace UserInterface.Views
                 frame1.Unrealized -= Frame1_Unrealized;
                 (browser as TWWebBrowserIE).socket.UnmapEvent += (browser as TWWebBrowserIE).Socket_UnmapEvent;
             }
+            if (browser != null)
+                browser.Dispose();
             if (popupWin != null)
             {
                 popupWin.Destroy();

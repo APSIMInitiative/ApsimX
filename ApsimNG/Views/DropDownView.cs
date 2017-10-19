@@ -48,7 +48,7 @@ namespace UserInterface.Views
         {
             combobox1.Changed -= OnSelectionChanged;
             comboModel.Dispose();
-            comboRender.Dispose();
+            comboRender.Destroy();
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
         }

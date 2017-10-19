@@ -49,7 +49,7 @@ namespace UserInterface.Views
             combobox1.Changed -= OnChanged;
             combobox1.SetCellDataFunc(comboRender, null);
             comboModel.Dispose();
-            comboRender.Dispose();
+            comboRender.Destroy();
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
         }

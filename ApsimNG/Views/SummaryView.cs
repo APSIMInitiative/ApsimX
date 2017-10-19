@@ -34,7 +34,7 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             comboModel.Dispose();
-            comboRender.Dispose();
+            comboRender.Destroy();
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
         }

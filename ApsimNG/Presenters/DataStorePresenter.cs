@@ -72,65 +72,67 @@ namespace UserInterface.Presenters
         /// <summary>Populate the grid control with data.</summary>
         public void PopulateGrid()
         {
-            DataTable data  = GetData();
-
-            // Strip out unwanted columns.
-            if (data != null)
+            using (DataTable data = GetData())
             {
-                int numFrozenColumns = 1;
-                for (int i = 0; i < data.Columns.Count; i++)
+
+                // Strip out unwanted columns.
+                if (data != null)
                 {
-                    if (data.Columns[i].ColumnName.Contains("Date") || data.Columns[i].ColumnName.Contains("Today"))
+                    int numFrozenColumns = 1;
+                    for (int i = 0; i < data.Columns.Count; i++)
                     {
-                        numFrozenColumns = i;
-                        break;
-                    }
-                }
-
-                int simulationId = 0;
-
-                for (int i = 0; i < data.Columns.Count; i++)
-                {
-
-                    if (data.Columns[i].ColumnName == "SimulationID")
-                    {
-                        if (simulationId == 0 && data.Rows.Count > 0)
+                        if (data.Columns[i].ColumnName.Contains("Date") || data.Columns[i].ColumnName.Contains("Today"))
                         {
-                            simulationId = (int)data.Rows[0][i];
+                            numFrozenColumns = i;
+                            break;
                         }
-                        data.Columns.RemoveAt(i);
-                        i--;
                     }
-                    else if (i >= numFrozenColumns &&
-                             this.view.ColumnFilter.Value != string.Empty &&
-                             !data.Columns[i].ColumnName.Contains(this.view.ColumnFilter.Value))
+
+                    int simulationId = 0;
+
+                    for (int i = 0; i < data.Columns.Count; i++)
                     {
-                        data.Columns.RemoveAt(i);
-                        i--;
-                    }
-                }
 
-                // Convert the last dot to a CRLF so that the columns in the grid are narrower.
-                foreach (DataColumn column in data.Columns)
-                {
-                    string units = null;
-                    // Try to obtain units
-                    if (dataStore != null && simulationId != 0)
+                        if (data.Columns[i].ColumnName == "SimulationID")
+                        {
+                            if (simulationId == 0 && data.Rows.Count > 0)
+                            {
+                                simulationId = (int)data.Rows[0][i];
+                            }
+                            data.Columns.RemoveAt(i);
+                            i--;
+                        }
+                        else if (i >= numFrozenColumns &&
+                                 this.view.ColumnFilter.Value != string.Empty &&
+                                 !data.Columns[i].ColumnName.Contains(this.view.ColumnFilter.Value))
+                        {
+                            data.Columns.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    // Convert the last dot to a CRLF so that the columns in the grid are narrower.
+                    foreach (DataColumn column in data.Columns)
                     {
-                        units = dataStore.GetUnits(view.TableList.SelectedValue, column.ColumnName);
+                        string units = null;
+                        // Try to obtain units
+                        if (dataStore != null && simulationId != 0)
+                        {
+                            units = dataStore.GetUnits(view.TableList.SelectedValue, column.ColumnName);
+                        }
+                        int posLastDot = column.ColumnName.LastIndexOf('.');
+                        if (posLastDot != -1)
+                            column.ColumnName = column.ColumnName.Insert(posLastDot + 1, "\r\n");
+
+                        // Add the units, if they're available
+                        if (units != null)
+                            column.ColumnName = column.ColumnName + " " + units;
+
                     }
-                    int posLastDot = column.ColumnName.LastIndexOf('.');
-                    if (posLastDot != -1)
-                        column.ColumnName = column.ColumnName.Insert(posLastDot + 1, "\r\n");
 
-                    // Add the units, if they're available
-                    if (units != null)
-                        column.ColumnName = column.ColumnName + " " + units;
-
+                    this.view.Grid.DataSource = data;
+                    this.view.Grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
                 }
-
-                this.view.Grid.DataSource = data;
-                this.view.Grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
             }
         }
 

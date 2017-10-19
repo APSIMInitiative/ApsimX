@@ -223,7 +223,7 @@ namespace UserInterface.Views
                     {
                         (render as CellRendererCombo).Edited -= ComboRender_Edited;
                     }
-                    render.Dispose();
+                    render.Destroy();
                 }
                 gridview.RemoveColumn(gridview.GetColumn(0));
             }

@@ -80,7 +80,6 @@ namespace UserInterface.Views
             toolStrip = (Toolbar)builder.GetObject("toolStrip");
             treeview1 = (TreeView)builder.GetObject("treeview1");
             RightHandView = (Viewport)builder.GetObject("RightHandView");
-            toolbarlabel = (Label)builder.GetObject("toolbarlabel");
             _mainWidget = vbox1;
             RightHandView.ShadowType = ShadowType.EtchedOut;
 
@@ -165,13 +164,11 @@ namespace UserInterface.Views
                         }
                     }
                 }
+                toolStrip.Remove(child);
+                child.Destroy();
             }
             ClearPopup();
-            Popup.Dispose();
-            treemodel.Dispose();
-            accel.Dispose();
-            textRender.Dispose();
-            timer.Dispose();
+            Popup.Destroy();
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
         }
@@ -192,8 +189,9 @@ namespace UserInterface.Views
                             (w as MenuItem).Activated -= handler;
                         }
                     }
-                    Popup.Remove(w);
                 }
+                Popup.Remove(w);
+                w.Destroy();
             }
         }
 
@@ -358,7 +356,10 @@ namespace UserInterface.Views
         public void PopulateMainToolStrip(List<MenuDescriptionArgs> menuDescriptions)
         {
             foreach (Widget child in toolStrip.Children)
+            {
                 toolStrip.Remove(child);
+                child.Destroy();
+            }
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 if (!hasResource(description.ResourceNameForImage))

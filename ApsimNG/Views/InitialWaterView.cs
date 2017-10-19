@@ -61,7 +61,7 @@ namespace UserInterface.Views
             spinbutton1.Changed -= OnNumericUpDown1ValueChanged;
             combobox1.Changed -= OnComboBox1SelectedValueChanged;
             comboModel.Dispose();
-            comboRender.Dispose();
+            comboRender.Destroy();
             graphView1.MainWidget.Destroy();
             graphView1 = null;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
