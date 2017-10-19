@@ -574,11 +574,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].RadIntTot</VariableName>
           </VariableReference>
-          <VariableReference>
-            <Name>RUEact</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[RUEModel].RueAct</VariableName>
-          </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </RUEModel>
         <LinearInterpolationFunction>
