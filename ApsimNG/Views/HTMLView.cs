@@ -152,7 +152,7 @@ namespace UserInterface.Views
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            while (wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
+            while (wb != null && wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
         }
@@ -193,7 +193,9 @@ namespace UserInterface.Views
             if (disposing)
             {
                 wb.Dispose();
+                wb = null;
                 socket.Dispose();
+                socket = null;
             }
 
             // Free any unmanaged objects here. 
@@ -266,7 +268,7 @@ namespace UserInterface.Views
             // We use a timeout so we don't sit here forever if a document fails to load.
 			Stopwatch watch = new Stopwatch();
 			watch.Start();
-			while (wb.IsLoading && watch.ElapsedMilliseconds < 10000)
+			while (wb != null && wb.IsLoading && watch.ElapsedMilliseconds < 10000)
 				while (Gtk.Application.EventsPending())
 					Gtk.Application.RunIteration();
         }
@@ -314,7 +316,9 @@ namespace UserInterface.Views
             if (disposing)
             {
                 wb.Dispose();
+                wb = null;
                 socket.Dispose();
+                socket = null;
                 scrollWindow.Destroy();
             }
 
@@ -353,7 +357,7 @@ namespace UserInterface.Views
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            while (wb.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
+            while (wb != null && wb.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
         }
@@ -400,6 +404,7 @@ namespace UserInterface.Views
             if (disposing)
             {
                 wb.Dispose();
+                wb = null;
                 scrollWindow.Destroy();
             }
 

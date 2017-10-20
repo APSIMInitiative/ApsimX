@@ -630,7 +630,7 @@ namespace UserInterface.Presenters
             XmlDocument doc = new XmlDocument();
             presenter.Attach(simulations, explorerView, null);
 
-            this.view.AddTab(name, new Gtk.Image(null, "ApsimNG.Resources.apsim logo32.png"), explorerView.MainWidget, onLeftTabControl);
+            this.view.AddTab(name, null, explorerView.MainWidget, onLeftTabControl);
 
             // restore the simulation tree width on the form
             if (simulations.ExplorerWidth == 0)
