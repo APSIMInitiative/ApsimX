@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
     /// 
     /// **Root Growth**
     /// 
-    /// Roots grow downwards through the soil profile, with initial depth determined by sowng depth and the growth rate determined by RootFrontVelocity. 
+    /// Roots grow downwards through the soil profile, with initial depth determined by sowing depth and the growth rate determined by RootFrontVelocity. 
     /// The RootFrontVelocity is modified by multiplying it by the soil's XF value; which represents any resistance posed by the soil to root extension. 
     /// Root depth is also constrained by a maximum root depth.
     /// 
