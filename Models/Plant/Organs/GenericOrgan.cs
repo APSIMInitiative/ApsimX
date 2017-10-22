@@ -126,35 +126,17 @@ namespace Models.PMF.Organs
         /// <summary>The live biomass state at start of the computation round</summary>
         private Biomass StartLive = null;
 
-        /// <summary>The DM supply for retranslocation</summary>
-        protected double DMRetranslocationSupply = 0.0;
+        /// <summary>The dry matter supply</summary>
+        private BiomassSupplyType dryMatterSupply = new BiomassSupplyType();
 
-        /// <summary>The DM supply for reallocation</summary>
-        protected double DMReallocationSupply = 0.0;
+        /// <summary>The nitrogen supply</summary>
+        private BiomassSupplyType nitrogenSupply = new BiomassSupplyType();
 
-        /// <summary>The N supply for retranslocation</summary>
-        private double NRetranslocationSupply = 0.0;
+        /// <summary>The dry matter demand</summary>
+        private BiomassPoolType dryMatterDemand = new BiomassPoolType();
 
-        /// <summary>The N supply for reallocation</summary>
-        private double NReallocationSupply = 0.0;
-
-        /// <summary>The structural DM demand</summary>
-        protected double StructuralDMDemand = 0.0;
-
-        /// <summary>The non structural DM demand</summary>
-        protected double StorageDMDemand = 0.0;
-
-        /// <summary>The metabolic DM demand</summary>
-        protected double MetabolicDMDemand = 0.0;
-
-        /// <summary>The structural N demand</summary>
-        protected double StructuralNDemand = 0.0;
-
-        /// <summary>The non structural N demand</summary>
-        protected double StorageNDemand = 0.0;
-
-        /// <summary>The metabolic N demand</summary>
-        protected double MetabolicNDemand = 0.0;
+        /// <summary>The nitrogen demand</summary>
+        private BiomassPoolType nitrogenDemand = new BiomassPoolType();
 
         /// <summary>The potential DM allocation</summary>
         protected double PotentialDMAllocation = 0.0;
@@ -171,20 +153,19 @@ namespace Models.PMF.Organs
             Live = new Biomass();
             Dead = new Biomass();
         }
+
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
             Live = new Biomass();
             Dead = new Biomass();
-            DMRetranslocationSupply = 0.0;
-            DMReallocationSupply = 0.0;
-            NRetranslocationSupply = 0.0;
-            NReallocationSupply = 0.0;
+            dryMatterSupply.Clear();
+            nitrogenSupply.Clear();
             PotentialDMAllocation = 0.0;
             PotentialStructuralDMAllocation = 0.0;
             PotentialMetabolicDMAllocation = 0.0;
-            StructuralDMDemand = 0.0;
-            StorageDMDemand = 0.0;
+            dryMatterDemand.Clear();
+            nitrogenDemand.Clear();
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
@@ -249,52 +230,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the DM demand for this computation round.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
-        public virtual BiomassPoolType DMDemand
-        {
-            get
-            {
-                if (Plant.IsEmerged)
-                    DoDMDemandCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
-                return new BiomassPoolType
-                {
-                    Structural = StructuralDMDemand,
-                    Storage = StorageDMDemand,
-                    Metabolic = 0.0
-                };
-            }
-            set { }
-        }
-
-        /// <summary>Computes the amount of structural DM demanded.</summary>
-        public double DemandedDMStructural()
-        {
-            if (DMConversionEfficiency.Value() > 0.0)
-            {
-                double demandedDM = DMDemandFunction.Value() * StructuralFraction.Value() / DMConversionEfficiency.Value();
-                return demandedDM;
-            }
-            else
-            { // Conversion efficiency is zero!!!!
-                return 0.0;
-            }
-        }
-
-        /// <summary>Computes the amount of non structural DM demanded.</summary>
-        /// <remarks>Assumes that StructuralFraction is always greater than zero</remarks>
-        public double DemandedDMStorage()
-        {
-            if (DMConversionEfficiency.Value() > 0.0)
-            {
-                double theoreticalMaximumDM = MathUtilities.Divide(StartLive.StructuralWt + StructuralDMDemand, StructuralFraction.Value(), 0);
-                double baseAllocated = StartLive.StructuralWt + StartLive.StorageWt + StructuralDMDemand;
-                double demandedDM = MathUtilities.Divide(Math.Max(0.0, theoreticalMaximumDM - baseAllocated), DMConversionEfficiency.Value(), 0);
-                return demandedDM;
-            }
-            else
-            { // Conversion efficiency is zero!!!!
-                return 0.0;
-            }
-        }
+        public virtual BiomassPoolType DMDemand { get { return dryMatterDemand; } }
 
         /// <summary>Sets the dm potential allocation.</summary>
         [XmlIgnore]
@@ -314,24 +250,12 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the DM supply for this computation round.</summary>
         [XmlIgnore]
-        public virtual BiomassSupplyType DMSupply
-        {
-            get
-            {
-                return new BiomassSupplyType
-                {
-                    Fixation = 0.0,
-                    Retranslocation = DMRetranslocationSupply,
-                    Reallocation = DMReallocationSupply
-                };
-            }
-            set { }
-        }
+        public virtual BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
 
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
         {
-             double availableDM = Math.Max(0.0, StartLive.StorageWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
+             double availableDM = Math.Max(0.0, StartLive.StorageWt - dryMatterSupply.Reallocation) * DMRetranslocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
 
@@ -350,58 +274,18 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the N demand for this computation round.</summary>
         [XmlIgnore]
-    public virtual BiomassPoolType NDemand
-    {
-        get
-        {
-            DoNDemandCalculations();
-            return new BiomassPoolType
-            {
-                Structural = StructuralNDemand,
-                Storage = StorageNDemand,
-                Metabolic = MetabolicNDemand
-            };
-        }
-        set { }
-    }
-
-        /// <summary>Computes the N demanded for this organ.</summary>
-        /// <remarks>
-        /// This is basic the old/original function. with added metabolicN
-        /// </remarks>
-        private void DoNDemandCalculations()
-        {
-            double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N);
-            NDeficit *= NitrogenDemandSwitch.Value();
-
-            StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value());
-            MetabolicNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * (CriticalNConc.Value() - MinimumNConc.Value()));
-            StorageNDemand = Math.Max(0, NDeficit - StructuralNDemand - MetabolicNDemand);
-        }
+        public virtual BiomassPoolType NDemand { get { return nitrogenDemand; } }
 
         /// <summary>Gets the N supply for this computation round.</summary>
         [XmlIgnore]
-        public virtual BiomassSupplyType NSupply
-        {
-            get
-            {
-                return new BiomassSupplyType()
-                {
-                    Fixation = 0.0,
-                    Uptake = 0.0,
-                    Retranslocation = NRetranslocationSupply,
-                    Reallocation = NReallocationSupply
-                };
-            }
-            set { }
-        }
+        public virtual BiomassSupplyType NSupply { get { return nitrogenSupply; } }
 
         /// <summary>Computes the N amount available for retranslocation.</summary>
         /// <remarks>This is limited to ensure Nconc does not go below MinimumNConc</remarks>
         public double AvailableNRetranslocation()
         {
                 double labileN = Math.Max(0.0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
-                double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value();
+                double availableN = Math.Max(0.0, labileN - nitrogenSupply.Reallocation) * NRetranslocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
 
@@ -435,7 +319,7 @@ namespace Models.PMF.Organs
                                   + value.Metabolic * (1.0 - DMConversionEfficiency.Value());
 
                 // allocate structural DM
-                Allocated.StructuralWt = Math.Min(value.Structural * DMConversionEfficiency.Value(), StructuralDMDemand);
+                Allocated.StructuralWt = Math.Min(value.Structural * DMConversionEfficiency.Value(), dryMatterDemand.Structural);
                 Live.StructuralWt += Allocated.StructuralWt;
                 
                 // allocate non structural DM
@@ -472,7 +356,7 @@ namespace Models.PMF.Organs
                 Allocated.MetabolicN += value.Metabolic;
 
                 // Retranslocation
-                if (MathUtilities.IsGreaterThan(value.Retranslocation, StartLive.StorageN - NRetranslocationSupply))
+                if (MathUtilities.IsGreaterThan(value.Retranslocation, StartLive.StorageN - nitrogenSupply.Retranslocation))
                     throw new Exception("N retranslocation exceeds non structural nitrogen in organ: " + Name);
                 Live.StorageN -= value.Retranslocation;
                 Allocated.StorageN -= value.Retranslocation;
@@ -572,25 +456,48 @@ namespace Models.PMF.Organs
             if (Plant.IsEmerged)
             {
                 StartLive = Live;
-                DoSupplyCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
+                CalculateSupplyDemand(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
             }
         }
 
         /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
-        virtual public void DoSupplyCalculations()
+        private void CalculateSupplyDemand()
         {
-            DMRetranslocationSupply = AvailableDMRetranslocation();
-            DMReallocationSupply = AvailableDMReallocation();
-            NRetranslocationSupply = AvailableNRetranslocation();
-            NReallocationSupply = AvailableNReallocation();
+            // Supply calculation
+            dryMatterSupply.Retranslocation = AvailableDMRetranslocation();
+            dryMatterSupply.Reallocation = AvailableDMReallocation();
+            dryMatterSupply.Fixation = 0;
+            dryMatterSupply.Uptake = 0;
+            nitrogenSupply.Retranslocation = AvailableNRetranslocation();
+            nitrogenSupply.Reallocation = AvailableNReallocation();
+            nitrogenSupply.Fixation = 0;
+            nitrogenSupply.Uptake = 0;
+
+            // Demand calculation
+            dryMatterDemand.Structural = DemandedDMStructural();
+            dryMatterDemand.Storage = DemandedDMStorage();
+            dryMatterDemand.Metabolic = 0;
+
+            double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N);
+            NDeficit *= NitrogenDemandSwitch.Value();
+            nitrogenDemand.Structural = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value());
+            nitrogenDemand.Metabolic = Math.Min(NDeficit, PotentialStructuralDMAllocation * (CriticalNConc.Value() - MinimumNConc.Value()));
+            nitrogenDemand.Storage = Math.Max(0, NDeficit - nitrogenDemand.Structural - nitrogenDemand.Metabolic);
         }
 
-        /// <summary>Computes the DM and N amounts demanded this computation round</summary>
-        virtual public void DoDMDemandCalculations()
+        /// <summary>Computes the amount of structural DM demanded.</summary>
+        private double DemandedDMStructural()
         {
-            StructuralDMDemand = DemandedDMStructural();
-            StorageDMDemand = DemandedDMStorage();
-            //Note: Metabolic is assumed to be zero
+            return DMDemandFunction.Value() * StructuralFraction.Value() / DMConversionEfficiency.Value();
+        }
+
+        /// <summary>Computes the amount of non structural DM demanded.</summary>
+        /// <remarks>Assumes that StructuralFraction is always greater than zero</remarks>
+        private double DemandedDMStorage()
+        {
+            double theoreticalMaximumDM = MathUtilities.Divide(StartLive.StructuralWt + dryMatterDemand.Structural, StructuralFraction.Value(), 0);
+            double baseAllocated = StartLive.StructuralWt + StartLive.StorageWt + dryMatterDemand.Structural;
+            return MathUtilities.Divide(Math.Max(0.0, theoreticalMaximumDM - baseAllocated), DMConversionEfficiency.Value(), 0);
         }
 
         /// <summary>Does the nutrient allocations.</summary>

@@ -39,20 +39,20 @@ namespace Models.PMF.Interfaces
         /// <summary>Sets the dm potential allocation.</summary>
         BiomassPoolType DMPotentialAllocation { set; }
 
-        /// <summary>Gets or sets the dm demand.</summary>
-        BiomassPoolType DMDemand { get; set; }
+        /// <summary>Gets the dm demand.</summary>
+        BiomassPoolType DMDemand { get; }
 
-        /// <summary>Gets or sets the dm supply.</summary>
-        BiomassSupplyType DMSupply { get; set; }
+        /// <summary>Gets the dm supply.</summary>
+        BiomassSupplyType DMSupply { get; }
 
         /// <summary>Sets the dm allocation.</summary>
         BiomassAllocationType DMAllocation { set; }
 
-        /// <summary>Gets or sets the n demand.</summary>
-        BiomassPoolType NDemand { get; set; }
+        /// <summary>Gets the n demand.</summary>
+        BiomassPoolType NDemand { get; }
 
-        /// <summary>Gets or sets the n supply.</summary>
-        BiomassSupplyType NSupply { get; set; }
+        /// <summary>Gets the n supply.</summary>
+        BiomassSupplyType NSupply { get; }
 
         /// <summary>Sets the n allocation.</summary>
         BiomassAllocationType NAllocation { set; }
@@ -84,6 +84,13 @@ namespace Models.PMF.Interfaces
         /// <summary>Gets or sets the metabolic.</summary>
         /// <value>The metabolic.</value>
         public double Metabolic { get; set; }
+
+        internal void Clear()
+        {
+            Structural = 0;
+            Storage = 0; 
+            Metabolic = 0;
+        }
     }
     /// <summary>
     /// 
@@ -103,6 +110,14 @@ namespace Models.PMF.Interfaces
         /// <summary>Gets or sets the retranslocation.</summary>
         /// <value>The retranslocation.</value>
         public double Retranslocation { get; set; }
+
+        internal void Clear()
+        {
+            Fixation = 0;
+            Reallocation = 0;
+            Uptake = 0;
+            Retranslocation = 0;
+        }
     }
     /// <summary>
     /// 
