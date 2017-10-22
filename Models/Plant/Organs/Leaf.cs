@@ -1133,6 +1133,12 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
 
+        /// <summary>Calculate organ supplies</summary>
+        public void CalculateSupplies() { }
+
+        /// <summary>Calculate organ demands</summary>
+        public void CalculateDemands() { }
+
         /// <summary>Gets or sets the dm demand.</summary>
         [Units("g/m^2")]
         public override BiomassPoolType DMDemand

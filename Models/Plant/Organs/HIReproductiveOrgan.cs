@@ -168,6 +168,13 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         public double N { get { return Total.N; } }
 
+        /// <summary>Calculate organ supplies</summary>
+        public void CalculateSupplies() { }
+
+        /// <summary>Calculate organ demands</summary>
+        public void CalculateDemands() { }
+
+
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The fractions of biomass to remove</param>

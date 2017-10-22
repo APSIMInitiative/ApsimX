@@ -249,6 +249,12 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Arbitrator methods
+        /// <summary>Calculate organ supplies</summary>
+        public void CalculateSupplies() { }
+
+        /// <summary>Calculate organ demands</summary>
+        public void CalculateDemands() { }
+
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

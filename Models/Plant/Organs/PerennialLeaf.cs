@@ -312,6 +312,13 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Arbitrator Methods
+
+        /// <summary>Calculate organ supplies</summary>
+        public void CalculateSupplies() { }
+
+        /// <summary>Calculate organ demands</summary>
+        public void CalculateDemands() { }
+
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
         public double WaterAllocation { get; set; }

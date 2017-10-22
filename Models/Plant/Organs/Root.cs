@@ -567,6 +567,12 @@ namespace Models.PMF.Organs
 
         #region IArbitrator interface
 
+        /// <summary>Calculate organ supplies</summary>
+        public void CalculateSupplies() { }
+
+        /// <summary>Calculate organ demands</summary>
+        public void CalculateDemands() { }
+
         /// <summary>Gets the DM demand for this computation round.</summary>
         public override BiomassPoolType DMDemand
         {

@@ -65,6 +65,12 @@ namespace Models.PMF.Interfaces
 
         /// <summary>Gets the total biomass</summary>
         Biomass Total { get; }
+
+        /// <summary>Calculate organ supplies</summary>
+        void CalculateSupplies();
+
+        /// <summary>Calculate organ demands</summary>
+        void CalculateDemands();
     }
 
 

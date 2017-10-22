@@ -135,8 +135,14 @@ namespace Models.PMF.Organs
         /// <summary>The dry matter demand</summary>
         private BiomassPoolType dryMatterDemand = new BiomassPoolType();
 
-        /// <summary>The nitrogen demand</summary>
-        private BiomassPoolType nitrogenDemand = new BiomassPoolType();
+        /// <summary>Structural nitrogen demand</summary>
+        protected double StructuralNDemand = 0.0;
+
+        /// <summary>The non structural N demand</summary>
+        protected double StorageNDemand = 0.0;
+
+        /// <summary>The metabolic N demand</summary>
+        protected double MetabolicNDemand = 0.0;
 
         /// <summary>The potential DM allocation</summary>
         protected double PotentialDMAllocation = 0.0;
@@ -153,7 +159,6 @@ namespace Models.PMF.Organs
             Live = new Biomass();
             Dead = new Biomass();
         }
-
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
@@ -165,7 +170,6 @@ namespace Models.PMF.Organs
             PotentialStructuralDMAllocation = 0.0;
             PotentialMetabolicDMAllocation = 0.0;
             dryMatterDemand.Clear();
-            nitrogenDemand.Clear();
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
@@ -232,6 +236,37 @@ namespace Models.PMF.Organs
         [Units("g/m^2")]
         public virtual BiomassPoolType DMDemand { get { return dryMatterDemand; } }
 
+        /// <summary>Computes the amount of structural DM demanded.</summary>
+        public double DemandedDMStructural()
+        {
+            if (DMConversionEfficiency.Value() > 0.0)
+            {
+                double demandedDM = DMDemandFunction.Value() * StructuralFraction.Value() / DMConversionEfficiency.Value();
+                return demandedDM;
+            }
+            else
+            { // Conversion efficiency is zero!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Computes the amount of non structural DM demanded.</summary>
+        /// <remarks>Assumes that StructuralFraction is always greater than zero</remarks>
+        public double DemandedDMStorage()
+        {
+            if (DMConversionEfficiency.Value() > 0.0)
+            {
+                double theoreticalMaximumDM = MathUtilities.Divide(StartLive.StructuralWt + dryMatterDemand.Structural, StructuralFraction.Value(), 0);
+                double baseAllocated = StartLive.StructuralWt + StartLive.StorageWt + dryMatterDemand.Structural;
+                double demandedDM = MathUtilities.Divide(Math.Max(0.0, theoreticalMaximumDM - baseAllocated), DMConversionEfficiency.Value(), 0);
+                return demandedDM;
+            }
+            else
+            { // Conversion efficiency is zero!!!!
+                return 0.0;
+            }
+        }
+
         /// <summary>Sets the dm potential allocation.</summary>
         [XmlIgnore]
         public BiomassPoolType DMPotentialAllocation
@@ -274,7 +309,34 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the N demand for this computation round.</summary>
         [XmlIgnore]
-        public virtual BiomassPoolType NDemand { get { return nitrogenDemand; } }
+    public virtual BiomassPoolType NDemand
+    {
+        get
+        {
+            DoNDemandCalculations();
+            return new BiomassPoolType
+            {
+                Structural = StructuralNDemand,
+                Storage = StorageNDemand,
+                Metabolic = MetabolicNDemand
+            };
+        }
+        set { }
+    }
+
+        /// <summary>Computes the N demanded for this organ.</summary>
+        /// <remarks>
+        /// This is basic the old/original function. with added metabolicN
+        /// </remarks>
+        private void DoNDemandCalculations()
+        {
+            double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N);
+            NDeficit *= NitrogenDemandSwitch.Value();
+
+            StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value());
+            MetabolicNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * (CriticalNConc.Value() - MinimumNConc.Value()));
+            StorageNDemand = Math.Max(0, NDeficit - StructuralNDemand - MetabolicNDemand);
+        }
 
         /// <summary>Gets the N supply for this computation round.</summary>
         [XmlIgnore]
@@ -454,16 +516,12 @@ namespace Models.PMF.Organs
         {
             // save current state
             if (Plant.IsEmerged)
-            {
                 StartLive = Live;
-                CalculateSupplyDemand(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
-            }
         }
 
-        /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
-        private void CalculateSupplyDemand()
+        /// <summary>Calculate organ supplies</summary>
+        public virtual void CalculateSupplies()
         {
-            // Supply calculation
             dryMatterSupply.Retranslocation = AvailableDMRetranslocation();
             dryMatterSupply.Reallocation = AvailableDMReallocation();
             dryMatterSupply.Fixation = 0;
@@ -472,32 +530,14 @@ namespace Models.PMF.Organs
             nitrogenSupply.Reallocation = AvailableNReallocation();
             nitrogenSupply.Fixation = 0;
             nitrogenSupply.Uptake = 0;
+        }
 
-            // Demand calculation
+        /// <summary>Calculate organ demands</summary>
+        public virtual void CalculateDemands()
+        {
             dryMatterDemand.Structural = DemandedDMStructural();
             dryMatterDemand.Storage = DemandedDMStorage();
             dryMatterDemand.Metabolic = 0;
-
-            double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N);
-            NDeficit *= NitrogenDemandSwitch.Value();
-            nitrogenDemand.Structural = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value());
-            nitrogenDemand.Metabolic = Math.Min(NDeficit, PotentialStructuralDMAllocation * (CriticalNConc.Value() - MinimumNConc.Value()));
-            nitrogenDemand.Storage = Math.Max(0, NDeficit - nitrogenDemand.Structural - nitrogenDemand.Metabolic);
-        }
-
-        /// <summary>Computes the amount of structural DM demanded.</summary>
-        private double DemandedDMStructural()
-        {
-            return DMDemandFunction.Value() * StructuralFraction.Value() / DMConversionEfficiency.Value();
-        }
-
-        /// <summary>Computes the amount of non structural DM demanded.</summary>
-        /// <remarks>Assumes that StructuralFraction is always greater than zero</remarks>
-        private double DemandedDMStorage()
-        {
-            double theoreticalMaximumDM = MathUtilities.Divide(StartLive.StructuralWt + dryMatterDemand.Structural, StructuralFraction.Value(), 0);
-            double baseAllocated = StartLive.StructuralWt + StartLive.StorageWt + dryMatterDemand.Structural;
-            return MathUtilities.Divide(Math.Max(0.0, theoreticalMaximumDM - baseAllocated), DMConversionEfficiency.Value(), 0);
         }
 
         /// <summary>Does the nutrient allocations.</summary>
