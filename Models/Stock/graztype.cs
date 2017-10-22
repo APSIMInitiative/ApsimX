@@ -366,6 +366,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
+        [Serializable]
         public class TPopnHerbageAttr
         {
             /// <summary>
@@ -400,6 +401,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
+        [Serializable]
         public class TPopnHerbageData
         {
             /// <summary>

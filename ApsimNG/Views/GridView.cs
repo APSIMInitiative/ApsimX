@@ -180,6 +180,17 @@ namespace UserInterface.Views
                 }
             }
             ClearGridColumns();
+            gridmodel.Dispose();
+            Popup.Dispose();
+            accel.Dispose();
+            if (imagePixbuf != null)
+                imagePixbuf.Dispose();
+            if (image1 != null)
+                image1.Dispose();
+            if (table != null)
+                table.Dispose();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>
@@ -212,6 +223,7 @@ namespace UserInterface.Views
                     {
                         (render as CellRendererCombo).Edited -= ComboRender_Edited;
                     }
+                    render.Destroy();
                 }
                 gridview.RemoveColumn(gridview.GetColumn(0));
             }
@@ -484,6 +496,7 @@ namespace UserInterface.Views
                 fixedColumn.Alignment = 0.5f; // For centered alignment of the column header
                 fixedColumn.Visible = false;
                 fixedcolview.AppendColumn(fixedColumn);
+
             }
 
             if (!isPropertyMode)
@@ -503,11 +516,20 @@ namespace UserInterface.Views
                 // We could store data into the grid model, but we don't.
                 // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
                 gridmodel.Append();
+
+                //DataRow dataRow = this.DataSource.Rows[row];
+                //gridmodel.AppendValues(dataRow.ItemArray);
+
             }
             gridview.Model = gridmodel;
 
             SetColumnHeaders(gridview);
             SetColumnHeaders(fixedcolview);
+
+            gridview.EnableSearch = false;
+            //gridview.SearchColumn = 0;
+            fixedcolview.EnableSearch = false;
+            //fixedcolview.SearchColumn = 0;
 
             gridview.Show();
 

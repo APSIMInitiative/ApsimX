@@ -61,6 +61,19 @@ namespace UserInterface.Views
             Graph = new GraphView(this);
             vpaned2.Pack2(Graph.MainWidget, true, false);
             Graph.MainWidget.Realized += GraphWidget_Realized;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, System.EventArgs e)
+        {
+            ProfileGrid.MainWidget.Destroy();
+            ProfileGrid = null;
+            PropertyGrid.MainWidget.Destroy();
+            PropertyGrid = null;
+            Graph.MainWidget.Destroy();
+            Graph = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>

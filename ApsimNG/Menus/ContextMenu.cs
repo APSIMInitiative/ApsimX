@@ -304,9 +304,11 @@ namespace UserInterface.Presenters
             List<DataTable> tables = new List<DataTable>();
             foreach (string tableName in storage.TableNames)
             {
-                DataTable table = storage.GetData(tableName);
-                table.TableName = tableName;
-                tables.Add(table);
+                using (DataTable table = storage.GetData(tableName))
+                {
+                    table.TableName = tableName;
+                    tables.Add(table);
+                }
             }
             try
             {

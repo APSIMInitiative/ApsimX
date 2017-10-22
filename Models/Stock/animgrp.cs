@@ -722,6 +722,7 @@ namespace Models.GrazPlan
     /// <summary>
     /// TStateInfo type. Information required to reset the state in the case of RDP insufficiency                                                                
     /// </summary>
+    [Serializable]
     public struct TStateInfo
     {
         /// <summary>
