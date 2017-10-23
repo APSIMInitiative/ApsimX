@@ -57,6 +57,7 @@ namespace UserInterface.Views
             vbox1.PackStart(PropertyGrid.MainWidget, true, true, 0);
             //vpaned1.Pack1(PropertyGrid.MainWidget, true, true);
             ProfileGrid = new GridView(this);
+            ProfileGrid.NumericFormat = "N3";
             vpaned2.Pack1(ProfileGrid.MainWidget, true, true);
             Graph = new GraphView(this);
             vpaned2.Pack2(Graph.MainWidget, true, false);
