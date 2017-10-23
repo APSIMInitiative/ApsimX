@@ -305,6 +305,9 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
+                string[] organNames = Organs.Select(o => o.Name).ToArray();
+                DM.Clear();
+
                 // Setup DM supplies
                 Organs.ForEach(organ => organ.CalculateSupplies());
                 IEnumerable<BiomassSupplyType> supplies = Organs.Select(o => o.DMSupply);
@@ -321,13 +324,15 @@ namespace Models.PMF
                 DoRetranslocation(Organs.ToArray(), DM, DMArbitrator);      // Allocate supply of retranslocated DM to organs
                 SendPotentialDMAllocations(Organs.ToArray());               // Tell each organ what their potential growth is so organs can calculate their N demands
 
-                supplies = Organs.Select(o => o.NSupply);
+                N.Clear();
+
                 double totalN = Organs.Sum(o => o.Total.N);
+                supplies = Organs.Select(o => o.NSupply);
                 N.SetupSupplies(supplies, totalN);
 
                 demands = Organs.Select(o => o.NDemand);
                 N.SetupDemands(demands);
-                
+
                 DoReAllocation(Organs.ToArray(), N, NArbitrator);           // Allocate N available from reallocation to each organ
             }
         }

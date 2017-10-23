@@ -217,8 +217,19 @@ namespace Models.PMF
         }
         
         /// <summary>Clear the arbitration type</summary>
-        private void Clear()
+        public void Clear()
         {
+            TotalReallocation = 0;
+            TotalRetranslocation = 0;
+            TotalRespiration = 0;
+            Allocated = 0;
+            NotAllocated = 0;
+            SinkLimitation = 0;
+            NutrientLimitation = 0;
+            Start = 0;
+            End = 0;
+            BalanceError = 0;
+
             Array.Clear(StructuralDemand, 0, StructuralDemand.Length);
             Array.Clear(MetabolicDemand, 0, StructuralDemand.Length);
             Array.Clear(StorageDemand, 0, StructuralDemand.Length);
