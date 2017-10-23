@@ -51,6 +51,10 @@ namespace Models.PMF.Organs
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf, IHasWaterDemand
     {
+        /// <summary>The plant</summary>
+        [Link]
+        private Plant Plant = null;
+
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
@@ -240,7 +244,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Live != null)
-                    return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value(), 1);
+                    return MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
                 return 0;
             }
         }
@@ -285,7 +289,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
-        new private void OnPlantSowing(object sender, SowPlant2Type data)
+        private void OnSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == Plant)
             {
@@ -311,9 +315,8 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        private new void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        private void OnPotentialPlantGrowth(object sender, EventArgs e)
         {
-            base.OnDoPotentialPlantGrowth(sender, e);
             if (Plant.IsEmerged)
             {
                 if (MicroClimatePresent == false)

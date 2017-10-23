@@ -1,127 +1,112 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Models.Core;
-using Models.PMF.Functions;
-using System.Xml.Serialization;
-using Models.PMF.Interfaces;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
-using Models.Soils.Arbitrator;
-using Models.PMF.Library;
-
 namespace Models.PMF.Organs
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Interfaces;
+    using Models.PMF.Functions;
+    using Models.PMF.Interfaces;
+    using Models.PMF.Library;
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// This organ is simulated using a generic organ type.
     /// </summary>
-
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
     public class GenericOrgan : Model, IOrgan, IArbitration
     {
-        #region Class Parameter Function Links
-
-        /// <summary>The live biomass</summary>
-        public Biomass Live { get; set; }
-
-        /// <summary>The dead biomass</summary>
-        public Biomass Dead { get; set; }
-
-        /// <summary>Gets the total biomass</summary>
-        public Biomass Total { get { return Live + Dead; } }
+        // ------------------- Fields -------------------
 
         /// <summary>The plant</summary>
         [Link]
-        protected Plant Plant = null;
+        private Plant Plant = null;
 
         /// <summary>The surface organic matter model</summary>
         [Link]
-        public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+        private ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
-        public BiomassRemoval biomassRemovalModel = null;
+        private BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The senescence rate function</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("/d")]
-        IFunction SenescenceRate = null;
+        private IFunction SenescenceRate = null;
 
         /// <summary>The detachment rate function</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("/d")]
-        IFunction DetachmentRateFunction = null;
+        private IFunction DetachmentRateFunction = null;
 
         /// <summary>The N retranslocation factor</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("/d")]
-        IFunction NRetranslocationFactor = null;
+        private IFunction NRetranslocationFactor = null;
 
         /// <summary>The N reallocation factor</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("/d")]
-        IFunction NReallocationFactor = null;
+        private IFunction NReallocationFactor = null;
 
         /// <summary>The nitrogen demand switch</summary>
-        [Link]
-        IFunction NitrogenDemandSwitch = null;
+        [ChildLinkByName]
+        private IFunction NitrogenDemandSwitch = null;
 
         /// <summary>The DM retranslocation factor</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("/d")]
-        IFunction DMRetranslocationFactor = null;
+        private IFunction DMRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("/d")]
-        IFunction DMReallocationFactor = null;
+        private IFunction DMReallocationFactor = null;
 
         /// <summary>The DM structural fraction</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("g/g")]
-        IFunction StructuralFraction = null;
+        private IFunction StructuralFraction = null;
 
         /// <summary>The DM demand function</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("g/m2/d")]
-        IFunction DMDemandFunction = null;
+        private IFunction DMDemandFunction = null;
 
         /// <summary>The initial biomass dry matter weight</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("g/m2")]
-        IFunction InitialWtFunction = null;
-        
+        private IFunction InitialWtFunction = null;
+
         /// <summary>The maximum N concentration</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("g/g")]
-        public IFunction MaximumNConc = null;
+        private IFunction MaximumNConc = null;
 
         /// <summary>The minimum N concentration</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("g/g")]
-        public IFunction MinimumNConc = null;
+        private IFunction MinimumNConc = null;
 
         /// <summary>The critical N concentration</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("g/g")]
-        public IFunction CriticalNConc = null;
+        private IFunction CriticalNConc = null;
 
         /// <summary>The proportion of biomass respired each day</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("/d")]
-        public IFunction MaintenanceRespirationFunction = null;
+        private IFunction MaintenanceRespirationFunction = null;
 
         /// <summary>Dry matter conversion efficiency</summary>
-        [Link]
+        [ChildLinkByName]
         [Units("/d")]
-        public IFunction DMConversionEfficiency = null;
+        private IFunction DMConversionEfficiency = null;
 
-        #endregion
-
-        #region State, supply, demand, and allocation
+        /// <summary>Tolerance for biomass comparisons</summary>
+        private double BiomassToleranceValue = 0.0000000001;   // 10E-10
 
         /// <summary>The live biomass state at start of the computation round</summary>
         private Biomass StartLive = null;
@@ -136,22 +121,22 @@ namespace Models.PMF.Organs
         private BiomassPoolType dryMatterDemand = new BiomassPoolType();
 
         /// <summary>Structural nitrogen demand</summary>
-        protected double StructuralNDemand = 0.0;
+        private double StructuralNDemand = 0.0;
 
         /// <summary>The non structural N demand</summary>
-        protected double StorageNDemand = 0.0;
+        private double StorageNDemand = 0.0;
 
         /// <summary>The metabolic N demand</summary>
-        protected double MetabolicNDemand = 0.0;
+        private double MetabolicNDemand = 0.0;
 
         /// <summary>The potential DM allocation</summary>
-        protected double PotentialDMAllocation = 0.0;
+        private double PotentialDMAllocation = 0.0;
 
         /// <summary>The potential structural DM allocation</summary>
-        protected double PotentialStructuralDMAllocation = 0.0;
+        private double PotentialStructuralDMAllocation = 0.0;
 
         /// <summary>The potential metabolic DM allocation</summary>
-        protected double PotentialMetabolicDMAllocation = 0.0;
+        private double PotentialMetabolicDMAllocation = 0.0;
 
         /// <summary>Constructor</summary>
         public GenericOrgan()
@@ -159,35 +144,18 @@ namespace Models.PMF.Organs
             Live = new Biomass();
             Dead = new Biomass();
         }
-        /// <summary>Clears this instance.</summary>
-        protected virtual void Clear()
-        {
-            Live = new Biomass();
-            Dead = new Biomass();
-            dryMatterSupply.Clear();
-            nitrogenSupply.Clear();
-            PotentialDMAllocation = 0.0;
-            PotentialStructuralDMAllocation = 0.0;
-            PotentialMetabolicDMAllocation = 0.0;
-            dryMatterDemand.Clear();
-            Allocated.Clear();
-            Senesced.Clear();
-            Detached.Clear();
-            Removed.Clear();
-        }
 
-        /// <summary>Clears some variables.</summary>
-        virtual protected void DoDailyCleanup()
-        {
-            Allocated.Clear();
-            Senesced.Clear();
-            Detached.Clear();
-            Removed.Clear();
-        }
+        /// <summary>The live biomass</summary>
+        [XmlIgnore]
+        public Biomass Live { get; set; }
 
-        #endregion
+        /// <summary>The dead biomass</summary>
+        [XmlIgnore]
+        public Biomass Dead { get; set; }
 
-        #region Class properties
+        /// <summary>Gets the total biomass</summary>
+        [XmlIgnore]
+        public Biomass Total { get { return Live + Dead; } }
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [XmlIgnore]
@@ -213,59 +181,14 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double GrowthRespiration { get; set; }
 
-        private double BiomassToleranceValue = 0.0000000001;   // 10E-10
-
-        #endregion
-
-        #region IOrgan interface
-
-        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="value">The fractions of biomass to remove</param>
-        virtual public void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
-        {
-            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
-        }
-
-        #endregion
-
-        #region Arbitrator methods
-
         /// <summary>Gets the DM demand for this computation round.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
         public virtual BiomassPoolType DMDemand { get { return dryMatterDemand; } }
 
-        /// <summary>Computes the amount of structural DM demanded.</summary>
-        public double DemandedDMStructural()
-        {
-            if (DMConversionEfficiency.Value() > 0.0)
-            {
-                double demandedDM = DMDemandFunction.Value() * StructuralFraction.Value() / DMConversionEfficiency.Value();
-                return demandedDM;
-            }
-            else
-            { // Conversion efficiency is zero!!!!
-                return 0.0;
-            }
-        }
-
-        /// <summary>Computes the amount of non structural DM demanded.</summary>
-        /// <remarks>Assumes that StructuralFraction is always greater than zero</remarks>
-        public double DemandedDMStorage()
-        {
-            if (DMConversionEfficiency.Value() > 0.0)
-            {
-                double theoreticalMaximumDM = MathUtilities.Divide(StartLive.StructuralWt + dryMatterDemand.Structural, StructuralFraction.Value(), 0);
-                double baseAllocated = StartLive.StructuralWt + StartLive.StorageWt + dryMatterDemand.Structural;
-                double demandedDM = MathUtilities.Divide(Math.Max(0.0, theoreticalMaximumDM - baseAllocated), DMConversionEfficiency.Value(), 0);
-                return demandedDM;
-            }
-            else
-            { // Conversion efficiency is zero!!!!
-                return 0.0;
-            }
-        }
+        /// <summary>Gets the DM supply for this computation round.</summary>
+        [XmlIgnore]
+        public virtual BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
 
         /// <summary>Sets the dm potential allocation.</summary>
         [XmlIgnore]
@@ -283,86 +206,26 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the DM supply for this computation round.</summary>
-        [XmlIgnore]
-        public virtual BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
-
-        /// <summary>Computes the amount of DM available for retranslocation.</summary>
-        public double AvailableDMRetranslocation()
-        {
-             double availableDM = Math.Max(0.0, StartLive.StorageWt - dryMatterSupply.Reallocation) * DMRetranslocationFactor.Value();
-                if (availableDM < -BiomassToleranceValue)
-                    throw new Exception("Negative DM retranslocation value computed for " + Name);
-
-                return availableDM;
-        }
-
-        /// <summary>Computes the amount of DM available for reallocation.</summary>
-        public double AvailableDMReallocation()
-        {
-            double availableDM = StartLive.StorageWt * SenescenceRate.Value() * DMReallocationFactor.Value();
-            if (availableDM < -BiomassToleranceValue)
-                throw new Exception("Negative DM reallocation value computed for " + Name);
-
-            return availableDM;
-        }
-
         /// <summary>Gets the N demand for this computation round.</summary>
         [XmlIgnore]
-    public virtual BiomassPoolType NDemand
-    {
-        get
+        public virtual BiomassPoolType NDemand
         {
-            DoNDemandCalculations();
-            return new BiomassPoolType
+            get
             {
-                Structural = StructuralNDemand,
-                Storage = StorageNDemand,
-                Metabolic = MetabolicNDemand
-            };
-        }
-        set { }
-    }
-
-        /// <summary>Computes the N demanded for this organ.</summary>
-        /// <remarks>
-        /// This is basic the old/original function. with added metabolicN
-        /// </remarks>
-        private void DoNDemandCalculations()
-        {
-            double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N);
-            NDeficit *= NitrogenDemandSwitch.Value();
-
-            StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value());
-            MetabolicNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * (CriticalNConc.Value() - MinimumNConc.Value()));
-            StorageNDemand = Math.Max(0, NDeficit - StructuralNDemand - MetabolicNDemand);
+                DoNDemandCalculations();
+                return new BiomassPoolType
+                {
+                    Structural = StructuralNDemand,
+                    Storage = StorageNDemand,
+                    Metabolic = MetabolicNDemand
+                };
+            }
+            set { }
         }
 
         /// <summary>Gets the N supply for this computation round.</summary>
         [XmlIgnore]
         public virtual BiomassSupplyType NSupply { get { return nitrogenSupply; } }
-
-        /// <summary>Computes the N amount available for retranslocation.</summary>
-        /// <remarks>This is limited to ensure Nconc does not go below MinimumNConc</remarks>
-        public double AvailableNRetranslocation()
-        {
-                double labileN = Math.Max(0.0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
-                double availableN = Math.Max(0.0, labileN - nitrogenSupply.Reallocation) * NRetranslocationFactor.Value();
-                if (availableN < -BiomassToleranceValue)
-                    throw new Exception("Negative N retranslocation value computed for " + Name);
-
-                return availableN;
-        }
-
-        /// <summary>Computes the N amount available for reallocation.</summary>
-        public double AvailableNReallocation()
-        {
-            double availableN = StartLive.StorageN * SenescenceRate.Value() * NReallocationFactor.Value();
-            if (availableN < -BiomassToleranceValue)
-                throw new Exception("Negative N reallocation value computed for " + Name);
-
-            return availableN;
-        }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
@@ -383,7 +246,7 @@ namespace Models.PMF.Organs
                 // allocate structural DM
                 Allocated.StructuralWt = Math.Min(value.Structural * DMConversionEfficiency.Value(), dryMatterDemand.Structural);
                 Live.StructuralWt += Allocated.StructuralWt;
-                
+
                 // allocate non structural DM
                 if ((value.Storage * DMConversionEfficiency.Value() - DMDemand.Storage) > BiomassToleranceValue)
                     throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
@@ -403,6 +266,7 @@ namespace Models.PMF.Organs
                 Allocated.StorageWt -= value.Retranslocation;
             }
         }
+
         /// <summary>Sets the n allocation.</summary>
         [XmlIgnore]
         public virtual BiomassAllocationType NAllocation
@@ -432,18 +296,23 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the maximum N concentration.</summary>
+        [XmlIgnore]
         public double MaxNconc { get { return MaximumNConc.Value(); } }
 
         /// <summary>Gets the minimum N concentration.</summary>
+        [XmlIgnore]
         public double MinNconc { get { return MinimumNConc.Value(); } }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
+        [XmlIgnore]
         public double Wt { get { return Live.Wt + Dead.Wt; } }
 
         /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
+        [XmlIgnore]
         public double N { get { return Live.N + Dead.N; } }
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
+        [XmlIgnore]
         public double Nconc
         {
             get
@@ -455,68 +324,63 @@ namespace Models.PMF.Organs
             }
         }
 
-        #endregion
-
-        #region Events and Event Handlers
-
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        /// 
-        [EventSubscribe("Commencing")]
-        protected void OnSimulationCommencing(object sender, EventArgs e)
+        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="value">The fractions of biomass to remove</param>
+        public virtual void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
-            StartLive = new Biomass();
-            Allocated = new Biomass();
-            Senesced = new Biomass();
-            Detached = new Biomass();
-            Removed = new Biomass();
-            Live = new Biomass();
-            Dead = new Biomass();
-            Clear();
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
         }
 
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        virtual protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        /// <summary>Computes the amount of structural DM demanded.</summary>
+        public double DemandedDMStructural()
         {
-            if (Plant.IsAlive)
-                DoDailyCleanup();
+            if (DMConversionEfficiency.Value() > 0.0)
+            {
+                double demandedDM = DMDemandFunction.Value() * StructuralFraction.Value() / DMConversionEfficiency.Value();
+                return demandedDM;
+            }
+            else
+            { // Conversion efficiency is zero!!!!
+                return 0.0;
+            }
         }
 
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        protected void OnPlantSowing(object sender, SowPlant2Type data)
+        /// <summary>Computes the amount of non structural DM demanded.</summary>
+        public double DemandedDMStorage()
         {
-            Clear();
+            // Assumes that StructuralFraction is always greater than zero
+            if (DMConversionEfficiency.Value() > 0.0)
+            {
+                double theoreticalMaximumDM = MathUtilities.Divide(StartLive.StructuralWt + dryMatterDemand.Structural, StructuralFraction.Value(), 0);
+                double baseAllocated = StartLive.StructuralWt + StartLive.StorageWt + dryMatterDemand.Structural;
+                double demandedDM = MathUtilities.Divide(Math.Max(0.0, theoreticalMaximumDM - baseAllocated), DMConversionEfficiency.Value(), 0);
+                return demandedDM;
+            }
+            else
+            { // Conversion efficiency is zero!!!!
+                return 0.0;
+            }
         }
 
-        /// <summary>Called when crop is emerging</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">Event data</param>
-        [EventSubscribe("PlantEmerging")]
-        protected void OnPlantEmerging(object sender, EventArgs e)
+        /// <summary>Computes the amount of DM available for retranslocation.</summary>
+        public double AvailableDMRetranslocation()
         {
-            //Initialise biomass and nitrogen
-            Live.StructuralWt = InitialWtFunction.Value();
-            Live.StorageWt = 0.0;
-            Live.StructuralN = Live.StructuralWt * MinimumNConc.Value();
-            Live.StorageN = (InitialWtFunction.Value() * MaximumNConc.Value()) - Live.StructuralN;
+            double availableDM = Math.Max(0.0, StartLive.StorageWt - dryMatterSupply.Reallocation) * DMRetranslocationFactor.Value();
+            if (availableDM < -BiomassToleranceValue)
+                throw new Exception("Negative DM retranslocation value computed for " + Name);
+
+            return availableDM;
         }
 
-        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantGrowth")]
-        protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        /// <summary>Computes the amount of DM available for reallocation.</summary>
+        public double AvailableDMReallocation()
         {
-            // save current state
-            if (Plant.IsEmerged)
-                StartLive = Live;
+            double availableDM = StartLive.StorageWt * SenescenceRate.Value() * DMReallocationFactor.Value();
+            if (availableDM < -BiomassToleranceValue)
+                throw new Exception("Negative DM reallocation value computed for " + Name);
+
+            return availableDM;
         }
 
         /// <summary>Calculate organ supplies</summary>
@@ -539,59 +403,6 @@ namespace Models.PMF.Organs
             dryMatterDemand.Storage = DemandedDMStorage();
             dryMatterDemand.Metabolic = 0;
         }
-
-        /// <summary>Does the nutrient allocations.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantGrowth")]
-        protected void OnDoActualPlantGrowth(object sender, EventArgs e)
-        {
-            if (Plant.IsAlive)
-            {
-                // Do senescence
-                double senescedFrac = SenescenceRate.Value();
-                if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
-                    senescedFrac = 1.0;  // remaining amount too small, senesce all
-                Biomass Loss = Live * senescedFrac;
-                Live.Subtract(Loss);
-                Dead.Add(Loss);
-                Senesced.Add(Loss);
-
-                // Do detachment
-                double detachedFrac = DetachmentRateFunction.Value();
-                if (Dead.Wt * (1.0 - detachedFrac) < BiomassToleranceValue)
-                    detachedFrac = 1.0;  // remaining amount too small, detach all
-                Biomass detaching = Dead * detachedFrac;
-                Dead.Multiply(1.0 - detachedFrac);
-                if (detaching.Wt > 0.0)
-                {
-                    Detached.Add(detaching);
-                    SurfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, Plant.CropType, Name);
-                }
-
-                // Do maintenance respiration
-                MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
-                Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
-                MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
-                Live.StorageWt *= (1 - MaintenanceRespirationFunction.Value());
-            }
-        }
-
-        /// <summary>Called when crop is ending</summary>
-        [EventSubscribe("PlantEnding")]
-        protected void DoPlantEnding(object sender, EventArgs e)
-        {
-            if (Wt > 0.0)
-            {
-                Detached.Add(Live);
-                Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
-            }
-
-            Clear();
-        }
-
-        #endregion
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
@@ -749,7 +560,182 @@ namespace Models.PMF.Organs
 
                 if (biomassRemovalModel != null)
                     biomassRemovalModel.Document(tags, headingLevel + 1, indent);
-            }        
+            }
+        }
+
+        /// <summary>Clears this instance.</summary>
+        protected virtual void Clear()
+        {
+            Live = new Biomass();
+            Dead = new Biomass();
+            dryMatterSupply.Clear();
+            nitrogenSupply.Clear();
+            PotentialDMAllocation = 0.0;
+            PotentialStructuralDMAllocation = 0.0;
+            PotentialMetabolicDMAllocation = 0.0;
+            dryMatterDemand.Clear();
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
+            Removed.Clear();
+        }
+
+        /// <summary>Clears some variables.</summary>
+        protected virtual void DoDailyCleanup()
+        {
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
+            Removed.Clear();
+        }
+
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// 
+        [EventSubscribe("Commencing")]
+        protected void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            StartLive = new Biomass();
+            Allocated = new Biomass();
+            Senesced = new Biomass();
+            Detached = new Biomass();
+            Removed = new Biomass();
+            Live = new Biomass();
+            Dead = new Biomass();
+            Clear();
+        }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+                DoDailyCleanup();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        protected void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+            Clear();
+        }
+
+        /// <summary>Called when crop is emerging</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Event data</param>
+        [EventSubscribe("PlantEmerging")]
+        protected void OnPlantEmerging(object sender, EventArgs e)
+        {
+            //Initialise biomass and nitrogen
+            Live.StructuralWt = InitialWtFunction.Value();
+            Live.StorageWt = 0.0;
+            Live.StructuralN = Live.StructuralWt * MinimumNConc.Value();
+            Live.StorageN = (InitialWtFunction.Value() * MaximumNConc.Value()) - Live.StructuralN;
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            // save current state
+            if (Plant.IsEmerged)
+                StartLive = Live;
+        }
+
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantGrowth")]
+        protected void OnDoActualPlantGrowth(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+            {
+                // Do senescence
+                double senescedFrac = SenescenceRate.Value();
+                if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
+                    senescedFrac = 1.0;  // remaining amount too small, senesce all
+                Biomass Loss = Live * senescedFrac;
+                Live.Subtract(Loss);
+                Dead.Add(Loss);
+                Senesced.Add(Loss);
+
+                // Do detachment
+                double detachedFrac = DetachmentRateFunction.Value();
+                if (Dead.Wt * (1.0 - detachedFrac) < BiomassToleranceValue)
+                    detachedFrac = 1.0;  // remaining amount too small, detach all
+                Biomass detaching = Dead * detachedFrac;
+                Dead.Multiply(1.0 - detachedFrac);
+                if (detaching.Wt > 0.0)
+                {
+                    Detached.Add(detaching);
+                    SurfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, Plant.CropType, Name);
+                }
+
+                // Do maintenance respiration
+                MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
+                Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
+                MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
+                Live.StorageWt *= (1 - MaintenanceRespirationFunction.Value());
+            }
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        protected void DoPlantEnding(object sender, EventArgs e)
+        {
+            if (Wt > 0.0)
+            {
+                Detached.Add(Live);
+                Detached.Add(Dead);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+            }
+
+            Clear();
+        }
+
+        /// <summary>Computes the N demanded for this organ.</summary>
+        /// <remarks>
+        /// This is basic the old/original function. with added metabolicN
+        /// </remarks>
+        protected void DoNDemandCalculations()
+        {
+            double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N);
+            NDeficit *= NitrogenDemandSwitch.Value();
+
+            StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value());
+            MetabolicNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * (CriticalNConc.Value() - MinimumNConc.Value()));
+            StorageNDemand = Math.Max(0, NDeficit - StructuralNDemand - MetabolicNDemand);
+        }
+
+        /// <summary>Computes the N amount available for retranslocation.</summary>
+        private double AvailableNRetranslocation()
+        {
+            // This is limited to ensure Nconc does not go below MinimumNConc
+            double labileN = Math.Max(0.0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
+            double availableN = Math.Max(0.0, labileN - nitrogenSupply.Reallocation) * NRetranslocationFactor.Value();
+            if (availableN < -BiomassToleranceValue)
+                throw new Exception("Negative N retranslocation value computed for " + Name);
+
+            return availableN;
+        }
+
+        /// <summary>Computes the N amount available for reallocation.</summary>
+        private double AvailableNReallocation()
+        {
+            double availableN = StartLive.StorageN * SenescenceRate.Value() * NReallocationFactor.Value();
+            if (availableN < -BiomassToleranceValue)
+                throw new Exception("Negative N reallocation value computed for " + Name);
+
+            return availableN;
         }
     }
 }
