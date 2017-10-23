@@ -637,7 +637,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        protected virtual void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             // save current state
             if (Plant.IsEmerged)

@@ -315,8 +315,9 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        private void OnPotentialPlantGrowth(object sender, EventArgs e)
+        private new void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            base.OnDoPotentialPlantGrowth(sender, e);
             if (Plant.IsEmerged)
             {
                 if (MicroClimatePresent == false)
