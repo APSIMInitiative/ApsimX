@@ -305,18 +305,14 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
-                string[] organNames = Organs.Select(o => o.Name).ToArray();
                 DM.Clear();
+                // Setup DM supplies from each organ
+                BiomassSupplyType[] supplies = Organs.Select(organ => organ.CalculateDryMatterSupply()).ToArray();
 
-                // Setup DM supplies
-                Organs.ForEach(organ => organ.CalculateSupplies());
-                IEnumerable<BiomassSupplyType> supplies = Organs.Select(o => o.DMSupply);
                 double totalWt = Organs.Sum(o => o.Total.Wt);
                 DM.SetupSupplies(supplies, totalWt);
 
-                // Setup DM demands
-                Organs.ForEach(organ => organ.CalculateDemands());
-                IEnumerable<BiomassPoolType> demands = Organs.Select(o => o.DMDemand);
+                BiomassPoolType[] demands = Organs.Select(organ => organ.CalculateDryMatterDemand()).ToArray();
                 DM.SetupDemands(demands);
 
                 DoReAllocation(Organs.ToArray(), DM, DMArbitrator);         // Allocate supply of reallocated DM to organs
@@ -326,11 +322,13 @@ namespace Models.PMF
 
                 N.Clear();
 
+                // Setup N supplies from each organ
+                supplies = Organs.Select(organ => organ.CalculateNitrogenSupply()).ToArray();
                 double totalN = Organs.Sum(o => o.Total.N);
-                supplies = Organs.Select(o => o.NSupply);
                 N.SetupSupplies(supplies, totalN);
 
-                demands = Organs.Select(o => o.NDemand);
+                // Setup N demands
+                demands = Organs.Select(organ => organ.CalculateNitrogenDemand()).ToArray();
                 N.SetupDemands(demands);
 
                 DoReAllocation(Organs.ToArray(), N, NArbitrator);           // Allocate N available from reallocation to each organ
@@ -632,10 +630,10 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Length; i++)
                 N.End += Organs[i].Total.N;
             N.BalanceError = (N.End - (N.Start + N.TotalUptakeSupply + N.TotalPlantSupply));
-            if (N.BalanceError > 0.000000001)
+            if (N.BalanceError > 0.05)
                 throw new Exception("N Mass balance violated!!!!.  Daily Plant N increment is greater than N supply");
             N.BalanceError = (N.End - (N.Start + N.TotalPlantDemand));
-            if (N.BalanceError > 0.000000001)
+            if (N.BalanceError > 0.001)
                 throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
             DM.End = 0;
             for (int i = 0; i < Organs.Length; i++)

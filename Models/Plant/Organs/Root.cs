@@ -518,19 +518,6 @@ namespace Models.PMF.Organs
             NReallocationSupply = AvailableNReallocation();
         }
 
-        /// <summary>Computes the DM and N amounts demanded this computation round</summary>
-        public void DoDMDemandCalculations()
-        {
-            if (Plant.SowingData.Depth < PlantZone.Depth)
-            {
-                StructuralDMDemand = DemandedDMStructural();
-                StorageDMDemand = DemandedDMStorage();
-                TotalDMDemand = StructuralDMDemand + StorageDMDemand + MetabolicDMDemand;
-                ////This sum is currently not necessary as demand is not calculated on a layer basis.
-                //// However it might be some day... and can consider non structural too
-            }
-        }
-
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -567,26 +554,77 @@ namespace Models.PMF.Organs
 
         #region IArbitrator interface
 
-        /// <summary>Calculate organ supplies</summary>
-        public void CalculateSupplies() { }
-
-        /// <summary>Calculate organ demands</summary>
-        public void CalculateDemands() { }
-
-        /// <summary>Gets the DM demand for this computation round.</summary>
-        public override BiomassPoolType DMDemand
+        /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
+        public override BiomassSupplyType CalculateDryMatterSupply()
         {
-            get
+            dryMatterSupply.Fixation = 0.0;
+            dryMatterSupply.Retranslocation = DMRetranslocationSupply;
+            dryMatterSupply.Reallocation = DMReallocationSupply;
+            return dryMatterSupply;
+        }
+
+        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
+        public override BiomassSupplyType CalculateNitrogenSupply()
+        {
+            nitrogenSupply.Fixation = 0.0;
+            nitrogenSupply.Uptake = 0.0;
+            nitrogenSupply.Retranslocation = NRetranslocationSupply;
+            nitrogenSupply.Reallocation = NReallocationSupply;
+
+            return nitrogenSupply;
+        }
+
+        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        public override BiomassPoolType CalculateDryMatterDemand()
+        {
+            if (Plant.SowingData.Depth < PlantZone.Depth)
             {
-                if (Plant.IsEmerged)
-                    DoDMDemandCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
-                return new BiomassPoolType
-                {
-                    Structural = StructuralDMDemand,
-                    Storage = StorageDMDemand,
-                    Metabolic = 0.0
-                };
+                StructuralDMDemand = DemandedDMStructural();
+                StorageDMDemand = DemandedDMStorage();
+                TotalDMDemand = StructuralDMDemand + StorageDMDemand + MetabolicDMDemand;
+                ////This sum is currently not necessary as demand is not calculated on a layer basis.
+                //// However it might be some day... and can consider non structural too
             }
+
+            dryMatterDemand.Structural = StructuralDMDemand;
+            dryMatterDemand.Storage = StorageDMDemand;
+
+            return dryMatterDemand;
+        }
+
+        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
+        public override BiomassPoolType CalculateNitrogenDemand()
+        {
+            // This is basically the old/original function with added metabolicN.
+            // Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum.
+
+            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value();
+            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value() : CriticalNConc.Value();
+
+            StructuralNDemand = 0.0;
+            MetabolicNDemand = 0.0;
+            StorageNDemand = 0.0;
+            foreach (ZoneState Z in Zones)
+            {
+                Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
+                Z.StorageNDemand = new double[Z.soil.Thickness.Length];
+                //Note: MetabolicN is assumed to be zero
+
+                double NDeficit = 0.0;
+                for (int i = 0; i < Z.LayerLive.Length; i++)
+                {
+                    Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * MinimumNConc.Value() * NitrogenSwitch;
+                    NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
+                    Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
+
+                    StructuralNDemand += Z.StructuralNDemand[i];
+                    StorageNDemand += Z.StorageNDemand[i];
+                }
+            }
+            nitrogenDemand.Structural = StructuralNDemand;
+            nitrogenDemand.Storage = StorageNDemand;
+            nitrogenDemand.Metabolic = MetabolicNDemand;
+            return nitrogenDemand;
         }
 
         /// <summary>Computes the amount of structural DM demanded.</summary>
@@ -627,20 +665,6 @@ namespace Models.PMF.Organs
             }
             // Either there is no Storage fraction or conversion efficiency is zero!!!!
             return 0.0;
-        }
-
-        /// <summary>Gets the DM supply for this computation round.</summary>
-        public override BiomassSupplyType DMSupply
-        {
-            get
-            {
-                return new BiomassSupplyType
-                {
-                    Fixation = 0.0,
-                    Retranslocation = DMRetranslocationSupply,
-                    Reallocation = DMReallocationSupply
-                };
-            }
         }
 
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
@@ -738,71 +762,6 @@ namespace Models.PMF.Organs
                 foreach (ZoneState Z in Zones)
                     Z.PartitionRootMass(TotalRAw, Allocated.Wt);
                 needToRecalculateLiveDead = true;
-            }
-        }
-
-        /// <summary>Gets the N demand for this computation round.</summary>
-        [Units("g/m2")]
-        public override BiomassPoolType NDemand
-        {
-            get
-            {
-                DoNDemandCalculations();
-                return new BiomassPoolType
-                {
-                    Structural = StructuralNDemand,
-                    Metabolic = MetabolicNDemand,
-                    Storage = StorageNDemand
-                };
-            }
-        }
-
-        /// <summary>Computes the N demanded for this organ.</summary>
-        /// <remarks>
-        /// This is basic the old/original function. with added metabolicN
-        /// Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum
-        /// </remarks>
-        private void DoNDemandCalculations()
-        {
-            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value();
-            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value() : CriticalNConc.Value();
-
-            StructuralNDemand = 0.0;
-            MetabolicNDemand = 0.0;
-            StorageNDemand = 0.0;
-            foreach (ZoneState Z in Zones)
-            {
-                Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
-                Z.StorageNDemand = new double[Z.soil.Thickness.Length];
-                //Note: MetabolicN is assumed to be zero
-
-                double NDeficit = 0.0;
-                for (int i = 0; i < Z.LayerLive.Length; i++)
-                {
-                    Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * MinimumNConc.Value() * NitrogenSwitch;
-                    NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
-                    Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
-
-                    StructuralNDemand += Z.StructuralNDemand[i];
-                    StorageNDemand += Z.StorageNDemand[i];
-                }
-            }
-        }
-
-
-        /// <summary>Gets the N supply for this computation round.</summary>
-        [XmlIgnore]
-        public override BiomassSupplyType NSupply
-        {
-            get
-            {
-                return new BiomassSupplyType()
-                {
-                    Fixation = 0.0,
-                    Uptake = 0.0, // computed via arbitrator
-                    Retranslocation = NRetranslocationSupply,
-                    Reallocation = NReallocationSupply
-                };
             }
         }
 

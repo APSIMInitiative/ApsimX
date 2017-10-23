@@ -108,12 +108,5 @@ namespace Models.PMF.Organs
             Live.Clear();
             Dead.Clear();
         }
-
-        /// <summary>Calculate organ supplies</summary>
-        public void CalculateSupplies() { }
-
-        /// <summary>Calculate organ demands</summary>
-        public void CalculateDemands() { }
-
     }
 }

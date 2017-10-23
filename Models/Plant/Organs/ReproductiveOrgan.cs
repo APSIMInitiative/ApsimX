@@ -249,11 +249,23 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Arbitrator methods
-        /// <summary>Calculate organ supplies</summary>
-        public void CalculateSupplies() { }
+        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        public override BiomassPoolType CalculateDryMatterDemand()
+        {
+            dryMatterDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency;
+            return dryMatterDemand;
+        }
 
-        /// <summary>Calculate organ demands</summary>
-        public void CalculateDemands() { }
+        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
+        public override BiomassPoolType CalculateNitrogenDemand()
+        {
+            double demand = NFillingRate.Value();
+            demand = Math.Min(demand, MaximumNConc.Value() * PotentialDMAllocation);
+            nitrogenDemand.Structural = demand;
+
+            return nitrogenDemand;
+        }
+
 
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
@@ -277,14 +289,6 @@ namespace Models.PMF.Organs
             }
 
         }
-        /// <summary>Gets or sets the dm demand.</summary>
-        public override BiomassPoolType DMDemand
-        {
-            get
-            {
-                return new BiomassPoolType { Structural = DMDemandFunction.Value() / DMConversionEfficiency};
-            }
-        }
         /// <summary>Sets the dm potential allocation.</summary>
         public override BiomassPoolType DMPotentialAllocation
         {
@@ -305,16 +309,6 @@ namespace Models.PMF.Organs
             {
                 GrowthRespiration = value.Structural *(1- DMConversionEfficiency);
                 Live.StructuralWt += value.Structural * DMConversionEfficiency;
-            }
-        }
-        /// <summary>Gets or sets the n demand.</summary>
-        public override BiomassPoolType NDemand
-        {
-            get
-            {
-                double demand = NFillingRate.Value();
-                demand = Math.Min(demand, MaximumNConc.Value() * PotentialDMAllocation);
-                return new BiomassPoolType { Structural = demand };
             }
         }
         /// <summary>Sets the n allocation.</summary>

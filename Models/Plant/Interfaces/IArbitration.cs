@@ -39,20 +39,20 @@ namespace Models.PMF.Interfaces
         /// <summary>Sets the dm potential allocation.</summary>
         BiomassPoolType DMPotentialAllocation { set; }
 
-        /// <summary>Gets the dm demand.</summary>
-        BiomassPoolType DMDemand { get; }
+        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        BiomassPoolType CalculateDryMatterDemand();
 
-        /// <summary>Gets the dm supply.</summary>
-        BiomassSupplyType DMSupply { get; }
+        /// <summary>Calculate and return dry matter supply (g/m2)</summary>
+        BiomassSupplyType CalculateDryMatterSupply();
 
         /// <summary>Sets the dm allocation.</summary>
         BiomassAllocationType DMAllocation { set; }
 
-        /// <summary>Gets the n demand.</summary>
-        BiomassPoolType NDemand { get; }
+        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
+        BiomassPoolType CalculateNitrogenDemand();
 
-        /// <summary>Gets the n supply.</summary>
-        BiomassSupplyType NSupply { get; }
+        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
+        BiomassSupplyType CalculateNitrogenSupply();
 
         /// <summary>Sets the n allocation.</summary>
         BiomassAllocationType NAllocation { set; }
@@ -65,12 +65,6 @@ namespace Models.PMF.Interfaces
 
         /// <summary>Gets the total biomass</summary>
         Biomass Total { get; }
-
-        /// <summary>Calculate organ supplies</summary>
-        void CalculateSupplies();
-
-        /// <summary>Calculate organ demands</summary>
-        void CalculateDemands();
     }
 
 

@@ -116,37 +116,14 @@ namespace Models.PMF.Organs
                     return 0.0;
             }
         }
-        /// <summary>Gets or sets the dm demand.</summary>
-        /// <value>The dm demand.</value>
-        public override BiomassPoolType DMDemand
-        {
-            get
-            {
-                double CurrentWt = (Live.Wt + Dead.Wt);
-                double NewHI = HI + HIIncrement.Value();
-                double NewWt = NewHI * AboveGroundWt.Value();
-                double Demand = Math.Max(0.0, NewWt - CurrentWt);
-
-                return new BiomassPoolType { Structural = Demand };
-            }
-        }
+       
         /// <summary>Sets the dm allocation.</summary>
         /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
         {
             set { Live.StructuralWt += value.Structural; DailyGrowth = value.Structural; }
         }
-        /// <summary>Gets or sets the n demand.</summary>
-        /// <value>The n demand.</value>
-        public override BiomassPoolType NDemand
-        {
-            get
-            {
-                double demand = Math.Max(0.0, (NConc.Value() * Live.Wt) - Live.N);
-                return new BiomassPoolType { Structural = demand };
-            }
-
-        }
+        
         /// <summary>Sets the n allocation.</summary>
         /// <value>The n allocation.</value>
         public override BiomassAllocationType NAllocation
@@ -168,12 +145,24 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         public double N { get { return Total.N; } }
 
-        /// <summary>Calculate organ supplies</summary>
-        public void CalculateSupplies() { }
+        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        public override BiomassPoolType CalculateDryMatterDemand()
+        {
+            double currentWt = (Live.Wt + Dead.Wt);
+            double newHI = HI + HIIncrement.Value();
+            double newWt = newHI * AboveGroundWt.Value();
+            double demand = Math.Max(0.0, newWt - currentWt);
+            dryMatterDemand.Structural = demand;
+            return dryMatterDemand;
+        }
 
-        /// <summary>Calculate organ demands</summary>
-        public void CalculateDemands() { }
-
+        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
+        public override BiomassPoolType CalculateNitrogenDemand()
+        {
+            double demand = Math.Max(0.0, (NConc.Value() * Live.Wt) - Live.N);
+            nitrogenDemand.Structural = demand;
+            return nitrogenDemand;
+        }
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
@@ -188,6 +177,10 @@ namespace Models.PMF.Organs
         {
             Live.Clear();
             Dead.Clear();
+            dryMatterDemand.Clear();
+            dryMatterSupply.Clear();
+            nitrogenDemand.Clear();
+            nitrogenSupply.Clear();
         }
     }
 }

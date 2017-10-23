@@ -70,6 +70,18 @@ namespace Models.PMF.Organs
         [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
 
+        /// <summary>The dry matter supply</summary>
+        protected BiomassSupplyType dryMatterSupply = new BiomassSupplyType();
+
+        /// <summary>The nitrogen supply</summary>
+        protected BiomassSupplyType nitrogenSupply = new BiomassSupplyType();
+
+        /// <summary>The dry matter demand</summary>
+        protected BiomassPoolType dryMatterDemand = new BiomassPoolType();
+
+        /// <summary>Structural nitrogen demand</summary>
+        protected BiomassPoolType nitrogenDemand = new BiomassPoolType();
+
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         public double MaintenanceRespiration { get; set; }
 
@@ -313,11 +325,44 @@ namespace Models.PMF.Organs
 
         #region Arbitrator Methods
 
-        /// <summary>Calculate organ supplies</summary>
-        public void CalculateSupplies() { }
+        /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
+        public virtual BiomassSupplyType CalculateDryMatterSupply()
+        {
+            dryMatterSupply.Fixation = Photosynthesis.Value();
+            dryMatterSupply.Retranslocation = StartLive.StorageWt * DMRetranslocationFactor.Value();
+            dryMatterSupply.Reallocation = 0.0;
+            return dryMatterSupply;
+        }
 
-        /// <summary>Calculate organ demands</summary>
-        public void CalculateDemands() { }
+        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
+        public virtual BiomassSupplyType CalculateNitrogenSupply()
+        {
+            return nitrogenSupply;
+        }
+
+        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        public virtual BiomassPoolType CalculateDryMatterDemand()
+        {
+            StructuralDMDemand = DMDemandFunction.Value();
+            StorageDMDemand = 0;
+            dryMatterDemand.Structural = StructuralDMDemand;
+            dryMatterDemand.Storage = StorageDMDemand;
+
+            return dryMatterDemand;
+        }
+
+        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
+        public virtual BiomassPoolType CalculateNitrogenDemand()
+        {
+            double StructuralDemand = MinimumNConc.Value() * PotentialDMAllocation;
+            double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);
+
+            nitrogenDemand.Structural = StructuralDemand;
+            nitrogenDemand.Storage = NDeficit;
+
+            return nitrogenDemand;
+        }
+
 
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
@@ -325,46 +370,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the dm demand.</summary>
         [XmlIgnore]
-        public BiomassPoolType DMDemand
-        {
-            get
-            {
-                StructuralDMDemand = DMDemandFunction.Value();
-                StorageDMDemand = 0;
-                return new BiomassPoolType { Structural = StructuralDMDemand, Storage = StorageDMDemand };
-            }
-            set { }
-        }
+        public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
 
         /// <summary>Gets or sets the dm supply.</summary>
         [XmlIgnore]
-        public BiomassSupplyType DMSupply
-        {
-            get
-            {
-                return new BiomassSupplyType
-                {
-                    Fixation = Photosynthesis.Value(),
-                    Retranslocation = StartLive.StorageWt * DMRetranslocationFactor.Value(),
-                    Reallocation = 0.0
-                };
-            }
-            set { }
-        }
+        public BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
 
         /// <summary>Gets or sets the n demand.</summary>
         [XmlIgnore]
-        public BiomassPoolType NDemand
-        {
-            get
-            {
-                double StructuralDemand = MinimumNConc.Value() * PotentialDMAllocation;
-                double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);
-
-                return new BiomassPoolType { Structural = StructuralDemand, Storage = NDeficit };
-            }
-            set { }
-        }
+        public BiomassPoolType NDemand { get { return nitrogenDemand; } }
 
         #endregion
 
@@ -398,6 +412,10 @@ namespace Models.PMF.Organs
             StructuralDMDemand = 0;
             StorageDMDemand = 0;
             LiveFWt = 0;
+            dryMatterDemand.Clear();
+            dryMatterSupply.Clear();
+            nitrogenDemand.Clear();
+            nitrogenSupply.Clear();
         }
         #endregion
 

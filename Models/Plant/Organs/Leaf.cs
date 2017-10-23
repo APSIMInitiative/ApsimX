@@ -893,29 +893,6 @@ namespace Models.PMF.Organs
             return count;
         }
 
-        private BiomassPoolType GetDMDemand()
-        {
-            double StructuralDemand = 0.0;
-            double StorageDemand = 0.0;
-            double MetabolicDemand = 0.0;
-
-            DMConversionEfficiency = DMConversionEfficiencyFunction.Value();
-            if (DMDemandFunction != null)
-            {
-                StructuralDemand = DMDemandFunction.Value() * StructuralFraction.Value();
-                StorageDemand = DMDemandFunction.Value() * (1 - StructuralFraction.Value());
-            }
-            else
-            {
-                foreach (LeafCohort L in Leaves)
-                {
-                    StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency;
-                    MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency;
-                    StorageDemand += L.StorageDMDemand / DMConversionEfficiency;
-                }
-            }
-            return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, Storage = StorageDemand };
-        }
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -961,6 +938,10 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
             apexGroupAge.Clear();
+            dryMatterSupply.Clear();
+            dryMatterDemand.Clear();
+            nitrogenSupply.Clear();
+            nitrogenDemand.Clear();
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
@@ -1133,28 +1114,10 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
 
-        /// <summary>Calculate organ supplies</summary>
-        public void CalculateSupplies() { }
-
-        /// <summary>Calculate organ demands</summary>
-        public void CalculateDemands() { }
-
-        /// <summary>Gets or sets the dm demand.</summary>
-        [Units("g/m^2")]
-        public override BiomassPoolType DMDemand
+        /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
+        public override BiomassSupplyType CalculateDryMatterSupply()
         {
-            get { return GetDMDemand(); }
-        }
-
-        /// <summary>Daily photosynthetic "net" supply of dry matter for the whole plant (g DM/m2/day)</summary>
-        [Units("g/m^2")]
-        public override BiomassSupplyType DMSupply
-        {
-            get { return GetDMSupply(); }
-        }
-
-        private BiomassSupplyType GetDMSupply()
-        {
+            // Daily photosynthetic "net" supply of dry matter for the whole plant (g DM/m2/day)
             double Retranslocation = 0;
             double Reallocation = 0;
 
@@ -1164,7 +1127,73 @@ namespace Models.PMF.Organs
                 Reallocation += L.LeafStartDMReallocationSupply;
             }
 
-            return new BiomassSupplyType { Fixation = Photosynthesis.Value(), Retranslocation = Retranslocation, Reallocation = Reallocation };
+            dryMatterSupply.Fixation = Photosynthesis.Value();
+            dryMatterSupply.Retranslocation = Retranslocation;
+            dryMatterSupply.Reallocation = Reallocation;
+
+            return dryMatterSupply;
+        }
+
+        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
+        public override BiomassSupplyType CalculateNitrogenSupply()
+        {
+            double RetransSupply = 0;
+            double ReallocationSupply = 0;
+            foreach (LeafCohort L in Leaves)
+            {
+                RetransSupply += Math.Max(0, L.LeafStartNRetranslocationSupply);
+                ReallocationSupply += L.LeafStartNReallocationSupply;
+            }
+            nitrogenSupply.Retranslocation = RetransSupply;
+            nitrogenSupply.Reallocation = ReallocationSupply;
+
+            return nitrogenSupply;
+        }
+
+        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        public override BiomassPoolType CalculateDryMatterDemand()
+        {
+            double StructuralDemand = 0.0;
+            double StorageDemand = 0.0;
+            double MetabolicDemand = 0.0;
+
+            DMConversionEfficiency = DMConversionEfficiencyFunction.Value();
+            if (DMDemandFunction != null)
+            {
+                StructuralDemand = DMDemandFunction.Value() * StructuralFraction.Value();
+                StorageDemand = DMDemandFunction.Value() * (1 - StructuralFraction.Value());
+            }
+            else
+            {
+                foreach (LeafCohort L in Leaves)
+                {
+                    StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency;
+                    MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency;
+                    StorageDemand += L.StorageDMDemand / DMConversionEfficiency;
+                }
+            }
+            dryMatterDemand.Structural = StructuralDemand;
+            dryMatterDemand.Metabolic = MetabolicDemand;
+            dryMatterDemand.Storage = StorageDemand;
+            return dryMatterDemand;
+        }
+
+        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
+        public override BiomassPoolType CalculateNitrogenDemand()
+        {
+            double StructuralDemand = 0.0;
+            double MetabolicDemand = 0.0;
+            double StorageDemand = 0.0;
+            foreach (LeafCohort L in Leaves)
+            {
+                StructuralDemand += L.StructuralNDemand;
+                MetabolicDemand += L.MetabolicNDemand;
+                StorageDemand += L.StorageNDemand;
+            }
+            nitrogenDemand.Structural = StructuralDemand;
+            nitrogenDemand.Metabolic = MetabolicDemand;
+            nitrogenDemand.Storage = StorageDemand;
+            return nitrogenDemand;
         }
 
         /// <summary>Sets the dm potential allocation.</summary>
@@ -1387,24 +1416,6 @@ namespace Models.PMF.Organs
                     throw new Exception(Name + "Not all leaf DM allocation was used");
             }
         }
-        /// <summary>Gets or sets the n demand.</summary>
-        [Units("g/m^2")]
-        public override BiomassPoolType NDemand
-        {
-            get
-            {
-                double StructuralDemand = 0.0;
-                double MetabolicDemand = 0.0;
-                double StorageDemand = 0.0;
-                foreach (LeafCohort L in Leaves)
-                {
-                    StructuralDemand += L.StructuralNDemand;
-                    MetabolicDemand += L.MetabolicNDemand;
-                    StorageDemand += L.StorageNDemand;
-                }
-                return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, Storage = StorageDemand };
-            }
-        }
 
         /// <summary>Sets the n allocation.</summary>
         [Units("g/m^2")]
@@ -1546,23 +1557,6 @@ namespace Models.PMF.Organs
                 double extentOfError = Math.Abs(endN - checkValue);
                 if (extentOfError > 0.00000001)
                     throw new Exception(Name + "Some Leaf N was not allocated.");
-            }
-        }
-
-        /// <summary>Gets or sets the n supply.</summary>
-        [Units("g/m^2")]
-        public override BiomassSupplyType NSupply
-        {
-            get
-            {
-                double RetransSupply = 0;
-                double ReallocationSupply = 0;
-                foreach (LeafCohort L in Leaves)
-                {
-                    RetransSupply += Math.Max(0, L.LeafStartNRetranslocationSupply);
-                    ReallocationSupply += L.LeafStartNReallocationSupply;
-                }
-                return new BiomassSupplyType { Retranslocation = RetransSupply, Reallocation = ReallocationSupply };
             }
         }
 

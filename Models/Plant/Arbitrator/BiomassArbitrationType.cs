@@ -170,38 +170,36 @@ namespace Models.PMF
         /// <summary>Setup all supplies</summary>
         /// <param name="suppliesForEachOrgan">The organs supplies.</param>
         /// <param name="totalOfAllOrgans">The total wt or N for all organs</param>
-        public void SetupSupplies(IEnumerable<BiomassSupplyType> suppliesForEachOrgan, double totalOfAllOrgans)
+        public void SetupSupplies(BiomassSupplyType[] suppliesForEachOrgan, double totalOfAllOrgans)
         {
             Clear();
             Start = totalOfAllOrgans;
 
-            for (int i = 0; i < suppliesForEachOrgan.Count(); i++)
+            for (int i = 0; i < suppliesForEachOrgan.Length; i++)
             {
-                BiomassSupplyType supply = suppliesForEachOrgan.ElementAt(i);
-                ReallocationSupply[i] = supply.Reallocation;
-                UptakeSupply[i] = supply.Uptake;
-                FixationSupply[i] = supply.Fixation;
-                RetranslocationSupply[i] = supply.Retranslocation;
+                ReallocationSupply[i] = suppliesForEachOrgan[i].Reallocation;
+                UptakeSupply[i] = suppliesForEachOrgan[i].Uptake;
+                FixationSupply[i] = suppliesForEachOrgan[i].Fixation;
+                RetranslocationSupply[i] = suppliesForEachOrgan[i].Retranslocation;
             }
         }
 
         /// <summary>Setup all demands</summary>
         /// <param name="demandsForEachOrgan">The organs demands</param>
-        public void SetupDemands(IEnumerable<BiomassPoolType> demandsForEachOrgan)
+        public void SetupDemands(BiomassPoolType[] demandsForEachOrgan)
         {
 
-            for (int i = 0; i < demandsForEachOrgan.Count(); i++)
+            for (int i = 0; i < demandsForEachOrgan.Length; i++)
             {
-                BiomassPoolType demand = demandsForEachOrgan.ElementAt(i);
-                if (MathUtilities.IsLessThan(demand.Structural, 0))
+                if (MathUtilities.IsLessThan(demandsForEachOrgan[i].Structural, 0))
                     throw new Exception(organNames[i] + " is returning a negative Structural " + BiomassType + " demand.  Check your parameterisation");
-                if (MathUtilities.IsLessThan(demand.Storage, 0))
+                if (MathUtilities.IsLessThan(demandsForEachOrgan[i].Storage, 0))
                     throw new Exception(organNames[i] + " is returning a negative Storage " + BiomassType + " demand.  Check your parameterisation");
-                if (MathUtilities.IsLessThan(demand.Metabolic, 0))
+                if (MathUtilities.IsLessThan(demandsForEachOrgan[i].Metabolic, 0))
                     throw new Exception(organNames[i] + " is returning a negative Metabolic " + BiomassType + " demand.  Check your parameterisation");
-                StructuralDemand[i] = demand.Structural;
-                MetabolicDemand[i] = demand.Metabolic;
-                StorageDemand[i] = demand.Storage;
+                StructuralDemand[i] = demandsForEachOrgan[i].Structural;
+                MetabolicDemand[i] = demandsForEachOrgan[i].Metabolic;
+                StorageDemand[i] = demandsForEachOrgan[i].Storage;
                 Reallocation[i] = 0;
                 Uptake[i] = 0;
                 Fixation[i] = 0;
