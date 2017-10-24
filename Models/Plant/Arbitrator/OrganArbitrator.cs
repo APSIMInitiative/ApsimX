@@ -274,6 +274,12 @@ namespace Models.PMF
 
         #region Plant interface methods
 
+        /// <summary>Things the plant model does when the simulation starts</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e) { Clear(); }
+
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -365,8 +371,9 @@ namespace Models.PMF
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
-            DM = null;
-            N = null;
+            string[] organNames = new string[0];
+            DM = new BiomassArbitrationType("DM", organNames);
+            N = new BiomassArbitrationType("N", organNames);
         }
 
         #endregion

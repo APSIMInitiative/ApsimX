@@ -54,16 +54,14 @@ namespace Models.PMF.Organs
         /// <summary>Gets the respired wt fixation.</summary>
         public double RespiredWtFixation { get { return RespiredWt; } }
 
-        /// <summary>Gets or sets the n supply.</summary>
-        public override BiomassSupplyType NSupply
+        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
+        public override BiomassSupplyType CalculateNitrogenSupply()
         {
-            get
-            {
-                BiomassSupplyType Supply = base.NSupply;   // get our base GenericOrgan to fill a supply structure first.
-                Supply.Fixation = FixationRate.Value();
-                return Supply;
-            }
+            base.CalculateNitrogenSupply();   // get our base GenericOrgan to fill a supply structure first.
+            NSupply.Fixation = FixationRate.Value();
+            return NSupply; 
         }
+
         /// <summary>Sets the dm allocation.</summary>
         public override BiomassAllocationType DMAllocation
         {
