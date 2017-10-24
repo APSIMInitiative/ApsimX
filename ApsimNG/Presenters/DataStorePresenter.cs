@@ -140,23 +140,30 @@ namespace UserInterface.Presenters
         /// <returns>A data table of all data.</returns>
         private DataTable GetData()
         {
-            DataTable data;
+            DataTable data = null;
             if (dataStore != null)
             {
-                int start = 0;
-                int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
-                if (ExperimentFilter != null)
+                try
                 {
-                    string filter = "NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
-                    data = dataStore.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
+                    int start = 0;
+                    int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
+                    if (ExperimentFilter != null)
+                    {
+                        string filter = "NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                        data = dataStore.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
+                    }
+                    else if (SimulationFilter != null)
+                        data = dataStore.GetData(simulationName: SimulationFilter.Name,
+                                                 tableName: view.TableList.SelectedValue,
+                                                 from: start, count: count);
+                    else
+                        data = dataStore.GetData(tableName: view.TableList.SelectedValue,
+                                                  count: Utility.Configuration.Settings.MaximumRowsOnReportGrid);
                 }
-                else if (SimulationFilter != null)
-                    data = dataStore.GetData(simulationName: SimulationFilter.Name,
-                                             tableName: view.TableList.SelectedValue,
-                                             from: start, count: count);
-                else
-                    data =  dataStore.GetData(tableName: view.TableList.SelectedValue, 
-                                              count: Utility.Configuration.Settings.MaximumRowsOnReportGrid);
+                catch (Exception e)
+                {
+                    this.explorerPresenter.MainPresenter.ShowMessage("Error reading data tables." + Environment.NewLine + e.ToString(), Simulation.ErrorLevel.Error);
+                }
             }
             else
                 data = new DataTable();
