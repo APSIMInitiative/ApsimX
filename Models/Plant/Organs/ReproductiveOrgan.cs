@@ -58,7 +58,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Dry matter conversion efficiency</summary>
         [Link]
-        public new IFunction DMConversionEfficiency = null;
+        public IFunction DMConversionEfficiency = null;
 
         /// <summary>The proportion of biomass repired each day</summary>
         [Link(IsOptional = true)]

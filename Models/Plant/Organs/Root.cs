@@ -165,7 +165,7 @@ namespace Models.PMF.Organs
         
         /// <summary>Dry matter efficiency function</summary>
         [Link]
-        public new IFunction DMConversionEfficiency = null;
+        public IFunction DMConversionEfficiency = null;
 
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]

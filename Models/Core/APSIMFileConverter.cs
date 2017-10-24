@@ -564,8 +564,25 @@ namespace Models.Core
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion19(XmlNode node, string fileName)
         {
+            //Rename existing DMConversionEfficiencyFunction nodes
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "Leaf"))
+            {
+                XmlNode dmFunction = APSIMFileConverterUtilities.FindModelNode(n, "DMConversionEfficiencyFunction");
+                if (dmFunction!=null)
+                {
+                    XmlUtilities.SetValue(dmFunction, "Name", "DMConversionEfficiency");
+                }
+            }
+
             List<XmlNode> nodeList = new List<XmlNode>();
+
+            XmlUtilities.FindAllRecursively(node, "DMConversionEfficiencyFunction", ref nodeList);
+            foreach (XmlNode n in nodeList)
+                APSIMFileConverterUtilities.RenameNode(n, "DMConversionEfficiencyFunction", "DMConversionEfficiency");
+
+            nodeList.Clear();
             nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Root"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Leaf"));
             nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"));
             nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "ReproductiveOrgan"));
 
