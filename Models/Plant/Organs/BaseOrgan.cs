@@ -47,8 +47,6 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         virtual public BiomassPoolType DMDemand { get { return new BiomassPoolType(); } set { } }
         /// <summary>the efficiency with which allocated DM is converted to organ mass.</summary>
-        [XmlIgnore]
-        virtual public double DMConversionEfficiency { get { return 1; } set { } }
 
         /// <summary>Gets or sets the n supply.</summary>
         [XmlIgnore]

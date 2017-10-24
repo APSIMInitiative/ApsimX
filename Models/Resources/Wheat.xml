@@ -1062,6 +1062,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <WhenToHold>Flowering</WhenToHold>
     </HoldFunction>
     <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
+    <Constant>
       <Name>InitialGrainProportion</Name>
       <Constant>
         <Name>InitialGrainProportion</Name>
@@ -1311,6 +1316,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
   </ReproductiveOrgan>
   <Root>
     <Name>Root</Name>
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
     <Constant>
       <Name>KLModifier</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2350,7 +2360,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <FixedValue>0.5</FixedValue>
     </Constant>
     <Constant>
-      <Name>DMConversionEfficiencyFunction</Name>
+      <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
     </Constant>
@@ -2375,7 +2385,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
     <MicroClimatePresent>true</MicroClimatePresent>
     <KDead>0.3</KDead>
     <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
-    <DMConversionEfficiency>0</DMConversionEfficiency>
     <TipsAtEmergence>0</TipsAtEmergence>
     <CohortsAtInitialisation>0</CohortsAtInitialisation>
     <FractionDied>0</FractionDied>
