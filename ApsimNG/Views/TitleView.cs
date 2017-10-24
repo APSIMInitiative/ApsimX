@@ -43,6 +43,8 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             entry1.Changed -= OnPositionComboChanged;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>

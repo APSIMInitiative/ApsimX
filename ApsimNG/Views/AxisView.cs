@@ -129,6 +129,8 @@ namespace UserInterface.Views
             entryMax.Changed -= OnMaximumChanged;
             entryInterval.Changed -= OnIntervalChanged;
             checkbutton1.Toggled -= OnCheckedChanged;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>

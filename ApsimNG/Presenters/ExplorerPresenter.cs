@@ -944,7 +944,7 @@ namespace UserInterface.Presenters
     /// An object that encompasses the data that is dragged during a drag/drop operation.
     /// </summary>
     [Serializable]
-    public class DragObject : ISerializable
+    public sealed class DragObject : ISerializable
     {
         /// <summary>Path to the node</summary>
         private string nodePath;

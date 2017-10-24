@@ -111,12 +111,36 @@ namespace Models.PostSimulationTools
                 {
                     bool keep = StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
                     if (keep)
+                    {
+                        TruncateDates(table);
                         dataStore.WriteTableRaw(table);
+                    }
                 }
 
                 // Close the reader and free resources.
                 excelReader.Close();
             }
+        }
+
+        /// <summary>
+        /// If the data table contains DateTime fields, convert them to hold
+        /// only the "Date" portion, and not the "Time" within the day.
+        /// We do this because in estatablishing PredictedObserved connections,
+        /// we commonly use the DateTime fields, but are (currently) only 
+        /// interested in the Date.
+        /// WARNING: This could potentially cause issues in the future, especially
+        /// if we begin to make use of sub-day model steps.
+        /// </summary>
+        /// <param name="table">Table to be adjusted</param>
+        private void TruncateDates(DataTable table)
+        {
+            for (int icol = 0; icol < table.Columns.Count; icol++)
+                if (table.Columns[icol].DataType == typeof(DateTime))
+                {
+                    foreach (DataRow row in table.Rows)
+                        if (!DBNull.Value.Equals(row[icol]))
+                            row[icol] = Convert.ToDateTime(row[icol]).Date;
+                }
         }
     }
 }

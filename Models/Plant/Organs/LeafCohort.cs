@@ -822,7 +822,7 @@ namespace Models.PMF.Organs
                 //Leaf area growth parameters
                 DeltaPotentialArea = PotentialAreaGrowthFunction(thermalTime);
                 //Calculate delta leaf area in the absence of water stress
-                DeltaStressConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStress.Value();
+                DeltaStressConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStressValue;
                 //Reduce potential growth for water stress
 
                 CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)

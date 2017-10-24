@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="18">
   <Name>Simulations</Name>
   <Memo>
@@ -44,198 +44,198 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
           <RegrStats>
             <Name>FloweringDAS</Name>
             <n>90</n>
-            <Slope>0.660831400713203</Slope>
-            <Intercept>24.149580642211532</Intercept>
-            <SEslope>0.085775424697465477</SEslope>
-            <SEintercept>4.8459445954835036</SEintercept>
-            <R2>0.40280180195792958</R2>
-            <RMSE>7.7595818902252143</RMSE>
-            <NSE>-0.35133787187351961</NSE>
-            <ME>5.1222222222222227</ME>
-            <MAE>6.344444444444445</MAE>
-            <RSR>1.1559943800168235</RSR>
+            <Slope>0.42422882222389008</Slope>
+            <Intercept>35.845207517684216</Intercept>
+            <SEslope>0.0901655415921336</SEslope>
+            <SEintercept>5.0939674215352913</SEintercept>
+            <R2>0.20099526703219495</R2>
+            <RMSE>7.6948756397430564</RMSE>
+            <NSE>-0.32889454128326</NSE>
+            <ME>3.5444444444444447</ME>
+            <MAE>6.0111111111111111</MAE>
+            <RSR>1.1463546773926963</RSR>
           </RegrStats>
           <RegrStats>
             <Name>LAImax</Name>
             <n>74</n>
-            <Slope>1.1769924819922821</Slope>
-            <Intercept>0.30109470032723396</Intercept>
-            <SEslope>0.052593742861313728</SEslope>
-            <SEintercept>0.15834168455078818</SEintercept>
-            <R2>0.87430544637490115</R2>
-            <RMSE>1.0109472388437506</RMSE>
-            <NSE>0.43512622591882832</NSE>
-            <ME>0.77781836973021534</ME>
-            <MAE>0.78519039273404923</MAE>
-            <RSR>0.74648532785426958</RSR>
+            <Slope>0.9481225610514622</Slope>
+            <Intercept>0.38013941781789784</Intercept>
+            <SEslope>0.045342089009830985</SEslope>
+            <SEintercept>0.1365094470230119</SEintercept>
+            <R2>0.85861451922269438</R2>
+            <RMSE>0.574877952786733</RMSE>
+            <NSE>0.81733903928147311</NSE>
+            <ME>0.24040917178488086</ME>
+            <MAE>0.43374414911565434</MAE>
+            <RSR>0.42449095321039021</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.AboveGround.Wt</Name>
             <n>88</n>
-            <Slope>1.1266896863756921</Slope>
-            <Intercept>-19.540065695579869</Intercept>
-            <SEslope>0.043880049901163572</SEslope>
-            <SEintercept>60.142112870681231</SEintercept>
-            <R2>0.88460818778394146</R2>
-            <RMSE>285.33817257970151</RMSE>
-            <NSE>0.76354664499440184</NSE>
-            <ME>137.38249232273702</ME>
-            <MAE>215.73083131696157</MAE>
-            <RSR>0.48349393487649123</RSR>
+            <Slope>1.0317311810117666</Slope>
+            <Intercept>15.812795394149589</Intercept>
+            <SEslope>0.043522400604858132</SEslope>
+            <SEintercept>59.65191779581302</SEintercept>
+            <R2>0.86727629419493391</R2>
+            <RMSE>243.87735906163667</RMSE>
+            <NSE>0.82726963277250543</NSE>
+            <ME>55.1162164993427</ME>
+            <MAE>173.6778240166953</MAE>
+            <RSR>0.41324027168871613</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Grain.Number</Name>
             <n>84</n>
-            <Slope>0.91391519019153911</Slope>
-            <Intercept>244.63930600866434</Intercept>
-            <SEslope>0.042051688373910781</SEslope>
-            <SEintercept>100.80904975309333</SEintercept>
-            <R2>0.8520734963788178</R2>
-            <RMSE>476.813590418154</RMSE>
-            <NSE>0.8445655597380235</NSE>
-            <ME>66.4583423337661</ME>
-            <MAE>350.53287359095589</MAE>
-            <RSR>0.39189798450471491</RSR>
+            <Slope>0.938528786721164</Slope>
+            <Intercept>176.76509451350148</Intercept>
+            <SEslope>0.04247371417009678</SEslope>
+            <SEintercept>101.82075751394504</SEintercept>
+            <R2>0.85620695286925086</R2>
+            <RMSE>473.66012364384488</RMSE>
+            <NSE>0.84661473154891631</NSE>
+            <ME>49.530103291953722</ME>
+            <MAE>336.90980368242634</MAE>
+            <RSR>0.38930611779225288</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Grain.Size</Name>
             <n>84</n>
-            <Slope>0.64143099601658426</Slope>
-            <Intercept>0.11937525431748428</Intercept>
-            <SEslope>0.12278342591126588</SEslope>
-            <SEintercept>0.034747738147354316</SEintercept>
-            <R2>0.24970989752733885</R2>
-            <RMSE>0.068885088794402791</RMSE>
-            <NSE>-0.48958312928437819</NSE>
-            <ME>0.019938714681795665</ME>
-            <MAE>0.050787703935106288</MAE>
-            <RSR>1.2131982512322117</RSR>
+            <Slope>0.61014337448965839</Slope>
+            <Intercept>0.12923987041124463</Intercept>
+            <SEslope>0.12649064090445322</SEslope>
+            <SEintercept>0.035796880854386405</SEintercept>
+            <R2>0.22103105827389569</R2>
+            <RMSE>0.071483791370418881</RMSE>
+            <NSE>-0.60409268033255126</NSE>
+            <ME>0.0211268060801519</ME>
+            <MAE>0.053098152341753128</MAE>
+            <RSR>1.2589663771920283</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Grain.Wt</Name>
             <n>103</n>
-            <Slope>0.90858514182566164</Slope>
-            <Intercept>98.819907456495685</Intercept>
-            <SEslope>0.040715154417755611</SEslope>
-            <SEintercept>28.351528387892174</SEintercept>
-            <R2>0.83138233278053153</R2>
-            <RMSE>150.41182507540114</RMSE>
-            <NSE>0.8082118821278621</NSE>
-            <ME>43.445948179415154</ME>
-            <MAE>119.70219484191478</MAE>
-            <RSR>0.43580511391018867</RSR>
+            <Slope>0.89028705043323875</Slope>
+            <Intercept>99.619813770447536</Intercept>
+            <SEslope>0.040469113224185248</SEslope>
+            <SEintercept>28.180200439273147</SEintercept>
+            <R2>0.82733969659706241</R2>
+            <RMSE>148.43189476141109</RMSE>
+            <NSE>0.81322781567202784</NSE>
+            <ME>33.161903942571648</ME>
+            <MAE>113.47064398076829</MAE>
+            <RSR>0.43006843891412289</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Husk.Live.Wt</Name>
             <n>6</n>
-            <Slope>0.39462316969308747</Slope>
-            <Intercept>20.154315662448525</Intercept>
-            <SEslope>0.10222023204460742</SEslope>
-            <SEintercept>9.40603059167302</SEintercept>
-            <R2>0.7884001892400796</R2>
-            <RMSE>39.148603098752318</RMSE>
-            <NSE>-0.030964056541523233</NSE>
-            <ME>-30.424918509694017</ME>
-            <MAE>31.498690595756415</MAE>
-            <RSR>0.92689627994970547</RSR>
+            <Slope>0.41614347613863484</Slope>
+            <Intercept>22.835198975738166</Intercept>
+            <SEslope>0.10909194440348016</SEslope>
+            <SEintercept>10.038347065348489</SEintercept>
+            <R2>0.78438130656501448</R2>
+            <RMSE>35.365548149560773</RMSE>
+            <NSE>0.15865954569026541</NSE>
+            <ME>-25.9460135928789</ME>
+            <MAE>28.428336855413136</MAE>
+            <RSR>0.83732732265113152</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Leaf.Live.N</Name>
             <n>6</n>
-            <Slope>0.31594414654741293</Slope>
-            <Intercept>-0.079997042688989384</Intercept>
-            <SEslope>0.045878436359949079</SEslope>
-            <SEintercept>0.079879223056392709</SEintercept>
-            <R2>0.92221617186058691</R2>
-            <RMSE>1.2545176114009788</RMSE>
-            <NSE>-0.065801877124424424</NSE>
-            <ME>-0.93295793047176689</ME>
-            <MAE>0.93295793047176689</MAE>
-            <RSR>0.94242677749362591</RSR>
+            <Slope>0.30917925736701368</Slope>
+            <Intercept>-0.062454233783493962</Intercept>
+            <SEslope>0.026734040085122354</SEslope>
+            <SEintercept>0.046546798901417545</SEintercept>
+            <R2>0.97096173938487873</R2>
+            <RMSE>1.2499706840539273</RMSE>
+            <NSE>-0.058090002203656566</NSE>
+            <ME>-0.92385037703838258</ME>
+            <MAE>0.92385037703838258</MAE>
+            <RSR>0.93901100552818173</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Leaf.Live.Wt</Name>
             <n>6</n>
-            <Slope>0.36065099607577861</Slope>
-            <Intercept>-2.2274619543874152</Intercept>
-            <SEslope>0.035439831861144452</SEslope>
-            <SEintercept>3.9266747298626172</SEintercept>
-            <R2>0.96281136541700685</R2>
-            <RMSE>72.675812215030632</RMSE>
-            <NSE>0.085334122300682713</NSE>
-            <ME>-53.780303304143814</ME>
-            <MAE>53.780303304143814</MAE>
-            <RSR>0.8730530137107545</RSR>
+            <Slope>0.35969247925429182</Slope>
+            <Intercept>-1.5009291432960339</Intercept>
+            <SEslope>0.034276876659480114</SEslope>
+            <SEintercept>3.7978212177965993</SEintercept>
+            <R2>0.96494871124658355</R2>
+            <RMSE>72.232764229780344</RMSE>
+            <NSE>0.096452144721986932</NSE>
+            <ME>-53.131058899424971</ME>
+            <MAE>53.131058899424971</MAE>
+            <RSR>0.86773068752062155</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Rachis.Live.Wt</Name>
             <n>6</n>
-            <Slope>0.95726113459937257</Slope>
-            <Intercept>37.667720982204742</Intercept>
-            <SEslope>0.17868046977790875</SEslope>
-            <SEintercept>29.404150190459831</SEintercept>
-            <R2>0.87768196796442377</R2>
-            <RMSE>37.615914911671972</RMSE>
-            <NSE>0.59072285032088145</NSE>
-            <ME>31.09875737012834</ME>
-            <MAE>31.09875737012834</MAE>
-            <RSR>0.58400709875759682</RSR>
+            <Slope>0.9917768759895752</Slope>
+            <Intercept>29.449687751214071</Intercept>
+            <SEslope>0.15077888853585367</SEslope>
+            <SEintercept>24.812589140657071</SEintercept>
+            <R2>0.91537259637036428</R2>
+            <RMSE>33.302572919692786</RMSE>
+            <NSE>0.67920335673232024</NSE>
+            <ME>28.185793590811826</ME>
+            <MAE>28.185793590811826</MAE>
+            <RSR>0.51704016870684211</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Stem.Live.N</Name>
             <n>6</n>
-            <Slope>1.8123023085616858</Slope>
-            <Intercept>-0.84998600340491448</Intercept>
-            <SEslope>0.33918231776592411</SEslope>
-            <SEintercept>0.67568491718340451</SEintercept>
-            <R2>0.87710934741700353</R2>
-            <RMSE>1.0833694354246777</RMSE>
-            <NSE>-0.656871474678778</NSE>
-            <ME>0.61668278417178413</ME>
-            <MAE>0.78702520114096919</MAE>
-            <RSR>1.1750430753376582</RSR>
+            <Slope>1.5040894679978734</Slope>
+            <Intercept>-0.84536979927900568</Intercept>
+            <SEslope>0.31551651633924416</SEslope>
+            <SEintercept>0.62854028658358485</SEintercept>
+            <R2>0.85032718965084564</R2>
+            <RMSE>0.68284654717728044</RMSE>
+            <NSE>0.34176359403619339</NSE>
+            <ME>0.0647990886658446</ME>
+            <MAE>0.55951246597808524</MAE>
+            <RSR>0.74062834019714119</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Stem.Live.Wt</Name>
             <n>6</n>
-            <Slope>1.0254596743885875</Slope>
-            <Intercept>302.87470284089471</Intercept>
-            <SEslope>0.12048738683992447</SEslope>
-            <SEintercept>50.899944462183932</SEintercept>
-            <R2>0.94766858556833933</R2>
-            <RMSE>315.74275792876051</RMSE>
-            <NSE>-1.9125481711319292</NSE>
-            <ME>312.54386284577384</ME>
-            <MAE>312.54386284577384</MAE>
-            <RSR>1.5579228080823753</RSR>
+            <Slope>0.83386405306529243</Slope>
+            <Intercept>279.95259282082873</Intercept>
+            <SEslope>0.10296199455753503</SEslope>
+            <SEintercept>43.4963355264474</SEintercept>
+            <R2>0.94252034979345189</R2>
+            <RMSE>222.31319064949562</RMSE>
+            <NSE>-0.44389889568190677</NSE>
+            <ME>216.85692910747565</ME>
+            <MAE>216.85692910747565</MAE>
+            <RSR>1.0969271077582694</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Structure.FinalLeafNumber</Name>
             <n>21</n>
-            <Slope>0.77688283335994823</Slope>
-            <Intercept>5.0182180120601068</Intercept>
-            <SEslope>0.12396853566425441</SEslope>
-            <SEintercept>2.3335362830294533</SEintercept>
-            <R2>0.6739454631419648</R2>
-            <RMSE>0.99097700831429159</RMSE>
-            <NSE>-0.10518456865800685</NSE>
-            <ME>0.8236152792271384</ME>
-            <MAE>0.84177149190207168</MAE>
-            <RSR>1.0259418755734873</RSR>
+            <Slope>0.76428937803816133</Slope>
+            <Intercept>3.8472657555308825</Intercept>
+            <SEslope>0.11793813206221464</SEslope>
+            <SEintercept>2.2200222729520647</SEintercept>
+            <R2>0.68850378429306058</R2>
+            <RMSE>0.79080008424268489</RMSE>
+            <NSE>0.29621327770616379</NSE>
+            <ME>-0.5840939373516858</ME>
+            <MAE>0.70870206856099094</MAE>
+            <RSR>0.81870206354404207</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
             <n>90</n>
-            <Slope>0.903041557972695</Slope>
-            <Intercept>16.378462707942731</Intercept>
-            <SEslope>0.052102910179873535</SEslope>
-            <SEintercept>5.9293198266713967</SEintercept>
-            <R2>0.77342605798613517</R2>
-            <RMSE>9.7016607971121225</RMSE>
-            <NSE>0.63687915833352782</NSE>
-            <ME>5.4555555555555557</ME>
-            <MAE>8.1222222222222218</MAE>
-            <RSR>0.59923798748740542</RSR>
+            <Slope>0.80828025447369789</Slope>
+            <Intercept>25.098294443235304</Intercept>
+            <SEslope>0.050062324627196883</SEslope>
+            <SEintercept>5.697100852074108</SEintercept>
+            <R2>0.74761707513935183</R2>
+            <RMSE>8.8850686235078928</RMSE>
+            <NSE>0.6954345909526285</NSE>
+            <ME>3.5</ME>
+            <MAE>7.1000000000000005</MAE>
+            <RSR>0.54879991704340225</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -253,8 +253,6 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
       <Exceedence>false</Exceedence>
     </Probability>
     <IncludeInDocumentation>false</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Replacements>
     <Name>Replacements</Name>
@@ -26553,7 +26551,7 @@ namespace Models
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
-      <Name>NewZealand</Name>
+      <Name>New Zealand</Name>
       <Memo>
         <Name>memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -37247,11 +37245,11 @@ namespace Models
               <Name>SowingRule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
+                <SowingDate>2010-10-04</SowingDate>
+                <CultivarName>Pioneer_39V43</CultivarName>
                 <RowSpace>720</RowSpace>
                 <PlantPopulation>10.5</PlantPopulation>
                 <PlantingDepth>20</PlantingDepth>
-                <CultivarName>Pioneer_39V43</CultivarName>
-                <SowingDate>2010-10-04</SowingDate>
               </Script>
               <Code><![CDATA[
 using System;

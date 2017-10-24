@@ -39,7 +39,7 @@ namespace UserInterface.Views
 
     }
 
-    public interface IBrowserWidget
+    public interface IBrowserWidget : IDisposable
     {
         void Navigate(string uri);
         void LoadHTML(string html);
@@ -152,7 +152,7 @@ namespace UserInterface.Views
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            while (wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
+            while (wb != null && wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
         }
@@ -172,6 +172,35 @@ namespace UserInterface.Views
         public void ExecJavaScript(string command, object[] args)
         {
             wb.Document.InvokeScript(command, args);
+        }
+
+        // Flag: Has Dispose already been called? 
+        bool disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers. 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern. 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                wb.Dispose();
+                wb = null;
+                socket.Dispose();
+                socket = null;
+            }
+
+            // Free any unmanaged objects here. 
+            //
+            disposed = true;
         }
     }
 
@@ -239,7 +268,7 @@ namespace UserInterface.Views
             // We use a timeout so we don't sit here forever if a document fails to load.
 			Stopwatch watch = new Stopwatch();
 			watch.Start();
-			while (wb.IsLoading && watch.ElapsedMilliseconds < 10000)
+			while (wb != null && wb.IsLoading && watch.ElapsedMilliseconds < 10000)
 				while (Gtk.Application.EventsPending())
 					Gtk.Application.RunIteration();
         }
@@ -266,6 +295,36 @@ namespace UserInterface.Views
                 argString += obj.ToString();
             }
             wb.StringByEvaluatingJavaScriptFromString(command + "(" + argString + ");");
+        }
+
+        // Flag: Has Dispose already been called? 
+        bool disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers. 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern. 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                wb.Dispose();
+                wb = null;
+                socket.Dispose();
+                socket = null;
+                scrollWindow.Destroy();
+            }
+
+            // Free any unmanaged objects here. 
+            //
+            disposed = true;
         }
     }
 
@@ -298,7 +357,7 @@ namespace UserInterface.Views
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            while (wb.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
+            while (wb != null && wb.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
         }
@@ -325,6 +384,33 @@ namespace UserInterface.Views
                 argString += obj.ToString();
             }
             wb.ExecuteScript(command + "(" + argString + ")");
+        }
+        // Flag: Has Dispose already been called? 
+        bool disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers. 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern. 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                wb.Dispose();
+                wb = null;
+                scrollWindow.Destroy();
+            }
+
+            // Free any unmanaged objects here. 
+            //
+            disposed = true;
         }
     }
 
@@ -400,10 +486,16 @@ namespace UserInterface.Views
                 frame1.Unrealized -= Frame1_Unrealized;
                 (browser as TWWebBrowserIE).socket.UnmapEvent += (browser as TWWebBrowserIE).Socket_UnmapEvent;
             }
+            if (browser != null)
+                browser.Dispose();
             if (popupWin != null)
             {
                 popupWin.Destroy();
             }
+            memoView1.MainWidget.Destroy();
+            memoView1 = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private void Hbox1_Realized(object sender, EventArgs e)

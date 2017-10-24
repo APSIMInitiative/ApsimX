@@ -19,6 +19,10 @@ namespace Models.PMF.Functions
         public double Value(int arrayIndex = -1)
         {
             // temporary water factor (0-1)
+            if (arrayIndex == -1)
+            {
+                return 1;
+            }
             double wfd;
             if (Soil.SoilWater.SW[arrayIndex] > Soil.DUL[arrayIndex])
             { // saturated

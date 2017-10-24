@@ -262,8 +262,21 @@ namespace Utility
             _markers.Clear();
             _editor.QueueDraw();
         }
-        public void Dispose() { ClearMarkers(); GC.SuppressFinalize(this); }
-        ~HighlightGroup() { Dispose(); }
+
+        // Track whether Dispose has been called.
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                    ClearMarkers();
+                disposing = true;
+            }
+        }
+        public void Dispose() { Dispose(true); GC.SuppressFinalize(this); }
+        ~HighlightGroup() { Dispose(false); }
 
         public IList<HighlightSegmentMarker> Markers { get { return _markers.AsReadOnly(); } }
     }
