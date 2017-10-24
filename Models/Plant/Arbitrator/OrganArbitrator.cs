@@ -74,7 +74,9 @@ namespace Models.PMF
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
-        public double FN { get { return N == null ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
+        public double FN { get {
+                return N == null | Math.Abs(N.TotalPlantDemand) < 0.000000001 ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0);
+            } }
 
         /// <summary>Gets the water supply.</summary>
         /// <value>The water supply.</value>
