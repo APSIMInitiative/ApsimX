@@ -762,6 +762,19 @@
             <string>[Activities].ActivityPerformed</string>
           </EventNames>
         </Report>
+        <Report>
+          <Name>ExcessLabour</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].Labour.Available as Excess</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].EndOfMonth</string>
+          </EventNames>
+        </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>

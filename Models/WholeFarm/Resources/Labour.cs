@@ -39,6 +39,17 @@ namespace Models.WholeFarm.Resources
         [Required]
 		public bool AllowAging { get; set; }
 
+        ///// <summary>
+        ///// Total resources currently available
+        ///// </summary>
+        //public double Available
+        //{
+        //    get
+        //    {
+        //        return this.Children.Where(a => a.GetType() == typeof(IResourceType)).Cast<IResourceType>().Sum(a => a.Amount);
+        //    }
+        //} 
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
