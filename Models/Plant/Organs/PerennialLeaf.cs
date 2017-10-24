@@ -80,12 +80,6 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Removed = new Biomass();
 
-        /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
-        public double Wt { get { return Live.Wt + Dead.Wt; } }
-
-        /// <summary>Gets the total (live + dead) n (g/m2)</summary>
-        public double N { get { return Live.N + Dead.N; } }
-
         /// <summary>The amount of biomass detached every day</summary>
         [XmlIgnore]
         public Biomass Detached = new Biomass();
@@ -603,7 +597,6 @@ namespace Models.PMF.Organs
             set { }
         }
 
-
         /// <summary>Sets the dm allocation.</summary>
         public BiomassAllocationType DMAllocation
         {
@@ -631,6 +624,7 @@ namespace Models.PMF.Organs
 
             }
         }
+
         /// <summary>Sets the n allocation.</summary>
         public BiomassAllocationType NAllocation
         {
@@ -656,8 +650,21 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the maximum nconc.</summary>
         public double MaxNconc { get { return MaximumNConc.Value(); } }
+
         /// <summary>Gets or sets the minimum nconc.</summary>
         public double MinNconc { get { return MinimumNConc.Value(); } }
+
+        /// <summary>Gets the total biomass</summary>
+        public Biomass Total { get { return Live + Dead; } }
+
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
+
         #endregion
 
         #region Events and Event Handlers
@@ -763,11 +770,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         protected void DoPlantEnding(object sender, EventArgs e)
         {
-            if (Wt > 0.0)
+            Biomass total = Live + Dead;
+            if (total.Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
             }
             Clear();
         }

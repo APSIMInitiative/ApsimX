@@ -25,10 +25,10 @@ namespace UserInterface.Presenters
     /// </summary>
     public class ContextMenu
     {
-        [Link]
+        [Link(IsOptional = true)]
         IStorageReader storage = null;
 
-        [Link]
+        [Link(IsOptional = true)]
         IStorageWriter storageWriter = null;
 
         /// <summary>
@@ -304,9 +304,11 @@ namespace UserInterface.Presenters
             List<DataTable> tables = new List<DataTable>();
             foreach (string tableName in storage.TableNames)
             {
-                DataTable table = storage.GetData(tableName);
-                table.TableName = tableName;
-                tables.Add(table);
+                using (DataTable table = storage.GetData(tableName))
+                {
+                    table.TableName = tableName;
+                    tables.Add(table);
+                }
             }
             try
             {

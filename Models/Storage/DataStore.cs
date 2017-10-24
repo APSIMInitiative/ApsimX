@@ -229,6 +229,8 @@
 
             StringBuilder sql = new StringBuilder();
 
+            bool hasToday = false;
+
             // Write SELECT clause
             sql.Append("SELECT S.Name AS SimulationName,S.ID AS SimulationID");
             List<string> fieldList = null;
@@ -247,6 +249,8 @@
                 sql.Append("[");
                 sql.Append(fieldName);
                 sql.Append(']');
+                if (fieldName == "Clock.Today")
+                    hasToday = true;
             }
 
             // Write FROM clause
@@ -268,6 +272,11 @@
                 sql.Append(filter);
                 sql.Append(")");
             }
+
+            // Write ORDER BY clause
+            sql.Append(" ORDER BY S.ID");
+            if (hasToday)
+                sql.Append(", T.[Clock.Today]");
 
             // Write LIMIT/OFFSET clause
             if (count > 0)
@@ -560,7 +569,7 @@
         private void WriteUnitsTable()
         {
             connection.ExecuteQuery("DELETE FROM _Units");
-            foreach (Table table in tables)
+            foreach (Table table in dataToWrite)
             {
                 foreach (Table.Column column in table.Columns)
                 {

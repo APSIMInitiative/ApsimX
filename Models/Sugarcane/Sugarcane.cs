@@ -12256,10 +12256,10 @@ namespace Models
             //num_layers = dlayer.Length;
 
             bd = Soil.BD;           //Soil.BDMapped;
-            dul_dep = Soil.SoilWater.DULmm;
+            dul_dep = Soil.DULmm;
             sw_dep = Soil.SoilWater.SWmm;     //Soil.Water;
-            sat_dep = Soil.SoilWater.SATmm;
-            ll15_dep = Soil.SoilWater.LL15mm;
+            sat_dep = Soil.SATmm;
+            ll15_dep = Soil.LL15mm;
 
 
 

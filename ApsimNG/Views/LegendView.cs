@@ -47,7 +47,7 @@ namespace UserInterface.Views
         /// </summary>
         public LegendView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.LegendView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.LegendView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             combobox1 = (ComboBox)builder.GetObject("combobox1");
             listview = (TreeView)builder.GetObject("listview");
@@ -77,6 +77,13 @@ namespace UserInterface.Views
             combobox1.Changed -= OnPositionComboChanged;
             combobox1.Focused -= OnTitleTextBoxEnter;
             listToggle.Toggled -= OnItemChecked;
+            comboModel.Dispose();
+            comboRender.Destroy();
+            listModel.Dispose();
+            listRender.Destroy();
+            listToggle.Destroy();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private bool settingCombo = false;

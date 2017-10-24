@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
     /// 
     /// **Root Growth**
     /// 
-    /// Roots grow downwards through the soil profile, with initial depth determined by sowng depth and the growth rate determined by RootFrontVelocity. 
+    /// Roots grow downwards through the soil profile, with initial depth determined by sowing depth and the growth rate determined by RootFrontVelocity. 
     /// The RootFrontVelocity is modified by multiplying it by the soil's XF value; which represents any resistance posed by the soil to root extension. 
     /// Root depth is also constrained by a maximum root depth.
     /// 
@@ -60,7 +60,7 @@ namespace Models.PMF.Organs
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Root : BaseOrgan, IWaterNitrogenUptake
+    public class Root : BaseOrgan, IWaterNitrogenUptake, IArbitration
     {
         #region Links
 
@@ -177,7 +177,11 @@ namespace Models.PMF.Organs
         public List<double> ZoneInitialDM { get; set; }
 
         private double BiomassToleranceValue = 0.0000000001;   // 10E-10
-
+        
+        /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
+        private bool needToRecalculateLiveDead = true;
+        private Biomass liveBiomass = new Biomass();
+        private Biomass deadBiomass = new Biomass();
         #endregion
 
         #region States
@@ -223,6 +227,48 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Outputs
+
+        /// <summary>Gets the live biomass.</summary>
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public Biomass Live
+        {
+            get
+            {
+                RecalculateLiveDead();
+                return liveBiomass;
+            }
+        }
+
+        /// <summary>Gets the dead biomass.</summary>
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public Biomass Dead
+        {
+            get
+            {
+                RecalculateLiveDead();
+                return deadBiomass;
+            }
+        }
+
+        /// <summary>Recalculate live and dead biomass if necessary</summary>
+        private void RecalculateLiveDead()
+        {
+            if (needToRecalculateLiveDead)
+            {
+                needToRecalculateLiveDead = false;
+                liveBiomass.Clear();
+                deadBiomass.Clear();
+                if (PlantZone != null)
+                {
+                    foreach (Biomass b in PlantZone.LayerLive)
+                        liveBiomass.Add(b);
+                    foreach (Biomass b in PlantZone.LayerDead)
+                        deadBiomass.Add(b);
+                }
+            }
+        }
 
         /// <summary>Gets the root length density.</summary>
         [Units("mm/mm3")]
@@ -339,6 +385,7 @@ namespace Models.PMF.Organs
                     Zones.Add(newZone);
                 }
             }
+            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Does the water uptake.</summary>
@@ -381,11 +428,13 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Clears this instance.</summary>
-        protected override void Clear()
+        protected void Clear()
         {
-            base.Clear();
+            Live.Clear();
+            Dead.Clear();
             PlantZone.Clear();
             Zones.Clear();
+            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
@@ -396,10 +445,16 @@ namespace Models.PMF.Organs
             {
                 double MeanWTF = 0;
 
-                if (Live.Wt > 0)
+                double liveWt = Live.Wt;
+                if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
+                    {
+                        double[] paw = Z.soil.PAW;
+                        double[] pawc = Z.soil.PAWC;
+                        Biomass[] layerLiveForZone = Z.LayerLive;
                         for (int i = 0; i < Z.LayerLive.Length; i++)
-                            MeanWTF += Z.LayerLive[i].Wt / Live.Wt * MathUtilities.Bound(2 * Z.soil.PAW[i] / Z.soil.PAWC[i], 0, 1);
+                            MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(2 * paw[i] / pawc[i], 0, 1);
+                    }
 
                 return MeanWTF;
             }
@@ -437,6 +492,7 @@ namespace Models.PMF.Organs
             {
                 PlantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value(), Plant.Population, MaximumNConc.Value());
                 InitialiseZones();
+                needToRecalculateLiveDead = true;
             }
         }
 
@@ -496,11 +552,13 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (Wt > 0.0)
+            Biomass total = Live + Dead;
+
+            if (total.Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
             }
             Clear();
         }
@@ -650,6 +708,7 @@ namespace Models.PMF.Organs
                         for (int layer = 0; layer < Z.soil.Thickness.Length; layer++)
                             Z.LayerLive[layer].PotentialDMAllocation = value.Structural * RAw[layer] / TotalRAw;
                     }
+                    needToRecalculateLiveDead = true;
                 }
             }
         }
@@ -672,7 +731,7 @@ namespace Models.PMF.Organs
 
                 foreach (ZoneState Z in Zones)
                     Z.PartitionRootMass(TotalRAw, Allocated.Wt);
-
+                needToRecalculateLiveDead = true;
             }
         }
 
@@ -800,21 +859,28 @@ namespace Models.PMF.Organs
                     RWC = new double[myZone.soil.Thickness.Length];
                 double NO3Uptake = 0;
                 double NH4Uptake = 0;
-                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+
+                double[] thickness = myZone.soil.Thickness;
+                double[] water = myZone.soil.Water;
+                double[] ll15mm = myZone.soil.LL15mm;
+                double[] dulmm = myZone.soil.DULmm;
+                double[] bd = myZone.soil.BD;
+
+                for (int layer = 0; layer < thickness.Length; layer++)
                 {
                     if (myZone.LayerLive[layer].Wt > 0)
                     {
-                        RWC[layer] = (myZone.soil.Water[layer] - myZone.soil.SoilWater.LL15mm[layer]) / (myZone.soil.SoilWater.DULmm[layer] - myZone.soil.SoilWater.LL15mm[layer]);
+                        RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
                         RWC[layer] = Math.Max(0.0, Math.Min(RWC[layer], 1.0));
                         double SWAF = NUptakeSWFactor.Value(layer);
 
                         double kno3 = KNO3.Value(layer);
-                        double NO3ppm = zone.NO3N[layer] * (100.0 / (myZone.soil.BD[layer] * myZone.soil.Thickness[layer]));
+                        double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
                         NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF, (MaxDailyNUptake.Value() - NO3Uptake));
                         NO3Uptake += NO3Supply[layer];
 
                         double knh4 = KNH4.Value(layer);
-                        double NH4ppm = zone.NH4N[layer] * (100.0 / (myZone.soil.BD[layer] * myZone.soil.Thickness[layer]));
+                        double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
                         NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF, (MaxDailyNUptake.Value() - NH4Uptake));
                         NH4Uptake += NH4Supply[layer];
                     }
@@ -864,6 +930,7 @@ namespace Models.PMF.Organs
                         }
                     }
                 }
+                needToRecalculateLiveDead = true;
 
                 if (!MathUtilities.FloatsAreEqual(NAllocated - Allocated.N, 0.0))
                     throw new Exception("Error in N Allocation: " + Name);
@@ -874,6 +941,17 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the minimum nconc.</summary>
         public override double MinNconc { get { return MinimumNConc.Value(); } }
 
+        /// <summary>Gets the total biomass</summary>
+        public Biomass Total { get { return Live + Dead; } }
+
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
+
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         public double[] CalculateWaterSupply(ZoneWaterAndN zone)
@@ -882,22 +960,25 @@ namespace Models.PMF.Organs
             if (myZone == null)
                 return null;
 
-            double[] supply = new double[myZone.soil.Thickness.Length];
-            LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
-            for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+            if (myZone.soil.Weirdo != null)
+                return new double[myZone.soil.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
+            else
             {
-                if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
-                {
-                    if (myZone.soil.Weirdo == null)
-                    {
-                        supply[layer] = Math.Max(0.0, myZone.soil.KL(Plant.Name)[layer] * KLModifier.Value(layer) *
-                            (zone.Water[layer] - myZone.soil.LL(Plant.Name)[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
-                    }
-                    else supply[layer] = 0; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
-                }
-            }
+                double[] kl = myZone.soil.KL(Plant.Name);
+                double[] ll = myZone.soil.LL(Plant.Name);
 
-            return supply;
+                double[] supply = new double[myZone.soil.Thickness.Length];
+                LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
+                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                {
+                    if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
+                    {
+                        supply[layer] = Math.Max(0.0, kl[layer] * KLModifier.Value(layer) *
+                            (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
+                    }
+                }
+                return supply;
+            }            
         }
 
         #endregion
@@ -911,22 +992,6 @@ namespace Models.PMF.Organs
             biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, removal, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
         }
         #endregion
-
-//        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-//        /// <param name="tags">The list of tags to add to.</param>
-//        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-//        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-//        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-//        {
-//            // add a heading.
-//            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-//
-//            // write description of this class.
-//            AutoDocumentation.GetClassDescription(this, tags, indent);
-//
-//
-//
-//        }
 
     }
 }

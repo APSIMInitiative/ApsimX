@@ -137,7 +137,7 @@ namespace UserInterface.Views
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
         public TabbedMetDataView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.TabbedMetDataView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TabbedMetDataView.glade");
             labelFileName = (Label)builder.GetObject("labelFileName");
             vbox1 = (VBox)builder.GetObject("vbox1");
             notebook1 = (Notebook)builder.GetObject("notebook1");
@@ -195,6 +195,8 @@ namespace UserInterface.Views
             spinNYears.ValueChanged -= OnGraphShowYearsValueChanged;
             notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
             worksheetCombo.Changed -= WorksheetCombo_Changed;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Gets or sets the filename.</summary>

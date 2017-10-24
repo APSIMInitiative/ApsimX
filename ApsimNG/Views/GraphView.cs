@@ -70,7 +70,7 @@ namespace UserInterface.Views
         /// </summary>
         public GraphView(ViewBase owner = null) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.GraphView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
             vbox2 = (VBox)builder.GetObject("vbox2");
@@ -129,6 +129,10 @@ namespace UserInterface.Views
                 }
             }
             Clear();
+            Popup.Dispose();
+            plot1.Destroy();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>
@@ -641,7 +645,14 @@ namespace UserInterface.Views
             Widget editor = editorObj as Widget;
             if (editor != null)
             {
-                expander1.Foreach(delegate(Widget widget) { if (widget != label2) expander1.Remove(widget); });
+                expander1.Foreach(delegate(Widget widget) 
+                {
+                    if (widget != label2)
+                    {
+                        expander1.Remove(widget);
+                        widget.Destroy();
+                    }
+                });
                 expander1.Add(editor);
                 expander1.Visible = true;
                 expander1.Expanded = true;

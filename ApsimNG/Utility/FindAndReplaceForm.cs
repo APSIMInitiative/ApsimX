@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Gtk;
 using Mono.TextEditor;
 using Cairo;
+using UserInterface;
 
 namespace Utility
 {
@@ -26,7 +27,7 @@ namespace Utility
 
         public FindAndReplaceForm()
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.FindAndReplace.glade");
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.FindAndReplace.glade");
             window1 = (Window)builder.GetObject("window1");
             chkMatchCase = (CheckButton)builder.GetObject("chkMatchCase");
             chkMatchWholeWord = (CheckButton)builder.GetObject("chkMatchWholeWord");
@@ -261,8 +262,21 @@ namespace Utility
             _markers.Clear();
             _editor.QueueDraw();
         }
-        public void Dispose() { ClearMarkers(); GC.SuppressFinalize(this); }
-        ~HighlightGroup() { Dispose(); }
+
+        // Track whether Dispose has been called.
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                    ClearMarkers();
+                disposing = true;
+            }
+        }
+        public void Dispose() { Dispose(true); GC.SuppressFinalize(this); }
+        ~HighlightGroup() { Dispose(false); }
 
         public IList<HighlightSegmentMarker> Markers { get { return _markers.AsReadOnly(); } }
     }

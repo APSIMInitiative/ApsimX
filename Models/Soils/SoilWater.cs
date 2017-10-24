@@ -26,6 +26,8 @@ namespace Models.Soils
     public class SoilWater : Model, ISoilWater
     {
 
+        private List<IModel> canopyModels;
+
 
         //GUI
         //***
@@ -913,42 +915,6 @@ namespace Models.Soils
         #region Outputs (Layered)
 
         /// <summary>
-        /// Thicknesses of each soil layer (mm)
-        /// </summary>
-        /// <value>
-        /// The dlayer.
-        /// </value>
-        [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 10000.0)]
-        [Units("mm")]
-        public double[] dlayer
-        { get { return SoilObject != null ? SoilObject.dlayer : new double[0]; } }
-
-        //ARRAYS IN MILLIMETERS
-
-        /// <summary>
-        /// Saturated water content for each soil layer expressed as a depth of water (mm)
-        /// </summary>
-        /// <value>
-        /// The sa TMM.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] SATmm
-        { get { return SoilObject != null ? SoilObject.sat_dep : new double[0]; } }
-
-        /// <summary>
-        /// Drained upper limit for each soil layer expressed as a depth of water (mm)
-        /// </summary>
-        /// <value>
-        /// The du LMM.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] DULmm
-        { get { return SoilObject != null ? SoilObject.dul_dep : new double[0]; } }
-
-        /// <summary>
         /// Current soil water content for each soil layer expressed as a depth of water (mm)
         /// </summary>
         /// <value>
@@ -970,55 +936,6 @@ namespace Models.Soils
             }
 
         /// <summary>
-        /// 15 bar lower limit of extractable soil water for each soil layer expressed as a depth of water (mm)
-        /// </summary>
-        /// <value>
-        /// The l L15MM.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] LL15mm
-        { get { return SoilObject != null ? SoilObject.ll15_dep : new double[0]; } }
-
-        /// <summary>
-        /// Air dry soil water content for each soil layer expressed as a depth of water (mm)
-        /// </summary>
-        /// <value>
-        /// The airdr ymm.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] AIRDRYmm
-        { get { return SoilObject != null ? SoilObject.air_dry_dep : new double[0]; } }
-
-
-        //ARRAYS AS FRACTIONS
-
-        /// <summary>
-        /// Saturated water content for each soil layer expressed as a volumetric water content
-        /// </summary>
-        /// <value>
-        /// The sat.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm/mm")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] SAT
-        { get { return SoilObject != null ? SoilObject.sat : new double[0]; } }
-
-        /// <summary>
-        /// Drained upper limit for each soil layer expressed as a volumetric water content
-        /// </summary>
-        /// <value>
-        /// The dul.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm/mm")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] DUL
-        { get { return SoilObject != null ? SoilObject.dul : new double[0]; } }
-
-        /// <summary>
         /// Current soil water content for each soil layer expressed as a volumetric water content
         /// </summary>
         /// <value>
@@ -1032,30 +949,6 @@ namespace Models.Soils
             get { return SoilObject != null ? SoilObject.sw : new double[0]; }
             set { SetWater_frac(value); } //TODO: remove this later, have manager scripts directly use SoilWater.SetWater_frac(amount) instead
             }
-
-        /// <summary>
-        /// 15 bar lower limit of extractable soil water for each soil layer expressed as a volumetric water content
-        /// </summary>
-        /// <value>
-        /// The l L15.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm/mm")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] LL15
-        { get { return SoilObject != null ? SoilObject.ll15 : new double[0]; } }
-
-        /// <summary>
-        /// Air dry soil water content for each soil layer expressed as a volumetric water content
-        /// </summary>
-        /// <value>
-        /// The airdry.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm/mm")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] AIRDRY
-        { get { return SoilObject != null ? SoilObject.air_dry : new double[0]; } }
 
         /// <summary>
         /// Depth of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)
@@ -1610,11 +1503,8 @@ namespace Models.Soils
 
             canopy.ZeroCanopyData();  //make all the arrays (from Yesterday) zero length, ready for the resize below (for Today).
 
-            //Get an array of models that are crop models.
-            List<IModel> models = Apsim.FindAll(paddock, typeof(ICanopy));
-
             //foreach ICanopy model in the simulation
-            foreach (Model m in models)
+            foreach (Model m in canopyModels)
                 {
                     //add an extra element to each of the canopy arrays.
                     Array.Resize(ref canopy.cover_green, canopy.NumberOfCrops + 1);
@@ -1706,7 +1596,7 @@ namespace Models.Soils
             //!     returns the index number of the first occurrence of specified value
 
             for (int i = 0; i < NameList.Length; i++)
-                if (NameList[i].ToLower() == Name.ToLower())
+                if (String.Equals(NameList[i], Name, StringComparison.OrdinalIgnoreCase))
                     return i;
             return -1;  // Not found
         }
@@ -1753,7 +1643,7 @@ namespace Models.Soils
         /// Called when [loaded].
         /// </summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
 
         }
@@ -1785,25 +1675,20 @@ namespace Models.Soils
 
             if (Soil.Thickness != null)
                 {
-                try
-                    {
-                    SoilObject = new SoilWaterSoil(constants, Soil);  //constructor can throw an Exception
-                    surfaceFactory = new SurfaceFactory();
-                    surface = surfaceFactory.GetSurface(SoilObject, Clock);  //constructor can throw an Exception (Evap class constructor too)
+                SoilObject = new SoilWaterSoil(constants, Soil);  //constructor can throw an Exception
+                surfaceFactory = new SurfaceFactory();
+                surface = surfaceFactory.GetSurface(SoilObject, Clock);  //constructor can throw an Exception (Evap class constructor too)
 
                 //optional inputs (array)
                 inflow_lat = null; 
-                }
-                catch (Exception Ex)
-                    {
-                    throw new ApsimXException(this, Ex.Message);  //catch any constructor Exceptions and rethrow as an ApsimXException.
-                    }
                 }
             else
                 {
                 throw new ApsimXException(this, "SoilWater module has detected that the Soil has no layers.");
                 }
             FindSolutes();
+
+            canopyModels = Apsim.FindAll(paddock, typeof(ICanopy));
         }
 
         /// <summary>

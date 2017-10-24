@@ -613,7 +613,7 @@ namespace Models.PMF
             //Finally Check Mass balance adds up
             N.End = 0;
             for (int i = 0; i < Organs.Length; i++)
-                N.End += Organs[i].N;
+                N.End += Organs[i].Total.N;
             N.BalanceError = (N.End - (N.Start + N.TotalUptakeSupply + N.TotalPlantSupply));
             if (N.BalanceError > 0.000000001)
                 throw new Exception("N Mass balance violated!!!!.  Daily Plant N increment is greater than N supply");
@@ -622,7 +622,7 @@ namespace Models.PMF
                 throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
             DM.End = 0;
             for (int i = 0; i < Organs.Length; i++)
-                DM.End += Organs[i].Wt;
+                DM.End += Organs[i].Total.Wt;
             DM.BalanceError = (DM.End - (DM.Start + DM.TotalPlantSupply));
             if (DM.BalanceError > 0.0001)
                 throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than DM supplied by photosynthesis and DM remobilisation");

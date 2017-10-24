@@ -46,7 +46,7 @@ namespace UserInterface.Views
         /// <summary>Initializes a new instance of the <see cref="DataStoreView" /> class.</summary>
         public DataStoreView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.DataStoreView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.DataStoreView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             table1 = (Table)builder.GetObject("table1");
             hbox1 = (HBox)builder.GetObject("hbox1");
@@ -60,6 +60,27 @@ namespace UserInterface.Views
             table1.Attach(editView1.MainWidget, 1, 2, 1, 2);
             editView2 = new EditView(this);
             hbox1.PackStart(editView2.MainWidget, false, false, 0);
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+
+        /// <summary>
+        /// Does cleanup when the main widget is destroyed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _mainWidget_Destroyed(object sender, System.EventArgs e)
+        {
+            gridView.MainWidget.Destroy();
+            gridView = null;
+            dropDownView1.MainWidget.Destroy();
+            dropDownView1 = null;
+            editView1.MainWidget.Destroy();
+            editView1 = null;
+            editView2.MainWidget.Destroy();
+            editView2 = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>List of all tables.</summary>

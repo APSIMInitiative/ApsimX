@@ -6513,6 +6513,7 @@ namespace Models.Soils
     /// <summary>
     /// FOMLayerLayerType
     /// </summary>
+    [Serializable]
     public class FOMLayerLayerType
     {
         /// <summary>The fom</summary>

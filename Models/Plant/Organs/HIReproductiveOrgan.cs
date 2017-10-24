@@ -10,7 +10,7 @@ namespace Models.PMF.Organs
     /// A harvest index reproductive organ
     /// </summary>
     [Serializable]
-    public class HIReproductiveOrgan : BaseOrgan
+    public class HIReproductiveOrgan : BaseOrgan, IArbitration
     {
         /// <summary>Gets or sets the above ground.</summary>
         [Link]
@@ -33,6 +33,12 @@ namespace Models.PMF.Organs
         /// <summary>The daily growth</summary>
         private double DailyGrowth = 0;
 
+        /// <summary>The live biomass</summary>
+        public Biomass Live { get; set; }
+
+        /// <summary>The dead biomass</summary>
+        public Biomass Dead { get; set; }
+
         /// <summary>Gets the live f wt.</summary>
         /// <value>The live f wt.</value>
         [Units("g/m^2")]
@@ -46,6 +52,13 @@ namespace Models.PMF.Organs
                 else
                     return 0.0;
             }
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="HIReproductiveOrgan"/> class.</summary>
+        public HIReproductiveOrgan()
+        {
+            Live = new Biomass();
+            Dead = new Biomass();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -64,11 +77,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (Wt > 0.0)
+            Biomass total = Live + Dead;
+            if (total.Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
             }
 
             Clear();
@@ -143,12 +157,30 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets the total biomass</summary>
+        public Biomass Total { get { return Live + Dead; } }
+
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
+
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The fractions of biomass to remove</param>
         public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
+        }
+
+        /// <summary>Clears this instance.</summary>
+        private void Clear()
+        {
+            Live.Clear();
+            Dead.Clear();
         }
     }
 }

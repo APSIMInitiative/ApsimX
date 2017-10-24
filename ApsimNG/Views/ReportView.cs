@@ -33,7 +33,7 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public ReportView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.ReportView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ReportView.glade");
             notebook1 = (Notebook)builder.GetObject("notebook1");
             vbox1 = (VBox)builder.GetObject("vbox1");
             vbox2 = (VBox)builder.GetObject("vbox2");
@@ -48,6 +48,19 @@ namespace UserInterface.Views
 
             dataStoreView1 = new DataStoreView(this);
             alignment1.Add(dataStoreView1.MainWidget);
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, System.EventArgs e)
+        {
+            VariableEditor.MainWidget.Destroy();
+            VariableEditor = null;
+            FrequencyEditor.MainWidget.Destroy();
+            FrequencyEditor = null;
+            dataStoreView1.MainWidget.Destroy();
+            dataStoreView1 = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Provides access to the variable list.</summary>

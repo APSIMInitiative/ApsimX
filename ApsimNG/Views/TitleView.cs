@@ -32,7 +32,7 @@ namespace UserInterface.Views
         /// </summary>
         public TitleView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.TitleView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TitleView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             entry1 = (Entry)builder.GetObject("entry1");
             _mainWidget = hbox1;
@@ -43,6 +43,8 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             entry1.Changed -= OnPositionComboChanged;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>

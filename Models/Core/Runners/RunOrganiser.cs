@@ -95,6 +95,8 @@
 
             // Get a list of all models we're going to run.
             modelsToRun = Apsim.ChildrenRecursively(relativeTo, typeof(IJobGenerator)).Cast<IJobGenerator>().ToList();
+            if (relativeTo is IJobGenerator)
+                modelsToRun.Add(relativeTo as IJobGenerator);
 
             // For each model, get a list of simulation names.
             modelsToRun.ForEach(model => SimulationNamesBeingRun.AddRange(model.GetSimulationNames()));

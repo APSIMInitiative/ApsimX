@@ -147,7 +147,7 @@ namespace Models.Soils
 
         /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             FindChildren();
         }
@@ -293,10 +293,22 @@ namespace Models.Soils
         {
             get
             {
-                if(waterNode != null)
-                return Map(waterNode.LL15, waterNode.Thickness, Thickness, MapType.Concentration);
+                if (waterNode != null && structure == null)
+                    return waterNode.LL15;
+                else if (waterNode != null)
+                    return Map(waterNode.LL15, waterNode.Thickness, Thickness, MapType.Concentration);
                 else
                     return Map(Weirdo.LL15, Weirdo.ParamThickness, Thickness, MapType.Concentration);
+            }
+        }
+
+        /// <summary>Return lower limit limit at standard thickness. Units: mm</summary>
+        [Units("mm/mm")]
+        public double[] LL15mm
+        {
+            get
+            {
+                return MathUtilities.Multiply(LL15, Thickness);
             }
         }
 
@@ -306,10 +318,22 @@ namespace Models.Soils
         {
             get
             {
-                if(waterNode !=null)
-                return Map(waterNode.DUL, waterNode.Thickness, Thickness, MapType.Concentration);
+                if (waterNode != null && structure == null)
+                    return waterNode.DUL;
+                else if (waterNode !=null)
+                    return Map(waterNode.DUL, waterNode.Thickness, Thickness, MapType.Concentration);
                 else
                     return Map(Weirdo.DUL, Weirdo.ParamThickness, Thickness, MapType.Concentration);
+            }
+        }
+
+        /// <summary>Return drained upper limit at standard thickness. Units: mm</summary>
+        [Units("mm/mm")]
+        public double[] DULmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(DUL, Thickness);
             }
         }
 
@@ -319,10 +343,22 @@ namespace Models.Soils
         {
             get
             {
-                if(waterNode != null)
-                return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration);
+                if (waterNode != null && structure == null)
+                    return waterNode.SAT;
+                else if (waterNode != null)
+                    return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration);
                 else
                     return Map(Weirdo.SAT, Weirdo.ParamThickness, Thickness, MapType.Concentration);
+            }
+        }
+
+        /// <summary>Return saturation at standard thickness. Units: mm</summary>
+        [Units("mm/mm")]
+        public double[] SATmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(SAT, Thickness);
             }
         }
 
@@ -337,8 +373,8 @@ namespace Models.Soils
             get 
             {
                 if (SoilWater == null) return null;
-                return Map(SoilWater.SWCON, SoilWater.Thickness, Thickness, MapType.Concentration, 0); 
-            } 
+                return Map(SoilWater.SWCON, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
+            }
         }
 
         /// <summary>
@@ -350,9 +386,9 @@ namespace Models.Soils
             get
                 {
                 if (SoilWater == null) return null;
-                return Map(SoilWater.KLAT, SoilWater.Thickness, Thickness, MapType.Concentration, 0);
-                }
+                return Map(SoilWater.KLAT, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
             }
+        }
 
 
 

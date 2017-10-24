@@ -1020,6 +1020,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
+        [Serializable]
         public class TTagPaddock
         {
             /// <summary>
@@ -1039,6 +1040,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
+        [Serializable]
         public class TTagIndex
         {
             /// <summary>
