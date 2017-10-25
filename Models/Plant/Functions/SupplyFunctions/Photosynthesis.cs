@@ -41,7 +41,7 @@ namespace Models.PMF.Functions.SupplyFunctions
         {
             C3PhotoLink ps = new C3PhotoLink();
             double SLN = Leaf.Live.N / Leaf.LAI;
-            double RSR = 1.0; //usage looks to be commented out.
+            double RSR = 0; // 0 for whole plant biomass
             double angle = 0;
 
             double[] res = ps.calc(Clock.Today.DayOfYear, Weather.Latitude, Weather.MaxT, Weather.MinT, Weather.Radn, Leaf.LAI, SLN, Soil.PAW.Sum(), RSR, angle);
