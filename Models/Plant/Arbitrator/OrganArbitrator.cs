@@ -49,7 +49,7 @@ namespace Models.PMF
         private const double kgha2gsm = 0.1;
 
         /// <summary>The list of organs</summary>
-        private List<IArbitration> Organs;
+        private List<IArbitration> Organs = new List<IArbitration>();
 
         /// <summary>The variables for DM</summary>
         [XmlIgnore]
@@ -295,9 +295,8 @@ namespace Models.PMF
 
                 Organs = organsToArbitrate;
 
-                string[] organNames = Organs.Select(o => o.Name).ToArray();
-                DM = new BiomassArbitrationType("DM", organNames);
-                N = new BiomassArbitrationType("N", organNames);
+                DM = new BiomassArbitrationType("DM", Organs);
+                N = new BiomassArbitrationType("N", Organs);
             }
 
         }
@@ -372,8 +371,8 @@ namespace Models.PMF
         private void Clear()
         {
             string[] organNames = new string[0];
-            DM = new BiomassArbitrationType("DM", organNames);
-            N = new BiomassArbitrationType("N", organNames);
+            DM = new BiomassArbitrationType("DM", Organs);
+            N = new BiomassArbitrationType("N", Organs);
         }
 
         #endregion

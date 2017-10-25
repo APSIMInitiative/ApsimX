@@ -95,7 +95,7 @@ namespace Models.PMF.Organs
         public virtual void SetNitrogenAllocation(BiomassAllocationType nitrogen) {  }
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
-        virtual public double NFixationCost { get { return 0; } set { } }
+        virtual public double NFixationCost { get { return 0; } }
         /// <summary>Gets or sets the n demand.</summary>
         [XmlIgnore]
         virtual public BiomassPoolType NDemand { get { return nitrogenDemand; } }

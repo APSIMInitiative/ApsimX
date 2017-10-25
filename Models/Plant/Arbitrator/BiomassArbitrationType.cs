@@ -13,7 +13,7 @@ namespace Models.PMF
     public class BiomassArbitrationType
     {
         /// <summary>Names of all organs</summary>
-        private string[] organNames;
+        private IArbitration[] organs;
 
         //Biomass Demand Variables
         /// <summary>Gets or sets the structural demand.</summary>
@@ -143,28 +143,28 @@ namespace Models.PMF
         //Constructor for Array variables
         /// <summary>Initializes a new instance of the <see cref="BiomassArbitrationType"/> class.</summary>
         /// <param name="type">Type of biomass arbitration</param>
-        /// <param name="namesOfAllOrgans">Names of organs</param>
-        public BiomassArbitrationType(string type, string[] namesOfAllOrgans)
+        /// <param name="allOrgans">Names of organs</param>
+        public BiomassArbitrationType(string type, List<IArbitration> allOrgans)
         {
             BiomassType = type;
-            organNames = namesOfAllOrgans;
-            StructuralDemand = new double[organNames.Length];
-            MetabolicDemand = new double[organNames.Length];
-            StorageDemand = new double[organNames.Length];
-            ReallocationSupply = new double[organNames.Length];
-            UptakeSupply = new double[organNames.Length];
-            FixationSupply = new double[organNames.Length];
-            RetranslocationSupply = new double[organNames.Length];
-            Reallocation = new double[organNames.Length];
-            Uptake = new double[organNames.Length];
-            Fixation = new double[organNames.Length];
-            Retranslocation = new double[organNames.Length];
-            Respiration = new double[organNames.Length];
-            ConstrainedGrowth = new double[organNames.Length];
-            StructuralAllocation = new double[organNames.Length];
-            MetabolicAllocation = new double[organNames.Length];
-            StorageAllocation = new double[organNames.Length];
-            TotalAllocation = new double[organNames.Length];
+            organs = allOrgans.ToArray();
+            StructuralDemand = new double[organs.Length];
+            MetabolicDemand = new double[organs.Length];
+            StorageDemand = new double[organs.Length];
+            ReallocationSupply = new double[organs.Length];
+            UptakeSupply = new double[organs.Length];
+            FixationSupply = new double[organs.Length];
+            RetranslocationSupply = new double[organs.Length];
+            Reallocation = new double[organs.Length];
+            Uptake = new double[organs.Length];
+            Fixation = new double[organs.Length];
+            Retranslocation = new double[organs.Length];
+            Respiration = new double[organs.Length];
+            ConstrainedGrowth = new double[organs.Length];
+            StructuralAllocation = new double[organs.Length];
+            MetabolicAllocation = new double[organs.Length];
+            StorageAllocation = new double[organs.Length];
+            TotalAllocation = new double[organs.Length];
         }
 
         /// <summary>Setup all supplies</summary>
@@ -192,11 +192,11 @@ namespace Models.PMF
             for (int i = 0; i < demandsForEachOrgan.Length; i++)
             {
                 if (MathUtilities.IsLessThan(demandsForEachOrgan[i].Structural, 0))
-                    throw new Exception(organNames[i] + " is returning a negative Structural " + BiomassType + " demand.  Check your parameterisation");
+                    throw new Exception((organs[i] as IOrgan).Name + " is returning a negative Structural " + BiomassType + " demand.  Check your parameterisation");
                 if (MathUtilities.IsLessThan(demandsForEachOrgan[i].Storage, 0))
-                    throw new Exception(organNames[i] + " is returning a negative Storage " + BiomassType + " demand.  Check your parameterisation");
+                    throw new Exception((organs[i] as IOrgan).Name + " is returning a negative Storage " + BiomassType + " demand.  Check your parameterisation");
                 if (MathUtilities.IsLessThan(demandsForEachOrgan[i].Metabolic, 0))
-                    throw new Exception(organNames[i] + " is returning a negative Metabolic " + BiomassType + " demand.  Check your parameterisation");
+                    throw new Exception((organs[i] as IOrgan).Name + " is returning a negative Metabolic " + BiomassType + " demand.  Check your parameterisation");
                 StructuralDemand[i] = demandsForEachOrgan[i].Structural;
                 MetabolicDemand[i] = demandsForEachOrgan[i].Metabolic;
                 StorageDemand[i] = demandsForEachOrgan[i].Storage;

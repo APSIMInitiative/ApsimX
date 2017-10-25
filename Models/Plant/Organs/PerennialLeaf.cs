@@ -262,7 +262,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
-        public double NFixationCost { get { return 0; } set { } }
+        public double NFixationCost { get { return 0; } }
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         public double[] WaterSupply(ZoneWaterAndN zone) { return null; }

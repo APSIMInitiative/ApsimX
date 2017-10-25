@@ -31,11 +31,6 @@ namespace Models.PMF.Interfaces
     /// </remarks>
     public interface IArbitration
     {
-        /// <summary>
-        /// Name of this Organ
-        /// </summary>
-        string Name { get;}
-
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         BiomassPoolType CalculateDryMatterDemand();
 
@@ -61,7 +56,7 @@ namespace Models.PMF.Interfaces
         double MinNconc { get; }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
-        double NFixationCost { get; set; }
+        double NFixationCost { get; }
 
         /// <summary>Gets the total biomass</summary>
         Biomass Total { get; }
