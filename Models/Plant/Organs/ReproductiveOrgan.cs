@@ -249,6 +249,24 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Arbitrator methods
+        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        public override BiomassPoolType CalculateDryMatterDemand()
+        {
+            dryMatterDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency;
+            return dryMatterDemand;
+        }
+
+        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
+        public override BiomassPoolType CalculateNitrogenDemand()
+        {
+            double demand = NFillingRate.Value();
+            demand = Math.Min(demand, MaximumNConc.Value() * PotentialDMAllocation);
+            nitrogenDemand.Structural = demand;
+
+            return nitrogenDemand;
+        }
+
+
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -271,53 +289,26 @@ namespace Models.PMF.Organs
             }
 
         }
-        /// <summary>Gets or sets the dm demand.</summary>
-        public override BiomassPoolType DMDemand
+        /// <summary>Sets the dry matter potential allocation.</summary>
+        public override void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
-            get
-            {
-                return new BiomassPoolType { Structural = DMDemandFunction.Value() / DMConversionEfficiency};
-            }
+            if (DMDemand.Structural == 0)
+                if (dryMatter.Structural < 0.000000000001) { }//All OK
+                else
+                    throw new Exception("Invalid allocation of potential DM in" + Name);
+            PotentialDMAllocation = dryMatter.Structural;
+            // PotentialDailyGrowth = value.Structural;
         }
-        /// <summary>Sets the dm potential allocation.</summary>
-        public override BiomassPoolType DMPotentialAllocation
+        /// <summary>Sets the dry matter allocation.</summary>
+        public override void SetDryMatterAllocation(BiomassAllocationType value)
         {
-            set
-            {
-                if (DMDemand.Structural == 0)
-                    if (value.Structural < 0.000000000001) { }//All OK
-                    else
-                        throw new Exception("Invalid allocation of potential DM in" + Name);
-                PotentialDMAllocation = value.Structural;
-                // PotentialDailyGrowth = value.Structural;
-            }
-        }
-        /// <summary>Sets the dm allocation.</summary>
-        public override BiomassAllocationType DMAllocation
-        {
-            set
-            {
-                GrowthRespiration = value.Structural *(1- DMConversionEfficiency);
-                Live.StructuralWt += value.Structural * DMConversionEfficiency;
-            }
-        }
-        /// <summary>Gets or sets the n demand.</summary>
-        public override BiomassPoolType NDemand
-        {
-            get
-            {
-                double demand = NFillingRate.Value();
-                demand = Math.Min(demand, MaximumNConc.Value() * PotentialDMAllocation);
-                return new BiomassPoolType { Structural = demand };
-            }
+            GrowthRespiration = value.Structural * (1 - DMConversionEfficiency);
+            Live.StructuralWt += value.Structural * DMConversionEfficiency;
         }
         /// <summary>Sets the n allocation.</summary>
-        public override BiomassAllocationType NAllocation
+        public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
-            set
-            {
-                Live.StructuralN += value.Structural;
-            }
+            Live.StructuralN += nitrogen.Structural;
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
         public double MaxNconc

@@ -33,35 +33,72 @@ namespace Models.PMF.Organs
         public ISummary Summary = null;
         #endregion
 
+        /// <summary>The dry matter supply</summary>
+        protected BiomassSupplyType dryMatterSupply = new BiomassSupplyType();
+
+        /// <summary>The nitrogen supply</summary>
+        protected BiomassSupplyType nitrogenSupply = new BiomassSupplyType();
+
+        /// <summary>The dry matter demand</summary>
+        protected BiomassPoolType dryMatterDemand = new BiomassPoolType();
+
+        /// <summary>Structural nitrogen demand</summary>
+        protected BiomassPoolType nitrogenDemand = new BiomassPoolType();
+
         #region Arbitration methods
+
+        /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
+        public virtual BiomassSupplyType CalculateDryMatterSupply()
+        {
+            return dryMatterSupply;
+        }
+
+        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
+        public virtual BiomassSupplyType CalculateNitrogenSupply()
+        {
+            return nitrogenSupply;
+        }
+
+        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        public virtual BiomassPoolType CalculateDryMatterDemand()
+        {
+            return dryMatterDemand;
+        }
+
+        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
+        public virtual BiomassPoolType CalculateNitrogenDemand()
+        {
+            return nitrogenDemand;
+        }
+
+
+
         /// <summary>Gets or sets the dm supply.</summary>
         [XmlIgnore]
-        virtual public BiomassSupplyType DMSupply { get { return new BiomassSupplyType(); } set { } }
+        virtual public BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
         /// <summary>Sets the dm potential allocation.</summary>
-        [XmlIgnore]
-        virtual public BiomassPoolType DMPotentialAllocation { set { } }
-        /// <summary>Sets the dm allocation.</summary>
-        [XmlIgnore]
-        virtual public BiomassAllocationType DMAllocation { set { } }
+        /// <summary>Sets the dry matter potential allocation.</summary>
+        virtual public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter){ }
+        /// <summary>Sets the dry matter allocation.</summary>
+        public virtual void SetDryMatterAllocation(BiomassAllocationType value) { }
         /// <summary>Gets or sets the dm demand.</summary>
         [XmlIgnore]
-        virtual public BiomassPoolType DMDemand { get { return new BiomassPoolType(); } set { } }
+        virtual public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
         /// <summary>the efficiency with which allocated DM is converted to organ mass.</summary>
         [XmlIgnore]
         virtual public double DMConversionEfficiency { get { return 1; } set { } }
 
         /// <summary>Gets or sets the n supply.</summary>
         [XmlIgnore]
-        virtual public BiomassSupplyType NSupply { get { return new BiomassSupplyType(); } set { } }
+        virtual public BiomassSupplyType NSupply { get { return nitrogenSupply; } }
         /// <summary>Sets the n allocation.</summary>
-        [XmlIgnore]
-        virtual public BiomassAllocationType NAllocation { set { } }
+        public virtual void SetNitrogenAllocation(BiomassAllocationType nitrogen) {  }
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
-        virtual public double NFixationCost { get { return 0; } set { } }
+        virtual public double NFixationCost { get { return 0; } }
         /// <summary>Gets or sets the n demand.</summary>
         [XmlIgnore]
-        virtual public BiomassPoolType NDemand { get { return new BiomassPoolType(); } set { } }
+        virtual public BiomassPoolType NDemand { get { return nitrogenDemand; } }
         /// <summary>Gets or sets the minimum nconc.</summary>
         [XmlIgnore]
         virtual public double MinNconc { get { return 0; } }
