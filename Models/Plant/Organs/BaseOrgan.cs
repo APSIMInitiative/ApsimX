@@ -77,11 +77,10 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         virtual public BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
         /// <summary>Sets the dm potential allocation.</summary>
-        [XmlIgnore]
-        virtual public BiomassPoolType DMPotentialAllocation { set { } }
-        /// <summary>Sets the dm allocation.</summary>
-        [XmlIgnore]
-        virtual public BiomassAllocationType DMAllocation { set { } }
+        /// <summary>Sets the dry matter potential allocation.</summary>
+        virtual public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter){ }
+        /// <summary>Sets the dry matter allocation.</summary>
+        public virtual void SetDryMatterAllocation(BiomassAllocationType value) { }
         /// <summary>Gets or sets the dm demand.</summary>
         [XmlIgnore]
         virtual public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
@@ -93,8 +92,7 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         virtual public BiomassSupplyType NSupply { get { return nitrogenSupply; } }
         /// <summary>Sets the n allocation.</summary>
-        [XmlIgnore]
-        virtual public BiomassAllocationType NAllocation { set { } }
+        public virtual void SetNitrogenAllocation(BiomassAllocationType nitrogen) {  }
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
         virtual public double NFixationCost { get { return 0; } set { } }

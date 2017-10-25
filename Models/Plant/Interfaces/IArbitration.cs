@@ -36,17 +36,11 @@ namespace Models.PMF.Interfaces
         /// </summary>
         string Name { get;}
 
-        /// <summary>Sets the dm potential allocation.</summary>
-        BiomassPoolType DMPotentialAllocation { set; }
-
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         BiomassPoolType CalculateDryMatterDemand();
 
         /// <summary>Calculate and return dry matter supply (g/m2)</summary>
         BiomassSupplyType CalculateDryMatterSupply();
-
-        /// <summary>Sets the dm allocation.</summary>
-        BiomassAllocationType DMAllocation { set; }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         BiomassPoolType CalculateNitrogenDemand();
@@ -54,8 +48,14 @@ namespace Models.PMF.Interfaces
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
         BiomassSupplyType CalculateNitrogenSupply();
 
+        /// <summary>Sets the dry matter potential allocation.</summary>
+        void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter);
+
+        /// <summary>Sets the dry matter allocation.</summary>
+        void SetDryMatterAllocation(BiomassAllocationType dryMatter);
+
         /// <summary>Sets the n allocation.</summary>
-        BiomassAllocationType NAllocation { set; }
+        void SetNitrogenAllocation(BiomassAllocationType nitrogen);
 
         /// <summary>Gets or sets the minimum nconc.</summary>
         double MinNconc { get; }

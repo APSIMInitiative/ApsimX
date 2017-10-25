@@ -289,35 +289,26 @@ namespace Models.PMF.Organs
             }
 
         }
-        /// <summary>Sets the dm potential allocation.</summary>
-        public override BiomassPoolType DMPotentialAllocation
+        /// <summary>Sets the dry matter potential allocation.</summary>
+        public override void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
-            set
-            {
-                if (DMDemand.Structural == 0)
-                    if (value.Structural < 0.000000000001) { }//All OK
-                    else
-                        throw new Exception("Invalid allocation of potential DM in" + Name);
-                PotentialDMAllocation = value.Structural;
-                // PotentialDailyGrowth = value.Structural;
-            }
+            if (DMDemand.Structural == 0)
+                if (dryMatter.Structural < 0.000000000001) { }//All OK
+                else
+                    throw new Exception("Invalid allocation of potential DM in" + Name);
+            PotentialDMAllocation = dryMatter.Structural;
+            // PotentialDailyGrowth = value.Structural;
         }
-        /// <summary>Sets the dm allocation.</summary>
-        public override BiomassAllocationType DMAllocation
+        /// <summary>Sets the dry matter allocation.</summary>
+        public override void SetDryMatterAllocation(BiomassAllocationType value)
         {
-            set
-            {
-                GrowthRespiration = value.Structural *(1- DMConversionEfficiency);
-                Live.StructuralWt += value.Structural * DMConversionEfficiency;
-            }
+            GrowthRespiration = value.Structural * (1 - DMConversionEfficiency);
+            Live.StructuralWt += value.Structural * DMConversionEfficiency;
         }
         /// <summary>Sets the n allocation.</summary>
-        public override BiomassAllocationType NAllocation
+        public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
-            set
-            {
-                Live.StructuralN += value.Structural;
-            }
+            Live.StructuralN += nitrogen.Structural;
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
         public double MaxNconc

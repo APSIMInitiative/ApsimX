@@ -397,12 +397,12 @@ namespace Models.PMF
 
             // Send potential DM allocation to organs to set this variable for calculating N demand
             for (int i = 0; i < Organs.Length; i++)
-                Organs[i].DMPotentialAllocation = new BiomassPoolType
+                Organs[i].SetDryMatterPotentialAllocation(new BiomassPoolType
                 {
                     Structural = DM.StructuralAllocation[i],  //Need to seperate metabolic and structural allocations
                     Metabolic = DM.MetabolicAllocation[i],  //This wont do anything currently
                     Storage = DM.StorageAllocation[i], //Nor will this do anything
-                };
+                });
         }
 
         /// <summary>Does the re allocation.</summary>
@@ -594,7 +594,7 @@ namespace Models.PMF
         {
             // Send DM allocations to all Plant Organs
             for (int i = 0; i < Organs.Length; i++)
-                Organs[i].DMAllocation = new BiomassAllocationType
+                Organs[i].SetDryMatterAllocation(new BiomassAllocationType
                 {
                     Respired = DM.Respiration[i],
                     Reallocation = DM.Reallocation[i],
@@ -602,7 +602,7 @@ namespace Models.PMF
                     Structural = DM.StructuralAllocation[i],
                     Storage = DM.StorageAllocation[i],
                     Metabolic = DM.MetabolicAllocation[i],
-                };
+                });
         }
 
         /// <summary>Sends the nutrient allocations.</summary>
@@ -620,7 +620,7 @@ namespace Models.PMF
                     N.MetabolicAllocation[i] = 0.0;
                 if (N.StorageAllocation[i] < 0.0)
                     N.StorageAllocation[i] = 0.0;
-                Organs[i].NAllocation = new BiomassAllocationType
+                Organs[i].SetNitrogenAllocation(new BiomassAllocationType
                 {
                     Structural = N.StructuralAllocation[i], //This needs to be seperated into components
                     Metabolic = N.MetabolicAllocation[i],
@@ -629,7 +629,7 @@ namespace Models.PMF
                     Reallocation = N.Reallocation[i],
                     Retranslocation = N.Retranslocation[i],
                     Uptake = N.Uptake[i]
-                };
+                });
             }
 
             //Finally Check Mass balance adds up

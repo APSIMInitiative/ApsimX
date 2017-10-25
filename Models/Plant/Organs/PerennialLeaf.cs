@@ -337,6 +337,14 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
         public virtual BiomassSupplyType CalculateNitrogenSupply()
         {
+            double LabileN = Math.Max(0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
+            Biomass Senescing = new Biomass();
+            GetSenescingLeafBiomass(out Senescing);
+
+            nitrogenSupply.Reallocation = Senescing.StorageN * NReallocationFactor.Value();
+            nitrogenSupply.Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
+            nitrogenSupply.Uptake = 0.0;
+
             return nitrogenSupply;
         }
 
@@ -379,6 +387,10 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the n demand.</summary>
         [XmlIgnore]
         public BiomassPoolType NDemand { get { return nitrogenDemand; } }
+
+        /// <summary>Gets the nitrogen supply.</summary>
+        [XmlIgnore]
+        public BiomassSupplyType NSupply { get { return nitrogenSupply; } }
 
         #endregion
 
@@ -591,86 +603,55 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
 
-        /// <summary>Sets the dm potential allocation.</summary>
-        public BiomassPoolType DMPotentialAllocation
+        /// <summary>Sets the dry matter potential allocation.</summary>
+        public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
-            set
-            {
-                PotentialMetabolicDMAllocation = value.Metabolic;
-                PotentialStructuralDMAllocation = value.Structural;
-                PotentialDMAllocation = value.Structural + value.Metabolic;
-            }
+            PotentialMetabolicDMAllocation = dryMatter.Metabolic;
+            PotentialStructuralDMAllocation = dryMatter.Structural;
+            PotentialDMAllocation = dryMatter.Structural + dryMatter.Metabolic;
         }
 
-        /// <summary>Gets or sets the N supply.</summary>
-        [XmlIgnore]
-        public BiomassSupplyType NSupply
+        /// <summary>Sets the dry matter allocation.</summary>
+        public void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
-            get
+            GrowthRespiration = dryMatter.Structural * (1 - DMConversionEfficiency.Value())
+                              + dryMatter.Storage * (1 - DMConversionEfficiency.Value());
+
+            AddNewLeafMaterial(StructuralWt: Math.Min(dryMatter.Structural * DMConversionEfficiency.Value(), StructuralDMDemand),
+                               StorageWt: dryMatter.Storage * DMConversionEfficiency.Value(),
+                               StructuralN: 0,
+                               StorageN: 0,
+                               SLA: SpecificLeafAreaFunction.Value());
+
+            double Removal = dryMatter.Retranslocation;
+            foreach (PerrenialLeafCohort L in Leaves)
             {
-                double LabileN = Math.Max(0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
-                Biomass Senescing = new Biomass();
-                GetSenescingLeafBiomass(out Senescing);
-
-                return new BiomassSupplyType()
-                {
-                    Reallocation = Senescing.StorageN * NReallocationFactor.Value(),
-                    Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value(),
-                    Uptake = 0.0
-                };
+                double Delta = Math.Min(L.Live.StorageWt, Removal);
+                L.Live.StorageWt -= Delta;
+                Removal -= Delta;
             }
-            set { }
-        }
-
-        /// <summary>Sets the dm allocation.</summary>
-        public BiomassAllocationType DMAllocation
-        {
-            set
-            {
-                GrowthRespiration = value.Structural * (1 - DMConversionEfficiency.Value())
-                                  + value.Storage * (1 - DMConversionEfficiency.Value());
-
-                AddNewLeafMaterial(StructuralWt: Math.Min(value.Structural * DMConversionEfficiency.Value(), StructuralDMDemand),
-                                   StorageWt: value.Storage * DMConversionEfficiency.Value(),
-                                   StructuralN: 0,
-                                   StorageN: 0,
-                                   SLA: SpecificLeafAreaFunction.Value());
-
-                double Removal = value.Retranslocation;
-                foreach (PerrenialLeafCohort L in Leaves)
-                {
-                    double Delta = Math.Min(L.Live.StorageWt, Removal);
-                    L.Live.StorageWt -= Delta;
-                    Removal -= Delta;
-                }
-                if (MathUtilities.IsGreaterThan(Removal, 0))
-                    throw new Exception("Insufficient Storage DM to account for Retranslocation and Reallocation in Perrenial Leaf");
-
-
-            }
+            if (MathUtilities.IsGreaterThan(Removal, 0))
+                throw new Exception("Insufficient Storage DM to account for Retranslocation and Reallocation in Perrenial Leaf");
         }
 
         /// <summary>Sets the n allocation.</summary>
-        public BiomassAllocationType NAllocation
+        public void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
-            set
-            {
-                AddNewLeafMaterial(StructuralWt: 0,
-                    StorageWt: 0,
-                    StructuralN: value.Structural,
-                    StorageN: value.Storage,
-                    SLA: SpecificLeafAreaFunction.Value());
+            AddNewLeafMaterial(StructuralWt: 0,
+                StorageWt: 0,
+                StructuralN: nitrogen.Structural,
+                StorageN: nitrogen.Storage,
+                SLA: SpecificLeafAreaFunction.Value());
 
-                double Removal = value.Retranslocation + value.Reallocation;
-                foreach (PerrenialLeafCohort L in Leaves)
-                {
-                    double Delta = Math.Min(L.Live.StorageN, Removal);
-                    L.Live.StorageN -= Delta;
-                    Removal -= Delta;
-                }
-                if (MathUtilities.IsGreaterThan(Removal, 0))
-                    throw new Exception("Insufficient Storage N to account for Retranslocation and Reallocation in Perrenial Leaf");
+            double Removal = nitrogen.Retranslocation + nitrogen.Reallocation;
+            foreach (PerrenialLeafCohort L in Leaves)
+            {
+                double Delta = Math.Min(L.Live.StorageN, Removal);
+                L.Live.StorageN -= Delta;
+                Removal -= Delta;
             }
+            if (MathUtilities.IsGreaterThan(Removal, 0))
+                throw new Exception("Insufficient Storage N to account for Retranslocation and Reallocation in Perrenial Leaf");
         }
 
         /// <summary>Gets or sets the maximum nconc.</summary>

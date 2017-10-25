@@ -180,18 +180,6 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public virtual BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
 
-        /// <summary>Sets the dm potential allocation.</summary>
-        [XmlIgnore]
-        public BiomassPoolType DMPotentialAllocation
-        {
-            set
-            {
-                PotentialMetabolicDMAllocation = value.Metabolic;
-                PotentialStructuralDMAllocation = value.Structural;
-                PotentialDMAllocation = value.Structural + value.Metabolic;
-            }
-        }
-
         /// <summary>Gets the N demand for this computation round.</summary>
         [XmlIgnore]
         public virtual BiomassPoolType NDemand { get { return nitrogenDemand; } }
@@ -204,68 +192,60 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public virtual double NFixationCost { get { return 0; } set { } }
 
-        /// <summary>Sets the dm allocation.</summary>
-        [XmlIgnore]
-        public virtual BiomassAllocationType DMAllocation
+        /// <summary>Sets the dry matter allocation.</summary>
+        public virtual void SetDryMatterAllocation(BiomassAllocationType value)
         {
-            set
+            // get DM lost by respiration (growth respiration)
+            GrowthRespiration = 0.0;
+            GrowthRespiration += value.Structural * (1.0 - DMConversionEfficiency.Value())
+                              + value.Storage * (1.0 - DMConversionEfficiency.Value())
+                              + value.Metabolic * (1.0 - DMConversionEfficiency.Value());
+
+            // allocate structural DM
+            Allocated.StructuralWt = Math.Min(value.Structural * DMConversionEfficiency.Value(), dryMatterDemand.Structural);
+            Live.StructuralWt += Allocated.StructuralWt;
+
+            // allocate non structural DM
+            if ((value.Storage * DMConversionEfficiency.Value() - DMDemand.Storage) > BiomassToleranceValue)
+                throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
+            if (DMDemand.Storage > 0.0)
             {
-                // get DM lost by respiration (growth respiration)
-                GrowthRespiration = 0.0;
-                GrowthRespiration += value.Structural * (1.0 - DMConversionEfficiency.Value())
-                                  + value.Storage * (1.0 - DMConversionEfficiency.Value())
-                                  + value.Metabolic * (1.0 - DMConversionEfficiency.Value());
-
-                // allocate structural DM
-                Allocated.StructuralWt = Math.Min(value.Structural * DMConversionEfficiency.Value(), dryMatterDemand.Structural);
-                Live.StructuralWt += Allocated.StructuralWt;
-
-                // allocate non structural DM
-                if ((value.Storage * DMConversionEfficiency.Value() - DMDemand.Storage) > BiomassToleranceValue)
-                    throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
-                if (DMDemand.Storage > 0.0)
-                {
-                    Allocated.StorageWt = value.Storage * DMConversionEfficiency.Value();
-                    Live.StorageWt += Allocated.StorageWt;
-                }
-
-                // allocate metabolic DM
-                Allocated.MetabolicWt = value.Metabolic * DMConversionEfficiency.Value();
-
-                // Retranslocation
-                if (value.Retranslocation - StartLive.StorageWt > BiomassToleranceValue)
-                    throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
-                Live.StorageWt -= value.Retranslocation;
-                Allocated.StorageWt -= value.Retranslocation;
+                Allocated.StorageWt = value.Storage * DMConversionEfficiency.Value();
+                Live.StorageWt += Allocated.StorageWt;
             }
+
+            // allocate metabolic DM
+            Allocated.MetabolicWt = value.Metabolic * DMConversionEfficiency.Value();
+
+            // Retranslocation
+            if (value.Retranslocation - StartLive.StorageWt > BiomassToleranceValue)
+                throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
+            Live.StorageWt -= value.Retranslocation;
+            Allocated.StorageWt -= value.Retranslocation;
         }
 
         /// <summary>Sets the n allocation.</summary>
-        [XmlIgnore]
-        public virtual BiomassAllocationType NAllocation
+        public virtual void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
-            set
-            {
-                Live.StructuralN += value.Structural;
-                Live.StorageN += value.Storage;
-                Live.MetabolicN += value.Metabolic;
+            Live.StructuralN += nitrogen.Structural;
+            Live.StorageN += nitrogen.Storage;
+            Live.MetabolicN += nitrogen.Metabolic;
 
-                Allocated.StructuralN += value.Structural;
-                Allocated.StorageN += value.Storage;
-                Allocated.MetabolicN += value.Metabolic;
+            Allocated.StructuralN += nitrogen.Structural;
+            Allocated.StorageN += nitrogen.Storage;
+            Allocated.MetabolicN += nitrogen.Metabolic;
 
-                // Retranslocation
-                if (MathUtilities.IsGreaterThan(value.Retranslocation, StartLive.StorageN - nitrogenSupply.Retranslocation))
-                    throw new Exception("N retranslocation exceeds non structural nitrogen in organ: " + Name);
-                Live.StorageN -= value.Retranslocation;
-                Allocated.StorageN -= value.Retranslocation;
+            // Retranslocation
+            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, StartLive.StorageN - nitrogenSupply.Retranslocation))
+                throw new Exception("N retranslocation exceeds non structural nitrogen in organ: " + Name);
+            Live.StorageN -= nitrogen.Retranslocation;
+            Allocated.StorageN -= nitrogen.Retranslocation;
 
-                // Reallocation
-                if (MathUtilities.IsGreaterThan(value.Reallocation, StartLive.StorageN))
-                    throw new Exception("N reallocation exceeds non structural nitrogen in organ: " + Name);
-                Live.StorageN -= value.Reallocation;
-                Allocated.StorageN -= value.Reallocation;
-            }
+            // Reallocation
+            if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, StartLive.StorageN))
+                throw new Exception("N reallocation exceeds non structural nitrogen in organ: " + Name);
+            Live.StorageN -= nitrogen.Reallocation;
+            Allocated.StorageN -= nitrogen.Reallocation;
         }
 
         /// <summary>Gets the maximum N concentration.</summary>
@@ -395,6 +375,14 @@ namespace Models.PMF.Organs
             nitrogenDemand.Metabolic = Math.Min(NDeficit, PotentialStructuralDMAllocation * (CriticalNConc.Value() - MinimumNConc.Value()));
             nitrogenDemand.Storage = Math.Max(0, NDeficit - nitrogenDemand.Structural - nitrogenDemand.Metabolic);
             return nitrogenDemand;
+        }
+
+        /// <summary>Sets the dry matter potential allocation.</summary>
+        public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
+        {
+            PotentialMetabolicDMAllocation = dryMatter.Metabolic;
+            PotentialStructuralDMAllocation = dryMatter.Structural;
+            PotentialDMAllocation = dryMatter.Structural + dryMatter.Metabolic;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

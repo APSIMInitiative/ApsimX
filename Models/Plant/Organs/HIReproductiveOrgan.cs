@@ -116,22 +116,17 @@ namespace Models.PMF.Organs
                     return 0.0;
             }
         }
-       
-        /// <summary>Sets the dm allocation.</summary>
-        /// <value>The dm allocation.</value>
-        public override BiomassAllocationType DMAllocation
+
+        /// <summary>Sets the dry matter allocation.</summary>
+        public override void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
-            set { Live.StructuralWt += value.Structural; DailyGrowth = value.Structural; }
+            Live.StructuralWt += dryMatter.Structural; DailyGrowth = dryMatter.Structural;
         }
-        
+
         /// <summary>Sets the n allocation.</summary>
-        /// <value>The n allocation.</value>
-        public override BiomassAllocationType NAllocation
+        public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
-            set
-            {
-                Live.StructuralN += value.Structural;
-            }
+            Live.StructuralN += nitrogen.Structural;
         }
 
         /// <summary>Gets the total biomass</summary>
