@@ -240,8 +240,8 @@ namespace Models.PMF.Photosynthesis
             }
             double[] results = new double[4];
 
-            //results[0] = (sunlitAssimilations.Sum() + shadedAssimilations.Sum()) * 3600 / 1000000 * 44 * B * 100 / ((1 + RootShootRatio) * 100);
-            results[0] = (sunlitAssimilations.Sum() + shadedAssimilations.Sum()) * 3600 / 1000000 * 44 * B * 100 / ((1) * 100);
+            results[0] = (sunlitAssimilations.Sum() + shadedAssimilations.Sum()) * 3600 / 1000000 * 44 * B * 100 / ((1 + RootShootRatio) * 100);
+            //results[0] = (sunlitAssimilations.Sum() + shadedAssimilations.Sum()) * 3600 / 1000000 * 44 * B * 100 / ((1) * 100);
             results[1] = hourlyWaterDemandsmm.Sum();
             results[2] = hourlyWaterSuppliesmm.Sum();
             results[3] = interceptedRadn.Sum();
