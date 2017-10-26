@@ -6,6 +6,7 @@ using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using System.Linq;
 
 namespace Models.PMF
 {
@@ -48,7 +49,7 @@ namespace Models.PMF
         private const double kgha2gsm = 0.1;
 
         /// <summary>The list of organs</summary>
-        private IArbitration[] Organs;
+        private List<IArbitration> Organs = new List<IArbitration>();
 
         /// <summary>The variables for DM</summary>
         [XmlIgnore]
@@ -204,7 +205,7 @@ namespace Models.PMF
             {
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
-                for (int i = 0; i < Organs.Length; i++)
+                for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
 
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
@@ -217,7 +218,7 @@ namespace Models.PMF
                     UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
 
                     //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
-                    for (int i = 0; i < Organs.Length; i++)
+                    for (int i = 0; i < Organs.Count; i++)
                         if (Organs[i] is IWaterNitrogenUptake)
                         {
                             double[] organNO3Supply = new double[zone.NO3N.Length];
@@ -261,11 +262,11 @@ namespace Models.PMF
                     NSupply += (MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N)) * Z.Zone.Area;
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
-                for (int i = 0; i < Organs.Length; i++)
+                for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = NSupply / Plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
 
                 //Allocate N that the SoilArbitrator has allocated the plant to each organ
-                DoUptake(Organs, N, NArbitrator);
+                DoUptake(Organs.ToArray(), N, NArbitrator);
                 Plant.Root.DoNitrogenUptake(zones);
             }
         }
@@ -292,7 +293,10 @@ namespace Models.PMF
                     if (organ is IArbitration)
                         organsToArbitrate.Add(organ as IArbitration);
 
-                Organs = organsToArbitrate.ToArray();
+                Organs = organsToArbitrate;
+
+                DM = new BiomassArbitrationType("DM", Organs);
+                N = new BiomassArbitrationType("N", Organs);
             }
 
         }
@@ -306,17 +310,33 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
-                //DM = BiomassArbitrationType.Create("DM", Organs);        //Get DM demands and supplies (with water stress effects included) from each organ
-                DM = new BiomassArbitrationType();
-                DM.DoSetup("DM", Organs);
-                DoReAllocation(Organs, DM, DMArbitrator);         //Allocate supply of reallocated DM to organs
-                DoFixation(Organs, DM, DMArbitrator);             //Allocate supply of fixed DM (photosynthesis) to organs
-                DoRetranslocation(Organs, DM, DMArbitrator);      //Allocate supply of retranslocated DM to organs
-                SendPotentialDMAllocations(Organs);                      //Tell each organ what their potential growth is so organs can calculate their N demands
-                //N = BiomassArbitrationType.Create("N", Organs);
-                N = new BiomassArbitrationType();
-                N.DoSetup("N", Organs);
-                DoReAllocation(Organs, N, NArbitrator);           //Allocate N available from reallocation to each organ
+                DM.Clear();
+                // Setup DM supplies from each organ
+                BiomassSupplyType[] supplies = Organs.Select(organ => organ.CalculateDryMatterSupply()).ToArray();
+
+                double totalWt = Organs.Sum(o => o.Total.Wt);
+                DM.SetupSupplies(supplies, totalWt);
+
+                BiomassPoolType[] demands = Organs.Select(organ => organ.CalculateDryMatterDemand()).ToArray();
+                DM.SetupDemands(demands);
+
+                DoReAllocation(Organs.ToArray(), DM, DMArbitrator);         // Allocate supply of reallocated DM to organs
+                DoFixation(Organs.ToArray(), DM, DMArbitrator);             // Allocate supply of fixed DM (photosynthesis) to organs
+                DoRetranslocation(Organs.ToArray(), DM, DMArbitrator);      // Allocate supply of retranslocated DM to organs
+                SendPotentialDMAllocations(Organs.ToArray());               // Tell each organ what their potential growth is so organs can calculate their N demands
+
+                N.Clear();
+
+                // Setup N supplies from each organ
+                supplies = Organs.Select(organ => organ.CalculateNitrogenSupply()).ToArray();
+                double totalN = Organs.Sum(o => o.Total.N);
+                N.SetupSupplies(supplies, totalN);
+
+                // Setup N demands
+                demands = Organs.Select(organ => organ.CalculateNitrogenDemand()).ToArray();
+                N.SetupDemands(demands);
+
+                DoReAllocation(Organs.ToArray(), N, NArbitrator);           // Allocate N available from reallocation to each organ
             }
         }
 
@@ -329,11 +349,11 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
-                DoFixation(Organs, N, NArbitrator);               //Allocate supply of fixable Nitrogen to each organ
-                DoRetranslocation(Organs, N, NArbitrator);        //Allocate supply of retranslocatable N to each organ
-                DoNutrientConstrainedDMAllocation(Organs);               //Work out how much DM can be assimilated by each organ based on allocated nutrients
-                SendDMAllocations(Organs);                               //Tell each organ how DM they are getting folling allocation
-                SendNutrientAllocations(Organs);                         //Tell each organ how much nutrient they are getting following allocaition
+                DoFixation(Organs.ToArray(), N, NArbitrator);               //Allocate supply of fixable Nitrogen to each organ
+                DoRetranslocation(Organs.ToArray(), N, NArbitrator);        //Allocate supply of retranslocatable N to each organ
+                DoNutrientConstrainedDMAllocation(Organs.ToArray());               //Work out how much DM can be assimilated by each organ based on allocated nutrients
+                SendDMAllocations(Organs.ToArray());                               //Tell each organ how DM they are getting folling allocation
+                SendNutrientAllocations(Organs.ToArray());                         //Tell each organ how much nutrient they are getting following allocaition
             }
         }
 
@@ -348,10 +368,11 @@ namespace Models.PMF
         }
 
         /// <summary>Clears this instance.</summary>
-        public void Clear()
+        private void Clear()
         {
-            DM = new BiomassArbitrationType();
-            N = new BiomassArbitrationType();
+            string[] organNames = new string[0];
+            DM = new BiomassArbitrationType("DM", Organs);
+            N = new BiomassArbitrationType("N", Organs);
         }
 
         #endregion
@@ -375,12 +396,12 @@ namespace Models.PMF
 
             // Send potential DM allocation to organs to set this variable for calculating N demand
             for (int i = 0; i < Organs.Length; i++)
-                Organs[i].DMPotentialAllocation = new BiomassPoolType
+                Organs[i].SetDryMatterPotentialAllocation(new BiomassPoolType
                 {
                     Structural = DM.StructuralAllocation[i],  //Need to seperate metabolic and structural allocations
                     Metabolic = DM.MetabolicAllocation[i],  //This wont do anything currently
                     Storage = DM.StorageAllocation[i], //Nor will this do anything
-                };
+                });
         }
 
         /// <summary>Does the re allocation.</summary>
@@ -572,7 +593,7 @@ namespace Models.PMF
         {
             // Send DM allocations to all Plant Organs
             for (int i = 0; i < Organs.Length; i++)
-                Organs[i].DMAllocation = new BiomassAllocationType
+                Organs[i].SetDryMatterAllocation(new BiomassAllocationType
                 {
                     Respired = DM.Respiration[i],
                     Reallocation = DM.Reallocation[i],
@@ -580,7 +601,7 @@ namespace Models.PMF
                     Structural = DM.StructuralAllocation[i],
                     Storage = DM.StorageAllocation[i],
                     Metabolic = DM.MetabolicAllocation[i],
-                };
+                });
         }
 
         /// <summary>Sends the nutrient allocations.</summary>
@@ -598,7 +619,7 @@ namespace Models.PMF
                     N.MetabolicAllocation[i] = 0.0;
                 if (N.StorageAllocation[i] < 0.0)
                     N.StorageAllocation[i] = 0.0;
-                Organs[i].NAllocation = new BiomassAllocationType
+                Organs[i].SetNitrogenAllocation(new BiomassAllocationType
                 {
                     Structural = N.StructuralAllocation[i], //This needs to be seperated into components
                     Metabolic = N.MetabolicAllocation[i],
@@ -607,7 +628,7 @@ namespace Models.PMF
                     Reallocation = N.Reallocation[i],
                     Retranslocation = N.Retranslocation[i],
                     Uptake = N.Uptake[i]
-                };
+                });
             }
 
             //Finally Check Mass balance adds up
@@ -615,10 +636,10 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Length; i++)
                 N.End += Organs[i].Total.N;
             N.BalanceError = (N.End - (N.Start + N.TotalUptakeSupply + N.TotalPlantSupply));
-            if (N.BalanceError > 0.000000001)
+            if (N.BalanceError > 0.05)
                 throw new Exception("N Mass balance violated!!!!.  Daily Plant N increment is greater than N supply");
             N.BalanceError = (N.End - (N.Start + N.TotalPlantDemand));
-            if (N.BalanceError > 0.000000001)
+            if (N.BalanceError > 0.001)
                 throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
             DM.End = 0;
             for (int i = 0; i < Organs.Length; i++)

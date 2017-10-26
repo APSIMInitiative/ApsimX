@@ -37,7 +37,12 @@ namespace Models.PMF.Functions
             else if (o is Array)
                 return Convert.ToDouble((o as Array).GetValue(arrayIndex));
             else
-                return Convert.ToDouble(o);
+            {
+                double doubleValue = Convert.ToDouble(o);
+                if (double.IsNaN(doubleValue))
+                    throw new Exception("NaN (not a number) found when getting variable: " + VariableName);
+                return doubleValue;
+            }
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

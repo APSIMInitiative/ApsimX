@@ -120,11 +120,32 @@ namespace Models.Report
                 DataTable data = storage.GetData(tableName);
                 if (data != null && data.Rows.Count > 0)
                 {
+                    SortColumnsOfDataTable(data);
                     StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
                     DataTableUtilities.DataTableToText(data, 0, ",", true, report);
                     report.Close();
                 }
             }
+        }
+
+        /// <summary>Sort the columns alphabetically</summary>
+        /// <param name="table">The table to sort</param>
+        private static void SortColumnsOfDataTable(DataTable table)
+        {
+            var columnArray = new DataColumn[table.Columns.Count];
+            table.Columns.CopyTo(columnArray, 0);
+            var ordinal = -1;
+            foreach (var orderedColumn in columnArray.OrderBy(c => c.ColumnName))
+                orderedColumn.SetOrdinal(++ordinal);
+
+            ordinal = -1;
+            int i = table.Columns.IndexOf("SimulationName");
+            if (i != -1)
+                table.Columns[i].SetOrdinal(++ordinal);
+
+            i = table.Columns.IndexOf("SimulationID");
+            if (i != -1)
+                table.Columns[i].SetOrdinal(++ordinal);
         }
 
 

@@ -495,11 +495,12 @@
         /// <param name="simulationNamesBeingRun">Collection of simulation names being run</param>
         private void WriteDBWorker(IEnumerable<string> knownSimulationNames, IEnumerable<string> simulationNamesBeingRun)
         {
+            Table dataToWriteToDB = null;
             try
             {
                 while (true)
                 {
-                    Table dataToWriteToDB = null;
+                    dataToWriteToDB = null;
                     lock (dataToWrite)
                     {
                         // Find the table with the most number of rows to write.
@@ -537,7 +538,11 @@
             }
             catch (Exception err)
             {
-                Console.WriteLine(err.ToString());
+                // Console.WriteLine(err.ToString());
+                string msg = "Error writing to database";
+                if (dataToWriteToDB != null)
+                    msg += " \"" + dataToWriteToDB.Name + "\"";
+                throw new Exception(msg, err);
             }
             finally
             {

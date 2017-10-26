@@ -219,7 +219,9 @@ namespace Models.Soils
         {
             get
             {
-                if (waterNode != null)
+                if (waterNode != null && structure == null)
+                    return waterNode.BD;
+                else if (waterNode != null)
                     return Map(waterNode.BD, waterNode.Thickness, Thickness, MapType.Concentration, waterNode.BD.Last());
                 else if (Weirdo != null)
                     return Map(Weirdo.BD, Weirdo.ParamThickness, Thickness, MapType.Concentration, Weirdo.BD.Last());
