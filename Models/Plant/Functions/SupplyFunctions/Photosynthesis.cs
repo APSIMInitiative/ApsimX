@@ -44,8 +44,13 @@ namespace Models.PMF.Functions.SupplyFunctions
             double RSR = 0; // 0 for whole plant biomass
             double angle = 0;
 
-            double[] res = ps.calc(Clock.Today.DayOfYear, Weather.Latitude, Weather.MaxT, Weather.MinT, Weather.Radn, Leaf.LAI, SLN, Soil.PAW.Sum(), RSR, angle);
-            return res[0];
+            if (Leaf.LAI > 0.5)
+            {
+                double[] res = ps.calc(Clock.Today.DayOfYear, Weather.Latitude, Weather.MaxT, Weather.MinT, Weather.Radn, Leaf.LAI, SLN, Soil.PAW.Sum(), RSR, angle);
+                return res[0];
+            }
+
+            return 0;
         }
     }
 }
