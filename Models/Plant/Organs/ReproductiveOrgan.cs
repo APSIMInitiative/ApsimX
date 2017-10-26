@@ -304,6 +304,7 @@ namespace Models.PMF.Organs
         {
             GrowthRespiration = value.Structural * (1 - DMConversionEfficiency);
             Live.StructuralWt += value.Structural * DMConversionEfficiency;
+            Allocated.StructuralWt = value.Structural;
         }
         /// <summary>Sets the n allocation.</summary>
         public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
