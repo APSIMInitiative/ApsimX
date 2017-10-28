@@ -176,6 +176,11 @@ namespace Models.PMF.Organs
         /// <summary>The live weights for each addition zone.</summary>
         public List<double> ZoneInitialDM { get; set; }
 
+        /// <summary>The proportion of biomass respired each day</summary> 
+        [Link]
+        [Units("/d")]
+        public IFunction MaintenanceRespirationFunction = null;
+
         private double BiomassToleranceValue = 0.0000000001;   // 10E-10
         
         /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
@@ -531,6 +536,12 @@ namespace Models.PMF.Organs
                 // Do Root Senescence
                 DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value() });
             }
+            // Do maintenance respiration
+            MaintenanceRespiration = 0;
+            MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
+            Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
+            MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
+            Live.StorageWt *= (1 - MaintenanceRespirationFunction.Value());
         }
 
         /// <summary>Called when crop is ending</summary>
