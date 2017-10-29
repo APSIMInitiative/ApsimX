@@ -645,6 +645,25 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double DeltaCarbonConstrainedArea
+        {
+            get
+            {
+                double value = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        value += L.DeltaCarbonConstrainedArea;
+                }
+                return value;
+            }
+        }
+
+
+
         /// <summary>Gets the cohort population.</summary>
         [XmlIgnore]
         [Units("mm3")]
