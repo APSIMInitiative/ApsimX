@@ -609,7 +609,41 @@ namespace Models.PMF.Organs
                 return 0;
             }
         }
+        
+        /// <summary>Gets the DeltaPotentialArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double DeltaPotentialArea
+        {
+            get
+            { 
+                double value = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        value += L.DeltaPotentialArea;
+                }
+                return value;
+            }
+        }
 
+
+        /// <summary>Gets the DeltaStressConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double DeltaStressConstrainedArea
+        {
+            get
+            {
+                double value = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        value += L.DeltaStressConstrainedArea;
+                }
+                return value;
+            }
+        }
 
         /// <summary>Gets the cohort population.</summary>
         [XmlIgnore]
