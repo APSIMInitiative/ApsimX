@@ -2969,6 +2969,71 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </RUEModel>
             <Photosynthesis>
               <Name>PhotosynthesisDCaps</Name>
+              <Constant>
+                <Name>RSR</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>LeafAngle</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>B</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>SLNRatioTop</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>1.32</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>psiVc</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>1.16</FixedValue>
+                <Units>μmol CO2 mmol-1 N s-1</Units>
+              </Constant>
+              <Constant>
+                <Name>psiJ</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>2.4</FixedValue>
+                <Units>μmol CO2 mmol-1 N s-1</Units>
+              </Constant>
+              <Constant>
+                <Name>psiRd</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.0116</FixedValue>
+                <Units>μmol CO2 mmol-1 N s-1</Units>
+              </Constant>
+              <Constant>
+                <Name>PsiFactor</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>Ca</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>400</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>CiCaRatio</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.7</FixedValue>
+                <Units>μbar</Units>
+              </Constant>
+              <Constant>
+                <Name>gm25</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.55</FixedValue>
+                <Units>mol CO2 m-2 ground s-1 bar-1</Units>
+              </Constant>
+              <Constant>
+                <Name>StructuralN</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>25</FixedValue>
+              </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Photosynthesis>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3283,14 +3348,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Spike].MinimumNConc.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Live>
-            <Name>Biomass</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </Live>
-          <Dead>
-            <Name>Biomass</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </Dead>
         </GenericOrgan>
         <GenericOrgan>
           <Name>Stem</Name>
@@ -3554,14 +3611,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Stem].MinimumNConc.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Live>
-            <Name>Biomass</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </Live>
-          <Dead>
-            <Name>Biomass</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </Dead>
         </GenericOrgan>
         <CompositeBiomass>
           <Name>AboveGround</Name>
