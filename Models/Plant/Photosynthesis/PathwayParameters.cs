@@ -20,6 +20,29 @@ namespace Models.PMF.Photosynthesis
             psiJ = 3.20;
             psiVp = 3.39;
             x = 0.4;
+            Kc_P25 = 272.38;
+            Kc_c = 32.689;
+            Kc_b = 9741.400;
+            Kp_P25 = 139;
+            Kp_c = 14.644;
+            Kp_b = 4366.129;
+            Ko_P25 = 165820;
+            Ko_c = 9.574;
+            Ko_b = 2853.019;
+            VcMax_VoMax_P25 = 4.580;
+            VcMax_VoMax_c = 13.241;
+            VcMax_VoMax_b = 3945.722;
+            VcMax_c = 26.355;
+            VcMax_b = 7857.830;
+            VpMax_c = 26.355;
+            VpMax_b = 7857.830;
+            Rd_c = 18.715;
+            Rd_b = 5579.745;
+            JMax_TOpt = 28.796;
+            JMax_Omega = 15.536;
+            gm_P25 = 0.55;
+            gm_TOpt = 34.309;
+            gm_Omega = 20.791;
         }
 
         /// <summary></summary>
@@ -67,76 +90,76 @@ namespace Models.PMF.Photosynthesis
         // Kc μbar	
         /// <summary></summary>
         [ModelPar("Kc_P25", "", "", "", "")]
-        public double Kc_P25 { get; set; } = 272.38;
+        public double Kc_P25 { get; set; }
         /// <summary></summary>
         [ModelPar("Kc_c", "", "K", "c", "μbar")]
-        public double Kc_c { get; set; } = 32.689;
+        public double Kc_c { get; set; }
         /// <summary></summary>
         [ModelPar("Kc_b", "", "", "", "")]
-        public double Kc_b { get; set; } = 9741.400;
+        public double Kc_b { get; set; }
 
         // Kc μbar	-- C4
         /// <summary></summary>
         [ModelPar("Kp_P25", "", "", "", "")]
-        public double Kp_P25 { get; set; } = 139;
+        public double Kp_P25 { get; set; }
         /// <summary></summary>
         [ModelPar("Kp_c", "", "K", "p", "μbar")]
-        public double Kp_c { get; set; } = 14.644;
+        public double Kp_c { get; set; }
         /// <summary></summary>
         [ModelPar("Kp_b", "", "", "", "")]
-        public double Kp_b { get; set; } = 4366.129;
+        public double Kp_b { get; set; }
 
         //Ko μbar	
         /// <summary></summary>
         [ModelPar("Ko_P25", "", "", "", "")]
-        public double Ko_P25 { get; set; } = 165820;
+        public double Ko_P25 { get; set; }
         /// <summary></summary>
         [ModelPar("Ko_c", "", "K", "o", "μbar")]
-        public double Ko_c { get; set; } = 9.574;
+        public double Ko_c { get; set; }
         /// <summary></summary>
         [ModelPar("Ko_b", "", "", "", "")]
-        public double Ko_b { get; set; } = 2853.019;
+        public double Ko_b { get; set; }
 
         //Vcmax/Vomax	-	
         /// <summary></summary>
         [ModelPar("VcMax.VoMax_P25", "", "", "", "")]
-        public double VcMax_VoMax_P25 { get; set; } = 4.580;
+        public double VcMax_VoMax_P25 { get; set; }
         /// <summary></summary>
         [ModelPar("VcMax.VoMax_c", "", "Vc_max/Vo_max", "", "")]
-        public double VcMax_VoMax_c { get; set; } = 13.241;
+        public double VcMax_VoMax_c { get; set; }
         /// <summary></summary>
         [ModelPar("VcMax.VoMax_b", "", "", "", "")]
-        public double VcMax_VoMax_b { get; set; } = 3945.722;
+        public double VcMax_VoMax_b { get; set; }
         //Vomax/Vcmax	-	
         //   -	-	-
         //Vcmax μmol/m2/s*	
         /// <summary></summary>
         [ModelPar("VcMax_c", "", "V", "c_max", "μmol/m2/s")]
-        public double VcMax_c { get; set; } = 26.355;
+        public double VcMax_c { get; set; }
         /// <summary></summary>
         [ModelPar("VcMax_b", "", "", "", "")]
-        public double VcMax_b { get; set; } = 7857.830;
+        public double VcMax_b { get; set; }
 
         //Vpmax μmol/m2/s*	
         /// <summary></summary>
         [ModelPar("VpMax_c", "", "V", "p_max", "μmol/m2/s", "", "", true)]
-        public double VpMax_c { get; set; } = 26.355;
+        public double VpMax_c { get; set; }
         /// <summary></summary>
         [ModelPar("VpMax_b", "", "", "", "", "", "", true)]
-        public double VpMax_b { get; set; } = 7857.830;
+        public double VpMax_b { get; set; }
 
         //Rd μmol/m2/s*	
         /// <summary></summary>
         [ModelPar("Rd_c", "", "R", "d", "μmol/m2/s")]
-        public double Rd_c { get; set; } = 18.715;
+        public double Rd_c { get; set; }
         /// <summary></summary>
         [ModelPar("Rd_b", "", "", "", "")]
-        public double Rd_b { get; set; } = 5579.745;
+        public double Rd_b { get; set; }
 
         //Jmax(Barley, Farquhar 1980)    μmol/m2/s*	
         /// <summary></summary>
         [ModelPar("JMax_TOpt", "", "", "", "")]
-        public double JMax_TOpt { get; set; } = 28.796;
+        public double JMax_TOpt { get; set; }
         /// <summary></summary>
         [ModelPar("JMax_Omega", "", "J", "max", "μmol/m2/s")]
         public double JMax_Omega { get; set; } = 15.536;
@@ -144,13 +167,13 @@ namespace Models.PMF.Photosynthesis
         //gm(Arabidopsis, Bernacchi 2002)    μmol/m2/s/bar	
         /// <summary></summary>
         [ModelPar("gm_P25", "", "", "", "")]
-        public double gm_P25 { get; set; } = 0.55;
+        public double gm_P25 { get; set; }
         /// <summary></summary>
         [ModelPar("gm_TOpt", "", "", "", "")]
-        public double gm_TOpt { get; set; } = 34.309;
+        public double gm_TOpt { get; set; }
         /// <summary></summary>
         [ModelPar("gm_Omega", "", "g", "m", "mol/m2/s/bar")]
-        public double gm_Omega { get; set; } = 20.791;
+        public double gm_Omega { get; set; }
 
         /// <summary></summary>
         [ModelPar("THGeL", "Quantum efficiency of PSII e- folow on PSII-absorbed light basis at the strictly limiting light level", "ɸ", "2(LL)", "")]
