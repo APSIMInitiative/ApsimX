@@ -34,40 +34,52 @@ namespace Models.PMF.Functions.SupplyFunctions
 
         #region Functions
         [Link]
+        [Description("Root Shoot Ratio")]
         IFunction RSR = null;
 
         [Link]
+        [Description("Leaf Angle 0 horizontal, 90 vertical")]
         IFunction LeafAngle = null;
 
         [Link]
+        [Description("B")]
         IFunction B = null;
 
         [Link]
+        [Description("The ratio of SLN concentration at the top as a multiplier on avg SLN from Apsim")]
         IFunction SLNRatioTop = null;
 
         [Link]
+        [Description("Slope of linear relationship between Vmax per leaf are at 25°C and N")]
         IFunction psiVc = null;
 
         [Link]
+        [Description("Slope of linear relationship between Jmax per leaf are at 25°C and N")]
         IFunction psiJ = null;
 
         [Link]
+        [Description("Slope of linear relationship between Rd per leaf are at 25°C and N")]
         IFunction psiRd = null;
 
         [Link]
+        [Description("Psi reduction factor that applies to all psi values. Can use as a genetic factor")]
         IFunction psiFactor = null;
 
         [Link]
+        [Description("Air CO2 partial pressure")]
         IFunction Ca = null;
 
         [Link]
+        [Description("Ratio of Ci to Ca")]
         IFunction CiCaRatio = null;
 
         [Link]
+        [Description("Mesophyll conductance for CO2 at 25degrees")]
         IFunction gm25 = null;
 
         [Link]
-        IFunction structuralN = null;
+        [Description("Amount of N needed to retain structure. Below this photosynthesis does not occur")]
+        IFunction StructuralN = null;
         #endregion
 
         /// <summary>
@@ -83,7 +95,7 @@ namespace Models.PMF.Functions.SupplyFunctions
             if (Leaf.LAI > 0.5)
             {
                 double[] res = ps.calc(Clock.Today.DayOfYear, Weather.Latitude, Weather.MaxT, Weather.MinT, Weather.Radn, Leaf.LAI, SLN, Soil.PAW.Sum(), RSR.Value(), LeafAngle.Value(),
-                    B.Value(), SLNRatioTop.Value(), psiVc.Value(), psiJ.Value(), psiRd.Value(), psiFactor.Value(), Ca.Value(), CiCaRatio.Value(), gm25.Value(), structuralN.Value());
+                    B.Value(), SLNRatioTop.Value(), psiVc.Value(), psiJ.Value(), psiRd.Value(), psiFactor.Value(), Ca.Value(), CiCaRatio.Value(), gm25.Value(), StructuralN.Value());
                 return res[0];
             }
 
