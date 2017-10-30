@@ -7,48 +7,61 @@ namespace Models.PMF.Photosynthesis
         /// <summary></summary>
         public PathwayParameters()
         {
+            structuralN = 25;
+            SLNRatioTop = 1.32;
+            SLNAv = 1.45;
+            CiCaRatio = 0.7;
+            CiCaRatioIntercept = 0.90;
+            CiCaRatioSlope = -0.12;
+            fcyc = 0;
+            psiRd = 0.0175;
+            psiVc = 1.75;
+            psiJ2 = 2.43;
+            psiJ = 3.20;
+            psiVp = 3.39;
+            x = 0.4;
         }
 
         /// <summary></summary>
         [ModelPar("GUUtv", "Base leaf nitrogen content at or below which PS = 0", "N", "b", "mmol N/m2", "", "m2 leaf")]
-        public double structuralN { get; set; } = 25;
+        public double structuralN { get; set; }
         /// <summary></summary>
         [ModelPar("6awks", "Ratio of SLNo to SLNav", "SLN", "ratio_top", "")]
-        public double SLNRatioTop { get; set; } = 1.32;
+        public double SLNRatioTop { get; set; }
         /// <summary></summary>
         [ModelPar("cNPBJ", "Average SLN over the canopy", "SLN", "av", "g N/m2", "", "m2 leaf")]
-        public double SLNAv { get; set; } = 1.45;
+        public double SLNAv { get; set; }
         //Parmas based on C3
         /// <summary></summary>
         [ModelPar("36Sr7", "Ratio of Ci to Ca for the sunlit and shade leaf fraction", "Ci/Ca", "", "")]
-        public double CiCaRatio { get; set; } = 0.7;
+        public double CiCaRatio { get; set; }
         /// <summary></summary>
         [ModelPar("WE2QN", "Intercept of linear relationship of Ci/Ca ratio to VPD", "b", "", "")]
-        public double CiCaRatioIntercept { get; set; } = 0.90;
+        public double CiCaRatioIntercept { get; set; }
         /// <summary></summary>
         [ModelPar("jC0xB", "Slope of linear relationship of Ci/Ca ratio to VPD", "a", "", "1/kPa")]
-        public double CiCaRatioSlope { get; set; } = -0.12;
+        public double CiCaRatioSlope { get; set; }
         /// <summary></summary>
         [ModelPar("uk6BV", "Fraction of electrons at PSI that follow cyclic transport around PSI", "f", "cyc", "")]
-        public double fcyc { get; set; } = 0;
+        public double fcyc { get; set; }
         /// <summary></summary>
         [ModelPar("3WXTb", "Slope of the linear relationship between Rd_l and N(L) at 25°C with intercept = 0", "psi", "Rd", "mmol/mol N/s")]
-        public double psiRd { get; set; } = 0.0175;
+        public double psiRd { get; set; }
         /// <summary></summary>
         [ModelPar("l2mwD", "Slope of the linear relationship between Vcmax_l and N(L) at 25°C with intercept = 0", "psi", "Vc", "mmol/mol N/s")]
-        public double psiVc { get; set; } = 1.75;
+        public double psiVc { get; set; }
         /// <summary></summary>
         [ModelPar("I0uh7", "Slope of the linear relationship between J2max_l and N(L) at 25°C with intercept = 0", "psi", "J2", "mmol/mol N/s")]
-        public double psiJ2 { get; set; } = 2.43;
+        public double psiJ2 { get; set; }
         /// <summary></summary>
         [ModelPar("JwwUu", "Slope of the linear relationship between Jmax_l and N(L) at 25°C with intercept = 0", "psi", "J", "mmol/mol N/s")]
-        public double psiJ { get; set; } = 3.20;
+        public double psiJ { get; set; }
         /// <summary></summary>
         [ModelPar("pYisy", "Slope of the linear relationship between Vpmax_l and N(L) at 25°C with interception = 0", "psi", "Vp", "mmol/mol N/s", "", "", true)]
-        public double psiVp { get; set; } = 3.39;
+        public double psiVp { get; set; }
         /// <summary></summary>
         [ModelPar("tuksS", "Fraction of electron transport partitioned to mesophyll chlorplast", "x", "", "", "", "", true)]
-        public double x { get; set; } = 0.4;
+        public double x { get; set; }
 
         #region KineticParams
         // Kc μbar	
