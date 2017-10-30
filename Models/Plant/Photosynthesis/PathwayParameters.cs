@@ -162,7 +162,7 @@ namespace Models.PMF.Photosynthesis
         public double JMax_TOpt { get; set; }
         /// <summary></summary>
         [ModelPar("JMax_Omega", "", "J", "max", "μmol/m2/s")]
-        public double JMax_Omega { get; set; } = 15.536;
+        public double JMax_Omega { get; set; }
 
         //gm(Arabidopsis, Bernacchi 2002)    μmol/m2/s/bar	
         /// <summary></summary>
