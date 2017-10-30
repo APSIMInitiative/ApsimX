@@ -308,6 +308,11 @@ namespace Models.PMF.Photosynthesis
         /// <summary></summary>
         public PhotosynthesisModel()
         {
+            SunlitACs = new List<double>();
+            SunlitAJs = new List<double>();
+            ShadedACs = new List<double>();
+            ShadedAJs = new List<double>();
+
             envModel = new EnvironmentModel();
             canopy = new LeafCanopy();
             canopy.nLayers = 1;
