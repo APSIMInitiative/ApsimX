@@ -27652,6 +27652,8 @@ namespace Models
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].AboveGroundLive.N</string>
                 <string>[Maize].AboveGroundLive.Wt</string>
+                <string>[Maize].AboveGround.N</string>
+                <string>[Maize].AboveGround.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
@@ -30131,7 +30133,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.AboveGroundLive.Wt</YFieldName>
+              <YFieldName>Maize.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -37245,11 +37247,11 @@ namespace Models
               <Name>SowingRule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowingDate>2010-10-04</SowingDate>
-                <CultivarName>Pioneer_39V43</CultivarName>
                 <RowSpace>720</RowSpace>
                 <PlantPopulation>10.5</PlantPopulation>
                 <PlantingDepth>20</PlantingDepth>
+                <CultivarName>Pioneer_39V43</CultivarName>
+                <SowingDate>2010-10-04</SowingDate>
               </Script>
               <Code><![CDATA[
 using System;
