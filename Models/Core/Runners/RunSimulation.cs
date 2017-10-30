@@ -7,13 +7,21 @@
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading;
 
     /// <summary>
     /// This runnable class clones a simulation and then runs it.
     /// </summary>
     [Serializable]
-    public class RunSimulation : JobManager.IRunnable, JobManager.IComputationalyTimeConsuming
+    public class RunSimulation : IRunnable, IComputationalyTimeConsuming
     {
+        /// <summary>The arguments for a commence event.</summary>
+        public class CommenceArgs
+        {
+            /// <summary>The token to check for a job cancellation</summary>
+            public CancellationTokenSource CancelToken;
+        }
+
         /// <summary>The simulation to run.</summary>
         public Simulation simulationToRun { get; private set; }
 
@@ -22,6 +30,7 @@
 
         /// <summary>The engine</summary>
         [NonSerialized]
+        [Link]
         private ISimulationEngine simulationEngine;
 
         /// <summary>The simulation to run.</summary>
@@ -34,16 +43,13 @@
         [NonSerialized]
         private Stopwatch timer;
 
-        /// <summary>Initializes a new instance of the <see cref="RunExternal"/> class.</summary>
+        /// <summary>Constructor</summary>
         /// <param name="simulation">The simulation to clone and run.</param>
-        /// <param name="engine">The engine</param>
         /// <param name="doClone">Clone the simulation before running?</param>
-        public RunSimulation(Simulation simulation, ISimulationEngine engine, bool doClone)
+        public RunSimulation(Simulation simulation, bool doClone)
         {
             simulationToRun = simulation;
             cloneSimulationBeforeRun = doClone;
-            simulationEngine = engine;
-            fileName = simulationEngine.FileName;
         }
 
         /// <summary>
@@ -60,12 +66,15 @@
         }
 
         /// <summary>Called to start the job.</summary>
-        /// <param name="jobManager">The job manager running this job.</param>
-        /// <param name="workerThread">The thread this job is running on.</param>
-        public void Run(JobManager jobManager, BackgroundWorker workerThread)
+        /// <param name="cancelToken">The token to check if job has been cancelled</param>
+        public void Run(CancellationTokenSource cancelToken)
         {
-            Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(fileName) + 
-                              ", Simulation " + simulationToRun.Name + " has commenced.");
+            if (simulationEngine != null)
+            {
+                fileName = simulationEngine.FileName;
+                Console.Write("File: " + Path.GetFileNameWithoutExtension(fileName) + ", ");
+            }
+            Console.WriteLine("Simulation " + simulationToRun.Name + " has commenced.");
 
             // Start timer to record how long it takes to run
             timer = new Stopwatch();
@@ -81,7 +90,8 @@
                     simulationToRun = Apsim.Clone(simulationToRun) as Simulation;
                     events = new Events(simulationToRun);
                     simulationEngine.MakeSubstitutions(simulationToRun);
-                    events.Publish("Loaded", null);
+                    LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                    events.Publish("Loaded", new object[] { simulationToRun, loadedArgs });
                 }
                 else
                     events = new Events(simulationToRun);
@@ -100,15 +110,18 @@
 
                 // Send a commence event so the simulation runs
                 object[] args = new object[] { null, new EventArgs() };
+                object[] commenceArgs = new object[] { null, new CommenceArgs() { CancelToken = cancelToken } };
                 events.Publish("Commencing", args);
-                events.Publish("DoCommence", args);
-                events.Publish("Completed", args);
+                events.Publish("DoCommence", commenceArgs);
             }
             catch (Exception err)
             {
                 string errorMessage = "ERROR in file: " + fileName + "\r\n" +
-                                      "Simulation name: " + simulationToRun.Name + "\r\n" +
-                                      err.ToString();
+                                      "Simulation name: " + simulationToRun.Name + "\r\n";
+                if (err.InnerException == null)
+                    errorMessage += err.ToString();
+                else
+                    errorMessage += err.InnerException.ToString();
 
                 ISummary summary = Apsim.Find(simulationToRun, typeof(Summary)) as ISummary;
                 if (summary != null)
@@ -118,6 +131,8 @@
             }
             finally
             {
+                events.Publish("Completed", new object[] { null, new EventArgs() });
+
                 // Cleanup the simulation
                 if (events != null)
                     events.DisconnectEvents();

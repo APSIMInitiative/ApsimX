@@ -783,14 +783,14 @@ namespace Models.AgPasture
             {
                 double rldFac = Math.Min(1.0, RootLengthDensity[layer] / ReferenceRLD);
                 double swFac;
-                if (mySoil.SoilWater.SWmm[layer] >= mySoil.SoilWater.DULmm[layer])
+                if (mySoil.SoilWater.SWmm[layer] >= mySoil.DULmm[layer])
                     swFac = 1.0;
-                else if (mySoil.SoilWater.SWmm[layer] <= mySoil.SoilWater.LL15mm[layer])
+                else if (mySoil.SoilWater.SWmm[layer] <= mySoil.LL15mm[layer])
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer]) /
-                                        (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]);
+                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
+                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
                 }
 
@@ -822,14 +822,14 @@ namespace Models.AgPasture
                 double condFac = 1.0 - Math.Pow(10.0, -mySoil.KS[layer] / ReferenceKSuptake);
                 double rldFac = 1.0 - Math.Pow(10.0, -RootLengthDensity[layer] / ReferenceRLD);
                 double swFac;
-                if (mySoil.SoilWater.SWmm[layer] >= mySoil.SoilWater.DULmm[layer])
+                if (mySoil.SoilWater.SWmm[layer] >= mySoil.DULmm[layer])
                     swFac = 1.0;
-                else if (mySoil.SoilWater.SWmm[layer] <= mySoil.SoilWater.LL15mm[layer])
+                else if (mySoil.SoilWater.SWmm[layer] <= mySoil.LL15mm[layer])
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer]) /
-                                        (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]);
+                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
+                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
                 }
 
@@ -927,14 +927,14 @@ namespace Models.AgPasture
             {
                 layerFrac = FractionLayerWithRoots(layer);
                 bdFac = 100.0 / (mySoil.Thickness[layer] * mySoil.BD[layer]);
-                if (myZone.Water[layer] >= mySoil.SoilWater.DULmm[layer])
+                if (myZone.Water[layer] >= mySoil.DULmm[layer])
                     swFac = 1.0;
-                else if (myZone.Water[layer] <= mySoil.SoilWater.LL15mm[layer])
+                else if (myZone.Water[layer] <= mySoil.LL15mm[layer])
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer]) /
-                                        (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]);
+                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
+                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
                     waterRatio = MathUtilities.Bound(waterRatio, 0.0, 1.0);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
                 }
@@ -982,14 +982,14 @@ namespace Models.AgPasture
             {
                 layerFrac = FractionLayerWithRoots(layer);
                 rldFac = Math.Min(1.0, MathUtilities.Divide(RootLengthDensity[layer], ReferenceRLD, 1.0));
-                if (myZone.Water[layer] >= mySoil.SoilWater.DULmm[layer])
+                if (myZone.Water[layer] >= mySoil.DULmm[layer])
                     swFac = 1.0;
-                else if (myZone.Water[layer] <= mySoil.SoilWater.LL15mm[layer])
+                else if (myZone.Water[layer] <= mySoil.LL15mm[layer])
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer]) /
-                                        (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]);
+                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
+                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
                 }
 

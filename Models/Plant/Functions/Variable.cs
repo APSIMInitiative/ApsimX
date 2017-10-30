@@ -19,6 +19,9 @@ namespace Models.PMF.Functions
     [Description("Returns the value of a nominated internal Plant numerical variable")]
     public class VariableReference : Model, IFunction
     {
+        [Link]
+        ILocator locator = null;
+
         /// <summary>The variable name</summary>
         [Description("Specify an internal Plant variable")]
         public string VariableName { get; set; }
@@ -28,13 +31,18 @@ namespace Models.PMF.Functions
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            object o = Apsim.Get(this, VariableName.Trim());
+            object o = locator.Get(VariableName.Trim());
             if (o is IFunction)
                 return (o as IFunction).Value(arrayIndex);
             else if (o is Array)
                 return Convert.ToDouble((o as Array).GetValue(arrayIndex));
             else
-                return Convert.ToDouble(o);
+            {
+                double doubleValue = Convert.ToDouble(o);
+                if (double.IsNaN(doubleValue))
+                    throw new Exception("NaN (not a number) found when getting variable: " + VariableName);
+                return doubleValue;
+            }
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

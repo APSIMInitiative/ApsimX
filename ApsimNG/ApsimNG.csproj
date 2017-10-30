@@ -135,7 +135,6 @@
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
     <Compile Include="Commands\RenameModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
-    <Compile Include="Commands\SaveApsimJob.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\WriteDebugDoc.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />

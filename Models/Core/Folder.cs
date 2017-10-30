@@ -66,7 +66,7 @@ namespace Models.Core
                                     Design += " x ";
                                 Design += factor.Name;
                             }
-                            Design += " (" + (child as Experiment).Names().Length + ")";
+                            Design += " (" + (child as Experiment).GetSimulationNames().ToArray().Length + ")";
 
                             DataRow row = tableData.NewRow();
                             row[0] = child.Name;

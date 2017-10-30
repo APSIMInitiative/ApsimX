@@ -17,18 +17,28 @@ namespace Models.Storage
         {
             public string Name { get; private set; }
             public string Units { get; private set; }
+            public string SQLiteDataType { get; set; }
 
             /// <summary>Constructor</summary>
             /// <param name="columnName">Name of column</param>
             /// <param name="columnUnits">Units of column</param>
-            public Column(string columnName, string columnUnits)
+            /// <param name="dataTypeString">Data type of column</param>
+            public Column(string columnName, string columnUnits, string dataTypeString)
             {
                 Name = columnName;
                 Units = columnUnits;
+                SQLiteDataType = dataTypeString;
             }
         }
 
-        public List<Row> RowsToWrite = new List<Row>();
+        /// <summary>Lock object</summary>
+        private object lockObject = new object();
+
+        /// <summary>Rows to write to .db file</summary>
+        private List<object[]> RowsToWrite = new List<object[]>();
+
+        /// <summary>A set of column names for quickly checking if columns exist in this table.</summary>
+        private SortedSet<string> sortedColumnNames = new SortedSet<string>();
 
         /// <summary>Name of table.</summary>
         public string Name { get; private set; }
@@ -39,12 +49,71 @@ namespace Models.Storage
         /// <summary>Column names in table</summary>
         public List<Column> Columns { get; private set; }
 
+        /// <summary>Gets the number of rows that need writing</summary>
+        public int NumRowsToWrite {  get { return RowsToWrite.Count;  } }
+
         /// <summary>Constructor</summary>
         /// <param name="tableName">Name of table</param>
         public Table(string tableName)
         {
             Name = tableName;
             Columns = new List<Column>();
+            Columns.Add(new Column("SimulationID", null, "integer"));
+        }
+
+        /// <summary>Add a row to our list of rows to write</summary>
+        /// <param name="simulationID"></param>
+        /// <param name="rowColumnNames"></param>
+        /// <param name="rowColumnUnits"></param>
+        /// <param name="rowValues"></param>
+        public void AddRow(int simulationID, IEnumerable<string> rowColumnNames, IEnumerable<string> rowColumnUnits, IEnumerable<object> rowValues)
+        {
+            // We want all rows to be a normalised flat table. All rows must have the same number of values
+            // and be in correct order i.e. like a .NET DataTable.
+
+            // Firstly flatten our arrays and structures from the rowValues passed in.
+            Flatten(ref rowColumnNames, ref rowColumnUnits, ref rowValues);
+
+            // Ensure the row's columns are in this table's columns.
+            for (int i = 0; i < rowColumnNames.Count(); i++)
+            {
+                lock (lockObject)
+                {
+                    if (!sortedColumnNames.Contains(rowColumnNames.ElementAt(i)))
+                    {
+                        object value = rowValues.ElementAt(i);
+                        string dataType = GetSQLiteDataType(value);
+
+                        sortedColumnNames.Add(rowColumnNames.ElementAt(i));
+                        Columns.Add(new Column(rowColumnNames.ElementAt(i),
+                                                rowColumnUnits.ElementAt(i),
+                                                dataType));
+
+                        // Add extra column to all rows currently in table
+                        for (int rowIndex = 0; rowIndex < RowsToWrite.Count; rowIndex++)
+                        {
+                            object[] values = RowsToWrite[rowIndex];
+                            Array.Resize(ref values, values.Length + 1);
+                            RowsToWrite[rowIndex] = values;
+                        }
+                    }
+                }
+            }
+
+            // Add new row to our values in correct order.
+            lock (lockObject)
+            {
+                object[] newRow = new object[Columns.Count];
+                newRow[0] = simulationID;
+                for (int i = 0; i < rowColumnNames.Count(); i++)
+                {
+                    int columnIndex = Columns.FindIndex(column => column.Name == rowColumnNames.ElementAt(i));
+                    newRow[columnIndex] = rowValues.ElementAt(i);
+                    if (Columns[columnIndex].SQLiteDataType == null)
+                        Columns[columnIndex].SQLiteDataType = GetSQLiteDataType(newRow[columnIndex]);
+                }
+                RowsToWrite.Add(newRow);
+            }
         }
 
         /// <summary>Set the connection</summary>
@@ -58,14 +127,17 @@ namespace Models.Storage
         /// <param name="connection">The SQLite connection to open</param>
         private void Open(SQLite connection)
         {
-            Columns.Clear();
-            DataTable data = connection.ExecuteQuery("pragma table_info('" + Name + "')");
-            foreach (DataRow row in data.Rows)
+            lock (lockObject)
             {
-                string columnName = row["Name"].ToString();
-                string units = null;
-                units = LookupUnitsForColumn(connection, columnName);
-                Columns.Add(new Column(columnName, units));
+                Columns.Clear();
+                DataTable data = connection.ExecuteQuery("pragma table_info('" + Name + "')");
+                foreach (DataRow row in data.Rows)
+                {
+                    string columnName = row["Name"].ToString();
+                    string units = null;
+                    units = LookupUnitsForColumn(connection, columnName);
+                    Columns.Add(new Column(columnName, units, null));
+                }
             }
         }
 
@@ -77,29 +149,28 @@ namespace Models.Storage
             IntPtr preparedInsertQuery = IntPtr.Zero;
             try
             {
-                // Flatten all rows.
-                RowsToWrite.ForEach(r => r.Flatten());
-
-                // Update our Columns variable from the columns in all rows.
-                UpdateColumnsFromRowsToWrite();
-
+                List<string> columnNames = new List<string>();
+                List<object[]> values = new List<object[]>();
                 // If the table exists, make sure it has the required columns, otherwise create the table
-                if (TableExists(connection, Name))
-                    AlterTable(connection);
-                else
-                    CreateTable(connection);
+
+                lock (lockObject)
+                {
+                    int numRows = RowsToWrite.Count;
+                    if (TableExists(connection, Name))
+                        AlterTable(connection);
+                    else
+                        CreateTable(connection);
+
+                    columnNames.AddRange(Columns.Select(column => column.Name));
+                    values.AddRange(RowsToWrite.GetRange(0, numRows));
+                    RowsToWrite.RemoveRange(0, numRows);
+                }
 
                 // Create an insert query
-                preparedInsertQuery = CreateInsertQuery(connection);
+                preparedInsertQuery = CreateInsertQuery(connection, columnNames);
 
-                object[] values = new object[Columns.Count];
-                List<string> columnNames = Columns.Select(col => col.Name).ToList();
-                for (int rowIndex = 0; rowIndex < RowsToWrite.Count; rowIndex++)
-                {
-                    Array.Clear(values, 0, values.Length);
-                    RowsToWrite[rowIndex].GetValues(columnNames, ref values, simulationIDs);
-                    connection.BindParametersAndRunQuery(preparedInsertQuery, values);
-                }
+                for (int rowIndex = 0; rowIndex < values.Count; rowIndex++)
+                    connection.BindParametersAndRunQuery(preparedInsertQuery, values[rowIndex]);
             }
             finally
             {
@@ -145,41 +216,26 @@ namespace Models.Storage
                 return null;
         }
 
-        /// <summary>Alter an existing table ensuring all columns exist.</summary>
-        private void UpdateColumnsFromRowsToWrite()
-        {
-            Dictionary<string, string> allColumnNames = new Dictionary<string, string>();
-            foreach (Row row in RowsToWrite)
-                for (int colIndex = 0; colIndex < row.ColumnNames.Count(); colIndex++)
-                {
-                    if (!allColumnNames.ContainsKey(row.ColumnNames.ElementAt(colIndex)))
-                        allColumnNames.Add(row.ColumnNames.ElementAt(colIndex), row.ColumnUnits.ElementAt(colIndex));
-                }
-
-            foreach (KeyValuePair<string,string> column in allColumnNames)
-                if (Columns.Find(col => col.Name == column.Key) == null)
-                    Columns.Add(new Column(column.Key, column.Value));
-        }
-
         /// <summary>Ensure columns exist in .db file</summary>
         /// <param name="connection">The SQLite connection to write to</param>
         private void CreateTable(SQLite connection)
         {
             StringBuilder sql = new StringBuilder();
-
-            bool hasSimulationName = RowsToWrite.Count > 0 && RowsToWrite[0].SimulationName != null;
-            if (hasSimulationName)
-                Columns.Insert(0, new Column("SimulationID", null));
-
-            foreach (Column col in Columns)
+            lock (lockObject)
             {
-                if (sql.Length > 0)
-                    sql.Append(',');
+                foreach (Column col in Columns)
+                {
+                    if (sql.Length > 0)
+                        sql.Append(',');
 
-                sql.Append("[");
-                sql.Append(col.Name);
-                sql.Append("] ");
-                sql.Append(GetSQLiteDataType(col.Name));
+                    sql.Append("[");
+                    sql.Append(col.Name);
+                    sql.Append("] ");
+                    if (col.SQLiteDataType == null)
+                        sql.Append("integer");
+                    else
+                        sql.Append(col.SQLiteDataType);
+                }
             }
             sql.Insert(0, "CREATE TABLE " + Name + " (");
             sql.Append(')');
@@ -193,38 +249,33 @@ namespace Models.Storage
             DataTable columnData = connection.ExecuteQuery("pragma table_info('" + Name + "')");
             List<string> existingColumns = DataTableUtilities.GetColumnAsStrings(columnData, "Name").ToList();
 
-            bool hasSimulationName = RowsToWrite.Count > 0 && RowsToWrite[0].SimulationName != null;
-            if (hasSimulationName && Columns.Find(col => col.Name == "SimulationID") == null)
-                Columns.Insert(0, new Column("SimulationID", null));
-
-            foreach (Column col in Columns)
+            lock (lockObject)
             {
-                if (!existingColumns.Contains(col.Name))
+                foreach (Column col in Columns)
                 {
-                    string sql = "ALTER TABLE " + Name + " ADD COLUMN [" + col.Name + "] " + GetSQLiteDataType(col.Name);
-                    connection.ExecuteNonQuery(sql);
+                    if (!existingColumns.Contains(col.Name))
+                    {
+                        string dataTypeString;
+                        if (col.SQLiteDataType == null)
+                            dataTypeString = "integer";
+                        else
+                            dataTypeString = col.SQLiteDataType;
+
+                        string sql = "ALTER TABLE " + Name + " ADD COLUMN [" + col.Name + "] " + dataTypeString;
+                        connection.ExecuteNonQuery(sql);
+                    }
                 }
             }
         }
 
         /// <summary>Convert .NET type into an SQLite type</summary>
-        private string GetSQLiteDataType(string columnName)
+        private string GetSQLiteDataType(object value)
         {
-            // Find the first non null value if possible.
-            object value = null;
-            foreach (Row row in RowsToWrite)
-            {
-                int i = row.ColumnNames.ToList().IndexOf(columnName);
-                if (i != -1)
-                {
-                    value = row.Values.ElementAt(i);
-                    if (value != null) break;
-                }
-            }
-
             // Convert the value we found above into an SQLite data type string and return it.
             Type type = null;
-            if (value != null)
+            if (value == null)
+                return null;
+            else
                 type = value.GetType();
 
             if (type == null)
@@ -243,31 +294,137 @@ namespace Models.Storage
 
         /// <summary>Create a prepared insert query</summary>
         /// <param name="connection">The SQLite connection to write to</param>
-        private IntPtr CreateInsertQuery(SQLite connection)
+        /// <param name="columnNames">Column names</param>
+        private IntPtr CreateInsertQuery(SQLite connection, List<string> columnNames)
         {
             StringBuilder sql = new StringBuilder();
             sql.Append("INSERT INTO ");
             sql.Append(Name);
             sql.Append('(');
 
-            for (int i = 0; i < Columns.Count; i++)
+            for (int i = 0; i < columnNames.Count; i++)
             {
                 if (i > 0)
                     sql.Append(',');
                 sql.Append('[');
-                sql.Append(Columns[i].Name);
+                sql.Append(columnNames[i]);
                 sql.Append(']');
             }
             sql.Append(") VALUES (");
 
-            for (int i = 0; i < Columns.Count; i++)
+            for (int i = 0; i < columnNames.Count; i++)
             {
                 if (i > 0)
                     sql.Append(',');
                 sql.Append('?');
             }
+
             sql.Append(')');
             return connection.Prepare(sql.ToString());
+        }
+
+        /// <summary>
+        /// 'Flatten' the row passed in, into a list of columns ready to be added
+        /// to a data table.
+        /// </summary>
+        public static void Flatten(ref IEnumerable<string> columnNames, ref IEnumerable<string> columnUnits, ref IEnumerable<object> columnValues)
+        {
+            List<string> newColumnNames = new List<string>();
+            List<string> newColumnUnits = new List<string>();
+            List<object> newValues = new List<object>();
+
+            for (int i = 0; i < columnValues.Count(); i++)
+            {
+                string units = null;
+                if (columnUnits != null)
+                    units = columnUnits.ElementAt(i);
+                FlattenValue(columnNames.ElementAt(i),
+                             units,
+                             columnValues.ElementAt(i),
+                             newColumnNames, newColumnUnits, newValues);
+            }
+
+            columnNames = newColumnNames;
+            columnUnits = newColumnUnits;
+            columnValues = newValues;
+        }
+
+        /// <summary>
+        /// 'Flatten' a value (if it is an array or structure) into something that can be
+        /// stored in a flat database table.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="units"></param>
+        /// <param name="value"></param>
+        /// <param name="newColumnNames"></param>
+        /// <param name="newColumnUnits"></param>
+        /// <param name="newValues"></param>
+        private static void FlattenValue(string name, string units, object value,
+                                         List<string> newColumnNames, List<string> newColumnUnits, List<object> newValues)
+        {
+            if (value == null || value.GetType() == typeof(DateTime) || value.GetType() == typeof(string) || !value.GetType().IsClass)
+            {
+                // Scalar
+                newColumnNames.Add(name);
+                newColumnUnits.Add(units);
+                newValues.Add(value);
+            }
+            else if (value.GetType().IsArray)
+            {
+                // Array
+                Array array = value as Array;
+
+                for (int columnIndex = 0; columnIndex < array.Length; columnIndex++)
+                {
+                    string heading = name;
+                    heading += "(" + (columnIndex + 1).ToString() + ")";
+
+                    object arrayElement = array.GetValue(columnIndex);
+                    FlattenValue(heading, units, arrayElement,
+                                 newColumnNames, newColumnUnits, newValues);  // recursion
+                }
+            }
+            else if (value.GetType().GetInterface("IList") != null)
+            {
+                // List
+                IList array = value as IList;
+                for (int columnIndex = 0; columnIndex < array.Count; columnIndex++)
+                {
+                    string heading = name;
+                    heading += "(" + (columnIndex + 1).ToString() + ")";
+
+                    object arrayElement = array[columnIndex];
+                    FlattenValue(heading, units, arrayElement,
+                                 newColumnNames, newColumnUnits, newValues);  // recursion                }
+                }
+            }
+            else
+            {
+                // A struct or class
+                foreach (PropertyInfo property in ReflectionUtilities.GetPropertiesSorted(value.GetType(), BindingFlags.Instance | BindingFlags.Public))
+                {
+                    object[] attrs = property.GetCustomAttributes(true);
+                    string propUnits = null;
+                    bool ignore = false;
+                    foreach (object attr in attrs)
+                    {
+                        if (attr is XmlIgnoreAttribute)
+                        {
+                            ignore = true;
+                            continue;
+                        }
+                        Core.UnitsAttribute unitsAttr = attr as Core.UnitsAttribute;
+                        if (unitsAttr != null)
+                            propUnits = unitsAttr.ToString();
+                    }
+                    if (ignore)
+                        continue;
+                    string heading = name + "." + property.Name;
+                    object classElement = property.GetValue(value, null);
+                    FlattenValue(heading, propUnits, classElement,
+                                 newColumnNames, newColumnUnits, newValues);  // recursion
+                }
+            }
         }
 
     }

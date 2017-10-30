@@ -48,7 +48,7 @@ namespace UserInterface.Views
 
         public ProfileView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.ProfileView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ProfileView.glade");
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             vpaned2 = (VPaned)builder.GetObject("vpaned2");
             vbox1 = (VBox)builder.GetObject("vbox1");
@@ -57,10 +57,24 @@ namespace UserInterface.Views
             vbox1.PackStart(PropertyGrid.MainWidget, true, true, 0);
             //vpaned1.Pack1(PropertyGrid.MainWidget, true, true);
             ProfileGrid = new GridView(this);
+            ProfileGrid.NumericFormat = "N3";
             vpaned2.Pack1(ProfileGrid.MainWidget, true, true);
             Graph = new GraphView(this);
             vpaned2.Pack2(Graph.MainWidget, true, false);
             Graph.MainWidget.Realized += GraphWidget_Realized;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, System.EventArgs e)
+        {
+            ProfileGrid.MainWidget.Destroy();
+            ProfileGrid = null;
+            PropertyGrid.MainWidget.Destroy();
+            PropertyGrid = null;
+            Graph.MainWidget.Destroy();
+            Graph = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>

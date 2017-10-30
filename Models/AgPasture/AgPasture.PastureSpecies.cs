@@ -4758,7 +4758,7 @@ namespace Models.AgPasture
             {
                 // N demand is greater than fixation and remobilisation, N uptake is needed
                 senescedNRemobilised = RemobilisableSenescedN;
-                mySoilNDemand = demandLuxuryN - (fixedN + senescedNRemobilised);
+                mySoilNDemand = demandLuxuryN * GlfSoilFertility - (fixedN + senescedNRemobilised);
                 fracRemobilised = 1.0;
             }
 
@@ -5780,11 +5780,11 @@ namespace Models.AgPasture
             {
                 fractionLayer = FractionLayerWithRoots(layer);
                 mySWater += mySoil.Water[layer] * fractionLayer;
-                myWSat += mySoil.SoilWater.SATmm[layer] * fractionLayer;
+                myWSat += mySoil.SATmm[layer] * fractionLayer;
                 if (myMinimumWaterFreePorosity <= -Epsilon)
-                    myWMinP += mySoil.SoilWater.DULmm[layer] * fractionLayer;
+                    myWMinP += mySoil.DULmm[layer] * fractionLayer;
                 else
-                    myWMinP = mySoil.SoilWater.SATmm[layer] * (1.0 - myMinimumWaterFreePorosity) * fractionLayer;
+                    myWMinP = mySoil.SATmm[layer] * (1.0 - myMinimumWaterFreePorosity) * fractionLayer;
             }
 
             if (mySWater > myWMinP)

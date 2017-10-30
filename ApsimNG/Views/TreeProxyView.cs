@@ -79,7 +79,7 @@ namespace UserInterface.Views
         /// </summary>
         public TreeProxyView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.TreeProxyView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TreeProxyView.glade");
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             alignment1 = (Alignment)builder.GetObject("alignment1");
             hbox1 = (HBox)builder.GetObject("hbox1");
@@ -106,6 +106,15 @@ namespace UserInterface.Views
             largestDate = DateTime.MinValue;
             treeview2.CursorChanged += GridCursorChanged;
             MainWidget.ShowAll();
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            heightModel.Dispose();
+            gridModel.Dispose();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>

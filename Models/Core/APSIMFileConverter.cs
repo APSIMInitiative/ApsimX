@@ -17,14 +17,14 @@ namespace Models.Core
     using System.Text.RegularExpressions;
     using PMF;
     using System.Data;
-	
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 15; } }
+        public static int LastestVersion { get { return 18; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -241,7 +241,7 @@ namespace Models.Core
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
                 APSIMFileConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"([\[\]\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
+                APSIMFileConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
         }
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace Models.Core
         {
             foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "Root"))
             {
-                XmlNode partitionFraction = APSIMFileConverterUtilities.FindPMFNode(root, "PartitionFraction");
+                XmlNode partitionFraction = APSIMFileConverterUtilities.FindModelNode(root, "PartitionFraction");
                 if (partitionFraction != null)
                 {
                     root.RemoveChild(partitionFraction);
@@ -381,8 +381,8 @@ namespace Models.Core
                 }
             }
         }
-		
-		/// <summary>
+
+        /// <summary>
         /// Rename the "Simulations", "Messages", "InitialConditions" .db tables to be
         /// prefixed with an underscore.
         /// </summary>
@@ -438,7 +438,120 @@ namespace Models.Core
                 }
                 XmlUtilities.SetValues(report, "VariableNames/string", variables);
             }
-        } 
+        }
 
+        /// <summary>
+        /// Add nodes for new leaf tiller model
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion16(XmlNode node, string fileName)
+        {
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "LeafCohortParameters"))
+            {
+                XmlNode LagDurationAgeMultiplier = XmlUtilities.CreateNode(node.OwnerDocument, "ArrayFunction", "");
+                XmlNode SenescenceDurationAgeMultiplier = XmlUtilities.CreateNode(node.OwnerDocument, "ArrayFunction", "");
+                XmlNode LeafSizeAgeMultiplier = XmlUtilities.CreateNode(node.OwnerDocument, "ArrayFunction", "");
+                XmlElement name = node.OwnerDocument.CreateElement("Name");
+                XmlElement element = node.OwnerDocument.CreateElement("Values");
+
+                name.InnerText = "LagDurationAgeMultiplier";
+                element.InnerText = "1 1 1";
+                LagDurationAgeMultiplier.AppendChild(name);
+                LagDurationAgeMultiplier.AppendChild(element);
+
+                name = node.OwnerDocument.CreateElement("Name");
+                name.InnerText = "SenescenceDurationAgeMultiplier";
+                element = node.OwnerDocument.CreateElement("Values");
+                element.InnerText = "1 1 1";
+                SenescenceDurationAgeMultiplier.AppendChild(name);
+                SenescenceDurationAgeMultiplier.AppendChild(element);
+
+                name = node.OwnerDocument.CreateElement("Name");
+                element = node.OwnerDocument.CreateElement("Values");
+                name.InnerText = "LeafSizeAgeMultiplier";
+                element.InnerText = "1 1 1 1 1 1 1 1 1 1 1 1";
+                LeafSizeAgeMultiplier.AppendChild(name);
+                LeafSizeAgeMultiplier.AppendChild(element);
+
+                n.AppendChild(LagDurationAgeMultiplier);
+                n.AppendChild(SenescenceDurationAgeMultiplier);
+                n.AppendChild(LeafSizeAgeMultiplier);
+            }
+        }
+
+        /// <summary>
+        /// Rename CohortLive. to Live.
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion17(XmlNode node, string fileName)
+        {
+            // Rename .CohortLive to .Live in all compositebiomass nodes and report variables.
+            foreach (XmlNode biomass in XmlUtilities.FindAllRecursivelyByType(node, "CompositeBiomass"))
+            {
+                List<string> variables = XmlUtilities.Values(biomass, "Propertys/string");
+                for (int i = 0; i < variables.Count; i++)
+                {
+                    variables[i] = variables[i].Replace(".CohortLive", ".Live");
+                    variables[i] = variables[i].Replace(".CohortDead", ".Dead");
+                }
+                XmlUtilities.SetValues(biomass, "Propertys/string", variables);
+            }
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+            {
+                List<string> variables = XmlUtilities.Values(report, "VariableNames/string");
+                for (int i = 0; i < variables.Count; i++)
+                {
+                    variables[i] = variables[i].Replace(".CohortLive", ".Live");
+                    variables[i] = variables[i].Replace(".CohortDead", ".Dead");
+                }
+                XmlUtilities.SetValues(report, "VariableNames/string", variables);
+            }
+
+            // remove all live and dead nodes.
+            foreach (XmlNode childToDelete in APSIMFileConverterUtilities.FindModelNodes(node, "CompositeBiomass", "Live"))
+                childToDelete.ParentNode.RemoveChild(childToDelete);
+            foreach (XmlNode childToDelete in APSIMFileConverterUtilities.FindModelNodes(node, "CompositeBiomass", "Dead"))
+                childToDelete.ParentNode.RemoveChild(childToDelete);
+
+            foreach (XmlNode childToDelete in APSIMFileConverterUtilities.FindModelNodes(node, "Biomass", "Live"))
+                childToDelete.ParentNode.RemoveChild(childToDelete);
+            foreach (XmlNode childToDelete in APSIMFileConverterUtilities.FindModelNodes(node, "Biomass", "Dead"))
+                childToDelete.ParentNode.RemoveChild(childToDelete);
+
+        }
+
+        /// <summary>
+        /// Rename CohortLive. to Live.
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion18(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.dlayer", ".Thickness");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.Thickness", ".Thickness");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15", ".LL15");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15mm", ".LL15mm");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.DUL", ".DUL");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.DULmm", ".DULmm");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.SAT", ".SAT");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.SATmm", ".SATmm");
+            }
+
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+            {
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.dlayer", ".Thickness");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.Thickness", ".Thickness");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.LL15", ".LL15");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.LL15mm", ".LL15mm");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.DUL", ".DUL");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.DULmm", ".DULmm");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SAT", ".SAT");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SATmm", ".SATmm");
+            }
+        }
     }
 }

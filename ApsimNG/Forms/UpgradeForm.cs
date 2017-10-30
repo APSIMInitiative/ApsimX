@@ -74,7 +74,7 @@ namespace UserInterface.Forms
         /// </summary>
         public UpgradeForm(IMainView explorerPresenter)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.UpgradeForm.glade");
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.UpgradeForm.glade");
             window1 = (Window)builder.GetObject("window1");
             button1 = (Button)builder.GetObject("button1");
             button2 = (Button)builder.GetObject("button2");

@@ -65,6 +65,18 @@
             }
         }
 
+
+        /// <summary>
+        /// Gets the text to use as a label for the property.
+        /// </summary>
+        public override string Caption
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// Returns the units of the property (in brackets) or null if not found.
         /// </summary>
@@ -161,6 +173,25 @@
                 if (descriptionAttribute != null && descriptionAttribute.ToString() != "")
                     return descriptionAttribute.ToString();
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the text to use as a label for the property.
+        /// </summary>
+        public override string Caption
+        {
+            get
+            {
+                CaptionAttribute labelAttribute = ReflectionUtilities.GetAttribute(FieldInfo, typeof(CaptionAttribute), false) as CaptionAttribute;
+                if (labelAttribute == null)
+                {
+                    return Description;
+                }
+                else
+                {
+                    return labelAttribute.ToString();
+                }
             }
         }
 

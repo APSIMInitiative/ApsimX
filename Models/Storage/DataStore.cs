@@ -25,29 +25,11 @@
         [NonSerialized]
         private SQLite connection = null;
 
-        private class SimulationData
-        {
-            public string simulationName;
-            public bool complete = false;
-            public List<Table> tables = new List<Table>();
-            public SimulationData(string simName) { simulationName = simName; }
-            public void AddRowToTable(string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
-            {
-                Table table = tables.Find(t => t.Name == tableName);
-                if (table == null)
-                {
-                    table = new Table(tableName);
-                    tables.Add(table);
-                }
-                table.RowsToWrite.Add(new Row(simulationName, columnNames, columnUnits, valuesToWrite));
-            }
-        }
-
         /// <summary>A List of tables that needs writing.</summary>
         private List<Table> tables = new List<Table>();
 
         /// <summary>Data that needs writing</summary>
-        private List<SimulationData> dataToWrite = new List<SimulationData>();
+        private List<Table> dataToWrite = new List<Table>();
 
         /// <summary>The simulations table in the .db</summary>
         private Dictionary<string, int> simulationIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -90,10 +72,71 @@
         /// <summary>Constructor</summary>
         public DataStore(string fileNameToUse) { FileName = fileNameToUse; }
 
+        /// <summary>
+        /// Use C# destructor syntax for finalization code.
+        /// This destructor will run only if the Dispose method
+        /// does not get called.
+        /// It gives your base class the opportunity to finalize.
+        /// Do not provide destructors in types derived from this class.
+        /// </summary>
+        ~DataStore() {
+            // Do not re-create Dispose clean-up code here.
+            // Calling Dispose(false) is optimal in terms of
+            // readability and maintainability.
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Track whether Dispose has been called
+        /// </summary>
+        private bool disposed = false;
+
         /// <summary>Dispose method</summary>
         public void Dispose()
         {
+            Dispose(true);
+            // This object will be cleaned up by the Dispose method.
+            // Therefore, you should call GC.SupressFinalize to
+            // take this object off the finalization queue
+            // and prevent finalization code for this object
+            // from executing a second time.
+            GC.SuppressFinalize(this);
             Close();
+        }
+
+        /// <summary>
+        /// Dispose(bool disposing) executes in two distinct scenarios.
+        /// If disposing equals true, the method has been called directly
+        /// or indirectly by a user's code. Managed and unmanaged resources
+        /// can be disposed.
+        /// If disposing equals false, the method has been called by the
+        /// runtime from inside the finalizer and you should not reference
+        /// other objects. Only unmanaged resources can be disposed.
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called.
+            if (!this.disposed)
+            {
+                // If disposing equals true, dispose all managed
+                // and unmanaged resources.
+                if (disposing)
+                {
+                    // Dispose managed resources.
+                    // component.Dispose();
+                }
+
+                // Call the appropriate methods to clean up
+                // unmanaged resources here.
+                // If disposing is false,
+                // only the following code is executed.
+                Close();
+
+                // Note disposing has been done.
+                disposed = true;
+
+            }
         }
 
         /// <summary>Write to permanent storage.</summary>
@@ -104,49 +147,63 @@
         /// <param name="valuesToWrite">Values of row to write</param>
         public void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
         {
-            SimulationData simData;
+            Table t;
+            int simulationID = simulationIDs[simulationName];
             lock (dataToWrite)
             {
-                simData = dataToWrite.Find(s => s.simulationName == simulationName);
-                if (simData == null)
+                t = dataToWrite.Find(table => table.Name == tableName);
+                if (t == null)
                 {
-                    simData = new SimulationData(simulationName);
-                    dataToWrite.Add(simData);
+                    t = new Table(tableName);
+                    dataToWrite.Add(t);
                 }
             }
-            simData.AddRowToTable(tableName, columnNames, columnUnits, valuesToWrite);
+            t.AddRow(simulationID, columnNames, columnUnits, valuesToWrite);
         }
 
         /// <summary>Completed writing data for simulation</summary>
         /// <param name="simulationName"></param>
         public void CompletedWritingSimulationData(string simulationName)
         {
-            SimulationData simData;
-            lock (dataToWrite)
-            {
-                simData = dataToWrite.Find(s => s.simulationName == simulationName);
-            }
-            if (simData != null)
-                simData.complete = true;
+            //int simulationID = simulationIDs[simulationName];
+            //lock (dataToWrite)
+            //{
+            //    simData = dataToWrite.Find(s => s.simulationID == simulationID);
+            //}
+            //if (simData != null)
+            //    simData.complete = true;
         }
 
-        /// <summary>Begin writing to DB file</summary>
-        /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file. If null no cleanup will be performed.</param>
-        /// <param name="simulationNamesBeingRun">Collection of simulation names being run. If null no cleanup will be performed.</param>
-        public void BeginWriting(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        /// <summary>Simulation runs are about to begin.</summary>
+        [EventSubscribe("BeginRun")]
+        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
             stoppingWriteToDB = false;
+            if (knownSimulationNames != null && simulationNamesBeingRun != null)
+            {
+                Open(readOnly: false);
+                CleanupDB(knownSimulationNames, simulationNamesBeingRun);
+            }
             writeTask = Task.Run(() => WriteDBWorker(knownSimulationNames, simulationNamesBeingRun));
         }
 
         /// <summary>Finish writing to DB file</summary>
-        public void EndWriting()
+        [EventSubscribe("EndRun")]
+        private void OnEndRun(object sender, EventArgs e)
         {
-            foreach (SimulationData data in dataToWrite)
-                data.complete = true;
+            //foreach (SimulationData data in dataToWrite)
+            //    data.complete = true;
 
             stoppingWriteToDB = true;
             writeTask.Wait();
+
+            // Call the all completed event in all models
+            if (Parent != null)
+            {
+                object[] args = new object[] { this, new EventArgs() };
+                foreach (IPostSimulationTool tool in Apsim.FindAll(Parent, typeof(IPostSimulationTool)))
+                    tool.Run(this);
+            }
         }
 
         /// <summary>
@@ -172,6 +229,8 @@
 
             StringBuilder sql = new StringBuilder();
 
+            bool hasToday = false;
+
             // Write SELECT clause
             sql.Append("SELECT S.Name AS SimulationName,S.ID AS SimulationID");
             List<string> fieldList = null;
@@ -190,6 +249,8 @@
                 sql.Append("[");
                 sql.Append(fieldName);
                 sql.Append(']');
+                if (fieldName == "Clock.Today")
+                    hasToday = true;
             }
 
             // Write FROM clause
@@ -211,6 +272,11 @@
                 sql.Append(filter);
                 sql.Append(")");
             }
+
+            // Write ORDER BY clause
+            sql.Append(" ORDER BY S.ID");
+            if (hasToday)
+                sql.Append(", T.[Clock.Today]");
 
             // Write LIMIT/OFFSET clause
             if (count > 0)
@@ -253,7 +319,7 @@
 
             bool startWriteThread = writeTask == null || writeTask.IsCompleted;
             if (startWriteThread)
-                BeginWriting();
+                OnBeginRun(null, null);
 
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in data.Columns)
@@ -277,7 +343,7 @@
                 foreach (string simulationName in simulationNames)
                     if (simulationName != null && simulationName != string.Empty)
                         CompletedWritingSimulationData(simulationName);
-                EndWriting();
+                OnEndRun(null, null);
             }
         }
 
@@ -416,9 +482,9 @@
         /// <summary>Is there data to be written?</summary>
         private bool IsDataToWrite()
         {
-            foreach (SimulationData data in dataToWrite)
+            foreach (Table data in dataToWrite)
             {
-                if (data.tables.Find(table => table.HasRowsToWrite) != null)
+                if (data.NumRowsToWrite > 0)
                     return true;
             }
             return false;
@@ -429,19 +495,24 @@
         /// <param name="simulationNamesBeingRun">Collection of simulation names being run</param>
         private void WriteDBWorker(IEnumerable<string> knownSimulationNames, IEnumerable<string> simulationNamesBeingRun)
         {
+            Table dataToWriteToDB = null;
             try
             {
-                Open(readOnly: false);
-
-                if (knownSimulationNames != null && simulationNamesBeingRun != null)
-                    CleanupDB(knownSimulationNames, simulationNamesBeingRun);
-
                 while (true)
                 {
-                    SimulationData dataToWriteToDB = null;
+                    dataToWriteToDB = null;
                     lock (dataToWrite)
                     {
-                        dataToWriteToDB = dataToWrite.Find(d => d.complete);
+                        // Find the table with the most number of rows to write.
+                        int maxNumRows = 0;
+                        foreach (Table t in dataToWrite)
+                        {
+                            if (t.NumRowsToWrite > maxNumRows)
+                            {
+                                maxNumRows = t.NumRowsToWrite;
+                                dataToWriteToDB = t;
+                            }
+                        }
                     }
 
                     if (dataToWriteToDB == null)
@@ -456,33 +527,24 @@
                         connection.ExecuteNonQuery("BEGIN");
                         try
                         {
-                            foreach (Table tableWithRows in dataToWriteToDB.tables)
-                            {
-                                tableWithRows.WriteRows(connection, simulationIDs);
-
-                                Table table = tables.Find(t => t.Name == tableWithRows.Name);
-                                if (table == null)
-                                    tables.Add(tableWithRows);
-                                else
-                                    table.MergeColumns(tableWithRows);
-                            }
+                            dataToWriteToDB.WriteRows(connection, simulationIDs);
                         }
                         finally
                         {
                             connection.ExecuteNonQuery("END");
-                        }
-                        lock (dataToWrite)
-                        {
-                            dataToWrite.Remove(dataToWriteToDB);
                         }
                     }
                 }
             }
             catch (Exception err)
             {
-                Console.WriteLine(err.ToString());
+                // Console.WriteLine(err.ToString());
+                string msg = "Error writing to database";
+                if (dataToWriteToDB != null)
+                    msg += " \"" + dataToWriteToDB.Name + "\"";
+                throw new Exception(msg, err);
             }
-            finally   
+            finally
             {
                 connection.ExecuteNonQuery("BEGIN");
                 try
@@ -493,16 +555,26 @@
                 {
                     connection.ExecuteNonQuery("END");
                 }
-                Close();
                 Open(readOnly: true);
             }
+
+            foreach (Table table in dataToWrite)
+            {
+                Table foundTable = tables.Find(t => t.Name == table.Name);
+                if (foundTable == null)
+                    tables.Add(table);
+                else
+                    foundTable.MergeColumns(table);
+            }
+            dataToWrite.Clear();
+
         }
 
         /// <summary>Write a _units table to .db</summary>
         private void WriteUnitsTable()
         {
             connection.ExecuteQuery("DELETE FROM _Units");
-            foreach (Table table in tables)
+            foreach (Table table in dataToWrite)
             {
                 foreach (Table.Column column in table.Columns)
                 {
@@ -748,7 +820,11 @@
             tables.RemoveAll(table => table.Name == tableName);
 
             Table newTable = new Table(tableName);
-            names.ForEach(name => newTable.Columns.Add(new Table.Column(name, null)));
+            foreach (string columnName in names)
+            {
+                if (columnName != "SimulationID")
+                    newTable.Columns.Add(new Table.Column(columnName, null, null));
+            }
             tables.Add(newTable);
         }
 

@@ -87,6 +87,7 @@ namespace Models.Core
         private Simulations()
         {
             Version = APSIMFileConverter.LastestVersion;
+            LoadErrors = new List<Exception>();
         }
 
         /// <summary>
@@ -108,7 +109,13 @@ namespace Models.Core
             Apsim.ParentAllChildren(newSimulations);
 
             // Call OnLoaded in all models.
-            newSimulations.LoadErrors = events.Publish("Loaded", null);
+            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+            events.Publish("Loaded", new object[] { newSimulations, loadedArgs });
+            if (loadedArgs.errors.Count > 0)
+            {
+                newSimulations.LoadErrors = new List<Exception>();
+                newSimulations.LoadErrors.AddRange(loadedArgs.errors);
+            }
             return newSimulations;
         }
 
@@ -140,7 +147,13 @@ namespace Models.Core
                 Apsim.ParentAllChildren(simulations);
 
                 // Call OnLoaded in all models.
-                simulations.LoadErrors = events.Publish("Loaded", null);
+                LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                events.Publish("Loaded", new object[] { simulations, loadedArgs });
+                if (loadedArgs.errors.Count > 0)
+                {
+                    simulations.LoadErrors = new List<Exception>();
+                    simulations.LoadErrors.AddRange(loadedArgs.errors);
+                }
             }
 
             return simulations;
@@ -172,7 +185,13 @@ namespace Models.Core
                 simulations.Parent = null;
                 Apsim.ParentAllChildren(simulations);
 
-                events.Publish("Loaded", null);
+                LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                events.Publish("Loaded", new object[] { simulations, loadedArgs });
+                if (loadedArgs.errors.Count > 0)
+                {
+                    simulations.LoadErrors = new List<Exception>();
+                    simulations.LoadErrors.AddRange(loadedArgs.errors);
+                }
             }
             else
                 throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
@@ -185,8 +204,9 @@ namespace Models.Core
         public void Run(Simulation simulation, bool doClone)
         {
             Apsim.ParentAllChildren(simulation);
-            RunSimulation simulationRunner = new RunSimulation(simulation, this, doClone);
-            simulationRunner.Run(null, null);
+            RunSimulation simulationRunner = new RunSimulation(simulation, doClone);
+            Links.Resolve(simulationRunner);
+            simulationRunner.Run(new System.Threading.CancellationTokenSource());
         }
 
         /// <summary>Make model substitutions if necessary.</summary>
@@ -209,7 +229,8 @@ namespace Models.Core
                             newModel.Parent = match.Parent;
                             match.Parent.Children.Remove(match as Model);
                             Events events = new Events(newModel);
-                            events.Publish("Loaded", null);
+                            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                            events.Publish("Loaded", new object[] { newModel, loadedArgs });
                         }
                     }
                 }
@@ -275,7 +296,7 @@ namespace Models.Core
             foreach (Model experiment in Apsim.ChildrenRecursively(this))
             {
                 if (experiment is Experiment)
-                    simulations.AddRange((experiment as Experiment).Names());
+                    simulations.AddRange((experiment as Experiment).GetSimulationNames());
             }
 
             return simulations.ToArray();
@@ -302,6 +323,14 @@ namespace Models.Core
                     (simulation as Simulation).FileName = FileName;
         }
 
+        /// <summary>
+        /// Nulls the link object, which will force it to be recreated when it's needed
+        /// </summary>
+        public void ClearLinks()
+        {
+            links = null;
+        }
+
         /// <summary>Create a links object</summary>
         private void CreateLinks()
         {
@@ -309,6 +338,7 @@ namespace Models.Core
             IStorageReader storage = Apsim.Find(this, typeof(IStorageReader)) as IStorageReader;
             if (storage != null)
                 services.Add(storage);
+            services.Add(this);
             links = new Links(services);
         }
 

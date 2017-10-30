@@ -19,7 +19,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(PostSimulationTools.PredictedObserved))]
-    public class Tests : Model, ITestable, JobManager.IRunnable
+    public class Tests : Model, ITestable
     {
         /// <summary>
         /// data table
@@ -237,14 +237,6 @@ namespace Models
                         }
                     }
             }
-        }
-
-        /// <summary>Run the test</summary>
-        /// <param name="jobManager">The job manager</param>
-        /// <param name="workerThread">Background worker</param>
-        public void Run(JobManager jobManager, BackgroundWorker workerThread)
-        {
-            Test(accept: false, GUIrun: false);
         }
 
         /// <summary>Document the stats.</summary>

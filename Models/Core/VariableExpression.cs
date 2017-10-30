@@ -101,6 +101,17 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Gets the text to use as a label for the property.
+        /// </summary>
+        public override string Caption
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Gets the units of the property (in brackets) or null if not found.
         /// </summary>
         public override string Units
@@ -140,9 +151,9 @@ namespace Models.Core
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " while evaluating expression: " + expression);
                 if (sometypeofobject is double)
-                {
                     sym.m_value = (double)sometypeofobject;
-                }
+                else if (sometypeofobject is int)
+                    sym.m_value = Convert.ToDouble(sometypeofobject);
                 else if (sometypeofobject is double[])
                 {
                     sym.m_values = (double[])sometypeofobject;

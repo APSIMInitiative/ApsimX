@@ -39,7 +39,7 @@ namespace UserInterface.Views
         /// <summary>Initializes a new instance of the <see cref="SeriesView" /> class</summary>
         public SeriesView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.SeriesView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SeriesView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             table1 = (Table)builder.GetObject("table1");
             label4 = (Label)builder.GetObject("label4");
@@ -106,6 +106,32 @@ namespace UserInterface.Views
 
             table1.Attach(dropDownView10.MainWidget, 3, 4, 6, 7, AttachOptions.Fill, 0, 0, 5);
             table1.Attach(dropDownView11.MainWidget, 3, 4, 7, 8, AttachOptions.Fill, 0, 0, 5);
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, System.EventArgs e)
+        {
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            dropDownView1.MainWidget.Destroy();
+            dropDownView2.MainWidget.Destroy();
+            dropDownView3.MainWidget.Destroy();
+            dropDownView4.MainWidget.Destroy();
+            dropDownView5.MainWidget.Destroy();
+            dropDownView6.MainWidget.Destroy();
+            dropDownView7.MainWidget.Destroy();
+            dropDownView8.MainWidget.Destroy();
+            dropDownView9.MainWidget.Destroy();
+            dropDownView10.MainWidget.Destroy();
+            dropDownView11.MainWidget.Destroy();
+            checkBoxView1.MainWidget.Destroy();
+            checkBoxView2.MainWidget.Destroy();
+            checkBoxView3.MainWidget.Destroy();
+            checkBoxView4.MainWidget.Destroy();
+            checkBoxView5.MainWidget.Destroy();
+            checkBoxView6.MainWidget.Destroy();
+            graphView1.MainWidget.Destroy();
+            editView1.MainWidget.Destroy();
+            _owner = null;
         }
 
         /// <summary>Data source</summary>

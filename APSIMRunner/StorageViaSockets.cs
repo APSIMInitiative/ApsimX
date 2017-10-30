@@ -8,7 +8,7 @@
 
     class StorageViaSockets : Model, IStorageWriter
     {
-        List<JobManagerMultiProcess.TransferRowInTable> data = new List<JobManagerMultiProcess.TransferRowInTable>();
+        List<JobRunnerMultiProcess.TransferRowInTable> data = new List<JobRunnerMultiProcess.TransferRowInTable>();
 
         /// <summary>We have completed the simulation - write remaining data</summary>
         /// <param name="simulationName"></param>
@@ -25,7 +25,7 @@
         /// <param name="valuesToWrite">Values of row to write</param>
         public void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
         {
-            JobManagerMultiProcess.TransferRowInTable rowData = new JobManagerMultiProcess.TransferRowInTable()
+            JobRunnerMultiProcess.TransferRowInTable rowData = new JobRunnerMultiProcess.TransferRowInTable()
             {
                 simulationName = simulationName,
                 tableName = tableName, 
@@ -41,9 +41,12 @@
         /// <summary>Write all the data we stored</summary>
         private void WriteAllData()
         {
-            SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = data };
-            SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
-            data.Clear();
+            if (data.Count > 0)
+            {
+                SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = data };
+                SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
+                data.Clear();
+            }
         }
     }
 }

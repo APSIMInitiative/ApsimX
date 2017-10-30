@@ -31,7 +31,7 @@ namespace UserInterface.Views
         /// </summary>
         public InitialWaterView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.InitialWaterView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.InitialWaterView.glade");
             hpaned1 = (HPaned)builder.GetObject("hpaned1");
             spinbutton1 = (SpinButton)builder.GetObject("spinbutton1");
             entry1 = (Entry)builder.GetObject("entry1");
@@ -60,6 +60,12 @@ namespace UserInterface.Views
             radiobutton1.Toggled -= OnRadioButton1CheckedChanged;
             spinbutton1.Changed -= OnNumericUpDown1ValueChanged;
             combobox1.Changed -= OnComboBox1SelectedValueChanged;
+            comboModel.Dispose();
+            comboRender.Destroy();
+            graphView1.MainWidget.Destroy();
+            graphView1 = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>

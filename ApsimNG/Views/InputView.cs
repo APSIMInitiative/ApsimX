@@ -50,7 +50,7 @@ namespace UserInterface.Views
         /// </summary>
         public InputView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.InputView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.InputView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             button1 = (Button)builder.GetObject("button1");
             label1 = (Label)builder.GetObject("label1");
@@ -67,6 +67,10 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             button1.Clicked -= OnBrowseButtonClick;
+            Grid.MainWidget.Destroy();
+            Grid = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>
