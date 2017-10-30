@@ -1395,7 +1395,8 @@ namespace Models.PMF.Organs
                     DMReAllocationCohort[i] = ReAlloc;
                 }
                 if (!MathUtilities.FloatsAreEqual(remainder, 0.0))
-                    throw new Exception(Name + " DM Reallocation demand left over after processing.");
+                   throw new Exception(Name + " DM Reallocation demand left over after processing.");
+
             }
 
             //Send allocations to cohorts
