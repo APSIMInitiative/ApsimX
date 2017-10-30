@@ -34,6 +34,10 @@ namespace Models.PMF.Functions.SupplyFunctions
 
         #region Functions
         [Link]
+        [Description("Use C3 or C4 model")]
+        IFunction Cmodel = null;
+
+        [Link]
         [Description("Root Shoot Ratio")]
         IFunction RSR = null;
 
@@ -80,6 +84,23 @@ namespace Models.PMF.Functions.SupplyFunctions
         [Link]
         [Description("Amount of N needed to retain structure. Below this photosynthesis does not occur")]
         IFunction StructuralN = null;
+
+        [Link]
+        [Description("Minimum LAI for photosynthesis to occur.")]
+        IFunction MinLAI = null;
+
+        // C4 exclusive params
+        [Link]
+        [Description("")]
+        IFunction psiVp = null;
+
+        [Link]
+        [Description("")]
+        IFunction gbs = null;
+
+        [Link]
+        [Description("")]
+        IFunction Vpr = null;
         #endregion
 
         /// <summary>
@@ -89,16 +110,33 @@ namespace Models.PMF.Functions.SupplyFunctions
         /// <returns>The DM supply.</returns>
         public double Value(int arrayIndex = -1)
         {
-            C3PhotoLink ps = new C3PhotoLink();
-            double SLN = Leaf.Live.N / Leaf.LAI;
-
-            if (Leaf.LAI > 0.5)
+            if ((int)Math.Round(Cmodel.Value()) == 3)
             {
-                double[] res = ps.calc(Clock.Today.DayOfYear, Weather.Latitude, Weather.MaxT, Weather.MinT, Weather.Radn, Leaf.LAI, SLN, Soil.PAW.Sum(), RSR.Value(), LeafAngle.Value(),
-                    B.Value(), SLNRatioTop.Value(), psiVc.Value(), psiJ.Value(), psiRd.Value(), psiFactor.Value(), Ca.Value(), CiCaRatio.Value(), gm25.Value(), StructuralN.Value());
-                return res[0];
-            }
+                C3PhotoLink ps = new C3PhotoLink();
+                double SLN = Leaf.Live.N / Leaf.LAI;
 
+                if (Leaf.LAI > MinLAI.Value())
+                {
+                    double[] res = ps.calc(Clock.Today.DayOfYear, Weather.Latitude, Weather.MaxT, Weather.MinT, Weather.Radn, Leaf.LAI, SLN, Soil.PAW.Sum(), RSR.Value(), LeafAngle.Value(),
+                        B.Value(), SLNRatioTop.Value(), psiVc.Value(), psiJ.Value(), psiRd.Value(), psiFactor.Value(), Ca.Value(), CiCaRatio.Value(), gm25.Value(), StructuralN.Value());
+                    return res[0];
+                }
+
+                return 0;
+            }
+            else if ((int)Math.Round(Cmodel.Value()) == 4)
+            {
+                C4PhotoLink ps = new C4PhotoLink();
+                double SLN = Leaf.Live.N / Leaf.LAI;
+
+                if (Leaf.LAI > 0.5)
+                {
+                    double[] res = ps.calc(Clock.Today.DayOfYear, Weather.Latitude, Weather.MaxT, Weather.MinT, Weather.Radn, Leaf.LAI, SLN, Soil.PAW.Sum(), B.Value(), RSR.Value(),
+                        LeafAngle.Value(), SLNRatioTop.Value(), psiVc.Value(), psiJ.Value(), psiRd.Value(), psiVp.Value(), psiFactor.Value(), Ca.Value(), gbs.Value(), gm25.Value(), Vpr.Value());
+                    return res[0];
+                }
+                return 0;
+            }
             return 0;
         }
     }
