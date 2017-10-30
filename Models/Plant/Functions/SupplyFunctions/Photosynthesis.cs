@@ -131,8 +131,8 @@ namespace Models.PMF.Functions.SupplyFunctions
 
                 if (Leaf.LAI > 0.5)
                 {
-                    double[] res = ps.calc(Clock.Today.DayOfYear, Weather.Latitude, Weather.MaxT, Weather.MinT, Weather.Radn, Leaf.LAI, SLN, Soil.PAW.Sum(), B.Value(), RSR.Value(),
-                        LeafAngle.Value(), SLNRatioTop.Value(), psiVc.Value(), psiJ.Value(), psiRd.Value(), psiVp.Value(), psiFactor.Value(), Ca.Value(), gbs.Value(), gm25.Value(), Vpr.Value());
+                    double[] res = ps.calc(Clock.Today.DayOfYear, Weather.Latitude, Weather.MaxT, Weather.MinT, Weather.Radn, Leaf.LAI, SLN, Soil.PAW.Sum(), B.Value(), RSR.Value(), LeafAngle.Value(), SLNRatioTop.Value(),
+                        psiVc.Value(), psiJ.Value(), psiRd.Value(), psiVp.Value(), psiFactor.Value(), Ca.Value(), gbs.Value(), gm25.Value(), Vpr.Value());
                     return res[0];
                 }
                 return 0;
