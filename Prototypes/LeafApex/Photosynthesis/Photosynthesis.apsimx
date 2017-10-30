@@ -2970,6 +2970,18 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Photosynthesis>
               <Name>PhotosynthesisDCaps</Name>
               <Constant>
+                <Name>Cmodel</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>3</FixedValue>
+                <Units>3 for C3, 4 for C4</Units>
+              </Constant>
+              <Constant>
+                <Name>MinLAI</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.1</FixedValue>
+                <Units />
+              </Constant>
+              <Constant>
                 <Name>RSR</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>0</FixedValue>
@@ -3033,6 +3045,21 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>StructuralN</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>25</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>psiVp</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>gbs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>Vpr</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
               </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Photosynthesis>
