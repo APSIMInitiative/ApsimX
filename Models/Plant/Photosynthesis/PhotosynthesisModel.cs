@@ -102,16 +102,16 @@ namespace Models.PMF.Photosynthesis
 
         /// <summary></summary>
         [ModelVar("SLAC88", "Time step", "t", "", "")]
-        public List<double> SunlitACs { get; set; } = new List<double>();
+        public List<double> SunlitACs { get; set; }
         /// <summary></summary>
         [ModelVar("SLAJ73", "", "", "", "")]
-        public List<double> SunlitAJs { get; set; } = new List<double>();
+        public List<double> SunlitAJs { get; set; }
         /// <summary></summary>
         [ModelVar("SSAC11", "", "", "", "")]
-        public List<double> ShadedACs { get; set; } = new List<double>();
+        public List<double> ShadedACs { get; set; }
         /// <summary></summary>
         [ModelVar("SSAK00", "", "", "", "")]
-        public List<double> ShadedAJs { get; set; } = new List<double>();
+        public List<double> ShadedAJs { get; set; }
 
         /// <summary></summary>
         public int minTime = 6;
@@ -175,7 +175,7 @@ namespace Models.PMF.Photosynthesis
 
         /// <summary></summary>
         [ModelVar("DDDR7", "Proportion of above ground biomass to total plant biomass", "P", "Shoot", "", "", "")]
-        public double P_ag { get; set; } = 0.8;
+        public double P_ag { get; set; }
 
         /// <summary></summary>
         [ModelVar("vtoDc", "ASunlitMAx", "A", "", "")]
@@ -312,6 +312,7 @@ namespace Models.PMF.Photosynthesis
             SunlitAJs = new List<double>();
             ShadedACs = new List<double>();
             ShadedAJs = new List<double>();
+            P_ag = 0.8;
 
             envModel = new EnvironmentModel();
             canopy = new LeafCanopy();
