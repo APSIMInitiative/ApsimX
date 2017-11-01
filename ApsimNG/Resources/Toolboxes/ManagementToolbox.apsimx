@@ -251,6 +251,56 @@ namespace Models
 }
 ]]></Code>
   </Manager>
+      <Manager>
+        <Name>Fertilise on Zadok stage</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Script>
+          <Stage>30</Stage>
+          <Amount>40</Amount>
+        </Script>
+        <Code><![CDATA[using System; 
+using Models.Core; 
+using Models.PMF; 
+namespace Models 
+{ 
+  [Serializable] 
+  public class Script : Model 
+  { 
+    [Link] Clock Clock; 
+    [Link] Fertiliser Fertiliser; 
+    [Link] Summary Summary; 
+    [Link] Plant Wheat; 
+ 
+    private bool hasFertilised = false; 
+
+    [Description("Fertilise once crop reaches stage:")]
+    public double Stage {get; set;}
+
+    [Description("Amount of fertiliser to be applied (kg/ha)")] 
+    public double Amount { get; set;} 
+     
+    [EventSubscribe("DoManagement")] 
+    private void OnDoManagement(object sender, EventArgs e) 
+    { 
+      double zadok = (double)Apsim.Get(Wheat,"Phenology.Zadok.Stage"); 
+ 
+      if(zadok >= Stage && !hasFertilised) 
+      { 
+         Summary.WriteMessage(this, "Fertilising!!"); 
+         Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NH4N);
+         hasFertilised = true; 
+      } 
+    }
+
+	[EventSubscribe("Sowing")]
+	private void OnSowing(object sender, EventArgs e)
+	{
+		hasFertilised = false;
+    }
+  } 
+} 
+]]></Code>
+      </Manager>
   <Manager>
     <Name>Irrigate on a fixed date</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
