@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 using Models.Core;
+using System.Threading;
 
 namespace Models
 {
@@ -173,23 +174,21 @@ namespace Models
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoCommence")]
-        private void OnDoCommence(object sender, EventArgs e)
+        private void OnDoCommence(object sender, Core.Runners.RunSimulation.CommenceArgs e)
         {
-            try
-            {
                 if (DoInitialSummary != null)
                     DoInitialSummary.Invoke(this, args);
 
                 if (StartOfSimulation != null)
                     StartOfSimulation.Invoke(this, args);
 
-			if (WFInitialiseResource != null)
-				WFInitialiseResource.Invoke(this, args);
+				if (WFInitialiseResource != null)
+					WFInitialiseResource.Invoke(this, args);
 
-			if (WFInitialiseActivity != null)
-				WFInitialiseActivity.Invoke(this, args);
+				if (WFInitialiseActivity != null)
+					WFInitialiseActivity.Invoke(this, args);
 
-            while (Today <= EndDate)
+	            while (Today <= EndDate && !e.CancelToken.IsCancellationRequested)
                 {
                     if (DoWeather != null)
                         DoWeather.Invoke(this, args);
@@ -330,15 +329,6 @@ namespace Models
                 }
                 Summary.WriteMessage(this, "Simulation terminated normally");
             }
-            catch (Exception ex)
-            {
-                Summary.WriteMessage(this, "Simulation terminated due to exception: " + ex.Message);
-                // Is there a good mechanism for letting our invoker know that an error has occurred?
-                // Throwing this back to the caller doesn't seem to work. This seems to be a consequence
-                // of the Invoke method used to call us crossing the native/managed boundary. I'm not
-                // sure why this is so...
-                // throw ex;
-            }
-        }
+
     }
 }
