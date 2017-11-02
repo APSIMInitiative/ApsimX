@@ -1,0 +1,43 @@
+{{ $baseUrl := .Site.BaseURL }}
+{{ partial "header.html" . }}
+
+<div class="row">
+	<div class="col-sm-8 doc-main">
+	<main role="main">
+		<div class="doc-list-header">
+			<h3>Index</h3>
+		</div>
+
+		<div class="doc-list-entry">
+		<ul>
+		{{ range .Site.Sections }}
+			{{ range first 1 .Pages }}
+				{{ if and (ne .Section "") (ne .Section "index") }}
+				<li><a class="doc-entry" href="{{ $baseUrl }}/{{ .Section }}">{{ .Section | title }}/</a><ul>
+				{{ end }}
+			{{ end }}
+			{{ range .Pages }}
+				{{ if eq (substr .Title 0 1) "_" }}
+				{{ else }}
+			<li><a class="doc-entry" href="{{ .RelPermalink }}">
+				<span class="doc-entry-title">{{ .Title }}</span>
+				<span class="doc-entry-meta in-list">
+					(<time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 02, 2006" }}</time>)
+				</span>
+			</a></li>
+				{{ end }}
+			{{ end }}
+			{{ range first 1 .Pages }}
+				{{ if and (ne .Section "") (ne .Section "index") }}</ul></li>{{ end }}
+			{{ end }}
+		{{ end }}
+		</ul>
+		</div>
+
+	</main>
+	</div> <!-- /.doc-main -->
+
+	{{ partial "sidebar-list.html" . }}
+</div> <!-- /.row -->
+
+{{ partial "footer.html" . }}
