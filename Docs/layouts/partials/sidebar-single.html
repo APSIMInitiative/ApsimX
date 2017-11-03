@@ -1,0 +1,42 @@
+{{ $baseUrl := .Site.BaseURL }}
+{{ $url := .Permalink }}
+<div class="col-sm-3 col-sm-offset-1 doc-sidebar">
+	<div id="sidebar">
+	<div class="sidebar-module">
+		<div class="sidebar-toc">
+			<h4 class="sidebar-heading">Table of Contents</h4>
+			<ul>
+				<li><strong><a href="#title">{{ .Title }}</a></strong></li>
+			</ul>
+			{{ .TableOfContents }}
+		</div>
+	</div>
+	<div class="sidebar-module">
+		<h4 class="sidebar-heading">Pages in Categories</h4>
+		<ul class="sidebar-category-list">
+		{{ range $name, $taxonomy := .Site.Taxonomies.categories }}
+			<li>
+				<a href="{{ $baseUrl }}/categories/{{ $name | urlize }}">
+					<span class="doc-list-category">{{ $name | title }}</span>
+				</a>
+				<ul>{{ range $taxonomy.Pages }}
+					<li>{{ if eq $url .Permalink }}
+						<span class="active">{{ .Title }}{{ if .Draft }} #Draft{{ end }}</span>
+						{{ else }}<a href="{{ .RelPermalink }}">{{ .Title }}{{ if .Draft }} #Draft{{ end }}</a>
+					{{ end }}</li>
+				{{ end }}
+				</ul>
+			</li>
+		{{ end }} 
+		</ul>
+	</div>
+	<div class="sidebar-module">
+		<h4 class="sidebar-heading">Tags</h4>
+		<div class="tag-box">
+		{{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+			<a class="tag-item" href="{{ $baseUrl }}/tags/{{ $name | urlize }}">{{ $name }}</a>
+		{{ end }}
+		</div>
+	</div>
+	</div>
+</div><!-- /.doc-sidebar -->
