@@ -750,7 +750,7 @@ namespace Models.PMF.Organs
             Allocated.StructuralWt = dryMatter.Structural;
             Allocated.StorageWt = dryMatter.Storage;
             Allocated.MetabolicWt = dryMatter.Metabolic;
-
+            GrowthRespiration = (dryMatter.Structural + dryMatter.Storage + dryMatter.Metabolic) * (1 - DMConversionEfficiency.Value());
             if (TotalRAw == 0 && Allocated.Wt > 0)
                 throw new Exception("Error trying to partition root biomass");
 
