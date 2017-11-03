@@ -1,0 +1,25 @@
+body {
+  padding-top: 70px;
+  padding-bottom: 0px;
+  font-family: 'Roboto';font-size: 14px;
+}
+
+div {
+	padding-left: 1cm;
+    padding-right: 1cm;
+    font-family: 'Roboto';font-size: 14px;
+}
+
+.theme-dropdown .dropdown-menu {
+  position: static;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.theme-showcase > p > .btn {
+  margin: 5px 0;
+}
+
+.theme-showcase .navbar .container {
+  width: auto;
+}

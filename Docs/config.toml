@@ -1,0 +1,20 @@
+baseURL = "/"
+languageCode = "en-us"
+title = "APSIM Next Generation"
+
+
+[Params]
+  noCategoryLink = true
+
+  
+[[menu.main]]
+  name   = "Model documentation"
+  url    = "/ModelDocumentation/Index"
+  weight = 1
+  
+[[menu.main]]  
+  name   = "Design"
+  url    = "/Design/Index"
+  weight = 2  
+
+  

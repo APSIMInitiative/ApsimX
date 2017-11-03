@@ -1,0 +1,22 @@
+{{ $baseUrl := .Site.BaseURL }}
+{{ partial "header.html" . }}
+
+<main role="main">
+
+
+{{ range where .Site.Pages "Title" "Index"}}
+	<div class="row doc-main">
+		{{ .Content }}
+	</div> 
+{{ end }}
+
+
+{{ $title := .Site.Title }}
+{{ with .Site.Params.withSitePosts }}
+<hr /> 
+
+{{ end }}
+
+</main>
+
+{{ partial "footer.html" . }}
