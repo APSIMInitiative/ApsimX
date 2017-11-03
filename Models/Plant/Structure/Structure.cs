@@ -281,7 +281,8 @@ namespace Models.PMF.Struct
         {
             if (Plant.IsGerminated)
             {
-                 DeltaHaunStage = 0;
+                Leaf l = Leaf as Leaf;
+                DeltaHaunStage = 0;
                 if (Phyllochron.Value() > 0)
                     DeltaHaunStage = ThermalTime.Value() / Phyllochron.Value();
                
@@ -363,7 +364,15 @@ namespace Models.PMF.Struct
 
                         if (Phenology.Stage > 4 & !SenescenceByAge)
                         {
-                            ApexNum -= Leaf.ApexNumByAge(StemSenescenceAge.Value());
+                            if(l != null && l.Apex is ApexTiller)
+                            {
+                                double n = Leaf.ApexNumByAge(StemSenescenceAge.Value());
+                                ApexNum -= n;
+                                TotalStemPopn -= n * Plant.Population;
+                            }
+                            else
+                                ApexNum -= Leaf.ApexNumByAge(StemSenescenceAge.Value());
+
                             SenescenceByAge = true;
                         }
                     }
@@ -375,8 +384,10 @@ namespace Models.PMF.Struct
                     //Reduce stem number incase of mortality
                     double PropnMortality = 0;
                     PropnMortality = BranchMortality.Value();
+                    double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
+
+                    if (l != null && l.Apex is ApexTiller)
                     {
-                        double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
                         TotalStemPopn -= DeltaPopn;
                         ProportionBranchMortality = PropnMortality;
                     }
