@@ -510,13 +510,17 @@ namespace Models.PMF
                     else
                     {//Remobilise more Non-structural DM to cover the cost
                         if (DM.TotalRetranslocationSupply > 0)
+                        {
+                            double Costmet = 0;
                             for (int i = 0; i < Organs.Length; i++)
                             {
                                 double proportion = DM.RetranslocationSupply[i] / DM.TotalRetranslocationSupply;
                                 double DMRetranslocated = Math.Min(UnallocatedRespirationCost * proportion, DM.RetranslocationSupply[i]);
                                 DM.Retranslocation[i] += DMRetranslocated;
-                                UnallocatedRespirationCost -= DMRetranslocated;
+                                Costmet += DMRetranslocated;
                             }
+                            UnallocatedRespirationCost -= Costmet;
+                        }
                         if (UnallocatedRespirationCost == 0)
                         { }//All cost accounted for
                         else
