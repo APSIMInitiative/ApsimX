@@ -60,20 +60,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Populate the view object
-        /// </summary>
-        private void PopulateView()
-        {
-            if (this.ShowCaption)
-            {
-                if (this.graph.Caption != "Double click to add a caption")
-                    this.view.Populate(this.graph.Caption);
-            }
-            else
-                this.view.Populate(this.graph.Name);
-        }
-
-        /// <summary>
         /// Detach the model from the view.
         /// </summary>
         public void Detach()
@@ -83,16 +69,6 @@ namespace UserInterface.Presenters
 
             // Trap events from the view.
             this.view.OnTitleChanged -= this.OnTitleChanged;
-        }
-        
-        /// <summary>
-        /// The 'Model' has changed so we need to update the 'View'. Usually the result of an 'Undo' or 'Redo'
-        /// </summary>
-        /// <param name="model">The model object</param>
-        private void OnModelChanged(object model)
-        {
-            if (model == this.graph)
-                this.PopulateView();
         }
 
         /// <summary>
@@ -105,10 +81,44 @@ namespace UserInterface.Presenters
             if (this.ShowCaption)
             {
                 if (newText != "Double click to add a caption")
+                {
                     this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "Caption", newText));
+                }
             }
             else
+            {
                 this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "Title", newText));
+            }
+        }
+
+        /// <summary>
+        /// Populate the view object
+        /// </summary>
+        private void PopulateView()
+        {
+            if (this.ShowCaption)
+            {
+                if (this.graph.Caption != "Double click to add a caption")
+                {
+                    this.view.Populate(this.graph.Caption);
+                }
+            }
+            else
+            {
+                this.view.Populate(this.graph.Name);
+            }
+        }
+
+        /// <summary>
+        /// The 'Model' has changed so we need to update the 'View'. Usually the result of an 'Undo' or 'Redo'
+        /// </summary>
+        /// <param name="model">The model object</param>
+        private void OnModelChanged(object model)
+        {
+            if (model == this.graph)
+            {
+                this.PopulateView();
+            }
         }
     }
 }

@@ -10,8 +10,8 @@ namespace UserInterface.Presenters
     using System.Linq;
     using Models;
     using Models.Core;
-    using Views;
     using Models.Factorial;
+    using Views;
 
     /// <summary>Presenter class for working with HtmlView</summary>
     public class SummaryPresenter : IPresenter
@@ -45,7 +45,9 @@ namespace UserInterface.Presenters
                     string[] simulationNames = experiment.GetSimulationNames().ToArray();
                     this.view.SimulationNames = simulationNames;
                     if (simulationNames.Length > 0)
+                    {
                         this.view.SimulationName = simulationNames[0];
+                    }
                 }
                 else
                 {
@@ -57,21 +59,21 @@ namespace UserInterface.Presenters
                 this.SetHtmlInView();
 
                 // subscribe to the simulation name changed event.
-                this.view.SimulationNameChanged += OnSimulationNameChanged;
+                this.view.SimulationNameChanged += this.OnSimulationNameChanged;
             }
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            this.view.SimulationNameChanged -= OnSimulationNameChanged;
+            this.view.SimulationNameChanged -= this.OnSimulationNameChanged;
         }
 
         /// <summary>Populate the summary view.</summary>
         private void SetHtmlInView()
         {
             StringWriter writer = new StringWriter();
-            Summary.WriteReport(dataStore, this.view.SimulationName, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html);
+            Summary.WriteReport(this.dataStore, this.view.SimulationName, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html);
             this.view.SetSummaryContent(writer.ToString());
             writer.Close();
         }
@@ -79,10 +81,9 @@ namespace UserInterface.Presenters
         /// <summary>Handles the SimulationNameChanged event of the view control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        void OnSimulationNameChanged(object sender, EventArgs e)
+        private void OnSimulationNameChanged(object sender, EventArgs e)
         {
-            SetHtmlInView();
+            this.SetHtmlInView();
         }
-
     }
 }
