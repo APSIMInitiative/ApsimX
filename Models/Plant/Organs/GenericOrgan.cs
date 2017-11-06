@@ -357,7 +357,13 @@ namespace Models.PMF.Organs
             if (DMDemand.Storage > 0.0)
             {
                 Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
-                Live.StorageWt += Allocated.StorageWt;
+                double diffWt = dryMatter.Storage - dryMatter.Retranslocation;
+                if (diffWt > 0)
+                {
+                    diffWt *= dmConversionEfficiency.Value();
+                }
+                Allocated.StorageWt = diffWt;
+                Live.StorageWt += diffWt;
             }
 
             // allocate metabolic DM
@@ -366,8 +372,8 @@ namespace Models.PMF.Organs
             // Retranslocation
             if (dryMatter.Retranslocation - startLive.StorageWt > biomassToleranceValue)
                 throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
-            Live.StorageWt -= dryMatter.Retranslocation;
-            Allocated.StorageWt -= dryMatter.Retranslocation;
+            // Live.StorageWt -= dryMatter.Retranslocation / dmConversionEfficiency.Value();
+            // Allocated.StorageWt = dryMatter.Retranslocation;
         }
 
         /// <summary>Sets the n allocation.</summary>

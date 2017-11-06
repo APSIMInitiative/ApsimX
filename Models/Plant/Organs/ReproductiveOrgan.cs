@@ -301,6 +301,7 @@ namespace Models.PMF.Organs
         public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
             Live.StructuralN += nitrogen.Structural;
+            Allocated.StructuralN = nitrogen.Structural;
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
         public double MaxNconc
