@@ -2,7 +2,7 @@
 
 <main role="main">
 	<div class="doc-list-entry">
-	{{ range .Data.Pages "Title" "Index"}}
+	{{ range .Data.Pages }}
 	   {{ .Content }}
 	{{ end }}
 	</div>
