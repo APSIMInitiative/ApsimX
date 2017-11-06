@@ -4692,17 +4692,18 @@ namespace Models.AgPasture
         internal void EvaluateNitrogenFixation()
         {
             fixedN = 0.0;
-            if (isLegume && demandLuxuryN > Epsilon)
+            double adjNDemand = demandOptimumN * myGlfSoilFertility;
+            if (isLegume && adjNDemand > Epsilon)
             {
                 // Start with minimum fixation
-                fixedN = myMinimumNFixation * demandLuxuryN;
+                fixedN = myMinimumNFixation * adjNDemand;
 
                 // Evaluate N stress
-                double Nstress = Math.Max(0.0, MathUtilities.Divide(SoilAvailableN, demandLuxuryN - fixedN, 1.0));
+                double Nstress = Math.Max(0.0, MathUtilities.Divide(SoilAvailableN, adjNDemand - fixedN, 1.0));
 
                 // Update N fixation if under N stress
                 if (Nstress < 0.99)
-                    fixedN += (myMaximumNFixation - myMinimumNFixation) * (1.0 - Nstress) * demandLuxuryN;
+                    fixedN += (myMaximumNFixation - myMinimumNFixation) * (1.0 - Nstress) * adjNDemand;
             }
         }
 
@@ -4741,16 +4742,17 @@ namespace Models.AgPasture
         internal void EvaluateSoilNitrogenDemand()
         {
             double fracRemobilised = 0.0;
-            if (demandLuxuryN - fixedN < Epsilon)
+            double adjNDemand = demandLuxuryN * myGlfSoilFertility;
+            if (adjNDemand - fixedN < Epsilon)
             {
                 // N demand is fulfilled by fixation alone
                 senescedNRemobilised = 0.0;
                 mySoilNDemand = 0.0;
             }
-            else if (demandLuxuryN - (fixedN + RemobilisableSenescedN) < Epsilon)
+            else if (adjNDemand - (fixedN + RemobilisableSenescedN) < Epsilon)
             {
                 // N demand is fulfilled by fixation plus N remobilised from senesced material
-                senescedNRemobilised = Math.Max(0.0, demandLuxuryN - fixedN);
+                senescedNRemobilised = Math.Max(0.0, adjNDemand - fixedN);
                 mySoilNDemand = 0.0;
                 fracRemobilised = MathUtilities.Divide(senescedNRemobilised, RemobilisableSenescedN, 0.0);
             }
@@ -4758,7 +4760,7 @@ namespace Models.AgPasture
             {
                 // N demand is greater than fixation and remobilisation, N uptake is needed
                 senescedNRemobilised = RemobilisableSenescedN;
-                mySoilNDemand = demandLuxuryN * GlfSoilFertility - (fixedN + senescedNRemobilised);
+                mySoilNDemand = adjNDemand * GlfSoilFertility - (fixedN + senescedNRemobilised);
                 fracRemobilised = 1.0;
             }
 
@@ -4777,7 +4779,7 @@ namespace Models.AgPasture
         {
             // check whether there is still demand for N (only match demand for growth at optimum N conc.)
             // check whether there is any luxury N remobilisable
-            double Nmissing = demandOptimumN - (fixedN + senescedNRemobilised + SoilUptakeN);
+            double Nmissing = demandOptimumN * myGlfSoilFertility - (fixedN + senescedNRemobilised + SoilUptakeN);
             if ((Nmissing > Epsilon) && (RemobilisableLuxuryN > Epsilon))
             {
                 // all N already considered is not enough to match demand for growth, check remobilisation of luxury N
