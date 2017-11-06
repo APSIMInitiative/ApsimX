@@ -864,9 +864,9 @@ namespace Models.PMF.Organs
                 LeafStartStorageNReallocationSupply = SenescedFrac * liveBiomass.StorageN * NReallocationFactor;
                 //Retranslocated N is only that which occurs after N uptake. Both Non-structural and metabolic N are able to be retranslocated but metabolic N will only be moved if remobilisation of non-structural N does not meet demands
                 LeafStartMetabolicNRetranslocationSupply = Math.Max(0.0,
-                    liveBiomass.MetabolicN * NRetranslocationFactor - LeafStartMetabolicNReallocationSupply);
+                    liveBiomass.MetabolicN * (1 - SenescedFrac) * NRetranslocationFactor);
                 LeafStartStorageNRetranslocationSupply = Math.Max(0.0,
-                    liveBiomass.StorageN * NRetranslocationFactor - LeafStartStorageNReallocationSupply);
+                    liveBiomass.StorageN * (1 - SenescedFrac) * NRetranslocationFactor);
                 LeafStartNReallocationSupply = LeafStartStorageNReallocationSupply + LeafStartMetabolicNReallocationSupply;
                 LeafStartNRetranslocationSupply = LeafStartStorageNRetranslocationSupply + LeafStartMetabolicNRetranslocationSupply;
 
