@@ -527,6 +527,11 @@ Though tillering is common in some maize varieties under certain agronomic condi
   <ReproductiveOrgan>
     <Name>Grain</Name>
     <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>    
+    <Constant>
       <Name>InitialGrainProportion</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.05</FixedValue>
@@ -883,6 +888,11 @@ The parameter KL is is described by Meinke et al (1993) to combine elements of s
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Maize].Population</XProperty>
     </LinearInterpolationFunction>
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>    
     <Constant>
       <Name>SoilWaterEffect</Name>
       <Memo>
@@ -1849,7 +1859,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <FixedValue>0.7</FixedValue>
     </Constant>
     <Constant>
-      <Name>DMConversionEfficiencyFunction</Name>
+      <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
@@ -1907,7 +1917,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
     <MicroClimatePresent>true</MicroClimatePresent>
     <KDead>0.03</KDead>
     <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
-    <DMConversionEfficiency>0</DMConversionEfficiency>
     <TipsAtEmergence>0</TipsAtEmergence>
     <CohortsAtInitialisation>0</CohortsAtInitialisation>
     <FractionDied>0</FractionDied>
