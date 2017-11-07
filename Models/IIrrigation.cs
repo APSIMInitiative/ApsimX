@@ -17,8 +17,17 @@ namespace Models
         /// <summary>The depth at which irrigation is applied (mm).</summary>
         double Depth { get; }
 
+        /// <summary>The time, from midnight, to start irrigation (hrs).</summary>
+        double StartTime { get; }
+
         /// <summary>The duration that irrigation is applied for (hrs).</summary>
         double Duration { get; }
+
+        /// <summary>The efficiency of the irrigation system (mm/mm).</summary>
+        double Efficiency { get; }
+
+        /// <summary>The flag for whether the irrigation can be intercepted by canopy (true/false).</summary>
+        bool WillIntercept { get; }
 
         /// <summary>The flag for whether the irrigation can run off (true/false).</summary>
         bool WillRunoff { get; }

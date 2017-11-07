@@ -11,7 +11,24 @@ namespace Models
     using System.Xml.Serialization;
     using Models.Core;
 
-    /// <summary>The irrigation class.</summary>
+    /// <summary>
+    /// This model controls the irrigation events, which can be triggered using the Apply() method.
+    /// </summary>
+    /// <remarks>
+    /// The Apply method can be invoked by external models or manager scripts, it has one mandatory parameter and several optionals:
+    /// - amount: The amount to apply (mm) (M);
+    /// - depth: The depth of application (mm) (O);
+    /// - startTime: The time to start the irrigation (hrs) (O);
+    /// - duration: The duration of irrigation event (hrs) (O);
+    /// - efficiency: The irrigation efficiency (mm/mm) (O);
+    /// - willIntercept: Whether irrigation can be intercepted by canopy (true/false) (O);
+    /// - willRunoff: Whether irrigation can run off (true/false) (O);
+    /// 
+    /// The actual amount of irrigation applied is computed by multiplying the 'amount' × 'efficiency'.
+    /// The Irrigated event is raised to advertise an irrigation, with it goes the actual amount applied and other
+    ///  parameters.
+    /// Solutes in irrigated water have not been not implemented yet.
+    /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
     public class Irrigation : Model, IIrrigation
@@ -34,7 +51,7 @@ namespace Models
         [XmlIgnore]
         public double Depth { get; set; }
 
-        /// <summary>The time, from midnight, to start irrigation (hrs).</summary>
+        /// <summary>Gets or sets the time, from midnight, to start irrigation (hrs).</summary>
         [XmlIgnore]
         public double StartTime { get; set; }
 
@@ -46,13 +63,13 @@ namespace Models
         [XmlIgnore]
         public double Efficiency { get; set; }
 
+        /// <summary>Gets or sets the flag for whether the irrigation can be intercepted by canopy.</summary>
+        [XmlIgnore]
+        public bool WillIntercept { get; set; }
+
         /// <summary>Gets or sets the flag for whether the irrigation can run off (true/false).</summary>
         [XmlIgnore]
         public bool WillRunoff { get; set; }
-
-        /// <summary>Indicates whether the irrigation can be intercepted by canopy.</summary>
-        [XmlIgnore]
-        public bool WillIntercept { get; set; }
 
         /// <summary>Occurs when [irrigated].</summary>
         /// <remarks>Advertises an irrigation and allows other models to respond accordingly.</remarks>
@@ -127,6 +144,12 @@ namespace Models
                     Efficiency = efficiency;
                 }
 
+                if (Depth > 0.0)
+                { // Subsurface irrigation, cannot have interception nor direct runoff
+                    willIntercept = false;
+                    willRunoff = false;
+                }
+
                 IrrigationTotal = amount;
                 IrrigationApplied = IrrigationTotal * Efficiency;
                 WillRunoff = willRunoff;
@@ -165,6 +188,7 @@ namespace Models
             StartTime = defaultStartTime;
             Duration = defaultDuration;
             Efficiency = defaultEfficiency;
+            WillIntercept = false;
             WillRunoff = false;
         }
     }

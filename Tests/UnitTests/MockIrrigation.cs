@@ -13,7 +13,13 @@ namespace UnitTests
 
         public double Depth { get; set; }
 
+        public double StartTime { get; set; }
+
         public double Duration { get; set; }
+
+        public double Efficiency { get; set; }
+
+        public bool WillIntercept { get; set; }
 
         public bool WillRunoff { get; set; }
 
