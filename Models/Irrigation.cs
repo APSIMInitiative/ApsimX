@@ -18,7 +18,11 @@ namespace Models
         /// <summary>Access the summary model.</summary>
         [Link] private ISummary Summary = null;
 
-        /// <summary>Gets or sets the amount of irrigation applied (mm).</summary>
+        /// <summary>Gets the total irrigation resource used (mm).</summary>
+        [XmlIgnore]
+        public double IrrigationTotal { get; private set; }
+
+        /// <summary>Gets the amount of irrigation applied (mm).</summary>
         [XmlIgnore]
         public double IrrigationApplied { get; private set; }
 
@@ -30,6 +34,10 @@ namespace Models
         [XmlIgnore]
         public double Duration { get; set; }
 
+        /// <summary>Gets or sets the efficiency of the irrigation system (mm/mm).</summary>
+        [XmlIgnore]
+        public double Efficiency { get; set; }
+        
         /// <summary>Gets or sets the flag for whether the irrigation can run off (true/false).</summary>
         [XmlIgnore]
         public bool WillRunoff { get; set; }
@@ -53,20 +61,22 @@ namespace Models
                 if (efficiency > 1.0 || efficiency < 0)
                     throw new ApsimXException(this, "Efficiency value for irrigation event must bet between 0 and 1 ");
 
-                IrrigationApplied = amount;
-                WillRunoff = willRunoff;
+                IrrigationTotal = amount;
+                IrrigationApplied = amount * efficiency;
                 Depth = depth;
                 Duration = duration;
+                Efficiency = efficiency;
+                WillRunoff = willRunoff;
 
                 // Prepare the irrigation data
-                Models.Soils.IrrigationApplicationType water = new Models.Soils.IrrigationApplicationType();
-                water.Amount = amount * efficiency;
-                water.Depth = depth;
-                water.will_runoff = willRunoff;
-                water.Duration = duration;
+                Models.Soils.IrrigationApplicationType irrigData = new Models.Soils.IrrigationApplicationType();
+                irrigData.Amount = IrrigationApplied;
+                irrigData.Depth = Depth;
+                irrigData.will_runoff = WillRunoff;
+                irrigData.Duration = Duration;
 
                 // Raise event and write log
-                Irrigated.Invoke(this, water);
+                Irrigated.Invoke(this, irrigData);
                 Summary.WriteMessage(this, string.Format("{0:F1} mm of water added at depth {1}", amount * efficiency, depth));
             }
         }
