@@ -175,6 +175,30 @@ namespace Models
             }
         }
 
+        /// <summary>Set the default parameters of Apply irrigation.</summary>
+        /// <param name="depth">The new default value for depth of application (mm).</param>
+        /// <param name="startTime">The new default value for time to start the irrigation (hrs).</param>
+        /// <param name="duration">The new default value for duration of irrigation event (hrs).</param>
+        /// <param name="efficiency">The new default value for irrigation efficiency (mm/mm).</param>
+        /// <param name="willIntercept">Whether irrigation can be intercepted by canopy (<c>true</c>/<c>false</c>).</param>
+        /// <param name="willRunoff">Whether irrigation can run off (<c>true</c>/<c>false</c>).</param>
+        public void SetParameter(double depth = -1.0, double startTime = -1.0, double duration = -1.0, double efficiency = -1.0, bool willIntercept = false, bool willRunoff = false)
+        {
+            if (depth >= 0.0)
+                defaultDepth = depth;
+
+            if (startTime >= 0.0)
+                defaultStartTime = startTime;
+
+            if (duration >= 0.0)
+                defaultDuration = duration;
+
+            if (efficiency >= 0.0)
+                defaultEfficiency = efficiency;
+
+            ////TODO: come up with a way to manipulate the boolean parameters
+        }
+
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
