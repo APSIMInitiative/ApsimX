@@ -2,19 +2,22 @@ baseURL = "/"
 languageCode = "en-us"
 title = "APSIM Next Generation"
 
-
 [Params]
   noCategoryLink = true
   
+[[menu.main]]  
+  name   = "Usage"
+  url    = "/usage/index"
+  weight = 1
   
 [[menu.main]]
   name   = "Model documentation"
   url    = "http://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetDocumentationHTML"
-  weight = 1
+  weight = 2
   
 [[menu.main]]  
   name   = "Development"
   url    = "/development/index"
-  weight = 2  
+  weight = 3  
 
-  
+    
