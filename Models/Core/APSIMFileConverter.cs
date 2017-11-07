@@ -24,7 +24,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 19; } }
+        public static int LastestVersion { get { return 20; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -600,6 +600,26 @@ namespace Models.Core
                 if (APSIMFileConverterUtilities.FindModelNode(n, "DMConversionEfficiency") == null)
                     n.AppendChild(DMnode);
             }
+        }
+
+        private static void UpgradeToVersion20(XmlNode node, string filename)
+        {
+            List<XmlNode> nodeList = new List<XmlNode>(XmlUtilities.FindAllRecursivelyByType(node, "Root"));
+
+            foreach (XmlNode n in nodeList)
+            {
+                XmlNode MRFnode;
+                MRFnode = XmlUtilities.CreateNode(node.OwnerDocument, "Constant", "");
+                XmlElement name = node.OwnerDocument.CreateElement("Name");
+                XmlElement element = node.OwnerDocument.CreateElement("FixedValue");
+                name.InnerText = "MaintenanceRespirationFunction";
+                element.InnerText = "1.0";
+                MRFnode.AppendChild(name);
+                MRFnode.AppendChild(element);
+
+                if (APSIMFileConverterUtilities.FindModelNode(n, "MaintenanceRespirationFunction") == null)
+                    n.AppendChild(MRFnode);
+            }        
         }
     }
 }
