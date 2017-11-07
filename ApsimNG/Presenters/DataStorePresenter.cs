@@ -5,15 +5,13 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
+    using System;
+    using System.Data;
+    using System.Linq;
     using APSIM.Shared.Utilities;
-    using Models;
     using Models.Core;
     using Models.Factorial;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
     using Views;
-    using System.Linq;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
@@ -27,10 +25,10 @@ namespace UserInterface.Presenters
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
-        /// <summary>When specified, will only show experiment data.</summary>
+        /// <summary>Gets or sets the experiment filter. When specified, will only show experiment data.</summary>
         public Experiment ExperimentFilter { get; set; }
 
-        /// <summary>When specified, will only show simulation data.</summary>
+        /// <summary>Gets or sets the simulation filter. When specified, will only show simulation data.</summary>
         public Simulation SimulationFilter { get; set; }
 
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
@@ -50,7 +48,9 @@ namespace UserInterface.Presenters
             {
                 this.view.TableList.Values = dataStore.TableNames.ToArray();
                 if (Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
+                {
                     this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
+                }
             }
 
             this.view.Grid.ResizeControls();
@@ -74,7 +74,6 @@ namespace UserInterface.Presenters
         {
             using (DataTable data = GetData())
             {
-
                 // Strip out unwanted columns.
                 if (data != null)
                 {
@@ -92,13 +91,13 @@ namespace UserInterface.Presenters
 
                     for (int i = 0; i < data.Columns.Count; i++)
                     {
-
                         if (data.Columns[i].ColumnName == "SimulationID")
                         {
                             if (simulationId == 0 && data.Rows.Count > 0)
                             {
                                 simulationId = (int)data.Rows[0][i];
                             }
+
                             data.Columns.RemoveAt(i);
                             i--;
                         }
@@ -115,19 +114,24 @@ namespace UserInterface.Presenters
                     foreach (DataColumn column in data.Columns)
                     {
                         string units = null;
+
                         // Try to obtain units
                         if (dataStore != null && simulationId != 0)
                         {
                             units = dataStore.GetUnits(view.TableList.SelectedValue, column.ColumnName);
                         }
+
                         int posLastDot = column.ColumnName.LastIndexOf('.');
                         if (posLastDot != -1)
+                        {
                             column.ColumnName = column.ColumnName.Insert(posLastDot + 1, "\r\n");
+                        }
 
                         // Add the units, if they're available
                         if (units != null)
+                        {
                             column.ColumnName = column.ColumnName + " " + units;
-
+                        }
                     }
 
                     this.view.Grid.DataSource = data;
@@ -153,12 +157,19 @@ namespace UserInterface.Presenters
                         data = dataStore.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
                     }
                     else if (SimulationFilter != null)
-                        data = dataStore.GetData(simulationName: SimulationFilter.Name,
+                    {
+                        data = dataStore.GetData(
+                                                 simulationName: SimulationFilter.Name,
                                                  tableName: view.TableList.SelectedValue,
-                                                 from: start, count: count);
+                                                 from: start, 
+                                                 count: count);
+                    }
                     else
-                        data = dataStore.GetData(tableName: view.TableList.SelectedValue,
-                                                  count: Utility.Configuration.Settings.MaximumRowsOnReportGrid);
+                    {
+                        data = dataStore.GetData(
+                                                tableName: view.TableList.SelectedValue,
+                                                count: Utility.Configuration.Settings.MaximumRowsOnReportGrid);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -166,7 +177,10 @@ namespace UserInterface.Presenters
                 }
             }
             else
+            {
                 data = new DataTable();
+            }
+
             return data;
         }
 
@@ -192,8 +206,11 @@ namespace UserInterface.Presenters
         private void OnMaximumNumberRecordsChanged(object sender, EventArgs e)
         {
             if (view.MaximumNumberRecords.Value == string.Empty)
+            {
                 Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
+            }
             else
+            {
                 try
                 {
                     Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(view.MaximumNumberRecords.Value);
@@ -202,6 +219,8 @@ namespace UserInterface.Presenters
                 {  // If there are any errors, return 0
                     Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
                 }
+            }
+
             PopulateGrid();
         }
     }

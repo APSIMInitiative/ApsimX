@@ -16,6 +16,9 @@ namespace UserInterface.Presenters
     /// </summary>
     public class FolderPresenter : IPresenter
     {
+        /// <summary>
+        /// The list of graph presenters
+        /// </summary>
         private List<GraphPresenter> presenters = new List<GraphPresenter>();
 
         /// <summary>
@@ -41,7 +44,9 @@ namespace UserInterface.Presenters
             }
 
             if (views.Count > 0)
+            {
                 (view as IFolderView).SetContols(views);
+            }
         }
 
         /// <summary>
@@ -50,10 +55,11 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             foreach (GraphPresenter presenter in presenters)
+            {
                 presenter.Detach();
+            }
 
             presenters.Clear();
         }
-
     }
 }
