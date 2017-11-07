@@ -7,8 +7,9 @@
 namespace Models
 {
     using System;
-    using Models.Core;
+    using System.Linq;
     using System.Xml.Serialization;
+    using Models.Core;
 
     /// <summary>The irrigation class.</summary>
     [Serializable]
@@ -16,7 +17,10 @@ namespace Models
     public class Irrigation : Model, IIrrigation
     {
         /// <summary>Access the summary model.</summary>
-        [Link] private ISummary Summary = null;
+        [Link] private ISummary summary = null;
+
+        /// <summary>Access the soil model.</summary>
+        [Link] private Soils.Soil soil = null;
 
         /// <summary>Gets the total irrigation resource used (mm).</summary>
         [XmlIgnore]
@@ -37,7 +41,7 @@ namespace Models
         /// <summary>Gets or sets the efficiency of the irrigation system (mm/mm).</summary>
         [XmlIgnore]
         public double Efficiency { get; set; }
-        
+
         /// <summary>Gets or sets the flag for whether the irrigation can run off (true/false).</summary>
         [XmlIgnore]
         public bool WillRunoff { get; set; }
@@ -46,26 +50,58 @@ namespace Models
         /// <remarks>Advertises an irrigation and allows other models to respond accordingly.</remarks>
         public event EventHandler<Models.Soils.IrrigationApplicationType> Irrigated;
 
+        /// <summary>Default value for depth (mm).</summary>
+        private double defaultDepth = 0.0;
+
+        /// <summary>Default value for duration of irrigation (hrs).</summary>
+        private double defaultDuration = 24.0;
+
+        /// <summary>Default value for irrigation efficiency (mm/mm).</summary>
+        private double defaultEfficiency = 1.0;
+
         /// <summary>Apply some irrigation.</summary>
         /// <param name="amount">The amount to apply (mm).</param>
         /// <param name="depth">The depth of application (mm).</param>
         /// <param name="duration">The duration of irrigation event (hrs)</param>
         /// <param name="efficiency">The irrigation efficiency (mm/mm).</param>
         /// <param name="willRunoff">Whether irrigation can run off (<c>true</c>/<c>false</c>).</param>
-        /// <exception cref="ApsimXException">Efficiency value for irrigation event must be between 0 and 1 </exception>
-        public void Apply(double amount, double depth = 0.0, double duration = 1, double efficiency = 1.0, bool willRunoff = false)
+        /// <exception cref="ApsimXException">Check the depth for irrigation, it cannot be deeper than the soil depth</exception>
+        /// <exception cref="ApsimXException">Check the duration for the irrigation, it must be less than 24hrs</exception>
+        /// <exception cref="ApsimXException">Check the value of irrigation efficiency, it must be between 0 and 1</exception>
+        public void Apply(double amount, double depth = -1.0, double duration = -1.0, double efficiency = -1.0, bool willRunoff = false)
         {
-            if (Irrigated != null && amount > 0)
+            if (Irrigated != null && amount > 0.0)
             {
                 // Check the parameters given
-                if (efficiency > 1.0 || efficiency < 0)
-                    throw new ApsimXException(this, "Efficiency value for irrigation event must bet between 0 and 1 ");
+                if (depth < 0.0)
+                { Depth = defaultDepth; }
+                else
+                {
+                    if (depth > soil.Thickness.Sum())
+                        throw new ApsimXException(this, "Check the depth for irrigation, it cannot be deeper than the soil depth");
+                    Depth = depth;
+                }
+
+                if (duration < 0.0)
+                { Duration = defaultDuration; }
+                else
+                {
+                    if (duration > 24.0)
+                        throw new ApsimXException(this, "Check the duration for the irrigation, it must be less than 24hrs");
+                    Duration = duration;
+                }
+
+                if (efficiency < 0.0)
+                { Efficiency = defaultEfficiency; }
+                else
+                {
+                    if (efficiency > 1.0)
+                        throw new ApsimXException(this, "Check the value of irrigation efficiency, it must be between 0 and 1");
+                    Efficiency = efficiency;
+                }
 
                 IrrigationTotal = amount;
-                IrrigationApplied = amount * efficiency;
-                Depth = depth;
-                Duration = duration;
-                Efficiency = efficiency;
+                IrrigationApplied = IrrigationTotal * Efficiency;
                 WillRunoff = willRunoff;
 
                 // Prepare the irrigation data
@@ -77,7 +113,12 @@ namespace Models
 
                 // Raise event and write log
                 Irrigated.Invoke(this, irrigData);
-                Summary.WriteMessage(this, string.Format("{0:F1} mm of water added at depth {1}", amount * efficiency, depth));
+                summary.WriteMessage(this, string.Format("{0:F1} mm of water added via irrigation at depth {1} mm", IrrigationApplied, Depth));
+            }
+            else
+            {
+                // write log of aborted event
+                summary.WriteMessage(this, "Irrigation did not occur because the amount given was negative");
             }
         }
 
@@ -87,9 +128,13 @@ namespace Models
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            IrrigationApplied = 0;
+            // Set values to zero or defaults
+            IrrigationTotal = 0.0;
+            IrrigationApplied = 0.0;
+            Depth = defaultDepth;
+            Duration = defaultDuration;
+            Efficiency = defaultEfficiency;
             WillRunoff = false;
         }
-
     }
 }
