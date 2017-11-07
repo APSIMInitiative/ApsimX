@@ -419,6 +419,7 @@ namespace UserInterface.Presenters
         public void AddModel(object sender, EventArgs e)
         {
             object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+            explorerPresenter.HideRightHandPanel();
             explorerPresenter.ShowInRightHandPanel(model,
                                                    "UserInterface.Views.ListButtonView",
                                                    "UserInterface.Presenters.AddModelPresenter");

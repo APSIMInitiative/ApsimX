@@ -1,0 +1,11 @@
+{{ partial "header.html" . }}
+
+<main role="main">
+	<div class="doc-list-entry">
+	{{ range .Data.Pages }}
+	   {{ .Content }}
+	{{ end }}
+	</div>
+</main>
+
+{{ partial "footer.html" . }}
