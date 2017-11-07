@@ -10,58 +10,62 @@ namespace Models
     using Models.Core;
     using System.Xml.Serialization;
 
-    /// <summary>Irrigation class.</summary>
+    /// <summary>The irrigation class.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
     public class Irrigation : Model, IIrrigation
     {
-        /// <summary>The summary</summary>
+        /// <summary>Access the summary model.</summary>
         [Link] private ISummary Summary = null;
 
-        /// <summary>Gets or sets the irrigation applied.</summary>
-        /// <value>The irrigation applied.</value>
+        /// <summary>Gets or sets the amount of irrigation applied (mm).</summary>
         [XmlIgnore]
-        public double IrrigationApplied { get; set; }
+        public double IrrigationApplied { get; private set; }
 
-        /// <summary>Indicates whether the irrigation should runoff.</summary>
-        [XmlIgnore]
-        public bool WillRunoff { get; set; }
-
-        /// <summary>Indicates the depth of irrigation.</summary>
+        /// <summary>Gets or sets the depth at which irrigation is applied (mm).</summary>
         [XmlIgnore]
         public double Depth { get; set; }
 
-        /// <summary>the duration, h, that irrigation is applied for</summary>
+        /// <summary>Gets or sets the duration that irrigation is applied for (hrs).</summary>
         [XmlIgnore]
         public double Duration { get; set; }
 
-        // Events we're going to send.
+        /// <summary>Gets or sets the flag for whether the irrigation can run off (true/false).</summary>
+        [XmlIgnore]
+        public bool WillRunoff { get; set; }
+
         /// <summary>Occurs when [irrigated].</summary>
+        /// <remarks>Advertises an irrigation and allows other models to respond accordingly.</remarks>
         public event EventHandler<Models.Soils.IrrigationApplicationType> Irrigated;
 
-        /// <summary>Apply irrigatopm.</summary>
-        /// <param name="amount">The amount.</param>
-        /// <param name="depth">The depth.</param>
-        /// <param name="efficiency">The efficiency.</param>
-        /// <param name="willRunoff">if set to <c>true</c> [will runoff].</param>
-        /// <param name="duration">The duration of irrigation event</param>
+        /// <summary>Apply some irrigation.</summary>
+        /// <param name="amount">The amount to apply (mm).</param>
+        /// <param name="depth">The depth of application (mm).</param>
+        /// <param name="duration">The duration of irrigation event (hrs)</param>
+        /// <param name="efficiency">The irrigation efficiency (mm/mm).</param>
+        /// <param name="willRunoff">Whether irrigation can run off (<c>true</c>/<c>false</c>).</param>
         /// <exception cref="ApsimXException">Efficiency value for irrigation event must be between 0 and 1 </exception>
-        public void Apply(double amount, double depth = 0.0, double efficiency = 1.0, bool willRunoff = false, double duration = 1)
+        public void Apply(double amount, double depth = 0.0, double duration = 1, double efficiency = 1.0, bool willRunoff = false)
         {
             if (Irrigated != null && amount > 0)
             {
-                if(efficiency > 1.0 || efficiency < 0)
+                // Check the parameters given
+                if (efficiency > 1.0 || efficiency < 0)
                     throw new ApsimXException(this, "Efficiency value for irrigation event must bet between 0 and 1 ");
 
+                IrrigationApplied = amount;
+                WillRunoff = willRunoff;
+                Depth = depth;
+                Duration = duration;
+
+                // Prepare the irrigation data
                 Models.Soils.IrrigationApplicationType water = new Models.Soils.IrrigationApplicationType();
                 water.Amount = amount * efficiency;
                 water.Depth = depth;
                 water.will_runoff = willRunoff;
                 water.Duration = duration;
-                IrrigationApplied = amount;
-                WillRunoff = willRunoff;
-                Depth = depth;
-                Duration = duration;
+
+                // Raise event and write log
                 Irrigated.Invoke(this, water);
                 Summary.WriteMessage(this, string.Format("{0:F1} mm of water added at depth {1}", amount * efficiency, depth));
             }
