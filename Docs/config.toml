@@ -5,16 +5,16 @@ title = "APSIM Next Generation"
 
 [Params]
   noCategoryLink = true
-
+  
   
 [[menu.main]]
   name   = "Model documentation"
-  url    = "/ModelDocumentation/Index"
+  url    = "http://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetDocumentationHTML"
   weight = 1
   
 [[menu.main]]  
-  name   = "Design"
-  url    = "/Design/Index"
+  name   = "Development"
+  url    = "/development/index"
   weight = 2  
 
   

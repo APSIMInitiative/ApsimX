@@ -1,15 +1,13 @@
 ---
-title: "Design"
+title: "ModelDesign"
 draft: false
 ---
 
-# Model Design
-
-## Writing a model
+# Model Development
 
 All models are written as normal .NET classes but must be derived from Model
 
-### Properties initialised at startup
+## Properties initialised at startup
 
 Models must be binary and XML serializable. Serialization is the process where models (objects) are created at startup and their properties / fields are given values from the serialization file (.apsimx). Normally this doesn’t require any extra work by the model developer so long as the data types used are serializable (most .NET types are).
 For XML serialzation to work, fields and properties that are to be given values at startup need to be public. APSIM, though, assumes that only public properties are serialized. Public fields are considered poor programming practice. There should be no public fields in any model. There are two ways to declare properties:
@@ -35,7 +33,7 @@ public DateTime StartDate
 
 The setter for a property must not have side affects. In other words, the setter must not invoke behaviour that affects the state of other properties. Remember, the setter will be invoked for each property during deserialisation at startup.
 
-### Communicating with other models - Links
+## Communicating with other models - Links
 
 If models need to communicate with other models, they may do so by declaring a public or private field with a [Link] attribute. APSIM will provide a valid reference for the field at simulation start time by finding another model that is in scope and has the same type as the field declaration. Once found, models can then call properties and methods of the referenced model as normal. e.g
 
@@ -51,7 +49,7 @@ private void OnStartOfDay(object sender, EventArgs e)
 
 In order to decouple models from other models, it may be necessary to create interfaces (e.g. IClock) that specify what the public interface for the type of model. This would then allow a different model to be swapped in. This would be particularly important for models where we have different implementations e.g. SoilWater.
 
-### Published events and subscribing to events
+## Published events and subscribing to events
 
 APSIM uses the .NET event mechanism to signal when things happen during a simulation. Models can create their own events using the normal .NET event syntax:
 
@@ -70,11 +68,11 @@ Models in APSIM (particularly the CLOCK model) produce many events that may be u
 
 Another useful event is called OnSimulationCompleted which will be invoked immediately after the simulation has completed running. This provides an opportunity for a model to perform cleanup.  
 
-### A hierarchy of models
+## A hierarchy of models
 
 In all APSIM simulations, models are run under a parent model and ultimately a parent ‘Zone’ (a core model that looks after a collection of models (used to be called a Paddock). This zone model is itself contained within a  ‘Simulation’, which in turn is parented by a 'Simulations' model. Interfaces for these are provided in the reference documentation. If a model needs to communicate with its Zone or Simulation, it may do so via the normal link mechanism.
 
-### Methods provided by the Model base class.
+## Methods provided by the Model base class.
 
 As stated above, all models must be derived from Model. This base class provides a number of methods for interacting with other models at runtime and discovering and altering the simulation structure.
 
@@ -97,11 +95,11 @@ public List<Model> Children { get; set; }
 
 All models have a name, a parent model (except the Simulation model which has a null Parent) and child models.
 
-### Errors
+## Errors
 
 To flag a fatal error and immediately terminate a simulation, a model may simply throw an 'ApsimXException'. The framework guarantees that the OnSimulationCompleted method will still be called in all models after the exception has been raised.
 
-### Writing summary (log) information
+## Writing summary (log) information
 
 To write summary information to the summary file, link to a model implementing the
 
@@ -121,7 +119,7 @@ void WriteWarning(string FullPath, string Message);
 
 WriteMessage will simply write a message, attaching the current simulation date (Clock.Today) to the message. WriteWarning can be used to write a warning (e.g. out of bounds) message to the summary.
 
-### Simulation API
+## Simulation API
 
 While the preference is for models to use the [Link] mechanism above for communicating with other models, sometimes it is necessary to dynamically work with models in a simulation in a more flexible way. For example, the REPORT model needs to get the values of variables from models where the interface to a model isn't known. To enable this type of interaction, a static API exists that contains methods that may be called by a model during a simulation. The API class is called 'Apsim' and it contains many useful methods:
 
@@ -140,8 +138,4 @@ foreach (ICrop crop in Apsim.FindAll(this, typeof(ICrop)))
 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
 ```
 
-
-
-
-# User Interface Design
  

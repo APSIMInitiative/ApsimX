@@ -7,7 +7,6 @@
 		<link rel="alternate" href="/index.xml" type="application/rss+xml" title="{{ .Site.Title }}">
 		<link rel="icon" href="{{ $baseUrl }}favicon.ico">
 		<title>{{ if not .IsHome }}{{ .Title }} - {{ end }}{{ .Site.Title }}</title>
-		<!--<link href="http://fonts.googleapis.com/css?family=PT+Sans:400,700" rel="stylesheet" type="text/css">-->
 		<link rel="stylesheet" href="{{ $baseUrl }}css/highlight/{{ with .Site.Params.highlightStyle }}{{ . }}{{ else }}default{{ end }}.css">
 		<link rel="stylesheet" href="{{ $baseUrl }}css/bootstrap.min.css">
 		<link rel="stylesheet" href="{{ $baseUrl }}css/bootstrap-theme.min.css">
@@ -20,16 +19,18 @@
 <body role="document">
 
 	<!-- Fixed navbar -->
-	<nav class="navbar navbar-inverse navbar-fixed-top">
+	<nav class="navbar navbar-default navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
+			    <a href="#">
+					<img alt="Brand" src="/images/ApsimLogo.png"/>
+				</a>
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="{{ $baseUrl }}">{{ .Site.Title }}</a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
