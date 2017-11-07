@@ -19,7 +19,7 @@ namespace UnitTests
 
         public event EventHandler<IrrigationApplicationType> Irrigated;
 
-        public void Apply(double amount, double depth = 0, double duration = 1, double efficiency = 1, bool willRunoff = false)
+        public void Apply(double amount, double depth = 0.0, double startTime = 0.0, double duration = 1.0, double efficiency = 1.0, bool willIntercept = false, bool willRunoff = false)
         {
             Irrigated.Invoke(this, new IrrigationApplicationType());
         }

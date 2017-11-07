@@ -10,14 +10,18 @@ namespace Models.Soils
     /// </summary>
     public class IrrigationApplicationType : EventArgs
     {
-        /// <summary>The amount</summary>
+        /// <summary>The amount to apply (mm).</summary>
         public double Amount;
-        /// <summary>The will_runoff</summary>
-        public bool will_runoff;
-        /// <summary>The depth</summary>
+        /// <summary>The depth of application (mm).</summary>
         public double Depth;
-        /// <summary>The depth</summary>
+        /// <summary>The time to start the irrigation (hrs).</summary>
+        public double StartTime;
+        /// <summary>The duration of irrigation event (hrs).</summary>
         public double Duration;
+        /// <summary>Whether irrigation can be intercepted by canopy.</summary>
+        public bool WillIntercept;
+        /// <summary>Whether irrigation can run off.</summary>
+        public bool WillRunoff;
         /// <summary>The n o3</summary>
         public double NO3;
         /// <summary>The n h4</summary>
