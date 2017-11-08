@@ -1,6 +1,7 @@
 ---
 title: "Usage"
 draft: false
+weight: 10
 ---
 
 * [Debug manager script](/usage/debugmanagerscript)
