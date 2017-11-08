@@ -1,18 +1,12 @@
 {{ partial "header.html" . }}
 
-<div class="row">
-	<div class="col-sm-8 doc-main">
-		<main role="main">
-			<article>
-				<a id="title"></a>
-				<section>
-					{{ .Content }}
-				</section>
-			</article>
-		</main>
-	</div> <!-- /.doc-main -->
-
-
-</div> <!-- /.row -->
+<div class="row doc-main">
+	<main role="main">
+		<a id="title"></a>
+		<section>
+			{{ .Content }}
+		</section>
+	</main>
+</div>
 
 {{ partial "footer.html" . }}
