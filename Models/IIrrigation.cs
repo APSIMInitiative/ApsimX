@@ -11,16 +11,16 @@ namespace Models
     /// <summary>Interface for an irrigation class.</summary>
     public interface IIrrigation
     {
-        /// <summary>The amount of irrigation applied (mm).</summary>
+        /// <summary>The amount of irrigation actually applied (mm).</summary>
         double IrrigationApplied { get; }
 
         /// <summary>The depth at which irrigation is applied (mm).</summary>
         double Depth { get; }
 
-        /// <summary>The time, from midnight, to start irrigation (hrs).</summary>
+        /// <summary>The time, since midnight, to start irrigation (hrs).</summary>
         double StartTime { get; }
 
-        /// <summary>The duration that irrigation is applied for (hrs).</summary>
+        /// <summary>The duration of the irrigation event (hrs).</summary>
         double Duration { get; }
 
         /// <summary>The efficiency of the irrigation system (mm/mm).</summary>

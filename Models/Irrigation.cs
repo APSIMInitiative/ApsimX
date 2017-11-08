@@ -15,19 +15,37 @@ namespace Models
     /// This model controls the irrigation events, which can be triggered using the Apply() method.
     /// </summary>
     /// <remarks>
-    /// The Apply method can be invoked by external models or manager scripts, it has one mandatory parameter and several optionals:
-    /// - amount: The amount to apply (mm) (M);
-    /// - depth: The depth of application (mm) (O);
-    /// - startTime: The time to start the irrigation (hrs) (O);
-    /// - duration: The duration of irrigation event (hrs) (O);
-    /// - efficiency: The irrigation efficiency (mm/mm) (O);
-    /// - willIntercept: Whether irrigation can be intercepted by canopy (true/false) (O);
-    /// - willRunoff: Whether irrigation can run off (true/false) (O);
+    /// The Irrigation module does not directly applies irrigation, it checks the amount and parameters and passes them on to other
+    ///  models which then take appropriate actions and made the changes effective.  
+    ///  
+    /// The Apply method can be called from another model or manager scripts, it has one mandatory parameter and several optionals:  
+    /// - amount: The amount of irrigation to apply (mm). This is mandatory and represents the amount of water resource to be used, 
+    ///    the actual amount applied will depend on the value of irrigation efficiency;  
+    /// - depth: The depth at which irrigation is applied (mm). This is optional, defaulting to zero (soil surface or above). It can 
+    ///    be used to define sub-surface irrigation;  
+    /// - startTime: The time, since midnight, to start the irrigation (hrs). This is optional, defaulting to zero. It is only used 
+    ///    by models with sub-daily time step;  
+    /// - duration: The duration of the irrigation event (hrs). This is optional, defaulting to 24hrs (whole day). It defines the 
+    ///    irrigation intensity and is only used by few models (mostly with sub-daily time step);  
+    /// - efficiency: The efficiency of the irrigation system (mm/mm). This is optional, defaulting to 1.0 (100%). Used to define the 
+    ///    actual amount of irrigation applied. Variations in efficiency are assumed to be losses between source/reservoir and field;  
+    /// - willIntercept: Whether irrigation can be intercepted by canopy (true/false). This is optional, with default value of false. 
+    ///    If true, some model can compute interception by the canopy thus reducing the amount of water reaching the soil;  
+    /// - willRunoff: Whether irrigation can run off (true/false). This is optional, defaulting to false. If set to true, the soil 
+    ///    water model will include irrigation in the runoff calculations (the way it is used depends on the water model);  
     /// 
-    /// The actual amount of irrigation applied is computed by multiplying the 'amount' × 'efficiency'.
-    /// The Irrigated event is raised to advertise an irrigation, with it goes the actual amount applied and other
-    ///  parameters.
-    /// Solutes in irrigated water have not been not implemented yet.
+    /// The data passed using the Apply method is used only during that event, default values are used if parameters are missing.  
+    /// 
+    /// The Irrigation model checks for the validity of the irrigation parameters: 
+    /// - Negative values are replaced by the default;   
+    /// - Values exceeding the upper bound cause fatal errors;  
+    /// 
+    /// The actual amount applied is reported as IrrigationApplied. The value set in the apply method is reported as IrrigationTotal.  
+    /// 
+    /// The Irrigated event is raised to advertise that an irrigation has occurred, so other models can respond accordingly.  
+    /// With the event goes the data containing the actual amount applied and the validated irrigation parameters.  
+    /// 
+    /// Solutes in irrigation water have not been not implemented yet.
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
@@ -39,11 +57,11 @@ namespace Models
         /// <summary>Access the soil model.</summary>
         [Link] private Soils.Soil soil = null;
 
-        /// <summary>Gets the total irrigation resource used (mm).</summary>
+        /// <summary>Gets the total irrigation resource required (mm).</summary>
         [XmlIgnore]
         public double IrrigationTotal { get; private set; }
 
-        /// <summary>Gets the amount of irrigation applied (mm).</summary>
+        /// <summary>Gets the amount of irrigation actually applied (mm).</summary>
         [XmlIgnore]
         public double IrrigationApplied { get; private set; }
 
@@ -51,11 +69,11 @@ namespace Models
         [XmlIgnore]
         public double Depth { get; set; }
 
-        /// <summary>Gets or sets the time, from midnight, to start irrigation (hrs).</summary>
+        /// <summary>Gets or sets the time, since midnight, to start irrigation (hrs).</summary>
         [XmlIgnore]
         public double StartTime { get; set; }
 
-        /// <summary>Gets or sets the duration that irrigation is applied for (hrs).</summary>
+        /// <summary>Gets or sets the duration of the irrigation event (hrs).</summary>
         [XmlIgnore]
         public double Duration { get; set; }
 
@@ -63,7 +81,7 @@ namespace Models
         [XmlIgnore]
         public double Efficiency { get; set; }
 
-        /// <summary>Gets or sets the flag for whether the irrigation can be intercepted by canopy.</summary>
+        /// <summary>Gets or sets the flag for whether the irrigation can be intercepted by canopy (true/false).</summary>
         [XmlIgnore]
         public bool WillIntercept { get; set; }
 
@@ -72,7 +90,9 @@ namespace Models
         public bool WillRunoff { get; set; }
 
         /// <summary>Occurs when [irrigated].</summary>
-        /// <remarks>Advertises an irrigation and allows other models to respond accordingly.</remarks>
+        /// <remarks>
+        /// Advertises an irrigation and passes its parameters, thus allowing other models to respond accordingly.
+        /// </remarks>
         public event EventHandler<Models.Soils.IrrigationApplicationType> Irrigated;
 
         /// <summary>Default value for depth (mm).</summary>
@@ -91,7 +111,7 @@ namespace Models
         /// <param name="amount">The amount to apply (mm).</param>
         /// <param name="depth">The depth of application (mm).</param>
         /// <param name="startTime">The time to start the irrigation (hrs).</param>
-        /// <param name="duration">The duration of irrigation event (hrs).</param>
+        /// <param name="duration">The duration of the irrigation event (hrs).</param>
         /// <param name="efficiency">The irrigation efficiency (mm/mm).</param>
         /// <param name="willIntercept">Whether irrigation can be intercepted by canopy (<c>true</c>/<c>false</c>).</param>
         /// <param name="willRunoff">Whether irrigation can run off (<c>true</c>/<c>false</c>).</param>
@@ -145,7 +165,7 @@ namespace Models
                 }
 
                 if (Depth > 0.0)
-                { // Subsurface irrigation, cannot have interception nor direct runoff
+                { // Sub-surface irrigation: it cannot be intercepted nor run off directly
                     willIntercept = false;
                     willRunoff = false;
                 }
