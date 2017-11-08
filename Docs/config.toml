@@ -6,5 +6,5 @@ theme = "hugo-theme-docdock"
 
 [Params]
   noCategoryLink = true
-
+  themeVariant = "darkgreen" 
     
