@@ -772,363 +772,363 @@ This is important in SLURP as it is set for each species to represent their diff
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>2011-11-07</Date>
-                <Action>[Irrigation].Apply(amount:30.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:30.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2011-11-25</Date>
-                <Action>[Irrigation].Apply(amount:13.6, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:13.6, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2011-11-28</Date>
-                <Action>[Irrigation].Apply(amount:20.1, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:20.1, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2011-11-29</Date>
-                <Action>[Irrigation].Apply(amount:16.4, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:16.4, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2011-12-05</Date>
-                <Action>[Irrigation].Apply(amount:27.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:27.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2011-12-15</Date>
-                <Action>[Irrigation].Apply(amount:8.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:8.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2011-12-26</Date>
-                <Action>[Irrigation].Apply(amount:22.5, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:22.5, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2011-12-29</Date>
-                <Action>[Irrigation].Apply(amount:16.5, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:16.5, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-01-05</Date>
-                <Action>[Irrigation].Apply(amount:22.8, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:22.8, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-01-09</Date>
-                <Action>[Irrigation].Apply(amount:17.8, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:17.8, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-01-12</Date>
-                <Action>[Irrigation].Apply(amount:9.1, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.1, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-01-16</Date>
-                <Action>[Irrigation].Apply(amount:18.3, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:18.3, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-01-19</Date>
-                <Action>[Irrigation].Apply(amount:18.6, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:18.6, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-01-23</Date>
-                <Action>[Irrigation].Apply(amount:22.5, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:22.5, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-01-30</Date>
-                <Action>[Irrigation].Apply(amount:8.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:8.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-02-02</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-02-07</Date>
-                <Action>[Irrigation].Apply(amount:16.5, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:16.5, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-02-09</Date>
-                <Action>[Irrigation].Apply(amount:13.3, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:13.3, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-02-13</Date>
-                <Action>[Irrigation].Apply(amount:12.2, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.2, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-02-20</Date>
-                <Action>[Irrigation].Apply(amount:13.3, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:13.3, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-02-23</Date>
-                <Action>[Irrigation].Apply(amount:8.8, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:8.8, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-03-29</Date>
-                <Action>[Irrigation].Apply(amount:10.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:10.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-04-02</Date>
-                <Action>[Irrigation].Apply(amount:6.5, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:6.5, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-04-05</Date>
-                <Action>[Irrigation].Apply(amount:5.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:5.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-04-10</Date>
-                <Action>[Irrigation].Apply(amount:6.9, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:6.9, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-04-26</Date>
-                <Action>[Irrigation].Apply(amount:4.6, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:4.6, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-04-30</Date>
-                <Action>[Irrigation].Apply(amount:6.9, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:6.9, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-05-03</Date>
-                <Action>[Irrigation].Apply(amount:3.2, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:3.2, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-11-01</Date>
-                <Action>[Irrigation].Apply(amount:18.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:18.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-11-15</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-11-22</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-11-26</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-11-29</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-12-03</Date>
-                <Action>[Irrigation].Apply(amount:6.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:6.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-12-06</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-12-13</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-12-17</Date>
-                <Action>[Irrigation].Apply(amount:20.8, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:20.8, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-12-20</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-12-24</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-12-27</Date>
-                <Action>[Irrigation].Apply(amount:9.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-12-31</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-01-03</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-01-07</Date>
-                <Action>[Irrigation].Apply(amount:18.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:18.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-01-10</Date>
-                <Action>[Irrigation].Apply(amount:18.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:18.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-01-14</Date>
-                <Action>[Irrigation].Apply(amount:21.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:21.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-01-21</Date>
-                <Action>[Irrigation].Apply(amount:15.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:15.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-01-24</Date>
-                <Action>[Irrigation].Apply(amount:15.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:15.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-01-28</Date>
-                <Action>[Irrigation].Apply(amount:15.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:15.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-01-31</Date>
-                <Action>[Irrigation].Apply(amount:15.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:15.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-02-04</Date>
-                <Action>[Irrigation].Apply(amount:18.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:18.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-02-07</Date>
-                <Action>[Irrigation].Apply(amount:6.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:6.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-02-11</Date>
-                <Action>[Irrigation].Apply(amount:18.7, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:18.7, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-02-14</Date>
-                <Action>[Irrigation].Apply(amount:13.5, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:13.5, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-02-18</Date>
-                <Action>[Irrigation].Apply(amount:15.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:15.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-02-21</Date>
-                <Action>[Irrigation].Apply(amount:15.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:15.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-02-25</Date>
-                <Action>[Irrigation].Apply(amount:15.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:15.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-02-28</Date>
-                <Action>[Irrigation].Apply(amount:32.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:32.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-03-07</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-03-11</Date>
-                <Action>[Irrigation].Apply(amount:9.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-03-14</Date>
-                <Action>[Irrigation].Apply(amount:9.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-03-28</Date>
-                <Action>[Irrigation].Apply(amount:18.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:18.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-04-04</Date>
-                <Action>[Irrigation].Apply(amount:9.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-04-11</Date>
-                <Action>[Irrigation].Apply(amount:9.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-10-24</Date>
-                <Action>[Irrigation].Apply(amount:9.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-10-31</Date>
-                <Action>[Irrigation].Apply(amount:15.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:15.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-11-04</Date>
-                <Action>[Irrigation].Apply(amount:6.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:6.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-11-07</Date>
-                <Action>[Irrigation].Apply(amount:9.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-11-11</Date>
-                <Action>[Irrigation].Apply(amount:9.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-11-14</Date>
-                <Action>[Irrigation].Apply(amount:9.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-11-18</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-11-21</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-11-25</Date>
-                <Action>[Irrigation].Apply(amount:9.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-12-02</Date>
-                <Action>[Irrigation].Apply(amount:9.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-12-05</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-12-09</Date>
-                <Action>[Irrigation].Apply(amount:6.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:6.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-12-12</Date>
-                <Action>[Irrigation].Apply(amount:11.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:11.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-12-17</Date>
-                <Action>[Irrigation].Apply(amount:15.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:15.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-12-23</Date>
-                <Action>[Irrigation].Apply(amount:7.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:7.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-01-06</Date>
-                <Action>[Irrigation].Apply(amount:14.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:14.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-01-09</Date>
-                <Action>[Irrigation].Apply(amount:12.6, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.6, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-01-13</Date>
-                <Action>[Irrigation].Apply(amount:15.7, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:15.7, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-01-16</Date>
-                <Action>[Irrigation].Apply(amount:14.7, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:14.7, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-01-20</Date>
-                <Action>[Irrigation].Apply(amount:17.5, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:17.5, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-01-23</Date>
-                <Action>[Irrigation].Apply(amount:7.5, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:7.5, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-01-30</Date>
-                <Action>[Irrigation].Apply(amount:10.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:10.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-02-03</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-02-05</Date>
-                <Action>[Irrigation].Apply(amount:10.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:10.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-02-10</Date>
-                <Action>[Irrigation].Apply(amount:9.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:9.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-02-17</Date>
-                <Action>[Irrigation].Apply(amount:10.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:10.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-02-20</Date>
-                <Action>[Irrigation].Apply(amount:10.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:10.0, duration:60.0);</Action>
               </Operation>
             </Operations>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1144,107 +1144,107 @@ This is important in SLURP as it is set for each species to represent their diff
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>2011-11-07</Date>
-                <Action>[Irrigation].Apply(amount:30.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:30.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2011-11-29</Date>
-                <Action>[Irrigation].Apply(amount:47.6, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:47.6, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2011-12-15</Date>
-                <Action>[Irrigation].Apply(amount:34.9, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:34.9, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2011-12-29</Date>
-                <Action>[Irrigation].Apply(amount:41.8, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:41.8, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-01-12</Date>
-                <Action>[Irrigation].Apply(amount:49.8, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:49.8, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-01-26</Date>
-                <Action>[Irrigation].Apply(amount:36.8, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:36.8, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-02-09</Date>
-                <Action>[Irrigation].Apply(amount:49.6, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:49.6, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-02-23</Date>
-                <Action>[Irrigation].Apply(amount:34.3, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:34.3, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-04-05</Date>
-                <Action>[Irrigation].Apply(amount:21.4, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:21.4, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-05-03</Date>
-                <Action>[Irrigation].Apply(amount:23.7, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:23.7, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-11-01</Date>
-                <Action>[Irrigation].Apply(amount:18.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:18.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-11-22</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2012-12-13</Date>
-                <Action>[Irrigation].Apply(amount:27.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:27.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-01-03</Date>
-                <Action>[Irrigation].Apply(amount:42.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:42.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-01-24</Date>
-                <Action>[Irrigation].Apply(amount:45.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:45.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-02-14</Date>
-                <Action>[Irrigation].Apply(amount:90.6, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:90.6, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-02-28</Date>
-                <Action>[Irrigation].Apply(amount:20.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:20.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-03-07</Date>
-                <Action>[Irrigation].Apply(amount:30.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:30.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-03-28</Date>
-                <Action>[Irrigation].Apply(amount:18.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:18.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-04-18</Date>
-                <Action>[Irrigation].Apply(amount:15.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:15.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-10-24</Date>
-                <Action>[Irrigation].Apply(amount:12.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:12.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-11-14</Date>
-                <Action>[Irrigation].Apply(amount:33.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:33.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2013-12-05</Date>
-                <Action>[Irrigation].Apply(amount:36.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:36.0, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-01-16</Date>
-                <Action>[Irrigation].Apply(amount:44.7, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:44.7, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-02-05</Date>
-                <Action>[Irrigation].Apply(amount:33.5, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:33.5, duration:60.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-02-27</Date>
-                <Action>[Irrigation].Apply(amount:32.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:32.0, duration:60.0);</Action>
               </Operation>
             </Operations>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1260,7 +1260,7 @@ This is important in SLURP as it is set for each species to represent their diff
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>2013-02-28</Date>
-                <Action>[Irrigation].Apply(amount:20.0, duration:1.0);</Action>
+                <Action>[Irrigation].Apply(amount:20.0, duration:60.0);</Action>
               </Operation>
             </Operations>
             <IncludeInDocumentation>true</IncludeInDocumentation>
