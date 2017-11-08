@@ -49,7 +49,7 @@ namespace Models.PMF.Functions
             if (End == "")
                 throw new Exception("Phase end name not set:" + Name);
 
-            if (Phenology.Between(Start, End) && ChildFunctions.Count > 0)
+            if (Phenology != null && Phenology.Between(Start, End) && ChildFunctions.Count > 0)
             {
                 IFunction Lookup = ChildFunctions[0] as IFunction;
                 return Lookup.Value(arrayIndex);
@@ -74,26 +74,28 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
-            if (Parent.GetType() == typeof(PhaseLookup))
+            if (IncludeInDocumentation)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The value of " + Parent.Name + " from " + Start + " to " + End + " is calculated as follows:", indent));
-                // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                    child.Document(tags, -1, indent + 1);
-            }
-            else
-            {
-                tags.Add(new AutoDocumentation.Paragraph(this.Value() + " between " +Start + " and " + End + " and a value of zero outside of this period", indent));
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
+
+                if (Parent.GetType() == typeof(PhaseLookup))
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("The value of " + Parent.Name + " from " + Start + " to " + End + " is calculated as follows:", indent));
+                    // write children.
+                    foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                        child.Document(tags, -1, indent + 1);
+                }
+                else
+                {
+                    tags.Add(new AutoDocumentation.Paragraph(this.Value() + " between " + Start + " and " + End + " and a value of zero outside of this period", indent));
+                }
             }
         }
-
 
     }
 

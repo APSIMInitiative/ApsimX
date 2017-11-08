@@ -57,15 +57,17 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (!(Parent is IFunction) && headingLevel > 0)
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            if (IncludeInDocumentation)
+            {
+                if (!(Parent is IFunction) && headingLevel > 0)
+                    tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            tags.Add(new AutoDocumentation.Paragraph("A value of 1 is returned if phenology is between " + Start + " and " + End + " phases, otherwise a value of 0 is returned.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("A value of 1 is returned if phenology is between " + Start + " and " + End + " phases, otherwise a value of 0 is returned.", indent));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
+            }
         }
     }
 }

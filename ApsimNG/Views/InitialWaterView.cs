@@ -8,7 +8,6 @@ namespace UserInterface.Views
     using System;
     using Interfaces;
     using Gtk;
-    using Glade;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -16,19 +15,12 @@ namespace UserInterface.Views
     /// </summary>
     public class InitialWaterView : ViewBase, IInitialWaterView
     {
-        [Widget]
         private HPaned hpaned1 = null;
-        [Widget]
         private SpinButton spinbutton1 = null;
-        [Widget]
         private Entry entry1 = null;
-        [Widget]
         private Entry entry2 = null;
-        [Widget]
         private RadioButton radiobutton1 = null;
-        [Widget]
         private RadioButton radiobutton2 = null;
-        [Widget]
         private ComboBox combobox1 = null;
         private GraphView graphView1 = null;
         private ListStore comboModel = new ListStore(typeof(string));
@@ -39,8 +31,14 @@ namespace UserInterface.Views
         /// </summary>
         public InitialWaterView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.InitialWaterView.glade", "hpaned1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.InitialWaterView.glade");
+            hpaned1 = (HPaned)builder.GetObject("hpaned1");
+            spinbutton1 = (SpinButton)builder.GetObject("spinbutton1");
+            entry1 = (Entry)builder.GetObject("entry1");
+            entry2 = (Entry)builder.GetObject("entry2");
+            radiobutton1 = (RadioButton)builder.GetObject("radiobutton1");
+            radiobutton2 = (RadioButton)builder.GetObject("radiobutton2");
+            combobox1 = (ComboBox)builder.GetObject("combobox1");
             _mainWidget = hpaned1;
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
@@ -62,6 +60,12 @@ namespace UserInterface.Views
             radiobutton1.Toggled -= OnRadioButton1CheckedChanged;
             spinbutton1.Changed -= OnNumericUpDown1ValueChanged;
             combobox1.Changed -= OnComboBox1SelectedValueChanged;
+            comboModel.Dispose();
+            comboRender.Destroy();
+            graphView1.MainWidget.Destroy();
+            graphView1 = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>

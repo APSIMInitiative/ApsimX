@@ -12,13 +12,15 @@ namespace Models.PMF.Organs
     /// A root model for SWIM
     /// </summary>
     [Serializable]
-    public class RootSWIM : BaseOrgan, BelowGround
+    public class RootSWIM : BaseOrgan, IArbitration, BelowGround
     {
         /// <summary>The uptake</summary>
         private double[] Uptake = null;
         /// <summary>The RLV</summary>
         public double[] rlv = null;
 
+        private Biomass Live = new Biomass();
+        private Biomass Dead = new Biomass();
 
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
@@ -32,6 +34,16 @@ namespace Models.PMF.Organs
             get { return -MathUtilities.Sum(Uptake); }
         }
 
+        /// <summary>Gets the total biomass</summary>
+        public Biomass Total { get { return Live + Dead; } }
+
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
 
         /// <summary>Called when [water uptakes calculated].</summary>
         /// <param name="Uptakes">The uptakes.</param>
@@ -71,11 +83,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (Wt > 0.0)
+            Biomass total = Live + Dead;
+            if (total.Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
             }
 
             Clear();
@@ -89,5 +102,11 @@ namespace Models.PMF.Organs
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
         }
 
+        /// <summary>Clears this instance.</summary>
+        private void Clear()
+        {
+            Live.Clear();
+            Dead.Clear();
+        }
     }
 }

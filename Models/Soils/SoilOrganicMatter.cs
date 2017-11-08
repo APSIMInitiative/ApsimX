@@ -26,7 +26,8 @@ namespace Models.Soils
         /// <summary>Gets or sets the root wt.</summary>
         /// <value>The root wt.</value>
         [Summary]
-        [Description("Root Weight (kg/ha)")]
+        [Units("kg/ha")]
+        [Description("Root Weight")]
         public double RootWt { get; set; }
 
         /// <summary>Gets or sets the soil cn.</summary>
@@ -168,9 +169,9 @@ namespace Models.Soils
 
                     for (int i = 0; i < OC.Length; i++)
                     {
-                        if (FInert[i] == double.NaN ||
-                            OC[i] == double.NaN ||
-                            BD[i] == double.NaN)
+                        if (Double.IsNaN(FInert[i]) ||
+                            Double.IsNaN(OC[i]) ||
+                            Double.IsNaN(BD[i]))
                             InertC[i] = double.NaN;
                         else
                         {

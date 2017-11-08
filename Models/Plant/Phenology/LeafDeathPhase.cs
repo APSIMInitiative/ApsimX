@@ -9,7 +9,7 @@ using Models.PMF.Struct;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// It is a Leaf death phenological phase which proceeds until the last leaf on the main-stem has fully senessced.  Therefore its duration depends on the number of main-stem leaves that are produced and the rate at which they seness following final leaf appearance.
+    /// It proceeds until the last leaf on the main-stem has fully senessced.  Therefore its duration depends on the number of main-stem leaves that are produced and the rate at which they seness following final leaf appearance.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -49,7 +49,7 @@ namespace Models.PMF.Phen
                 First = false;
             }
 
-            if ((Leaf.DeadCohortNo >= Structure.MainStemFinalNodeNumber.Value()) || (Leaf.CohortsInitialised == false))
+            if ((Leaf.DeadCohortNo >= Structure.FinalLeafNumber.Value()) || (Leaf.CohortsInitialised == false))
                 return 0.00001;
             else
                 return 0;
@@ -62,7 +62,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (Leaf.DeadCohortNo - DeadNodeNoAtStart) / (Structure.MainStemFinalNodeNumber.Value() - DeadNodeNoAtStart);
+                double F = (Leaf.DeadCohortNo - DeadNodeNoAtStart) / (Structure.FinalLeafNumber.Value() - DeadNodeNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return F;

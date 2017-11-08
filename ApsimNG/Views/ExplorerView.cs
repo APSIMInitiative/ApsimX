@@ -14,7 +14,6 @@
 namespace UserInterface.Views
 {
     using EventArguments;
-    using Glade;
     using Gtk;
     using Interfaces;
     using System;
@@ -57,15 +56,10 @@ namespace UserInterface.Views
         /// <summary>The node path before rename.</summary>
         private string nodePathBeforeRename;
 
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private Toolbar toolStrip = null;
-        [Widget]
         private TreeView treeview1 = null;
-        [Widget]
         private Viewport RightHandView = null;
-        [Widget]
         private Label toolbarlabel = null;
 
         private Menu Popup = new Menu();
@@ -81,8 +75,11 @@ namespace UserInterface.Views
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.ExplorerView.glade", "vbox1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            toolStrip = (Toolbar)builder.GetObject("toolStrip");
+            treeview1 = (TreeView)builder.GetObject("treeview1");
+            RightHandView = (Viewport)builder.GetObject("RightHandView");
             _mainWidget = vbox1;
             RightHandView.ShadowType = ShadowType.EtchedOut;
 
@@ -123,8 +120,8 @@ namespace UserInterface.Views
             treeview1.DragEnd += OnDragEnd;
             treeview1.FocusInEvent += Treeview1_FocusInEvent;
             treeview1.FocusOutEvent += Treeview1_FocusOutEvent;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
             timer.Elapsed += Timer_Elapsed;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -167,8 +164,13 @@ namespace UserInterface.Views
                         }
                     }
                 }
+                toolStrip.Remove(child);
+                child.Destroy();
             }
             ClearPopup();
+            Popup.Destroy();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private void ClearPopup()
@@ -181,14 +183,15 @@ namespace UserInterface.Views
                     if (pi != null)
                     {
                         System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (w is ImageMenuItem && handlers != null && handlers.ContainsKey("activate"))
+                        if (handlers != null && handlers.ContainsKey("activate"))
                         {
                             EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as ImageMenuItem).Activated -= handler;
+                            (w as MenuItem).Activated -= handler;
                         }
                     }
-                    Popup.Remove(w);
                 }
+                Popup.Remove(w);
+                w.Destroy();
             }
         }
 
@@ -353,7 +356,10 @@ namespace UserInterface.Views
         public void PopulateMainToolStrip(List<MenuDescriptionArgs> menuDescriptions)
         {
             foreach (Widget child in toolStrip.Children)
+            {
                 toolStrip.Remove(child);
+                child.Destroy();
+            }
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 if (!hasResource(description.ResourceNameForImage))

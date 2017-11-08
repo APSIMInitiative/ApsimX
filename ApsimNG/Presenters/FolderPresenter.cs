@@ -16,6 +16,9 @@ namespace UserInterface.Presenters
     /// </summary>
     public class FolderPresenter : IPresenter
     {
+        /// <summary>
+        /// The list of graph presenters
+        /// </summary>
         private List<GraphPresenter> presenters = new List<GraphPresenter>();
 
         /// <summary>
@@ -34,13 +37,16 @@ namespace UserInterface.Presenters
             {
                 GraphView graphView = new GraphView();
                 GraphPresenter presenter = new GraphPresenter();
+                explorerPresenter.ApsimXFile.Links.Resolve(presenter);
                 presenter.Attach(graph, graphView, explorerPresenter);
                 presenters.Add(presenter);
                 views.Add(graphView);
             }
 
             if (views.Count > 0)
+            {
                 (view as IFolderView).SetContols(views);
+            }
         }
 
         /// <summary>
@@ -49,10 +55,11 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             foreach (GraphPresenter presenter in presenters)
+            {
                 presenter.Detach();
+            }
 
             presenters.Clear();
         }
-
     }
 }

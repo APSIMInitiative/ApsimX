@@ -8,6 +8,7 @@ using Models.Core;
 using Models.PostSimulationTools;
 using APSIM.Shared.Utilities;
 using System.ComponentModel;
+using Models.Storage;
 
 namespace Models
 {
@@ -18,7 +19,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(PostSimulationTools.PredictedObserved))]
-    public class Tests : Model, ITestable, JobManager.IRunnable
+    public class Tests : Model, ITestable
     {
         /// <summary>
         /// data table
@@ -53,10 +54,10 @@ namespace Models
             PredictedObserved PO = Parent as PredictedObserved;
             if (PO == null)
                 return;
-            DataStore DS = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            IStorageReader DS = PO.Parent as IStorageReader;
             MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
-            DataTable POtable = DS.GetData("*", PO.Name);
+            DataTable POtable = DS.GetData(PO.Name);
             List<string> columnNames;
             string sigIdent = "X";
 
@@ -82,22 +83,28 @@ namespace Models
 
             for (int c = 0; c < columnNames.Count; c++) //on each P/O column pair
             {
-                x.Clear();
-                y.Clear();
-                foreach (DataRow row in POtable.Rows)
+                string observedFieldName = "Observed." + columnNames[c];
+                string predictedFieldName = "Predicted." + columnNames[c];
+                if (POtable.Columns.Contains(observedFieldName) &&
+                    POtable.Columns.Contains(predictedFieldName))
                 {
-                    xstr = row["Observed." + columnNames[c]].ToString();
-                    ystr = row["Predicted." + columnNames[c]].ToString();
-                    if (Double.TryParse(xstr, out xres) && Double.TryParse(ystr, out yres))
+                    x.Clear();
+                    y.Clear();
+                    foreach (DataRow row in POtable.Rows)
                     {
-                        x.Add(xres);
-                        y.Add(yres);
+                        xstr = row[observedFieldName].ToString();
+                        ystr = row[predictedFieldName].ToString();
+                        if (Double.TryParse(xstr, out xres) && Double.TryParse(ystr, out yres))
+                        {
+                            x.Add(xres);
+                            y.Add(yres);
+                        }
                     }
-                }
-                if (x.Count == 0 || y.Count == 0)
-                    continue;
+                    if (x.Count == 0 || y.Count == 0)
+                        continue;
 
-                stats[c] = MathUtilities.CalcRegressionStats(columnNames[c], y, x);
+                    stats[c] = MathUtilities.CalcRegressionStats(columnNames[c], y, x);
+                }
             }
 
             //remove any null stats which can occur from non-numeric columns such as dates
@@ -232,80 +239,78 @@ namespace Models
             }
         }
 
-        /// <summary>Run the test</summary>
-        /// <param name="jobManager">The job manager</param>
-        /// <param name="workerThread">Background worker</param>
-        public void Run(JobManager jobManager, BackgroundWorker workerThread)
-        {
-            Test(accept: false, GUIrun: false);
-        }
-
         /// <summary>Document the stats.</summary>
         /// <param name="tags"></param>
         /// <param name="headingLevel"></param>
         /// <param name="indent"></param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // Run test suite so that data table is full.
-            Test(accept: false, GUIrun: true);
-
-            // Get stat names.
-            List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
-            statNames.RemoveAt(0);
-
-            // Grab the columns of data we want.
-            DataTable dataForDoc = new DataTable();
-            dataForDoc.Columns.Add("Variable", typeof(string)); 
-            for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
+            if (IncludeInDocumentation)
             {
-                if (statNames[statIndex] != "SEintercept" && 
-                    statNames[statIndex] != "SEslope" &&
-                    statNames[statIndex] != "RSR")
-                    dataForDoc.Columns.Add(statNames[statIndex], typeof(string));
-            }
+                tags.Add(new AutoDocumentation.Heading(Parent.Name, headingLevel));
 
-            int rowIndex = 0;
-            while (rowIndex < Table.Rows.Count)
-            {
-                DataRow row = dataForDoc.NewRow();
-                dataForDoc.Rows.Add(row);
-                string variableName = Table.Rows[rowIndex][1].ToString();
-                row[0] = variableName;
+                // Run test suite so that data table is full.
+                Test(accept: false, GUIrun: true);
 
-                int i = 1;
+                // Get stat names.
+                List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
+                statNames.RemoveAt(0);
+
+                // Grab the columns of data we want.
+                DataTable dataForDoc = new DataTable();
+                dataForDoc.Columns.Add("Variable", typeof(string));
                 for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
                 {
-                    if (statNames[statIndex] != "SEintercept" && 
+                    if (statNames[statIndex] != "SEintercept" &&
                         statNames[statIndex] != "SEslope" &&
                         statNames[statIndex] != "RSR")
+                        dataForDoc.Columns.Add(statNames[statIndex], typeof(string));
+                }
+
+                int rowIndex = 0;
+                while (rowIndex < Table.Rows.Count)
+                {
+                    DataRow row = dataForDoc.NewRow();
+                    dataForDoc.Rows.Add(row);
+                    string variableName = Table.Rows[rowIndex][1].ToString();
+                    row[0] = variableName;
+
+                    int i = 1;
+                    for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
                     {
-                        object currentValue = Table.Rows[rowIndex]["Current"];
-                        string formattedValue;
-                        if (currentValue.GetType() == typeof(double))
+                        if (statNames[statIndex] != "SEintercept" &&
+                            statNames[statIndex] != "SEslope" &&
+                            statNames[statIndex] != "RSR")
                         {
-                            double doubleValue = Convert.ToDouble(currentValue);
-                            if (!double.IsNaN(doubleValue))
+                            object currentValue = Table.Rows[rowIndex]["Current"];
+                            string formattedValue;
+                            if (currentValue.GetType() == typeof(double))
                             {
-                                if (statIndex == 0)
-                                    formattedValue = doubleValue.ToString("F0");
+                                double doubleValue = Convert.ToDouble(currentValue);
+                                if (!double.IsNaN(doubleValue))
+                                {
+                                    if (statIndex == 0)
+                                        formattedValue = doubleValue.ToString("F0");
+                                    else
+                                        formattedValue = doubleValue.ToString("F3");
+                                }
                                 else
-                                    formattedValue = doubleValue.ToString("F3");
+                                    formattedValue = currentValue.ToString();
                             }
                             else
                                 formattedValue = currentValue.ToString();
+
+                            row[i] = formattedValue;
+                            i++;
                         }
-                        else
-                            formattedValue = currentValue.ToString();
-
-                        row[i] = formattedValue;
-                        i++;
+                        rowIndex++;
                     }
-                    rowIndex++;
                 }
-            }
 
-            // add data to doc table.
-            tags.Add(new AutoDocumentation.Table(dataForDoc, headingLevel));
+                // add data to doc table.
+                tags.Add(new AutoDocumentation.Table(dataForDoc, headingLevel));
+            }
         }
+
     }
 }

@@ -24,6 +24,9 @@ namespace UserInterface.Presenters
     /// </summary>
     class SeriesPresenter : IPresenter
     {
+        [Link]
+        IStorageReader storage = null;
+
         /// <summary>The graph model to work with.</summary>
         private Series series;
 
@@ -50,6 +53,7 @@ namespace UserInterface.Presenters
             if (parentGraph != null)
             {
                 graphPresenter = new GraphPresenter();
+                explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                 graphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
             }
 
@@ -296,9 +300,7 @@ namespace UserInterface.Presenters
             if (series.TableName != this.seriesView.DataSource.SelectedValue)
             {
                 this.SetModelProperty("TableName", this.seriesView.DataSource.SelectedValue);
-                DataStore dataStore = new DataStore(series);
-                PopulateFieldNames(dataStore);
-                dataStore.Disconnect();
+                PopulateFieldNames();
             }
         }
 
@@ -332,13 +334,9 @@ namespace UserInterface.Presenters
         private void PopulateView()
         {
             // Populate the editor with a list of data sources.
-            DataStore dataStore = new DataStore(series);
             List<string> dataSources = new List<string>();
-            foreach (string tableName in dataStore.TableNames)
-            {
-                if (tableName != "Messages" && tableName != "InitialConditions" && tableName != DataStore.UnitsTableName) 
-                    dataSources.Add(tableName);
-            }
+            foreach (string tableName in storage.TableNames)
+                dataSources.Add(tableName);
             dataSources.Sort();
             this.seriesView.DataSource.Values = dataSources.ToArray();
 
@@ -369,8 +367,7 @@ namespace UserInterface.Presenters
             this.seriesView.DataSource.SelectedValue = series.TableName;
             this.seriesView.Filter.Value = series.Filter;
 
-            PopulateFieldNames(dataStore);
-            dataStore.Disconnect();
+            PopulateFieldNames();
 
             this.seriesView.X.SelectedValue = series.XFieldName;
             this.seriesView.Y.SelectedValue = series.YFieldName;
@@ -441,7 +438,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Populates the field names in the view.</summary>
         /// <param name="dataStore">The data store.</param>
-        private void PopulateFieldNames(DataStore dataStore)
+        private void PopulateFieldNames()
         {
             Graph parentGraph = series.Parent as Graph;
             if (this.seriesView.DataSource != null && 
@@ -451,7 +448,7 @@ namespace UserInterface.Presenters
             {
                 List<string> fieldNames = new List<string>();
                 fieldNames.Add("SimulationName");
-                fieldNames.AddRange(dataStore.ColumnNames(seriesView.DataSource.SelectedValue));
+                fieldNames.AddRange(storage.ColumnNames(seriesView.DataSource.SelectedValue));
                 fieldNames.Sort();
 
                 this.seriesView.X.Values = fieldNames.ToArray();

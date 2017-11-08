@@ -47,6 +47,10 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             combobox1.Changed -= OnSelectionChanged;
+            comboModel.Dispose();
+            comboRender.Destroy();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Get or sets the list of valid values.</summary>

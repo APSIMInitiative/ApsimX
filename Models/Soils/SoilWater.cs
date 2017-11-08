@@ -26,6 +26,8 @@ namespace Models.Soils
     public class SoilWater : Model, ISoilWater
     {
 
+        private List<IModel> canopyModels;
+
 
         //GUI
         //***
@@ -50,7 +52,8 @@ namespace Models.Soils
         /// The summer date.
         /// </value>
         [Units("dd-mmm")]
-        [Description("Start date for switch to summer parameters for soil water evaporation (dd-mmm)")]
+        [Caption("Summer date")]
+        [Description("Start date for switch to summer parameters for soil water evaporation")]
         public string SummerDate { get; set; }
 
         /// <summary>
@@ -61,7 +64,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 40.0)]
         [Units("mm")]
-        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in summer (a.k.a. U) (mm)")]
+        [Caption("Summer U")]
+        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in summer (a.k.a. U)")]
         public double SummerU { get; set; }
 
         /// <summary>
@@ -71,6 +75,7 @@ namespace Models.Soils
         /// The summer cona.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Caption("Summer ConA")]
         [Description("Drying coefficient for stage 2 soil water evaporation in summer (a.k.a. ConA)")]
         public double SummerCona { get; set; }
 
@@ -83,7 +88,8 @@ namespace Models.Soils
         /// The winter date.
         /// </value>
         [Units("dd-mmm")]
-        [Description("Start date for switch to winter parameters for soil water evaporation (dd-mmm)")]
+        [Caption("Winter date")]
+        [Description("Start date for switch to winter parameters for soil water evaporation")]
         public string WinterDate { get; set; }
 
         /// <summary>
@@ -94,7 +100,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
-        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in winter (a.k.a. U) (mm).")]
+        [Caption("Winter U")]
+        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in winter (a.k.a. U).")]
         public double WinterU { get; set; }
 
         /// <summary>
@@ -104,6 +111,7 @@ namespace Models.Soils
         /// The winter cona.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Caption("Winter ConA")]
         [Description("Drying coefficient for stage 2 soil water evaporation in winter (a.k.a. ConA)")]
         public double WinterCona { get; set; }
 
@@ -115,7 +123,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm2/day")]
-        [Description("Constant in the soil water diffusivity calculation (mm2/day)")]
+        [Caption("Diffusivity constant")]
+        [Description("Constant in the soil water diffusivity calculation")]
         public double DiffusConst { get; set; }
 
         /// <summary>
@@ -126,7 +135,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("/mm")]
-        [Description("Effect of soil water storage above the lower limit on soil water diffusivity (/mm)")]
+        [Caption("Diffusivity slope")]
+        [Description("Effect of soil water storage above the lower limit on soil water diffusivity")]
         public double DiffusSlope { get; set; }
 
         /// <summary>
@@ -136,6 +146,7 @@ namespace Models.Soils
         /// The salb.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Caption("Albedo")]
         [Description("Fraction of incoming radiation reflected from bare soil")]
         public double Salb { get; set; }
 
@@ -148,6 +159,7 @@ namespace Models.Soils
         /// The c n2 bare.
         /// </value>
         [Bounds(Lower = 1.0, Upper = 100.0)]
+        [Caption("CN bare")]
         [Description("Runoff Curve Number (CN) for bare soil with average moisture")]
         public double CN2Bare { get; set; }
 
@@ -158,6 +170,7 @@ namespace Models.Soils
         /// The cn red.
         /// </value>
         [Bounds(Lower = 1.0, Upper = 100.0)]
+        [Caption("CN reduction")]
         [Description("Maximum reduction in runoff Curve Number due to cover")]
         public double CNRed { get; set; }
 
@@ -168,6 +181,7 @@ namespace Models.Soils
         /// The cn cov.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]        
+        [Caption("CN cover")]
         [Description("Fractional cover at which maximum reduction of Curve Number occurs")]
         public double CNCov { get; set; }
 
@@ -184,7 +198,8 @@ namespace Models.Soils
         /// The slope.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Description("Slope of the catchment area for lateral flow calculations (0-1)")]
+        [Caption("Slope")]
+        [Description("Slope of the catchment area for lateral flow calculations")]
         public double slope { get; set; }
 
         /// <summary>
@@ -195,7 +210,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]     //1.0e8F = 100000000
         [Units("m")]
-        [Description("Basal width of the downslope boundary of the catchment for lateral flow calculations (m)")]
+        [Caption("Basal width")]
+        [Description("Basal width of the downslope boundary of the catchment for lateral flow calculations")]
         public double discharge_width { get; set; }
 
         /// <summary>
@@ -206,7 +222,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]     //1.0e8F = 100000000
         [Units("m2")]
-        [Description("Catchment area for later flow calculations (m2)")]
+        [Caption("Catchment")]
+        [Description("Catchment area for lateral flow calculations")]
         public double catchment_area { get; set; }
 
 
@@ -220,7 +237,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
-        [Description("Maximum ponding depth of water (e.g. of a rice paddy) (mm)")]
+        [Caption("Max pond")]
+        [Description("Maximum ponding depth of water (e.g. of a rice paddy)")]
         public double max_pond { get; set; }
 
 
@@ -270,7 +288,8 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("cm")]
-        [Description("Soil layer thickness for each layer (cm)")]
+        [Caption("Depth")]
+        [Description("Soil layer thickness for each layer")]
         public string[] Depth
             {
             get
@@ -297,7 +316,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/d")]
-        [Description("Fractional amount of water above DUL that can drain under gravity per day (SWCON) (/d)")]
+        [Caption("SWCON")]
+        [Description("Fractional amount of water above DUL that can drain under gravity per day (SWCON)")]
         public double[] SWCON { get; set; }
 
 
@@ -314,7 +334,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0, Upper = 1.0e3F)] //1.0e3F = 1000
         [Units("mm/d")]
-        [Description("Lateral saturated hydraulic conductivity (KLAT) (mm/d)")]
+        [Caption("Klat")]
+        [Description("Lateral saturated hydraulic conductivity (KLAT)")]
         public double[] KLAT { get; set; }
 
         #endregion
@@ -894,42 +915,6 @@ namespace Models.Soils
         #region Outputs (Layered)
 
         /// <summary>
-        /// Thicknesses of each soil layer (mm)
-        /// </summary>
-        /// <value>
-        /// The dlayer.
-        /// </value>
-        [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 10000.0)]
-        [Units("mm")]
-        public double[] dlayer
-        { get { return SoilObject != null ? SoilObject.dlayer : new double[0]; } }
-
-        //ARRAYS IN MILLIMETERS
-
-        /// <summary>
-        /// Saturated water content for each soil layer expressed as a depth of water (mm)
-        /// </summary>
-        /// <value>
-        /// The sa TMM.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] SATmm
-        { get { return SoilObject != null ? SoilObject.sat_dep : new double[0]; } }
-
-        /// <summary>
-        /// Drained upper limit for each soil layer expressed as a depth of water (mm)
-        /// </summary>
-        /// <value>
-        /// The du LMM.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] DULmm
-        { get { return SoilObject != null ? SoilObject.dul_dep : new double[0]; } }
-
-        /// <summary>
         /// Current soil water content for each soil layer expressed as a depth of water (mm)
         /// </summary>
         /// <value>
@@ -951,55 +936,6 @@ namespace Models.Soils
             }
 
         /// <summary>
-        /// 15 bar lower limit of extractable soil water for each soil layer expressed as a depth of water (mm)
-        /// </summary>
-        /// <value>
-        /// The l L15MM.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] LL15mm
-        { get { return SoilObject != null ? SoilObject.ll15_dep : new double[0]; } }
-
-        /// <summary>
-        /// Air dry soil water content for each soil layer expressed as a depth of water (mm)
-        /// </summary>
-        /// <value>
-        /// The airdr ymm.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] AIRDRYmm
-        { get { return SoilObject != null ? SoilObject.air_dry_dep : new double[0]; } }
-
-
-        //ARRAYS AS FRACTIONS
-
-        /// <summary>
-        /// Saturated water content for each soil layer expressed as a volumetric water content
-        /// </summary>
-        /// <value>
-        /// The sat.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm/mm")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] SAT
-        { get { return SoilObject != null ? SoilObject.sat : new double[0]; } }
-
-        /// <summary>
-        /// Drained upper limit for each soil layer expressed as a volumetric water content
-        /// </summary>
-        /// <value>
-        /// The dul.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm/mm")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] DUL
-        { get { return SoilObject != null ? SoilObject.dul : new double[0]; } }
-
-        /// <summary>
         /// Current soil water content for each soil layer expressed as a volumetric water content
         /// </summary>
         /// <value>
@@ -1013,30 +949,6 @@ namespace Models.Soils
             get { return SoilObject != null ? SoilObject.sw : new double[0]; }
             set { SetWater_frac(value); } //TODO: remove this later, have manager scripts directly use SoilWater.SetWater_frac(amount) instead
             }
-
-        /// <summary>
-        /// 15 bar lower limit of extractable soil water for each soil layer expressed as a volumetric water content
-        /// </summary>
-        /// <value>
-        /// The l L15.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm/mm")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] LL15
-        { get { return SoilObject != null ? SoilObject.ll15 : new double[0]; } }
-
-        /// <summary>
-        /// Air dry soil water content for each soil layer expressed as a volumetric water content
-        /// </summary>
-        /// <value>
-        /// The airdry.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm/mm")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] AIRDRY
-        { get { return SoilObject != null ? SoilObject.air_dry : new double[0]; } }
 
         /// <summary>
         /// Depth of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)
@@ -1591,11 +1503,8 @@ namespace Models.Soils
 
             canopy.ZeroCanopyData();  //make all the arrays (from Yesterday) zero length, ready for the resize below (for Today).
 
-            //Get an array of models that are crop models.
-            List<IModel> models = Apsim.FindAll(paddock, typeof(ICanopy));
-
             //foreach ICanopy model in the simulation
-            foreach (Model m in models)
+            foreach (Model m in canopyModels)
                 {
                     //add an extra element to each of the canopy arrays.
                     Array.Resize(ref canopy.cover_green, canopy.NumberOfCrops + 1);
@@ -1687,7 +1596,7 @@ namespace Models.Soils
             //!     returns the index number of the first occurrence of specified value
 
             for (int i = 0; i < NameList.Length; i++)
-                if (NameList[i].ToLower() == Name.ToLower())
+                if (String.Equals(NameList[i], Name, StringComparison.OrdinalIgnoreCase))
                     return i;
             return -1;  // Not found
         }
@@ -1734,7 +1643,7 @@ namespace Models.Soils
         /// Called when [loaded].
         /// </summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
 
         }
@@ -1766,25 +1675,20 @@ namespace Models.Soils
 
             if (Soil.Thickness != null)
                 {
-                try
-                    {
-                    SoilObject = new SoilWaterSoil(constants, Soil);  //constructor can throw an Exception
-                    surfaceFactory = new SurfaceFactory();
-                    surface = surfaceFactory.GetSurface(SoilObject, Clock);  //constructor can throw an Exception (Evap class constructor too)
+                SoilObject = new SoilWaterSoil(constants, Soil);  //constructor can throw an Exception
+                surfaceFactory = new SurfaceFactory();
+                surface = surfaceFactory.GetSurface(SoilObject, Clock);  //constructor can throw an Exception (Evap class constructor too)
 
                 //optional inputs (array)
                 inflow_lat = null; 
-                }
-                catch (Exception Ex)
-                    {
-                    throw new ApsimXException(this, Ex.Message);  //catch any constructor Exceptions and rethrow as an ApsimXException.
-                    }
                 }
             else
                 {
                 throw new ApsimXException(this, "SoilWater module has detected that the Soil has no layers.");
                 }
             FindSolutes();
+
+            canopyModels = Apsim.FindAll(paddock, typeof(ICanopy));
         }
 
         /// <summary>

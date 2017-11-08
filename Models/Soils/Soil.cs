@@ -139,6 +139,7 @@ namespace Models.Soils
         [XmlIgnore] public SoilOrganicMatter SoilOrganicMatter { get; private set; }
 
         /// <summary>Gets the soil nitrogen.</summary>
+        [NonSerialized]
         private SoluteManager SoluteManager;
 
         /// <summary>Gets the soil nitrogen.</summary>
@@ -146,7 +147,7 @@ namespace Models.Soils
 
         /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             FindChildren();
         }
@@ -218,7 +219,9 @@ namespace Models.Soils
         {
             get
             {
-                if (waterNode != null)
+                if (waterNode != null && structure == null)
+                    return waterNode.BD;
+                else if (waterNode != null)
                     return Map(waterNode.BD, waterNode.Thickness, Thickness, MapType.Concentration, waterNode.BD.Last());
                 else if (Weirdo != null)
                     return Map(Weirdo.BD, Weirdo.ParamThickness, Thickness, MapType.Concentration, Weirdo.BD.Last());
@@ -292,10 +295,22 @@ namespace Models.Soils
         {
             get
             {
-                if(waterNode != null)
-                return Map(waterNode.LL15, waterNode.Thickness, Thickness, MapType.Concentration);
+                if (waterNode != null && structure == null)
+                    return waterNode.LL15;
+                else if (waterNode != null)
+                    return Map(waterNode.LL15, waterNode.Thickness, Thickness, MapType.Concentration);
                 else
                     return Map(Weirdo.LL15, Weirdo.ParamThickness, Thickness, MapType.Concentration);
+            }
+        }
+
+        /// <summary>Return lower limit limit at standard thickness. Units: mm</summary>
+        [Units("mm/mm")]
+        public double[] LL15mm
+        {
+            get
+            {
+                return MathUtilities.Multiply(LL15, Thickness);
             }
         }
 
@@ -305,10 +320,22 @@ namespace Models.Soils
         {
             get
             {
-                if(waterNode !=null)
-                return Map(waterNode.DUL, waterNode.Thickness, Thickness, MapType.Concentration);
+                if (waterNode != null && structure == null)
+                    return waterNode.DUL;
+                else if (waterNode !=null)
+                    return Map(waterNode.DUL, waterNode.Thickness, Thickness, MapType.Concentration);
                 else
                     return Map(Weirdo.DUL, Weirdo.ParamThickness, Thickness, MapType.Concentration);
+            }
+        }
+
+        /// <summary>Return drained upper limit at standard thickness. Units: mm</summary>
+        [Units("mm/mm")]
+        public double[] DULmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(DUL, Thickness);
             }
         }
 
@@ -318,10 +345,22 @@ namespace Models.Soils
         {
             get
             {
-                if(waterNode != null)
-                return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration);
+                if (waterNode != null && structure == null)
+                    return waterNode.SAT;
+                else if (waterNode != null)
+                    return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration);
                 else
                     return Map(Weirdo.SAT, Weirdo.ParamThickness, Thickness, MapType.Concentration);
+            }
+        }
+
+        /// <summary>Return saturation at standard thickness. Units: mm</summary>
+        [Units("mm/mm")]
+        public double[] SATmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(SAT, Thickness);
             }
         }
 
@@ -336,8 +375,8 @@ namespace Models.Soils
             get 
             {
                 if (SoilWater == null) return null;
-                return Map(SoilWater.SWCON, SoilWater.Thickness, Thickness, MapType.Concentration, 0); 
-            } 
+                return Map(SoilWater.SWCON, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
+            }
         }
 
         /// <summary>
@@ -349,9 +388,9 @@ namespace Models.Soils
             get
                 {
                 if (SoilWater == null) return null;
-                return Map(SoilWater.KLAT, SoilWater.Thickness, Thickness, MapType.Concentration, 0);
-                }
+                return Map(SoilWater.KLAT, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
             }
+        }
 
 
 
@@ -985,12 +1024,38 @@ namespace Models.Soils
         /// <summary>Gets or sets the nitrate N for each layer (kg/ha)</summary>
         [XmlIgnore]
         [Units("kg/ha")]
-        public double[] NO3N { get { return SoluteManager.GetSolute("NO3"); } set { SoluteManager.SetSolute("NO3",value); } }
+        public double[] NO3N
+        {
+            get
+            {
+                if (SoluteManager == null)
+                    return new double[0];
+                else
+                    return SoluteManager.GetSolute("NO3");
+            }
+            set
+            {
+                SoluteManager.SetSolute("NO3",value);
+            }
+        }
 
         /// <summary>Gets the ammonia N for each layer (kg/ha)</summary>
         [XmlIgnore]
         [Units("kg/ha")]
-        public double[] NH4N { get { return SoluteManager.GetSolute("NH4"); } set { SoluteManager.SetSolute("NH4", value); } }
+        public double[] NH4N
+        {
+            get
+            {
+                if (SoluteManager == null)
+                    return new double[0];
+                else
+                    return SoluteManager.GetSolute("NH4");
+            }
+            set
+            {
+                SoluteManager.SetSolute("NH4", value);
+            }
+        }
 
         /// <summary>Gets the temperature of each layer</summary>
         public double[] Temperature { get { return temperatureModel.Value; } }

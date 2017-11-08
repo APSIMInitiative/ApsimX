@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -352,7 +352,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Phyllochron.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>PrimordiaPerMainstemNode</Name>
@@ -371,7 +371,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <End>Maturity</End>
         </PhaseLookupValue>
         <PhaseLookupValue>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <LinearInterpolationFunction>
             <Name>Phyllochron</Name>
             <XYPairs>
@@ -402,7 +402,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <End>Maturity</End>
         </PhaseLookupValue>
         <Constant>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>80</FixedValue>
         </Constant>
@@ -452,10 +452,10 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -573,11 +573,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <Name>RadnInt</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].RadIntTot</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>RUEact</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[RUEModel].RueAct</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </RUEModel>
@@ -888,7 +883,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <FixedValue>0.95</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.2</FixedValue>
           </Constant>
@@ -1022,6 +1017,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Leaves />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -1063,11 +1059,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Name>SoilWaterEffect</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>PartitionFraction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.05</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
@@ -1276,6 +1267,15 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].Depth</XProperty>
         </LinearInterpolationFunction>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.05</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1432,6 +1432,16 @@ date of Experiment 4 is assumed here.]]></MemoText>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[StorageRoot].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1582,6 +1592,11 @@ date of Experiment 4 is assumed here.]]></MemoText>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Petiole].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <CompositeBiomass>
@@ -1657,7 +1672,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>FodderBeet</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>Report</Name>
@@ -1723,30 +1737,30 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <RegrStats>
             <Name>FodderBeet.AboveGround.N</Name>
             <n>31</n>
-            <Slope>0.78631703974572442</Slope>
-            <Intercept>9.017105456576644</Intercept>
-            <SEslope>0.062409166652983232</SEslope>
-            <SEintercept>1.8309571215190412</SEintercept>
-            <R2>0.84553473190924344</R2>
-            <RMSE>4.8898627713225595</RMSE>
-            <NSE>0.7362384287975251</NSE>
-            <ME>3.0874033506059737</ME>
-            <MAE>3.9931535165560121</MAE>
-            <RSR>0.50522582418335449</RSR>
+            <Slope>0.78740450818203822</Slope>
+            <Intercept>9.0389481992461036</Intercept>
+            <SEslope>0.062305764020070854</SEslope>
+            <SEintercept>1.8279235000613561</SEintercept>
+            <R2>0.84632721491845952</R2>
+            <RMSE>4.9151552950241362</RMSE>
+            <NSE>0.73350279007501928</NSE>
+            <ME>3.1394233421740552</ME>
+            <MAE>4.0305255653282348</MAE>
+            <RSR>0.5078390746426</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.AboveGround.Wt</Name>
             <n>50</n>
-            <Slope>0.97446406732979174</Slope>
-            <Intercept>179.94089333213265</Intercept>
-            <SEslope>0.051001186779070423</SEslope>
-            <SEintercept>96.899562591872311</SEintercept>
-            <R2>0.883795740676825</R2>
-            <RMSE>344.23407186060558</RMSE>
-            <NSE>0.85083522689577662</NSE>
-            <ME>137.09379448852673</ME>
-            <MAE>267.77355700207767</MAE>
-            <RSR>0.3823368640899526</RSR>
+            <Slope>0.9748586421654406</Slope>
+            <Intercept>181.60019733083755</Intercept>
+            <SEslope>0.050959751349786586</SEslope>
+            <SEintercept>96.820837463557112</SEintercept>
+            <R2>0.88404560479441074</R2>
+            <RMSE>344.90867294972372</RMSE>
+            <NSE>0.85025001278402357</NSE>
+            <ME>139.41516112667259</ME>
+            <MAE>268.32440023733193</MAE>
+            <RSR>0.38308613583847823</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.CoverGreen</Name>
@@ -1933,16 +1947,16 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <RegrStats>
             <Name>FodderBeet.TotalDead.N</Name>
             <n>29</n>
-            <Slope>3.0037261239258815</Slope>
-            <Intercept>1.694131211408</Intercept>
-            <SEslope>0.35890431431864855</SEslope>
-            <SEintercept>0.72682699304711174</SEintercept>
-            <R2>0.72177215952035079</R2>
-            <RMSE>5.945762034434952</RMSE>
-            <NSE>-24.391517027425678</NSE>
-            <ME>4.9919880328298429</ME>
-            <MAE>4.9919880328298429</MAE>
-            <RSR>4.9513581444645896</RSR>
+            <Slope>3.0006513293337349</Slope>
+            <Intercept>1.7537083760366414</Intercept>
+            <SEslope>0.35876527118740259</SEslope>
+            <SEintercept>0.72654541297979158</SEintercept>
+            <R2>0.72151636708918621</R2>
+            <RMSE>5.9898627392876662</RMSE>
+            <NSE>-24.769580126122612</NSE>
+            <ME>5.0465045096733112</ME>
+            <MAE>5.0465045096733112</MAE>
+            <RSR>4.9880831904527225</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -2281,7 +2295,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>FodderBeet</ResourceName>
         <CropType>FodderBeet</CropType>
-        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -4417,7 +4430,6 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>FodderBeet</ResourceName>
         <CropType>FodderBeet</CropType>
-        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -6672,7 +6684,6 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>FodderBeet</ResourceName>
         <CropType>FodderBeet</CropType>
-        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -8927,7 +8938,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>FodderBeet</ResourceName>
           <CropType>FodderBeet</CropType>
-          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -9223,9 +9233,9 @@ namespace Models
             <Name>SowDateCv</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <InitialRootDepth>5</InitialRootDepth>
               <CropToSow>Rivage</CropToSow>
               <SowingDate>0001-01-01</SowingDate>
+              <InitialRootDepth>5</InitialRootDepth>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;

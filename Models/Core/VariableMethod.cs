@@ -61,6 +61,10 @@ namespace Models.Core
         public override string Description { get { return string.Empty; } }
 
         /// <summary>
+        /// Gets the text to use as a label for the property.
+        /// </summary>
+        public override string Caption { get { return string.Empty; } }
+        /// <summary>
         /// Gets the units of the method
         /// </summary>
         public override string Units { get { return string.Empty; } set { } }

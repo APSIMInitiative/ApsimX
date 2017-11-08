@@ -33,7 +33,11 @@ namespace Models.PMF.Functions
                     for (int i = 1; i < ChildFunctions.Count; i++)
                     {
                         F = ChildFunctions[i] as IFunction;
-                        returnValue = returnValue / F.Value(arrayIndex);
+                        double denominator = F.Value(arrayIndex);
+                        if (denominator == 0)
+                            returnValue = 0;
+                        else
+                            returnValue = returnValue / denominator;
                     }
 
             }
@@ -46,7 +50,10 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            SubtractFunction.DocumentMathFunction(this, '/', tags, headingLevel, indent);
+            if (IncludeInDocumentation)
+            {
+                SubtractFunction.DocumentMathFunction(this, '/', tags, headingLevel, indent);
+            }
         }
 
     }
