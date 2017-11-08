@@ -3747,7 +3747,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].BasePhyllochron.FixedValue = 70</Command>
           <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000</Command>
         </Cultivar>
         <Cultivar>
@@ -6934,7 +6933,10 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>County</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+            <Command>[Structure].BasePhyllochron.FixedValue = 75</Command>
           </Cultivar>
           <Cultivar>
             <Name>Dash</Name>
@@ -6958,8 +6960,11 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Omaka</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 2000</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 10</Command>
             <Command />
-            <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Optic</Name>
@@ -6994,12 +6999,21 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Triumph</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+            <Command>[Structure].BasePhyllochron.FixedValue = 110</Command>
+            <Command>[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 2,4,4,1,1,1,1,1</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           </Cultivar>
           <Cultivar>
             <Name>Valetta</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+            <Command>[Structure].BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 2800</Command>
           </Cultivar>
           <Cultivar>
             <Name>Vortex</Name>
@@ -27956,7 +27970,7 @@ namespace Models
             <TableName>DailyObsPred</TableName>
             <XFieldName>Observed.Barley.Structure.HaunStage.Value()</XFieldName>
             <YFieldName>Predicted.Barley.Structure.HaunStage.Value()</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -28075,6 +28089,80 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>LeafTips1</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[There were some inconsistencies in the leaf number observations so don't expect to good of a fit with the model]]></MemoText>
+          </Memo>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Number of leaves</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>12</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries>
+            <string>Pyramid2006-05-10</string>
+            <string>Sherwood2006-05-10</string>
+          </DisabledSeries>
         </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
