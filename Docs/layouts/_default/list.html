@@ -1,8 +1,8 @@
 {{ partial "header.html" . }}
 
 <main role="main">
-	<div class="doc-list-entry">
-	{{ range .Data.Pages }}
+	<div class="row doc-main">
+	{{ range where .Data.Pages ".File.TranslationBaseName" "Index"}}
 	   {{ .Content }}
 	{{ end }}
 	</div>
