@@ -14,9 +14,9 @@ namespace Models.Soils
         public double Amount;
         /// <summary>The depth of application (mm).</summary>
         public double Depth;
-        /// <summary>The time to start the irrigation (hrs).</summary>
+        /// <summary>The time to start the irrigation (minutes).</summary>
         public double StartTime;
-        /// <summary>The duration of irrigation event (hrs).</summary>
+        /// <summary>The duration of irrigation event (minutes).</summary>
         public double Duration;
         /// <summary>Whether irrigation can be intercepted by canopy.</summary>
         public bool WillIntercept;

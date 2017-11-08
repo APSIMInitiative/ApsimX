@@ -17,10 +17,10 @@ namespace Models
         /// <summary>The depth at which irrigation is applied (mm).</summary>
         double Depth { get; }
 
-        /// <summary>The time, since midnight, to start irrigation (hrs).</summary>
+        /// <summary>The time, since midnight, to start irrigation (minutes).</summary>
         double StartTime { get; }
 
-        /// <summary>The duration of the irrigation event (hrs).</summary>
+        /// <summary>The duration of the irrigation event (minutes).</summary>
         double Duration { get; }
 
         /// <summary>The efficiency of the irrigation system (mm/mm).</summary>
@@ -38,8 +38,8 @@ namespace Models
         /// <summary>Called to apply some irrigation.</summary>
         /// <param name="amount">The amount to apply (mm).</param>
         /// <param name="depth">The depth of application (mm).</param>
-        /// <param name="startTime">The time to start the irrigation (hrs).</param>
-        /// <param name="duration">The duration of irrigation event (hrs).</param>
+        /// <param name="startTime">The time to start the irrigation (minutes).</param>
+        /// <param name="duration">The duration of irrigation event (minutes).</param>
         /// <param name="efficiency">The irrigation efficiency (mm/mm).</param>
         /// <param name="willIntercept">Whether irrigation can be intercepted by canopy (<c>true</c>/<c>false</c>).</param>
         /// <param name="willRunoff">Whether irrigation can run off (<c>true</c>/<c>false</c>).</param>

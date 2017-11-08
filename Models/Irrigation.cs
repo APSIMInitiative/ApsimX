@@ -23,9 +23,9 @@ namespace Models
     ///    the actual amount applied will depend on the value of irrigation efficiency;  
     /// - depth: The depth at which irrigation is applied (mm). This is optional, defaulting to zero (soil surface or above). It can 
     ///    be used to define sub-surface irrigation;  
-    /// - startTime: The time, since midnight, to start the irrigation (hrs). This is optional, defaulting to zero. It is only used 
+    /// - startTime: The time, since midnight, to start the irrigation (minutes). This is optional, defaulting to zero. It is only used 
     ///    by models with sub-daily time step;  
-    /// - duration: The duration of the irrigation event (hrs). This is optional, defaulting to 24hrs (whole day). It defines the 
+    /// - duration: The duration of the irrigation event (minutes). This is optional, defaulting to 1440min (whole day). It defines the 
     ///    irrigation intensity and is only used by few models (mostly with sub-daily time step);  
     /// - efficiency: The efficiency of the irrigation system (mm/mm). This is optional, defaulting to 1.0 (100%). Used to define the 
     ///    actual amount of irrigation applied. Variations in efficiency are assumed to be losses between source/reservoir and field;  
@@ -69,11 +69,11 @@ namespace Models
         [XmlIgnore]
         public double Depth { get; set; }
 
-        /// <summary>Gets or sets the time, since midnight, to start irrigation (hrs).</summary>
+        /// <summary>Gets or sets the time, since midnight, to start irrigation (minutes).</summary>
         [XmlIgnore]
         public double StartTime { get; set; }
 
-        /// <summary>Gets or sets the duration of the irrigation event (hrs).</summary>
+        /// <summary>Gets or sets the duration of the irrigation event (minutes).</summary>
         [XmlIgnore]
         public double Duration { get; set; }
 
@@ -98,11 +98,11 @@ namespace Models
         /// <summary>Default value for depth (mm).</summary>
         private double defaultDepth = 0.0;
 
-        /// <summary>Default value for start time of irrigation (hrs).</summary>
+        /// <summary>Default value for start time of irrigation (minutes).</summary>
         private double defaultStartTime = 0.0;
-        
-        /// <summary>Default value for duration of irrigation (hrs).</summary>
-        private double defaultDuration = 24.0;
+
+        /// <summary>Default value for duration of irrigation (minutes).</summary>
+        private double defaultDuration = 1440.0;
 
         /// <summary>Default value for irrigation efficiency (mm/mm).</summary>
         private double defaultEfficiency = 1.0;
@@ -110,15 +110,15 @@ namespace Models
         /// <summary>Apply some irrigation.</summary>
         /// <param name="amount">The amount to apply (mm).</param>
         /// <param name="depth">The depth of application (mm).</param>
-        /// <param name="startTime">The time to start the irrigation (hrs).</param>
-        /// <param name="duration">The duration of the irrigation event (hrs).</param>
+        /// <param name="startTime">The time to start the irrigation (minutes).</param>
+        /// <param name="duration">The duration of the irrigation event (minutes).</param>
         /// <param name="efficiency">The irrigation efficiency (mm/mm).</param>
         /// <param name="willIntercept">Whether irrigation can be intercepted by canopy (<c>true</c>/<c>false</c>).</param>
         /// <param name="willRunoff">Whether irrigation can run off (<c>true</c>/<c>false</c>).</param>
         /// <exception cref="ApsimXException">Check the depth for irrigation, it cannot be deeper than the soil depth</exception>
-        /// <exception cref="ApsimXException">Check the duration for the irrigation, it must be less than 24hrs</exception>
-        /// <exception cref="ApsimXException">Check the start time for irrigation, it must be less than 24hrs</exception>
-        /// <exception cref="ApsimXException">Check the start time and duration of irrigation, the sum must be smaller than 24hrs</exception>
+        /// <exception cref="ApsimXException">Check the duration for the irrigation, it must be less than 1440 minutes</exception>
+        /// <exception cref="ApsimXException">Check the start time for irrigation, it must be less than 1440 minutes</exception>
+        /// <exception cref="ApsimXException">Check the start time and duration of irrigation, the sum must be smaller than 1440 minutes</exception>
         /// <exception cref="ApsimXException">Check the value of irrigation efficiency, it must be between 0 and 1</exception>
         public void Apply(double amount, double depth = -1.0, double startTime = -1.0, double duration = -1.0, double efficiency = -1.0, bool willIntercept = false, bool willRunoff = false)
         {
@@ -138,8 +138,8 @@ namespace Models
                 { StartTime = defaultStartTime; }
                 else
                 {
-                    if (startTime >= 24.0)
-                        throw new ApsimXException(this, "Check the start time for irrigation, it must be less than 24hrs");
+                    if (startTime >= 1440.0)
+                        throw new ApsimXException(this, "Check the start time for irrigation, it must be less than 1440 minutes");
                     StartTime = startTime;
                 }
 
@@ -147,13 +147,13 @@ namespace Models
                 { Duration = defaultDuration; }
                 else
                 {
-                    if (duration > 24.0)
-                        throw new ApsimXException(this, "Check the duration for the irrigation, it must be less than 24hrs");
+                    if (duration > 1440.0)
+                        throw new ApsimXException(this, "Check the duration for the irrigation, it must be less than 1440 minutes");
                     Duration = duration;
                 }
 
-                if (StartTime + Duration > 24.0)
-                    throw new ApsimXException(this, "Check the start time and duration of irrigation, the sum must be smaller than 24hrs");
+                if (StartTime + Duration > 1440.0)
+                    throw new ApsimXException(this, "Check the start time and duration of irrigation, the sum must be smaller than 1440 minutes");
 
                 if (efficiency < 0.0)
                 { Efficiency = defaultEfficiency; }
@@ -197,8 +197,8 @@ namespace Models
 
         /// <summary>Set the default parameters of Apply irrigation.</summary>
         /// <param name="depth">The new default value for depth of application (mm).</param>
-        /// <param name="startTime">The new default value for time to start the irrigation (hrs).</param>
-        /// <param name="duration">The new default value for duration of irrigation event (hrs).</param>
+        /// <param name="startTime">The new default value for time to start the irrigation (minutes).</param>
+        /// <param name="duration">The new default value for duration of irrigation event (minutes).</param>
         /// <param name="efficiency">The new default value for irrigation efficiency (mm/mm).</param>
         /// <param name="willIntercept">Whether irrigation can be intercepted by canopy (<c>true</c>/<c>false</c>).</param>
         /// <param name="willRunoff">Whether irrigation can run off (<c>true</c>/<c>false</c>).</param>
