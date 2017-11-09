@@ -19,7 +19,7 @@ namespace Models.CLEM.Activities
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs mustering based upon the current herd filtering. It is also used to assign individuals to pastures (paddocks) at the start of the simulation.")]
-    public class RuminantActivityMuster: WFRuminantActivityBase
+    public class RuminantActivityMuster: CLEMRuminantActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

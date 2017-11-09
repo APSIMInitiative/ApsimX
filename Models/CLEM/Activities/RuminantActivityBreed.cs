@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
-    public class RuminantActivityBreed : WFRuminantActivityBase
+    public class RuminantActivityBreed : CLEMRuminantActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

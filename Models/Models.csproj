@@ -507,7 +507,7 @@
     <Compile Include="CLEM\Activities\CropActivityFee.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityFee.cs" />
     <Compile Include="CLEM\Activities\TruckingSettings.cs" />
-    <Compile Include="CLEM\Activities\WFRuminantActivityBase.cs" />
+    <Compile Include="CLEM\Activities\CLEMRuminantActivityBase.cs" />
     <Compile Include="CLEM\FileCrop.cs" />
     <Compile Include="CLEM\Groupings\LabourFilterGroupSpecified.cs" />
     <Compile Include="CLEM\Groupings\LabourFilterGroupUnit.cs" />

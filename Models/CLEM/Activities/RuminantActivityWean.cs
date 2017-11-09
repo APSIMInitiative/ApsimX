@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages weaning of suckling ruminant individuals.")]
-    public class RuminantActivityWean: WFRuminantActivityBase
+    public class RuminantActivityWean: CLEMRuminantActivityBase
     {
         [Link]
         private ResourcesHolder Resources = null;

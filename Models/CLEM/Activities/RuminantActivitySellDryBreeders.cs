@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity flags dry breeders for sale. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
-    public class RuminantActivitySellDryBreeders : WFRuminantActivityBase
+    public class RuminantActivitySellDryBreeders : CLEMRuminantActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

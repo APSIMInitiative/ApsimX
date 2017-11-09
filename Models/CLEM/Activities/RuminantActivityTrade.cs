@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages trade individuals. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
-    public class RuminantActivityTrade : WFRuminantActivityBase, IValidatableObject
+    public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

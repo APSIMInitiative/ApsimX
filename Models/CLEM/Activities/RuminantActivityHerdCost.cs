@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity will arange payment of a ruminant herd expense such as dips and drenches based on the current herd filtering.")]
-    public class RuminantActivityHerdCost : WFRuminantActivityBase, IValidatableObject
+    public class RuminantActivityHerdCost : CLEMRuminantActivityBase, IValidatableObject
 	{
 		/// <summary>
 		/// Amount payable
