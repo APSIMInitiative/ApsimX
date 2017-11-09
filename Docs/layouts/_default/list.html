@@ -1,0 +1,11 @@
+{{ partial "header.html" . }}
+
+<main role="main">
+	<div class="row doc-main">
+	{{ range where .Data.Pages ".File.TranslationBaseName" "Index"}}
+	   {{ .Content }}
+	{{ end }}
+	</div>
+</main>
+
+{{ partial "footer.html" . }}

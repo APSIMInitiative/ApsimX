@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+{{ $baseUrl := .Site.BaseURL }}
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="alternate" href="/index.xml" type="application/rss+xml" title="{{ .Site.Title }}">
+		<link rel="icon" href="{{ $baseUrl }}favicon.ico">
+		<title>{{ if not .IsHome }}{{ .Title }} - {{ end }}{{ .Site.Title }}</title>
+		<link rel="stylesheet" href="{{ $baseUrl }}css/highlight/{{ with .Site.Params.highlightStyle }}{{ . }}{{ else }}default{{ end }}.css">
+		<link rel="stylesheet" href="{{ $baseUrl }}css/bootstrap.min.css">
+		<link rel="stylesheet" href="{{ $baseUrl }}css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="{{ $baseUrl }}css/theme.css">
+		<link rel="stylesheet" href="{{ $baseUrl }}css/bootie-docs.css">
+		<link rel="stylesheet" href="{{ $baseUrl }}css/site.css">
+		<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+	</head>
+
+<body role="document">
+
+	<!-- Fixed navbar -->
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+			    <a href="/">
+					<img alt="Brand" src="/images/ApsimLogo.png"/>
+				</a>
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li {{ if .IsHome }}class="active"{{ end }}><a href="{{ $baseUrl }}">Home</a></li>
+			{{ $url := .URL }}
+			{{ with .Site.Menus.main }}
+				{{ range $menu := . }}
+					<li {{ if eq $url .URL }}class="active"{{ end }}><a href="{{ .URL }}">{{ .Name }}</a></li>
+				{{ end }}
+			{{ end }}
+				{{ if not .Site.Params.noCategoryLink }}
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Categories<span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+						{{ range $name, $taxonomy := .Site.Taxonomies.categories }}
+							<li><a href="{{ $baseUrl }}categories/{{ $name | urlize }}">{{ title $name }}</a></li>
+						{{ end }}
+						</ul>
+					</li>
+				{{ end }}
+				</ul>
+				{{ with .Site.Params.searchDomain }}
+				<form class="navbar-form navbar-left" role="search" action="https://www.google.co.jp/search" method="get">
+					<div class="input-group doc-search-form">
+						<input type="hidden" name="as_sitesearch" value="{{ . }}">
+						<input type="text" name="as_q" class="search-query doc-search-input-text" placeholder="Search Site">
+						<span class="input-group-addon input-group-btn doc-search-input-btn">
+							<button class="btn" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+						</span>
+					</div>
+				</form>
+				{{ end }}
+			</div><!--/.nav-collapse -->
+		</div>
+	</nav>
+
+<div class="container">

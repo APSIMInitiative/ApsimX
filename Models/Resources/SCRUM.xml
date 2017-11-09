@@ -1161,6 +1161,12 @@ The root organ demands and is partitioned N and DM and its depth increases throu
 ]]>
       </MemoText>
     </Memo>
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+      <Units>0-1</Units>
+    </Constant>
     <LinearInterpolationFunction>
       <Name>KLModifier</Name>
       <XYPairs>

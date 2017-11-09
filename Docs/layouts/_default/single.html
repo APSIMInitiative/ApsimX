@@ -1,0 +1,12 @@
+{{ partial "header.html" . }}
+
+<div class="row doc-main">
+	<main role="main">
+		<a id="title"></a>
+		<section>
+			{{ .Content }}
+		</section>
+	</main>
+</div>
+
+{{ partial "footer.html" . }}
