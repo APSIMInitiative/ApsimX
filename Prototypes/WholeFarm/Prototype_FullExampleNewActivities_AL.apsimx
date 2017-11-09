@@ -16,8 +16,8 @@
     <Summary>
       <Name>summaryfile</Name>
     </Summary>
-    <WholeFarm>
-      <Name>WholeFarm</Name>
+    <ZoneCLEM>
+      <Name>ZoneCLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
         <Finance>
@@ -1185,7 +1185,7 @@
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationInterval>12</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <Graph>
       <Name>Graph</Name>
       <Series>

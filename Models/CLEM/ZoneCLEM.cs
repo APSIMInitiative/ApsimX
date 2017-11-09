@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.CLEM
 {
 	/// <summary>
 	/// WholeFarm Zone to control simulation
@@ -17,7 +17,7 @@ namespace Models.WholeFarm
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(Simulation))]
     [Description("This manages all WholeFarm resources and activities in the simulation.")]
-    public class WholeFarm: Zone, IValidatableObject
+    public class ZoneCLEM: Zone, IValidatableObject
 	{
 		[Link]
 		ISummary Summary = null;
@@ -74,7 +74,7 @@ namespace Models.WholeFarm
         /// <summary>
         /// Constructor
         /// </summary>
-        public WholeFarm()
+        public ZoneCLEM()
 		{
 			this.SetDefaults();
 		}

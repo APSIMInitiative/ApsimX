@@ -23,7 +23,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>IAT</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -1101,7 +1101,7 @@
       <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <Graph>
       <Name>Maize_local</Name>
       <Series>

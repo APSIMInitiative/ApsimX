@@ -17,7 +17,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -339,7 +339,7 @@
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -354,7 +354,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -671,7 +671,7 @@
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -686,7 +686,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -1042,7 +1042,7 @@
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -1057,7 +1057,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -1434,7 +1434,7 @@
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -1449,7 +1449,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -1879,7 +1879,7 @@
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -1894,7 +1894,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -2268,7 +2268,7 @@
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -2283,7 +2283,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -2676,7 +2676,7 @@
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -2691,7 +2691,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -3177,7 +3177,7 @@
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -3192,7 +3192,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -3690,7 +3690,7 @@
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -3705,7 +3705,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -4181,7 +4181,7 @@
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -4196,7 +4196,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -4629,7 +4629,7 @@
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <IncludeInDocumentation>true</IncludeInDocumentation>

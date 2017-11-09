@@ -13,7 +13,7 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>WF_IATExample_IndiaICRISAT_v1</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -1542,7 +1542,7 @@
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationInterval>0</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>0</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <Graph>
       <Name>MaizeGrain</Name>
       <Series>

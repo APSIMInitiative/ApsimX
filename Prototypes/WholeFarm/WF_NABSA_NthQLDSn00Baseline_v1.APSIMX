@@ -16,7 +16,7 @@
     <Summary>
       <Name>summaryfile</Name>
     </Summary>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>WF_NABSANthQLDSn00Baseline_v1</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -850,7 +850,7 @@
       <RandomSeed>0</RandomSeed>
       <EcologicalIndicatorsCalculationInterval>12</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <Graph>
       <Name>Graph</Name>
       <Series>

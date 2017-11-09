@@ -22,7 +22,7 @@
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ErrorMessage />
     </FileGRASP>
-    <WholeFarm>
+    <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
         <Name>Resources</Name>
@@ -172,7 +172,7 @@
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
-    </WholeFarm>
+    </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <IncludeInDocumentation>true</IncludeInDocumentation>
