@@ -343,10 +343,7 @@ namespace Models.PMF.Organs
         {
             // get DM lost by respiration (growth respiration)
             GrowthRespiration = 0.0;
-            GrowthRespiration += dryMatter.Structural * (1.0 - dmConversionEfficiency.Value())
-                              + dryMatter.Storage * (1.0 - dmConversionEfficiency.Value())
-                              + dryMatter.Metabolic * (1.0 - dmConversionEfficiency.Value());
-
+            GrowthRespiration += dryMatter.Structural * (1.0 - dmConversionEfficiency.Value());
             // allocate structural DM
             Allocated.StructuralWt = Math.Min(dryMatter.Structural * dmConversionEfficiency.Value(), dryMatterDemand.Structural);
             Live.StructuralWt += Allocated.StructuralWt;
@@ -356,7 +353,7 @@ namespace Models.PMF.Organs
                 throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
             if (DMDemand.Storage > 0.0)
             {
-                Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
+                // Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
                 double diffWt = dryMatter.Storage - dryMatter.Retranslocation;
                 if (diffWt > 0)
                 {
@@ -364,11 +361,15 @@ namespace Models.PMF.Organs
                 }
                 Allocated.StorageWt = diffWt;
                 Live.StorageWt += diffWt;
+
+                GrowthRespiration += diffWt * (1.0 - dmConversionEfficiency.Value());
+
             }
 
             // allocate metabolic DM
             Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
 
+            GrowthRespiration += dryMatter.Metabolic * (1.0 - dmConversionEfficiency.Value());
             // Retranslocation
             if (dryMatter.Retranslocation - startLive.StorageWt > biomassToleranceValue)
                 throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
