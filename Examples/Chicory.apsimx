@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="20">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
     <Name>Chicory</Name>
@@ -182,13 +184,13 @@ namespace Models
 			//Calculate soil water variables
 			double depthFromSurface = 0.0;
 			double fracLayer = 0.0;
-			nLayers = Soil.Thickness.Length;
+			nLayers = Soil.SoilWater.Thickness.Length;
 			for (int layer = 0; layer < nLayers; layer++)
 			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
-				TopLL += Soil.LL15mm[layer] * fracLayer;
-				TopDUL += Soil.DULmm[layer] * fracLayer;
-				depthFromSurface += Soil.Thickness[layer];
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
+				TopLL += Soil.SoilWater.LL15mm[layer] * fracLayer;
+				TopDUL += Soil.SoilWater.DULmm[layer] * fracLayer;
+				depthFromSurface += Soil.SoilWater.Thickness[layer];
 				if (depthFromSurface >= depthPAWC)
 					layer = nLayers;
 			}
@@ -220,9 +222,9 @@ namespace Models
 			TopSWC = 0.0;
 			for (int layer = 0; layer < nLayers; layer++)
 			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
+				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
 				TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
-				depthFromSurface += Soil.Thickness[layer];
+				depthFromSurface += Soil.SoilWater.Thickness[layer];
 				if (depthFromSurface >= depthPAWC)
 					layer = nLayers;
 			}
@@ -1090,6 +1092,7 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>Chicory</ResourceName>
         <CropType>Chicory</CropType>
+        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <Report>
         <Name>Report</Name>
@@ -1109,8 +1112,8 @@ namespace Models
           <string>[Soil].SoilWater.Drainage as Drainage</string>
           <string>[Soil].SoilWater.Runoff as Runoff</string>
           <string>sum([Soil].SoilWater.SWmm) as TotalSWC</string>
-          <string>sum([Soil].DULmm) as TotalDUL</string>
-          <string>sum([Soil].LL15mm) as TotalLL15</string>
+          <string>sum([Soil].SoilWater.DULmm) as TotalDUL</string>
+          <string>sum([Soil].SoilWater.LL15mm) as TotalLL15</string>
           <string>[Fertiliser].NitrogenApplied as FertiliserN</string>
           <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
           <string>([Soil].SoilWater.LeachNH4 + [Soil].SoilWater.LeachNO3) as LeachedN</string>
