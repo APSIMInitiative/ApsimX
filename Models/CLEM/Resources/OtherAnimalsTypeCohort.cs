@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(OtherAnimalsType))]
     [Description("This specifies an other animal cohort at the start of the simulation.")]
-    public class OtherAnimalsTypeCohort: WFModel
+    public class OtherAnimalsTypeCohort: CLEMModel
 	{
 		/// <summary>
 		/// Gender

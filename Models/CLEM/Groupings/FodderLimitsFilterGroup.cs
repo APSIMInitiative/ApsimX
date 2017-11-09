@@ -13,7 +13,7 @@ namespace Models.CLEM.Groupings
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This grouping is not currently used.")]
-    public class FodderLimitsFilterGroup: WFModel
+    public class FodderLimitsFilterGroup: CLEMModel
 	{
 		/// <summary>
 		/// Monthly values to supply selected individuals

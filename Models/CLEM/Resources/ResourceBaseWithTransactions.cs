@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the WholeFarm Resource Base Class and should not be used directly.")]
-    public class ResourceBaseWithTransactions: WFModel
+    public class ResourceBaseWithTransactions: CLEMModel
 	{
 		/// <summary>
 		/// Last transaction received

@@ -15,7 +15,7 @@ namespace Models.CLEM.Groupings
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This other animal filter group selects specific individuals from the other animals using any number of Other Animal Filters.")]
-    public class OtherAnimalsFilterGroup: WFModel
+    public class OtherAnimalsFilterGroup: CLEMModel
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

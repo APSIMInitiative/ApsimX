@@ -13,7 +13,7 @@ namespace Models.CLEM.Groupings
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This labour filter group provides days available or needed for specific individuals from the labour pool using any number of Labour Filters.. Multiple filters will select groups of individuals required.")]
-    public class LabourFilterGroupDefine: WFModel
+    public class LabourFilterGroupDefine: CLEMModel
 	{
 		/// <summary>
 		/// Days per month selected individuals available

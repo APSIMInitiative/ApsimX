@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Land))]
     [Description("This resource represents a land type (e.g. Clay region.) This is not necessarily a paddock, but Bunded and interbund land areas must be separated into individual land types.")]
-    public class LandType : WFModel, IResourceType, IResourceWithTransactionType
+    public class LandType : CLEMModel, IResourceType, IResourceWithTransactionType
 	{
         [Link]
         ISummary Summary = null;

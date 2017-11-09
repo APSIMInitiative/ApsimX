@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
     [Description("This resource represents an animal food store (e.g. Lucerne).")]
-    public class AnimalFoodStoreType : WFModel, IResourceType, IResourceWithTransactionType, IFeedType
+    public class AnimalFoodStoreType : CLEMModel, IResourceType, IResourceWithTransactionType, IFeedType
     {
         /// <summary>
         /// Dry Matter (%)

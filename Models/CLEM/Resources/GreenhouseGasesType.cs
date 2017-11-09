@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(GreenhouseGases))]
     [Description("This resource represents a greenhouse gas (e.g. CO2).")]
-    public class GreenhouseGasesType : WFModel, IResourceWithTransactionType, IResourceType
+    public class GreenhouseGasesType : CLEMModel, IResourceWithTransactionType, IResourceType
 	{
 		/// <summary>
 		/// Starting amount

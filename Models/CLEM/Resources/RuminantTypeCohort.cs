@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
 	[ValidParent(ParentType = typeof(RuminantInitialCohorts))]
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [Description("This specifies a ruminant cohort at the start of the simulation.")]
-    public class RuminantTypeCohort : WFModel
+    public class RuminantTypeCohort : CLEMModel
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

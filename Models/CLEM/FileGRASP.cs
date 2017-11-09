@@ -39,7 +39,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.WFFileGRASPPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
     [Description("This model holds a GRASP data file for native pasture used in the WholeFarm simulation.")]
-    public class FileGRASP : WFModel
+    public class FileGRASP : CLEMModel
     {
         ///// <summary>
         ///// A link to the clock model.

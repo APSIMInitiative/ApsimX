@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all resource groups used in the CLEM simulation")]
-    public class ResourcesHolder: WFModel
+    public class ResourcesHolder: CLEMModel
     {
 
         // Scoping rules of Linking in Apsim means that you can only link to 

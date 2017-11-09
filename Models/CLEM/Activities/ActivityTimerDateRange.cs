@@ -19,7 +19,7 @@ namespace Models.CLEM.Activities
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [Description("This activity timer defines a date range to perfrom activities.")]
-    public class ActivityTimerDateRange : WFModel, IActivityTimer
+    public class ActivityTimerDateRange : CLEMModel, IActivityTimer
 	{
 		[XmlIgnore]
 		[Link]

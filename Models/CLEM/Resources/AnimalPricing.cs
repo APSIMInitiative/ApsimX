@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantType))]
     [Description("This is the parent model component holing all Animal Price Entries that define the value of individuals in the breed/herd.")]
-    public class AnimalPricing: WFModel
+    public class AnimalPricing: CLEMModel
 	{
 		/// <summary>
 		/// Style of pricing animals
@@ -42,7 +42,7 @@ namespace Models.CLEM.Resources
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(AnimalPricing))]
     [Description("This is the price entry specifying the value of all individuals of a specified sex and greater than or equal to the specified age.")]
-    public class AnimalPriceEntry: WFModel
+    public class AnimalPriceEntry: CLEMModel
 	{
 		/// <summary>
 		/// Gender

@@ -15,7 +15,7 @@ namespace Models.CLEM.Groupings
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantActivityFeed))]
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. Multiple filters will select groups of individuals required.")]
-    public class RuminantFeedGroup: WFModel
+    public class RuminantFeedGroup: CLEMModel
 	{
 		/// <summary>
 		/// Monthly values to supply selected individuals

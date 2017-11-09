@@ -13,7 +13,7 @@ namespace Models.CLEM
 	///</summary> 
 	[Serializable]
     [Description("This is the Base WholeFarm model and should not be used directly.")]
-    public abstract class WFModel: Model
+    public abstract class CLEMModel: Model
 	{
 		[Link]
 		ISummary Summary = null;

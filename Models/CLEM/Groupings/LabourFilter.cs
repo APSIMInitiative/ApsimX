@@ -14,7 +14,7 @@ namespace Models.CLEM.Groupings
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This labour filter rule is used to define specific individuals from the current labour pool. Multiple filters are additive.")]
-    public class LabourFilter: WFModel
+    public class LabourFilter: CLEMModel
 	{
 		/// <summary>
 		/// Name of parameter to filter by

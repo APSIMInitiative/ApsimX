@@ -16,7 +16,7 @@ namespace Models.CLEM.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all activities used in the CLEM simulation")]
-	public class ActivitiesHolder: WFModel
+	public class ActivitiesHolder: CLEMModel
 	{
         /// <summary>
         /// List of the all the Activities.

@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(OtherAnimals))]
     [Description("This resource represents an other animal group (e.g. Chickens).")]
-    public class OtherAnimalsType : WFModel, IResourceWithTransactionType
+    public class OtherAnimalsType : CLEMModel, IResourceWithTransactionType
 	{
 		/// <summary>
 		/// Current cohorts of this Other Animal Type.

@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(Finance))]
     [Description("This resource represents a finance type (e.g. General bank account).")]
-    public class FinanceType : WFModel, IResourceWithTransactionType, IResourceType
+    public class FinanceType : CLEMModel, IResourceWithTransactionType, IResourceType
 	{
 		/// <summary>
 		/// Opening balance

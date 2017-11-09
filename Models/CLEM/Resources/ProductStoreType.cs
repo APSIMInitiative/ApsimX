@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(ProductStore))]
     [Description("This resource represents a prodcut store type (e.g. Cotton).")]
-    public class ProductStoreType : WFModel, IResourceWithTransactionType, IResourceType
+    public class ProductStoreType : CLEMModel, IResourceWithTransactionType, IResourceType
 	{
 		/// <summary>
 		/// Starting amount

@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(CropActivityTask))]
     [Description("This is a fee required to perfrom a crop amanagement task.")]
-    public class CropActivityFee: WFModel
+    public class CropActivityFee: CLEMModel
 	{
 		/// <summary>
 		/// Payment style

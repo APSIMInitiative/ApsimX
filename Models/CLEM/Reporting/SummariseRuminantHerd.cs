@@ -18,7 +18,7 @@ namespace Models.CLEM
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
     [Description("This component will generate a herd summary report. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
-    public class SummariseRuminantHerd: WFModel
+    public class SummariseRuminantHerd: CLEMModel
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

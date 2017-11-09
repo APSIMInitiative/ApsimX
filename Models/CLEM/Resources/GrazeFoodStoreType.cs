@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(GrazeFoodStore))]
     [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
-    public class GrazeFoodStoreType : WFModel, IResourceWithTransactionType, IResourceType
+    public class GrazeFoodStoreType : CLEMModel, IResourceWithTransactionType, IResourceType
 	{
 		[Link]
 		ZoneCLEM WholeFarm = null;

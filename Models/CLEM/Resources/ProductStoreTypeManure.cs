@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(ProductStore))]
     [Description("This resource represents a manure store. This is a special type of Porduct Store Type and is needed for manure management and must be named \"Manure\".")]
-    public class ProductStoreTypeManure: WFModel, IResourceWithTransactionType, IResourceType
+    public class ProductStoreTypeManure: CLEMModel, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
         /// List of all uncollected manure stores

@@ -16,7 +16,7 @@ namespace Models.CLEM.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [Description("This provides trucking settings for the Ruminant Buy and Sell Activity and will determine costs and emissions if required.")]
-    public class TruckingSettings : WFModel
+    public class TruckingSettings : CLEMModel
 	{
         [Link]
         private ResourcesHolder Resources = null;

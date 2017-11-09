@@ -17,7 +17,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [Description("This activity timer is used to determine whether an activity (and all sub activities) will be performed based on the harvet dates of the CropActivityManageProduct above.")]
-    public class ActivityTimerCropHarvest : WFModel, IActivityTimer, IValidatableObject
+    public class ActivityTimerCropHarvest : CLEMModel, IActivityTimer, IValidatableObject
     {
         [Link]
         Clock Clock = null;
