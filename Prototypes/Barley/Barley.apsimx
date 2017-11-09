@@ -16,7 +16,7 @@ The model consists of:
 * A phenology model to simulate development between growth phases  
 * A structure model to simulate plant morphology  
 * A collection of organs to simulate the various plant parts  
-* An arbitrator to allocate resources (N, biomass) to various plant organs.  
+* An arbitrator to allocate resources (nitrogen, biomass) to various plant organs.  
 ]]></MemoText>
   </Memo>
   <Memo>
@@ -4237,7 +4237,7 @@ Where MinLeafNumber is the number of leaves that a Barley crop will produce when
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The difference between Inherent earlyness leaf number and the number of leaves produced when the plant is unvernalised and grown in long photoperiod]]></MemoText>
+            <MemoText><![CDATA[The difference between inherent earlyness leaf number and the number of leaves produced when the plant is unvernalised and grown in long photoperiod]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
@@ -4270,7 +4270,7 @@ Where MinLeafNumber is the number of leaves that a Barley crop will produce when
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp compared to the phyllochron duration for the same phase at 8 h Pp.  ]]></MemoText>
+            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligule appearance at 16 h Pp compared to the phyllochron duration for the same phase at 8 h Pp.  ]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
@@ -27200,9 +27200,97 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
           </Graph>
+          <Graph>
+            <Name>MainStemPop</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Barley.Structure.MainStemPopn</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
+        <Graph>
+          <Name>SoilN</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.SoilNitrogen.mineral_n(1)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Experiment>
       <Folder>
@@ -28149,80 +28237,6 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>LeafTips1</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Observed</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Memo>
-            <Name>Memo</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[There were some inconsistencies in the leaf number observations so don't expect to good of a fit with the model]]></MemoText>
-          </Memo>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Number of leaves</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>12</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries>
-            <string>Pyramid2006-05-10</string>
-            <string>Sherwood2006-05-10</string>
-          </DisabledSeries>
         </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -42369,5 +42383,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>249</ExplorerWidth>
+  <ExplorerWidth>565</ExplorerWidth>
 </Simulations>
