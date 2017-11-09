@@ -121,7 +121,7 @@ namespace Models.CLEM.Resources
 		/// <summary>
 		/// Activity details
 		/// </summary>
-		public WFActivityBase Activity { get; set; }
+		public CLEMActivityBase Activity { get; set; }
 	}
 
 

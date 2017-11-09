@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(WFActivityBase))]
+	[ValidParent(ParentType = typeof(CLEMActivityBase))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [Description("This activity timer defines a date range to perfrom activities.")]

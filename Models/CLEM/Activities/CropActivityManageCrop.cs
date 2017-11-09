@@ -15,11 +15,11 @@ namespace Models.CLEM.Activities
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(WFActivityBase))]
+    [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages a crop by assigning land to be used for child activities.")]
-    public class CropActivityManageCrop: WFActivityBase, IValidatableObject
+    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject
     {
         [Link]
         private ResourcesHolder Resources = null;

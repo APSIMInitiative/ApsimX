@@ -19,11 +19,11 @@ namespace Models.CLEM.Activities
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(WFActivityBase))]
+	[ValidParent(ParentType = typeof(CLEMActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the growth and aging of all ruminants. Only one instance of this activity is permitted.")]
-    public class RuminantActivityGrow : WFActivityBase
+    public class RuminantActivityGrow : CLEMActivityBase
 	{
 		[XmlIgnore]
 		[Link]

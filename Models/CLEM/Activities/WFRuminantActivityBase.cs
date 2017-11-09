@@ -17,7 +17,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the Ruminant specific version of the WholeFarm Activity Base Class and should not be used directly.")]
-    public class WFRuminantActivityBase : WFActivityBase
+    public class WFRuminantActivityBase : CLEMActivityBase
     {
         [Link]
         private ResourcesHolder Resources = null;

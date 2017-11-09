@@ -15,11 +15,11 @@ namespace Models.CLEM.Activities
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(WFActivityBase))]
+	[ValidParent(ParentType = typeof(CLEMActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity applies controlled burning to a specified graze food store (i.e. native pasture paddock).")]
-    public class PastureActivityBurn: WFActivityBase
+    public class PastureActivityBurn: CLEMActivityBase
 	{
 		[XmlIgnore]
 		[Link]

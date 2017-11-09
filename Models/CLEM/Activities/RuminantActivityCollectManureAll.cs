@@ -14,11 +14,11 @@ namespace Models.CLEM.Activities
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(WFActivityBase))]
+	[ValidParent(ParentType = typeof(CLEMActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the collection of manure from all paddocks and yards in the simulation.")]
-    public class RuminantActivityCollectManureAll : WFActivityBase
+    public class RuminantActivityCollectManureAll : CLEMActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

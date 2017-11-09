@@ -17,7 +17,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageCrop))]
     [Description("This activity is used within a crop management activity to obtain production values from the crop file.")]
-    public class CropActivityManageProduct: WFActivityBase, IValidatableObject
+    public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject
     {
         [Link]
         Clock Clock = null;

@@ -14,11 +14,11 @@ namespace Models.CLEM.Activities
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(WFActivityBase))]
+	[ValidParent(ParentType = typeof(CLEMActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity peforms monthly interest transactions.")]
-    public class FinanceActivityCalculateInterest : WFActivityBase
+    public class FinanceActivityCalculateInterest : CLEMActivityBase
 	{
 		/// <summary>
 		/// Get the resources.

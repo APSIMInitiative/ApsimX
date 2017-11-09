@@ -16,9 +16,9 @@ namespace Models.CLEM.Activities
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(WFActivityBase))]
+	[ValidParent(ParentType = typeof(CLEMActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	public class RuminantActivityGraze : WFActivityBase
+	public class RuminantActivityGraze : CLEMActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;

@@ -16,11 +16,11 @@ namespace Models.CLEM.Activities
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(WFActivityBase))]
+	[ValidParent(ParentType = typeof(CLEMActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity folder can ve used to arrange and group activities.")]
-    public class ActivityFolder : WFActivityBase
+    public class ActivityFolder : CLEMActivityBase
 	{
         /// <summary>
         /// Perform Activity with partial resources available

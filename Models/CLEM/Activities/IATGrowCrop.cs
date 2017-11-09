@@ -17,7 +17,7 @@ namespace Models.CLEM.Activities
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(IATCropLand))]
-	public class IATGrowCrop: WFActivityBase
+	public class IATGrowCrop: CLEMActivityBase
 	{
         [Link]
 		Clock Clock = null;

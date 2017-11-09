@@ -582,7 +582,7 @@
     <Compile Include="CLEM\Resources\AnimalPriceValue.cs" />
     <Compile Include="CLEM\Reporting\SummariseRuminantHerd.cs" />
     <Compile Include="CLEM\Transmutation.cs" />
-    <Compile Include="CLEM\Activities\WFActivityBase.cs" />
+    <Compile Include="CLEM\Activities\CLEMActivityBase.cs" />
     <Compile Include="CLEM\Validation.cs" />
     <Compile Include="CLEM\CLEMModel.cs" />
     <Compile Include="CLEM\ZoneCLEM.cs" />

@@ -19,7 +19,7 @@ namespace Models.CLEM.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IATGrowCrop))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    public class IATGrowCropLabour : WFActivityBase
+    public class IATGrowCropLabour : CLEMActivityBase
 	{
         /// <summary>
         /// Get the Clock.

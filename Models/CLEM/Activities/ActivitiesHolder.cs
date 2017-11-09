@@ -26,12 +26,12 @@ namespace Models.CLEM.Activities
 
 		private void BindEvents(List<IModel> root)
 		{
-			foreach (var item in root.Where(a => a.GetType().IsSubclassOf(typeof(WFActivityBase))))
+			foreach (var item in root.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
 			{
 				if (item.GetType() != typeof(ActivityFolder))
 				{
-					(item as WFActivityBase).ResourceShortfallOccurred += ActivitiesHolder_ResourceShortfallOccurred;
-					(item as WFActivityBase).ActivityPerformed += ActivitiesHolder_ActivityPerformed;
+					(item as CLEMActivityBase).ResourceShortfallOccurred += ActivitiesHolder_ResourceShortfallOccurred;
+					(item as CLEMActivityBase).ActivityPerformed += ActivitiesHolder_ActivityPerformed;
 				}
 				BindEvents(item.Children.Cast<IModel>().ToList());
 			}
@@ -68,7 +68,7 @@ namespace Models.CLEM.Activities
 		/// <summary>
 		/// Details of the last activity performed
 		/// </summary>
-		public WFActivityBase LastActivityPerformed { get; set; }
+		public CLEMActivityBase LastActivityPerformed { get; set; }
 		
 		private void ActivitiesHolder_ActivityPerformed(object sender, EventArgs e)
 		{
@@ -146,7 +146,7 @@ namespace Models.CLEM.Activities
 		[EventSubscribe("WFGetResourcesRequired")]
 		private void OnGetResourcesRequired(object sender, EventArgs e)
 		{
-			foreach (WFActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(WFActivityBase))))
+			foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
 			{
 				child.GetResourcesForAllActivities();
 			}
@@ -158,7 +158,7 @@ namespace Models.CLEM.Activities
 		[EventSubscribe("WFInitialiseActivity")]
 		private void OnWFInitialiseActivity(object sender, EventArgs e)
 		{
-			foreach (WFActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(WFActivityBase))))
+			foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
 			{
 				child.GetResourcesForAllActivityInitialisation();
 			}

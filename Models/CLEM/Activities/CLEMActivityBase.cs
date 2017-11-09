@@ -16,7 +16,7 @@ namespace Models.CLEM.Activities
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the WholeFarm Activity Base Class and should not be used directly.")]
-    public abstract class WFActivityBase: CLEMModel
+    public abstract class CLEMActivityBase: CLEMModel
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
@@ -33,7 +33,7 @@ namespace Models.CLEM.Activities
 		/// Current list of activities under this activity
 		/// </summary>
 		[XmlIgnore]
-		public List<WFActivityBase> ActivityList { get; set; }
+		public List<CLEMActivityBase> ActivityList { get; set; }
 
 		/// <summary>
 		/// Current status of this activity
@@ -83,13 +83,13 @@ namespace Models.CLEM.Activities
 			// get resources required for all dynamically created WFActivityBase activities
 			if (ActivityList != null)
 			{
-				foreach (WFActivityBase activity in ActivityList)
+				foreach (CLEMActivityBase activity in ActivityList)
 				{
 					activity.GetResourcesForAllActivityInitialisation();
 				}
 			}
 			// get resources required for all children of type WFActivityBase
-			foreach (WFActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(WFActivityBase))).ToList())
+			foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
 			{
 				activity.GetResourcesForAllActivityInitialisation();
 			}
@@ -118,13 +118,13 @@ namespace Models.CLEM.Activities
 			// get resources required for all dynamically created WFActivityBase activities
 			if (ActivityList != null)
 			{
-				foreach (WFActivityBase activity in ActivityList)
+				foreach (CLEMActivityBase activity in ActivityList)
 				{
 					activity.GetResourcesForAllActivities();
 				}
 			}
 			// get resources required for all children of type WFActivityBase
-			foreach (WFActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(WFActivityBase))).ToList())
+			foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
 			{
 				activity.GetResourcesForAllActivities();
 			}
