@@ -3986,7 +3986,7 @@ The model consists of:
           <Name>Memo</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[Barley exhibits a range of developmental responses to environment and these are strongly influences by genotype characteristics.
-Temperature effects development increasing development rates and decreasing phase durations as temperatures increase.  Theset affects are captured by thermal time, .  However, Barley also exhibits vernalisation and photoperiod sensitivities in its Vegetative phase and further photoperiod sensitivity in the EarlyReproducivePhase.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types) exposure to cool temperatures or short photoperiods during the Vegetative phase will reduce the thermal time duration of the vegetative phase.  
+Temperature effects development increasing development rates and decreasing phase durations as temperatures increase.  These effects are captured by thermal time.  However, barley also exhibits vernalisation and photoperiod sensitivities in its Vegetative phase and further photoperiod sensitivity in the EarlyReproducivePhase.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotypes in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types) exposure to cool temperatures or short photoperiods during the Vegetative phase will reduce the thermal time duration of the vegetative phase.  
 
 We draw on the Kirby Framework to capture these vernalisation and photoperiod responses.  This framework assumes that the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number which sets a target, and leaf appearance rate, which sets the rate of progress toward this target.  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].    
 
@@ -4652,10 +4652,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                     <double>5</double>
                     <double>6</double>
                     <double>7</double>
-                    <double>8</double>
                   </X>
                   <Y>
-                    <double>0</double>
                     <double>0</double>
                     <double>1</double>
                     <double>2</double>
@@ -5119,7 +5117,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Constant>
           <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.03</FixedValue>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>NFillingRate</Name>
@@ -5768,12 +5766,14 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <X>
                   <double>3</double>
                   <double>3.45</double>
+                  <double>3.7</double>
                   <double>4</double>
                 </X>
                 <Y>
                   <double>0.1</double>
                   <double>0.5</double>
                   <double>1</double>
+                  <double>0.5</double>
                 </Y>
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6370,7 +6370,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Constant>
             <Name>MaximumOrganWt</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.5</FixedValue>
+            <FixedValue>0.2</FixedValue>
           </Constant>
           <AddFunction>
             <Name>GrowthDuration</Name>
@@ -6684,7 +6684,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Constant>
                 <Name>StemFraction</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.4</FixedValue>
+                <FixedValue>0.9</FixedValue>
               </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>TerminalSpikelet</Start>
@@ -6960,11 +6960,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Omaka</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 2000</Command>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 10</Command>
             <Command />
-            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Optic</Name>
@@ -8349,23 +8345,23 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>9.7</double>
-                  <double>11.866666666666667</double>
-                  <double>2.125</double>
-                  <double>2.1111111111111112</double>
-                  <double>2.833333333333333</double>
-                  <double>3.1111111111111112</double>
+                  <double>17.459999999999997</double>
+                  <double>21.36</double>
+                  <double>8.0750000000000011</double>
+                  <double>9.0777777777777775</double>
+                  <double>12.75</double>
+                  <double>13.066666666666666</double>
                 </NO3>
                 <NH4>
-                  <double>1.2</double>
-                  <double>1.2666666666666666</double>
-                  <double>0.46875</double>
-                  <double>1.1944444444444444</double>
-                  <double>0.3611111111111111</double>
-                  <double>0.25</double>
+                  <double>2.16</double>
+                  <double>2.28</double>
+                  <double>1.78125</double>
+                  <double>5.1361111111111111</double>
+                  <double>1.625</double>
+                  <double>1.05</double>
                 </NH4>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
+                <NO3Units>kgha</NO3Units>
+                <NH4Units>kgha</NH4Units>
                 <SWUnits>Volumetric</SWUnits>
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
@@ -8834,6 +8830,11 @@ namespace Models
             <Name>StemWt</Name>
             <Series>
               <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -8900,6 +8901,11 @@ namespace Models
             <Name>LeafWt</Name>
             <Series>
               <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -8966,6 +8972,11 @@ namespace Models
             <Name>SpikeWt</Name>
             <Series>
               <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -9098,6 +9109,11 @@ namespace Models
             <Name>LeafDeadWt</Name>
             <Series>
               <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -11175,23 +11191,23 @@ This was a cultivar evaluation trial conducted in Lincoln. Eight cultivars were 
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>9.7</double>
-                  <double>11.866666666666667</double>
-                  <double>2.125</double>
-                  <double>2.1111111111111112</double>
-                  <double>2.833333333333333</double>
-                  <double>3.1111111111111112</double>
+                  <double>17.459999999999997</double>
+                  <double>21.36</double>
+                  <double>8.0750000000000011</double>
+                  <double>9.0777777777777775</double>
+                  <double>12.75</double>
+                  <double>13.066666666666666</double>
                 </NO3>
                 <NH4>
-                  <double>1.2</double>
-                  <double>1.2666666666666666</double>
-                  <double>0.46875</double>
-                  <double>1.1944444444444444</double>
-                  <double>0.3611111111111111</double>
-                  <double>0.25</double>
+                  <double>2.16</double>
+                  <double>2.28</double>
+                  <double>1.78125</double>
+                  <double>5.1361111111111111</double>
+                  <double>1.625</double>
+                  <double>1.05</double>
                 </NH4>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
+                <NO3Units>kgha</NO3Units>
+                <NH4Units>kgha</NH4Units>
                 <SWUnits>Volumetric</SWUnits>
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
@@ -11702,7 +11718,7 @@ namespace Models
               <Title>Stem weight</Title>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
-              <Maximum>600</Maximum>
+              <Maximum>NaN</Maximum>
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
@@ -14823,14 +14839,14 @@ namespace Models
           <Name>Experiment</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[This was a field experiment established at the New Zealand Institute for Plant & Food Research Limited rain-out shelter in October 2014. Barley cultivars cv Dash and cv Omaka, differing canopy characteristics and water extraction capabilities were established with a range of irrigation treatments aimed at producing a range of soil moisture deficits.
-•	High =Full replacement irrigation: replace weekly, measured crop water use;
-•	Mid =Intermediate replacement with reduced frequency and higher volume e.g. monthly application of ½ measured crop water use;
-•	Low =Nil (or near nil) irrigation, e.g.  irrigated once at anthesis.
+•	High = Full replacement irrigation: replace weekly, measured crop water use;
+•	Mid = Intermediate replacement with reduced frequency and higher volume e.g. monthly application of ½ measured crop water use;
+•	Low = Nil (or near nil) irrigation, e.g.  irrigated once at anthesis.
 The treatments were monitored for:
 •	Soil water - this was measured continuously using auto logging TDR and weekly using a neutron probe;
 •	Canopy light interception;
-•	Biomass - quantified four times during crop growth;
-•	Leaf area.
+•	Biomass and leaf area index were quantified four times during crop growth.
+
 
 
 
@@ -14987,7 +15003,7 @@ The treatments were monitored for:
             <Name>Clock</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <StartDate>2014-10-15T00:00:00</StartDate>
-            <EndDate>2015-02-26T00:00:00</EndDate>
+            <EndDate>2015-01-26T00:00:00</EndDate>
           </Clock>
           <Summary>
             <Name>summaryfile</Name>
@@ -16838,6 +16854,50 @@ namespace Models
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Barley.Leaf.CoverGreen</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Zadok1</Name>
+            <Series>
+              <Name>Observed</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Barley.Structure.TotalStemPopn</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -26159,8 +26219,8 @@ This was a nitrogen*irrigation trial conducted at Lincoln
                   <double>300</double>
                 </Thickness>
                 <SWCON>
-                  <double>0.9</double>
-                  <double>0.6</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
                   <double>0.4</double>
                   <double>0.4</double>
                   <double>0.4</double>
