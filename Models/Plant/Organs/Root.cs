@@ -162,6 +162,10 @@ namespace Models.PMF.Organs
         [Link]
         [Units("mm")]
         public IFunction MaximumRootDepth = null;
+        
+        /// <summary>Dry matter efficiency function</summary>
+        [Link]
+        public IFunction DMConversionEfficiency = null;
 
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
@@ -630,13 +634,13 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of structural DM demanded.</summary>
         public double DemandedDMStructural()
         {
-            if (DMConversionEfficiency > 0.0)
+            if (DMConversionEfficiency.Value() > 0.0)
             {
                 double demandedDM = DMDemandFunction.Value();
                 if (StructuralFraction != null)
-                    demandedDM *= StructuralFraction.Value() / DMConversionEfficiency;
+                    demandedDM *= StructuralFraction.Value() / DMConversionEfficiency.Value();
                 else
-                    demandedDM /= DMConversionEfficiency;
+                    demandedDM /= DMConversionEfficiency.Value();
 
                 return demandedDM;
             }
@@ -647,7 +651,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of non structural DM demanded.</summary>
         public double DemandedDMStorage()
         {
-            if ((DMConversionEfficiency > 0.0) && (StructuralFraction != null))
+            if ((DMConversionEfficiency.Value() > 0.0) && (StructuralFraction != null))
             {
                 double rootLiveStructuralWt = 0.0;
                 double rootLiveStorageWt = 0.0;
@@ -660,7 +664,7 @@ namespace Models.PMF.Organs
 
                 double theoreticalMaximumDM = (rootLiveStructuralWt + StructuralDMDemand) / StructuralFraction.Value();
                 double baseAllocated = rootLiveStructuralWt + rootLiveStorageWt + StructuralDMDemand;
-                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency;
+                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency.Value();
                 return demandedDM;
             }
             // Either there is no Storage fraction or conversion efficiency is zero!!!!

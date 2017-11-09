@@ -76,6 +76,11 @@ zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);
         <FixedValue>0</FixedValue>
         <Units>mm/d</Units>
       </Constant>
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>      
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
     <Constant>
@@ -84,6 +89,11 @@ zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);
       <FixedValue>1</FixedValue>
       <Units>g/m2</Units>
     </Constant>
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>    
     <Constant>
       <Name>MaximumRootDepth</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
