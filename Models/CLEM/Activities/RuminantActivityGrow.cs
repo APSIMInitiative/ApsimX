@@ -532,7 +532,7 @@ namespace Models.CLEM.Activities
 		/// <summary>Function to determine which animlas have died and remove from the population</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFAnimalDeath")]
+		[EventSubscribe("CLEMAnimalDeath")]
 		private void OnWFAnimalDeath(object sender, EventArgs e)
 		{
 			// remove individuals that died
