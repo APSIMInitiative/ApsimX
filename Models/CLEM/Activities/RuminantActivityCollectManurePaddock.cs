@@ -117,7 +117,7 @@ namespace Models.CLEM.Activities
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFCollectManure")]
+		[EventSubscribe("CLEMCollectManure")]
 		private void OnWFCollectManure(object sender, EventArgs e)
 		{
             // is manure in resources
