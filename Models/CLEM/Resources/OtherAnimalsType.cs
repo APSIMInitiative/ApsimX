@@ -34,7 +34,7 @@ namespace Models.CLEM.Resources
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFInitialiseResource")]
+		[EventSubscribe("CLEMInitialiseResource")]
 		private void OnWFInitialiseResource(object sender, EventArgs e)
 		{
 			Initialise();

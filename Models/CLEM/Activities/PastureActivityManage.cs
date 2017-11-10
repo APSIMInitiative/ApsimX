@@ -160,7 +160,7 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFInitialiseResource")]
+        [EventSubscribe("CLEMInitialiseResource")]
         private void OnWFInitialiseResource(object sender, EventArgs e)
         {
             if (Area == 0 & AreaRequested > 0)

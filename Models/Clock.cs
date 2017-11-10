@@ -105,7 +105,7 @@ namespace Models
         public event EventHandler DoLifecycle;
 
         /// <summary>WholeFarm initialise Resources occurs once at start of simulation</summary>
-        public event EventHandler WFInitialiseResource;
+        public event EventHandler CLEMInitialiseResource;
 		/// <summary>WholeFarm initialise Activity occurs once at start of simulation</summary>
 		public event EventHandler WFInitialiseActivity;
         /// <summary>WholeFarm start of timestep event</summary>
@@ -182,8 +182,8 @@ namespace Models
                 if (StartOfSimulation != null)
                     StartOfSimulation.Invoke(this, args);
 
-				if (WFInitialiseResource != null)
-					WFInitialiseResource.Invoke(this, args);
+				if (CLEMInitialiseResource != null)
+					CLEMInitialiseResource.Invoke(this, args);
 
 				if (WFInitialiseActivity != null)
 					WFInitialiseActivity.Invoke(this, args);
