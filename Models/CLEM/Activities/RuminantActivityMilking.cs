@@ -40,7 +40,7 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFInitialiseActivity")]
+        [EventSubscribe("CLEMInitialiseActivity")]
         private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(false, true);

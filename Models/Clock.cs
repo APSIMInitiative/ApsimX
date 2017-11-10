@@ -107,7 +107,7 @@ namespace Models
         /// <summary>WholeFarm initialise Resources occurs once at start of simulation</summary>
         public event EventHandler CLEMInitialiseResource;
 		/// <summary>WholeFarm initialise Activity occurs once at start of simulation</summary>
-		public event EventHandler WFInitialiseActivity;
+		public event EventHandler CLEMInitialiseActivity;
         /// <summary>WholeFarm start of timestep event</summary>
         public event EventHandler WFStartOfTimeStep;
         /// <summary>WholeFarm update pasture</summary>
@@ -185,8 +185,8 @@ namespace Models
 				if (CLEMInitialiseResource != null)
 					CLEMInitialiseResource.Invoke(this, args);
 
-				if (WFInitialiseActivity != null)
-					WFInitialiseActivity.Invoke(this, args);
+				if (CLEMInitialiseActivity != null)
+					CLEMInitialiseActivity.Invoke(this, args);
 
 	            while (Today <= EndDate && !e.CancelToken.IsCancellationRequested)
                 {
