@@ -71,7 +71,7 @@ namespace Models.CLEM.Activities
 		/// <summary>Function to determine all individuals potential intake and suckling intake after milk consumption from mother</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFPotentialIntake")]
+		[EventSubscribe("CLEMPotentialIntake")]
 		private void OnWFPotentialIntake(object sender, EventArgs e)
 		{
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
