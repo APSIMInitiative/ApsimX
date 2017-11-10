@@ -50,8 +50,8 @@ namespace Models.CLEM.Reporting
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFHerdSummary")]
-		private void OnWFHerdSummary(object sender, EventArgs e)
+		[EventSubscribe("CLEMHerdSummary")]
+		private void OnCLEMHerdSummary(object sender, EventArgs e)
 		{
             // warning if the same individual is in multiple filter groups it will be entered more than once
 

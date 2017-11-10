@@ -145,7 +145,7 @@ namespace Models
 		/// <summary>WholeFarm Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
 		public event EventHandler CLEMAgeResources;
 		/// <summary>WholeFarm event to calculate monthly herd summary</summary>
-		public event EventHandler WFHerdSummary;
+		public event EventHandler CLEMHerdSummary;
 
 		// WholeFarm versions of the following events to ensure APSIM tasks perfomed before WF not yet implemented
 		///// <summary>WholeFarm start of simulation performed after APSIM StartOfSimulation</summary>
@@ -310,8 +310,8 @@ namespace Models
                             CLEMAnimalStock.Invoke(this, args);
                         if (CLEMAnimalSell != null)
                             CLEMAnimalSell.Invoke(this, args);
-					    if (WFHerdSummary != null)
-						    WFHerdSummary.Invoke(this, args);
+					    if (CLEMHerdSummary != null)
+						    CLEMHerdSummary.Invoke(this, args);
                         if (CLEMAgeResources != null)
                             CLEMAgeResources.Invoke(this, args);
 					    if (CLEMAnimalBuy != null)

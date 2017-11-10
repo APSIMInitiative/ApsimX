@@ -49,8 +49,8 @@ namespace Models.CLEM
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFHerdSummary")]
-		private void OnWFHerdSummary(object sender, EventArgs e)
+		[EventSubscribe("CLEMHerdSummary")]
+		private void OnCLEMHerdSummary(object sender, EventArgs e)
 		{
 			timestep++;
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
