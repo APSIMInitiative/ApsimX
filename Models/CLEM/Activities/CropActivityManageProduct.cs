@@ -162,7 +162,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             fileCrop = Apsim.Child(Simulation, ModelNameFileCrop) as FileCrop;
             if (fileCrop == null)
@@ -207,7 +207,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMStartOfTimeStep")]
-        private void OnWFStartOfTimeStep(object sender, EventArgs e)
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             PreviousHarvest = NextHarvest;
             NextHarvest = HarvestData.FirstOrDefault();
@@ -217,7 +217,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMDoCutAndCarry")]
-        private void OnWFDoCutAndCarry(object sender, EventArgs e)
+        private void OnCLEMDoCutAndCarry(object sender, EventArgs e)
         {
             int year = Clock.Today.Year;
             int month = Clock.Today.Month;

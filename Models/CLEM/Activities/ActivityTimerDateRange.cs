@@ -63,7 +63,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
 			startDate = new DateTime(StartDate.Year, StartDate.Month, 1);

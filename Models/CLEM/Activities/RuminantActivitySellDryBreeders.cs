@@ -74,7 +74,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(false, false);
 
@@ -87,7 +87,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMAnimalMilking")]
-		private void OnWFAnimalMilking(object sender, EventArgs e)
+		private void OnCLEMAnimalMilking(object sender, EventArgs e)
 		{
             if (this.TimingOK & this.Status != ActivityStatus.Ignored)
             {

@@ -105,7 +105,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get labour specifications
             labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
@@ -116,7 +116,7 @@ namespace Models.CLEM.Activities
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("CLEMAnimalBreeding")]
-		private void OnWFAnimalBreeding(object sender, EventArgs e)
+		private void OnCLEMAnimalBreeding(object sender, EventArgs e)
 		{
             if(this.TimingOK)
 			{

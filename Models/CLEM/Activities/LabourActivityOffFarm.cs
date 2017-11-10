@@ -58,7 +58,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // locate BankType resource
             bankType = Resources.GetResourceItem(this, typeof(Finance), BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;

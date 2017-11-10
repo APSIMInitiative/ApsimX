@@ -180,7 +180,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
 
         }
@@ -230,7 +230,7 @@ namespace Models.CLEM.Activities
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("CLEMDoCutAndCarry")]
-        private void OnWFDoCutAndCarry(object sender, EventArgs e)
+        private void OnCLEMDoCutAndCarry(object sender, EventArgs e)
         {
             int year = Clock.Today.Year;
             int month = Clock.Today.Month;

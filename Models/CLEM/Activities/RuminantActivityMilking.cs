@@ -41,7 +41,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(false, true);
 
@@ -57,7 +57,7 @@ namespace Models.CLEM.Activities
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("WFMilking")]
-		private void OnWFMilking(object sender, EventArgs e)
+		private void OnCLEMMilking(object sender, EventArgs e)
 		{
 			// take all milk
 //			List<RuminantFemale> herd = Resources.RuminantHerd().Herd.Where(a => a.HerdName == HerdName & a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();

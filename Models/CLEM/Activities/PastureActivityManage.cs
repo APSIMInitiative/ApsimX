@@ -149,7 +149,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             //get the units of area for this run from the Land resource.
             unitsOfArea2Ha = Resources.Land().UnitsOfAreaToHaConversion ; 
@@ -161,7 +161,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseResource")]
-        private void OnWFInitialiseResource(object sender, EventArgs e)
+        private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             if (Area == 0 & AreaRequested > 0)
             {
@@ -210,7 +210,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMUpdatePasture")]
-		private void OnWFUpdatePasture(object sender, EventArgs e)
+		private void OnCLEMUpdatePasture(object sender, EventArgs e)
 		{
             if (PastureDataList != null)
             {            

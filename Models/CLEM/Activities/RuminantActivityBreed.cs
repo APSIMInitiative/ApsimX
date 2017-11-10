@@ -46,7 +46,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // Assignment of mothers was moved to RuminantHerd resource to ensure this is done even if no breeding activity is included
 
@@ -61,7 +61,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMAnimalBreeding")]
-		private void OnWFAnimalBreeding(object sender, EventArgs e)
+		private void OnCLEMAnimalBreeding(object sender, EventArgs e)
 		{
 //			RuminantHerd ruminantHerd = Resources.RuminantHerd();
             List<Ruminant> herd = CurrentHerd(true); //ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();

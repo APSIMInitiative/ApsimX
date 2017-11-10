@@ -62,7 +62,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             methaneEmissions = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning) as GreenhouseGasesType;
 			manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning) as ProductStoreTypeManure;
@@ -72,7 +72,7 @@ namespace Models.CLEM.Activities
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("CLEMPotentialIntake")]
-		private void OnWFPotentialIntake(object sender, EventArgs e)
+		private void OnCLEMPotentialIntake(object sender, EventArgs e)
 		{
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 			List<Ruminant> herd = ruminantHerd.Herd;
@@ -244,7 +244,7 @@ namespace Models.CLEM.Activities
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("CLEMAnimalWeightGain")]
-		private void OnWFAnimalWeightGain(object sender, EventArgs e)
+		private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
 		{
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 			List<Ruminant> herd = ruminantHerd.Herd;
@@ -336,7 +336,7 @@ namespace Models.CLEM.Activities
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("CLEMCalculateManure")]
-		private void OnWFCalculateManure(object sender, EventArgs e)
+		private void OnCLEMCalculateManure(object sender, EventArgs e)
 		{
 			if(manureStore!=null)
 			{
@@ -533,7 +533,7 @@ namespace Models.CLEM.Activities
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("CLEMAnimalDeath")]
-		private void OnWFAnimalDeath(object sender, EventArgs e)
+		private void OnCLEMAnimalDeath(object sender, EventArgs e)
 		{
 			// remove individuals that died
 			// currently performed in the month after weight has been adjusted

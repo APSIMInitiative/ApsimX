@@ -106,7 +106,7 @@ namespace Models.CLEM.Resources
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("CLEMInitialiseResource")]
-		private void OnWFInitialiseResource(object sender, EventArgs e)
+		private void OnCLEMInitialiseResource(object sender, EventArgs e)
 		{
 			Initialise();
 		}
