@@ -111,7 +111,7 @@ namespace Models
         /// <summary>WholeFarm start of timestep event</summary>
         public event EventHandler CLEMStartOfTimeStep;
         /// <summary>WholeFarm update pasture</summary>
-        public event EventHandler WFUpdatePasture;
+        public event EventHandler CLEMUpdatePasture;
 		/// <summary>WholeFarm cut and carry</summary>
 		public event EventHandler WFDoCutAndCarry;
 		/// <summary>WholeFarm Do Animal (Ruminant and Other) Breeding and milk calculations</summary>
@@ -280,8 +280,8 @@ namespace Models
                         // WholeFarm events performed before APSIM EndOfMonth
                         if (CLEMStartOfTimeStep != null)
                             CLEMStartOfTimeStep.Invoke(this, args);
-                        if (WFUpdatePasture != null)
-                            WFUpdatePasture.Invoke(this, args);
+                        if (CLEMUpdatePasture != null)
+                            CLEMUpdatePasture.Invoke(this, args);
                         if (WFDoCutAndCarry != null)
                             WFDoCutAndCarry.Invoke(this, args);
                         if (WFAnimalBreeding != null)

@@ -209,7 +209,7 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to get next supply of pasture</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFUpdatePasture")]
+        [EventSubscribe("CLEMUpdatePasture")]
 		private void OnWFUpdatePasture(object sender, EventArgs e)
 		{
             if (PastureDataList != null)
