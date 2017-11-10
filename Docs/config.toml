@@ -2,22 +2,9 @@ baseURL = "/"
 languageCode = "en-us"
 title = "APSIM Next Generation"
 
+theme = "hugo-theme-docdock"
+
 [Params]
   noCategoryLink = true
-  
-[[menu.main]]  
-  name   = "Usage"
-  url    = "/usage/index"
-  weight = 1
-  
-[[menu.main]]
-  name   = "Model documentation"
-  url    = "http://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetDocumentationHTML"
-  weight = 2
-  
-[[menu.main]]  
-  name   = "Development"
-  url    = "/development/index"
-  weight = 3  
-
+  themeVariant = "darkgreen" 
     
