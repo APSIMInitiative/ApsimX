@@ -97,8 +97,8 @@ namespace Models.CLEM.Activities
 		/// <summary>An event handler to call for animal sales</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFAnimalSell")]
-		private void OnWFAnimalSell(object sender, EventArgs e)
+		[EventSubscribe("CLEMAnimalSell")]
+		private void OnCLEMAnimalSell(object sender, EventArgs e)
 		{
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 

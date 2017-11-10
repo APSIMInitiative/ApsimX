@@ -139,7 +139,7 @@ namespace Models
 		/// <summary>WholeFarm stock animals to pasture availability or other metrics</summary>
 		public event EventHandler CLEMAnimalStock;
 		/// <summary>WholeFarm sell animals to market including transporting and labour</summary>
-		public event EventHandler WFAnimalSell;
+		public event EventHandler CLEMAnimalSell;
 		/// <summary>WholeFarm buy animals including transporting and labour</summary>
 		public event EventHandler WFAnimalBuy;
 		/// <summary>WholeFarm Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
@@ -308,8 +308,8 @@ namespace Models
                             CLEMAnimalManage.Invoke(this, args);
                         if (CLEMAnimalStock != null)
                             CLEMAnimalStock.Invoke(this, args);
-                        if (WFAnimalSell != null)
-                            WFAnimalSell.Invoke(this, args);
+                        if (CLEMAnimalSell != null)
+                            CLEMAnimalSell.Invoke(this, args);
 					    if (WFHerdSummary != null)
 						    WFHerdSummary.Invoke(this, args);
                         if (WFAgeResources != null)
