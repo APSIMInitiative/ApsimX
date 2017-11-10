@@ -540,12 +540,14 @@ namespace Models.PMF.Organs
                 // Do Root Senescence
                 DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value() });
             }
+            needToRecalculateLiveDead = false;
             // Do maintenance respiration
             MaintenanceRespiration = 0;
             MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
             Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
             MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
             Live.StorageWt *= (1 - MaintenanceRespirationFunction.Value());
+            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Called when crop is ending</summary>
