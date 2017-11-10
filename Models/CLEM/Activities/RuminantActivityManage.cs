@@ -160,8 +160,8 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to call for all herd management activities</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFAnimalManage")]
-		private void OnWFAnimalManage(object sender, EventArgs e)
+        [EventSubscribe("CLEMAnimalManage")]
+		private void OnCLEMAnimalManage(object sender, EventArgs e)
 		{
             //List<Ruminant> localHerd = this.CurrentHerd();
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
