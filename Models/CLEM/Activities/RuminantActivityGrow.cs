@@ -243,7 +243,7 @@ namespace Models.CLEM.Activities
 		/// <summary>Function to calculate growth of herd for the monthly timestep</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFAnimalWeightGain")]
+		[EventSubscribe("CLEMAnimalWeightGain")]
 		private void OnWFAnimalWeightGain(object sender, EventArgs e)
 		{
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
@@ -331,7 +331,7 @@ namespace Models.CLEM.Activities
 
 		/// <summary>
 		/// Function to calculate manure production and place in uncollected manure pools of the "manure" resource in ProductResources 
-		/// This is called at the end of WFAnimalWeightGain so after intake determines and before deaths and sales.
+		/// This is called at the end of CLEMAnimalWeightGain so after intake determines and before deaths and sales.
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

@@ -127,7 +127,7 @@ namespace Models
 		/// <summary>WholeFarm Calculate Animals (Ruminant and Other) milk production</summary>
 		public event EventHandler CLEMAnimalMilkProduction;
 		/// <summary>WholeFarm Calculate Animals(Ruminant and Other) weight gain</summary>
-		public event EventHandler WFAnimalWeightGain;
+		public event EventHandler CLEMAnimalWeightGain;
 		/// <summary>WholeFarm Do Animal (Ruminant and Other) death</summary>
 		public event EventHandler WFAnimalDeath;
 		/// <summary>WholeFarm Do Animal (Ruminant and Other) milking</summary>
@@ -292,8 +292,8 @@ namespace Models
                             CLEMPotentialIntake.Invoke(this, args);
                         if (CLEMGetResourcesRequired != null)
                             CLEMGetResourcesRequired.Invoke(this, args);
-                        if (WFAnimalWeightGain != null)
-                            WFAnimalWeightGain.Invoke(this, args);
+                        if (CLEMAnimalWeightGain != null)
+                            CLEMAnimalWeightGain.Invoke(this, args);
 					    if (CLEMCalculateManure != null)
 						    CLEMCalculateManure.Invoke(this, args);
 					    if (CLEMCollectManure != null)
