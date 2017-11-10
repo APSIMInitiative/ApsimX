@@ -335,7 +335,7 @@ namespace Models.CLEM.Activities
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFCalculateManure")]
+		[EventSubscribe("CLEMCalculateManure")]
 		private void OnWFCalculateManure(object sender, EventArgs e)
 		{
 			if(manureStore!=null)

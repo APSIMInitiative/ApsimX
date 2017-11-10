@@ -119,7 +119,7 @@ namespace Models
 		/// <summary>Get potential intake. This includes suckling milk consumption</summary>
 		public event EventHandler CLEMPotentialIntake;
 		/// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
-		public event EventHandler WFCalculateManure;
+		public event EventHandler CLEMCalculateManure;
 		/// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
 		public event EventHandler WFCollectManure;
 		/// <summary>Request and perform the collection of maure after resources are allocated and manure produced in time-step</summary>
@@ -294,8 +294,8 @@ namespace Models
                             WFGetResourcesRequired.Invoke(this, args);
                         if (WFAnimalWeightGain != null)
                             WFAnimalWeightGain.Invoke(this, args);
-					    if (WFCalculateManure != null)
-						    WFCalculateManure.Invoke(this, args);
+					    if (CLEMCalculateManure != null)
+						    CLEMCalculateManure.Invoke(this, args);
 					    if (WFCollectManure != null)
 						    WFCollectManure.Invoke(this, args);
                         if (WFAnimalDeath != null)
