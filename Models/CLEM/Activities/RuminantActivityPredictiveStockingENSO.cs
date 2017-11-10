@@ -216,8 +216,8 @@ namespace Models.CLEM.Activities
 		/// <summary>An event handler to call for all resources other than food for feeding activity</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFAnimalStock")]
-		private void OnWFAnimalStock(object sender, EventArgs e)
+		[EventSubscribe("CLEMAnimalStock")]
+		private void OnCLEMAnimalStock(object sender, EventArgs e)
 		{
 			// this event happens after management has marked individuals for purchase or sale.
 			if (Clock.Today.Month == AssessmentMonth)
