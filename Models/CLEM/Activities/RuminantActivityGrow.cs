@@ -518,8 +518,8 @@ namespace Models.CLEM.Activities
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFAgeResources")]
-		private void OnWFAgeResources(object sender, EventArgs e)
+		[EventSubscribe("CLEMAgeResources")]
+		private void OnCLEMAgeResources(object sender, EventArgs e)
 		{
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 			// grow all individuals

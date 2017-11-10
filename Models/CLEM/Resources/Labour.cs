@@ -105,8 +105,8 @@ namespace Models.CLEM.Resources
 		/// <summary>Age individuals</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFAgeResources")]
-		private void ONWFAgeResources(object sender, EventArgs e)
+		[EventSubscribe("CLEMAgeResources")]
+		private void ONCLEMAgeResources(object sender, EventArgs e)
 		{
 			if(AllowAging)
 			{

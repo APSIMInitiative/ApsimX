@@ -91,8 +91,8 @@ namespace Models.CLEM.Resources
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFAgeResources")]
-		private void OnWFAgeResources(object sender, EventArgs e)
+		[EventSubscribe("CLEMAgeResources")]
+		private void OnCLEMAgeResources(object sender, EventArgs e)
 		{
 			// decay N and DMD of pools and age by 1 month
 			foreach (ManureStoreUncollected store in UncollectedStores)
