@@ -109,7 +109,7 @@ namespace Models.CLEM.Resources
 				object resourceGroupObject = resourceGroup as object;
 				switch (resourceGroupObject.GetType().ToString())
 				{
-					case "Models.WholeFarm.Resources.Labour":
+					case "Models.CLEM.Resources.Labour":
 						// get matching labour types
 						// use activity uid to ensure unique for this request
 						List<LabourType> items = (resourceGroup as Labour).Items;

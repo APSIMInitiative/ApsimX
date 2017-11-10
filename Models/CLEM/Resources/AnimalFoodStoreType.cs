@@ -100,7 +100,7 @@ namespace Models.CLEM.Resources
 					addAmount = (double)ResourceAmount;
 					nAdded = Nitrogen;
 					break;
-				case "Models.WholeFarm.Resources.FoodResourcePacket":
+				case "Models.CLEM.Resources.FoodResourcePacket":
 					addAmount = ((FoodResourcePacket)ResourceAmount).Amount;
 					nAdded = ((FoodResourcePacket)ResourceAmount).PercentN;
 					break;

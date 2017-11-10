@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStoreType : CLEMModel, IResourceWithTransactionType, IResourceType
 	{
 		[Link]
-		ZoneCLEM WholeFarm = null;
+		ZoneCLEM ZoneCLEM = null;
 
 		/// <summary>
 		/// List of pools available
@@ -207,7 +207,7 @@ namespace Models.CLEM.Resources
 		[EventSubscribe("WFAgeResources")]
 		private void ONWFAgeResources(object sender, EventArgs e)
 		{
-			if (WholeFarm.IsEcologicalIndicatorsCalculationMonth())
+			if (ZoneCLEM.IsEcologicalIndicatorsCalculationMonth())
 			{
 				OnEcologicalIndicatorsCalculated(new EcolIndicatorsEventArgs() { Indicators = CurrentEcologicalIndicators });
 				biomassAvailable = this.Amount;

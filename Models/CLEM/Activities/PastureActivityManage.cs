@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
         [Link]
         FileGRASP FileGRASP = null;
         [Link]
-		ZoneCLEM WholeFarm = null;
+		ZoneCLEM ZoneCLEM = null;
 
  
         /// <summary>
@@ -373,7 +373,7 @@ namespace Models.CLEM.Activities
 		{
 
             //If it is time to do yearly calculation
-            if (WholeFarm.IsEcologicalIndicatorsCalculationMonth())
+            if (ZoneCLEM.IsEcologicalIndicatorsCalculationMonth())
             {
                 // Calculate change in Land Condition index and Grass basal area
                 double utilisation = LinkedNativeFoodType.PercentUtilisation;
@@ -386,10 +386,10 @@ namespace Models.CLEM.Activities
 
                 // Calculate average monthly stocking rate
                 // Check number of months to use
-                int monthdiff = ((WholeFarm.EcologicalIndicatorsNextDueDate.Year - Clock.StartDate.Year) * 12) + WholeFarm.EcologicalIndicatorsNextDueDate.Month - Clock.StartDate.Month;
-                if (monthdiff >= WholeFarm.EcologicalIndicatorsCalculationInterval)
+                int monthdiff = ((ZoneCLEM.EcologicalIndicatorsNextDueDate.Year - Clock.StartDate.Year) * 12) + ZoneCLEM.EcologicalIndicatorsNextDueDate.Month - Clock.StartDate.Month;
+                if (monthdiff >= ZoneCLEM.EcologicalIndicatorsCalculationInterval)
                 {
-                    monthdiff = WholeFarm.EcologicalIndicatorsCalculationInterval;
+                    monthdiff = ZoneCLEM.EcologicalIndicatorsCalculationInterval;
                 }
                 LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = StockingRateSummed / monthdiff;
 
@@ -433,8 +433,8 @@ namespace Models.CLEM.Activities
             double stockingRate = LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate;
             pkStkRate = (int)Math.Round(stockingRate);
 
-			PastureDataList = FileGRASP.GetIntervalsPastureData(WholeFarm.ClimateRegion, soilIndex, 1,
-               pkGrassBA, pkLandCon, pkStkRate, Clock.Today, WholeFarm.EcologicalIndicatorsCalculationInterval);
+			PastureDataList = FileGRASP.GetIntervalsPastureData(ZoneCLEM.ClimateRegion, soilIndex, 1,
+               pkGrassBA, pkLandCon, pkStkRate, Clock.Today, ZoneCLEM.EcologicalIndicatorsCalculationInterval);
         }
 
 
