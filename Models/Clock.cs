@@ -123,7 +123,7 @@ namespace Models
 		/// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
 		public event EventHandler CLEMCollectManure;
 		/// <summary>Request and perform the collection of maure after resources are allocated and manure produced in time-step</summary>
-		public event EventHandler WFGetResourcesRequired;
+		public event EventHandler CLEMGetResourcesRequired;
 		/// <summary>WholeFarm Calculate Animals (Ruminant and Other) milk production</summary>
 		public event EventHandler WFAnimalMilkProduction;
 		/// <summary>WholeFarm Calculate Animals(Ruminant and Other) weight gain</summary>
@@ -290,8 +290,8 @@ namespace Models
 						    WFAnimalMilkProduction.Invoke(this, args);
                         if (CLEMPotentialIntake != null)
                             CLEMPotentialIntake.Invoke(this, args);
-                        if (WFGetResourcesRequired != null)
-                            WFGetResourcesRequired.Invoke(this, args);
+                        if (CLEMGetResourcesRequired != null)
+                            CLEMGetResourcesRequired.Invoke(this, args);
                         if (WFAnimalWeightGain != null)
                             WFAnimalWeightGain.Invoke(this, args);
 					    if (CLEMCalculateManure != null)

@@ -311,7 +311,7 @@ namespace Models.CLEM.Activities
 
 		/// <summary>
 		/// Private method to determine resources required for this activity in the current month
-		/// This method is local to this activity and not called with WFGetResourcesRequired event
+		/// This method is local to this activity and not called with CLEMGetResourcesRequired event
 		/// </summary>
 		/// <returns>List of required resource requests</returns>
 		private List<ResourceRequest> GetResourcesNeededForActivityLocal()

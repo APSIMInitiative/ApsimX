@@ -143,7 +143,7 @@ namespace Models.CLEM.Activities
 		/// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFGetResourcesRequired")]
+		[EventSubscribe("CLEMGetResourcesRequired")]
 		private void OnGetResourcesRequired(object sender, EventArgs e)
 		{
 			foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))

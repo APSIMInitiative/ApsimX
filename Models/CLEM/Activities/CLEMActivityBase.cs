@@ -97,7 +97,7 @@ namespace Models.CLEM.Activities
 
 		/// <summary>
 		/// Method to cascade calls for resources for all activities in the UI tree. 
-		/// Responds to WFGetResourcesRequired in the Activity model holing top level list of activities
+		/// Responds to CLEMGetResourcesRequired in the Activity model holing top level list of activities
 		/// </summary>
 		public virtual void GetResourcesForAllActivities()
 		{
