@@ -109,7 +109,7 @@ namespace Models
 		/// <summary>WholeFarm initialise Activity occurs once at start of simulation</summary>
 		public event EventHandler CLEMInitialiseActivity;
         /// <summary>WholeFarm start of timestep event</summary>
-        public event EventHandler WFStartOfTimeStep;
+        public event EventHandler CLEMStartOfTimeStep;
         /// <summary>WholeFarm update pasture</summary>
         public event EventHandler WFUpdatePasture;
 		/// <summary>WholeFarm cut and carry</summary>
@@ -278,8 +278,8 @@ namespace Models
                     if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
                     {
                         // WholeFarm events performed before APSIM EndOfMonth
-                        if (WFStartOfTimeStep != null)
-                            WFStartOfTimeStep.Invoke(this, args);
+                        if (CLEMStartOfTimeStep != null)
+                            CLEMStartOfTimeStep.Invoke(this, args);
                         if (WFUpdatePasture != null)
                             WFUpdatePasture.Invoke(this, args);
                         if (WFDoCutAndCarry != null)

@@ -206,7 +206,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFStartOfTimeStep")]
+        [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnWFStartOfTimeStep(object sender, EventArgs e)
         {
             PreviousHarvest = NextHarvest;
