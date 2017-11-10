@@ -125,7 +125,7 @@ namespace Models
 		/// <summary>Request and perform the collection of maure after resources are allocated and manure produced in time-step</summary>
 		public event EventHandler CLEMGetResourcesRequired;
 		/// <summary>WholeFarm Calculate Animals (Ruminant and Other) milk production</summary>
-		public event EventHandler WFAnimalMilkProduction;
+		public event EventHandler CLEMAnimalMilkProduction;
 		/// <summary>WholeFarm Calculate Animals(Ruminant and Other) weight gain</summary>
 		public event EventHandler WFAnimalWeightGain;
 		/// <summary>WholeFarm Do Animal (Ruminant and Other) death</summary>
@@ -286,8 +286,8 @@ namespace Models
                             CLEMDoCutAndCarry.Invoke(this, args);
                         if (CLEMAnimalBreeding != null)
                             CLEMAnimalBreeding.Invoke(this, args);
-					    if (WFAnimalMilkProduction != null)
-						    WFAnimalMilkProduction.Invoke(this, args);
+					    if (CLEMAnimalMilkProduction != null)
+						    CLEMAnimalMilkProduction.Invoke(this, args);
                         if (CLEMPotentialIntake != null)
                             CLEMPotentialIntake.Invoke(this, args);
                         if (CLEMGetResourcesRequired != null)
