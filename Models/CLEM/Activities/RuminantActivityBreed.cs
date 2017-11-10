@@ -60,7 +60,7 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to perform herd breeding </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFAnimalBreeding")]
+        [EventSubscribe("CLEMAnimalBreeding")]
 		private void OnWFAnimalBreeding(object sender, EventArgs e)
 		{
 //			RuminantHerd ruminantHerd = Resources.RuminantHerd();
