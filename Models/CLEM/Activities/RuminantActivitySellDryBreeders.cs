@@ -86,7 +86,7 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to perform herd dry breeder cull</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFAnimalMilking")]
+        [EventSubscribe("CLEMAnimalMilking")]
 		private void OnWFAnimalMilking(object sender, EventArgs e)
 		{
             if (this.TimingOK & this.Status != ActivityStatus.Ignored)
