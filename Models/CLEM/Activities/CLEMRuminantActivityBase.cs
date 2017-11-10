@@ -10,13 +10,13 @@ using Models.CLEM.Groupings;
 namespace Models.CLEM.Activities
 {
     ///<summary>
-    /// WholeFarm ruminant specific activity base model
+    /// CLEM ruminant specific activity base model
     /// This has the ability of identify herd to be used.
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("This is the Ruminant specific version of the WholeFarm Activity Base Class and should not be used directly.")]
+    [Description("This is the Ruminant specific version of the CLEM Activity Base Class and should not be used directly.")]
     public class CLEMRuminantActivityBase : CLEMActivityBase
     {
         [Link]

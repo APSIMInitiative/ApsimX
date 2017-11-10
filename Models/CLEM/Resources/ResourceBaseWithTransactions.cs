@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("This is the WholeFarm Resource Base Class and should not be used directly.")]
+    [Description("This is the CLEM Resource Base Class and should not be used directly.")]
     public class ResourceBaseWithTransactions: CLEMModel
 	{
 		/// <summary>

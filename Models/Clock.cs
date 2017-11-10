@@ -104,17 +104,17 @@ namespace Models
         /// <summary> Process a Pest and Disease lifecycle object </summary>
         public event EventHandler DoLifecycle;
 
-        /// <summary>WholeFarm initialise Resources occurs once at start of simulation</summary>
+        /// <summary>CLEM initialise Resources occurs once at start of simulation</summary>
         public event EventHandler CLEMInitialiseResource;
-		/// <summary>WholeFarm initialise Activity occurs once at start of simulation</summary>
+		/// <summary>CLEM initialise Activity occurs once at start of simulation</summary>
 		public event EventHandler CLEMInitialiseActivity;
-        /// <summary>WholeFarm start of timestep event</summary>
+        /// <summary>CLEM start of timestep event</summary>
         public event EventHandler CLEMStartOfTimeStep;
-        /// <summary>WholeFarm update pasture</summary>
+        /// <summary>CLEM update pasture</summary>
         public event EventHandler CLEMUpdatePasture;
-		/// <summary>WholeFarm cut and carry</summary>
+		/// <summary>CLEM cut and carry</summary>
 		public event EventHandler CLEMDoCutAndCarry;
-		/// <summary>WholeFarm Do Animal (Ruminant and Other) Breeding and milk calculations</summary>
+		/// <summary>CLEM Do Animal (Ruminant and Other) Breeding and milk calculations</summary>
 		public event EventHandler CLEMAnimalBreeding;
 		/// <summary>Get potential intake. This includes suckling milk consumption</summary>
 		public event EventHandler CLEMPotentialIntake;
@@ -124,36 +124,36 @@ namespace Models
 		public event EventHandler CLEMCollectManure;
 		/// <summary>Request and perform the collection of maure after resources are allocated and manure produced in time-step</summary>
 		public event EventHandler CLEMGetResourcesRequired;
-		/// <summary>WholeFarm Calculate Animals (Ruminant and Other) milk production</summary>
+		/// <summary>CLEM Calculate Animals (Ruminant and Other) milk production</summary>
 		public event EventHandler CLEMAnimalMilkProduction;
-		/// <summary>WholeFarm Calculate Animals(Ruminant and Other) weight gain</summary>
+		/// <summary>CLEM Calculate Animals(Ruminant and Other) weight gain</summary>
 		public event EventHandler CLEMAnimalWeightGain;
-		/// <summary>WholeFarm Do Animal (Ruminant and Other) death</summary>
+		/// <summary>CLEM Do Animal (Ruminant and Other) death</summary>
 		public event EventHandler CLEMAnimalDeath;
-		/// <summary>WholeFarm Do Animal (Ruminant and Other) milking</summary>
+		/// <summary>CLEM Do Animal (Ruminant and Other) milking</summary>
 		public event EventHandler CLEMAnimalMilking;
-		/// <summary>WholeFarm Calculate ecological state after all deaths and before management</summary>
+		/// <summary>CLEM Calculate ecological state after all deaths and before management</summary>
 		public event EventHandler CLEMCalculateEcologicalState;
-		/// <summary>WholeFarm Do Animal (Ruminant and Other) Herd Management (Kulling, Castrating, Weaning, etc.)</summary>
+		/// <summary>CLEM Do Animal (Ruminant and Other) Herd Management (Kulling, Castrating, Weaning, etc.)</summary>
 		public event EventHandler CLEMAnimalManage;
-		/// <summary>WholeFarm stock animals to pasture availability or other metrics</summary>
+		/// <summary>CLEM stock animals to pasture availability or other metrics</summary>
 		public event EventHandler CLEMAnimalStock;
-		/// <summary>WholeFarm sell animals to market including transporting and labour</summary>
+		/// <summary>CLEM sell animals to market including transporting and labour</summary>
 		public event EventHandler CLEMAnimalSell;
-		/// <summary>WholeFarm buy animals including transporting and labour</summary>
+		/// <summary>CLEM buy animals including transporting and labour</summary>
 		public event EventHandler CLEMAnimalBuy;
-		/// <summary>WholeFarm Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
+		/// <summary>CLEM Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
 		public event EventHandler CLEMAgeResources;
-		/// <summary>WholeFarm event to calculate monthly herd summary</summary>
+		/// <summary>CLEM event to calculate monthly herd summary</summary>
 		public event EventHandler CLEMHerdSummary;
 
-		// WholeFarm versions of the following events to ensure APSIM tasks perfomed before WF not yet implemented
-		///// <summary>WholeFarm start of simulation performed after APSIM StartOfSimulation</summary>
-		//public event EventHandler WFStartOfSimulation;
-		///// <summary>WholeFarm start of month performed after APSIM StartOfMonth</summary>
-		//public event EventHandler WFStartOfMonth;
-		///// <summary>WholeFarm end of month performed after APSIM EndOfMonth</summary>
-		//public event EventHandler WFEndOfMonth;
+		// CLEM versions of the following events to ensure APSIM tasks perfomed before CLEM not yet implemented
+		///// <summary>CLEM start of simulation performed after APSIM StartOfSimulation</summary>
+		//public event EventHandler CLEMStartOfSimulation;
+		///// <summary>CLEM start of month performed after APSIM StartOfMonth</summary>
+		//public event EventHandler CLEMStartOfMonth;
+		///// <summary>CLEM end of month performed after APSIM EndOfMonth</summary>
+		//public event EventHandler CLEMEndOfMonth;
 
 		// Public properties available to other models.
 		/// <summary>Gets the today.</summary>
@@ -277,7 +277,7 @@ namespace Models
 
                     if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
                     {
-                        // WholeFarm events performed before APSIM EndOfMonth
+                        // CLEM events performed before APSIM EndOfMonth
                         if (CLEMStartOfTimeStep != null)
                             CLEMStartOfTimeStep.Invoke(this, args);
                         if (CLEMUpdatePasture != null)

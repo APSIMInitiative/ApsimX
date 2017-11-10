@@ -38,7 +38,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.WFFileView")]
     [PresenterName("UserInterface.Presenters.WFFileGRASPPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
-    [Description("This model holds a GRASP data file for native pasture used in the WholeFarm simulation.")]
+    [Description("This model holds a GRASP data file for native pasture used in the CLEM simulation.")]
     public class FileGRASP : CLEMModel
     {
         ///// <summary>

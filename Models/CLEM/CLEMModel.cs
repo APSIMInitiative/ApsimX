@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 namespace Models.CLEM
 {
 	///<summary>
-	/// WholeFarm base model
+	/// CLEM base model
 	///</summary> 
 	[Serializable]
-    [Description("This is the Base WholeFarm model and should not be used directly.")]
+    [Description("This is the Base CLEM model and should not be used directly.")]
     public abstract class CLEMModel: Model
 	{
 		[Link]

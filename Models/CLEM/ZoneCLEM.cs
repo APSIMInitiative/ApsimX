@@ -10,13 +10,13 @@ using System.Xml.Serialization;
 namespace Models.CLEM
 {
 	/// <summary>
-	/// WholeFarm Zone to control simulation
+	/// CLEM Zone to control simulation
 	/// </summary>
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(Simulation))]
-    [Description("This manages all WholeFarm resources and activities in the simulation.")]
+    [Description("This manages all CLEM resources and activities in the simulation.")]
     public class ZoneCLEM: Zone, IValidatableObject
 	{
 		[Link]
@@ -37,7 +37,7 @@ namespace Models.CLEM
 		private static Random randomGenerator;
 
 		/// <summary>
-		/// Access the WholeFarm random number generator
+		/// Access the CLEM random number generator
 		/// </summary>
 		[XmlIgnore]
 		[Description("Random number generator for simulation")]
@@ -90,7 +90,7 @@ namespace Models.CLEM
             if (Clock.StartDate.Day != 1)
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
-                results.Add(new ValidationResult(String.Format("WholeFarm must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString(), memberNames)));
+                results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString(), memberNames)));
             }
             return results;
         }
