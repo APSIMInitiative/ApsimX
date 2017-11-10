@@ -75,8 +75,8 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to call for animal purchases</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFAnimalBuy")]
-		private void OnWFAnimalBuy(object sender, EventArgs e)
+        [EventSubscribe("CLEMAnimalBuy")]
+		private void OnCLEMAnimalBuy(object sender, EventArgs e)
 		{
             if (TimingOK)
             {

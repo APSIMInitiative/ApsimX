@@ -141,7 +141,7 @@ namespace Models
 		/// <summary>WholeFarm sell animals to market including transporting and labour</summary>
 		public event EventHandler CLEMAnimalSell;
 		/// <summary>WholeFarm buy animals including transporting and labour</summary>
-		public event EventHandler WFAnimalBuy;
+		public event EventHandler CLEMAnimalBuy;
 		/// <summary>WholeFarm Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
 		public event EventHandler WFAgeResources;
 		/// <summary>WholeFarm event to calculate monthly herd summary</summary>
@@ -314,8 +314,8 @@ namespace Models
 						    WFHerdSummary.Invoke(this, args);
                         if (WFAgeResources != null)
                             WFAgeResources.Invoke(this, args);
-					    if (WFAnimalBuy != null)
-						    WFAnimalBuy.Invoke(this, args);
+					    if (CLEMAnimalBuy != null)
+						    CLEMAnimalBuy.Invoke(this, args);
                         EndOfMonth.Invoke(this, args);
                     }
 
