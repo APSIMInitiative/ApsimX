@@ -113,7 +113,7 @@ namespace Models
         /// <summary>WholeFarm update pasture</summary>
         public event EventHandler CLEMUpdatePasture;
 		/// <summary>WholeFarm cut and carry</summary>
-		public event EventHandler WFDoCutAndCarry;
+		public event EventHandler CLEMDoCutAndCarry;
 		/// <summary>WholeFarm Do Animal (Ruminant and Other) Breeding and milk calculations</summary>
 		public event EventHandler WFAnimalBreeding;
 		/// <summary>Get potential intake. This includes suckling milk consumption</summary>
@@ -282,8 +282,8 @@ namespace Models
                             CLEMStartOfTimeStep.Invoke(this, args);
                         if (CLEMUpdatePasture != null)
                             CLEMUpdatePasture.Invoke(this, args);
-                        if (WFDoCutAndCarry != null)
-                            WFDoCutAndCarry.Invoke(this, args);
+                        if (CLEMDoCutAndCarry != null)
+                            CLEMDoCutAndCarry.Invoke(this, args);
                         if (WFAnimalBreeding != null)
                             WFAnimalBreeding.Invoke(this, args);
 					    if (WFAnimalMilkProduction != null)

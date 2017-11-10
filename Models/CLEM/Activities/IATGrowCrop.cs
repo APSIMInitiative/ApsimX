@@ -229,7 +229,7 @@ namespace Models.CLEM.Activities
 		/// <summary>An event handler for a Cut and Carry</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFDoCutAndCarry")]
+		[EventSubscribe("CLEMDoCutAndCarry")]
         private void OnWFDoCutAndCarry(object sender, EventArgs e)
         {
             int year = Clock.Today.Year;
