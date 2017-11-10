@@ -133,7 +133,7 @@ namespace Models
 		/// <summary>WholeFarm Do Animal (Ruminant and Other) milking</summary>
 		public event EventHandler CLEMAnimalMilking;
 		/// <summary>WholeFarm Calculate ecological state after all deaths and before management</summary>
-		public event EventHandler WFCalculateEcologicalState;
+		public event EventHandler CLEMCalculateEcologicalState;
 		/// <summary>WholeFarm Do Animal (Ruminant and Other) Herd Management (Kulling, Castrating, Weaning, etc.)</summary>
 		public event EventHandler WFAnimalManage;
 		/// <summary>WholeFarm stock animals to pasture availability or other metrics</summary>
@@ -302,10 +302,10 @@ namespace Models
                             CLEMAnimalDeath.Invoke(this, args);
                         if (CLEMAnimalMilking != null)
                             CLEMAnimalMilking.Invoke(this, args);
-					    if (WFCalculateEcologicalState != null)
-						    WFCalculateEcologicalState.Invoke(this, args);
                         if (WFAnimalManage != null)
                             WFAnimalManage.Invoke(this, args);
+					    if (CLEMCalculateEcologicalState != null)
+						    CLEMCalculateEcologicalState.Invoke(this, args);
                         if (WFAnimalStock != null)
                             WFAnimalStock.Invoke(this, args);
                         if (WFAnimalSell != null)

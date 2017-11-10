@@ -248,8 +248,8 @@ namespace Models.CLEM.Activities
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFCalculateEcologicalState")]
-		private void OnWFCalculateEcologicalState(object sender, EventArgs e)
+		[EventSubscribe("CLEMCalculateEcologicalState")]
+		private void OnCLEMCalculateEcologicalState(object sender, EventArgs e)
         {
             // This event happens after growth and pasture consumption and animal death
             // But before any management, buying and selling of animals.
