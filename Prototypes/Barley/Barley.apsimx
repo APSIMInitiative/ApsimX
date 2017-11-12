@@ -7,7 +7,7 @@
     <MemoText><![CDATA[
 # APSIM Barley Model 
 
-_Khaembah E.N., Zyskowski, R.F. and Brown, H.E._
+_Khaembah E.N., Zyskowski, R.F.,Brown, H.E.and Huth, N.I._
 
 The APSIM Barley Model has been developed using the Plant Modelling Framework (PMF) of Brown et al. (2014). This framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, Barley, sorghum) can be achieved by the model developer without additional coding.
 
@@ -4152,7 +4152,7 @@ Where MinLeafNumber is the number of leaves that a Barley crop will produce when
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[Vrn1 accumulation begins when Vrn4 experssion is down regulated to zero and stops, assuming vernalisation saturation, at a value of 1]]></MemoText>
+            <MemoText><![CDATA[Vrn1 accumulation begins when Vrn4 expression is down-regulated to zero and stops, assuming vernalisation saturation, at a value of 1]]></MemoText>
           </Memo>
           <Constant>
             <Name>Saturation</Name>
@@ -4248,7 +4248,7 @@ Where MinLeafNumber is the number of leaves that a Barley crop will produce when
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The amount of vernalising temperature required before vernalisation response will be evident.  Value of relative to the amount offl vernalisation temperature required from the end of the lag until vernalisation saturation.  A value of 0 means there is no lag, a value of 1 means the lag is the same (in vernal time) as the vernalisation requirement and a value of 2 means the lag is twice as long as the vernalisation response phase]]></MemoText>
+            <MemoText><![CDATA[The amount of vernalising temperature required before vernalisation response will be evident.  Value is relative to the amount of vernalisation temperature required from the end of the lag until vernalisation saturation.  A value of 0 means there is no lag, a value of 1 means the lag is the same (in vernal time) as the vernalisation requirement and a value of 2 means the lag is twice as long as the vernalisation response phase]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
@@ -4280,7 +4280,7 @@ Where MinLeafNumber is the number of leaves that a Barley crop will produce when
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp.]]></MemoText>
+            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligule appearance at 16 h Pp.]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1.5</FixedValue>
@@ -4344,7 +4344,7 @@ Where MinLeafNumber is the number of leaves that a Barley crop will produce when
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The Final leaf number is fixed at Terminal Spikelet and leaves contune to appear at a rate set by thermal time and phyllochron until flag leaf liguale appears and this phase is completed.]]></MemoText>
+            <MemoText><![CDATA[The Final leaf number is fixed at Terminal Spikelet and leaves continue to appear at a rate set by thermal time and phyllochron until the ligule of the flag leaf appears and this phase is completed.]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -4999,11 +4999,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </HoldFunction>
         <Constant>
           <Name>InitialGrainProportion</Name>
-          <Constant>
-            <Name>InitialGrainProportion</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.05</FixedValue>
-          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
         </Constant>
@@ -6933,10 +6928,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>County</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
-            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].BasePhyllochron.FixedValue = 75</Command>
+            <Command />
           </Cultivar>
           <Cultivar>
             <Name>Dash</Name>
@@ -6998,7 +6990,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].BasePhyllochron.FixedValue = 110</Command>
             <Command>[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 2,4,4,1,1,1,1,1</Command>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           </Cultivar>
@@ -7008,8 +6999,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].BasePhyllochron.FixedValue = 80</Command>
-            <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 2800</Command>
+            <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 2000</Command>
           </Cultivar>
           <Cultivar>
             <Name>Vortex</Name>
@@ -7333,16 +7323,16 @@ namespace Models
           <Type>Bottom</Type>
           <Title />
           <Inverted>false</Inverted>
-          <Minimum>0</Minimum>
-          <Maximum>0.05</Maximum>
+          <Minimum>0.025</Minimum>
+          <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title />
           <Inverted>false</Inverted>
-          <Minimum>0</Minimum>
-          <Maximum>0.05</Maximum>
+          <Minimum>0.025</Minimum>
+          <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
@@ -23874,7 +23864,7 @@ namespace Models
               <Title>Stem weight</Title>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
-              <Maximum>600</Maximum>
+              <Maximum>NaN</Maximum>
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
