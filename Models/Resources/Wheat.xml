@@ -1590,7 +1590,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
     </PartitionFractionDemandFunction>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
-    <MaintenanceRespiration>0</MaintenanceRespiration>
+    <Constant>
+        <Name>MaintenanceRespirationFunction</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>0</FixedValue>
+      </Constant>
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />

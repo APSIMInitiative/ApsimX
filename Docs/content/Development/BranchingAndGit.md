@@ -3,8 +3,6 @@ title: "Branching And Git"
 draft: false
 ---
 
-# Branching and GIT
-
 We use a feature branch work flow. The following description is borrowed from [Understanding the GitHub flow](https://guides.github.com/introduction/flow).
 
 ## Branching
