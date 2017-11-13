@@ -39,7 +39,7 @@ namespace Models.PMF.Functions
                                         System.Globalization.CultureInfo.InvariantCulture);
             else
             {
-                return Convert.ToDouble(o, System.Globalization.CultureInfo.InvariantCulture);
+                double doubleValue = Convert.ToDouble(o, System.Globalization.CultureInfo.InvariantCulture);
                 if (double.IsNaN(doubleValue))
                     throw new Exception("NaN (not a number) found when getting variable: " + VariableName);
                 return doubleValue;
