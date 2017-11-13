@@ -378,9 +378,11 @@ namespace Models.PMF.Struct
                     }
 
                     //Reduce population if there has been plant mortality 
-                    if (DeltaPlantPopulation>0)
-                    TotalStemPopn -= DeltaPlantPopulation * TotalStemPopn / Plant.Population;
-                    
+                    if (DeltaPlantPopulation > 0)
+                    {
+                        TotalStemPopn -= DeltaPlantPopulation * TotalStemPopn / Plant.Population;
+                        RemoveFromCohorts(DeltaPlantPopulation / Plant.Population);
+                    }
                     //Reduce stem number incase of mortality
                     double PropnMortality = 0;
                     PropnMortality = BranchMortality.Value();
@@ -390,7 +392,7 @@ namespace Models.PMF.Struct
                     {
                         TotalStemPopn -= DeltaPopn;
                         ProportionBranchMortality = PropnMortality;
-                        RemoveFromCohorts();
+                        
                     }
                 }
             }
@@ -400,7 +402,8 @@ namespace Models.PMF.Struct
         /// Remove cohort population according to branch mortality
         /// </summary>
         /// <param name="minimum">Minimum value of ApexNum in order to remove stem.</param>
-        private void RemoveFromCohorts(double minimum = 0)
+        /// <param name="fraction">The fraction of removing from stem population</param>
+        private void RemoveFromCohorts(double fraction, double minimum = 0)
         {
             Leaf leaf = Leaf as Leaf; // This is terrible
             if (leaf == null)
@@ -408,7 +411,7 @@ namespace Models.PMF.Struct
 
             foreach (LeafCohort LC in leaf.Leaves)
                 if (ApexNum >= minimum)
-                    LC.CohortPopulation *= BranchMortality.Value();
+                    LC.CohortPopulation *= fraction;
         }
 
         /// <summary>Does the actual growth.</summary>
