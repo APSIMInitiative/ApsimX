@@ -2,19 +2,9 @@ baseURL = "/"
 languageCode = "en-us"
 title = "APSIM Next Generation"
 
+theme = "hugo-theme-docdock"
 
 [Params]
   noCategoryLink = true
-
-  
-[[menu.main]]
-  name   = "Model documentation"
-  url    = "/ModelDocumentation/Index"
-  weight = 1
-  
-[[menu.main]]  
-  name   = "Design"
-  url    = "/Design/Index"
-  weight = 2  
-
-  
+  themeVariant = "darkgreen" 
+    
