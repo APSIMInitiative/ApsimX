@@ -80,7 +80,6 @@ namespace UserInterface.Views
             toolStrip = (Toolbar)builder.GetObject("toolStrip");
             treeview1 = (TreeView)builder.GetObject("treeview1");
             RightHandView = (Viewport)builder.GetObject("RightHandView");
-            toolbarlabel = (Label)builder.GetObject("toolbarlabel");
             _mainWidget = vbox1;
             RightHandView.ShadowType = ShadowType.EtchedOut;
 
@@ -121,8 +120,8 @@ namespace UserInterface.Views
             treeview1.DragEnd += OnDragEnd;
             treeview1.FocusInEvent += Treeview1_FocusInEvent;
             treeview1.FocusOutEvent += Treeview1_FocusOutEvent;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
             timer.Elapsed += Timer_Elapsed;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -165,8 +164,13 @@ namespace UserInterface.Views
                         }
                     }
                 }
+                toolStrip.Remove(child);
+                child.Destroy();
             }
             ClearPopup();
+            Popup.Destroy();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private void ClearPopup()
@@ -185,8 +189,9 @@ namespace UserInterface.Views
                             (w as MenuItem).Activated -= handler;
                         }
                     }
-                    Popup.Remove(w);
                 }
+                Popup.Remove(w);
+                w.Destroy();
             }
         }
 
@@ -351,7 +356,10 @@ namespace UserInterface.Views
         public void PopulateMainToolStrip(List<MenuDescriptionArgs> menuDescriptions)
         {
             foreach (Widget child in toolStrip.Children)
+            {
                 toolStrip.Remove(child);
+                child.Destroy();
+            }
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 if (!hasResource(description.ResourceNameForImage))

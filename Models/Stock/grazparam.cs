@@ -1274,9 +1274,9 @@ namespace Models.GrazPlan
                 {
                     case ptyText: result = getTextParam(sTagList);
                         break;
-                    case ptyReal: result = String.Format("%f", getRealParam(sTagList));
+                    case ptyReal: result = String.Format("{0:G}", getRealParam(sTagList));
                         break;
-                    case ptyInt: result = String.Format("%d", getIntParam(sTagList));
+                    case ptyInt: result = String.Format("{0:D}", getIntParam(sTagList));
                         break;
                     case ptyBool: if (getBoolParam(sTagList))
                             result = "true";
