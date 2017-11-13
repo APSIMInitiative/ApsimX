@@ -71,6 +71,18 @@ namespace Models.CLEM
 		[XmlIgnore]
 		public DateTime EcologicalIndicatorsNextDueDate { get; set; }
 
+
+        // ignore zone base class properties
+
+        /// <summary>Area of the zone.</summary>
+        /// <value>The area.</value>
+        [XmlIgnore]
+        public new double Area { get; set; }
+        /// <summary>Gets or sets the slope.</summary>
+        /// <value>The slope.</value>
+        [XmlIgnore]
+        public new double Slope { get; set; }
+
         /// <summary>
         /// Constructor
         /// </summary>
