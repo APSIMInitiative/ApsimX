@@ -1,9 +1,7 @@
 ---
-title: "Get Source"
+title: "Getting the source code"
 draft: false
 ---
-
-# Getting the source code
 
 The APSIM source code is located on GitHub so you will need to have a GitHub login if you want to contribute new features or modifications to the APSIM repository.
 
