@@ -150,10 +150,10 @@ namespace Models.CLEM.Activities
 				}
 			}
 
-			herd = Resources.RuminantHerd().Herd.ToList();
+			herd = CurrentHerd(false);
 
-			// feed
-			double feedRequired = 0;
+            // feed
+            double feedRequired = 0;
 			// get zero limited month from clock
 			int month = Clock.Today.Month - 1;
 
