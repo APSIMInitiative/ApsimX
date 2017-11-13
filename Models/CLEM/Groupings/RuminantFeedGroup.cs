@@ -17,10 +17,10 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. Multiple filters will select groups of individuals required.")]
     public class RuminantFeedGroup: CLEMModel
 	{
-		/// <summary>
-		/// Monthly values to supply selected individuals
-		/// </summary>
-		[Description("Monthly values to supply selected individuals")]
+        /// <summary>
+        /// Daily value to supply for each month
+        /// </summary>
+        [Description("Daily value to supply for each month")]
 		public double[] MonthlyValues { get; set; }
 
 		/// <summary>
