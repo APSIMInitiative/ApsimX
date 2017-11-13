@@ -320,6 +320,76 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourcesHolder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivitiesHolder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityFolder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerCropHarvest.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerDateRange.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerInterval.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerMonthRange.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalFoodStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalFoodStoreType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalPriceEntry.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalPricing.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityFee.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityManageCrop.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityManageProduct.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityTask.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileGRASP.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Finance.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityCalculateInterest.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityPayExpense.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\GrazeFoodStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\GrazeFoodStoreType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\GreenhouseGases.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\GreenhouseGasesType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\HumanFoodStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\HumanFoodStoreType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Labour.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourFilter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourFilterGroupSpecified.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourFilterGroupUnit.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Land.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LandType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\OtherAnimals.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\OtherAnimalsType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ProductStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ProductStoreType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ProductStoreTypeManure.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Relationship.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportRuminantHerd.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivitySell.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityBreed.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityBuySell.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityCollectManureAll.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityCollectManurePaddock.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityFee.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityFeed.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrow.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityHerdCost.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityManage.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMilking.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMuster.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityPredictiveStocking.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityPredictiveStockingENSO.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivitySellDryBreeders.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityTrade.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityWean.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFeedGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFilter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFilterGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantHerd.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantInitialCohorts.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantTypeCohort.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuninantActivityMilking.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\SummariseRuminantHerd.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Transmutation.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCost.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TruckingSettings.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ZoneCLEM.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CFlow.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NFlow.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Solute.png" />
@@ -667,6 +737,7 @@
     </Reference>
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

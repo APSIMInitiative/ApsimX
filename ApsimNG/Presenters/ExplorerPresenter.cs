@@ -918,7 +918,8 @@ namespace UserInterface.Presenters
             }
             else
             {
-                imageFileName = model.GetType().Name;
+                // Add model name from namespace to the resource image name
+                imageFileName = model.GetType().FullName.Split('.')[1] + "." + model.GetType().Name;
             }
 
             if (model.GetType().Namespace.Contains("Models.PMF"))
