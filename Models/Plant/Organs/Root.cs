@@ -842,22 +842,26 @@ namespace Models.PMF.Organs
                 double[] dulmm = myZone.soil.DULmm;
                 double[] bd = myZone.soil.BD;
 
+                double accuDepth = 0;
+                
                 for (int layer = 0; layer < thickness.Length; layer++)
                 {
+                    accuDepth += thickness[layer];
                     if (myZone.LayerLive[layer].Wt > 0)
                     {
+                        double factorRootDepth = Math.Max(0, Math.Min(1, 1 - (accuDepth - Depth ) / thickness[layer]));
                         RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
                         RWC[layer] = Math.Max(0.0, Math.Min(RWC[layer], 1.0));
                         double SWAF = NUptakeSWFactor.Value(layer);
 
                         double kno3 = KNO3.Value(layer);
                         double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF, (MaxDailyNUptake.Value() - NO3Uptake));
+                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (MaxDailyNUptake.Value() - NO3Uptake));
                         NO3Uptake += NO3Supply[layer];
 
                         double knh4 = KNH4.Value(layer);
                         double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF, (MaxDailyNUptake.Value() - NH4Uptake));
+                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (MaxDailyNUptake.Value() - NH4Uptake));
                         NH4Uptake += NH4Supply[layer];
                     }
                 }
