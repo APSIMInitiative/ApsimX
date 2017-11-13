@@ -25,14 +25,14 @@ namespace UserInterface.Presenters
     /// </summary>
     public class MainPresenter
     {
+        /// <summary>A list of presenters for tabs on the left.</summary>
+        public List<ExplorerPresenter> presenters1 = new List<ExplorerPresenter>();
+
         /// <summary>A private reference to the view this presenter will talk to.</summary>
         private IMainView view;
 
         /// <summary>The path last used to open the examples</summary>
         private string lastExamplesPath;
-
-        /// <summary>A list of presenters for tabs on the left.</summary>
-        private List<ExplorerPresenter> presenters1 = new List<ExplorerPresenter>();
 
         /// <summary>A list of presenters for tabs on the right.</summary>
         private List<ExplorerPresenter> presenters2 = new List<ExplorerPresenter>();
@@ -113,11 +113,9 @@ namespace UserInterface.Presenters
             this.view.SplitWindowOn = !this.view.SplitWindowOn;
         }
 
-        /// <summary>
-        /// Execute the specified script, returning any error messages or NULL if all OK.
-        /// </summary>
-        /// <param name="code">The code string</param>
-        /// <returns>Null value</returns>
+        /// <summary>Execute the specified script, returning any error messages or NULL if all OK.</summary>
+        /// <param name="code">The script code</param>
+        /// <returns>Any exception message or null</returns>
         public string ProcessStartupScript(string code)
         {
             Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, null);
@@ -141,28 +139,34 @@ namespace UserInterface.Presenters
 
             // Call Execute on our newly created script instance.
             object[] arguments = new object[] { this };
-            executeMethod.Invoke(script, arguments);
+            try
+            {
+                executeMethod.Invoke(script, arguments);
+            }
+            catch (System.Reflection.TargetInvocationException except)
+            {
+                return except.InnerException.ToString();
+            }
+
             return null;
         }
 
         /// <summary>
         /// Add a status message. A message of null will clear the status message.
         /// </summary>
-        /// <param name="message">The message string</param>
-        /// <param name="errorLevel">The error level name</param>
-        public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
+        /// <param name="message">The message test</param>
+        /// <param name="errorLevel">The error level value</param>
+        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel)
         {
             this.view.ShowMessage(message, errorLevel);
         }
 
-        /// <summary>
-        /// Show a message in a dialog box
-        /// </summary>
-        /// <param name="message">The error message</param>
-        /// <param name="title">The title</param>
-        /// <param name="msgType">Message type</param>
-        /// <param name="buttonType">The button to use</param>
-        /// <returns>The dialog return value</returns>
+        /// <summary>Show a message in a dialog box</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="title">The dialog title</param>
+        /// <param name="msgType">The type of dialog message</param>
+        /// <param name="buttonType">Button type</param>
+        /// <returns>The message dialog return value</returns>
         public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType)
         {
             return this.view.ShowMsgDialog(message, title, msgType, buttonType);
@@ -171,7 +175,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>
-        /// <param name="percent">Percent value</param>
+        /// <param name="percent">The progress</param>
         public void ShowProgress(int percent)
         {
             this.view.ShowProgress(percent);
@@ -202,21 +206,17 @@ namespace UserInterface.Presenters
             this.view.ShowWaitCursor(wait);
         }
 
-        /// <summary>
-        /// Change the text of a tab.
-        /// </summary>
-        /// <param name="ownerView">The owner view</param>
+        /// <summary>Change the text of a tab.</summary>
+        /// <param name="ownerView">The owning view</param>
         /// <param name="newTabName">New text of the tab.</param>
-        /// <param name="tooltip">Tooltip string</param>
+        /// <param name="tooltip">The tooltip text</param>
         public void ChangeTabText(object ownerView, string newTabName, string tooltip)
         {
             this.view.ChangeTabText(ownerView, newTabName, tooltip);
         }
 
-        /// <summary>
-        /// Close the application
-        /// </summary>
-        /// <param name="askToSave">Save this</param>
+        /// <summary>Close the application</summary>
+        /// <param name="askToSave">Prompt to save</param>
         public void Close(bool askToSave)
         {
             this.view.Close();
@@ -224,7 +224,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Ask the user a question</summary>
         /// <param name="message">The message to show the user.</param>
-        /// <returns>The user response</returns>
+        /// <returns>A response value</returns>
         public QuestionResponseEnum AskQuestion(string message)
         {
             return this.view.AskQuestion(message);
@@ -233,7 +233,7 @@ namespace UserInterface.Presenters
         /// <summary>Ask user for a filename to open.</summary>
         /// <param name="fileSpec">The file specification to use to filter the files.</param>
         /// <param name="initialDirectory">Optional Initial starting directory</param>
-        /// <returns>The filename</returns>
+        /// <returns>A filename</returns>
         public string AskUserForOpenFileName(string fileSpec, string initialDirectory = "")
         {
             return this.view.AskUserForOpenFileName(fileSpec, initialDirectory);
@@ -271,6 +271,13 @@ namespace UserInterface.Presenters
                 {
                     Simulations simulations = Simulations.Read(fileName);
                     presenter = this.CreateNewTab(fileName, simulations, onLeftTabControl);
+                    if (simulations.LoadErrors.Count > 0)
+                    {
+                        foreach (Exception error in simulations.LoadErrors)
+                        {
+                            this.view.ShowMessage(error.ToString(), Simulation.ErrorLevel.Error);
+                        }
+                    }
 
                     // Add to MRU list and update display
                     Utility.Configuration.Settings.AddMruFile(fileName);
@@ -278,7 +285,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    this.view.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                    this.view.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
                 }
 
                 this.view.ShowWaitCursor(false);
@@ -297,15 +304,6 @@ namespace UserInterface.Presenters
             Utility.Configuration.Settings.Save();
         }
 
-        /// <summary>
-        /// Closes the tab containing a specified object
-        /// </summary>
-        /// <param name="o">The object (normally a Gtk Widget) being sought</param>
-        public void CloseTabContaining(object o)
-        {
-            this.view.CloseTabContaining(o);
-        }
-
         /// <summary>Event handler invoked when user clicks on 'Standard toolbox'</summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">Event arguments</param>
@@ -320,6 +318,15 @@ namespace UserInterface.Presenters
             }
 
             this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd(), onLeftTabControl);
+        }
+
+        /// <summary>
+        /// Closes the tab containing a specified object
+        /// </summary>
+        /// <param name="o">The object (normally a Gtk Widget) being sought</param>
+        public void CloseTabContaining(object o)
+        {
+            this.view.CloseTabContaining(o);
         }
 
         /// <summary>Populate the view for the first time. Will throw if there are errors on startup.</summary>
@@ -359,8 +366,8 @@ namespace UserInterface.Presenters
 
             startPage.AddButton(
                                 "Upgrade",
-                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
-                                this.OnUpgrade);
+                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                        this.OnUpgrade);
             
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
@@ -485,7 +492,7 @@ namespace UserInterface.Presenters
                     }
                     catch (Exception)
                     {
-                        this.view.ShowMessage("Error renaming file!", DataStore.ErrorLevel.Error);
+                        this.view.ShowMessage("Error renaming file!", Simulation.ErrorLevel.Error);
                     }
                 }
             }
@@ -514,7 +521,7 @@ namespace UserInterface.Presenters
                     }
                     catch (Exception)
                     {
-                        this.view.ShowMessage("Error creating copy of file!", DataStore.ErrorLevel.Error);
+                        this.view.ShowMessage("Error creating copy of file!", Simulation.ErrorLevel.Error);
                     }
                 }
             }
@@ -540,7 +547,7 @@ namespace UserInterface.Presenters
                     }
                     catch (Exception)
                     {
-                        this.view.ShowMessage("Error deleting file!", DataStore.ErrorLevel.Error);
+                        this.view.ShowMessage("Error deleting file!", Simulation.ErrorLevel.Error);
                     }
                 }
             }
@@ -555,7 +562,11 @@ namespace UserInterface.Presenters
             {
                 if (Path.GetExtension(argument) == ".cs")
                 {
-                    this.ProcessStartupScript(File.ReadAllText(argument));
+                    string result = this.ProcessStartupScript(File.ReadAllText(argument));
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        throw new Exception(result);
+                    }
                 }
                 else if (Path.GetExtension(argument) == ".apsimx")
                 {
@@ -570,7 +581,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="fileName">The file name being sought</param>
         /// <param name="onLeftTabControl">If true, search the left screen, else search the right</param>
-        /// <returns>The presenter</returns>
+        /// <returns>The explorer presenter</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
         {
             List<ExplorerPresenter> presenters = onLeftTabControl ? this.presenters1 : this.presenters2;
@@ -604,7 +615,7 @@ namespace UserInterface.Presenters
         /// <returns>The explorer presenter</returns>
         private ExplorerPresenter CreateNewTab(string name, Simulations simulations, bool onLeftTabControl)
         {
-            this.view.ShowMessage(" ", DataStore.ErrorLevel.Information); // Clear the message window
+            this.view.ShowMessage(" ", Simulation.ErrorLevel.Information); // Clear the message window
             ExplorerView explorerView = new ExplorerView(null);
             ExplorerPresenter presenter = new ExplorerPresenter(this);
             if (onLeftTabControl)
@@ -619,7 +630,7 @@ namespace UserInterface.Presenters
             XmlDocument doc = new XmlDocument();
             presenter.Attach(simulations, explorerView, null);
 
-            this.view.AddTab(name, new Gtk.Image(null, "ApsimNG.Resources.apsim logo32.png"), explorerView.MainWidget, onLeftTabControl);
+            this.view.AddTab(name, null, explorerView.MainWidget, onLeftTabControl);
 
             // restore the simulation tree width on the form
             if (simulations.ExplorerWidth == 0)
@@ -691,6 +702,10 @@ namespace UserInterface.Presenters
                     this.presenters2.RemoveAt(e.Index - 1);
                 }
             }
+
+            // We've just closed Simulations
+            // This is a good time to force garbage collection 
+            GC.Collect(2, GCCollectionMode.Forced, true);
         }
 
         /// <summary>
@@ -728,7 +743,7 @@ namespace UserInterface.Presenters
                     message += "\r\n" + err.InnerException.Message;
                 }
 
-                this.view.ShowMessage(message, DataStore.ErrorLevel.Error);
+                this.view.ShowMessage(message, Simulation.ErrorLevel.Error);
             }
         }
 
@@ -812,7 +827,7 @@ namespace UserInterface.Presenters
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             if (version.Revision == 0)
             {
-                this.view.ShowMessage("You are on a custom build. You cannot upgrade.", DataStore.ErrorLevel.Error);
+                this.view.ShowMessage("You are on a custom build. You cannot upgrade.", Simulation.ErrorLevel.Error);
             }
             else
             {

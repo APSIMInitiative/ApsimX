@@ -1,6 +1,5 @@
 ﻿using System;
 using Gtk;
-using Glade;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views
@@ -35,13 +34,9 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler<OpenDialogArgs> BrowseButtonClicked;
 
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private Button button1 = null;
-        [Widget]
         private Label label1 = null;
-        [Widget]
         private Label label2 = null;
         private GridView Grid;
 
@@ -55,8 +50,11 @@ namespace UserInterface.Views
         /// </summary>
         public InputView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.InputView.glade", "vbox1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.InputView.glade");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            button1 = (Button)builder.GetObject("button1");
+            label1 = (Label)builder.GetObject("label1");
+            label2 = (Label)builder.GetObject("label2");
             _mainWidget = vbox1;
 
             Grid = new GridView(this);
@@ -69,6 +67,10 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             button1.Clicked -= OnBrowseButtonClick;
+            Grid.MainWidget.Destroy();
+            Grid = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>

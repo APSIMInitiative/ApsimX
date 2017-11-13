@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Glade;
 using Gtk;
 using WebKit;
 using MonoMac.AppKit;
@@ -40,7 +39,7 @@ namespace UserInterface.Views
 
     }
 
-    public interface IBrowserWidget
+    public interface IBrowserWidget : IDisposable
     {
         void Navigate(string uri);
         void LoadHTML(string html);
@@ -153,7 +152,7 @@ namespace UserInterface.Views
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            while (wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
+            while (wb != null && wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
         }
@@ -173,6 +172,35 @@ namespace UserInterface.Views
         public void ExecJavaScript(string command, object[] args)
         {
             wb.Document.InvokeScript(command, args);
+        }
+
+        // Flag: Has Dispose already been called? 
+        bool disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers. 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern. 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                wb.Dispose();
+                wb = null;
+                socket.Dispose();
+                socket = null;
+            }
+
+            // Free any unmanaged objects here. 
+            //
+            disposed = true;
         }
     }
 
@@ -240,7 +268,7 @@ namespace UserInterface.Views
             // We use a timeout so we don't sit here forever if a document fails to load.
 			Stopwatch watch = new Stopwatch();
 			watch.Start();
-			while (wb.IsLoading && watch.ElapsedMilliseconds < 10000)
+			while (wb != null && wb.IsLoading && watch.ElapsedMilliseconds < 10000)
 				while (Gtk.Application.EventsPending())
 					Gtk.Application.RunIteration();
         }
@@ -267,6 +295,36 @@ namespace UserInterface.Views
                 argString += obj.ToString();
             }
             wb.StringByEvaluatingJavaScriptFromString(command + "(" + argString + ");");
+        }
+
+        // Flag: Has Dispose already been called? 
+        bool disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers. 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern. 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                wb.Dispose();
+                wb = null;
+                socket.Dispose();
+                socket = null;
+                scrollWindow.Destroy();
+            }
+
+            // Free any unmanaged objects here. 
+            //
+            disposed = true;
         }
     }
 
@@ -299,7 +357,7 @@ namespace UserInterface.Views
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            while (wb.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
+            while (wb != null && wb.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
         }
@@ -327,6 +385,33 @@ namespace UserInterface.Views
             }
             wb.ExecuteScript(command + "(" + argString + ")");
         }
+        // Flag: Has Dispose already been called? 
+        bool disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers. 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern. 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                wb.Dispose();
+                wb = null;
+                scrollWindow.Destroy();
+            }
+
+            // Free any unmanaged objects here. 
+            //
+            disposed = true;
+        }
     }
 
     /// <summary>
@@ -339,13 +424,9 @@ namespace UserInterface.Views
         /// </summary>
         public string ImagePath { get; set; }
 
-        [Widget]
         private VPaned vpaned1 = null;
-        [Widget]
         private VBox vbox2 = null;
-        [Widget]
         private Frame frame1 = null;
-        [Widget]
         private HBox hbox1 = null;
 
         protected IBrowserWidget browser = null;
@@ -357,8 +438,11 @@ namespace UserInterface.Views
         /// </summary>
         public HTMLView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.HTMLView.glade", "vpaned1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.HTMLView.glade");
+            vpaned1 = (VPaned)builder.GetObject("vpaned1");
+            vbox2 = (VBox)builder.GetObject("vbox2");
+            frame1 = (Frame)builder.GetObject("frame1");
+            hbox1 = (HBox)builder.GetObject("hbox1");
             _mainWidget = vpaned1;
             // Handle a temporary browser created when we want to export a map.
             if (owner == null)
@@ -402,10 +486,16 @@ namespace UserInterface.Views
                 frame1.Unrealized -= Frame1_Unrealized;
                 (browser as TWWebBrowserIE).socket.UnmapEvent += (browser as TWWebBrowserIE).Socket_UnmapEvent;
             }
+            if (browser != null)
+                browser.Dispose();
             if (popupWin != null)
             {
                 popupWin.Destroy();
             }
+            memoView1.MainWidget.Destroy();
+            memoView1 = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private void Hbox1_Realized(object sender, EventArgs e)

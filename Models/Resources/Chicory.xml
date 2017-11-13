@@ -960,14 +960,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -1519,14 +1511,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -1982,14 +1966,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -2420,14 +2396,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -2907,20 +2875,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Root].RWC</XProperty>
     </LinearInterpolationFunction>
-    <CompositeBiomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Root].LayerLive</string>
-      </Propertys>
-    </CompositeBiomass>
-    <CompositeBiomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Root].LayerDead</string>
-      </Propertys>
-    </CompositeBiomass>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -2959,7 +2913,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
     </BiomassRemoval>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
-    <MaintenanceRespiration>0</MaintenanceRespiration>
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />

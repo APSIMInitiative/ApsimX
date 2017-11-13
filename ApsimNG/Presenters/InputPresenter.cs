@@ -8,6 +8,7 @@ namespace UserInterface.Presenters
 {
     using System;
     using Models;
+    using Models.Core;
     using Views;
 
     /// <summary>
@@ -70,7 +71,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                this.explorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                this.explorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
             }
         }
 

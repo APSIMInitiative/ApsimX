@@ -37,6 +37,13 @@ namespace UserInterface.Views
             vport.ShadowType = ShadowType.None;
             scroller.Add(vport);
             _mainWidget = scroller;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Sets the controls to show.</summary>

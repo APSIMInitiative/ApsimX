@@ -247,14 +247,6 @@ During this phase the plant has completed its growth and is drying ready for har
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText><![CDATA[It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.]]></MemoText>
     </Memo>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <Constant>
       <Name>MaximumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -517,14 +509,6 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
 Stover represents any part of the crop that is not removed at harvest (i.e not part of the product).]]>
       </MemoText>
     </Memo>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1177,20 +1161,12 @@ The root organ demands and is partitioned N and DM and its depth increases throu
 ]]>
       </MemoText>
     </Memo>
-    <CompositeBiomass>
-      <Name>Live</Name>
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Root].LayerLive</string>
-      </Propertys>
-    </CompositeBiomass>
-    <CompositeBiomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Root].LayerDead</string>
-      </Propertys>
-    </CompositeBiomass>
+      <FixedValue>1</FixedValue>
+      <Units>0-1</Units>
+    </Constant>
     <LinearInterpolationFunction>
       <Name>KLModifier</Name>
       <XYPairs>
@@ -1505,7 +1481,11 @@ This is the proportion of total biomass that is paritioned into the roots and is
     </LinearInterpolationFunction>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
-    <MaintenanceRespiration>0</MaintenanceRespiration>
+    <Constant>
+        <Name>MaintenanceRespirationFunction</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>0</FixedValue>
+    </Constant>
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />
@@ -1521,14 +1501,6 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
 ]]>
       </MemoText>
     </Memo>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <Constant>
       <Name>MaximumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>

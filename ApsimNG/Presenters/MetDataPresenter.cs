@@ -13,6 +13,7 @@ namespace UserInterface.Presenters
     using System.Text;
     using APSIM.Shared.Utilities;
     using Models;
+    using Models.Core;
     using Models.Graph;
     using Views;
 
@@ -118,15 +119,17 @@ namespace UserInterface.Presenters
         {
             try
             {
-                DataTable data = this.graphMetData;
-                DateTime startDate = new DateTime(Convert.ToInt16(startYear), 1, 1);
-                DateTime endDate = new DateTime(Convert.ToInt16(startYear), 12, 31);
-                if (showYears > 1)
+                using (DataTable data = this.graphMetData)
                 {
-                    endDate = endDate.AddYears(Convert.ToInt16(showYears) - 1);
-                }
+                    DateTime startDate = new DateTime(Convert.ToInt16(startYear), 1, 1);
+                    DateTime endDate = new DateTime(Convert.ToInt16(startYear), 12, 31);
+                    if (showYears > 1)
+                    {
+                        endDate = endDate.AddYears(Convert.ToInt16(showYears) - 1);
+                    }
 
-                this.DisplayDetailedGraphs(data, tabIndex, startDate, endDate, false);
+                    this.DisplayDetailedGraphs(data, tabIndex, startDate, endDate, false);
+                }
             }
             catch (Exception)
             {
@@ -200,14 +203,16 @@ namespace UserInterface.Presenters
                         this.weatherData.ExcelWorkSheetName = sheetName;
                         this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
 
-                        DataTable data = this.weatherData.GetAllData();
+                        using (DataTable data = this.weatherData.GetAllData())
+                        {
 
-                        this.dataStartDate = this.weatherData.StartDate;
-                        this.dataEndDate = this.weatherData.EndDate;
-                        this.WriteTable(data);
-                        this.WriteSummary(data);
-                        this.DisplayDetailedGraphs(data);
-                        this.explorerPresenter.MainPresenter.ShowMessage(" ", DataStore.ErrorLevel.Information);
+                            this.dataStartDate = this.weatherData.StartDate;
+                            this.dataEndDate = this.weatherData.EndDate;
+                            this.WriteTable(data);
+                            this.WriteSummary(data);
+                            this.DisplayDetailedGraphs(data);
+                        }
+                        this.explorerPresenter.MainPresenter.ShowMessage(" ", Simulation.ErrorLevel.Information);
                     }
                     finally
                     {
@@ -220,7 +225,7 @@ namespace UserInterface.Presenters
                     string message = err.Message;
                     message += "\r\n" + err.StackTrace;
                     this.weatherDataView.Summarylabel = err.Message;
-                    this.explorerPresenter.MainPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
+                    this.explorerPresenter.MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
                 }
             }
 

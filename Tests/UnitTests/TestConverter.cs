@@ -5,11 +5,13 @@
 //-----------------------------------------------------------------------
 namespace UnitTests
 {
+    using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
     using Models.Graph;
     using Models.Soils;
     using NUnit.Framework;
+    using System.Data;
     using System.IO;
     using System.Xml;
 
@@ -38,7 +40,7 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement));
+            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
 
             string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
                              "<Graph>" +
@@ -65,7 +67,7 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement));
+            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
 
             string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
                              "<Cultivar>" +
@@ -122,7 +124,7 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement));
+            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
 
             string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
                              "<Manager>" +
@@ -176,7 +178,7 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement));
+            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
 
             string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
                              "<GenericOrgan>" +
@@ -201,6 +203,10 @@ namespace UnitTests
                                  "<Name>CriticalNConc</Name>" +
                                  "<VariableName>[Stem].MinimumNConc.Value()</VariableName>" +
                                "</VariableReference>" +
+                               "<Constant>" +
+                                 "<Name>DMConversionEfficiency</Name>" +
+                                 "<FixedValue>1.0</FixedValue>" +
+                               "</Constant>" +
                              "</GenericOrgan>" +
                             "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
@@ -261,7 +267,7 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement));
+            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
 
             string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
                              "<Manager>" +
@@ -314,5 +320,35 @@ namespace UnitTests
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
 
+        public void Version9()
+        {
+            Directory.SetCurrentDirectory(Path.GetTempPath());
+
+            string fileName = Path.Combine(Path.GetTempPath(), "TestConverter.db");
+            File.Delete(fileName);
+            SQLite connection = new SQLite();
+            connection.OpenDatabase(fileName, false);
+            try
+            {
+                connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
+                connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
+                connection.ExecuteNonQuery("CREATE TABLE _Units (TableName TEXT, ColumnHeading TEXT, Units TEXT)");
+                connection.ExecuteNonQuery("CREATE TABLE Report (Col1 TEXT, Col2 TEXT, Col3 TEXT)");
+
+                string fromXML = "<Simulation Version=\"8\"/>";
+
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(fromXML);
+                Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, fileName));
+                DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
+                string[] tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name");
+                Assert.AreEqual(tableNames, new string[] { "_Simulations", "_Messages", "_Units", "Report" } );
+            }
+            finally
+            {
+                connection.CloseDatabase();
+                File.Delete(fileName);
+            }
+        }
     }
 }

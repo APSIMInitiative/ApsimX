@@ -472,10 +472,6 @@
             <Name>RadnInt</Name>
             <VariableName>[Leaf].RadIntTot</VariableName>
           </VariableReference>
-          <VariableReference>
-            <Name>RUEact</Name>
-            <VariableName>[RUEModel].RueAct</VariableName>
-          </VariableReference>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
             <XYPairs>

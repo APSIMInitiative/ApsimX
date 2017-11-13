@@ -91,8 +91,8 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="MathNet.Numerics, Version=3.13.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MathNet.Numerics.3.13.0\lib\net40\MathNet.Numerics.dll</HintPath>
+    <Reference Include="MathNet.Numerics, Version=3.20.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.3.20.0\lib\net40\MathNet.Numerics.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MigraDoc.DocumentObjectModel-gdi, Version=1.50.3638.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
@@ -139,26 +139,33 @@
     <Compile Include="Core\APSIMFileConverter.cs" />
     <Compile Include="Core\APSIMFileReader.cs" />
     <Compile Include="Core\APSIMFileWriter.cs" />
+    <Compile Include="Core\Attributes\BriefLabelAttribute.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Core\Attributes\ScopedModelAttribute.cs" />
     <Compile Include="Core\Attributes\SoluteAttribute.cs" />
     <Compile Include="Core\AutoDocumentation.cs" />
     <Compile Include="Core\Alias.cs" />
+    <Compile Include="Core\EventArgs\LoadedEventArgs.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\FileFormat.cs" />
-    <Compile Include="Core\Runners\JobManagerMultiProcess.cs" />
+    <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
+    <Compile Include="Core\IJobGenerator.cs" />
+    <Compile Include="Core\IStorageWriter.cs" />
+    <Compile Include="Core\Locator.cs" />
+    <Compile Include="Core\Runners\JobRunnerMultiProcess.cs" />
     <Compile Include="Core\Links.cs" />
     <Compile Include="Core\ModelNode.cs" />
     <Compile Include="Core\ModelTypes.cs" />
     <Compile Include="Core\Property.cs" />
     <Compile Include="Core\Runner.cs" />
     <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />
-    <Compile Include="Core\Runners\RunClonedSimulation.cs" />
-    <Compile Include="Core\Runners\RunAllCompletedEvent.cs" />
+    <Compile Include="Core\Runners\RunSimulation.cs" />
     <Compile Include="Core\Runners\RunExternal.cs" />
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
+    <Compile Include="Plant\Functions\ArrayFunction.cs" />
+    <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
@@ -271,11 +278,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Core\IEvent.cs" />
+    <Compile Include="Core\ILocator.cs" />
     <Compile Include="Report\IReportColumn.cs" />
+    <Compile Include="Core\IStorageReader.cs" />
     <Compile Include="Report\ReportColumnWithValues.cs" />
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
-    <Compile Include="Report\ReportTable.cs" />
     <Compile Include="Soils\Nutrient\NFlow.cs" />
     <Compile Include="Soils\Nutrient\CFlow.cs" />
     <Compile Include="Soils\Nutrient\NutrientPool.cs" />
@@ -325,6 +334,8 @@
     <Compile Include="Stock\stock_vars.cs" />
     <Compile Include="Stock\typedval.cs" />
     <Compile Include="Stock\xmlpsr.cs" />
+    <Compile Include="Storage\Row.cs" />
+    <Compile Include="Storage\Table.cs" />
     <Compile Include="Sugarcane\CropConstants.cs" />
     <Compile Include="Sugarcane\CultivarConstants.cs" />
     <Compile Include="Sugarcane\MathUtil.cs" />
@@ -438,7 +449,6 @@
     <Compile Include="Core\ISummary.cs" />
     <Compile Include="Core\Model.cs" />
     <Compile Include="Core\Zone.cs" />
-    <Compile Include="DataStore.cs" />
     <Compile Include="Core\Simulations.cs" />
     <Compile Include="Graph\Axis.cs" />
     <Compile Include="Graph\Series.cs" />
@@ -460,7 +470,7 @@
     <Compile Include="Weather\ControlledEnvironment.cs" />
     <Compile Include="Weather\Weather.cs" />
     <Compile Include="Report\Report.cs" />
-    <Compile Include="Project.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
     <Compile Include="WholeFarm\Activities\ActivitiesHolder.cs" />
@@ -593,10 +603,6 @@
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
       <Project>{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}</Project>
       <Name>APSIM.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ApServer\ApServer.csproj">
-      <Project>{7726F6D0-1CE6-475E-8790-E93999818545}</Project>
-      <Name>ApServer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

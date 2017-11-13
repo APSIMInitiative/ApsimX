@@ -8,6 +8,7 @@ namespace UnitTests
     using System.Linq;
     using System.Text;
 
+    [Serializable]
     class MockWeather : IWeather
     {
         public double Amp { get; set; }

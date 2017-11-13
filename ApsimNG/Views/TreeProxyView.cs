@@ -12,7 +12,6 @@ namespace UserInterface.Views
     using System.Drawing;
     using System.Data;
     using Gtk;
-    using Glade;
     using OxyPlot;
     using OxyPlot.Axes;
     using OxyPlot.GtkSharp;
@@ -66,19 +65,10 @@ namespace UserInterface.Views
         /// </summary>
         public double[] SoilMidpoints;
 
-        [Widget]
         VPaned vpaned1 = null;
-
-        [Widget]
         Alignment alignment1 = null;
-
-        [Widget]
         HBox hbox1 = null;
-
-        [Widget]
         TreeView treeview1 = null;
-
-        [Widget]
         TreeView treeview2 = null;
 
         private ListStore heightModel = new ListStore(typeof(string));
@@ -89,8 +79,12 @@ namespace UserInterface.Views
         /// </summary>
         public TreeProxyView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.TreeProxyView.glade", "vpaned1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TreeProxyView.glade");
+            vpaned1 = (VPaned)builder.GetObject("vpaned1");
+            alignment1 = (Alignment)builder.GetObject("alignment1");
+            hbox1 = (HBox)builder.GetObject("hbox1");
+            treeview1 = (TreeView)builder.GetObject("treeview1");
+            treeview2 = (TreeView)builder.GetObject("treeview2");
             _mainWidget = vpaned1;
             this.pBelowGround = new OxyPlot.GtkSharp.PlotView();
             this.pAboveGround = new OxyPlot.GtkSharp.PlotView();
@@ -112,6 +106,15 @@ namespace UserInterface.Views
             largestDate = DateTime.MinValue;
             treeview2.CursorChanged += GridCursorChanged;
             MainWidget.ShowAll();
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            heightModel.Dispose();
+            gridModel.Dispose();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>

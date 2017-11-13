@@ -1,46 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gtk;
-using Glade;
 using Mono.TextEditor;
-using System.IO;
 using Cairo;
+using UserInterface;
 
 namespace Utility
 {
     public class FindAndReplaceForm
     {
-        [Widget]
+        // Gtk Widgets
         private Window window1 = null;
-        [Widget]
         private CheckButton chkMatchCase = null;
-        [Widget]
         private CheckButton chkMatchWholeWord = null;
-        [Widget]
         private Entry txtLookFor = null;
-        [Widget]
         private Entry txtReplaceWith = null;
-        [Widget]
         private Button btnReplace = null;
-        [Widget]
         private Button btnReplaceAll = null;
-        [Widget]
         private Button btnHighlightAll = null;
-        [Widget]
         private Button btnCancel = null;
-        [Widget]
         private Button btnFindPrevious = null;
-        [Widget]
         private Button btnFindNext = null;
-        [Widget]
         private Label lblReplaceWith = null;
 
         private bool selectionOnly = false;
 
         public FindAndReplaceForm()
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.FindAndReplace.glade", "window1");
-            gxml.Autoconnect(this);
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.FindAndReplace.glade");
+            window1 = (Window)builder.GetObject("window1");
+            chkMatchCase = (CheckButton)builder.GetObject("chkMatchCase");
+            chkMatchWholeWord = (CheckButton)builder.GetObject("chkMatchWholeWord");
+            txtLookFor = (Entry)builder.GetObject("txtLookFor");
+            txtReplaceWith = (Entry)builder.GetObject("txtReplaceWith");
+            btnReplace = (Button)builder.GetObject("btnReplace");
+            btnReplaceAll = (Button)builder.GetObject("btnReplaceAll");
+            btnHighlightAll = (Button)builder.GetObject("btnHighlightAll");
+            btnCancel = (Button)builder.GetObject("btnCancel");
+            btnFindPrevious = (Button)builder.GetObject("btnFindPrevious");
+            btnFindNext = (Button)builder.GetObject("btnFindNext");
+            lblReplaceWith = (Label)builder.GetObject("lblReplaceWith");
+
             btnFindNext.Clicked += btnFindNext_Click;
             btnFindPrevious.Clicked += btnFindPrevious_Click;
             btnCancel.Clicked += btnCancel_Click;
@@ -100,7 +100,7 @@ namespace Utility
             if (_editor != null && _editor.FileName != null)
                 text += " - " + System.IO.Path.GetFileName(_editor.FileName);
             if (this.selectionOnly)
-              text += " (selection only)";
+                text += " (selection only)";
             window1.Title = text;
         }
 
@@ -160,7 +160,7 @@ namespace Utility
             FindNext(false, true, "Text not found");
         }
 
-       
+
         public SearchResult FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
         {
             Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
@@ -183,8 +183,6 @@ namespace Utility
                 Editor.ScrollTo(range.Offset);
             return range;
         }
-        
-        Dictionary<MonoTextEditor, HighlightGroup> _highlightGroups = new Dictionary<MonoTextEditor, HighlightGroup>();
 
         private void btnHighlightAll_Click(object sender, EventArgs e)
         {
@@ -216,55 +214,10 @@ namespace Utility
             else
                 ShowMsg(string.Format("Replaced {0} occurrences.", count));
         }
+
         public string LookFor { get { return txtLookFor.Text; } }
     }
 
-    /// <summary>
-    /// Extends the TextSegementMarker class to allow a different background color to be used
-    /// Is there a better way to do this? There isn't really much documentation
-    /// on the Mono.TextEditor stuff. The source code is the documentation...
-    /// </summary>
-    public class HighlightSegmentMarker : TextSegmentMarker
-    {
-        public HighlightSegmentMarker(int Offset, int Length) : base(Offset, Length) {}
-
-        public override void DrawBackground(MonoTextEditor editor, Context cr, LineMetrics metrics, int startOffset, int endOffset)
-        {
-            int x1 = editor.LocationToPoint(editor.OffsetToLocation(this.Offset), false).X;
-            int x2 = editor.LocationToPoint(editor.OffsetToLocation(this.Offset + this.Length), false).X;
-            cr.Rectangle(x1, metrics.LineYRenderStartPosition + 0.5, x2 - x1, metrics.LineHeight - 1);
-            cr.SetSourceRGB(1.0, 1.0, 0.0);
-            cr.Fill();
-        }
-    }
-
-    /// <summary>Bundles a group of markers together so that they can be cleared 
-    /// together.</summary>
-    public class HighlightGroup : IDisposable
-    {
-        List<HighlightSegmentMarker> _markers = new List<HighlightSegmentMarker>();
-        Mono.TextEditor.MonoTextEditor _editor;
-        TextDocument _document;
-        public HighlightGroup(Mono.TextEditor.MonoTextEditor editor)
-        {
-            _editor = editor;
-            _document = editor.Document;
-        }
-        public void AddMarker(HighlightSegmentMarker marker)
-        {
-            _markers.Add(marker);
-            _document.AddMarker(marker);
-        }
-        public void ClearMarkers()
-        {
-            foreach (HighlightSegmentMarker m in _markers)
-                _document.RemoveMarker(m);
-            _markers.Clear();
-            _editor.QueueDraw();
-        }
-        public void Dispose() { ClearMarkers(); GC.SuppressFinalize(this); }
-        ~HighlightGroup() { Dispose(); }
-
-        public IList<HighlightSegmentMarker> Markers { get { return _markers.AsReadOnly(); } }
-    }
 }
+
+    

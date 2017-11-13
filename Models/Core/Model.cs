@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Models.Core
 {
+    using Storage;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -159,6 +160,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.QualitativePPEffect))]
         [XmlElement(typeof(Models.PMF.Phen.ZadokPMF))]
         [XmlElement(typeof(Models.PMF.Phen.BuddingPhase))]
+        [XmlElement(typeof(Models.PMF.Functions.ArrayFunction))]
         [XmlElement(typeof(Models.PMF.Functions.AccumulateFunction))]
         [XmlElement(typeof(Models.PMF.Functions.MovingAverageFunction))]
         [XmlElement(typeof(Models.PMF.Functions.MovingSumFunction))]
