@@ -590,7 +590,8 @@ namespace Models.PMF.Phen
             string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
             double StartFraction = 0;
             if (StartFractionSt != "")
-                StartFraction = Convert.ToDouble(StartFractionSt);
+                StartFraction = Convert.ToDouble(StartFractionSt, 
+                                                 System.Globalization.CultureInfo.InvariantCulture);
 
             int StartPhaseIndex = -1;
             int EndPhaseIndex = -1;
@@ -630,8 +631,8 @@ namespace Models.PMF.Phen
             string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
             double StartFraction = 0;
             if (StartFractionSt != "")
-                StartFraction = Convert.ToDouble(StartFractionSt);
-
+                StartFraction = double.Parse(StartFractionSt.ToString(), 
+                                             System.Globalization.CultureInfo.InvariantCulture);
             int StartPhaseIndex = Phases.IndexOf(PhaseStartingWith(Start));
             //Set the index of the current phase, if it is a parallel phase set the index to that of its parallel
             if (CurrentPhase.PhaseParallel == null)
