@@ -390,9 +390,25 @@ namespace Models.PMF.Struct
                     {
                         TotalStemPopn -= DeltaPopn;
                         ProportionBranchMortality = PropnMortality;
+                        RemoveFromCohorts();
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Remove cohort population according to branch mortality
+        /// </summary>
+        /// <param name="minimum">Minimum value of ApexNum in order to remove stem.</param>
+        private void RemoveFromCohorts(double minimum = 0)
+        {
+            Leaf leaf = Leaf as Leaf; // This is terrible
+            if (leaf == null)
+                return;
+
+            foreach (LeafCohort LC in leaf.Leaves)
+                if (ApexNum >= minimum)
+                    LC.CohortPopulation *= BranchMortality.Value();
         }
 
         /// <summary>Does the actual growth.</summary>
