@@ -320,10 +320,6 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass[] LayerDead { get { if (PlantZone != null) return PlantZone.LayerDead; else return new Biomass[0]; } }
 
-        /// <summary>Gets or sets the length.</summary>
-        [XmlIgnore]
-        public double Length { get { return PlantZone.Length; } }
-
         /// <summary>Gets or sets the water uptake.</summary>
         [Units("mm")]
         public double WaterUptake
@@ -513,7 +509,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
-                PlantZone.Length = MathUtilities.Sum(LengthDensity);
                 DoSupplyCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
             }
         }
