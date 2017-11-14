@@ -70,13 +70,22 @@ namespace UserInterface.Views
             }
             set
             {
-                comboModel.Clear();
-                foreach (string text in value)
-                    comboModel.AppendValues(text);
-                // if (comboModel.IterNChildren() > 0)
-                //     combobox1.Active = 0;
-                // else
+                // Avoid possible recursion
+                combobox1.Changed -= OnSelectionChanged;
+                try
+                {
+                    comboModel.Clear();
+                    foreach (string text in value)
+                        comboModel.AppendValues(text);
+                    // if (comboModel.IterNChildren() > 0)
+                    //     combobox1.Active = 0;
+                    // else
                     combobox1.Active = -1;
+                }
+                finally
+                {
+                    combobox1.Changed += OnSelectionChanged;
+                }
             }
         }
 
