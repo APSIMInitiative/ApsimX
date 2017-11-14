@@ -41,38 +41,29 @@ namespace Models.PMF.Organs
         public override double NFixationCost { get { return FixationMetabolicCost.Value(); } }
 
         /// <summary>Sets the n allocation.</summary>
-        [XmlIgnore]
-        public override BiomassAllocationType NAllocation
+        public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
-            set
-            {
-                base.NAllocation = value;    // give N allocation to base first.
-                NFixed = value.Fixation;    // now get our fixation value.
-            }
+            base.SetNitrogenAllocation(nitrogen);    // give N allocation to base first.
+            NFixed = nitrogen.Fixation;    // now get our fixation value.
         }
 
         /// <summary>Gets the respired wt fixation.</summary>
         public double RespiredWtFixation { get { return RespiredWt; } }
 
-        /// <summary>Gets or sets the n supply.</summary>
-        public override BiomassSupplyType NSupply
+        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
+        public override BiomassSupplyType CalculateNitrogenSupply()
         {
-            get
-            {
-                BiomassSupplyType Supply = base.NSupply;   // get our base GenericOrgan to fill a supply structure first.
-                Supply.Fixation = FixationRate.Value();
-                return Supply;
-            }
+            base.CalculateNitrogenSupply();   // get our base GenericOrgan to fill a supply structure first.
+            NSupply.Fixation = FixationRate.Value();
+            return NSupply; 
         }
-        /// <summary>Sets the dm allocation.</summary>
-        public override BiomassAllocationType DMAllocation
+
+        /// <summary>Sets the dry matter allocation.</summary>
+        public override void SetDryMatterAllocation(BiomassAllocationType value)
         {
-            set
             //This is the DM that is consumed to fix N.  this is calculated by the arbitrator and passed to the nodule to report
-            {
-                base.DMAllocation = value;      // Give the allocation to our base GenericOrgan first
-                RespiredWt = value.Respired;    // Now get the respired value for ourselves.
-            }
+            base.SetDryMatterAllocation(value);      // Give the allocation to our base GenericOrgan first
+            RespiredWt = value.Respired;    // Now get the respired value for ourselves.
         }
 
         #endregion

@@ -229,6 +229,8 @@
 
             StringBuilder sql = new StringBuilder();
 
+            bool hasToday = false;
+
             // Write SELECT clause
             sql.Append("SELECT S.Name AS SimulationName,S.ID AS SimulationID");
             List<string> fieldList = null;
@@ -247,6 +249,8 @@
                 sql.Append("[");
                 sql.Append(fieldName);
                 sql.Append(']');
+                if (fieldName == "Clock.Today")
+                    hasToday = true;
             }
 
             // Write FROM clause
@@ -268,6 +272,11 @@
                 sql.Append(filter);
                 sql.Append(")");
             }
+
+            // Write ORDER BY clause
+            sql.Append(" ORDER BY S.ID");
+            if (hasToday)
+                sql.Append(", T.[Clock.Today]");
 
             // Write LIMIT/OFFSET clause
             if (count > 0)
@@ -486,11 +495,12 @@
         /// <param name="simulationNamesBeingRun">Collection of simulation names being run</param>
         private void WriteDBWorker(IEnumerable<string> knownSimulationNames, IEnumerable<string> simulationNamesBeingRun)
         {
+            Table dataToWriteToDB = null;
             try
             {
                 while (true)
                 {
-                    Table dataToWriteToDB = null;
+                    dataToWriteToDB = null;
                     lock (dataToWrite)
                     {
                         // Find the table with the most number of rows to write.
@@ -528,7 +538,11 @@
             }
             catch (Exception err)
             {
-                Console.WriteLine(err.ToString());
+                // Console.WriteLine(err.ToString());
+                string msg = "Error writing to database";
+                if (dataToWriteToDB != null)
+                    msg += " \"" + dataToWriteToDB.Name + "\"";
+                throw new Exception(msg, err);
             }
             finally
             {

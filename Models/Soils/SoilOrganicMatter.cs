@@ -169,9 +169,9 @@ namespace Models.Soils
 
                     for (int i = 0; i < OC.Length; i++)
                     {
-                        if (FInert[i] == double.NaN ||
-                            OC[i] == double.NaN ||
-                            BD[i] == double.NaN)
+                        if (Double.IsNaN(FInert[i]) ||
+                            Double.IsNaN(OC[i]) ||
+                            Double.IsNaN(BD[i]))
                             InertC[i] = double.NaN;
                         else
                         {

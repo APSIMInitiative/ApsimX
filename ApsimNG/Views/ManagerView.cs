@@ -35,6 +35,17 @@ namespace UserInterface.Views
             ScriptEditor = new EditorView(this);
             notebook.AppendPage(Grid.MainWidget, new Label("Properties"));
             notebook.AppendPage(ScriptEditor.MainWidget, new Label("Script"));
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, System.EventArgs e)
+        {
+            Grid.MainWidget.Destroy();
+            Grid = null;
+            ScriptEditor.MainWidget.Destroy();
+            ScriptEditor = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         public IGridView GridView { get { return Grid; } }

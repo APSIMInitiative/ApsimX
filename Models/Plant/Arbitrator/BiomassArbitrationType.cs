@@ -12,6 +12,9 @@ namespace Models.PMF
     [Serializable]
     public class BiomassArbitrationType
     {
+        /// <summary>Names of all organs</summary>
+        private IArbitration[] organs;
+
         //Biomass Demand Variables
         /// <summary>Gets or sets the structural demand.</summary>
         /// <value>Demand for structural biomass from each organ</value>
@@ -139,95 +142,64 @@ namespace Models.PMF
 
         //Constructor for Array variables
         /// <summary>Initializes a new instance of the <see cref="BiomassArbitrationType"/> class.</summary>
-        public BiomassArbitrationType()
-        { }
-
-        /// <summary>Initializes a new instance of the <see cref="BiomassArbitrationType"/> class.</summary>
-        /// <param name="Size">The size.</param>
-        public BiomassArbitrationType(int Size) {Resize(Size);}
-
-        private void Resize(int Size)
+        /// <param name="type">Type of biomass arbitration</param>
+        /// <param name="allOrgans">Names of organs</param>
+        public BiomassArbitrationType(string type, List<IArbitration> allOrgans)
         {
-            StructuralDemand = new double[Size];
-            MetabolicDemand = new double[Size];
-            StorageDemand = new double[Size];
-            ReallocationSupply = new double[Size];
-            UptakeSupply = new double[Size];
-            FixationSupply = new double[Size];
-            RetranslocationSupply = new double[Size];
-            Reallocation = new double[Size];
-            Uptake = new double[Size];
-            Fixation = new double[Size];
-            Retranslocation = new double[Size];
-            Respiration = new double[Size];
-            ConstrainedGrowth = new double[Size];
-            StructuralAllocation = new double[Size];
-            MetabolicAllocation = new double[Size];
-            StorageAllocation = new double[Size];
-            TotalAllocation = new double[Size];
+            BiomassType = type;
+            organs = allOrgans.ToArray();
+            StructuralDemand = new double[organs.Length];
+            MetabolicDemand = new double[organs.Length];
+            StorageDemand = new double[organs.Length];
+            ReallocationSupply = new double[organs.Length];
+            UptakeSupply = new double[organs.Length];
+            FixationSupply = new double[organs.Length];
+            RetranslocationSupply = new double[organs.Length];
+            Reallocation = new double[organs.Length];
+            Uptake = new double[organs.Length];
+            Fixation = new double[organs.Length];
+            Retranslocation = new double[organs.Length];
+            Respiration = new double[organs.Length];
+            ConstrainedGrowth = new double[organs.Length];
+            StructuralAllocation = new double[organs.Length];
+            MetabolicAllocation = new double[organs.Length];
+            StorageAllocation = new double[organs.Length];
+            TotalAllocation = new double[organs.Length];
         }
 
-        /// <summary>Create a new biomass allocation type.</summary>
-        /// <param name="organs">The organs.</param>
-        /// <param name="type">The arbitration type</param>
-        public static BiomassArbitrationType Create(string type, IArbitration[] organs)
+        /// <summary>Setup all supplies</summary>
+        /// <param name="suppliesForEachOrgan">The organs supplies.</param>
+        /// <param name="totalOfAllOrgans">The total wt or N for all organs</param>
+        public void SetupSupplies(BiomassSupplyType[] suppliesForEachOrgan, double totalOfAllOrgans)
         {
-            BiomassArbitrationType BAT = new BiomassArbitrationType();
-            BAT.DoSetup(type, organs);
-            return BAT;
-        }
-        /// <summary>Does the dm setup.</summary>
-        /// <param name="Organs">The organs.</param>
-        /// <param name="Type">The arbitration type</param>
-        virtual public void DoSetup(string Type, IArbitration[] Organs)
-        {
-            //Creat Drymatter variable class
-            Resize(Organs.Length);
-            BiomassType = Type;
+            Clear();
+            Start = totalOfAllOrgans;
 
-            // GET INITIAL STATE VARIABLES FOR MASS BALANCE CHECKS
-            Start = 0;
-            // GET SUPPLIES AND CALCULATE TOTAL
-            for (int i = 0; i < Organs.Length; i++)
+            for (int i = 0; i < suppliesForEachOrgan.Length; i++)
             {
-                BiomassSupplyType Supply = new BiomassSupplyType();
-                if (Type == "DM")
-                    Supply = Organs[i].DMSupply;
-                else
-                    Supply = Organs[i].NSupply;
-
-                if (Type == "DM")
-                    if (MathUtilities.IsLessThan(Supply.Fixation + Supply.Reallocation + Supply.Retranslocation + Supply.Uptake, 0))
-                        throw new Exception(Organs[i].Name + " is returning a negative " + Type + " supply.  Check your parameterisation");
-                ReallocationSupply[i] = Supply.Reallocation;
-                if (Type == "DM")
-                    UptakeSupply[i] = Supply.Uptake;  // Equivalent for N done elsewhere - not sure why NIH
-                FixationSupply[i] = Supply.Fixation;
-                RetranslocationSupply[i] = Supply.Retranslocation;
-                if (Type == "DM")
-                    Start += Organs[i].Total.Wt;
-                else
-                    Start += Organs[i].Total.N;
+                ReallocationSupply[i] = suppliesForEachOrgan[i].Reallocation;
+                UptakeSupply[i] = suppliesForEachOrgan[i].Uptake;
+                FixationSupply[i] = suppliesForEachOrgan[i].Fixation;
+                RetranslocationSupply[i] = suppliesForEachOrgan[i].Retranslocation;
             }
+        }
 
-            // SET OTHER ORGAN VARIABLES AND CALCULATE TOTALS
-            for (int i = 0; i < Organs.Length; i++)
+        /// <summary>Setup all demands</summary>
+        /// <param name="demandsForEachOrgan">The organs demands</param>
+        public void SetupDemands(BiomassPoolType[] demandsForEachOrgan)
+        {
+
+            for (int i = 0; i < demandsForEachOrgan.Length; i++)
             {
-
-                BiomassPoolType Demand = new BiomassPoolType();
-                if (Type == "DM")
-                    Demand = Organs[i].DMDemand;
-                else
-                    Demand = Organs[i].NDemand;
-                if (MathUtilities.IsLessThan(Demand.Structural, 0))
-                    throw new Exception(Organs[i].Name + " is returning a negative Structural " + Type + " demand.  Check your parameterisation");
-                if (MathUtilities.IsLessThan(Demand.Storage, 0))
-                    throw new Exception(Organs[i].Name + " is returning a negative Storage " + Type + " demand.  Check your parameterisation");
-                if (MathUtilities.IsLessThan(Demand.Metabolic, 0))
-                    throw new Exception(Organs[i].Name + " is returning a negative Metabolic " + Type + " demand.  Check your parameterisation");
-                StructuralDemand[i] = Demand.Structural;
-                MetabolicDemand[i] = Demand.Metabolic;
-                StorageDemand[i] = Demand.Storage;
+                if (MathUtilities.IsLessThan(demandsForEachOrgan[i].Structural, 0))
+                    throw new Exception((organs[i] as IOrgan).Name + " is returning a negative Structural " + BiomassType + " demand.  Check your parameterisation");
+                if (MathUtilities.IsLessThan(demandsForEachOrgan[i].Storage, 0))
+                    throw new Exception((organs[i] as IOrgan).Name + " is returning a negative Storage " + BiomassType + " demand.  Check your parameterisation");
+                if (MathUtilities.IsLessThan(demandsForEachOrgan[i].Metabolic, 0))
+                    throw new Exception((organs[i] as IOrgan).Name + " is returning a negative Metabolic " + BiomassType + " demand.  Check your parameterisation");
+                StructuralDemand[i] = demandsForEachOrgan[i].Structural;
+                MetabolicDemand[i] = demandsForEachOrgan[i].Metabolic;
+                StorageDemand[i] = demandsForEachOrgan[i].Storage;
                 Reallocation[i] = 0;
                 Uptake[i] = 0;
                 Fixation[i] = 0;
@@ -240,7 +212,39 @@ namespace Models.PMF
             Allocated = 0;
             SinkLimitation = 0;
             NutrientLimitation = 0;
+        }
+        
+        /// <summary>Clear the arbitration type</summary>
+        public void Clear()
+        {
+            TotalReallocation = 0;
+            TotalRetranslocation = 0;
+            TotalRespiration = 0;
+            Allocated = 0;
+            NotAllocated = 0;
+            SinkLimitation = 0;
+            NutrientLimitation = 0;
+            Start = 0;
+            End = 0;
+            BalanceError = 0;
 
+            Array.Clear(StructuralDemand, 0, StructuralDemand.Length);
+            Array.Clear(MetabolicDemand, 0, StructuralDemand.Length);
+            Array.Clear(StorageDemand, 0, StructuralDemand.Length);
+            Array.Clear(ReallocationSupply, 0, StructuralDemand.Length);
+            Array.Clear(UptakeSupply, 0, StructuralDemand.Length);
+            Array.Clear(FixationSupply, 0, StructuralDemand.Length);
+            Array.Clear(RetranslocationSupply, 0, StructuralDemand.Length);
+            Array.Clear(Reallocation, 0, StructuralDemand.Length);
+            Array.Clear(Uptake, 0, StructuralDemand.Length);
+            Array.Clear(Fixation, 0, StructuralDemand.Length);
+            Array.Clear(Retranslocation, 0, StructuralDemand.Length);
+            Array.Clear(Respiration, 0, StructuralDemand.Length);
+            Array.Clear(ConstrainedGrowth, 0, StructuralDemand.Length);
+            Array.Clear(StructuralAllocation, 0, StructuralDemand.Length);
+            Array.Clear(MetabolicAllocation, 0, StructuralDemand.Length);
+            Array.Clear(StorageAllocation, 0, StructuralDemand.Length);
+            Array.Clear(TotalAllocation, 0, StructuralDemand.Length);
         }
     }
 }

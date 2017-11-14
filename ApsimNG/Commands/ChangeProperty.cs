@@ -152,9 +152,12 @@ namespace UserInterface.Commands
                 catch (Exception e)
                 {
                     this.wasModified = false;
+                    Exception rethrow;
                     if (e is System.Reflection.TargetInvocationException)
-                        e = (e as System.Reflection.TargetInvocationException).InnerException;
-                    throw e; // Pass the exception on for further handling
+                        rethrow = (e as System.Reflection.TargetInvocationException).InnerException;
+                    else
+                        rethrow = e;
+                    throw rethrow; // Pass the exception on for further handling
                 }
 
                 return this.wasModified;

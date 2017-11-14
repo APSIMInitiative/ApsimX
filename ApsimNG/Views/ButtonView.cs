@@ -43,6 +43,8 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             button.Clicked -= OnButtonClick;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Get or sets the text of the button.</summary>

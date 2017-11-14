@@ -131,6 +131,7 @@ namespace UserInterface.Presenters
             {
                 (this.view as Views.ExplorerView).MainWidget.Destroy();
             }
+
             this.contextMenu = null;
             this.mainMenu = null;
             this.CommandHistory.Clear();
@@ -564,6 +565,104 @@ namespace UserInterface.Presenters
             this.view.PopulateContextMenu(descriptions);
         }
 
+        /// <summary>Hide the right hand panel.</summary>
+        public void HideRightHandPanel()
+        {
+            if (this.currentRightHandPresenter != null)
+            {
+                try
+                {
+                    this.currentRightHandPresenter.Detach();
+                    this.currentRightHandPresenter = null;
+                }
+                catch (Exception err)
+                {
+                    MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                }
+            }
+
+            this.view.AddRightHandView(null);
+        }
+
+        /// <summary>Display a view on the right hand panel in view.</summary>
+        public void ShowRightHandPanel()
+        {
+            if (this.view.SelectedNode != string.Empty)
+            {
+                object model = Apsim.Get(this.ApsimXFile, this.view.SelectedNode);
+
+                if (model != null)
+                {
+                    ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
+                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+
+                    if (this.advancedMode)
+                    {
+                        viewName = new ViewNameAttribute("UserInterface.Views.GridView");
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.PropertyPresenter");
+                    }
+
+                    if (viewName == null && presenterName == null)
+                    {
+                        viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
+                    }
+
+                    if (viewName != null && presenterName != null)
+                    {
+                        this.ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
+                    }
+                }
+            }
+        }
+
+        /// <summary>Show a view in the right hand panel.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="viewName">The view name.</param>
+        /// <param name="presenterName">The presenter name.</param>
+        public void ShowInRightHandPanel(object model, string viewName, string presenterName)
+        {
+            try
+            {
+                object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
+                this.currentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName) as IPresenter;
+                if (newView != null && this.currentRightHandPresenter != null)
+                {
+                    // Resolve links in presenter.
+                    ApsimXFile.Links.Resolve(currentRightHandPresenter);
+                    this.view.AddRightHandView(newView);
+                    this.currentRightHandPresenter.Attach(model, newView, this);
+                }
+            }
+            catch (Exception err)
+            {
+                if (err is System.Reflection.TargetInvocationException)
+                {
+                    err = (err as System.Reflection.TargetInvocationException).InnerException;
+                }
+
+                string message = err.Message;
+                message += "\r\n" + err.StackTrace;
+                MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
+            }
+        }
+
+        /// <summary>Get a screen shot of the right hand panel.</summary>
+        /// <returns>The image</returns>
+        public System.Drawing.Image GetScreenhotOfRightHandPanel()
+        {
+            return this.view.GetScreenshotOfRightHandPanel();
+        }
+
+        /// <summary>
+        /// Get the View object
+        /// </summary>
+        /// <returns>Returns the View object</returns>
+        public ViewBase GetView()
+        {
+            return this.view as ExplorerView;
+        }
+
         #region Events from view
 
         /// <summary>A node has been dragged over another node. Allow drop?</summary>
@@ -762,8 +861,8 @@ namespace UserInterface.Presenters
         }
         #endregion
 
-        #region Privates 
-        
+        #region Privates        
+
         /// <summary>
         /// Write all errors thrown during the loading of the <code>.apsimx</code> file.
         /// </summary>
@@ -840,103 +939,6 @@ namespace UserInterface.Presenters
             return description;
         }
 
-        /// <summary>Hide the right hand panel.</summary>
-        public void HideRightHandPanel()
-        {
-            if (this.currentRightHandPresenter != null)
-            {
-                try
-                {
-                    this.currentRightHandPresenter.Detach();
-                    this.currentRightHandPresenter = null;
-                }
-                catch (Exception err)
-                {
-                    MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
-                }
-            }
-
-            this.view.AddRightHandView(null);
-        }
-
-        /// <summary>Display a view on the right hand panel in view.</summary>
-        public void ShowRightHandPanel()
-        {
-            if (this.view.SelectedNode != string.Empty)
-            {
-                object model = Apsim.Get(this.ApsimXFile,  this.view.SelectedNode);
-
-                if (model != null)
-                {
-                    ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
-                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
-
-                    if (this.advancedMode)
-                    {
-                        viewName = new ViewNameAttribute("UserInterface.Views.GridView");
-                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.PropertyPresenter");
-                    }
-
-                    if (viewName == null && presenterName == null)
-                    {
-                        viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
-                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
-                    }
-
-                    if (viewName != null && presenterName != null)
-                    {
-                        this.ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
-                    }
-                }
-            }
-        }
-
-        /// <summary>Show a view in the right hand panel.</summary>
-        /// <param name="model">The model.</param>
-        /// <param name="viewName">The view name.</param>
-        /// <param name="presenterName">The presenter name.</param>
-        public void ShowInRightHandPanel(object model, string viewName, string presenterName)
-        {
-            try
-            {
-                object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
-                this.currentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName) as IPresenter;
-                if (newView != null && this.currentRightHandPresenter != null)
-                {
-                    // Resolve links in presenter.
-                    ApsimXFile.Links.Resolve(currentRightHandPresenter);
-                    this.view.AddRightHandView(newView);
-                    this.currentRightHandPresenter.Attach(model, newView, this);
-                }
-            }
-            catch (Exception err)
-            {
-                if (err is System.Reflection.TargetInvocationException)
-                {
-                    err = (err as System.Reflection.TargetInvocationException).InnerException;
-                }
-
-                string message = err.Message;
-                message += "\r\n" + err.StackTrace;
-                MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
-            }
-        }
-
-        /// <summary>Get a screen shot of the right hand panel.</summary>
-        /// <returns>The image</returns>
-        public System.Drawing.Image GetScreenhotOfRightHandPanel()
-        {
-            return this.view.GetScreenshotOfRightHandPanel();
-        }
-
-        /// <summary>
-        /// Get the View object
-        /// </summary>
-        /// <returns>Returns the View object</returns>
-        public ViewBase GetView()
-        {
-            return this.view as ExplorerView;
-        }
         #endregion
     }
 
@@ -944,7 +946,7 @@ namespace UserInterface.Presenters
     /// An object that encompasses the data that is dragged during a drag/drop operation.
     /// </summary>
     [Serializable]
-    public class DragObject : ISerializable
+    public sealed class DragObject : ISerializable
     {
         /// <summary>Path to the node</summary>
         private string nodePath;

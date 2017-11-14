@@ -42,6 +42,13 @@ namespace UserInterface.Views
             vbox.PackStart(buttonPanel, false, true, 0);
             vbox.PackStart(scrolledwindow1, true, true, 0);
             _mainWidget.ShowAll();
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>The list.</summary>

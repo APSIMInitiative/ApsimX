@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
     /// 
     /// **Root Growth**
     /// 
-    /// Roots grow downwards through the soil profile, with initial depth determined by sowng depth and the growth rate determined by RootFrontVelocity. 
+    /// Roots grow downwards through the soil profile, with initial depth determined by sowing depth and the growth rate determined by RootFrontVelocity. 
     /// The RootFrontVelocity is modified by multiplying it by the soil's XF value; which represents any resistance posed by the soil to root extension. 
     /// Root depth is also constrained by a maximum root depth.
     /// 
@@ -162,6 +162,10 @@ namespace Models.PMF.Organs
         [Link]
         [Units("mm")]
         public IFunction MaximumRootDepth = null;
+        
+        /// <summary>Dry matter efficiency function</summary>
+        [Link]
+        public IFunction DMConversionEfficiency = null;
 
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
@@ -175,6 +179,11 @@ namespace Models.PMF.Organs
 
         /// <summary>The live weights for each addition zone.</summary>
         public List<double> ZoneInitialDM { get; set; }
+
+        /// <summary>The proportion of biomass respired each day</summary> 
+        [Link]
+        [Units("/d")]
+        public IFunction MaintenanceRespirationFunction = null;
 
         private double BiomassToleranceValue = 0.0000000001;   // 10E-10
         
@@ -518,19 +527,6 @@ namespace Models.PMF.Organs
             NReallocationSupply = AvailableNReallocation();
         }
 
-        /// <summary>Computes the DM and N amounts demanded this computation round</summary>
-        public void DoDMDemandCalculations()
-        {
-            if (Plant.SowingData.Depth < PlantZone.Depth)
-            {
-                StructuralDMDemand = DemandedDMStructural();
-                StorageDMDemand = DemandedDMStorage();
-                TotalDMDemand = StructuralDMDemand + StorageDMDemand + MetabolicDMDemand;
-                ////This sum is currently not necessary as demand is not calculated on a layer basis.
-                //// However it might be some day... and can consider non structural too
-            }
-        }
-
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -544,6 +540,14 @@ namespace Models.PMF.Organs
                 // Do Root Senescence
                 DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value() });
             }
+            needToRecalculateLiveDead = false;
+            // Do maintenance respiration
+            MaintenanceRespiration = 0;
+            MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
+            Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
+            MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
+            Live.StorageWt *= (1 - MaintenanceRespirationFunction.Value());
+            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -567,32 +571,89 @@ namespace Models.PMF.Organs
 
         #region IArbitrator interface
 
-        /// <summary>Gets the DM demand for this computation round.</summary>
-        public override BiomassPoolType DMDemand
+        /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
+        public override BiomassSupplyType CalculateDryMatterSupply()
         {
-            get
+            dryMatterSupply.Fixation = 0.0;
+            dryMatterSupply.Retranslocation = DMRetranslocationSupply;
+            dryMatterSupply.Reallocation = DMReallocationSupply;
+            return dryMatterSupply;
+        }
+
+        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
+        public override BiomassSupplyType CalculateNitrogenSupply()
+        {
+            nitrogenSupply.Fixation = 0.0;
+            nitrogenSupply.Uptake = 0.0;
+            nitrogenSupply.Retranslocation = NRetranslocationSupply;
+            nitrogenSupply.Reallocation = NReallocationSupply;
+
+            return nitrogenSupply;
+        }
+
+        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        public override BiomassPoolType CalculateDryMatterDemand()
+        {
+            if (Plant.SowingData.Depth < PlantZone.Depth)
             {
-                if (Plant.IsEmerged)
-                    DoDMDemandCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
-                return new BiomassPoolType
-                {
-                    Structural = StructuralDMDemand,
-                    Storage = StorageDMDemand,
-                    Metabolic = 0.0
-                };
+                StructuralDMDemand = DemandedDMStructural();
+                StorageDMDemand = DemandedDMStorage();
+                TotalDMDemand = StructuralDMDemand + StorageDMDemand + MetabolicDMDemand;
+                ////This sum is currently not necessary as demand is not calculated on a layer basis.
+                //// However it might be some day... and can consider non structural too
             }
+
+            dryMatterDemand.Structural = StructuralDMDemand;
+            dryMatterDemand.Storage = StorageDMDemand;
+
+            return dryMatterDemand;
+        }
+
+        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
+        public override BiomassPoolType CalculateNitrogenDemand()
+        {
+            // This is basically the old/original function with added metabolicN.
+            // Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum.
+
+            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value();
+            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value() : CriticalNConc.Value();
+
+            StructuralNDemand = 0.0;
+            MetabolicNDemand = 0.0;
+            StorageNDemand = 0.0;
+            foreach (ZoneState Z in Zones)
+            {
+                Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
+                Z.StorageNDemand = new double[Z.soil.Thickness.Length];
+                //Note: MetabolicN is assumed to be zero
+
+                double NDeficit = 0.0;
+                for (int i = 0; i < Z.LayerLive.Length; i++)
+                {
+                    Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * MinimumNConc.Value() * NitrogenSwitch;
+                    NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
+                    Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
+
+                    StructuralNDemand += Z.StructuralNDemand[i];
+                    StorageNDemand += Z.StorageNDemand[i];
+                }
+            }
+            nitrogenDemand.Structural = StructuralNDemand;
+            nitrogenDemand.Storage = StorageNDemand;
+            nitrogenDemand.Metabolic = MetabolicNDemand;
+            return nitrogenDemand;
         }
 
         /// <summary>Computes the amount of structural DM demanded.</summary>
         public double DemandedDMStructural()
         {
-            if (DMConversionEfficiency > 0.0)
+            if (DMConversionEfficiency.Value() > 0.0)
             {
                 double demandedDM = DMDemandFunction.Value();
                 if (StructuralFraction != null)
-                    demandedDM *= StructuralFraction.Value() / DMConversionEfficiency;
+                    demandedDM *= StructuralFraction.Value() / DMConversionEfficiency.Value();
                 else
-                    demandedDM /= DMConversionEfficiency;
+                    demandedDM /= DMConversionEfficiency.Value();
 
                 return demandedDM;
             }
@@ -603,7 +664,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of non structural DM demanded.</summary>
         public double DemandedDMStorage()
         {
-            if ((DMConversionEfficiency > 0.0) && (StructuralFraction != null))
+            if ((DMConversionEfficiency.Value() > 0.0) && (StructuralFraction != null))
             {
                 double rootLiveStructuralWt = 0.0;
                 double rootLiveStorageWt = 0.0;
@@ -616,25 +677,11 @@ namespace Models.PMF.Organs
 
                 double theoreticalMaximumDM = (rootLiveStructuralWt + StructuralDMDemand) / StructuralFraction.Value();
                 double baseAllocated = rootLiveStructuralWt + rootLiveStorageWt + StructuralDMDemand;
-                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency;
+                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency.Value();
                 return demandedDM;
             }
             // Either there is no Storage fraction or conversion efficiency is zero!!!!
             return 0.0;
-        }
-
-        /// <summary>Gets the DM supply for this computation round.</summary>
-        public override BiomassSupplyType DMSupply
-        {
-            get
-            {
-                return new BiomassSupplyType
-                {
-                    Fixation = 0.0,
-                    Retranslocation = DMRetranslocationSupply,
-                    Reallocation = DMReallocationSupply
-                };
-            }
         }
 
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
@@ -678,126 +725,55 @@ namespace Models.PMF.Organs
             return 0.0;
         }
 
-        /// <summary>Sets the dm potential allocation.</summary>
-        public override BiomassPoolType DMPotentialAllocation
+        /// <summary>Sets the dry matter potential allocation.</summary>
+        public override void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
-            set
+            if (PlantZone.Uptake == null)
+                throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
+
+            if (PlantZone.Depth <= 0)
+                return; //cannot allocate growth where no length
+
+            if (DMDemand.Structural == 0 && dryMatter.Structural > 0.000000000001)
+                throw new Exception("Invalid allocation of potential DM in" + Name);
+
+
+            double TotalRAw = 0;
+            foreach (ZoneState Z in Zones)
+                TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
+
+            if (TotalRAw == 0 && dryMatter.Structural > 0)
+                throw new Exception("Error trying to partition potential root biomass");
+
+            if (TotalRAw > 0)
             {
-                if (PlantZone.Uptake == null)
-                    throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
-
-                if (PlantZone.Depth <= 0)
-                    return; //cannot allocate growth where no length
-
-                if (DMDemand.Structural == 0 && value.Structural > 0.000000000001)
-                    throw new Exception("Invalid allocation of potential DM in" + Name);
-
-
-                double TotalRAw = 0;
                 foreach (ZoneState Z in Zones)
-                    TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
-
-                if (TotalRAw == 0 && value.Structural > 0)
-                    throw new Exception("Error trying to partition potential root biomass");
-
-                if (TotalRAw > 0)
                 {
-                    foreach (ZoneState Z in Zones)
-                    {
-                        double[] RAw = Z.CalculateRootActivityValues();
-                        for (int layer = 0; layer < Z.soil.Thickness.Length; layer++)
-                            Z.LayerLive[layer].PotentialDMAllocation = value.Structural * RAw[layer] / TotalRAw;
-                    }
-                    needToRecalculateLiveDead = true;
+                    double[] RAw = Z.CalculateRootActivityValues();
+                    for (int layer = 0; layer < Z.soil.Thickness.Length; layer++)
+                        Z.LayerLive[layer].PotentialDMAllocation = dryMatter.Structural * RAw[layer] / TotalRAw;
                 }
-            }
-        }
-
-        /// <summary>Sets the dm allocation.</summary>
-        public override BiomassAllocationType DMAllocation
-        {
-            set
-            {
-                double TotalRAw = 0;
-                foreach (ZoneState Z in Zones)
-                    TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
-
-                Allocated.StructuralWt = value.Structural;
-                Allocated.StorageWt = value.Storage;
-                Allocated.MetabolicWt = value.Metabolic;
-
-                if (TotalRAw == 0 && Allocated.Wt > 0)
-                    throw new Exception("Error trying to partition root biomass");
-
-                foreach (ZoneState Z in Zones)
-                    Z.PartitionRootMass(TotalRAw, Allocated.Wt);
                 needToRecalculateLiveDead = true;
             }
         }
 
-        /// <summary>Gets the N demand for this computation round.</summary>
-        [Units("g/m2")]
-        public override BiomassPoolType NDemand
+        /// <summary>Sets the dry matter allocation.</summary>
+        public override void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
-            get
-            {
-                DoNDemandCalculations();
-                return new BiomassPoolType
-                {
-                    Structural = StructuralNDemand,
-                    Metabolic = MetabolicNDemand,
-                    Storage = StorageNDemand
-                };
-            }
-        }
-
-        /// <summary>Computes the N demanded for this organ.</summary>
-        /// <remarks>
-        /// This is basic the old/original function. with added metabolicN
-        /// Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum
-        /// </remarks>
-        private void DoNDemandCalculations()
-        {
-            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value();
-            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value() : CriticalNConc.Value();
-
-            StructuralNDemand = 0.0;
-            MetabolicNDemand = 0.0;
-            StorageNDemand = 0.0;
+            double TotalRAw = 0;
             foreach (ZoneState Z in Zones)
-            {
-                Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
-                Z.StorageNDemand = new double[Z.soil.Thickness.Length];
-                //Note: MetabolicN is assumed to be zero
+                TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
-                double NDeficit = 0.0;
-                for (int i = 0; i < Z.LayerLive.Length; i++)
-                {
-                    Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * MinimumNConc.Value() * NitrogenSwitch;
-                    NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
-                    Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
+            Allocated.StructuralWt = dryMatter.Structural;
+            Allocated.StorageWt = dryMatter.Storage;
+            Allocated.MetabolicWt = dryMatter.Metabolic;
+            GrowthRespiration = (dryMatter.Structural + dryMatter.Storage + dryMatter.Metabolic) * (1 - DMConversionEfficiency.Value());
+            if (TotalRAw == 0 && Allocated.Wt > 0)
+                throw new Exception("Error trying to partition root biomass");
 
-                    StructuralNDemand += Z.StructuralNDemand[i];
-                    StorageNDemand += Z.StorageNDemand[i];
-                }
-            }
-        }
-
-
-        /// <summary>Gets the N supply for this computation round.</summary>
-        [XmlIgnore]
-        public override BiomassSupplyType NSupply
-        {
-            get
-            {
-                return new BiomassSupplyType()
-                {
-                    Fixation = 0.0,
-                    Uptake = 0.0, // computed via arbitrator
-                    Retranslocation = NRetranslocationSupply,
-                    Reallocation = NReallocationSupply
-                };
-            }
+            foreach (ZoneState Z in Zones)
+                Z.PartitionRootMass(TotalRAw, Allocated.Wt);
+            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Computes the N amount available for retranslocation.</summary>
@@ -889,53 +865,49 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the n allocation.</summary>
-        public override BiomassAllocationType NAllocation
+        public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
-            set
+            double totalStructuralNDemand = 0;
+            double totalNDemand = 0;
+
+            foreach (ZoneState Z in Zones)
             {
-                double totalStructuralNDemand = 0;
-                double totalNDemand = 0;
+                totalStructuralNDemand += MathUtilities.Sum(Z.StructuralNDemand);
+                totalNDemand += MathUtilities.Sum(Z.StructuralNDemand) + MathUtilities.Sum(Z.StorageNDemand);
+            }
+            NTakenUp = nitrogen.Uptake;
+            Allocated.StructuralN = nitrogen.Structural;
+            Allocated.StorageN = nitrogen.Storage;
+            Allocated.MetabolicN = nitrogen.Metabolic;
 
-                foreach (ZoneState Z in Zones)
+            double surplus = Allocated.N - totalNDemand;
+            if (surplus > 0.000000001)
+                throw new Exception("N Allocation to roots exceeds Demand");
+            double NAllocated = 0;
+
+            foreach (ZoneState Z in Zones)
+            {
+                for (int i = 0; i < Z.LayerLive.Length; i++)
                 {
-                    totalStructuralNDemand += MathUtilities.Sum(Z.StructuralNDemand);
-                    totalNDemand += MathUtilities.Sum(Z.StructuralNDemand) + MathUtilities.Sum(Z.StorageNDemand);
-                }
-                NTakenUp = value.Uptake;
-                Allocated.StructuralN = value.Structural;
-                Allocated.StorageN = value.Storage;
-                Allocated.MetabolicN = value.Metabolic;
-
-                double surplus = Allocated.N - totalNDemand;
-                if (surplus > 0.000000001)
-                    throw new Exception("N Allocation to roots exceeds Demand");
-                double NAllocated = 0;
-
-                foreach (ZoneState Z in Zones)
-                {
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                    if (totalStructuralNDemand > 0)
                     {
-                        if (totalStructuralNDemand > 0)
-                        {
-                            double StructFrac = Z.StructuralNDemand[i] / totalStructuralNDemand;
-                            Z.LayerLive[i].StructuralN += value.Structural * StructFrac;
-                            NAllocated += value.Structural * StructFrac;
-                        }
-                        double totalStorageNDemand = MathUtilities.Sum(Z.StorageNDemand);
-                        if (totalStorageNDemand > 0)
-                        {
-                            double NonStructFrac = Z.StorageNDemand[i] / totalStorageNDemand;
-                            Z.LayerLive[i].StorageN += value.Storage * NonStructFrac;
-                            NAllocated += value.Storage * NonStructFrac;
-                        }
+                        double StructFrac = Z.StructuralNDemand[i] / totalStructuralNDemand;
+                        Z.LayerLive[i].StructuralN += nitrogen.Structural * StructFrac;
+                        NAllocated += nitrogen.Structural * StructFrac;
+                    }
+                    double totalStorageNDemand = MathUtilities.Sum(Z.StorageNDemand);
+                    if (totalStorageNDemand > 0)
+                    {
+                        double NonStructFrac = Z.StorageNDemand[i] / totalStorageNDemand;
+                        Z.LayerLive[i].StorageN += nitrogen.Storage * NonStructFrac;
+                        NAllocated += nitrogen.Storage * NonStructFrac;
                     }
                 }
-                needToRecalculateLiveDead = true;
-
-                if (!MathUtilities.FloatsAreEqual(NAllocated - Allocated.N, 0.0))
-                    throw new Exception("Error in N Allocation: " + Name);
-
             }
+            needToRecalculateLiveDead = true;
+
+            if (!MathUtilities.FloatsAreEqual(NAllocated - Allocated.N, 0.0))
+                throw new Exception("Error in N Allocation: " + Name);
         }
 
         /// <summary>Gets or sets the minimum nconc.</summary>

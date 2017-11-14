@@ -67,6 +67,10 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             button1.Clicked -= OnBrowseButtonClick;
+            Grid.MainWidget.Destroy();
+            Grid = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>

@@ -1849,100 +1849,100 @@ But their data suggests a value of 0.3]]></MemoText>
           <RegrStats>
             <Name>TOC0_10cm</Name>
             <n>148</n>
-            <Slope>0.7874833030590479</Slope>
-            <Intercept>3684.8794087651349</Intercept>
-            <SEslope>0.034354659113398356</SEslope>
-            <SEintercept>532.52278485031718</SEintercept>
-            <R2>0.78255230459360248</R2>
-            <RMSE>1799.1007165602537</RMSE>
-            <NSE>0.76535104578524837</NSE>
-            <ME>486.6690039045</ME>
-            <MAE>1344.8905319095504</MAE>
-            <RSR>0.48276649459950632</RSR>
+            <Slope>0.787353619259872</Slope>
+            <Intercept>3559.0853580548883</Intercept>
+            <SEslope>0.032531059342936951</SEslope>
+            <SEintercept>504.25563118673233</SEintercept>
+            <R2>0.80048968611759386</R2>
+            <RMSE>1698.1925894166807</RMSE>
+            <NSE>0.79093489414595974</NSE>
+            <ME>358.92331324390614</ME>
+            <MAE>1263.111417408868</MAE>
+            <RSR>0.45568904286526235</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TOC0_30cm</Name>
             <n>199</n>
-            <Slope>0.76695027683107775</Slope>
-            <Intercept>9930.7870148555921</Intercept>
-            <SEslope>0.029438360059518342</SEslope>
-            <SEintercept>1108.3153810094202</SEintercept>
-            <R2>0.77504889285991818</R2>
-            <RMSE>3855.500419094953</RMSE>
-            <NSE>0.74412714038743011</NSE>
-            <ME>1338.4606563386783</ME>
-            <MAE>2821.4659217244866</MAE>
-            <RSR>0.50456621601944884</RSR>
+            <Slope>0.68075679581449278</Slope>
+            <Intercept>12300.345036422161</Intercept>
+            <SEslope>0.023002575389828389</SEslope>
+            <SEintercept>866.01658705959483</SEintercept>
+            <R2>0.81637739249348951</R2>
+            <RMSE>3501.0636414472756</RMSE>
+            <NSE>0.7890095860854921</NSE>
+            <ME>530.145266168517</ME>
+            <MAE>2450.1280533434824</MAE>
+            <RSR>0.45818136210266575</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TOC10_30cm</Name>
             <n>117</n>
-            <Slope>0.15159564813148291</Slope>
-            <Intercept>16106.853615861513</Intercept>
-            <SEslope>0.024583927218281971</SEslope>
-            <SEintercept>436.53614640743217</SEintercept>
-            <R2>0.24848954970349291</R2>
-            <RMSE>2769.8207853718541</RMSE>
-            <NSE>0.017066115823270112</NSE>
-            <ME>1229.3871791993774</ME>
-            <MAE>2317.1546420837426</MAE>
-            <RSR>0.98718424818649086</RSR>
+            <Slope>0.15696385099964427</Slope>
+            <Intercept>15969.768264223691</Intercept>
+            <SEslope>0.024549023531696686</SEslope>
+            <SEintercept>435.91636256646711</SEintercept>
+            <R2>0.26226190691040285</R2>
+            <RMSE>2737.834734214412</RMSE>
+            <NSE>0.039636989140940937</NSE>
+            <ME>1186.4376695340413</ME>
+            <MAE>2282.7428399119617</MAE>
+            <RSR>0.975784187203818</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TOC30_60cm</Name>
             <n>171</n>
-            <Slope>0.88641356698157081</Slope>
-            <Intercept>3683.941245779366</Intercept>
-            <SEslope>0.030168695877581069</SEslope>
-            <SEintercept>665.79060913219234</SEintercept>
-            <R2>0.83628726212394588</R2>
-            <RMSE>3550.8035069195171</RMSE>
-            <NSE>0.80512924129324326</NSE>
-            <ME>1349.6447276416518</ME>
-            <MAE>2859.8758430651656</MAE>
-            <RSR>0.44014902433903025</RSR>
+            <Slope>0.85573884552142765</Slope>
+            <Intercept>4048.0582290969323</Intercept>
+            <SEslope>0.028401662774927866</SEslope>
+            <SEintercept>626.79409265875461</SEintercept>
+            <R2>0.84305494878999276</R2>
+            <RMSE>3367.5566078708075</RMSE>
+            <NSE>0.82472369654401145</NSE>
+            <ME>1083.3704433010537</ME>
+            <MAE>2640.7942729867518</MAE>
+            <RSR>0.41743418143874961</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TON0_10cm</Name>
             <n>9</n>
-            <Slope>0.43191903722711572</Slope>
-            <Intercept>783.93930674904789</Intercept>
-            <SEslope>0.070850693133551107</SEslope>
-            <SEintercept>129.45031686753006</SEintercept>
-            <R2>0.84149803212612884</R2>
-            <RMSE>382.65484411769245</RMSE>
-            <NSE>0.49164602225774445</NSE>
-            <ME>-208.20505707063776</ME>
-            <MAE>328.66853034955557</MAE>
-            <RSR>0.6722129145126271</RSR>
+            <Slope>0.43853101802139133</Slope>
+            <Intercept>768.36073122151492</Intercept>
+            <SEslope>0.070190905999468589</SEslope>
+            <SEintercept>128.2448289633947</SEintercept>
+            <R2>0.84793725710612555</R2>
+            <RMSE>381.81227980388974</RMSE>
+            <NSE>0.49388223783938867</NSE>
+            <ME>-212.23591333170552</ME>
+            <MAE>328.68798396056991</MAE>
+            <RSR>0.6707327748469406</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TON0_30cm</Name>
             <n>61</n>
-            <Slope>0.84343570474735652</Slope>
-            <Intercept>608.42313151044027</Intercept>
-            <SEslope>0.10532457543226971</SEslope>
-            <SEintercept>372.13356318590417</SEintercept>
-            <R2>0.52082203869589527</R2>
-            <RMSE>317.9689670040699</RMSE>
-            <NSE>0.29724149673629086</NSE>
-            <ME>58.445800901281437</ME>
-            <MAE>220.08466532575463</MAE>
-            <RSR>0.83140716382688484</RSR>
+            <Slope>0.76288443908545789</Slope>
+            <Intercept>714.7758236559057</Intercept>
+            <SEslope>0.082874457102653648</SEslope>
+            <SEintercept>292.81264028014192</SEintercept>
+            <R2>0.58952978795620969</R2>
+            <RMSE>283.45943767693274</RMSE>
+            <NSE>0.44150604118650827</NSE>
+            <ME>-118.16110508150018</ME>
+            <MAE>173.65761521444057</MAE>
+            <RSR>0.74117360998919679</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TON30_60cm</Name>
             <n>54</n>
-            <Slope>0.68093758770541091</Slope>
-            <Intercept>631.95205727547409</Intercept>
-            <SEslope>0.064650045379902349</SEslope>
-            <SEintercept>183.85606877461464</SEintercept>
-            <R2>0.68085851112848661</R2>
-            <RMSE>285.62869601481935</RMSE>
-            <NSE>-3.1058276056315259</NSE>
-            <ME>-274.30336490497172</ME>
-            <MAE>274.30336490497172</MAE>
-            <RSR>2.0074346218701109</RSR>
+            <Slope>0.8753985784135655</Slope>
+            <Intercept>21.446926389309738</Intercept>
+            <SEslope>0.084575633320103052</SEslope>
+            <SEintercept>240.52177171698287</SEintercept>
+            <R2>0.67322824274327964</R2>
+            <RMSE>343.85151701602842</RMSE>
+            <NSE>-4.9503008639615986</NSE>
+            <ME>-332.46725959082573</ME>
+            <MAE>332.46725959082573</MAE>
+            <RSR>2.416631975957773</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
