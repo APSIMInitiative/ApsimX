@@ -195,6 +195,8 @@ namespace UserInterface.Views
             spinNYears.ValueChanged -= OnGraphShowYearsValueChanged;
             notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
             worksheetCombo.Changed -= WorksheetCombo_Changed;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Gets or sets the filename.</summary>

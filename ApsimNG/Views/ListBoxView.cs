@@ -111,6 +111,11 @@ namespace UserInterface.Views
             listview.SelectionChanged -= OnSelectionChanged;
             listview.ButtonPressEvent -= OnDoubleClick;
             ClearPopup();
+            Popup.Destroy();
+            listmodel.Dispose();
+            accel.Dispose();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Get or sets the list of valid values.</summary>
@@ -405,8 +410,9 @@ namespace UserInterface.Views
                             (w as MenuItem).Activated -= handler;
                         }
                     }
-                    Popup.Remove(w);
                 }
+                Popup.Remove(w);
+                w.Destroy();
             }
         }
     }

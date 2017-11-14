@@ -96,11 +96,12 @@ namespace Models.PMF.Functions.SupplyFunctions
         /// <returns>g dry matter/m2 soil/day</returns>
         public double Value(int arrayIndex = -1)
         {
-            if (Double.IsNaN(RadnInt.Value(arrayIndex)))
+            double radiationInterception = RadnInt.Value(arrayIndex);
+            if (Double.IsNaN(radiationInterception))
                 throw new Exception("NaN Radiation interception value supplied to RUE model");
-            if (RadnInt.Value(arrayIndex) < 0)
+            if (radiationInterception < 0)
                 throw new Exception("Negative Radiation interception value supplied to RUE model");
-            return RadnInt.Value(arrayIndex) * RueAct;
+            return radiationInterception * RueAct;
         }
         #endregion
     }

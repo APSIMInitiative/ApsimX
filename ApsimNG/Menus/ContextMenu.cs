@@ -304,9 +304,11 @@ namespace UserInterface.Presenters
             List<DataTable> tables = new List<DataTable>();
             foreach (string tableName in storage.TableNames)
             {
-                DataTable table = storage.GetData(tableName);
-                table.TableName = tableName;
-                tables.Add(table);
+                using (DataTable table = storage.GetData(tableName))
+                {
+                    table.TableName = tableName;
+                    tables.Add(table);
+                }
             }
             try
             {
@@ -417,6 +419,7 @@ namespace UserInterface.Presenters
         public void AddModel(object sender, EventArgs e)
         {
             object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+            explorerPresenter.HideRightHandPanel();
             explorerPresenter.ShowInRightHandPanel(model,
                                                    "UserInterface.Views.ListButtonView",
                                                    "UserInterface.Presenters.AddModelPresenter");

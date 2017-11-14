@@ -129,6 +129,8 @@ namespace UserInterface.Views
             entryMax.Changed -= OnMaximumChanged;
             entryInterval.Changed -= OnIntervalChanged;
             checkbutton1.Toggled -= OnCheckedChanged;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>
@@ -173,7 +175,8 @@ namespace UserInterface.Views
                 if (String.IsNullOrEmpty(entryMin.Text))
                     return double.NaN;
                 else
-                    return Convert.ToDouble(entryMin.Text);
+                    return Convert.ToDouble(entryMin.Text, 
+                                            System.Globalization.CultureInfo.InvariantCulture);
             }
             
             set
@@ -195,7 +198,8 @@ namespace UserInterface.Views
                 if (String.IsNullOrEmpty(entryMax.Text))
                     return double.NaN;
                 else
-                    return Convert.ToDouble(entryMax.Text);
+                    return Convert.ToDouble(entryMax.Text, 
+                                            System.Globalization.CultureInfo.InvariantCulture);
             }
             
             set
@@ -217,7 +221,8 @@ namespace UserInterface.Views
                 if (String.IsNullOrEmpty(entryInterval.Text))
                     return double.NaN;
                 else
-                    return Convert.ToDouble(entryInterval.Text);
+                    return Convert.ToDouble(entryInterval.Text, 
+                                            System.Globalization.CultureInfo.InvariantCulture);
             }
 
             set

@@ -33,7 +33,11 @@ namespace Models.PMF.Functions
                     for (int i = 1; i < ChildFunctions.Count; i++)
                     {
                         F = ChildFunctions[i] as IFunction;
-                        returnValue = returnValue / F.Value(arrayIndex);
+                        double denominator = F.Value(arrayIndex);
+                        if (denominator == 0)
+                            returnValue = 0;
+                        else
+                            returnValue = returnValue / denominator;
                     }
 
             }

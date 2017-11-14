@@ -109,8 +109,10 @@ namespace Models.PostSimulationTools
                 if (!Convert.IsDBNull(view[row][observedColumnName]) &&
                     !Convert.IsDBNull(view[row][predictedColumnName]))
                 {
-                    observedData.Add(Convert.ToDouble(view[row][observedColumnName]));
-                    predictedData.Add(Convert.ToDouble(view[row][predictedColumnName]));
+                    observedData.Add(Convert.ToDouble(view[row][observedColumnName], 
+                                                      System.Globalization.CultureInfo.InvariantCulture));
+                    predictedData.Add(Convert.ToDouble(view[row][predictedColumnName], 
+                                                       System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
 
