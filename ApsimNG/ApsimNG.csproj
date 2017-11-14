@@ -104,6 +104,7 @@
     <EmbeddedResource Include="Resources\Glade\MainView.glade" />
     <EmbeddedResource Include="Resources\Glade\UpgradeForm.glade" />
     <EmbeddedResource Include="Resources\Glade\TreeProxyView.glade" />
+    <EmbeddedResource Include="Resources\Glade\ModelDetailsWrapperView.glade" />
     <None Include="Resources\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Test.xshd" />
@@ -153,6 +154,7 @@
     <Compile Include="Interfaces\IGridColumn.cs" />
     <Compile Include="Interfaces\IGridView.cs" />
     <Compile Include="Interfaces\IInitialWaterView.cs" />
+    <Compile Include="Interfaces\IModelDetailsWrapperView.cs" />
     <Compile Include="Interfaces\ISeriesView.cs" />
     <Compile Include="Interfaces\ISummaryView.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
@@ -190,6 +192,7 @@
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
+    <Compile Include="Presenters\ModelDetailsWrapperPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -230,6 +233,7 @@
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
     <Compile Include="Views\MemoView.cs" />
+    <Compile Include="Views\ModelDetailsWrapperView.cs" />
     <Compile Include="Views\ProfileView.cs" />
     <Compile Include="Views\ReportView.cs" />
     <Compile Include="Views\SeriesView.cs" />

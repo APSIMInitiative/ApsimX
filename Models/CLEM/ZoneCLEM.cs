@@ -17,6 +17,7 @@ namespace Models.CLEM
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(Simulation))]
     [Description("This manages all CLEM resources and activities in the simulation.")]
+    [HelpUri("http://www.csiro.au")]
     public class ZoneCLEM: Zone, IValidatableObject
 	{
 		[Link]
