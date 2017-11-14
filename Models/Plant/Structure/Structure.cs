@@ -381,18 +381,31 @@ namespace Models.PMF.Struct
                     if (DeltaPlantPopulation > 0)
                     {
                         TotalStemPopn -= DeltaPlantPopulation * TotalStemPopn / Plant.Population;
-                        RemoveFromCohorts(DeltaPlantPopulation / Plant.Population);
+                        // Reduce cohort population in case of plant mortality
+                        // RemoveFromCohorts(DeltaPlantPopulation / Plant.Population, 0);
                     }
-                    //Reduce stem number incase of mortality
+
+                    // Reduce stem number incase of mortality
                     double PropnMortality = 0;
                     PropnMortality = BranchMortality.Value();
                     double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
 
-                    if (l != null && l.Apex is ApexTiller)
+                    if (l != null)
                     {
                         TotalStemPopn -= DeltaPopn;
                         ProportionBranchMortality = PropnMortality;
-                        
+                        // In case of branch mortality, reduce cohort populations for 
+                        // all cohrots whose leaf/stem number is not less than the 
+                        // leaf /stem number at the toppest leaf.
+                        // This operation is conducted in whole season for ApexStandard,
+                        // but only after flag leaf appeared in ApexTiller.
+                        if (l.Apex is ApexStandard)
+                        {
+                            // RemoveFromCohorts(PropnMortality, ApexNum);
+                        } else if (l.Apex is ApexTiller & AllLeavesAppeared)
+                        {
+                            // RemoveFromCohorts(PropnMortality, ApexNum);
+                        }
                     }
                 }
             }
