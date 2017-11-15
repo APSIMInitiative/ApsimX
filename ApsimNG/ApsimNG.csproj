@@ -324,6 +324,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PastureActivityManage.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileCrop.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportResourceBalances.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourcesHolder.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivitiesHolder.png" />
@@ -389,7 +391,6 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantInitialCohorts.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantType.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantTypeCohort.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuninantActivityMilking.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\SummariseRuminantHerd.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Transmutation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCost.png" />
