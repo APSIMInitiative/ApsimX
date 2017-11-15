@@ -3,8 +3,6 @@ title: "Attributes"
 draft: false
 ---
 
-# Attributes
-
 1. **[Link(IsOptional=true)]**: Applies to class fields. When applied to a field, APSIM will locate an object  of the specified type and store a reference to it in the field. Will throw an exception if not found. When IsOptional = true, APSIM will not throw an exception when an object cannot be found.
 2. **[Units(string UnitString)]**: Specifies the units of the related field or property. Units are reported in the output tables and on graph axes.
 3. **[Bounds(Lower=value, Upper= value)]**: Specifies the lower and upper bounds of the related field or property. Currently APSIM doesn't use these bounds.

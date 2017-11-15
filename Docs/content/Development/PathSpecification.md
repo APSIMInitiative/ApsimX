@@ -3,8 +3,6 @@ title: "Path Specification"
 draft: false
 ---
 
-# Path Specification
-
 Paths are structured similarly to directory paths in Windows and Unix, using a ‘.’ character instead of slashes.
  
 ## Relative paths

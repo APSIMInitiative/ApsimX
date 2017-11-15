@@ -153,7 +153,7 @@ namespace Models.Core
                 if (sometypeofobject is double)
                     sym.m_value = (double)sometypeofobject;
                 else if (sometypeofobject is int)
-                    sym.m_value = Convert.ToDouble(sometypeofobject);
+                    sym.m_value = Convert.ToDouble(sometypeofobject, System.Globalization.CultureInfo.InvariantCulture);
                 else if (sometypeofobject is double[])
                 {
                     sym.m_values = (double[])sometypeofobject;

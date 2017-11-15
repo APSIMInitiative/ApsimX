@@ -806,7 +806,7 @@ namespace Models.Soils
             ResidueWater = ResidueWater + ResidueInterception(IrrigationData.Amount);
             Irrigation += IrrigationData.Amount - ResidueInterception(IrrigationData.Amount);
             //Fix me.  Need to subtract out canopy interception also
-            IrrigationDuration += IrrigationData.Duration;
+            IrrigationDuration += IrrigationData.Duration / 60.0;
         }
         /// <summary>
         /// sets up daily met data

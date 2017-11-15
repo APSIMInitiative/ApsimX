@@ -1,9 +1,7 @@
 ---
-title: "Compile"
+title: "Model Validatation"
 draft: false
 ---
-
-# Model Validation
 
 All models included in the APSIM release need to have validation tests built using the user interface. Graphs with observed data need to be created in a .apsimx file. 
 

@@ -180,6 +180,11 @@ namespace Models.PMF.Organs
         /// <summary>The live weights for each addition zone.</summary>
         public List<double> ZoneInitialDM { get; set; }
 
+        /// <summary>The proportion of biomass respired each day</summary> 
+        [Link]
+        [Units("/d")]
+        public IFunction MaintenanceRespirationFunction = null;
+
         private double BiomassToleranceValue = 0.0000000001;   // 10E-10
         
         /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
@@ -314,10 +319,6 @@ namespace Models.PMF.Organs
         /// <summary>Layer dead.</summary>
         [XmlIgnore]
         public Biomass[] LayerDead { get { if (PlantZone != null) return PlantZone.LayerDead; else return new Biomass[0]; } }
-
-        /// <summary>Gets or sets the length.</summary>
-        [XmlIgnore]
-        public double Length { get { return PlantZone.Length; } }
 
         /// <summary>Gets or sets the water uptake.</summary>
         [Units("mm")]
@@ -508,7 +509,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
-                PlantZone.Length = MathUtilities.Sum(LengthDensity);
                 DoSupplyCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
             }
         }
@@ -535,6 +535,14 @@ namespace Models.PMF.Organs
                 // Do Root Senescence
                 DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value() });
             }
+            needToRecalculateLiveDead = false;
+            // Do maintenance respiration
+            MaintenanceRespiration = 0;
+            MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
+            Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
+            MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
+            Live.StorageWt *= (1 - MaintenanceRespirationFunction.Value());
+            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -751,10 +759,10 @@ namespace Models.PMF.Organs
             foreach (ZoneState Z in Zones)
                 TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
-            Allocated.StructuralWt = dryMatter.Structural;
-            Allocated.StorageWt = dryMatter.Storage;
-            Allocated.MetabolicWt = dryMatter.Metabolic;
-
+            Allocated.StructuralWt = dryMatter.Structural * DMConversionEfficiency.Value();
+            Allocated.StorageWt = dryMatter.Storage * DMConversionEfficiency.Value();
+            Allocated.MetabolicWt = dryMatter.Metabolic * DMConversionEfficiency.Value();
+            GrowthRespiration = (dryMatter.Structural + dryMatter.Storage + dryMatter.Metabolic) * (1 - DMConversionEfficiency.Value());
             if (TotalRAw == 0 && Allocated.Wt > 0)
                 throw new Exception("Error trying to partition root biomass");
 

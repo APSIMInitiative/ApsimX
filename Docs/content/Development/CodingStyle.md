@@ -1,9 +1,8 @@
 ---
-title: "Compile"
+title: "Coding Style"
 draft: false
 ---
 
-# Coding Guidelines
 
 To ensure ease of maintenance and development, it is important that a consistent design is used when implementing models in APSIM Next Generation.  To achieve this, the following guidelines how to layout a class with regions and specifies the different types of declarations in each region.  This is intended to help maintain a consistent model source code layout so that programmers don’t need to contend with different coding styles between models.  It also ensures that the code interfaces correctly with the broader model environment.
 
