@@ -36,16 +36,64 @@ namespace Models.CLEM.Groupings
 		/// </summary>
 		public static List<Ruminant> Filter(this IEnumerable<Ruminant> individuals, Model filterGroup)
 		{
-			var rules = new List<Rule>();
+            bool femaleProperties = false;
+            bool maleProperties = false;
+            var rules = new List<Rule>();
 			foreach (RuminantFilter filter in Apsim.Children(filterGroup, typeof(RuminantFilter)))
 			{
-				ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
-				// create rule list
-				rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
+                ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
+                // create rule list
+                string gender = "";
+                switch (filter.Parameter)
+                {
+                    case RuminantFilterParameters.Draught:
+                    case RuminantFilterParameters.BreedingSire:
+                        maleProperties = true;
+                        gender = "Male";
+                        break;
+                    case RuminantFilterParameters.IsPregnant:
+                    case RuminantFilterParameters.IsLactating:
+                        femaleProperties = true;
+                        gender = "Female";
+                        break;
+                    default:
+                        break;
+                }
+                if(gender != "")
+                {
+                    RuminantFilter fltr = new RuminantFilter()
+                    {
+                        Parameter = RuminantFilterParameters.Gender,
+                        Operator = FilterOperators.Equal,
+                        Value = gender
+                    };
+                    rules.Add(new Rule(fltr.Parameter.ToString(), (ExpressionType)Enum.Parse(typeof(ExpressionType), fltr.Operator.ToString()), fltr.Value));
+                }
+                rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
 			}
 
-			var compiledRulesList = CompileRule(new List<Ruminant>(), rules);
-			return GetItemsThatMatchAll<Ruminant>(individuals, compiledRulesList).ToList<Ruminant>();
+            if (femaleProperties && maleProperties)
+            {
+                return new List<Ruminant>();
+            }
+            else
+            {
+                if (femaleProperties)
+                {
+                    var compiledRulesList = CompileRule(new List<RuminantFemale>(), rules);
+                    return GetItemsThatMatchAll<RuminantFemale>(individuals.Cast<RuminantFemale>(), compiledRulesList).ToList<Ruminant>();
+                }
+                else if (femaleProperties)
+                {
+                    var compiledRulesList = CompileRule(new List<RuminantMale>(), rules);
+                    return GetItemsThatMatchAll<RuminantMale>(individuals.Cast<RuminantMale>(), compiledRulesList).ToList<Ruminant>();
+                }
+                else
+                {
+                    var compiledRulesList = CompileRule(new List<Ruminant>(), rules);
+                    return GetItemsThatMatchAll<Ruminant>(individuals, compiledRulesList).ToList<Ruminant>();
+                }
+            }
 		}
 
 		/// <summary>

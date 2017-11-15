@@ -106,8 +106,32 @@ namespace Models.CLEM.Groupings
         /// </summary>
         ID,
         /// <summary>
+        /// Weight of individuals
+        /// </summary>
+        Weight,
+        /// <summary>
         /// Current grazing location
         /// </summary>
-        Location
+        Location,
+        /// <summary>
+        /// Weaned status
+        /// </summary>
+        Weaned,
+        /// <summary>
+        /// Is female lactating
+        /// </summary>
+        IsLactating,
+        /// <summary>
+        /// Is female pregnant
+        /// </summary>
+        IsPregnant,
+        /// <summary>
+        /// Is male draught individual
+        /// </summary>
+        Draught,
+        /// <summary>
+        /// Is male breeding sire
+        /// </summary>
+        BreedingSire,
     }
 }

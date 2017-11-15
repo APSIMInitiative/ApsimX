@@ -541,6 +541,31 @@
           <RuminantActivityFeed>
             <Name>Feed rice straw</Name>
             <RuminantFeedGroup>
+              <Name>Feed lactating</Name>
+              <RuminantFilter>
+                <Name>Filter[IsLactating=True]</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Parameter>IsLactating</Parameter>
+                <Operator>Equal</Operator>
+                <Value>True</Value>
+              </RuminantFilter>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MonthlyValues>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </MonthlyValues>
+            </RuminantFeedGroup>
+            <RuminantFeedGroup>
               <Name>Feed Bos indicus</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthlyValues>
@@ -4648,5 +4673,5 @@
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>281</ExplorerWidth>
+  <ExplorerWidth>282</ExplorerWidth>
 </Simulations>
