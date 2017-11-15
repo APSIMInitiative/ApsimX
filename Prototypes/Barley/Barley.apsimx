@@ -871,13 +871,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>1</double>
-                    <double>1.99</double>
-                    <double>2</double>
+                    <double>2.99</double>
                     <double>3</double>
                     <double>4</double>
                     <double>5</double>
                     <double>6</double>
                     <double>7</double>
+                    <double>8</double>
                   </X>
                   <Y>
                     <double>0</double>
@@ -1017,8 +1017,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
+                  <double>0.15</double>
                   <double>0.25</double>
-                  <double>0.5</double>
                 </X>
                 <Y>
                   <double>1</double>
@@ -1280,7 +1280,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Constant>
               <Name>GrainsPerGramOfStem</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>22</FixedValue>
+              <FixedValue>35</FixedValue>
               <Units>grains</Units>
             </Constant>
             <VariableReference>
@@ -2051,7 +2051,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Constant>
               <Name>AreaLargestLeaves</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>3000</FixedValue>
+              <FixedValue>2500</FixedValue>
               <Units>mm^2</Units>
             </Constant>
             <LinearInterpolationFunction>
@@ -2062,14 +2062,14 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <X>
                   <double>3</double>
                   <double>3.6</double>
-                  <double>4</double>
+                  <double>4.2</double>
                   <double>5</double>
                 </X>
                 <Y>
                   <double>0.1</double>
                   <double>0.5</double>
                   <double>1</double>
-                  <double>0.3</double>
+                  <double>0.1</double>
                 </Y>
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2155,7 +2155,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Constant>
               <Name>Multiplier</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>3</FixedValue>
+              <FixedValue>6</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
@@ -2337,8 +2337,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>4</double>
               </X>
               <Y>
-                <double>18000</double>
                 <double>30000</double>
+                <double>35000</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2354,7 +2354,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>1</double>
               </X>
               <Y>
-                <double>10000</double>
+                <double>15000</double>
                 <double>18000</double>
               </Y>
             </XYPairs>
@@ -2389,17 +2389,27 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Constant>
           <MultiplyFunction>
             <Name>ShadeInducedSenescenceRate</Name>
-            <Constant>
-              <Name>RatePerDegDay</Name>
-              <Memo>
-                <Name>Memo</Name>
+            <LinearInterpolationFunction>
+              <Name>CoverEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MemoText><![CDATA[1% per degree day means it takes one phyllochron for a shaded leaf to fully sceness
-]]></MemoText>
-              </Memo>
+                <X>
+                  <double>0</double>
+                  <double>0.9</double>
+                  <double>0.95</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0.01</double>
+                  <double>0.03</double>
+                </Y>
+              </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0</FixedValue>
-            </Constant>
+              <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
+            </LinearInterpolationFunction>
             <VariableReference>
               <Name>ThermalTime</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2980,7 +2990,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Constant>
                 <Name>StemFraction</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.6</FixedValue>
+                <FixedValue>0.8</FixedValue>
               </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>TerminalSpikelet</Start>
@@ -3249,7 +3259,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Omaka</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 2000</Command>
+            <Command />
           </Cultivar>
           <Cultivar>
             <Name>Optic</Name>
@@ -5012,6 +5022,11 @@ namespace Models
             <Name>StemWt</Name>
             <Series>
               <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -5068,7 +5083,7 @@ namespace Models
               <Title>Stem weight</Title>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
-              <Maximum>600</Maximum>
+              <Maximum>NaN</Maximum>
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
@@ -5078,6 +5093,11 @@ namespace Models
             <Name>LeafWt</Name>
             <Series>
               <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -5144,6 +5164,11 @@ namespace Models
             <Name>SpikeWt</Name>
             <Series>
               <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -5200,7 +5225,7 @@ namespace Models
               <Title>Ear weight</Title>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
-              <Maximum>1000</Maximum>
+              <Maximum>NaN</Maximum>
               <Interval>200</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
@@ -11489,7 +11514,7 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>23</double>
+                  <double>130</double>
                   <double>18</double>
                   <double>15</double>
                   <double>1.5</double>
