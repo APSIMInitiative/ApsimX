@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="20">
   <Name>Simulations</Name>
   <Memo>
@@ -26788,7 +26788,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
             <FileName>lincoln.met</FileName>
           </Weather>
           <Clock>
-            <Name>clock</Name>
+            <Name>Clock</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <StartDate>2012-10-01T00:00:00</StartDate>
             <EndDate>2013-04-25T00:00:00</EndDate>
@@ -27548,11 +27548,14 @@ namespace Models
 	{
 		[Link] Plant Maize;
 		[Link] Zone zone;
-					
-        
-		[EventSubscribe("Commencing")]
+		[Link] Simulation sim;
+
+		[XmlIgnore] private RemovalFractions Remove { get; set; }
+				
+        [EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
+		Remove = new RemovalFractions();
 		}
 		
 		[EventSubscribe("DoManagement")]
@@ -27560,7 +27563,13 @@ namespace Models
 		{
 			if (Maize.Phenology.CurrentPhaseName == "ReadyForHarvesting")
 			{
-				Maize.Harvest();
+				Remove.SetFractionToRemove("Leaf", 0.0);
+				Remove.SetFractionToResidue("Leaf", 0.0);
+				Remove.SetFractionToRemove("Grain", 0.0);
+				Remove.SetFractionToResidue("Grain", 0.0);
+				Remove.SetFractionToRemove("Stem", 0.0);
+				Remove.SetFractionToResidue("Stem", 0.0);
+				Maize.Harvest(Remove);
 				Maize.EndCrop();
 			}
 		}
@@ -27581,128 +27590,129 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Clock].Today</string>
-                <string>[ExtraVariables].Script.AccumPlantN</string>
-                <string>[ExtraVariables].Script.AccumMineralisation</string>
                 <string>[ExtraVariables].Script.AccumDenit</string>
-                <string>[ExtraVariables].Script.AccumFert</string>
-                <string>[ExtraVariables].Script.AccumLeach</string>
                 <string>[ExtraVariables].Script.AccumDetach</string>
-                <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-                <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-                <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-                <string>[ExtraVariables].Script.SWC</string>
-                <string>[ExtraVariables].Script.DUL</string>
-                <string>[ExtraVariables].Script.OutFlowLat</string>
+                <string>[ExtraVariables].Script.AccumDrainage</string>
                 <string>[ExtraVariables].Script.AccumEO</string>
                 <string>[ExtraVariables].Script.AccumEP</string>
                 <string>[ExtraVariables].Script.AccumES</string>
-                <string>[ExtraVariables].Script.AccumDrainage</string>
-                <string>[ExtraVariables].Script.AccumRunoff</string>
-                <string>[ExtraVariables].Script.AccumRainfall</string>
+                <string>[ExtraVariables].Script.AccumFert</string>
                 <string>[ExtraVariables].Script.AccumIrrigation</string>
+                <string>[ExtraVariables].Script.AccumLeach</string>
+                <string>[ExtraVariables].Script.AccumMineralisation</string>
                 <string>[ExtraVariables].Script.AccumOutflowLat</string>
-                <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-                <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-                <string>[ExtraVariables].Script.FomN</string>
-                <string>[ExtraVariables].Script.HumN</string>
+                <string>[ExtraVariables].Script.AccumPlantN</string>
+                <string>[ExtraVariables].Script.AccumRainfall</string>
+                <string>[ExtraVariables].Script.AccumRunoff</string>
                 <string>[ExtraVariables].Script.BiomN</string>
+                <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
+                <string>[ExtraVariables].Script.DeltaSoilOMN</string>
+                <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
                 <string>[ExtraVariables].Script.DltNMinRes</string>
                 <string>[ExtraVariables].Script.DltNMinTot</string>
-                <string>[Soil].SoilWater.SW</string>
-                <string>[Soil].SoilWater.Eo</string>
-                <string>[Soil].SoilWater.Es</string>
-                <string>[Soil].SoilWater.Drainage</string>
-                <string>[Soil].SoilWater.Runoff</string>
-                <string>[Soil].SoilWater.pond</string>
-                <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
-                <string>[Soil].NO3N</string>
+                <string>[ExtraVariables].Script.DUL</string>
+                <string>[ExtraVariables].Script.FomN</string>
+                <string>[ExtraVariables].Script.HumN</string>
+                <string>[ExtraVariables].Script.LeafAppearedPosition</string>
+                <string>[ExtraVariables].Script.LeafExpandedPosition</string>
+                <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
+                <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
+                <string>[ExtraVariables].Script.OutFlowLat</string>
+                <string>[ExtraVariables].Script.SoilNitrogenContent</string>
+                <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+                <string>[ExtraVariables].Script.SWC</string>
+                <string>[Maize].AboveGround.N</string>
+                <string>[Maize].AboveGround.Wt</string>
+                <string>[Maize].AboveGroundLive.N</string>
+                <string>[Maize].AboveGroundLive.Wt</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
+                <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
+                <string>[Maize].Arbitrator.DM.SinkLimitation</string>
+                <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantSupply</string>
+                <string>[Maize].EarLive.N</string>
+                <string>[Maize].EarLive.Wt</string>
+                <string>[Maize].Grain.GrowthRateGrainDevelopment.Value()</string>
+                <string>[Maize].Grain.Live.N</string>
+                <string>[Maize].Grain.Live.NConc</string>
+                <string>[Maize].Grain.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Grain.NumberFunction.Value()</string>
+                <string>[Maize].Husk.Live.N</string>
+                <string>[Maize].Husk.Live.NConc</string>
+                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Leaf.AppearedCohortNo</string>
+                <string>[Maize].Leaf.CohortArea[1:30]</string>
+                <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                <string>[Maize].Leaf.CohortSLA[1:30]</string>
+                <string>[Maize].Leaf.CoverDead</string>
+                <string>[Maize].Leaf.CoverTotal</string>
+                <string>[Maize].Leaf.Dead.NConc</string>
+                <string>[Maize].Leaf.DeadCohortNo</string>
+                <string>[Maize].Leaf.DeadCohortNo</string>
+                <string>[Maize].Leaf.ExpandedCohortNo</string>
+                <string>[Maize].Leaf.Fn</string>
+                <string>[Maize].Leaf.Fw</string>
+                <string>[Maize].Leaf.Height</string>
+                <string>[Maize].Leaf.InitialisedCohortNo</string>
+                <string>[Maize].Leaf.LAI</string>
+                <string>[Maize].Leaf.Live.N</string>
+                <string>[Maize].Leaf.Live.NConc</string>
+                <string>[Maize].Leaf.Live.Wt</string>
+                <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
+                <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+                <string>[Maize].Leaf.Photosynthesis.RueAct</string>
+                <string>[Maize].Leaf.SenescingCohortNo</string>
+                <string>[Maize].Leaf.Transpiration</string>
+                <string>[Maize].Leaf.WaterDemand</string>
+                <string>[Maize].Phenology.CurrentPhaseName</string>
+                <string>[Maize].Phenology.Stage</string>
+                <string>[Maize].Phenology.Stage</string>
+                <string>[Maize].Rachis.Live.N</string>
+                <string>[Maize].Rachis.Live.NConc</string>
+                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Root.Depth</string>
+                <string>[Maize].Root.Live.N</string>
+                <string>[Maize].Root.Live.Wt</string>
+                <string>[Maize].Root.WaterSupply</string>
+                <string>[Maize].Root.WaterUptake</string>
+                <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Stem.Live.NConc</string>
+                <string>[Maize].Stem.Live.StructuralWt</string>
+                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Stem.MaximumNConc.Value()</string>
+                <string>[Maize].Stem.MinimumNConc.Value()</string>
+                <string>[Maize].Structure.Height</string>
+                <string>[Maize].Structure.LeafTipsAppeared</string>
+                <string>[Maize].Structure.MainStemFinalNodeNo</string>
+                <string>[Maize].Structure.MainStemPrimordiaNo</string>
+                <string>[Maize].Structure.MainStemPrimordiaNo</string>
+                <string>[Maize].Structure.Phyllochron.Value()</string>
+                <string>[Maize].Tastle.Live.Wt</string>
+                <string>[Maize].Total.N</string>
+                <string>[Maize].Total.Wt</string>
                 <string>[MicroClimate].net_radn</string>
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
-                <string>[Maize].EarLive.Wt</string>
-                <string>[Maize].Leaf.Live.Wt</string>
-                <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
-                <string>[Maize].Tastle.Live.Wt</string>
-                <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
-                <string>[Maize].Leaf.Live.N</string>
-                <string>[Maize].Root.Live.N</string>
-                <string>[Maize].Rachis.Live.N</string>
-                <string>[Maize].Husk.Live.N</string>
-                <string>[Maize].Root.WaterSupply</string>
-                <string>[Maize].Root.WaterUptake</string>
-                <string>[Maize].Leaf.Transpiration</string>
-                <string>[Maize].Leaf.WaterDemand</string>
-                <string>[Maize].Root.Depth</string>
-                <string>[Maize].Leaf.CoverTotal</string>
-                <string>[Maize].Leaf.CoverDead</string>
-                <string>[Maize].Leaf.LAI</string>
-                <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
-                <string>[Maize].Leaf.Fw</string>
-                <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
-                <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
-                <string>[Maize].Leaf.Fn</string>
-                <string>[Maize].Phenology.CurrentPhaseName</string>
-                <string>[Maize].Phenology.Stage</string>
-                <string>[Maize].AboveGroundLive.N</string>
-                <string>[Maize].AboveGroundLive.Wt</string>
-                <string>[Maize].AboveGround.N</string>
-                <string>[Maize].AboveGround.Wt</string>
-                <string>[Maize].Total.N</string>
-                <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
-                <string>[Maize].Phenology.Stage</string>
-                <string>[Maize].Leaf.ExpandedCohortNo</string>
-                <string>[Maize].Leaf.AppearedCohortNo</string>
-                <string>[Maize].Leaf.DeadCohortNo</string>
-                <string>[Maize].Leaf.InitialisedCohortNo</string>
-                <string>[Maize].Structure.MainStemFinalNodeNo</string>
-                <string>[Maize].Structure.LeafTipsAppeared</string>
-                <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Leaf.CohortArea[1:30]</string>
-                <string>[Maize].Leaf.CohortSLA[1:30]</string>
-                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
-                <string>[Maize].Arbitrator.N.TotalPlantSupply</string>
-                <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
-                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
-                <string>[Maize].Arbitrator.DM.Allocated</string>
-                <string>[Maize].Arbitrator.DM.SinkLimitation</string>
-                <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
-                <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
-                <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[Maize].Structure.Phyllochron.Value()</string>
-                <string>[Maize].Structure.Height</string>
-                <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Grain.NumberFunction.Value()</string>
-                <string>[ExtraVariables].Script.LeafAppearedPosition</string>
-                <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
-                <string>[ExtraVariables].Script.LeafExpandedPosition</string>
-                <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
-                <string>[Maize].Leaf.DeadCohortNo</string>
                 <string>[Phenology].ThermalTime.Value()</string>
-                <string>[Maize].Leaf.SenescingCohortNo</string>
-                <string>[Maize].Stem.MaximumNConc.Value()</string>
-                <string>[Maize].Stem.MinimumNConc.Value()</string>
-                <string>[Maize].Stem.Live.NConc</string>
-                <string>[Maize].Leaf.Live.NConc</string>
-                <string>[Maize].Grain.Live.NConc</string>
-                <string>[Maize].Husk.Live.NConc</string>
-                <string>[Maize].Rachis.Live.NConc</string>
-                <string>[Maize].Leaf.Dead.NConc</string>
-                <string>[Maize].Leaf.Photosynthesis.RueAct</string>
-                <string>[Maize].Stem.Live.StructuralWt</string>
-                <string>[Maize].Grain.GrowthRateGrainDevelopment.Value()</string>
+                <string>[Soil].NO3N</string>
+                <string>[Soil].SoilWater.Drainage</string>
+                <string>[Soil].SoilWater.Eo</string>
+                <string>[Soil].SoilWater.Es</string>
+                <string>[Soil].SoilWater.pond</string>
+                <string>[Soil].SoilWater.Runoff</string>
+                <string>[Soil].SoilWater.SW</string>
+                <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -37247,11 +37257,11 @@ namespace Models
               <Name>SowingRule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
+                <SowingDate>2010-10-04</SowingDate>
+                <CultivarName>Pioneer_39V43</CultivarName>
                 <RowSpace>720</RowSpace>
                 <PlantPopulation>10.5</PlantPopulation>
                 <PlantingDepth>20</PlantingDepth>
-                <CultivarName>Pioneer_39V43</CultivarName>
-                <SowingDate>2010-10-04</SowingDate>
               </Script>
               <Code><![CDATA[
 using System;
