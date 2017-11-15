@@ -1717,7 +1717,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Leaf].Fw</XProperty>
+              <XProperty>[Root].WaterTensionFactor</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NitrogenStressEffect</Name>
@@ -1749,7 +1749,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0.1</double>
-              <double>1</double>
+                  <double>1.1</double>
               <double>1.3</double>
             </X>
             <Y>
@@ -2031,10 +2031,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
-                <double>0.5</double>
+                    <double>1</double>
               </X>
               <Y>
-                <double>0.5</double>
+                    <double>2</double>
                 <double>0</double>
               </Y>
             </XYPairs>
@@ -2066,10 +2066,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
-                <double>0.5</double>
+                    <double>1</double>
               </X>
               <Y>
-                <double>0.5</double>
+                    <double>2</double>
                 <double>0</double>
               </Y>
             </XYPairs>
@@ -3046,9 +3046,11 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600</Command>
         <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.051</Command>
-        <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 25</Command>
-        <Command>[Leaf].ExtinctionCoeff.FixedValue = 0.5</Command>
+            <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 28</Command>
+            <Command>[Leaf].ExtinctionCoeff.FixedValue = 0.6</Command>
         <Command>[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20</Command>
+            <Command>[Grain].MaximumNConc.FixedValue = 0.025</Command>
+            <Command>[Grain].MaxNConcDailyGrowth.FixedValue = 0.025</Command>
       </Cultivar>
       <Cultivar>
         <Name>Einstein</Name>
