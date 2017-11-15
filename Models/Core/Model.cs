@@ -287,6 +287,7 @@ namespace Models.Core
 		[XmlElement(typeof(Models.CLEM.Activities.Relationship))]
 		[XmlElement(typeof(Models.CLEM.Reporting.ReportRuminantHerd))]
         [XmlElement(typeof(Models.CLEM.Activities.ResourceActivitySell))]
+        [XmlElement(typeof(Models.CLEM.Reporting.ReportResourceBalances))]
         [XmlElement(typeof(Models.CLEM.Resources.ResourcesHolder))]
 		[XmlElement(typeof(Models.CLEM.Activities.RuminantActivityBuySell))]
 		[XmlElement(typeof(Models.CLEM.Activities.RuminantActivityBreed))]

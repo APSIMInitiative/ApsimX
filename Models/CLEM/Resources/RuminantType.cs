@@ -16,10 +16,12 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
-    public class RuminantType : CLEMModel
+    public class RuminantType : CLEMModel, IResourceType
     {
         [Link]
         ISummary Summary = null;
+        [Link]
+        private ResourcesHolder Resources = null;
 
         /// <summary>
         /// Breed
@@ -42,10 +44,10 @@ namespace Models.CLEM.Resources
 		[XmlIgnore]
 		public List<AnimalPriceValue> PriceList;
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("CLEMInitialiseResource")]
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseResource")]
 		private void OnCLEMInitialiseResource(object sender, EventArgs e)
 		{
 			// setup price list 
@@ -114,12 +116,60 @@ namespace Models.CLEM.Resources
 			}
 		}
 
-		#region Grow Activity
+        /// <summary>
+        /// Add resource
+        /// </summary>
+        /// <param name="ResourceAmount"></param>
+        /// <param name="ActivityName"></param>
+        /// <param name="Reason"></param>
+        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        {
+            throw new NotImplementedException();
+        }
 
-		/// <summary>
-		/// Energy maintenance efficiency coefficient
-		/// </summary>
-		[Description("Energy maintenance efficiency coefficient")]
+        /// <summary>
+        /// Remove resource
+        /// </summary>
+        /// <param name="Request"></param>
+        public void Remove(ResourceRequest Request)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Set resource
+        /// </summary>
+        /// <param name="NewAmount"></param>
+        public void Set(double NewAmount)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Initialise resource
+        /// </summary>
+        public void Initialise()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Current number of individuals of this herd.
+        /// </summary>
+        public double Amount
+        {
+            get
+            {
+                return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Count();
+            }
+        }
+
+        #region Grow Activity
+
+        /// <summary>
+        /// Energy maintenance efficiency coefficient
+        /// </summary>
+        [Description("Energy maintenance efficiency coefficient")]
         [Required]
         public double EMaintEfficiencyCoefficient { get; set; }
 		/// <summary>
@@ -567,9 +617,9 @@ namespace Models.CLEM.Resources
         [Required]
         public double MethaneProductionCoefficient { get; set; }
 
-		#endregion
+        #endregion
 
-	}
+    }
 
 
 

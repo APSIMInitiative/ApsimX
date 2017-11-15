@@ -324,6 +324,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportResourceBalances.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourcesHolder.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivitiesHolder.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityFolder.png" />
