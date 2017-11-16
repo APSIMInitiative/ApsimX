@@ -45,7 +45,7 @@ namespace UserInterface.Presenters
             this.allowableChildModels.RemoveAll(a => allowableChildFunctions.Any(b => a == b));
 
             this.view.List.IsModelList = true;
-            this.view.List.Values = this.allowableChildModels.Select(m => m.Name).ToArray();
+            this.view.List.Values = this.allowableChildModels.Select(m => m.FullName).ToArray();
             this.view.AddButton("Add", null, this.OnAddButtonClicked);
 
             // Trap events from the view.
