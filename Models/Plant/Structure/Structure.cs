@@ -466,6 +466,7 @@ namespace Models.PMF.Struct
             CohortToInitialise = 0;
             TipToAppear = 0;
             PotLeafTipsAppeared = 0;
+            ResetStemPopn();            
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -509,13 +510,13 @@ namespace Models.PMF.Struct
         [EventSubscribe("Harvesting")]
         private void OnHarvesting(object sender, EventArgs e)
         {
-            PotLeafTipsAppeared = 0;
-            Clear();
-            ResetStemPopn();
-            Germinated = false;
-            Emerged = false;
-            CohortToInitialise = 0;
-            TipToAppear = 0;
+            //PotLeafTipsAppeared = 0;
+            //Clear();
+            //ResetStemPopn();
+            //Germinated = false;
+           //Emerged = false;
+           // CohortToInitialise = 0;
+           //TipToAppear = 0;
         }
 
         /// <summary>Called when crop recieves a remove biomass event from manager</summary>
