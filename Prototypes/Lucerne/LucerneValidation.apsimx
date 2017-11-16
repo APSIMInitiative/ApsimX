@@ -36,17 +36,13 @@
             <Name>XYPairs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
-              <double>1</double>
-              <double>5</double>
-              <double>10</double>
+              <double>2</double>
               <double>15</double>
               <double>30</double>
               <double>40</double>
             </X>
             <Y>
               <double>0</double>
-              <double>3</double>
-              <double>6.5</double>
               <double>10</double>
               <double>25</double>
               <double>0</double>
@@ -970,8 +966,8 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
                   <double>16.5</double>
                 </X>
                 <Y>
-                  <double>2.4</double>
-                  <double>1.8</double>
+                  <double>2.6</double>
+                  <double>1.9</double>
                   <double>1.1</double>
                   <double>0.4</double>
                   <double>0.2</double>
@@ -1101,18 +1097,22 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
                 <Name>XYPairs</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
-                  <double>6</double>
-                  <double>10.1</double>
+                  <double>10.2</double>
+                  <double>12</double>
+                  <double>13</double>
                   <double>14</double>
+                  <double>15</double>
                   <double>16</double>
                   <double>16.5</double>
                 </X>
                 <Y>
-                  <double>57</double>
-                  <double>57</double>
+                  <double>51.5</double>
                   <double>45</double>
-                  <double>38</double>
-                  <double>35</double>
+                  <double>41.5</double>
+                  <double>37.5</double>
+                  <double>34</double>
+                  <double>30</double>
+                  <double>28</double>
                 </Y>
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6650,6 +6650,9 @@ namespace Models
               <string>SD2dry</string>
               <string>SD3dry</string>
               <string>SD4dry</string>
+              <string>SD1irr</string>
+              <string>SD2irr</string>
+              <string>SD3irr</string>
             </DisabledSeries>
           </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
