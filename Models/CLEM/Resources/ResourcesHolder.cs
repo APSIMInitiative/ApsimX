@@ -8,6 +8,7 @@ using System.Runtime.Serialization;
 using Models.Core;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Resources
 {
@@ -20,7 +21,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all resource groups used in the CLEM simulation")]
-    public class ResourcesHolder: CLEMModel
+    public class ResourcesHolder: CLEMModel, IValidatableObject
     {
 
         // Scoping rules of Linking in Apsim means that you can only link to 
@@ -49,7 +50,7 @@ namespace Models.CLEM.Resources
 		[Link]
 		ISummary Summary = null;
 
-		private IModel GetByName(string Name)
+        private IModel GetByName(string Name)
         {
             return ResourceTypeList.Find(x => x.Name == Name);
         }
@@ -335,11 +336,9 @@ namespace Models.CLEM.Resources
 								if (!QueryOnly)
 								{
 									//remove cost
-									//request.Reason = trans.Name + " " + trans.Parent.Name;
 									// create new request for this transmutation cost
 									ResourceRequest transRequest = new ResourceRequest();
 									transRequest.Reason = trans.Name + " " + trans.Parent.Name;
-//									transRequest.ActivityName = trans.Name + " " + trans.Parent.Name;
 									transRequest.Required = transmutationCost;
 									transRequest.ResourceType = transcost.ResourceType;
 									transRequest.ActivityModel = request.ActivityModel;
@@ -370,6 +369,24 @@ namespace Models.CLEM.Resources
 			}
 		}
 
+        /// <summary>
+        /// Validate object
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
 
-	}
+            var t = this.Children.GroupBy(a => a.GetType());
+
+            // check that only one instance of each resource group is present
+            foreach (var item in this.Children.GroupBy(a => a.GetType()).Where(b => b.Count() > 1))
+            {
+                string[] memberNames = new string[] { item.Key.FullName };
+                results.Add(new ValidationResult(String.Format("Only one (1) instance of any resource group is allowed in the Resources Holder. Multiple Resource Groups [{0}] found!", item.Key.FullName), memberNames));
+            }
+            return results;
+        }
+    }
 }

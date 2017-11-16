@@ -1,4 +1,6 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Resources;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -105,6 +107,29 @@ namespace Models.CLEM
                 string[] memberNames = new string[] { "Clock.StartDate" };
                 results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString(), memberNames)));
             }
+            // check that one resources and on activities are present.
+            int HolderCnt = this.Children.Where(a => a.GetType() == typeof(ResourcesHolder)).Count();
+            if (HolderCnt == 0)
+            {
+                string[] memberNames = new string[] { "CLEM.Resources" };
+                results.Add(new ValidationResult("CLEM must contain a Resources Holder to manage resources", memberNames));
+            }
+            if (HolderCnt > 1)
+            {
+                string[] memberNames = new string[] { "CLEM.Resources" };
+                results.Add(new ValidationResult("CLEM must contain only one (1) Resources Holder to manage resources", memberNames));
+            }
+            HolderCnt = this.Children.Where(a => a.GetType() == typeof(ActivitiesHolder)).Count();
+            if (HolderCnt == 0)
+            {
+                string[] memberNames = new string[] { "CLEM.Activities" };
+                results.Add(new ValidationResult("CLEM must contain an Activities Holder to manage activities", memberNames));
+            }
+            if (HolderCnt > 1)
+            {
+                string[] memberNames = new string[] { "CLEM.Activities" };
+                results.Add(new ValidationResult("CLEM must contain only one (1) Activities Holder to manage activities", memberNames));
+            }
             return results;
         }
 
@@ -115,8 +140,8 @@ namespace Models.CLEM
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // validation is performed here
-            // commencing is too early as Summary has not been created fro reporting.
-            // some values assigned in commencing will not be checked bfore processing, but will be caught here
+            // commencing is too early as Summary has not been created for reporting.
+            // some values assigned in commencing will not be checked before processing, but will be caught here
             if (!Validate(Simulation, ""))
             {
                 string error = "Invalid parameters in model (see summary for details)";
