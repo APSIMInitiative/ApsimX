@@ -24,7 +24,11 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
+<<<<<<< HEAD
         public static int LastestVersion { get { return 21; } }
+=======
+        public static int LastestVersion { get { return 20; } }
+>>>>>>> 8192e4006e9e63b9f532c746f924f75c09a49f07
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -603,6 +607,7 @@ namespace Models.Core
             }
         }
 
+<<<<<<< HEAD
 
         private static void UpgradeToVersion20(XmlNode node, string filename)
         {
@@ -630,6 +635,9 @@ namespace Models.Core
         /// <param name="node"></param>
         /// <param name="fileName"></param>
         private static void UpgradeToVersion21(XmlNode node, string fileName)
+=======
+        private static void UpgradeToVersion20(XmlNode node, string fileName)
+>>>>>>> 8192e4006e9e63b9f532c746f924f75c09a49f07
         {
             List<XmlNode> nodeList = new List<XmlNode>();
 
