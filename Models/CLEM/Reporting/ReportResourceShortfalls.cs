@@ -22,14 +22,9 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This report automatically generates a current balance column for each CLEM Resource Type\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
-    public class ReportResourceBalances: Models.Report.Report
+    [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
+    public class ReportResourceShortfalls: Models.Report.Report
     {
-        [Link]
-        private ResourcesHolder Resources = null;
-        [Link]
-        ISummary Summary = null;
-
         /// <summary>The columns to write to the data store.</summary>
         private List<IReportColumn> columns = null;
 
@@ -67,40 +62,16 @@ namespace Models.CLEM.Reporting
         {
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
-            if (VariableNames != null)
-            {
-                for (int i = 0; i < this.VariableNames.Length; i++)
-                {
-                    // each variable name is now a ResourceGroup
-                    bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
-                    if (!isDuplicate && this.VariableNames[i] != string.Empty)
-                    {
-                        if (this.VariableNames[i].StartsWith("["))
-                        {
-                            variableNames.Add(this.VariableNames[i]);
-                        }
-                        else
-                        {
-                            // check it is a ResourceGroup
-                            CLEMModel model = Resources.GetResourceByName(this.VariableNames[i]) as CLEMModel;
-                            if (model == null)
-                            {
-                                Summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\nEntry has been ignored", this.VariableNames[i], this.Name));
-                            }
-                            // get all children
-                            foreach (CLEMModel item in model.Children)
-                            {
-                                string amountStr = "Amount";
-                                if (item.GetType() == typeof(FinanceType))
-                                {
-                                    amountStr = "Balance";
-                                }
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + "." + amountStr + " as " + item.Name);
-                            }
-                        }
-                    }
-                }
-            }
+
+            variableNames.Add("[Clock].Today as Date");
+            variableNames.Add("[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource");
+            variableNames.Add("[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity");
+            variableNames.Add("[Activities].LastShortfallResourceRequest.Reason as Reason");
+            variableNames.Add("[Activities].LastShortfallResourceRequest.Required as Required");
+            variableNames.Add("[Activities].LastShortfallResourceRequest.Available as Available");
+
+            EventNames = new string[] { "[Activities].ResourceShortfallOccurred" };
+
             base.VariableNames = variableNames.ToArray();
             this.FindVariableMembers();
 
