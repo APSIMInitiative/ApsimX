@@ -165,7 +165,7 @@ namespace Models.Graph
 
                 // Get data for each simulation / zone object
                 DataTable baseData = GetBaseData(storage, simulationZones);
-                if (baseData.Rows.Count > 0)
+                if (baseData != null && baseData.Rows.Count > 0)
                 {
                     simulationZones.ForEach(simulationZone => simulationZone.CreateDataView(baseData, this));
 
