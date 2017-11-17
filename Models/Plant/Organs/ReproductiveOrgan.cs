@@ -64,6 +64,10 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         public IFunction MaintenanceRespirationFunction = null;
 
+        /// <summary>The cost for remobilisation</summary>
+        [Link]
+        public IFunction RemobilisationCost = null;
+
         #endregion
 
         #region Class Fields

@@ -167,6 +167,10 @@ namespace Models.PMF.Organs
         [Link]
         public IFunction DMConversionEfficiency = null;
 
+        /// <summary>The cost for remobilisation</summary>
+        [Link]
+        public IFunction RemobilisationCost = null;
+
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
