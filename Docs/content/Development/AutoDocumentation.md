@@ -3,8 +3,6 @@ title: "Auto documentation"
 draft: false
 ---
 
-# Auto documentation
-
 The APSIM infrastructure has the ability to create a PDF file by examining the validation .apsimx file and the source code. The .apsimx file needs to have the same name as the .apsimx file (e.g. Maize.apsimx for the Maize model). To generate the document, the user can right click on the top level node (Simulations) in the user interface and select 'Create documentation'. 
 
 ## Model design to support auto documentation

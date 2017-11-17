@@ -1197,10 +1197,10 @@ namespace Models.Soils
             {
             irrig.amount = IrrigationData.Amount;  
 
-            irrig.willRunoff = IrrigationData.will_runoff;
+            irrig.willRunoff = IrrigationData.WillRunoff;
 
             //check if will_runoff value conflicts with subsurface irrigation.
-            if ((IrrigationData.will_runoff) && (IrrigationData.Depth > 0.0))
+            if ((IrrigationData.WillRunoff) && (IrrigationData.Depth > 0.0))
                 {
                 irrig.willRunoff = false;
                 String warningText;

@@ -3,8 +3,6 @@ title: "Debug Manager Script"
 draft: false
 ---
 
-# Debug manager script
-
 To debug a manager script you need to insert
 
 ```c#

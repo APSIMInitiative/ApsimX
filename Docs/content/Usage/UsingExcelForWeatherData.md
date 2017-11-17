@@ -3,8 +3,6 @@ title: "Using Excel for weather data"
 draft: false
 ---
 
-# Using Excel for weather data
-
 It is possible to store met data in an excel ‘.xlsx’ file.  The format of the worksheet is represented below
 
 ![Usage](/images/Usage.ExcelWeather1.png)  

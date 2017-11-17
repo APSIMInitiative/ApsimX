@@ -1,11 +1,11 @@
 
 :root{
-    --SIDE-MAIN-color:#008079;
+    --SIDE-MAIN-color:#00A095;
     --SIDE-MAIN-TXT-color:black;
     --MAIN-HOVER-color:#004d47;
     --SIDE-FOCUS-BACK-color:#006f69;
     --SIDE-FOCUS-FORE-color:black;
-    --MENU-LINK-color:black;
+    --MENU-LINK-color:white;
     --MENU-ACTIVE-BACK-color:#004d47;
     --MENU-ACTIVE-LINK-color:white;
     

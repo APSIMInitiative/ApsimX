@@ -122,7 +122,6 @@ namespace Models.PMF.Organs
             DeltaNO3 = new double[soil.Thickness.Length];
             DeltaNH4 = new double[soil.Thickness.Length];
 
-            Length = 0.0;
             Depth = 0.0;
 
             if (LayerLive == null || LayerLive.Length == 0)

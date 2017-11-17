@@ -329,9 +329,7 @@ namespace Models.PMF.Organs
             /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
             [Link]
             public IFunction SenessingLeafRelativeSize = null;
-            /// <summary>
-            /// The proportion of mass that is respired each day
-            /// </summary>
+            /// <summary>The proportion of mass that is respired each day</summary>
             [Link]
             public IFunction MaintenanceRespirationFunction = null;
             /// <summary>Modify leaf size by age</summary>

@@ -1128,7 +1128,8 @@ namespace CMPServices
                     case TBaseType.ITYPE_DOUBLE:
                         {
                             if (value.Length > 0)
-                                setValue(Convert.ToDouble(value));
+                                setValue(Convert.ToDouble(value, 
+                                                          System.Globalization.CultureInfo.InvariantCulture));
                             else
                                 setValue(0);
                         } break;
@@ -1188,7 +1189,8 @@ namespace CMPServices
                     case TBaseType.ITYPE_INT4:
                     case TBaseType.ITYPE_INT8: setValue(Convert.ToInt64(value)); break;
                     case TBaseType.ITYPE_SINGLE:
-                    case TBaseType.ITYPE_DOUBLE: setValue(Convert.ToDouble(value)); break;
+                    case TBaseType.ITYPE_DOUBLE: setValue(Convert.ToDouble(value, 
+                                                                           System.Globalization.CultureInfo.InvariantCulture)); break;
                     case TBaseType.ITYPE_CHAR:
                         { //single byte char
                             FData = ascii.GetBytes(value.ToString());
@@ -1714,7 +1716,8 @@ namespace CMPServices
                             buf = asStr();
                             if (buf.Length < 1)
                                 buf = "0";
-                            value = Convert.ToDouble(buf);
+                            value = Convert.ToDouble(buf, 
+                                                     System.Globalization.CultureInfo.InvariantCulture);
                         }
                         break;
                     default:

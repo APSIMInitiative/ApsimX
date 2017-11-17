@@ -777,7 +777,7 @@ namespace Models
 
             if (dataTypeName == "Double" || dataTypeName == "Single")
             {
-                double doubleValue = Convert.ToDouble(value);
+                double doubleValue = Convert.ToDouble(value, System.Globalization.CultureInfo.InvariantCulture);
                 if (format == null || format == string.Empty)
                 {
                     return string.Format("{0:F3}", doubleValue);
