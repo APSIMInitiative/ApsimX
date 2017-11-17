@@ -146,19 +146,21 @@ namespace Models
 		public event EventHandler CLEMAgeResources;
 		/// <summary>CLEM event to calculate monthly herd summary</summary>
 		public event EventHandler CLEMHerdSummary;
+        /// <summary>CLEM end of timestep event</summary>
+        public event EventHandler CLEMEndOfTimeStep;
 
-		// CLEM versions of the following events to ensure APSIM tasks perfomed before CLEM not yet implemented
-		///// <summary>CLEM start of simulation performed after APSIM StartOfSimulation</summary>
-		//public event EventHandler CLEMStartOfSimulation;
-		///// <summary>CLEM start of month performed after APSIM StartOfMonth</summary>
-		//public event EventHandler CLEMStartOfMonth;
-		///// <summary>CLEM end of month performed after APSIM EndOfMonth</summary>
-		//public event EventHandler CLEMEndOfMonth;
+        // CLEM versions of the following events to ensure APSIM tasks perfomed before CLEM not yet implemented
+        ///// <summary>CLEM start of simulation performed after APSIM StartOfSimulation</summary>
+        //public event EventHandler CLEMStartOfSimulation;
+        ///// <summary>CLEM start of month performed after APSIM StartOfMonth</summary>
+        //public event EventHandler CLEMStartOfMonth;
+        ///// <summary>CLEM end of month performed after APSIM EndOfMonth</summary>
+        //public event EventHandler CLEMEndOfMonth;
 
-		// Public properties available to other models.
-		/// <summary>Gets the today.</summary>
-		/// <value>The today.</value>
-		[XmlIgnore]
+        // Public properties available to other models.
+        /// <summary>Gets the today.</summary>
+        /// <value>The today.</value>
+        [XmlIgnore]
         public DateTime Today { get; private set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -316,6 +318,8 @@ namespace Models
                             CLEMAgeResources.Invoke(this, args);
 					    if (CLEMAnimalBuy != null)
 						    CLEMAnimalBuy.Invoke(this, args);
+                        if (CLEMEndOfTimeStep != null)
+                            CLEMEndOfTimeStep.Invoke(this, args);
                         EndOfMonth.Invoke(this, args);
                     }
 
