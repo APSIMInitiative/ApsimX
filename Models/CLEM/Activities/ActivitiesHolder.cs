@@ -18,6 +18,8 @@ namespace Models.CLEM.Activities
     [Description("This holds all activities used in the CLEM simulation")]
 	public class ActivitiesHolder: CLEMModel
 	{
+        private ActivityFolder TimeStep = new ActivityFolder() { Name = "TimeStep" };
+
         /// <summary>
         /// List of the all the Activities.
         /// </summary>
@@ -164,5 +166,19 @@ namespace Models.CLEM.Activities
 			}
 		}
 
-	}
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMEndOfTimeStep")]
+        private void OnCLEMEndOfTimeStep(object sender, EventArgs e)
+        {
+            ActivityPerformedEventArgs ea = new ActivityPerformedEventArgs()
+            {
+                Activity = TimeStep
+            };
+            LastActivityPerformed = TimeStep;
+            // call ActivityPerformedEventhandler
+            OnActivityPerformed(ea);
+        }
+    }
 }

@@ -345,6 +345,12 @@
             <string>[Activities].SummariseHerd.OnReportItemGenerated</string>
           </EventNames>
         </ReportResourceBalances>
+        <ReportActivitiesPerformed>
+          <Name>ReportActivitiesPerformed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+        </ReportActivitiesPerformed>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>

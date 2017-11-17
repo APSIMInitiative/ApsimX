@@ -105,6 +105,7 @@
     <EmbeddedResource Include="Resources\Glade\UpgradeForm.glade" />
     <EmbeddedResource Include="Resources\Glade\TreeProxyView.glade" />
     <EmbeddedResource Include="Resources\Glade\ModelDetailsWrapperView.glade" />
+    <EmbeddedResource Include="Resources\Glade\ReportActivityLedgerView.glade" />
     <None Include="Resources\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Test.xshd" />
@@ -166,6 +167,7 @@
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
+    <Compile Include="Presenters\ActivityLedgerGridPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
     <Compile Include="Presenters\ExperimentPresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
@@ -186,6 +188,7 @@
     <Compile Include="Presenters\OperationsPresenter.cs" />
     <Compile Include="Presenters\ProfilePresenter.cs" />
     <Compile Include="Presenters\PropertyPresenter.cs" />
+    <Compile Include="Presenters\ReportActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
     <Compile Include="Presenters\SeriesPresenter.cs" />
     <Compile Include="Presenters\SummaryPresenter.cs" />
@@ -214,6 +217,7 @@
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
+    <Compile Include="Views\ActivityLedgerGridView.cs" />
     <Compile Include="Views\DataStoreView.cs" />
     <Compile Include="Views\DropDownView.cs" />
     <Compile Include="Views\EditBoxView.cs" />
@@ -235,6 +239,7 @@
     <Compile Include="Views\MemoView.cs" />
     <Compile Include="Views\ModelDetailsWrapperView.cs" />
     <Compile Include="Views\ProfileView.cs" />
+    <Compile Include="Views\ReportActivityLedgerView.cs" />
     <Compile Include="Views\ReportView.cs" />
     <Compile Include="Views\SeriesView.cs" />
     <Compile Include="Views\SummaryView.cs" />
@@ -324,6 +329,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportResourceShortfalls.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportActivitiesPerformed.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PastureActivityManage.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileCrop.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportResourceBalances.png" />
@@ -462,6 +469,10 @@
     <EmbeddedResource Include="Resources\help.png" />
     <EmbeddedResource Include="Resources\DebugDoc.xsl" />
     <Content Include="ApsimLogo.ico" />
+    <EmbeddedResource Include="Resources\MenuImages\Critical.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Ignore.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Partial.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Success.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
