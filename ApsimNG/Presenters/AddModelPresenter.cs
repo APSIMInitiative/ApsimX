@@ -66,7 +66,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnAddButtonClicked(object sender, EventArgs e)
         {
-            Type selectedModelType = this.allowableChildModels.Find(m => m.Name == this.view.List.SelectedValue);
+            Type selectedModelType = this.allowableChildModels.Find(m => m.FullName == this.view.List.SelectedValue);
             if (selectedModelType != null)
             {
                 this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
@@ -105,7 +105,7 @@ namespace UserInterface.Presenters
                 {
                     foreach (Type t in assembly.GetTypes())
                     {
-                        if (t.Name == modelName && t.IsPublic && t.IsClass)
+                        if (t.FullName == modelName && t.IsPublic && t.IsClass)
                         {
                             modelType = t;
                             break;
