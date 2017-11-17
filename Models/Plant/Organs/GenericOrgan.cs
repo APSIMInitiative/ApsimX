@@ -383,13 +383,13 @@ namespace Models.PMF.Organs
             Allocated.MetabolicN += nitrogen.Metabolic;
 
             // Retranslocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN - nitrogenSupply.Retranslocation))
+            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - nitrogenSupply.Retranslocation))
                 throw new Exception("N retranslocation exceeds non structural nitrogen in organ: " + Name);
             Live.StorageN -= nitrogen.Retranslocation;
             Allocated.StorageN -= nitrogen.Retranslocation;
 
             // Reallocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN))
+            if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))
                 throw new Exception("N reallocation exceeds non structural nitrogen in organ: " + Name);
             Live.StorageN -= nitrogen.Reallocation;
             Allocated.StorageN -= nitrogen.Reallocation;
