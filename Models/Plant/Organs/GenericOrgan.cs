@@ -315,7 +315,7 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         public virtual BiomassPoolType CalculateDryMatterDemand()
         {
-            dryMatterDemand.Structural = DemandedDMStructural();
+            dryMatterDemand.Structural = DemandedDMStructural() + remobilisationCost.Value();
             dryMatterDemand.Storage = DemandedDMStorage();
             dryMatterDemand.Metabolic = 0;
             return dryMatterDemand;
