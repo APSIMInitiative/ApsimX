@@ -621,8 +621,14 @@ namespace Models.Core
 
                 if (APSIMFileConverterUtilities.FindModelNode(n, "MaintenanceRespirationFunction") == null)
                     n.AppendChild(MRFnode);
-            }        
+            }
+        }
 
+        /// <summary>
+        /// Add RemobilisationCost to all organs
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="fileName"></param>
         private static void UpgradeToVersion21(XmlNode node, string fileName)
         {
             List<XmlNode> nodeList = new List<XmlNode>();
