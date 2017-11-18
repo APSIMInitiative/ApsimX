@@ -516,10 +516,10 @@ namespace Models.PMF.Organs
         /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
         public void DoSupplyCalculations()
         {
-            DMRetranslocationSupply = AvailableDMRetranslocation();
             DMReallocationSupply = AvailableDMReallocation();
-            NRetranslocationSupply = AvailableNRetranslocation();
+            DMRetranslocationSupply = AvailableDMRetranslocation();
             NReallocationSupply = AvailableNReallocation();
+            NRetranslocationSupply = AvailableNRetranslocation();
         }
 
         /// <summary>Does the nutrient allocations.</summary>
