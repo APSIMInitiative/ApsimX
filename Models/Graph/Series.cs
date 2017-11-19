@@ -165,13 +165,16 @@ namespace Models.Graph
 
                 // Get data for each simulation / zone object
                 DataTable baseData = GetBaseData(storage, simulationZones);
-                simulationZones.ForEach(simulationZone => simulationZone.CreateDataView(baseData, this));
+                if (baseData != null && baseData.Rows.Count > 0)
+                {
+                    simulationZones.ForEach(simulationZone => simulationZone.CreateDataView(baseData, this));
 
-                // Setup all colour, marker, line types etc in all simulation / zone objects.
-                PaintAllSimulationZones(simulationZones);
+                    // Setup all colour, marker, line types etc in all simulation / zone objects.
+                    PaintAllSimulationZones(simulationZones);
 
-                // Convert all simulation / zone objects to seriesdefinitions.
-                simulationZones.ForEach(simZone => ourDefinitions.Add(ConvertToSeriesDefinition(storage, simZone)));
+                    // Convert all simulation / zone objects to seriesdefinitions.
+                    simulationZones.ForEach(simZone => ourDefinitions.Add(ConvertToSeriesDefinition(storage, simZone)));
+                }
             }
 
             // Get all data.
