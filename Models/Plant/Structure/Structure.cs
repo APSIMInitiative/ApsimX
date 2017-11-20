@@ -371,7 +371,7 @@ namespace Models.PMF.Struct
                                 TotalStemPopn -= n * Plant.Population;
                             }
                             else
-                                ApexNum -= Leaf.ApexNumByAge(StemSenescenceAge.Value());
+                               ApexNum -= Leaf.ApexNumByAge(StemSenescenceAge.Value());
 
                             SenescenceByAge = true;
                         }
@@ -397,7 +397,7 @@ namespace Models.PMF.Struct
                     // leaf /stem number at the toppest leaf.
                     // This operation is conducted in whole season for ApexStandard,
                     // but only after flag leaf appeared in ApexTiller.
-                    if (l != null)
+                    if (l != null & DeltaPopn > 0)
                     {
                         if (l.Apex is ApexStandard)
                         {
@@ -423,7 +423,7 @@ namespace Models.PMF.Struct
                 return;
 
             foreach (LeafCohort LC in leaf.Leaves)
-                if (ApexNum >= minimum)
+                if (LC.CohortPopulation / Plant.Population >= minimum)
                     LC.CohortPopulation -= number;
         }
 
