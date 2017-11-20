@@ -281,7 +281,8 @@ namespace Models.PMF.Struct
         {
             if (Plant.IsGerminated)
             {
-                 DeltaHaunStage = 0;
+                Leaf l = Leaf as Leaf;
+                DeltaHaunStage = 0;
                 if (Phyllochron.Value() > 0)
                     DeltaHaunStage = ThermalTime.Value() / Phyllochron.Value();
                
@@ -363,25 +364,73 @@ namespace Models.PMF.Struct
 
                         if (Phenology.Stage > 4 & !SenescenceByAge)
                         {
-                            ApexNum -= Leaf.ApexNumByAge(StemSenescenceAge.Value());
+                            if(l != null && l.Apex is ApexTiller)
+                            {
+                                double n = Leaf.ApexNumByAge(StemSenescenceAge.Value());
+                                ApexNum -= n;
+                                TotalStemPopn -= n * Plant.Population;
+                            }
+                            else
+                               ApexNum -= Leaf.ApexNumByAge(StemSenescenceAge.Value());
+
                             SenescenceByAge = true;
                         }
                     }
 
                     //Reduce population if there has been plant mortality 
-                    if (DeltaPlantPopulation>0)
-                    TotalStemPopn -= DeltaPlantPopulation * TotalStemPopn / Plant.Population;
-                    
-                    //Reduce stem number incase of mortality
-                    double PropnMortality = 0;
-                    PropnMortality = BranchMortality.Value();
+                    if (DeltaPlantPopulation > 0)
                     {
-                        double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
-                        TotalStemPopn -= DeltaPopn;
-                        ProportionBranchMortality = PropnMortality;
+                        double deltaPopn = DeltaPlantPopulation * TotalStemPopn / Plant.Population;
+                        TotalStemPopn -= deltaPopn;
+                        // Reduce cohort population in case of plant mortality
+                        RemoveFromCohorts(DeltaPlantPopulation, 0);
+                    }
+
+                    // Reduce stem number incase of branch mortality
+                    double PropnMortality = BranchMortality.Value();
+                    double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
+                    TotalStemPopn -= DeltaPopn;
+                    ProportionBranchMortality = PropnMortality;
+                    
+                    // In case of branch mortality, reduce cohort populations for 
+                    // all cohrots whose leaf/stem number is not less than the 
+                    // leaf /stem number at the toppest leaf.
+                    // This operation is conducted in whole season for ApexStandard,
+                    // but only after flag leaf appeared in ApexTiller.
+                    if (l != null & DeltaPopn > 0)
+                    {
+                        if (l.Apex is ApexStandard)
+                        {
+                            // RemoveFromCohorts(DeltaPopn, ApexNum);
+                        } else if (l.Apex is ApexTiller & AllLeavesAppeared)
+                        {
+                            // RemoveFromCohorts(DeltaPopn, ApexNum);
+                        }
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Remove cohort population according to branch mortality
+        /// </summary>
+        /// <param name="minimum">Minimum value of ApexNum in order to remove stem.</param>
+        /// <param name="fraction">The number of stem removing from stem population</param>
+        private void RemoveFromCohorts(double fraction, double minimum = 0)
+        {
+            Leaf leaf = Leaf as Leaf; // This is terrible
+            if (leaf == null)
+                return;
+
+            foreach (LeafCohort LC in leaf.Leaves)
+                if (LC.CohortPopulation / Plant.Population >= minimum)
+                {
+                    LC.CohortPopulation *= fraction;
+                    if (LC.CohortPopulation < 0)
+                    {
+                        LC.CohortPopulation = 0;
+                    }
+                }
         }
 
         /// <summary>Does the actual growth.</summary>
