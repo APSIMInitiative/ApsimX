@@ -24,7 +24,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 20; } }
+        public static int LastestVersion { get { return 21; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -620,7 +620,40 @@ namespace Models.Core
 
                 if (APSIMFileConverterUtilities.FindModelNode(n, "MaintenanceRespirationFunction") == null)
                     n.AppendChild(MRFnode);
-            }        
+            }
+        }
+
+        /// <summary>
+        /// Add RemobilisationCost to all organs
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion21(XmlNode node, string fileName)
+        {
+            List<XmlNode> nodeList = new List<XmlNode>();
+
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Root"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Leaf"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "ReproductiveOrgan"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "LeafCohortParameters"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Nodule"));
+
+            foreach (XmlNode n in nodeList)
+            {
+                XmlNode DMnode;
+                DMnode = XmlUtilities.CreateNode(node.OwnerDocument, "Constant", "");
+                XmlElement name = node.OwnerDocument.CreateElement("Name");
+                XmlElement element = node.OwnerDocument.CreateElement("FixedValue");
+                name.InnerText = "RemobilisationCost";
+                element.InnerText = "0";
+                DMnode.AppendChild(name);
+                DMnode.AppendChild(element);
+
+                if (APSIMFileConverterUtilities.FindModelNode(n, "RemobilisationCost") == null)
+                    n.AppendChild(DMnode);
+            }
         }
     }
 }

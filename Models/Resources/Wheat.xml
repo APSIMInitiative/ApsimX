@@ -1067,6 +1067,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <FixedValue>1</FixedValue>
     </Constant>
     <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
+    <Constant>
       <Name>InitialGrainProportion</Name>
       <Constant>
         <Name>InitialGrainProportion</Name>
@@ -1320,6 +1326,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
     </Constant>
     <Constant>
       <Name>KLModifier</Name>
@@ -1679,6 +1691,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
         <Name>NReallocationFactor</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>1</FixedValue>
+      </Constant>
+      <Constant>
+        <Name>RemobilisationCost</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>0</FixedValue>
+        <Units />
       </Constant>
       <Constant>
         <Name>MaintenanceRespirationFunction</Name>
@@ -2281,6 +2299,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
     </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
     <VariableReference>
       <Name>ThermalTime</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2443,6 +2467,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
     </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>    
     <Constant>
       <Name>NRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2619,6 +2649,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>/d</Units>
+    </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
     </Constant>
     <LinearInterpolationFunction>
       <Name>MaximumNConc</Name>

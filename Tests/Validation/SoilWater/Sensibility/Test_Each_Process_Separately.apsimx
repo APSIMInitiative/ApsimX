@@ -6502,7 +6502,7 @@ namespace Models
         </Operation>
         <Operation>
           <Date>1940-01-12T00:00:00</Date>
-          <Action>[Irrigation].Apply(amount:10, depth:3100);</Action>
+          <Action>[Irrigation].Apply(amount:10, depth:3000);</Action>
         </Operation>
       </Operations>
       <Manager>
