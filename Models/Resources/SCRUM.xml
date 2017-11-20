@@ -262,6 +262,12 @@ During this phase the plant has completed its growth and is drying ready for har
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
     </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
     <PartitionFractionDemandFunction>
       <Name>DMDemandFunction</Name>
       <PhaseLookup>
@@ -513,6 +519,12 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
     </Constant>
     <Constant>
       <Name>SenescenceRate</Name>
@@ -1167,6 +1179,12 @@ The root organ demands and is partitioned N and DM and its depth increases throu
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
     </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
     <LinearInterpolationFunction>
       <Name>KLModifier</Name>
       <XYPairs>
@@ -1505,6 +1523,12 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
       <Name>MaximumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
     </Constant>
     <Constant>
       <Name>MinimumNConc</Name>

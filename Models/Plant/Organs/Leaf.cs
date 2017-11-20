@@ -341,6 +341,9 @@ namespace Models.PMF.Organs
             /// <summary>Modify senescence duration by age</summary>
             [Link]
             public IFunction SenescenceDurationAgeMultiplier = null;
+            /// <summary>The cost for remobilisation</summary>
+            [Link]
+            public IFunction RemobilisationCost = null;
         }
         #endregion
 
