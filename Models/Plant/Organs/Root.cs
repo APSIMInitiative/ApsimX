@@ -167,6 +167,10 @@ namespace Models.PMF.Organs
         [Link]
         public IFunction DMConversionEfficiency = null;
 
+        /// <summary>The cost for remobilisation</summary>
+        [Link]
+        public IFunction RemobilisationCost = null;
+
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
@@ -516,10 +520,10 @@ namespace Models.PMF.Organs
         /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
         public void DoSupplyCalculations()
         {
-            DMRetranslocationSupply = AvailableDMRetranslocation();
             DMReallocationSupply = AvailableDMReallocation();
-            NRetranslocationSupply = AvailableNRetranslocation();
+            DMRetranslocationSupply = AvailableDMRetranslocation();
             NReallocationSupply = AvailableNReallocation();
+            NRetranslocationSupply = AvailableNRetranslocation();
         }
 
         /// <summary>Does the nutrient allocations.</summary>

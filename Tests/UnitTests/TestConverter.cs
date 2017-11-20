@@ -207,6 +207,10 @@ namespace UnitTests
                                  "<Name>DMConversionEfficiency</Name>" +
                                  "<FixedValue>1.0</FixedValue>" +
                                "</Constant>" +
+                               "<Constant>" +
+                                 "<Name>RemobilisationCost</Name>" +
+                                 "<FixedValue>0</FixedValue>" +
+                               "</Constant>" +
                              "</GenericOrgan>" +
                             "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);

@@ -260,6 +260,7 @@ namespace UserInterface.Views
         /// <param name="title">The series title</param>
         /// <param name="x">The x values for the series</param>
         /// <param name="y">The y values for the series</param>
+        /// <param name="error">The error values for the series</param>
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
@@ -273,6 +274,7 @@ namespace UserInterface.Views
              string title,
              IEnumerable x,
              IEnumerable y,
+             IEnumerable error,
              Models.Graph.Axis.AxisType xAxisType,
              Models.Graph.Axis.AxisType yAxisType,
              Color colour,
@@ -282,9 +284,10 @@ namespace UserInterface.Views
              Models.Graph.MarkerSizeType markerSize,
              bool showOnLegend)
         {
+            Utility.LineSeriesWithTracker series = null;
             if (x != null && y != null)
             {
-                Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
+                series = new Utility.LineSeriesWithTracker();
                 series.OnHoverOverPoint += OnHoverOverPoint;
                 if (showOnLegend)
                     series.Title = title;
@@ -339,7 +342,17 @@ namespace UserInterface.Views
                 }
 
                 this.plot1.Model.Series.Add(series);
+                if (error != null)
+                {
+                    ScatterErrorSeries errorSeries = new ScatterErrorSeries();
+                    errorSeries.ItemsSource = this.PopulateErrorPointSeries(x, y, error, xAxisType, yAxisType);
+                    errorSeries.XAxisKey = xAxisType.ToString();
+                    errorSeries.YAxisKey = yAxisType.ToString();
+                    errorSeries.ErrorBarColor = series.MarkerFill;
+                    this.plot1.Model.Series.Add(errorSeries);
+                }
             }
+
         }
 
         /// <summary>
@@ -851,6 +864,44 @@ namespace UserInterface.Views
             }
             else
                 return null;
+        }
+
+        /// <summary>
+        /// Populate the specified DataPointSeries with data from the data table.
+        /// </summary>
+        /// <param name="x">The x values</param>
+        /// <param name="y">The y values</param>
+        /// <param name="error">The error size values</param>
+        /// <param name="xAxisType">The x axis the data is associated with</param>
+        /// <param name="yAxisType">The y axis the data is associated with</param>
+        /// <returns>A list of 'DataPoint' objects ready to be plotted</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        private List<ScatterErrorPoint> PopulateErrorPointSeries(
+            IEnumerable x,
+            IEnumerable y,
+            IEnumerable error,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType)
+        {
+            List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
+            if (x != null && y != null && error != null)
+            {
+                // Create a new data point for each x.
+                double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
+                double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
+                double[] errorValues = GetDataPointValues(error.GetEnumerator(), yAxisType);
+
+                if (xValues.Length == yValues.Length && xValues.Length == errorValues.Length)
+                {
+                    // Create data points
+                    for (int i = 0; i < xValues.Length; i++)
+                        if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(errorValues[i]))
+                            points.Add(new ScatterErrorPoint(xValues[i], yValues[i], 0, errorValues[i], 0));
+
+                    return points;
+                }
+            }
+            return null;
         }
 
         /// <summary>Gets an array of values for the given enumerator</summary>
