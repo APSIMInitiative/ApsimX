@@ -363,8 +363,10 @@ namespace Models.PMF.Struct
 
                         if (Phenology.Stage > 4 & !SenescenceByAge)
                         {
-                            ApexNum -= Leaf.ApexNumByAge(StemSenescenceAge.Value());
+                            double senescenceNum = Leaf.ApexNumByAge(StemSenescenceAge.Value());
+                            ApexNum -= senescenceNum;
                             SenescenceByAge = true;
+                            TotalStemPopn -= senescenceNum * Plant.Population;
                         }
                     }
 
