@@ -207,7 +207,7 @@ namespace UserInterface.Views
         private void Help_ButtonPressEvent(object o, ButtonPressEventArgs args)
         {
             if (args.Event.Button == 1)
-              System.Diagnostics.Process.Start("http://www.apsim.info/Filter.aspx");
+              System.Diagnostics.Process.Start("https://apsimnextgeneration.netlify.com/usage/graphfilters/");
         }
 
         public void EndEdit()

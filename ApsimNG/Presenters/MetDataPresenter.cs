@@ -205,13 +205,13 @@ namespace UserInterface.Presenters
 
                         using (DataTable data = this.weatherData.GetAllData())
                         {
-
                             this.dataStartDate = this.weatherData.StartDate;
                             this.dataEndDate = this.weatherData.EndDate;
                             this.WriteTable(data);
                             this.WriteSummary(data);
                             this.DisplayDetailedGraphs(data);
                         }
+
                         this.explorerPresenter.MainPresenter.ShowMessage(" ", Simulation.ErrorLevel.Information);
                     }
                     finally

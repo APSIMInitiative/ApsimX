@@ -288,8 +288,8 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         public virtual BiomassSupplyType CalculateDryMatterSupply()
         {
-            dryMatterSupply.Retranslocation = AvailableDMRetranslocation();
             dryMatterSupply.Reallocation = AvailableDMReallocation();
+            dryMatterSupply.Retranslocation = AvailableDMRetranslocation();         
             dryMatterSupply.Fixation = 0;
             dryMatterSupply.Uptake = 0;
             return dryMatterSupply;
