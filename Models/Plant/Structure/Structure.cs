@@ -383,7 +383,7 @@ namespace Models.PMF.Struct
                         double deltaPopn = DeltaPlantPopulation * TotalStemPopn / Plant.Population;
                         TotalStemPopn -= deltaPopn;
                         // Reduce cohort population in case of plant mortality
-                        RemoveFromCohorts(deltaPopn, 0);
+                        RemoveFromCohorts(DeltaPlantPopulation, 0);
                     }
 
                     // Reduce stem number incase of branch mortality
@@ -401,10 +401,10 @@ namespace Models.PMF.Struct
                     {
                         if (l.Apex is ApexStandard)
                         {
-                            RemoveFromCohorts(DeltaPopn, ApexNum);
+                            // RemoveFromCohorts(DeltaPopn, ApexNum);
                         } else if (l.Apex is ApexTiller & AllLeavesAppeared)
                         {
-                            RemoveFromCohorts(DeltaPopn, ApexNum);
+                            // RemoveFromCohorts(DeltaPopn, ApexNum);
                         }
                     }
                 }
@@ -415,8 +415,8 @@ namespace Models.PMF.Struct
         /// Remove cohort population according to branch mortality
         /// </summary>
         /// <param name="minimum">Minimum value of ApexNum in order to remove stem.</param>
-        /// <param name="number">The number of stem removing from stem population</param>
-        private void RemoveFromCohorts(double number, double minimum = 0)
+        /// <param name="fraction">The number of stem removing from stem population</param>
+        private void RemoveFromCohorts(double fraction, double minimum = 0)
         {
             Leaf leaf = Leaf as Leaf; // This is terrible
             if (leaf == null)
@@ -424,7 +424,13 @@ namespace Models.PMF.Struct
 
             foreach (LeafCohort LC in leaf.Leaves)
                 if (LC.CohortPopulation / Plant.Population >= minimum)
-                    LC.CohortPopulation -= number;
+                {
+                    LC.CohortPopulation *= fraction;
+                    if (LC.CohortPopulation < 0)
+                    {
+                        LC.CohortPopulation = 0;
+                    }
+                }
         }
 
         /// <summary>Does the actual growth.</summary>
