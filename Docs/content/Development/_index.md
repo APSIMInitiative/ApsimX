@@ -6,9 +6,11 @@ weight: 20
 
 # Tools and software process
 
-* [Get source code from GitHub](/development/getsource)
+* [GIT 1: Get source code from GitHub for the first time](/development/getsource)
+* [GIT 2: Bring your development folder up to date](/development/bringuptodate)
+* [GIT 3: Commit files](/development/commit)
+* [GIT 4: Contributing changes back to the master repository](/development/pushandpullrequest)
 * [Setup development environment to compile](/development/compile)
-* [Branching and Git](/development/branchingandgit)
 
 # Model development
 
