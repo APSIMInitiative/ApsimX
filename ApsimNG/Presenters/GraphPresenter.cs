@@ -214,6 +214,7 @@ namespace UserInterface.Presenters
                                                 definition.title, 
                                                 definition.x, 
                                                 definition.y,
+                                                definition.error,
                                                 definition.xAxis, 
                                                 definition.yAxis, 
                                                 definition.colour,

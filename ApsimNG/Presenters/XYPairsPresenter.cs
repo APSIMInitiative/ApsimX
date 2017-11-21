@@ -1,21 +1,21 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="InitialWaterPresenter.cs" company="APSIM Initiative">
+// <copyright file="XYPairsPresenter.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
     using System;
-    using System.Data;
     using System.Collections.Generic;
+    using System.Data;
     using System.Reflection;
+    using APSIM.Shared.Utilities;
     using EventArguments;
     using Interfaces;
-    using Models.PMF.Functions;
     using Models.Core;
     using Models.Graph;
+    using Models.PMF.Functions;
     using Views;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The presenter class for populating an InitialWater view with an InitialWater model.
@@ -82,11 +82,15 @@ namespace UserInterface.Presenters
             this.graphPresenter.Attach(this.graph, this.xyPairsView.Graph, this.explorerPresenter);
             string xAxisTitle = LookForXAxisTitle();
             if (xAxisTitle != null)
+            {
                 xyPairsView.Graph.FormatAxis(Axis.AxisType.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN);
+            }
 
             string yAxisTitle = LookForYAxisTitle();
             if (yAxisTitle != null)
+            {
                 xyPairsView.Graph.FormatAxis(Axis.AxisType.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN);
+            }
 
             xyPairsView.Graph.FormatTitle(xyPairs.Parent.Name);
         }
@@ -131,25 +135,38 @@ namespace UserInterface.Presenters
                 string propertyName = xProperty.GetValue(xyPairs.Parent, null).ToString();
                 IVariable variable = Apsim.GetVariableObject(xyPairs, propertyName);
                 if (variable != null && variable.UnitsLabel != null)
+                {
                     return propertyName + " " + variable.UnitsLabel;
+                }
+
                 return propertyName;
             }
             else if (xyPairs.Parent is AirTemperatureFunction)
+            {
                 return "Mean air temperature (oC)";
+            }
             else if (xyPairs.Parent is SoilTemperatureFunction)
+            {
                 return "Mean soil temperature (oC)";
+            }
             else if (xyPairs.Parent is SoilTemperatureWeightedFunction)
+            {
                 return "Weighted soil temperature (oC)";
+            }
             else if (xyPairs.Parent is WeightedTemperatureFunction)
+            {
                 return "Weighted air temperature (oC)";
+            }
             else
+            {
                 return null;
+            }
         }
 
         /// <summary>
         /// Return the y axis title.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The axis title</returns>
         private string LookForYAxisTitle()
         {
             IModel modelContainingLinkField = xyPairs.Parent.Parent;
@@ -158,12 +175,13 @@ namespace UserInterface.Presenters
             {
                 UnitsAttribute units = ReflectionUtilities.GetAttribute(linkField, typeof(UnitsAttribute), true) as UnitsAttribute;
                 if (units != null)
+                {
                     return xyPairs.Parent.Name + " (" + units.ToString() + ")";
+                }
             }
+
             return xyPairs.Parent.Name;
         }
-
-
 
         /// <summary>
         /// Populate the grid with data and formatting.
@@ -201,6 +219,7 @@ namespace UserInterface.Presenters
                 }
             }
         }        
+
         /// <summary>
         /// Setup the profile grid based on the properties in the model.
         /// The column index of the cell that has changed.
@@ -226,7 +245,6 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-
                 }
 
                 DataTableUtilities.AddColumnOfObjects(table, columnName, values);
@@ -249,11 +267,11 @@ namespace UserInterface.Presenters
 
             this.xyPairsView.VariablesGrid.ResizeControls();
 
-            //this.initialWaterView.OnDepthWetSoilChanged += this.OnDepthWetSoilChanged;
-            //this.initialWaterView.OnFilledFromTopChanged += this.OnFilledFromTopChanged;
-            //this.initialWaterView.OnPAWChanged += this.OnPAWChanged;
-            //this.initialWaterView.OnPercentFullChanged += this.OnPercentFullChanged;
-            //this.initialWaterView.OnRelativeToChanged += this.OnRelativeToChanged;
+            // this.initialWaterView.OnDepthWetSoilChanged += this.OnDepthWetSoilChanged;
+            // this.initialWaterView.OnFilledFromTopChanged += this.OnFilledFromTopChanged;
+            // this.initialWaterView.OnPAWChanged += this.OnPAWChanged;
+            // this.initialWaterView.OnPercentFullChanged += this.OnPercentFullChanged;
+            // this.initialWaterView.OnRelativeToChanged += this.OnRelativeToChanged;
         }
 
         /// <summary>
@@ -297,8 +315,8 @@ namespace UserInterface.Presenters
             // Maintain a list of all property changes that we need to make.
             List<Commands.ChangeProperty.Property> properties = new List<Commands.ChangeProperty.Property>();
 
-            //add missing data as 0 otherwise it will throw an exception
-            //could make this work as an entire row, but will stick to X & Y columns for now
+            // add missing data as 0 otherwise it will throw an exception
+            // could make this work as an entire row, but will stick to X & Y columns for now
             /*
             for (int Row = 0; Row != data.Rows.Count; Row++)
             {
@@ -310,8 +328,8 @@ namespace UserInterface.Presenters
                     break;
             }
             */
-            // Loop through all non-readonly properties, get an array of values from the data table
-            // for the property and then set the property value.
+            //// Loop through all non-readonly properties, get an array of values from the data table
+            //// for the property and then set the property value.
             for (int i = 0; i < this.propertiesInGrid.Count; i++)
             {
                 // If this property is NOT readonly then set its value.
@@ -323,9 +341,13 @@ namespace UserInterface.Presenters
                     {
                         values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
                         if (!MathUtilities.ValuesInArray((double[])values))
+                        {
                             values = null;
+                        }
                         else
+                        {
                             values = MathUtilities.RemoveMissingValuesFromBottom((double[])values);
+                        }
                     }
                     else
                     {
@@ -419,10 +441,12 @@ namespace UserInterface.Presenters
         /// The model has changed. Update the view.
         /// </summary>
         /// <param name="changedModel">The model that has changed.</param>
-        void OnModelChanged(object changedModel)
+        private void OnModelChanged(object changedModel)
         {
             if (changedModel == this.xyPairs)
+            {
                 this.PopulateView();
+            }
         }
     }
 }
