@@ -103,6 +103,11 @@ namespace Models.PMF.Organs
         [Units("/d")]
         private IFunction dmConversionEfficiency = null;
 
+        /// <summary>The cost for remobilisation</summary>
+        [ChildLinkByName]
+        [Units("")]
+        private IFunction remobilisationCost = null;
+
         /// <summary>Tolerance for biomass comparisons</summary>
         private double biomassToleranceValue = 0.0000000001;   // 10E-10
 
@@ -283,8 +288,8 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         public virtual BiomassSupplyType CalculateDryMatterSupply()
         {
-            dryMatterSupply.Retranslocation = AvailableDMRetranslocation();
             dryMatterSupply.Reallocation = AvailableDMReallocation();
+            dryMatterSupply.Retranslocation = AvailableDMRetranslocation();         
             dryMatterSupply.Fixation = 0;
             dryMatterSupply.Uptake = 0;
             return dryMatterSupply;
@@ -310,7 +315,7 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         public virtual BiomassPoolType CalculateDryMatterDemand()
         {
-            dryMatterDemand.Structural = DemandedDMStructural();
+            dryMatterDemand.Structural = DemandedDMStructural() + remobilisationCost.Value();
             dryMatterDemand.Storage = DemandedDMStorage();
             dryMatterDemand.Metabolic = 0;
             return dryMatterDemand;
@@ -341,12 +346,13 @@ namespace Models.PMF.Organs
         /// <param name="dryMatter">The actual amount of drymatter allocation</param>
         public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
+            // Check retranslocation
+            if (dryMatter.Retranslocation - startLive.StorageWt > biomassToleranceValue)
+                throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
+
             // get DM lost by respiration (growth respiration)
             GrowthRespiration = 0.0;
-            GrowthRespiration += dryMatter.Structural * (1.0 - dmConversionEfficiency.Value())
-                              + dryMatter.Storage * (1.0 - dmConversionEfficiency.Value())
-                              + dryMatter.Metabolic * (1.0 - dmConversionEfficiency.Value());
-
+            GrowthRespiration += dryMatter.Structural * (1.0 - dmConversionEfficiency.Value());
             // allocate structural DM
             Allocated.StructuralWt = Math.Min(dryMatter.Structural * dmConversionEfficiency.Value(), dryMatterDemand.Structural);
             Live.StructuralWt += Allocated.StructuralWt;
@@ -354,20 +360,20 @@ namespace Models.PMF.Organs
             // allocate non structural DM
             if ((dryMatter.Storage * dmConversionEfficiency.Value() - DMDemand.Storage) > biomassToleranceValue)
                 throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
-            if (DMDemand.Storage > 0.0)
+            // Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
+            double diffWt = dryMatter.Storage - dryMatter.Retranslocation;
+            if (diffWt > 0)
             {
-                Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
-                Live.StorageWt += Allocated.StorageWt;
+                diffWt *= dmConversionEfficiency.Value();
+                GrowthRespiration += diffWt;
             }
-
+            Allocated.StorageWt = diffWt;
+            Live.StorageWt += diffWt;
+            
             // allocate metabolic DM
             Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
+            GrowthRespiration += dryMatter.Metabolic * (1.0 - dmConversionEfficiency.Value());
 
-            // Retranslocation
-            if (dryMatter.Retranslocation - startLive.StorageWt > biomassToleranceValue)
-                throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
-            Live.StorageWt -= dryMatter.Retranslocation;
-            Allocated.StorageWt -= dryMatter.Retranslocation;
         }
 
         /// <summary>Sets the n allocation.</summary>
@@ -668,6 +674,7 @@ namespace Models.PMF.Organs
                 }
 
                 // Do maintenance respiration
+                MaintenanceRespiration = 0;
                 MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
                 Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
                 MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();

@@ -1,26 +1,35 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.Graph;
-using UserInterface.EventArguments;
-using UserInterface.Interfaces;
-using UserInterface.Views;
+﻿// -----------------------------------------------------------------------
+// <copyright file="GraphPresenter.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace UserInterface.Presenters
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Drawing;
+    using System.IO;
+    using System.Linq;
+    using APSIM.Shared.Utilities;
+    using EventArguments;
+    using Interfaces;
+    using Models.Core;
+    using Models.Graph;
+    using Views;
+    
     /// <summary>
     /// A presenter for a graph.
     /// </summary>
-    class GraphPresenter : IPresenter, IExportable
+    public class GraphPresenter : IPresenter, IExportable
     {
+        /// <summary>
+        /// The storage object
+        /// </summary>
         [Link]
-        IStorageReader storage = null;
+        private IStorageReader storage = null;
         
         /// <summary>The graph view</summary>
         private IGraphView graphView;
@@ -35,7 +44,7 @@ namespace UserInterface.Presenters
         private IPresenter currentPresenter = null;
 
         /// <summary>The series definitions to show on graph.</summary>
-        public List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
+        private List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model.</param>
@@ -63,7 +72,10 @@ namespace UserInterface.Presenters
         {
             explorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
             if (currentPresenter != null)
+            {
                 currentPresenter.Detach();
+            }
+
             graphView.OnAxisClick -= OnAxisClick;
             graphView.OnLegendClick -= OnLegendClick;
             graphView.OnCaptionClick -= OnCaptionClick;
@@ -85,8 +97,11 @@ namespace UserInterface.Presenters
                 {
                     explorerPresenter.MainPresenter.ShowMessage("Error obtaining data from database: " + e.Message, Simulation.ErrorLevel.Error);
                 }
+
                 foreach (SeriesDefinition definition in seriesDefinitions)
+                {
                     DrawOnView(definition);
+                }
 
                 // Update axis maxima and minima
                 graphView.UpdateView();
@@ -95,8 +110,10 @@ namespace UserInterface.Presenters
                 DrawOnView(graph.GetAnnotationsToGraph());
 
                 // Format the axes.
-                foreach (Models.Graph.Axis A in graph.Axes)
-                    FormatAxis(A);
+                foreach (Models.Graph.Axis a in graph.Axes)
+                {
+                    FormatAxis(a);
+                }
 
                 // Format the legend.
                 graphView.FormatLegend(graph.LegendPosition);
@@ -104,11 +121,15 @@ namespace UserInterface.Presenters
                 // Format the title
                 graphView.FormatTitle(graph.Name);
 
-                //Format the footer
-                if (String.IsNullOrEmpty(graph.Caption))
+                // Format the footer
+                if (string.IsNullOrEmpty(graph.Caption))
+                {
                     graphView.FormatCaption("Double click to add a caption", true);
+                }
                 else
+                {
                     graphView.FormatCaption(graph.Caption, false);
+                }
 
                 // Remove series titles out of the graph disabled series list when
                 // they are no longer valid i.e. not on the graph.
@@ -121,6 +142,54 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>Export the contents of this graph to the specified file.</summary>
+        /// <param name="folder">The folder name</param>
+        /// <returns>The html string</returns>
+        public string ConvertToHtml(string folder)
+        {
+            Rectangle r = new Rectangle(0, 0, 800, 500);
+            Bitmap img = new Bitmap(r.Width, r.Height);
+
+            graphView.Export(ref img, r, true);
+
+            string fileName = Path.Combine(folder, graph.Name + ".png");
+            img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+
+            string html = "<img class=\"graph\" src=\"" + fileName + "\"/>";
+            if (this.graph.Caption != null)
+            {
+                html += "<p>" + this.graph.Caption + "</p>";
+            }
+
+            return html;
+        }
+
+        /// <summary>Export the contents of this graph to the specified file.</summary>
+        /// <param name="folder">The folder.</param>
+        /// <returns>The file name</returns>
+        public string ExportToPDF(string folder)
+        {
+            // The rectange numbers below are optimised for generation of PDF document
+            // on a computer that has its display settings at 100%.
+            Rectangle r = new Rectangle(0, 0, 600, 450);
+            Bitmap img = new Bitmap(r.Width, r.Height);
+
+            graphView.Export(ref img, r, true);
+
+            string path = Apsim.FullPath(graph).Replace(".Simulations.", string.Empty);
+            string fileName = Path.Combine(folder, path + ".png");
+            img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+
+            return fileName;
+        }
+
+        /// <summary>Gets the series names.</summary>
+        /// <returns>A list of series names.</returns>
+        public string[] GetSeriesNames()
+        {
+            return seriesDefinitions.Select(s => s.title).ToArray();
+        }
+
         /// <summary>Draws the specified series definition on the view.</summary>
         /// <param name="definition">The definition.</param>
         private void DrawOnView(SeriesDefinition definition)
@@ -129,23 +198,50 @@ namespace UserInterface.Presenters
             {
                 // Create the series and populate it with data.
                 if (definition.type == SeriesType.Bar)
-                    graphView.DrawBar(definition.title, definition.x, definition.y,
-                                      definition.xAxis, definition.yAxis, definition.colour, definition.showInLegend);
-
+                {
+                    graphView.DrawBar(
+                                      definition.title, 
+                                      definition.x, 
+                                      definition.y,
+                                      definition.xAxis, 
+                                      definition.yAxis, 
+                                      definition.colour, 
+                                      definition.showInLegend);
+                }
                 else if (definition.type == SeriesType.Scatter)
-                    graphView.DrawLineAndMarkers(definition.title, definition.x, definition.y, 
-                                                 definition.xAxis, definition.yAxis, definition.colour,
-                                                 definition.line, definition.marker, 
-                                                 definition.lineThickness, definition.markerSize, definition.showInLegend);
-                
+                {
+                    graphView.DrawLineAndMarkers(
+                                                definition.title, 
+                                                definition.x, 
+                                                definition.y,
+                                                definition.error,
+                                                definition.xAxis, 
+                                                definition.yAxis, 
+                                                definition.colour,
+                                                definition.line, 
+                                                definition.marker,
+                                                definition.lineThickness, 
+                                                definition.markerSize, 
+                                                definition.showInLegend);
+                }
                 else if (definition.type == SeriesType.Area)
-                    graphView.DrawArea(definition.title, definition.x, definition.y, definition.x2, definition.y2,
-                                       definition.xAxis, definition.yAxis, definition.colour, definition.showInLegend);
+                {
+                    graphView.DrawArea(
+                                        definition.title, 
+                                        definition.x, 
+                                        definition.y, 
+                                        definition.x2, 
+                                        definition.y2,
+                                        definition.xAxis, 
+                                        definition.yAxis, 
+                                        definition.colour, 
+                                        definition.showInLegend);
+                }
             }
         }
 
         /// <summary>Draws the specified series definition on the view.</summary>
-        /// <param name="definition">The definition.</param>
+        /// <param name="annotations">The list of annotations</param>
         private void DrawOnView(List<Annotation> annotations)
         {
             double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom);
@@ -164,25 +260,42 @@ namespace UserInterface.Presenters
                     {
                         double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
 
-                        double yPosition = largestAxisScale - i * interval;
-                        graphView.DrawText(textAnnotation.text, minimumX, yPosition,
-                                           textAnnotation.leftAlign, textAnnotation.textRotation,
-                                           Axis.AxisType.Bottom, Axis.AxisType.Left, textAnnotation.colour);
+                        double yPosition = largestAxisScale - (i * interval);
+                        graphView.DrawText(
+                                            textAnnotation.text, 
+                                            minimumX, 
+                                            yPosition,
+                                            textAnnotation.leftAlign, 
+                                            textAnnotation.textRotation,
+                                            Axis.AxisType.Bottom, 
+                                            Axis.AxisType.Left, 
+                                            textAnnotation.colour);
                     }
                     else
                     {
-                        graphView.DrawText(textAnnotation.text, textAnnotation.x, textAnnotation.y,
-                                           textAnnotation.leftAlign, textAnnotation.textRotation,
-                                           Axis.AxisType.Bottom, Axis.AxisType.Left, textAnnotation.colour);
+                        graphView.DrawText(
+                                            textAnnotation.text, 
+                                            textAnnotation.x, 
+                                            textAnnotation.y,
+                                            textAnnotation.leftAlign, 
+                                            textAnnotation.textRotation,
+                                            Axis.AxisType.Bottom, 
+                                            Axis.AxisType.Left, 
+                                            textAnnotation.colour);
                     }
                 }
                 else
                 {
                     LineAnnotation lineAnnotation = annotations[i] as LineAnnotation;
 
-                    graphView.DrawLine(lineAnnotation.x1, lineAnnotation.y1,
-                                       lineAnnotation.x2, lineAnnotation.y2,
-                                       lineAnnotation.type, lineAnnotation.thickness, lineAnnotation.colour);
+                    graphView.DrawLine(
+                                        lineAnnotation.x1, 
+                                        lineAnnotation.y1,
+                                        lineAnnotation.x2, 
+                                        lineAnnotation.y2,
+                                        lineAnnotation.type, 
+                                        lineAnnotation.thickness, 
+                                        lineAnnotation.colour);
                 }
             }
         }
@@ -204,14 +317,21 @@ namespace UserInterface.Presenters
                     {
                         string xName = definition.xFieldName;
                         if (definition.xFieldUnits != null)
+                        {
                             xName = xName + " " + definition.xFieldUnits;
+                        }
+
                         names.Add(xName);
                     }
+
                     if (definition.y != null && definition.yAxis == axis.Type && definition.yFieldName != null)
                     {
                         string yName = definition.yFieldName;
                         if (definition.yFieldUnits != null)
+                        {
                             yName = yName + " " + definition.yFieldUnits;
+                        }
+
                         names.Add(yName);
                     }
                 }
@@ -219,57 +339,13 @@ namespace UserInterface.Presenters
                 // Create a default title by appending all 'names' together.
                 title = StringUtilities.BuildString(names.ToArray(), ", ");
             }
+
             graphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval);
         }
-
-        /// <summary>Export the contents of this graph to the specified file.</summary>
-        /// <param name="folder"></param>
-        /// <returns></returns>
-        public string ConvertToHtml(string folder)
-        {
-            Rectangle r = new Rectangle(0, 0, 800, 500);
-            Bitmap img = new Bitmap(r.Width, r.Height);
-
-            graphView.Export(ref img, r, true);
-
-            string fileName = Path.Combine(folder, graph.Name + ".png");
-            img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
-
-            string html = "<img class=\"graph\" src=\"" + fileName + "\"/>";
-            if (this.graph.Caption != null)
-                html += "<p>" + this.graph.Caption + "</p>";
-            return html;
-        }
-
-        /// <summary>Export the contents of this graph to the specified file.</summary>
-        /// <param name="folder">The folder.</param>
-        /// <returns></returns>
-        public string ExportToPDF(string folder)
-        {
-            // The rectange numbers below are optimised for generation of PDF document
-            // on a computer that has its display settings at 100%.
-            Rectangle r = new Rectangle(0, 0, 600, 450);
-            Bitmap img = new Bitmap(r.Width, r.Height);
-
-            graphView.Export(ref img, r, true);
-
-            string path = Apsim.FullPath(graph).Replace(".Simulations.", "");
-            string fileName = Path.Combine(folder, path + ".png");
-            img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
-
-            return fileName;
-        }
-
-        /// <summary>Gets the series names.</summary>
-        /// <returns>A list of series names.</returns>
-        public string[] GetSeriesNames()
-        {
-            return seriesDefinitions.Select(s => s.title).ToArray();
-        }
-
+        
         /// <summary>The graph model has changed.</summary>
-        /// <param name="Model">The model.</param>
-        private void OnGraphModelChanged(object Model)
+        /// <param name="model">The model.</param>
+        private void OnGraphModelChanged(object model)
         {
             DrawGraph();
         }
@@ -279,13 +355,16 @@ namespace UserInterface.Presenters
         private void OnAxisClick(Axis.AxisType axisType)
         {
             if (currentPresenter != null)
+            {
                 currentPresenter.Detach();
-            AxisPresenter AxisPresenter = new AxisPresenter();
-            currentPresenter = AxisPresenter;
-            AxisView A = new AxisView(graphView as GraphView);
+            }
+
+            AxisPresenter axisPresenter = new AxisPresenter();
+            currentPresenter = axisPresenter;
+            AxisView a = new AxisView(graphView as GraphView);
             string dimension = (axisType == Axis.AxisType.Left || axisType == Axis.AxisType.Right) ? "Y" : "X";
-            graphView.ShowEditorPanel(A.MainWidget, dimension + "-Axis options");
-            AxisPresenter.Attach(GetAxis(axisType), A, explorerPresenter);
+            graphView.ShowEditorPanel(a.MainWidget, dimension + "-Axis options");
+            axisPresenter.Attach(GetAxis(axisType), a, explorerPresenter);
         }
 
         /// <summary>User has clicked a footer.</summary>
@@ -294,7 +373,10 @@ namespace UserInterface.Presenters
         private void OnCaptionClick(object sender, EventArgs e)
         {
             if (currentPresenter != null)
+            {
                 currentPresenter.Detach();
+            }
+
             TitlePresenter titlePresenter = new TitlePresenter();
             currentPresenter = titlePresenter;
             titlePresenter.ShowCaption = true;
@@ -306,19 +388,24 @@ namespace UserInterface.Presenters
 
         /// <summary>Get an axis</summary>
         /// <param name="axisType">Type of the axis.</param>
-        /// <returns></returns>
+        /// <returns>Return the axis</returns>
         /// <exception cref="System.Exception">Cannot find axis with type:  + axisType.ToString()</exception>
         private object GetAxis(Axis.AxisType axisType)
         {
-            foreach (Axis A in graph.Axes)
-                if (A.Type.ToString() == axisType.ToString())
-                    return A;
+            foreach (Axis a in graph.Axes)
+            {
+                if (a.Type.ToString() == axisType.ToString())
+                {
+                    return a;
+                }
+            }
+
             throw new Exception("Cannot find axis with type: " + axisType.ToString());
         }
 
         /// <summary>The axis has changed</summary>
-        /// <param name="Axis">The axis.</param>
-        private void OnAxisChanged(Axis Axis)
+        /// <param name="axis">The axis.</param>
+        private void OnAxisChanged(Axis axis)
         {
             DrawGraph();
         }
@@ -329,7 +416,10 @@ namespace UserInterface.Presenters
         private void OnLegendClick(object sender, LegendClickArgs e)
         {
             if (currentPresenter != null)
+            {
                 currentPresenter.Detach();
+            }
+
             LegendPresenter presenter = new LegendPresenter(this);
             currentPresenter = presenter;
 
@@ -350,7 +440,10 @@ namespace UserInterface.Presenters
                 {
                     e.HoverText = GetSimulationNameForPoint(e.X, e.Y);
                     if (e.HoverText == null)
+                    {
                         e.HoverText = e.SeriesName;
+                    }
+
                     return;
                 }
             }
@@ -400,11 +493,14 @@ namespace UserInterface.Presenters
                         {
                             object simulationName = simNameEnum.Current;
                             if (simulationName != null)
+                            {
                                 return simulationName.ToString();
+                            }
                         }
                     }
                 }
             }
+
             return null;
         }
     }

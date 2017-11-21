@@ -376,6 +376,12 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <Units>g/g</Units>
     </Constant>
     <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>    
+    <Constant>
       <Name>MinimumNConc</Name>
       <Memo>
         <Name>Description</Name>
@@ -1027,6 +1033,12 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <MemoText><![CDATA[__Note:__ Represents all the stems and branches in the plant, without any distinction between age or the position in the canopy. ]]></MemoText>
     </Memo>
     <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>    
+    <Constant>
       <Name>InitialWtFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
@@ -1567,6 +1579,12 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <MemoText><![CDATA[__Note:__ Represents the reproductive parts of the plant, flowers, pods, seeds, etc.]]></MemoText>
     </Memo>
     <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
+    <Constant>
       <Name>InitialWtFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
@@ -2026,6 +2044,12 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       </MemoText>
     </Memo>
     <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
+    <Constant>
       <Name>InitialWtFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
@@ -2454,6 +2478,12 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       There is no distinction of age, but root biomass is allocated separately for each soil layer within the root zone.   The depth of the root zone can change over time as root grows.  ]]>
       </MemoText>
     </Memo>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
     <Constant>
       <Name>InitialDM</Name>
       <Memo>
@@ -2913,7 +2943,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
     </BiomassRemoval>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
-    <MaintenanceRespiration>0</MaintenanceRespiration>
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />
