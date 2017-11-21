@@ -3299,7 +3299,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Valetta</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>[Barley].Leaf.CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 2000</Command>
           </Cultivar>
           <Cultivar>
             <Name>Vortex</Name>
@@ -11176,7 +11176,7 @@ The treatments were monitored for:
             <Name>Clock</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <StartDate>2014-10-15T00:00:00</StartDate>
-            <EndDate>2015-03-01T00:00:00</EndDate>
+            <EndDate>2015-01-31T00:00:00</EndDate>
           </Clock>
           <Summary>
             <Name>summaryfile</Name>
@@ -17879,7 +17879,7 @@ This is a water response trial conducted inside and outside the rain shelter at 
 
 •	Full drought (in rain shelter) – was not irrigated except for 17 mm rainfall as a result of shelter failure 42 days after sowing;
 
-•	Early drought (in rain shelter) – also receive 17 mm rainfall and the drought was fully relieved at the onset stem elongation;
+•	Early drought (in rain shelter) – also receive 17 mm rainfall and the drought was fully relieved upon the onset of stem elongation;
 
 •	Late drought (in rain shelter) – fully irrigated (i.e. net crop water use + soil water evaporation) up to stem elongation and nil irrigation thereafter; 
 
@@ -24920,9 +24920,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -26398,9 +26398,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -27871,9 +27871,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -32197,9 +32197,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Grimmett</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Grimmett</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -33480,9 +33480,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Grimmett</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Grimmett</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -34777,8 +34777,8 @@ namespace Models
                 <Name>SowingRule</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <CultivarName>Grimmett</CultivarName>
                   <SowDate>25-may</SowDate>
+                  <CultivarName>Grimmett</CultivarName>
                   <SowingDepth>30</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>120</Population>
