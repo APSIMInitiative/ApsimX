@@ -43,7 +43,7 @@ namespace Models
 		[Description("Row spacing (mm)")]
 		public double RowSpacing { get; set; }
 		[Description("Plant population (/m2)")]
-		public double Population { get; set; }
+		public double Population { get; set; } 
 		
 
 
