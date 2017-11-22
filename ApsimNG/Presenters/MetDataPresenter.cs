@@ -205,13 +205,13 @@ namespace UserInterface.Presenters
 
                         using (DataTable data = this.weatherData.GetAllData())
                         {
-
                             this.dataStartDate = this.weatherData.StartDate;
                             this.dataEndDate = this.weatherData.EndDate;
                             this.WriteTable(data);
                             this.WriteSummary(data);
                             this.DisplayDetailedGraphs(data);
                         }
+
                         this.explorerPresenter.MainPresenter.ShowMessage(" ", Simulation.ErrorLevel.Information);
                     }
                     finally
@@ -607,6 +607,7 @@ namespace UserInterface.Presenters
                                                      "Maximum Temperature",
                                                      months,
                                                      monthlyMaxT,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
                                                      Color.Red,
@@ -619,6 +620,7 @@ namespace UserInterface.Presenters
                                                      "Minimum Temperature",
                                                      months,
                                                      monthlyMinT,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
                                                      Color.Orange,
@@ -685,6 +687,7 @@ namespace UserInterface.Presenters
                                                  "Long term average Rainfall",
                                                  months,
                                                  avgMonthlyRain,
+                                                 null,
                                                  Axis.AxisType.Bottom,
                                                  Axis.AxisType.Left,
                                                  Color.Blue,
@@ -713,6 +716,7 @@ namespace UserInterface.Presenters
                                                      "Maximum Temperature",
                                                      dates,
                                                      maxTemps,
+                                                     null, 
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Left,
                                                      Color.Blue,
@@ -726,6 +730,7 @@ namespace UserInterface.Presenters
                                                      "Minimum Temperature",
                                                      dates,
                                                      minTemps,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Left,
                                                      Color.Orange,
@@ -762,6 +767,7 @@ namespace UserInterface.Presenters
                                                      "Radiation",
                                                      dates,
                                                      radn,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
                                                      Color.Blue,
@@ -774,6 +780,7 @@ namespace UserInterface.Presenters
                                                      "Maximum Radiation",
                                                      dates,
                                                      maxRadn,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
                                                      Color.Orange,
