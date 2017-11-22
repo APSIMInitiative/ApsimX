@@ -926,7 +926,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       </DivideFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <NumberOfDays>5</NumberOfDays>
-      <InitialValue>0</InitialValue>
+      <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
     </MovingAverageFunction>
     <MovingAverageFunction>
       <Name>MeanPhyllochron</Name>
@@ -937,7 +937,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <NumberOfDays>300</NumberOfDays>
-      <InitialValue>80</InitialValue>
+      <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
     </MovingAverageFunction>
     <HoldFunction>
       <Name>FinalLeafNumber</Name>
