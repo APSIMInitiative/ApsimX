@@ -206,6 +206,15 @@ namespace Models.PMF.Struct
             DeltaTipNumber = 0;
             DeltaHaunStage = 0;
             SenescenceByAge = false;
+            Initialised = false;
+            Germinated = false;
+            Emerged = false;
+            ApexNum = 0;
+            _Height = 0;
+            LeafTipsAppeared = 0;
+            BranchNumber = 0;
+            NextLeafProportion = 0;
+            DeltaPlantPopulation = 0;
         }
 
         #endregion
