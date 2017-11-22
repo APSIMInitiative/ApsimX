@@ -209,7 +209,6 @@ namespace Models.PMF.Struct
             Initialised = false;
             Germinated = false;
             Emerged = false;
-            ApexNum = 0;
             _Height = 0;
             LeafTipsAppeared = 0;
             BranchNumber = 0;
