@@ -1322,42 +1322,6 @@ namespace Models
             <string>([Reporting]Script.SoilDenit[2]-[Reporting]Script.SoilDenit[1]) as dltSoilDenit</string>
             <string>([Reporting]Script.SoilDenit[2]-[Reporting]Script.SoilDenit[1]) as dltSoilDenit</string>
             <string>([Reporting]Script.TotalWt[2]-[Reporting]Script.TotalWt[1]) as dltTotalWt</string>
-            <string />
-            <string />
-            <string>[Reporting]Script.DenitrifiedN[1]</string>
-            <string>[Reporting]Script.DenitrifiedN[2]</string>
-            <string>[Reporting]Script.MineralisedSoilN[1]</string>
-            <string>[Reporting]Script.MineralisedSoilN[2]</string>
-            <string>[Reporting]Script.MineralisedSurfOMN[1]</string>
-            <string>[Reporting]Script.MineralisedSurfOMN[2]</string>
-            <string>[Reporting]Script.TotalUrea[1]</string>
-            <string>[Reporting]Script.TotalUrea[2]</string>
-            <string>[Reporting]Script.TotalNH4[1]</string>
-            <string>[Reporting]Script.TotalNH4[2]</string>
-            <string>[Reporting]Script.TotalNO3[1]</string>
-            <string>[Reporting]Script.TotalNO3[2]</string>
-            <string>[Reporting]Script.TotalFOMN[1]</string>
-            <string>[Reporting]Script.TotalFOMN[2]</string>
-            <string>[Reporting]Script.TotalHumicN[1]</string>
-            <string>[Reporting]Script.TotalHumicN[2]</string>
-            <string>[Reporting]Script.TotalMicrobialN[1]</string>
-            <string>[Reporting]Script.TotalMicrobialN[2]</string>
-            <string>[Reporting]Script.HydrolisedN[1]</string>
-            <string>[Reporting]Script.HydrolisedN[2]</string>
-            <string>[Reporting]Script.NitrifiedN[1]</string>
-            <string>[Reporting]Script.NitrifiedN[2]</string>
-            <string>[Reporting]Script.TotalFOMC[1]</string>
-            <string>[Reporting]Script.TotalFOMC[2]</string>
-            <string>[Reporting]Script.TotalHumicC[1]</string>
-            <string>[Reporting]Script.TotalHumicC[2]</string>
-            <string>[Reporting]Script.TotalMicrobialC[1]</string>
-            <string>[Reporting]Script.TotalMicrobialC[2]</string>
-            <string>[Reporting]Script.SoilNO3[1]</string>
-            <string>[Reporting]Script.SoilNO3[2]</string>
-            <string>[Reporting]Script.SoilDenit[1]</string>
-            <string>[Reporting]Script.SoilDenit[2]</string>
-            <string>[Reporting]Script.TotalWt[1]</string>
-            <string>[Reporting]Script.TotalWt[2]</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -8379,5 +8343,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>238</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
