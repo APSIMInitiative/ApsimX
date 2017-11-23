@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Resources;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,16 +20,21 @@ namespace Models.CLEM.Activities
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [Description("This activity timer defines a range between months upon which to perform activities.")]
-    public class ActivityTimerMonthRange: CLEMModel, IActivityTimer
+    public class ActivityTimerMonthRange: CLEMModel, IActivityTimer, IActivityPerformedNotifier
 	{
 		[XmlIgnore]
 		[Link]
 		Clock Clock = null;
 
-		/// <summary>
-		/// Start month of annual period to perform activities
-		/// </summary>
-		[Description("Start month of annual period to perform activities (1-12)")]
+        /// <summary>
+        /// Notify CLEM that this Timer was performed
+        /// </summary>
+        public event EventHandler ActivityPerformed;
+
+        /// <summary>
+        /// Start month of annual period to perform activities
+        /// </summary>
+        [Description("Start month of annual period to perform activities (1-12)")]
 		[System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
         public int StartMonth { get; set; }
@@ -56,24 +62,47 @@ namespace Models.CLEM.Activities
 		{
             get
             {
+                bool due = false;
                 if (StartMonth < EndMonth)
                 {
                     if ((Clock.Today.Month >= StartMonth) && (Clock.Today.Month <= EndMonth))
                     {
-                        return true;
+                        due = true;
                     }
-                    return false;
                 }
                 else
                 {
                     if ((Clock.Today.Month >= EndMonth) | (Clock.Today.Month <= StartMonth))
                     {
-                        return true;
+                        due = true;
                     }
-                    return false;
                 }
+                if (due)
+                {
+                    // report activity performed.
+                    BlankActivity ba = new BlankActivity()
+                    {
+                        Status = ActivityStatus.Timer,
+                        Name = this.Name
+                    };
+                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+                    {
+                        Activity = ba
+                    };
+                    this.OnActivityPerformed(activitye);
+                }
+                return due;
             }
 		}
 
-	}
+        /// <summary>
+        /// Activity has occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
+    }
 }

@@ -57,7 +57,7 @@ namespace UserInterface.Views
         private HBox hbox1 = null;
         private Gtk.Image image1 = null;
 
-        private Gdk.Pixbuf imagePixbuf;
+        //private Gdk.Pixbuf imagePixbuf;
 
         private ListStore gridmodel = new ListStore(typeof(string));
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();
@@ -376,10 +376,12 @@ namespace UserInterface.Views
                     case "Partial":
                     case "Ignore":
                     case "Critical":
+                    case "Timer":
                         (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages."+dataVal.ToString()+".png");
                         break;
                     default:
-                        cell.Visible = false;
+                        (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.blank.png");
+//                        cell.Visible = false;
                         break;
                 }
             }

@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Resources;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,16 +20,21 @@ namespace Models.CLEM.Activities
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [Description("This activity time defines a start month and interval upon which to perform activities.")]
-    public class ActivityTimerInterval: CLEMModel, IActivityTimer
+    public class ActivityTimerInterval: CLEMModel, IActivityTimer, IActivityPerformedNotifier
 	{
 		[XmlIgnore]
 		[Link]
 		Clock Clock = null;
 
-		/// <summary>
-		/// The payment interval (in months, 1 monthly, 12 annual)
-		/// </summary>
-		[System.ComponentModel.DefaultValueAttribute(12)]
+        /// <summary>
+        /// Notify CLEM that timer was ok
+        /// </summary>
+        public event EventHandler ActivityPerformed;
+
+        /// <summary>
+        /// The payment interval (in months, 1 monthly, 12 annual)
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(12)]
 		[Description("The interval (in months, 1 monthly, 12 annual)")]
         [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
         public int Interval { get; set; }
@@ -63,6 +69,20 @@ namespace Models.CLEM.Activities
 		{
 			get
             {
+                if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
+                {
+                    // report activity performed.
+                    BlankActivity ba = new BlankActivity()
+                    {
+                        Status = ActivityStatus.Timer,
+                        Name = this.Name
+                    };
+                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+                    {
+                        Activity = ba
+                    };
+                    this.OnActivityPerformed(activitye);
+                }
                 return (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month);
             }
 		}
@@ -100,7 +120,15 @@ namespace Models.CLEM.Activities
 
 		}
 
+        /// <summary>
+        /// Activity has occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
 
-
-	}
+    }
 }

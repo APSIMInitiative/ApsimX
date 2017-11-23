@@ -35,14 +35,19 @@ namespace Models.CLEM.Activities
 					(item as CLEMActivityBase).ResourceShortfallOccurred += ActivitiesHolder_ResourceShortfallOccurred;
 					(item as CLEMActivityBase).ActivityPerformed += ActivitiesHolder_ActivityPerformed;
 				}
-				BindEvents(item.Children.Cast<IModel>().ToList());
+                BindEvents(item.Children.Cast<IModel>().ToList());
 			}
-		}
+            // add link to all timers as children so they can fire activity performed
+            foreach (var timer in root.Where(a => typeof(IActivityPerformedNotifier).IsAssignableFrom(a.GetType())))
+            {
+                (timer as IActivityPerformedNotifier).ActivityPerformed += ActivitiesHolder_ActivityPerformed;
+            }
+        }
 
-		/// <summary>
-		/// Last resource request that was in defecit
-		/// </summary>
-		public ResourceRequest LastShortfallResourceRequest { get; set; }
+        /// <summary>
+        /// Last resource request that was in defecit
+        /// </summary>
+        public ResourceRequest LastShortfallResourceRequest { get; set; }
 
 		private void ActivitiesHolder_ResourceShortfallOccurred(object sender, EventArgs e)
 		{

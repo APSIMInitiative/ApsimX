@@ -473,6 +473,8 @@
     <EmbeddedResource Include="Resources\MenuImages\Ignore.png" />
     <EmbeddedResource Include="Resources\MenuImages\Partial.png" />
     <EmbeddedResource Include="Resources\MenuImages\Success.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Timer.png" />
+    <EmbeddedResource Include="Resources\MenuImages\blank.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Models.CLEM.Resources;
 
 namespace Models.CLEM.Activities
 {
@@ -19,7 +20,7 @@ namespace Models.CLEM.Activities
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [Description("This activity timer defines a date range to perfrom activities.")]
-    public class ActivityTimerDateRange : CLEMModel, IActivityTimer
+    public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
 	{
 		[XmlIgnore]
 		[Link]
@@ -51,10 +52,15 @@ namespace Models.CLEM.Activities
 		private DateTime startDate;
 		private DateTime endDate;
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public ActivityTimerDateRange()
+        /// <summary>
+        /// Activity performed
+        /// </summary>
+        public event EventHandler ActivityPerformed;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ActivityTimerDateRange()
 		{
 			this.SetDefaults();
 		}
@@ -69,11 +75,11 @@ namespace Models.CLEM.Activities
 			startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
 		}
 
-		/// <summary>
-		/// Method to determine whether the activity is due
-		/// </summary>
-		/// <returns>Whether the activity is due in the current month</returns>
-		public bool ActivityDue
+        /// <summary>
+        /// Method to determine whether the activity is due
+        /// </summary>
+        /// <returns>Whether the activity is due in the current month</returns>
+        public bool ActivityDue
 		{
             get
             {
@@ -82,8 +88,32 @@ namespace Models.CLEM.Activities
                 {
                     inrange = !inrange;
                 }
+                if(inrange)
+                {
+                    // report activity performed.
+                    BlankActivity ba = new BlankActivity()
+                    {
+                        Status = ActivityStatus.Timer,
+                        Name = this.Name
+                    };
+                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+                    {
+                        Activity = ba
+                    };
+                    this.OnActivityPerformed(activitye);
+                }
                 return inrange;
             }
 		}
-	}
+
+        /// <summary>
+        /// Activity has occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
+    }
 }

@@ -381,12 +381,12 @@ namespace Models.CLEM.Activities
 		}
 
 		/// <summary>
-		/// Resource shortfall occured event handler
+		/// Activity performed event handler
 		/// </summary>
 		public virtual event EventHandler ActivityPerformed;
 
 		/// <summary>
-		/// Shortfall occurred 
+		/// Activity has occurred 
 		/// </summary>
 		/// <param name="e"></param>
 		protected virtual void OnActivityPerformed(EventArgs e)
@@ -417,7 +417,11 @@ namespace Models.CLEM.Activities
 		/// <summary>
 		/// Insufficient resources so simulation stopped
 		/// </summary>
-		Critical
-	}
+		Critical,
+        /// <summary>
+        /// Indicates a timer occurred successfully
+        /// </summary>
+        Timer
+    }
 
 }

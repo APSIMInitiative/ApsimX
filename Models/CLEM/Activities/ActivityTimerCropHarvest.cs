@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Resources;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,7 +18,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [Description("This activity timer is used to determine whether an activity (and all sub activities) will be performed based on the harvet dates of the CropActivityManageProduct above.")]
-    public class ActivityTimerCropHarvest : CLEMModel, IActivityTimer, IValidatableObject
+    public class ActivityTimerCropHarvest : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
         [Link]
         Clock Clock = null;
@@ -45,10 +46,15 @@ namespace Models.CLEM.Activities
 
         private CropActivityManageProduct ManageProductActivity;
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public ActivityTimerCropHarvest()
+        /// <summary>
+        /// Notify CLEM that this activity was performed.
+        /// </summary>
+        public event EventHandler ActivityPerformed;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ActivityTimerCropHarvest()
 		{
 			this.SetDefaults();
 		}
@@ -112,10 +118,33 @@ namespace Models.CLEM.Activities
                     }
                 }
                 int today = Clock.Today.Year * 100 + Clock.Today.Month;
+                if (month[0] <= today && month[1] >= today)
+                {
+                    // report activity performed.
+                    BlankActivity ba = new BlankActivity()
+                    {
+                        Status = ActivityStatus.Timer,
+                        Name = this.Name
+                    };
+                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+                    {
+                        Activity = ba
+                    };
+                    this.OnActivityPerformed(activitye);
+                }
                 return (month[0] <= today && month[1] >= today);
             }
 
 		}
 
+        /// <summary>
+        /// Activity has occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
     }
 }
