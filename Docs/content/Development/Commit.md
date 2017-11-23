@@ -3,6 +3,15 @@ title: "GIT 3: Commit files"
 draft: false
 ---
 
+## Initial setup
+
+**The first time you use SourceTree** we recommend you turn staging off.
+
+* Click 'Commit'
+* Choose 'No staging' in the drop down beside the 'Modified files...' drop down
+
+![SourceTreeRemotes](/images/Development.SourceTreeNoStaging.png)
+
 ## Commit
 
 If you have files that you have added or modified, you can commit them to GIT. This process of adding commits keeps track of your progress as you work on files in APSIM.
@@ -11,11 +20,11 @@ Commits also create a transparent history of your work that others can follow to
 
 Commit messages are important, especially since Git tracks your changes and then displays them as commits once they're pushed to the server. By writing clear commit messages, you can make it easier for other people to follow along and provide feedback.
 
-Commits are local to your computer only until you do a push to a remote repository. Click 'Commit':
+Commits are local to your computer only until you do a push to a remote repository. 
 
 ![SourceTreeRemotes](/images/Development.SourceTreeCommit.png)
 
-In the top left corner, SourceTree shows (by default) the files that you have been modified but haven't commited yet. If you have created new files that have never been commited they won't be shown yet. To see these files, change the drop down box from 'Modified files" to "Untracked". 
+In the top left corner, SourceTree shows (by default) the files that you have modified but haven't commited yet. If you have created new files that have never been commited they won't be shown yet. To see these files, change the drop down box from 'Modified files" to "Untracked". 
 
 * You can then right click on the untracked files and select "Add" to tell GIT to start tracking them. 
 * If you don't want to keep them, right click and select "Remove". **This will delete them from your folder**
