@@ -882,8 +882,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <Y>
                     <double>0</double>
                     <double>0</double>
+                    <double>1</double>
                     <double>2</double>
-                    <double>4</double>
                     <double>4</double>
                     <double>7</double>
                     <double>12</double>
@@ -4707,8 +4707,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Booma</Cultivar>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -7489,8 +7489,8 @@ This was a cultivar evaluation trial conducted in Lincoln. Eight cultivars were 
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2010-08-26</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -9473,9 +9473,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
+                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -11666,9 +11666,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2014-10-15</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -20480,6 +20480,72 @@ namespace Models
               <string>Fulldrought150</string>
             </DisabledSeries>
           </Graph>
+          <Graph>
+            <Name>StemPop</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Barley.Structure.TotalStemPopn</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledDiamond</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Barley.Structure.MainStemPopn</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Stem weight</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
@@ -21408,7 +21474,7 @@ namespace Models
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
         <Graph>
-          <Name>StemWt</Name>
+          <Name>StemPop</Name>
           <Series>
             <Name>Predicted</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -21447,9 +21513,9 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Structure.MainStemPop</YFieldName>
+            <YFieldName>Barley.Structure.MainStemPopn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -23345,9 +23411,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowDepth>20</SowDepth>
-                  <Popn>300</Popn>
                   <SowingDate>1999-05-28</SowingDate>
+                  <Popn>300</Popn>
+                  <SowDepth>20</SowDepth>
                   <CultivarName>Dash</CultivarName>
                 </Script>
                 <Code><![CDATA[using System;
@@ -25521,9 +25587,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
+                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -26999,9 +27065,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
+                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -28472,9 +28538,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
+                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -32798,9 +32864,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
+                    <CultivarName>Grimmett</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <CultivarName>Grimmett</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -34081,9 +34147,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
+                    <CultivarName>Grimmett</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <CultivarName>Grimmett</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -35378,8 +35444,8 @@ namespace Models
                 <Name>SowingRule</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowDate>25-may</SowDate>
                   <CultivarName>Grimmett</CultivarName>
+                  <SowDate>25-may</SowDate>
                   <SowingDepth>30</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>120</Population>
