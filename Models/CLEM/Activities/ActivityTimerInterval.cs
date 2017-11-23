@@ -72,14 +72,13 @@ namespace Models.CLEM.Activities
                 if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
                 {
                     // report activity performed.
-                    BlankActivity ba = new BlankActivity()
-                    {
-                        Status = ActivityStatus.Timer,
-                        Name = this.Name
-                    };
                     ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                     {
-                        Activity = ba
+                        Activity = new BlankActivity()
+                        {
+                            Status = ActivityStatus.Timer,
+                            Name = this.Name
+                        }
                     };
                     this.OnActivityPerformed(activitye);
                 }

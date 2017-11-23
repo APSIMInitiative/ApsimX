@@ -80,14 +80,13 @@ namespace Models.CLEM.Activities
                 if (due)
                 {
                     // report activity performed.
-                    BlankActivity ba = new BlankActivity()
-                    {
-                        Status = ActivityStatus.Timer,
-                        Name = this.Name
-                    };
                     ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                     {
-                        Activity = ba
+                        Activity = new BlankActivity()
+                        {
+                            Status = ActivityStatus.Timer,
+                            Name = this.Name
+                        }
                     };
                     this.OnActivityPerformed(activitye);
                 }

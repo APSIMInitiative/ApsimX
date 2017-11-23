@@ -57,7 +57,7 @@ namespace UserInterface.Views
         private HBox hbox1 = null;
         private Gtk.Image image1 = null;
 
-        //private Gdk.Pixbuf imagePixbuf;
+        private Gdk.Pixbuf imagePixbuf;
 
         private ListStore gridmodel = new ListStore(typeof(string));
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();

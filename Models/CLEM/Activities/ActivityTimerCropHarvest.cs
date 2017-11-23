@@ -121,14 +121,13 @@ namespace Models.CLEM.Activities
                 if (month[0] <= today && month[1] >= today)
                 {
                     // report activity performed.
-                    BlankActivity ba = new BlankActivity()
-                    {
-                        Status = ActivityStatus.Timer,
-                        Name = this.Name
-                    };
                     ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                     {
-                        Activity = ba
+                        Activity = new BlankActivity()
+                        {
+                            Status = ActivityStatus.Timer,
+                            Name = this.Name
+                        }
                     };
                     this.OnActivityPerformed(activitye);
                 }
