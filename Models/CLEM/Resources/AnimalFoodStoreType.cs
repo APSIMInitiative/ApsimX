@@ -44,7 +44,7 @@ namespace Models.CLEM.Resources
 		/// Current store nitrogen (%)
 		/// </summary>
 		[XmlIgnore]
-		[Description("Current store nitrogen (%)")]
+//		[Description("Current store nitrogen (%)")]
 		public double CurrentStoreNitrogen { get; set; }
 
 		/// <summary>

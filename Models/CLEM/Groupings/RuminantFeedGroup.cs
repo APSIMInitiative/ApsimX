@@ -14,7 +14,7 @@ namespace Models.CLEM.Groupings
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantActivityFeed))]
-    [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters.\nThis filter group includes feeding rules. Multiple feeding groups will select groups of individuals required.")]
+    [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters.\nThis filter group includes feeding rules. No filters will apply rules to current herd.\nMultiple feeding groups will select groups of individuals required.")]
     public class RuminantFeedGroup: CLEMModel
 	{
         /// <summary>

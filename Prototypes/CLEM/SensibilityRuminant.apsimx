@@ -218,6 +218,13 @@
           <Name>ReportHerd</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </ReportRuminantHerd>
+        <ActivityTimerDateRange>
+          <Name>ActivityTimerDateRange</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <StartDate>2000-11-01T00:00:00</StartDate>
+          <EndDate>2007-01-01T00:00:00</EndDate>
+          <Invert>false</Invert>
+        </ActivityTimerDateRange>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ActivitiesHolder>
       <Folder>
@@ -252,7 +259,7 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Activities].ReportHerd.ReportDetails.Individual.ID as ID</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.ID as uID</string>
             <string>[Activities].ReportHerd.ReportDetails.Individual.Weight as Weight</string>
           </VariableNames>
           <EventNames>

@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantInitialCohorts))]
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
-    [Description("This specifies a ruminant cohort at the start of the simulation.")]
+    [Description("This specifies a ruminant cohort used for identifying purchase individuals and initalising the herd at the start of the simulation.")]
     public class RuminantTypeCohort : CLEMModel
 	{
 		[Link]
