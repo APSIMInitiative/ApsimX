@@ -360,41 +360,22 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
       <ShootLag>40</ShootLag>
       <ShootRate>1.5</ShootRate>
     </EmergingPhase>
-    <GenericPhase>
+    <NodeNumberPhase>
       <Name>Vegetative</Name>
-      <Memo>
-        <Name>Memo</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[The duration of the vegetative phase is set by a target Haun Stage for the occurence of Terminal Spikelet and the rate of leaf appearance.  ]]></MemoText>
-      </Memo>
       <VariableReference>
         <Name>ThermalTime</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
-      <MultiplyFunction>
-        <Name>Target</Name>
-        <VariableReference>
-          <Name>Phyllochron</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Structure].MeanPhyllochron.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>HSTS</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Structure].HaunStageTerminalSpikelet.Value()</VariableName>
-        </VariableReference>
+      <VariableReference>
+        <Name>CompletionNodeNumber</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-      </MultiplyFunction>
-      <Memo>
-        <Name>Memo1</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[HaunStageTerminalSpiklet decreases as vernalisation is accumulated and as photoperiod extends, capturing the effect of these responses on the duration of the Vegetative phase]]></MemoText>
-      </Memo>
+        <VariableName>[Structure].HaunStageTerminalSpikelet.Value()</VariableName>
+      </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>Emergence</Start>
       <End>TerminalSpikelet</End>
-    </GenericPhase>
+    </NodeNumberPhase>
     <LeafAppearancePhase>
       <Name>StemElongation</Name>
       <Memo>
