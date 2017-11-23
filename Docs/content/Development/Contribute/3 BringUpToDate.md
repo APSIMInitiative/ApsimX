@@ -1,5 +1,5 @@
 ---
-title: "GIT 2: Bring your development folder up to date"
+title: "3. Bring folder up to date"
 draft: false
 ---
 

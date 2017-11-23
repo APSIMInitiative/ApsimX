@@ -1,5 +1,5 @@
 ---
-title: "GIT 3: Commit files"
+title: "4. Commit files"
 draft: false
 ---
 
