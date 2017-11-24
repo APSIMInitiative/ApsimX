@@ -177,6 +177,7 @@
     <Compile Include="Presenters\GraphPresenter.cs" />
     <Compile Include="Presenters\IExportable.cs" />
     <Compile Include="Presenters\InitialWaterPresenter.cs" />
+    <Compile Include="Presenters\CLEMCropsInputPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\IPresenter.cs" />
     <Compile Include="Presenters\LegendPresenter.cs" />
@@ -229,6 +230,7 @@
     <Compile Include="Views\GridView.cs" />
     <Compile Include="Views\HTMLView.cs" />
     <Compile Include="Views\InitialWaterView.cs" />
+    <Compile Include="Views\CLEMCropsInputView.cs" />
     <Compile Include="Views\InputView.cs" />
     <Compile Include="Views\LegendView.cs" />
     <Compile Include="Views\ListBoxView.cs" />

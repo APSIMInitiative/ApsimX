@@ -25,8 +25,8 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.WFFileView")]
-    [PresenterName("UserInterface.Presenters.WFFileCropPresenter")]
+    [ViewName("UserInterface.Views.CLEMCropsInputView")]
+    [PresenterName("UserInterface.Presenters.CLEMCropsInputPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
     [Description("This model holds a crop data file for the CLEM simulation.")]
     public class FileCrop : Model
