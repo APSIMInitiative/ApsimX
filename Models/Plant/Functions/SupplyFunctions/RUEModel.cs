@@ -9,10 +9,10 @@ using Models.Interfaces;
 namespace Models.PMF.Functions.SupplyFunctions
 {
     /// <summary>
-    /// Biomass accumulation is the product of the amount of intercepted radiation and its conversion efficiency, the radiation use efficiency (RUE) ([Monteith1977]).  
-    /// This approach simulates net photosynthesis rather than providing separate estimates of growth and respiration.  
-    /// RUE is calculated from a potential value which is discounted using stress factors that account for plant nutrition (Fn), air temperature(Ft), vapour pressure deficit (Fvpd), water supply (Fw) and atmospheric CO2 concentration (Fco2).  
-    /// NOTE: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth.
+    /// Biomass accumulation is modeled as the product of intercepted radiation and its conversion efficiency, the radiation use efficiency (RUE) ([Monteith1977]).  
+    ///   This approach simulates net photosynthesis rather than providing separate estimates of growth and respiration.  
+    ///   RUE is calculated from a potential value which is discounted using stress factors that account for plant nutrition (FN), air temperature (FT), vapour pressure deficit (FVPD), water supply (FW) and atmospheric CO<sub>2</sub> concentration (FCO2).  
+    ///   NOTE: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(ILeaf))]
@@ -96,11 +96,12 @@ namespace Models.PMF.Functions.SupplyFunctions
         /// <returns>g dry matter/m2 soil/day</returns>
         public double Value(int arrayIndex = -1)
         {
-            if (Double.IsNaN(RadnInt.Value(arrayIndex)))
+            double radiationInterception = RadnInt.Value(arrayIndex);
+            if (Double.IsNaN(radiationInterception))
                 throw new Exception("NaN Radiation interception value supplied to RUE model");
-            if (RadnInt.Value(arrayIndex) < 0)
+            if (radiationInterception < 0)
                 throw new Exception("Negative Radiation interception value supplied to RUE model");
-            return RadnInt.Value(arrayIndex) * RueAct;
+            return radiationInterception * RueAct;
         }
         #endregion
     }

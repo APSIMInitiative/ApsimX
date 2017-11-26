@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.24 -->
+<interface>
+  <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <widget class="GtkVBox" id="vbox1">
+  <object class="GtkVBox" id="vbox1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <child>
-      <widget class="GtkVBox" id="vbox2">
+      <object class="GtkVBox" id="vbox2">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
           <placeholder/>
         </child>
         <child>
-          <widget class="GtkEventBox" id="captionEventBox">
+          <object class="GtkEventBox" id="captionEventBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="no_show_all">True</property>
             <child>
-              <widget class="GtkLabel" id="captionLabel">
+              <object class="GtkLabel" id="captionLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="no_show_all">True</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">label</property>
-              </widget>
+              </object>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
@@ -34,7 +34,7 @@
             <property name="position">1</property>
           </packing>
         </child>
-      </widget>
+      </object>
       <packing>
         <property name="expand">True</property>
         <property name="fill">True</property>
@@ -42,28 +42,25 @@
       </packing>
     </child>
     <child>
-      <widget class="GtkExpander" id="expander1">
+      <object class="GtkExpander" id="expander1">
         <property name="can_focus">True</property>
         <property name="no_show_all">True</property>
         <child>
           <placeholder/>
         </child>
-        <child>
-          <widget class="GtkLabel" id="label2">
+        <child type="label">
+          <object class="GtkLabel" id="label2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">expander</property>
-          </widget>
-          <packing>
-            <property name="type">label_item</property>
-          </packing>
+          </object>
         </child>
-      </widget>
+      </object>
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="position">1</property>
       </packing>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+</interface>

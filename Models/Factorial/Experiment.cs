@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using Models.Factorial;
-using APSIM.Shared.Utilities;
-using System.ComponentModel;
-using System.IO;
-
-namespace Models.Factorial
+﻿namespace Models.Factorial
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Core.Runners;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+
     /// <summary>
     /// Encapsulates a factorial experiment.f
     /// </summary>
@@ -17,49 +15,76 @@ namespace Models.Factorial
     [ViewName("UserInterface.Views.MemoView")]
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class Experiment : Model, JobManager.IRunnable
+    public class Experiment : Model, IJobGenerator
     {
-        /// <summary>Called to start the job.</summary>
-        /// <param name="jobManager">The job manager running this job.</param>
-        /// <param name="workerThread">The thread this job is running on.</param>
-        public void Run(JobManager jobManager, BackgroundWorker workerThread)
+        [Link]
+        IStorageReader storage = null;
+
+        private List<List<FactorValue>> allCombinations;
+        private Stream serialisedBase;
+        private Simulations parentSimulations;
+
+        /// <summary>Simulation runs are about to begin.</summary>
+        [EventSubscribe("BeginRun")]
+        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
-            List<List<FactorValue>> allCombinations = AllCombinations();
+            allCombinations = AllCombinations();
+            parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
             Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
-            Simulations parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
+        }
 
-            Stream serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
+        /// <summary>Gets the next job to run</summary>
+        public IRunnable NextJobToRun()
+        {
+            if (allCombinations == null || allCombinations.Count == 0)
+                return null;
 
-            List<Simulation> simulations = new List<Simulation>();
+            var combination = allCombinations[0];
+            allCombinations.RemoveAt(0);
+            string newSimulationName = Name;
+            foreach (FactorValue value in combination)
+                newSimulationName += value.Name;
+
+            Simulation newSimulation = Apsim.DeserialiseFromStream(serialisedBase) as Simulation;
+            newSimulation.Name = newSimulationName;
+            newSimulation.Parent = null;
+            newSimulation.FileName = parentSimulations.FileName;
+            Apsim.ParentAllChildren(newSimulation);
+
+            // Make substitutions.
+            parentSimulations.MakeSubstitutions(newSimulation);
+
+            // Call OnLoaded in all models.
+            Events events = new Events(newSimulation);
+            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+            events.Publish("Loaded", new object[] { newSimulation, loadedArgs });
+
+            foreach (FactorValue value in combination)
+                value.ApplyToSimulation(newSimulation);
+
+            PushFactorsToReportModels(newSimulation, combination);
+            StoreFactorsInDataStore(newSimulation, combination);
+            return new RunSimulation(newSimulation, doClone: false);
+        }
+
+        /// <summary>Gets a list of simulation names</summary>
+        public IEnumerable<string> GetSimulationNames()
+        {
+            List<string> names = new List<string>();
+            allCombinations = AllCombinations();
             foreach (List<FactorValue> combination in allCombinations)
             {
                 string newSimulationName = Name;
+
                 foreach (FactorValue value in combination)
                     newSimulationName += value.Name;
 
-                Simulation newSimulation = Apsim.DeserialiseFromStream(serialisedBase) as Simulation;
-                newSimulation.Name = newSimulationName;
-                newSimulation.Parent = null;
-                newSimulation.FileName = parentSimulations.FileName;
-                Apsim.ParentAllChildren(newSimulation);
-
-                // Make substitutions.
-                Simulations.MakeSubstitutions(parentSimulations, new List<Simulation> { newSimulation });
-
-                // Call OnLoaded in all models.
-                Events events = new Events();
-                events.AddModelEvents(newSimulation);
-                events.CallEventHandler(newSimulation, "Loaded", null);
-
-                foreach (FactorValue value in combination)
-                    value.ApplyToSimulation(newSimulation);
-                
-                PushFactorsToReportModels(newSimulation, combination);
-                StoreFactorsInDataStore(newSimulation, combination);
-                jobManager.AddChildJob(this, newSimulation);
+                names.Add(newSimulationName);
             }
+            return names;
         }
-
+        
         /// <summary>Find all report models and give them the factor values.</summary>
         /// <param name="factorValues">The factor values to send to each report model.</param>
         /// <param name="simulation">The simulation to search for report models.</param>
@@ -114,9 +139,25 @@ namespace Models.Factorial
             IModel parentFolder = Apsim.Parent(this, typeof(Folder));
             if (parentFolder != null)
                 parentFolderName = parentFolder.Name;
-            DataStore store = new DataStore(this);
-            store.StoreFactors(Name, simulation.Name, parentFolderName, names, values);
-            store.Disconnect();
+
+            DataTable factorTable = new DataTable();
+            factorTable.TableName = "_Factors";
+            factorTable.Columns.Add("ExperimentName", typeof(string));
+            factorTable.Columns.Add("SimulationName", typeof(string));
+            factorTable.Columns.Add("FolderName", typeof(string));
+            factorTable.Columns.Add("FactorName", typeof(string));
+            factorTable.Columns.Add("FactorValue", typeof(string));
+            for (int i = 0; i < names.Count; i++)
+            {
+                DataRow row = factorTable.NewRow();
+                row[0] = Name;
+                row[1] = simulation.Name;
+                row[2] = parentFolderName;
+                row[3] = names[i];
+                row[4] = values[i];
+                factorTable.Rows.Add(row);
+            }
+            storage.WriteTable(factorTable);
         }
 
         /// <summary>
@@ -154,12 +195,12 @@ namespace Models.Factorial
                     Apsim.ParentAllChildren(newSimulation);
 
                     // Make substitutions.
-                    Simulations.MakeSubstitutions(parentSimulations, new List<Simulation> { newSimulation });
+                    parentSimulations.MakeSubstitutions(newSimulation);
 
                     // Connect events and links in our new  simulation.
-                    Events events = new Events();
-                    events.AddModelEvents(newSimulation);
-                    events.CallEventHandler(newSimulation, "Loaded", null);
+                    Events events = new Events(newSimulation);
+                    LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                    events.Publish("Loaded", new object[] { newSimulation, loadedArgs });
 
                     foreach (FactorValue value in combination)
                         value.ApplyToSimulation(newSimulation);
@@ -171,29 +212,6 @@ namespace Models.Factorial
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Return a list of simulation names.
-        /// </summary>
-        public string[] Names()
-        {
-            List<List<FactorValue>> allCombinations = AllCombinations();
-
-            List<string> names = new List<string>();
-            if (allCombinations != null)
-            {
-                foreach (List<FactorValue> combination in allCombinations)
-                {
-                    string newSimulationName = Name;
-
-                    foreach (FactorValue value in combination)
-                        newSimulationName += value.Name;
-
-                    names.Add(newSimulationName);
-                }
-            }
-            return names.ToArray();
         }
 
         /// <summary>
@@ -221,5 +239,25 @@ namespace Models.Factorial
             }
             return null;
         }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                foreach (IModel child in Children)
+                {
+                    if (!(child is Simulation) && !(child is Factors))
+                        child.Document(tags, headingLevel + 1, indent);
+                }
+            }
+        }
+
     }
 }

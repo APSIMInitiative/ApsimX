@@ -4,6 +4,7 @@ using Models.Interfaces;
 using Models.PMF.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
+using Models.PMF.Struct;
 using System;
 using System.Xml.Serialization;
 
@@ -23,14 +24,14 @@ namespace Models.PMF.Organs
     /// 
     /// **Nitrogen Demands**
     /// 
-    /// The daily nonstructural N demand is the product of Total DM demand and a Maximum N concentration less the structural N demand.
+    /// The daily Storage N demand is the product of Total DM demand and a Maximum N concentration less the structural N demand.
     /// The daily structural N demand is the product of Total DM demand and a Minimum N concentration. 
     /// The Nitrogen demand switch is a multiplier applied to nitrogen demand so it can be turned off at certain phases.
     /// 
     /// **Nitrogen Supplies**
     /// 
     /// As the organ senesces a fraction of senesced N is made available to the arbitrator as NReallocationSupply.
-    /// A fraction of nonstructural N is made available to the arbitrator as NRetranslocationSupply
+    /// A fraction of Storage N is made available to the arbitrator as NRetranslocationSupply
     /// 
     /// **Biomass Senescence and Detachment**
     /// 
@@ -50,6 +51,10 @@ namespace Models.PMF.Organs
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf, IHasWaterDemand
     {
+        /// <summary>The plant</summary>
+        [Link]
+        private Plant Plant = null;
+
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
@@ -239,7 +244,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Live != null)
-                    return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value(), 1);
+                    return MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
                 return 0;
             }
         }
@@ -263,18 +268,12 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double WaterAllocation { get; set; }
 
-        /// <summary>Gets the DM supply for this computation round.</summary>
-        public override BiomassSupplyType DMSupply
+        /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
+        public override BiomassSupplyType CalculateDryMatterSupply()
         {
-            get
-            {
-                return new BiomassSupplyType
-                {
-                    Fixation = Photosynthesis.Value(),
-                    Retranslocation = DMRetranslocationSupply,
-                    Reallocation = DMReallocationSupply
-                };
-            }
+            base.CalculateDryMatterSupply();   // get our base GenericOrgan to fill a supply structure first.
+            DMSupply.Fixation = Photosynthesis.Value();
+            return DMSupply;
         }
 
         #endregion
@@ -284,7 +283,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
-        new private void OnPlantSowing(object sender, SowPlant2Type data)
+        private void OnSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == Plant)
             {

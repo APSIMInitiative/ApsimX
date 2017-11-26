@@ -298,10 +298,11 @@ namespace Models.Agroforestry
 
             for (int i = 2; i < Table.Count; i++)
             {
-                shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0]));
+                shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0], 
+                                                             System.Globalization.CultureInfo.InvariantCulture));
                 List<double> getRLDs = new List<double>();
                 for (int j = 3; j < Table[1].Count; j++)
-                    getRLDs.Add(Convert.ToDouble(Table[i][j]));
+                    getRLDs.Add(Convert.ToDouble(Table[i][j], System.Globalization.CultureInfo.InvariantCulture));
                 rld.Add(THCutoffs[i - 2], getRLDs.ToArray());
             }
         }
@@ -634,21 +635,7 @@ namespace Models.Agroforestry
                 }
             }
         }
-        /// <summary>Writes documentation for this cultivar by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            // need to put something here
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
-
-            
-        }
     }
 
     /// <summary>

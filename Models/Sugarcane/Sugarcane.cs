@@ -12256,10 +12256,10 @@ namespace Models
             //num_layers = dlayer.Length;
 
             bd = Soil.BD;           //Soil.BDMapped;
-            dul_dep = Soil.SoilWater.DULmm;
+            dul_dep = Soil.DULmm;
             sw_dep = Soil.SoilWater.SWmm;     //Soil.Water;
-            sat_dep = Soil.SoilWater.SATmm;
-            ll15_dep = Soil.SoilWater.LL15mm;
+            sat_dep = Soil.SATmm;
+            ll15_dep = Soil.LL15mm;
 
 
 
@@ -12336,7 +12336,7 @@ namespace Models
 
             CheckAllNUptakeOptionalsReadIn();   //sugar_read_constants() - (this is what is left of sugar_read_constants() that can't be done using [Param])
 
-            g_current_stage = Convert.ToDouble(crop_end);
+            g_current_stage = Convert.ToDouble(crop_end, System.Globalization.CultureInfo.InvariantCulture);
             g_crop_status = crop_out;
 
             }

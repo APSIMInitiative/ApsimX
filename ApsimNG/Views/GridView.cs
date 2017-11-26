@@ -16,7 +16,6 @@ namespace UserInterface.Views
     using Classes;
     //using DataGridViewAutoFilter;
     using EventArguments;
-    using Glade;
     using Gtk;
     using Interfaces;
     using Models.Core;
@@ -86,19 +85,10 @@ namespace UserInterface.Views
         /// </summary>
         private bool selfCursorMove = false;
 
-        [Widget]
         private ScrolledWindow scrolledwindow1 = null;
-        // [Widget]
-        // private ScrolledWindow scrolledwindow2 = null;
-
-        [Widget]
         public TreeView gridview = null;
-        [Widget]
         public TreeView fixedcolview = null;
-
-        [Widget]
         private HBox hbox1 = null;
-        [Widget]
         private Gtk.Image image1 = null;
 
         private Gdk.Pixbuf imagePixbuf;
@@ -116,8 +106,12 @@ namespace UserInterface.Views
         /// </summary>
         public GridView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.GridView.glade", "hbox1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
+            hbox1 = (HBox)builder.GetObject("hbox1");
+            scrolledwindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
+            gridview = (TreeView)builder.GetObject("gridview");
+            fixedcolview = (TreeView)builder.GetObject("fixedcolview");
+            image1 = (Gtk.Image)builder.GetObject("image1");
             _mainWidget = hbox1;
             gridview.Model = gridmodel;
             gridview.Selection.Mode = SelectionMode.Multiple;
@@ -140,6 +134,7 @@ namespace UserInterface.Views
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
+
 
         /// <summary>
         /// Does cleanup when the main widget is destroyed
@@ -170,7 +165,7 @@ namespace UserInterface.Views
             // This may break if Gtk# changes the way they implement event handlers.
             foreach (Widget w in Popup)
             {
-                if (w is ImageMenuItem)
+                if (w is MenuItem)
                 {
                     PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
                     if (pi != null)
@@ -179,12 +174,23 @@ namespace UserInterface.Views
                         if (handlers != null && handlers.ContainsKey("activate"))
                         {
                             EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as ImageMenuItem).Activated -= handler;
+                            (w as MenuItem).Activated -= handler;
                         }
                     }
                 }
             }
             ClearGridColumns();
+            gridmodel.Dispose();
+            Popup.Dispose();
+            accel.Dispose();
+            if (imagePixbuf != null)
+                imagePixbuf.Dispose();
+            if (image1 != null)
+                image1.Dispose();
+            if (table != null)
+                table.Dispose();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>
@@ -217,6 +223,7 @@ namespace UserInterface.Views
                     {
                         (render as CellRendererCombo).Edited -= ComboRender_Edited;
                     }
+                    render.Destroy();
                 }
                 gridview.RemoveColumn(gridview.GetColumn(0));
             }
@@ -463,7 +470,7 @@ namespace UserInterface.Views
                 textRender.Xalign = ((i == 0) || (i == 1) && isPropertyMode) ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
                 TreeViewColumn column = new TreeViewColumn();
-                column.Title = this.DataSource.Columns[i].ColumnName;
+                column.Title = this.DataSource.Columns[i].Caption;
                 column.PackStart(textRender, true);     // 0
                 column.PackStart(toggleRender, true);   // 1
                 column.PackStart(comboRender, true);    // 2
@@ -489,6 +496,7 @@ namespace UserInterface.Views
                 fixedColumn.Alignment = 0.5f; // For centered alignment of the column header
                 fixedColumn.Visible = false;
                 fixedcolview.AppendColumn(fixedColumn);
+
             }
 
             if (!isPropertyMode)
@@ -508,46 +516,62 @@ namespace UserInterface.Views
                 // We could store data into the grid model, but we don't.
                 // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
                 gridmodel.Append();
+
+                //DataRow dataRow = this.DataSource.Rows[row];
+                //gridmodel.AppendValues(dataRow.ItemArray);
+
             }
             gridview.Model = gridmodel;
 
+            SetColumnHeaders(gridview);
+            SetColumnHeaders(fixedcolview);
+
+            gridview.EnableSearch = false;
+            //gridview.SearchColumn = 0;
+            fixedcolview.EnableSearch = false;
+            //fixedcolview.SearchColumn = 0;
+
             gridview.Show();
-
-            // Now let's apply center-justification to all the column headers, just for the heck of it
-            // It seems that on Windows, it's best to do this after gridview has been shown
-            // Note that this affects the justification of wrapped lines, not justification of the
-            // header as a whole, which is handled with column.Alignment
-            for (int i = 0; i < nCols; i++)
-            {
-                Label label = GetColumnHeaderLabel(i);
-                if (label != null)
-                {
-                    label.Wrap = true;
-                    label.Justify = Justification.Center;
-                    if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
-                        (label.Parent as Alignment).LeftPadding = 2;
-                    label.Style.FontDescription.Weight = Pango.Weight.Bold;
-                }
-
-                label = GetColumnHeaderLabel(i, fixedcolview);
-                if (label != null)
-                {
-                    label.Wrap = true;
-                    label.Justify = Justification.Center;
-                    label.Style.FontDescription.Weight = Pango.Weight.Bold;
-                }
-            }
 
             if (mainWindow != null)
                 mainWindow.Cursor = null;
         }
 
         /// <summary>
-        /// Clean up "stuff" when the editing control is closed
+        /// Modify the settings of all column headers
+        /// We apply center-justification to all the column headers, just for the heck of it
+        /// Note that "justification" here refers to justification of wrapped lines, not 
+        /// justification of the header as a whole, which is handled with column.Alignment
+        /// We create new Labels here, and use markup to make them bold, since other approaches 
+        /// don't seem to work consistently
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TextRender_EditingCanceled(object sender, EventArgs e)
+        /// <param name="view">The treeview for which headings are to be modified</param>
+        private void SetColumnHeaders(TreeView view)
+        {
+            int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+            for (int i = 0; i < nCols; i++)
+            {
+                Label newLabel = new Label();
+                view.Columns[i].Widget = newLabel;
+                newLabel.Wrap = true;
+                newLabel.Justify = Justification.Center;
+                if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
+                    (newLabel.Parent as Alignment).LeftPadding = 2;
+                newLabel.UseMarkup = true;
+                newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(gridview.Columns[i].Title) + "</b>";
+                if (this.DataSource.Columns[i].Caption != this.DataSource.Columns[i].ColumnName)
+                    newLabel.Parent.Parent.Parent.TooltipText = this.DataSource.Columns[i].ColumnName;
+                newLabel.Show();
+            }
+        }
+
+
+    /// <summary>
+    /// Clean up "stuff" when the editing control is closed
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void TextRender_EditingCanceled(object sender, EventArgs e)
         {
             this.userEditingCell = false;
             (this.editControl as Widget).KeyPressEvent -= Gridview_KeyPressEvent;

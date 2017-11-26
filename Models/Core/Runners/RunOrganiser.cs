@@ -1,92 +1,105 @@
 ﻿namespace Models.Core.Runners
 {
     using APSIM.Shared.Utilities;
-    using Factorial;
+    using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    /// <summary>
-    /// A runnable job that looks at the model passed in and determines what is to be run.
-    /// Will spawn other jobs to do the actual running.
-    /// </summary>
-    class RunOrganiser : JobManager.IRunnable
+    using System.Linq;
+
+    /// <summary>A job manager that looks after running all simulations</summary>
+    public class RunOrganiser : IJobManager
     {
         private Simulations simulations;
-        private Model model;
+        private IModel modelSelectedByUser;
         private bool runTests;
+        private List<IJobGenerator> modelsToRun;
+
+        /// <summary>Simulation names being run</summary>
+        public List<string> SimulationNamesBeingRun { get; private set; }
+
+        /// <summary>All known simulation names</summary>
+        public List<string> AllSimulationNames { get; private set; }
 
         /// <summary>Constructor</summary>
         /// <param name="model">The model to run.</param>
         /// <param name="simulations">simulations object.</param>
         /// <param name="runTests">Run the test nodes?</param>
-        public RunOrganiser(Simulations simulations, Model model, bool runTests)
+        public RunOrganiser(Simulations simulations, IModel model, bool runTests)
         {
             this.simulations = simulations;
-            this.model = model;
+            this.modelSelectedByUser = model;
             this.runTests = runTests;
         }
 
-        /// <summary>Called to start the job.</summary>
-        /// <param name="jobManager">The job manager running this job.</param>
-        /// <param name="workerThread">The thread this job is running on.</param>
-        public void Run(JobManager jobManager, BackgroundWorker workerThread)
+        /// <summary>Return the index of next job to run or -1 if nothing to run.</summary>
+        /// <returns>Job to run or null if no more jobs to run</returns>
+        public IRunnable GetNextJobToRun()
         {
-            JobSequence parentJob = new JobSequence();
-            JobParallel simulationJobs = new JobParallel();
-            List<string> simulationNames = new List<string>();
-            FindAllSimulationsToRun(model, simulationJobs, simulationNames);
-            parentJob.Jobs.Add(simulationJobs);
-            parentJob.Jobs.Add(new RunAllCompletedEvent(simulations));
-
-            // IF we are going to run all simulations, we can delete all tables in the DataStore. This
-            // will clean up order of columns in the tables and removed unused ones.
-            // Otherwise just remove the unwanted simulations from the DataStore.
-            DataStore store = Apsim.Child(simulations, typeof(DataStore)) as DataStore;
-            if (store != null)
+            // First time through there. Get a list of things to run.
+            if (modelsToRun == null)
             {
-                if (model is Simulations)
-                    store.DeleteAllTables(true);
-                else
-                    store.RemoveUnwantedSimulations(simulations, simulationNames);
-                store.Disconnect();
+                GetListOfModelsToRun(modelSelectedByUser);
+
+                // Send event telling all models that we're about to begin running.
+                Events events = new Events(simulations);
+                events.Publish("BeginRun", new object[] { AllSimulationNames, SimulationNamesBeingRun });
+
+                modelsToRun.ForEach(model => simulations.Links.Resolve(model));
             }
 
-            if (runTests)
-            {
-                foreach (Tests tests in Apsim.ChildrenRecursively(model, typeof(Tests)))
-                    parentJob.Jobs.Add(tests);
-            }
-            jobManager.AddChildJob(this, parentJob);
-        }
+            // If we didn't find anything to run then return null to tell job runner to exit.
+            if (modelsToRun == null || modelsToRun.Count == 0)
+                return null;
 
-        /// <summary>Find simulations/experiments to run.</summary>
-        /// <param name="model">The model and its children to search.</param>
-        /// <param name="parentJob">The parent job to add the child jobs to.</param>
-        /// <param name="simulationNames">Simulations names found.</param>
-        private void FindAllSimulationsToRun(IModel model, JobParallel parentJob, List<string> simulationNames)
-        { 
-            // Get jobs to run and give them to job manager.
-            List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
-
-            if (model is Experiment)
-            {
-                parentJob.Jobs.Add(model as Experiment);
-                simulationNames.AddRange((model as Experiment).Names());
-            }
-            else if (model is Simulation)
-            {
-                simulationNames.Add(model.Name);
-                if (model.Parent == null)
-                    parentJob.Jobs.Add(model as Simulation);
-                else
-                    parentJob.Jobs.Add(new RunClonedSimulation(model as Simulation));
-            }
             else
             {
-                // Look for simulations.
-                foreach (Model child in model.Children)
-                    if (child is Experiment || child is Simulation || child is Folder)
-                        FindAllSimulationsToRun(child, parentJob, simulationNames);
+                // Iterate through all jobs and return the next one.
+                IRunnable job = modelsToRun[0].NextJobToRun();
+                while (job == null && modelsToRun.Count > 0)
+                {
+                    modelsToRun.RemoveAt(0);
+                    if (modelsToRun.Count > 0)
+                        job = modelsToRun[0].NextJobToRun();
+                }
+
+                // If we didn't find a job to run then send event telling all models that we're about to end running.
+                if (job != null)
+                    simulations.Links.Resolve(job);
+                return job;
             }
+        }
+
+        /// <summary>Called by the job runner when all jobs completed</summary>
+        public void Completed()
+        {
+            Events events = new Events(simulations);
+            events.Publish("EndRun", new object[] {this, new EventArgs() });
+
+            // Optionally run the tests
+            if (runTests)
+            {
+                foreach (Tests test in Apsim.ChildrenRecursively(simulations, typeof(Tests)))
+                    test.Test();
+            }
+        }
+
+        /// <summary>Determine the list of jobs to run</summary>
+        /// <param name="relativeTo">Model to use to find jobs to run</param>
+        private void GetListOfModelsToRun(IModel relativeTo)
+        {
+            AllSimulationNames = new List<string>();
+            SimulationNamesBeingRun = new List<string>();
+
+            // get a list of all simulation names.
+            List<IJobGenerator> allModels = Apsim.ChildrenRecursively(simulations, typeof(IJobGenerator)).Cast<IJobGenerator>().ToList();
+            allModels.ForEach(model => AllSimulationNames.AddRange(model.GetSimulationNames()));
+
+            // Get a list of all models we're going to run.
+            modelsToRun = Apsim.ChildrenRecursively(relativeTo, typeof(IJobGenerator)).Cast<IJobGenerator>().ToList();
+            if (relativeTo is IJobGenerator)
+                modelsToRun.Add(relativeTo as IJobGenerator);
+
+            // For each model, get a list of simulation names.
+            modelsToRun.ForEach(model => SimulationNamesBeingRun.AddRange(model.GetSimulationNames()));
         }
     }
 }

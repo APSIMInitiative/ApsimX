@@ -27,10 +27,14 @@ namespace UnitTests
         // [Test]  // Temporarily disabled
         public void FileFormat_EnsureWriteReadRoundTripWorks()
         {
+            // Create some models.
+            Simulation simulationModel = new Simulation();
+            Simulations simulationsModel = Simulations.Create(new Model[] { simulationModel });
+
             // Create a simulations object with child model wrappers.
             ModelWrapper rootNode1 = new ModelWrapper();
-            ModelWrapper simulations = rootNode1.Add(new Simulations());
-            ModelWrapper simulation = simulations.Add(new Simulation());
+            ModelWrapper simulations = rootNode1.Add(simulationsModel);
+            ModelWrapper simulation = simulations.Add(simulationModel);
 
             Clock clock = new Clock();
             clock.StartDate = new DateTime(2015, 1, 1);

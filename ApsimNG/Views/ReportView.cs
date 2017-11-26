@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
-    using Glade;
     using Gtk;
 
     interface IReportView
@@ -22,13 +21,9 @@ namespace UserInterface.Views
 
     public class ReportView : ViewBase, IReportView
     {
-        [Widget]
         private Notebook notebook1 = null;
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private VBox vbox2 = null;
-        [Widget]
         private Alignment alignment1 = null;
 
         private EditorView VariableEditor;
@@ -38,8 +33,11 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public ReportView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.ReportView.glade", "notebook1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ReportView.glade");
+            notebook1 = (Notebook)builder.GetObject("notebook1");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            vbox2 = (VBox)builder.GetObject("vbox2");
+            alignment1 = (Alignment)builder.GetObject("alignment1");
             _mainWidget = notebook1;
 
             VariableEditor = new EditorView(this);
@@ -50,6 +48,19 @@ namespace UserInterface.Views
 
             dataStoreView1 = new DataStoreView(this);
             alignment1.Add(dataStoreView1.MainWidget);
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, System.EventArgs e)
+        {
+            VariableEditor.MainWidget.Destroy();
+            VariableEditor = null;
+            FrequencyEditor.MainWidget.Destroy();
+            FrequencyEditor = null;
+            dataStoreView1.MainWidget.Destroy();
+            dataStoreView1 = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Provides access to the variable list.</summary>

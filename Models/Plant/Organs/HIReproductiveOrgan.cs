@@ -10,7 +10,7 @@ namespace Models.PMF.Organs
     /// A harvest index reproductive organ
     /// </summary>
     [Serializable]
-    public class HIReproductiveOrgan : BaseOrgan
+    public class HIReproductiveOrgan : BaseOrgan, IArbitration
     {
         /// <summary>Gets or sets the above ground.</summary>
         [Link]
@@ -33,6 +33,12 @@ namespace Models.PMF.Organs
         /// <summary>The daily growth</summary>
         private double DailyGrowth = 0;
 
+        /// <summary>The live biomass</summary>
+        public Biomass Live { get; set; }
+
+        /// <summary>The dead biomass</summary>
+        public Biomass Dead { get; set; }
+
         /// <summary>Gets the live f wt.</summary>
         /// <value>The live f wt.</value>
         [Units("g/m^2")]
@@ -46,6 +52,13 @@ namespace Models.PMF.Organs
                 else
                     return 0.0;
             }
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="HIReproductiveOrgan"/> class.</summary>
+        public HIReproductiveOrgan()
+        {
+            Live = new Biomass();
+            Dead = new Biomass();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -64,11 +77,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (Wt > 0.0)
+            Biomass total = Live + Dead;
+            if (total.Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
             }
 
             Clear();
@@ -102,45 +116,47 @@ namespace Models.PMF.Organs
                     return 0.0;
             }
         }
-        /// <summary>Gets or sets the dm demand.</summary>
-        /// <value>The dm demand.</value>
-        public override BiomassPoolType DMDemand
-        {
-            get
-            {
-                double CurrentWt = (Live.Wt + Dead.Wt);
-                double NewHI = HI + HIIncrement.Value();
-                double NewWt = NewHI * AboveGroundWt.Value();
-                double Demand = Math.Max(0.0, NewWt - CurrentWt);
 
-                return new BiomassPoolType { Structural = Demand };
-            }
-        }
-        /// <summary>Sets the dm allocation.</summary>
-        /// <value>The dm allocation.</value>
-        public override BiomassAllocationType DMAllocation
+        /// <summary>Sets the dry matter allocation.</summary>
+        public override void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
-            set { Live.StructuralWt += value.Structural; DailyGrowth = value.Structural; }
+            Live.StructuralWt += dryMatter.Structural; DailyGrowth = dryMatter.Structural;
         }
-        /// <summary>Gets or sets the n demand.</summary>
-        /// <value>The n demand.</value>
-        public override BiomassPoolType NDemand
-        {
-            get
-            {
-                double demand = Math.Max(0.0, (NConc.Value() * Live.Wt) - Live.N);
-                return new BiomassPoolType { Structural = demand };
-            }
 
-        }
         /// <summary>Sets the n allocation.</summary>
-        /// <value>The n allocation.</value>
-        public override BiomassAllocationType NAllocation
+        public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
-            set
-            {
-                Live.StructuralN += value.Structural;
-            }
+            Live.StructuralN += nitrogen.Structural;
+        }
+
+        /// <summary>Gets the total biomass</summary>
+        public Biomass Total { get { return Live + Dead; } }
+
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
+
+        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        public override BiomassPoolType CalculateDryMatterDemand()
+        {
+            double currentWt = (Live.Wt + Dead.Wt);
+            double newHI = HI + HIIncrement.Value();
+            double newWt = newHI * AboveGroundWt.Value();
+            double demand = Math.Max(0.0, newWt - currentWt);
+            dryMatterDemand.Structural = demand;
+            return dryMatterDemand;
+        }
+
+        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
+        public override BiomassPoolType CalculateNitrogenDemand()
+        {
+            double demand = Math.Max(0.0, (NConc.Value() * Live.Wt) - Live.N);
+            nitrogenDemand.Structural = demand;
+            return nitrogenDemand;
         }
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
@@ -149,6 +165,17 @@ namespace Models.PMF.Organs
         public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
+        }
+
+        /// <summary>Clears this instance.</summary>
+        private void Clear()
+        {
+            Live.Clear();
+            Dead.Clear();
+            dryMatterDemand.Clear();
+            dryMatterSupply.Clear();
+            nitrogenDemand.Clear();
+            nitrogenSupply.Clear();
         }
     }
 }

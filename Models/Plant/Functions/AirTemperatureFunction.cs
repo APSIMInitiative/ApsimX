@@ -108,21 +108,22 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            AutoDocumentation.GetClassDescription(this,tags,indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
-            // Links aren't resolved at this point so go find xy pairs manually.
-            XYPairs xypairs = Apsim.Child(this, "XYPairs") as XYPairs;
-
-            // add graph and table.
-            if (xypairs != null)
-                tags.Add(new AutoDocumentation.GraphAndTable(xypairs, Name, "Temperature (oC)", Name + " (deg. day)", indent));
+                // add graph and table.
+                if (XYPairs != null)
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.", indent));
+                    tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, "MeanAirTemperature", Name, indent));
+                }
+            }
         }
 
     }

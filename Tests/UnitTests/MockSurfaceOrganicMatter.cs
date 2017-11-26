@@ -7,6 +7,7 @@ namespace UnitTests
     using Models.Soils;
     using System;
 
+    [Serializable]
     class MockSurfaceOrganicMatter : ISurfaceOrganicMatter
     {
         public double Cover { get; set; }

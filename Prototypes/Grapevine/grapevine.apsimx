@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="15">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -327,7 +327,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <End>Veraison</End>
         </PhaseLookupValue>
         <PhaseLookupValue>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <MultiplyFunction>
             <Name>MultiplyFunction</Name>
             <Constant>
@@ -363,7 +363,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <End>Veraison</End>
         </PhaseLookupValue>
         <Constant>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>24</FixedValue>
           <Units>number</Units>
@@ -509,10 +509,10 @@ A function is used to provide flowering date as days after sowing(DAS).
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -537,10 +537,10 @@ A function is used to provide flowering date as days after sowing(DAS).
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -565,10 +565,10 @@ A function is used to provide flowering date as days after sowing(DAS).
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -785,7 +785,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
           </LinearInterpolationFunction>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.2</FixedValue>
             <Units>percentage</Units>
@@ -1256,60 +1256,15 @@ A function is used to provide flowering date as days after sowing(DAS).
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>6</FixedValue>
         </Constant>
-        <MultiplyFunction>
+        <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <Constant>
-            <Name>Sroot</Name>
+            <Name>PartitionFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>4779</FixedValue>
-            <Units>gc</Units>
+            <FixedValue>0.2</FixedValue>
           </Constant>
-          <Constant>
-            <Name>Kprgr</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.003</FixedValue>
-            <Units>gc gc-1d-1</Units>
-          </Constant>
-          <ExponentialFunction>
-            <Name>TemResponseFun</Name>
-            <SubtractFunction>
-              <Name>SubtractFunction</Name>
-              <AirTemperatureFunction>
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <X>
-                    <double>0</double>
-                    <double>40</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>40</double>
-                  </Y>
-                </XYPairs>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AirTemperatureFunction>
-              <Constant>
-                <Name>referenceT</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>20</FixedValue>
-                <Units>oC</Units>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </SubtractFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <A>0</A>
-            <B>1</B>
-            <C>0.069314</C>
-          </ExponentialFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-        </MultiplyFunction>
-        <Constant>
-          <Name>PartitionFraction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.2</FixedValue>
-        </Constant>
+        </PartitionFractionDemandFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1457,6 +1412,16 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1599,6 +1564,16 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Cordon].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1737,6 +1712,16 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Trunk].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <ReproductiveOrgan>
@@ -2105,7 +2090,6 @@ A function is used to provide flowering date as days after sowing(DAS).
       </OrganArbitrator>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Grapevine</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>Report</Name>
@@ -2113,7 +2097,6 @@ A function is used to provide flowering date as days after sowing(DAS).
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
-        <string>Name as Zone</string>
         <string>[Clock].Today</string>
         <string>[Clock].Today.Year</string>
         <string>[Grapevine].Phenology.Stage</string>
@@ -2216,8 +2199,6 @@ A function is used to provide flowering date as days after sowing(DAS).
       <FieldName2UsedForMatch>Clock.Today.Year</FieldName2UsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
     <Name>BaseSim</Name>
@@ -2587,7 +2568,6 @@ A function is used to provide flowering date as days after sowing(DAS).
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>Grapevine</ResourceName>
         <CropType>Grapevine</CropType>
-        <SowingDate>2005-05-01T00:00:00</SowingDate>
       </Plant>
       <Operations>
         <Name>Operations</Name>
@@ -4089,7 +4069,6 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Grapevine</ResourceName>
           <CropType>Grapevine</CropType>
-          <SowingDate>2005-05-01T00:00:00</SowingDate>
         </Plant>
         <Operations>
           <Name>Operations</Name>

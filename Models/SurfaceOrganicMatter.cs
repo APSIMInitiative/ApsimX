@@ -365,7 +365,7 @@
         /// <summary>Gets or sets the Carbon:Phosphorus ratio.</summary>
         /// <value>The Carbon:Phosphorus ratio.</value>
         [Summary]
-        [Description("Carbon:Phosphorus ratio (g/g)")]
+        [Description("Carbon:Phosphorus ratio")]
         [Units("g/g")]
         public string cpr
         {

@@ -144,7 +144,7 @@ namespace Models.Soils
             _salb = soil.SoilWater.Salb;
             _dlayer = soil.Thickness;
             _bd = soil.BD;
-            _ll15_dep = soil.SoilWater.LL15mm;
+            _ll15_dep = soil.LL15mm;
             _sw_dep = soil.SoilWater.SWmm;
             _latitude = weather.Latitude;
             _tav = weather.Tav;

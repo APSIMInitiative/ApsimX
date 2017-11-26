@@ -25,17 +25,17 @@ namespace Models.PMF
 
         /// <summary>Gets or sets the non structural n.</summary>
         /// <value>The non structural n.</value>
-        /// <exception cref="System.Exception">Cannot set NonStructuralN in ArrayBiomass</exception>
+        /// <exception cref="System.Exception">Cannot set StorageN in ArrayBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
-        public double[] NonStructuralN
+        public double[] StorageN
         {
             get
             {
-                return AddValuesToList(".NonStructuralN");
+                return AddValuesToList(".StorageN");
             }
 
-            set { throw new Exception("Cannot set NonStructuralN in ArrayBiomass"); }
+            set { throw new Exception("Cannot set StorageN in ArrayBiomass"); }
         }
 
         /// <summary>Gets or sets the structural n.</summary>
@@ -70,16 +70,16 @@ namespace Models.PMF
 
         /// <summary>Gets or sets the non structural wt.</summary>
         /// <value>The non structural wt.</value>
-        /// <exception cref="System.Exception">Cannot set NonStructuralWt in ArrayBiomass</exception>
+        /// <exception cref="System.Exception">Cannot set StorageWt in ArrayBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
-        public double[] NonStructuralWt
+        public double[] StorageWt
         {
             get
             {
-                return AddValuesToList(".NonStructuralWt");
+                return AddValuesToList(".StorageWt");
             }
-            set { throw new Exception("Cannot set NonStructuralWt in ArrayBiomass"); }
+            set { throw new Exception("Cannot set StorageWt in ArrayBiomass"); }
         }
 
         /// <summary>Gets or sets the structural wt.</summary>
@@ -140,11 +140,11 @@ namespace Models.PMF
         /// <value>The non structural n conc.</value>
         [XmlIgnore]
         [Units("g/g")]
-        public double[] NonStructuralNConc
+        public double[] StorageNConc
         {
             get
             {
-                return AddValuesToList(".NonStructuralNConc");
+                return AddValuesToList(".StorageNConc");
             }
         }
 
@@ -182,13 +182,15 @@ namespace Models.PMF
                 {
                     foreach (object Value in Obj as IEnumerable)
                     {
-                        Values[i] = Convert.ToDouble(Value);
+                        Values[i] = Convert.ToDouble(Value, 
+                                                     System.Globalization.CultureInfo.InvariantCulture);
                         i++;
                     }
                 }
                 else
                 {
-                    Values[i] = Convert.ToDouble(Obj);
+                    Values[i] = Convert.ToDouble(Obj, 
+                                                 System.Globalization.CultureInfo.InvariantCulture);
                     i++;
                 }
 

@@ -8,6 +8,7 @@ namespace Models.PMF.Library
     using Soils;
     using System;
     using System.Collections.Generic;
+    using System.Data;
 
     /// <summary>
     /// This class impliments biomass removal from live + dead pools.
@@ -205,6 +206,40 @@ namespace Models.PMF.Library
             Live.Multiply(remainingLiveFraction);
             Dead.Multiply(remainingDeadFraction);
             return remainingLiveFraction;
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                tags.Add(new AutoDocumentation.Paragraph("This organ will respond to certain management actions by either removing some of its biomass from the system or transferring some of its biomass to the soil.  The following table describes the proportions of live and dead biomass that are transferred for a range of management actions.", indent));
+
+                DataTable data = new DataTable();
+                data.Columns.Add("Method", typeof(string));
+                data.Columns.Add("% Live Removed", typeof(int));
+                data.Columns.Add("% Dead Removed", typeof(int));
+                data.Columns.Add("% Live To Residue", typeof(int));
+                data.Columns.Add("% Dead To Residue", typeof(int));
+
+                foreach (OrganBiomassRemovalType removal in Apsim.Children(this, typeof(OrganBiomassRemovalType)))
+                {
+                    DataRow row = data.NewRow();
+                    data.Rows.Add(row);
+                    row["Method"] = removal.Name;
+                    row["% Live Removed"] = removal.FractionLiveToRemove * 100;
+                    row["% Dead Removed"] = removal.FractionDeadToRemove * 100;
+                    row["% Live To Residue"] = removal.FractionLiveToResidue * 100;
+                    row["% Dead To Residue"] = removal.FractionDeadToResidue * 100;
+                }
+
+                tags.Add(new AutoDocumentation.Table(data, indent));
+            }
         }
     }
 }

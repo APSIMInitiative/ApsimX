@@ -652,7 +652,7 @@ namespace Models
             // Open the .db for writing.
             Open(forWriting: true);
 
-            foreach (IPostSimulationTool tool in Apsim.Children(this, typeof(IPostSimulationTool)))
+            foreach (IPostSimulationTool tool in Apsim.FindAll(this, typeof(IPostSimulationTool)))
                 tool.Run(this);
         }
 
@@ -834,102 +834,102 @@ namespace Models
         /// <param name="tables">The tables.</param>
         private void WriteTables(ReportTable[] tables)
         {
-            // Insert simulationID column into all tables.
-            foreach (ReportTable table in tables)
-            {
-                int simulationID = GetSimulationID(table.SimulationName);
-                table.Columns.Insert(0, new ReportColumnConstantValue("SimulationID", simulationID));
-            }
+            //// Insert simulationID column into all tables.
+            //foreach (ReportTable table in tables)
+            //{
+            //    int simulationID = GetSimulationID(table.SimulationName);
+            //    table.Columns.Insert(0, new ReportColumnConstantValue("SimulationID", simulationID));
+            //}
 
-            // Open the .db for writing.
-            Open(forWriting: true);
+            //// Open the .db for writing.
+            //Open(forWriting: true);
 
-            // Tell SQLite that we're beginning a transaction.
-            Connection.ExecuteNonQuery("BEGIN");
+            //// Tell SQLite that we're beginning a transaction.
+            //Connection.ExecuteNonQuery("BEGIN");
 
-            IntPtr query = IntPtr.Zero;
+            //IntPtr query = IntPtr.Zero;
 
-            try
-            {
-                // Get a list of all names and datatypes for each field in this table.
-                List<string> names = new List<string>();
-                List<Type> types = new List<Type>();
-                List<string> units = new List<string>();
-                foreach (ReportTable table in tables)
-                    foreach (IReportColumn column in table.Columns)
-                    {
-                        if (!names.Contains(column.Name))
-                        {
-                            object firstNonBlankValue = column.Values.Find(value => value != null);
-                            if (firstNonBlankValue != null)
-                            {
-                                names.Add(column.Name);
-                                types.Add(firstNonBlankValue.GetType());
-                                if (column.Units != null)
-                                {
-                                    string sql = "INSERT INTO " + UnitsTableName + " (SimulationID, TableName, ColumnHeading, Units) " +
-                                                               "VALUES (?, ?, ?, ?)";
-                                    IntPtr statement = Connection.Prepare(sql);
-                                    Connection.BindParametersAndRunQuery(statement, new object[] {
-                                                      GetSimulationID(table.SimulationName),
-                                                      table.TableName,
-                                                      column.Name,
-                                                      column.Units});
-                                }
-                            }
-                        }
-                    }
+            //try
+            //{
+            //    // Get a list of all names and datatypes for each field in this table.
+            //    List<string> names = new List<string>();
+            //    List<Type> types = new List<Type>();
+            //    List<string> units = new List<string>();
+            //    foreach (ReportTable table in tables)
+            //        foreach (IReportColumn column in table.Columns)
+            //        {
+            //            if (!names.Contains(column.Name))
+            //            {
+            //                object firstNonBlankValue = column.Values.Find(value => value != null);
+            //                if (firstNonBlankValue != null)
+            //                {
+            //                    names.Add(column.Name);
+            //                    types.Add(firstNonBlankValue.GetType());
+            //                    if (column.Units != null)
+            //                    {
+            //                        string sql = "INSERT INTO " + UnitsTableName + " (SimulationID, TableName, ColumnHeading, Units) " +
+            //                                                   "VALUES (?, ?, ?, ?)";
+            //                        IntPtr statement = Connection.Prepare(sql);
+            //                        Connection.BindParametersAndRunQuery(statement, new object[] {
+            //                                          GetSimulationID(table.SimulationName),
+            //                                          table.TableName,
+            //                                          column.Name,
+            //                                          column.Units});
+            //                    }
+            //                }
+            //            }
+            //        }
 
-                // Create the table.
-                string tableName = tables[0].TableName;
-                CreateTable(tableName, names.ToArray(), types.ToArray());
+            //    // Create the table.
+            //    string tableName = tables[0].TableName;
+            //    CreateTable(tableName, names.ToArray(), types.ToArray());
 
-                // Prepare the insert query sql
-                query = PrepareInsertIntoTable(Connection, tableName, names.ToArray());
+            //    // Prepare the insert query sql
+            //    query = PrepareInsertIntoTable(Connection, tableName, names.ToArray());
 
-                // Write each row to the .db
-                foreach (ReportTable table in tables)
-                {
-                    int numRows = 0;
+            //    // Write each row to the .db
+            //    foreach (ReportTable table in tables)
+            //    {
+            //        int numRows = 0;
 
-                    // Create an array of value indexes for column.
-                    int[] valueIndexes = new int[table.Columns.Count];
-                    for (int i = 0; i < table.Columns.Count; i++)
-                    {
-                        numRows = Math.Max(numRows, table.Columns[i].Values.Count);
-                        valueIndexes[i] = names.IndexOf(table.Columns[i].Name);
-                    }
+            //        // Create an array of value indexes for column.
+            //        int[] valueIndexes = new int[table.Columns.Count];
+            //        for (int i = 0; i < table.Columns.Count; i++)
+            //        {
+            //            numRows = Math.Max(numRows, table.Columns[i].Values.Count);
+            //            valueIndexes[i] = names.IndexOf(table.Columns[i].Name);
+            //        }
 
-                    object[] values = new object[names.Count];
-                    for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
-                    {
-                        Array.Clear(values, 0, values.Length);
-                        for (int colIndex = 0; colIndex < table.Columns.Count; colIndex++)
-                        {
-                            int valueIndex = valueIndexes[colIndex];
-                            if (valueIndex != -1)
-                            {
-                                if (table.Columns[colIndex] is ReportColumnConstantValue)
-                                    values[valueIndex] = table.Columns[colIndex].Values[0];
-                                else if (rowIndex < table.Columns[colIndex].Values.Count)
-                                    values[valueIndex] = table.Columns[colIndex].Values[rowIndex];
-                            }
-                        }
+            //        object[] values = new object[names.Count];
+            //        for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
+            //        {
+            //            Array.Clear(values, 0, values.Length);
+            //            for (int colIndex = 0; colIndex < table.Columns.Count; colIndex++)
+            //            {
+            //                int valueIndex = valueIndexes[colIndex];
+            //                if (valueIndex != -1)
+            //                {
+            //                    if (table.Columns[colIndex] is ReportColumnConstantValue)
+            //                        values[valueIndex] = table.Columns[colIndex].Values[0];
+            //                    else if (rowIndex < table.Columns[colIndex].Values.Count)
+            //                        values[valueIndex] = table.Columns[colIndex].Values[rowIndex];
+            //                }
+            //            }
 
-                        // Write the row to the .db
-                        Connection.BindParametersAndRunQuery(query, values.ToArray());
-                    }
-                }
-            }
-            finally
-            {
-                // tell SQLite we're ending our transaction.
-                Connection.ExecuteNonQuery("END");
+            //            // Write the row to the .db
+            //            Connection.BindParametersAndRunQuery(query, values.ToArray());
+            //        }
+            //    }
+            //}
+            //finally
+            //{
+            //    // tell SQLite we're ending our transaction.
+            //    Connection.ExecuteNonQuery("END");
 
-                // finalise our query.
-                if (query != IntPtr.Zero)
-                    Connection.Finalize(query);
-            }
+            //    // finalise our query.
+            //    if (query != IntPtr.Zero)
+            //        Connection.Finalize(query);
+            //}
         }
 
         /// <summary>
@@ -1166,6 +1166,51 @@ namespace Models
                     result = (string)DB.Rows[0][0];
             }
             return result;
+        }
+
+        /// <summary>
+        /// Obtain the units for a column of data
+        /// </summary>
+        /// <param name="tableName">Name of the table</param>
+        /// <param name="columnHeading">Name of the data column</param>
+        /// <returns>The units (with surrounding parentheses), or null if not available</returns>
+        public string GetUnits(string tableName, string columnHeading)
+        {
+            string result = null;
+            if (TableNames.Contains(UnitsTableName))
+            {
+                string query = "SELECT Units FROM " + UnitsTableName +
+                      " WHERE TableName = '" + tableName +
+                      "' AND ColumnHeading = '" + columnHeading + "'";
+                DataTable DB = Connection.ExecuteQuery(query);
+                if (DB.Rows.Count > 0)
+                    result = (string)DB.Rows[0][0];
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Add units to table. Removes old units first.
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="columnNames">The column names to add</param>
+        /// <param name="columnUnits">The column units to add</param>
+        public void AddUnitsForTable(string tableName, List<string> columnNames, List<string> columnUnits)
+        {
+            Connection.ExecuteNonQuery("DELETE FROM " + UnitsTableName + " WHERE TableName = '" + tableName + "'");
+
+            string sql = "INSERT INTO " + UnitsTableName + " (SimulationID, TableName, ColumnHeading, Units) " +
+                           "VALUES (?, ?, ?, ?)";
+            IntPtr statement = Connection.Prepare(sql);
+            for (int i = 0; i < columnNames.Count; i++)
+            {
+                Connection.BindParametersAndRunQuery(statement, new object[] {
+                                                      0,
+                                                      tableName,
+                                                      columnNames[i],
+                                                      columnUnits[i]});
+            }
+            Connection.Finalize(statement);
         }
 
         #endregion

@@ -23,6 +23,7 @@ namespace Models.GrazPlan
     /// <summary>
     /// Chemistry data for the forage
     /// </summary>
+    [Serializable]
     public struct TChemData
     {
         /// <summary>

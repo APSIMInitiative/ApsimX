@@ -48,18 +48,20 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
 
-            // add graph and table.
-            if (XYPairs != null)
-                tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, Name, "Temperature (oC)", Name + " (deg. day)", indent));
+                // add graph and table.
+                if (XYPairs != null)
+                    tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, Name, "Temperature (oC)", Name + " (deg. day)", indent));
+            }
         }
-
     }
 }
    

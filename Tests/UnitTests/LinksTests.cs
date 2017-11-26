@@ -1,6 +1,8 @@
 ﻿using Models;
 using Models.Core;
+using Models.Core.Interfaces;
 using Models.PMF.Functions;
+using Models.Storage;
 using NUnit.Framework;
 using System;
 
@@ -81,6 +83,19 @@ namespace UnitTests
         public Simulation sim = null;
     }
 
+    [Serializable]
+    class ModelWithServices : Model
+    {
+        [Link]
+        public IStorageReader storage = null;
+
+        [Link]
+        public ILocator locator = null;
+
+        [Link]
+        public IEvent events = null;
+    }
+
     [TestFixture]
     class LinksTests
     {
@@ -93,9 +108,11 @@ namespace UnitTests
             ModelWrapper models = new ModelWrapper();
 
             // Create some models.
-            ModelWrapper simulations = models.Add(new Simulations());
 
-            ModelWrapper simulation = simulations.Add(new Simulation());
+            Simulation simulationModel = new Simulation();
+            Simulations simulationsModel = Simulations.Create(new Model[] { simulationModel });
+            ModelWrapper simulations = models.Add(simulationsModel);
+            ModelWrapper simulation = simulations.Add(simulationModel);
 
             Clock clock = new Clock();
             clock.StartDate = new DateTime(2015, 1, 1);
@@ -126,9 +143,10 @@ namespace UnitTests
             ModelWrapper models = new ModelWrapper();
 
             // Create some models.
-            ModelWrapper simulations = models.Add(new Simulations());
-
-            ModelWrapper simulation = simulations.Add(new Simulation());
+            Simulation simulationModel = new Simulation();
+            Simulations simulationsModel = Simulations.Create(new Model[] { simulationModel });
+            ModelWrapper simulations = models.Add(simulationsModel);
+            ModelWrapper simulation = simulations.Add(simulationModel);
 
             Clock clock = new Clock();
             clock.StartDate = new DateTime(2015, 1, 1);
@@ -193,7 +211,6 @@ namespace UnitTests
             // Should find the closest match.
             Assert.AreEqual(modelWithScopedLink.zone2.Name, "zone1");
         }
-
 
         /// <summary>Ensure a [ChildLink] finds works</summary>
         [Test]
@@ -264,6 +281,24 @@ namespace UnitTests
             Assert.AreEqual(modelWithParentLink.sim.Name, "Simulation");
         }
 
+        /// <summary>Ensure link can resolve services</summary>
+        [Test]
+        public void Links_EnsureServicesResolve()
+        {
+            ModelWithServices modelWithServices = new ModelWithServices();
+            Simulation simulation = new Simulation();
+            simulation.Children.Add(new Clock());
+            simulation.Children.Add(new MockSummary());
+            simulation.Children.Add(modelWithServices);
+
+            Simulations engine = Simulations.Create(new Model[] { simulation, new DataStore() });
+
+            engine.Links.Resolve(simulation);
+
+            Assert.IsNotNull(modelWithServices.storage);
+            Assert.IsNotNull(modelWithServices.locator);
+            Assert.IsNotNull(modelWithServices.events);
+        }
 
     }
 }

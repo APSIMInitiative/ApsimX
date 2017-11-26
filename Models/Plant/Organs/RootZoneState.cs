@@ -42,7 +42,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Demand for Non-structural N, set when Ndemand is called and used again in N allocation</summary>
         [Units("g/m2")]
-        public double[] NonStructuralNDemand { get; set; }
+        public double[] StorageNDemand { get; set; }
 
         /// <summary>The Nuptake</summary>
         public double[] NitUptake { get; set; }
@@ -122,7 +122,6 @@ namespace Models.PMF.Organs
             DeltaNO3 = new double[soil.Thickness.Length];
             DeltaNH4 = new double[soil.Thickness.Length];
 
-            Length = 0.0;
             Depth = 0.0;
 
             if (LayerLive == null || LayerLive.Length == 0)

@@ -57,7 +57,7 @@ namespace UnitTests
                                                                         "..",
                                                                         "..",
                                                                         "..",
-                                                                        "UserInterface",
+                                                                        "ApsimNG",
                                                                         "Resources",
                                                                         "Toolboxes",
                                                                         "StandardToolbox.apsimx");
@@ -97,7 +97,7 @@ namespace UnitTests
                                                                         "..",
                                                                         "..",
                                                                         "..",
-                                                                        "UserInterface",
+                                                                        "ApsimNG",
                                                                         "Resources",
                                                                         "Toolboxes",
                                                                         "StandardToolbox.apsimx");

@@ -1,72 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models;
-using UserInterface.Views;
+﻿// -----------------------------------------------------------------------
+// <copyright file="InputPresenter.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace UserInterface.Presenters
 {
+    using System;
+    using Models;
+    using Models.Core;
+    using Views;
+
     /// <summary>
     /// Attaches an Input model to an Input View.
     /// </summary>
     public class InputPresenter : IPresenter
     {
-        private Models.PostSimulationTools.Input Input;
-        private IInputView View;
-        private ExplorerPresenter ExplorerPresenter;
+        /// <summary>
+        /// The input model
+        /// </summary>
+        private Models.PostSimulationTools.Input input;
+
+        /// <summary>
+        /// The input view
+        /// </summary>
+        private IInputView view;
+
+        /// <summary>
+        /// The Explorer
+        /// </summary>
+        private ExplorerPresenter explorerPresenter;
 
         /// <summary>
         /// Attaches an Input model to an Input View.
         /// </summary>
+        /// <param name="model">The model to attach</param>
+        /// <param name="view">The View to attach</param>
+        /// <param name="explorerPresenter">The explorer</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            Input = model as Models.PostSimulationTools.Input;
-            View = view as IInputView;
-            ExplorerPresenter = explorerPresenter;
-            View.BrowseButtonClicked += OnBrowseButtonClicked;
+            this.input = model as Models.PostSimulationTools.Input;
+            this.view = view as IInputView;
+            this.explorerPresenter = explorerPresenter;
+            this.view.BrowseButtonClicked += this.OnBrowseButtonClicked;
 
-            OnModelChanged(model);  // Updates the view
+            this.OnModelChanged(model);  // Updates the view
 
-            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
-
 
         /// <summary>
         /// Detaches an Input model from an Input View.
         /// </summary>
         public void Detach()
         {
-            View.BrowseButtonClicked -= OnBrowseButtonClicked;
-            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            this.view.BrowseButtonClicked -= this.OnBrowseButtonClicked;
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
 
         /// <summary>
         /// Browse button was clicked by user.
         /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">The params</param>
         private void OnBrowseButtonClicked(object sender, OpenDialogArgs e)
         {
             try
             {
-                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Input, "FullFileName", e.FileName));
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.input, "FullFileName", e.FileName));
             }
             catch (Exception err)
             {
-                ExplorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                this.explorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
             }
         }
 
         /// <summary>
         /// The model has changed - update the view.
         /// </summary>
-        void OnModelChanged(object changedModel)
+        /// <param name="changedModel">The model object</param>
+        private void OnModelChanged(object changedModel)
         {
-            View.FileName = Input.FullFileName;
-            View.GridView.DataSource = Input.GetTable();
-            if (View.GridView.DataSource == null)
-                View.WarningText = Input.ErrorMessage;
+            this.view.FileName = this.input.FullFileName;
+            this.view.GridView.DataSource = this.input.GetTable();
+            if (this.view.GridView.DataSource == null)
+            {
+                this.view.WarningText = this.input.ErrorMessage;
+            }
             else
-                View.WarningText = string.Empty;
+            {
+                this.view.WarningText = string.Empty;
+            }
         }
     }
 }

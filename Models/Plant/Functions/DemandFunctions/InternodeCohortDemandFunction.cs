@@ -2,6 +2,7 @@ using System;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Organs;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Functions.DemandFunctions
 {

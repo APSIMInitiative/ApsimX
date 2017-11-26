@@ -87,12 +87,14 @@ namespace Models.PMF.Functions
                     Array arr = sometypeofobject as Array;
                     symFilled.m_values = new double[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
-                        symFilled.m_values[i] = Convert.ToDouble(arr.GetValue(i));
+                        symFilled.m_values[i] = Convert.ToDouble(arr.GetValue(i), 
+                                                                 System.Globalization.CultureInfo.InvariantCulture);
                 }
                 else if (sometypeofobject is IFunction)
                     symFilled.m_value = (sometypeofobject as IFunction).Value(arrayIndex);
                 else
-                    symFilled.m_value = Convert.ToDouble(sometypeofobject);
+                    symFilled.m_value = Convert.ToDouble(sometypeofobject, 
+                                                         System.Globalization.CultureInfo.InvariantCulture);
                 varFilled.Add(symFilled);
             }
             fn.Variables = varFilled;
@@ -147,12 +149,14 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-            string st = Expression.Replace(".Value()", "");
-            st = st.Replace("*", "x");
-            tags.Add(new AutoDocumentation.Paragraph(Name + " = " + st, indent));
-
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+                string st = Expression.Replace(".Value()", "");
+                st = st.Replace("*", "x");
+                tags.Add(new AutoDocumentation.Paragraph(Name + " = " + st, indent));
+            }
         }
 
     }

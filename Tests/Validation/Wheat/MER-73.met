@@ -2,8 +2,8 @@
 !experiment number = 5
 !experiment = MER-73
 !station name = MER-73                                  
-latitude = -31.3  (DECIMAL DEGREES)
-longitude = 0  (DECIMAL DEGREES)
+latitude = -31.483  (DECIMAL DEGREES)
+longitude = 118.275  (DECIMAL DEGREES)
 tav =   18.20 (oC)     ! annual average ambient temperature
 amp =   13.80 (oC)     ! annual amplitude in mean monthly temperature
 

@@ -10,7 +10,6 @@ namespace Models.PMF
     using System.Xml.Serialization;
     using Models.Core;
     using APSIM.Shared.Utilities;
-    using OldPlant;
 
     /// <summary>
     /// Cultivar class for holding cultivar overrides.
@@ -26,7 +25,6 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    [ValidParent(ParentType = typeof(Plant15))]
     [ValidParent(ParentType = typeof(CultivarFolder))]
     public class Cultivar : Model
     {
@@ -147,20 +145,6 @@ namespace Models.PMF
 
             this.properties.Clear();
             this.oldPropertyValues.Clear();
-        }
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            // add a heading.
-            if (Apsim.Children(this, typeof(Memo)).Count>0)
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write memos
-            foreach (IModel childFolder in Apsim.Children(this, typeof(Memo)))
-                childFolder.Document(tags, headingLevel + 1, indent);
         }
     }
 }

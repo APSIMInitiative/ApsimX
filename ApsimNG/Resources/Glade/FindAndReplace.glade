@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.24 -->
+<interface>
+  <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <widget class="GtkWindow" id="window1">
+  <object class="GtkWindow" id="window1">
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
     <child>
-      <widget class="GtkAlignment" id="alignment1">
+      <object class="GtkAlignment" id="alignment1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="top_padding">5</property>
@@ -14,7 +14,7 @@
         <property name="left_padding">5</property>
         <property name="right_padding">5</property>
         <child>
-          <widget class="GtkTable" id="table1">
+          <object class="GtkTable" id="table1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="n_rows">5</property>
@@ -37,23 +37,26 @@
               <placeholder/>
             </child>
             <child>
-              <widget class="GtkLabel" id="lblLookFor">
+              <placeholder/>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lblLookFor">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Find what:</property>
-              </widget>
+              </object>
               <packing>
                 <property name="y_options">GTK_EXPAND</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="lblReplaceWith">
+              <object class="GtkLabel" id="lblReplaceWith">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Replace with:</property>
-              </widget>
+              </object>
               <packing>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
@@ -61,13 +64,13 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="btnReplace">
+              <object class="GtkButton" id="btnReplace">
                 <property name="label" translatable="yes">Replace</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="can_default">True</property>
                 <property name="receives_default">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">2</property>
                 <property name="right_attach">3</property>
@@ -78,12 +81,12 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="btnReplaceAll">
+              <object class="GtkButton" id="btnReplaceAll">
                 <property name="label" translatable="yes">Replace All</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">3</property>
                 <property name="right_attach">4</property>
@@ -94,12 +97,12 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="btnCancel">
+              <object class="GtkButton" id="btnCancel">
                 <property name="label" translatable="yes">Cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">4</property>
                 <property name="right_attach">5</property>
@@ -110,12 +113,12 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="btnFindPrevious">
+              <object class="GtkButton" id="btnFindPrevious">
                 <property name="label" translatable="yes">Find previous</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">3</property>
                 <property name="right_attach">4</property>
@@ -126,13 +129,13 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="btnFindNext">
+              <object class="GtkButton" id="btnFindNext">
                 <property name="label" translatable="yes">Find next</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="can_default">True</property>
                 <property name="receives_default">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">4</property>
                 <property name="right_attach">5</property>
@@ -142,13 +145,13 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="chkMatchCase">
+              <object class="GtkCheckButton" id="chkMatchCase">
                 <property name="label" translatable="yes">Match case</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">3</property>
@@ -158,13 +161,13 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="chkMatchWholeWord">
+              <object class="GtkCheckButton" id="chkMatchWholeWord">
                 <property name="label" translatable="yes">Match whole word</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">3</property>
                 <property name="right_attach">5</property>
@@ -174,7 +177,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="txtReplaceWith">
+              <object class="GtkEntry" id="txtReplaceWith">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">●</property>
@@ -183,7 +186,7 @@
                 <property name="secondary_icon_activatable">False</property>
                 <property name="primary_icon_sensitive">True</property>
                 <property name="secondary_icon_sensitive">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">5</property>
@@ -194,7 +197,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="txtLookFor">
+              <object class="GtkEntry" id="txtLookFor">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">●</property>
@@ -203,7 +206,7 @@
                 <property name="secondary_icon_activatable">False</property>
                 <property name="primary_icon_sensitive">True</property>
                 <property name="secondary_icon_sensitive">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">5</property>
@@ -212,11 +215,11 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="btnHighlightAll">
+              <object class="GtkButton" id="btnHighlightAll">
                 <property name="label" translatable="yes">Find &amp; highlight all</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="left_attach">2</property>
                 <property name="right_attach">4</property>
@@ -226,12 +229,9 @@
                 <property name="y_options">GTK_EXPAND</property>
               </packing>
             </child>
-            <child>
-              <placeholder/>
-            </child>
-          </widget>
+          </object>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+</interface>

@@ -5,6 +5,7 @@ using Models.Core;
 using Models.PMF.Organs;
 using Models.PMF.Functions;
 using System.Xml.Serialization;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
 {
@@ -26,7 +27,7 @@ namespace Models.PMF.Phen
         private IFunction CompletionNodeNumber = null;
 
         /// <summary>The cohort no at start</summary>
-        private double CohortNoAtStart;
+        private double NodeNoAtStart;
         /// <summary>The first</summary>
         private bool First = true;
         /// <summary>The fraction complete yesterday</summary>
@@ -36,7 +37,7 @@ namespace Models.PMF.Phen
         public override void ResetPhase()
         {
             base.ResetPhase();
-            CohortNoAtStart = 0;
+            NodeNoAtStart = 0;
             FractionCompleteYesterday = 0;
             First = true;
         }
@@ -50,7 +51,7 @@ namespace Models.PMF.Phen
 
             if (First)
             {
-                CohortNoAtStart = Structure.LeafTipsAppeared;
+                NodeNoAtStart = Structure.LeafTipsAppeared;
                 First = false;
             }
 
@@ -71,7 +72,7 @@ namespace Models.PMF.Phen
             base.AddTT(PropOfDayToUse);
             if (First)
             {
-                CohortNoAtStart = Structure.LeafTipsAppeared;
+                NodeNoAtStart = Structure.LeafTipsAppeared;
                 First = false;
             }
 
@@ -90,7 +91,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (Structure.LeafTipsAppeared - CohortNoAtStart) / (CompletionNodeNumber.Value() - CohortNoAtStart);
+                double F = (Structure.LeafTipsAppeared - NodeNoAtStart) / (CompletionNodeNumber.Value() - NodeNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.

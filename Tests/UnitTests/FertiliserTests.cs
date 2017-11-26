@@ -7,6 +7,7 @@ using System;
 using Models.Core.Runners;
 using System.Collections.Generic;
 using Models.Interfaces;
+using Models.Core.Interfaces;
 
 namespace UnitTests
 {
@@ -14,6 +15,7 @@ namespace UnitTests
     class FertiliserTests
     {
         /// <summary>Test setup routine. Returns a soil properties that can be used for testing.</summary>
+        [Serializable]
         public class MockSoil : Model, ISoil, ISolute
         {
             public double[] Thickness { get; set; }
@@ -27,6 +29,7 @@ namespace UnitTests
         [Test]
         public void Fertiliser_EnsureApplyWorks()
         {
+
             // Create a tree with a root node for our models.
             Simulation simulation = new Simulation();
 
@@ -56,8 +59,9 @@ namespace UnitTests
             simulation.Children.Add(operations);
 
             simulation.Children.Add(new SoluteManager());
-            Apsim.ParentAllChildren(simulation);
-            simulation.Run(null, null);
+
+            ISimulationEngine simulationEngine = Simulations.Create(new Model[] { simulation });
+            simulationEngine.Run(simulation, doClone:false);
 
             Assert.AreEqual(soil.NO3, new double[] { 1, 2, 103 });
             Assert.AreEqual(MockSummary.messages[0], "100 kg/ha of NO3N added at depth 300 layer 3");

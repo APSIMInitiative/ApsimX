@@ -10,6 +10,7 @@ namespace Models.PostSimulationTools
     using System.Data;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using Storage;
 
     /// <summary>
     /// A post processing model that produces time series stats.
@@ -31,7 +32,7 @@ namespace Models.PostSimulationTools
         /// The main run method called to fill tables in the specified DataStore.
         /// </summary>
         /// <param name="dataStore">The DataStore to work with</param>
-        public void Run(DataStore dataStore)
+        public void Run(IStorageReader dataStore)
         {
             dataStore.DeleteTable(this.Name);
 
@@ -48,7 +49,7 @@ namespace Models.PostSimulationTools
             statsData.Columns.Add("SDSD", typeof(double));
             statsData.Columns.Add("LCS", typeof(double));
 
-            DataTable simulationData = dataStore.GetData("*", this.TableName);
+            DataTable simulationData = dataStore.GetData(this.TableName);
             if (simulationData != null)
             {
                 DataView view = new DataView(simulationData);
@@ -85,7 +86,8 @@ namespace Models.PostSimulationTools
                 }
 
                 // Write the stats data to the DataStore
-                dataStore.WriteTable(null, this.Name, statsData);
+                statsData.TableName = this.Name;
+                dataStore.WriteTableRaw(statsData);
             }
         }
 
@@ -107,8 +109,10 @@ namespace Models.PostSimulationTools
                 if (!Convert.IsDBNull(view[row][observedColumnName]) &&
                     !Convert.IsDBNull(view[row][predictedColumnName]))
                 {
-                    observedData.Add(Convert.ToDouble(view[row][observedColumnName]));
-                    predictedData.Add(Convert.ToDouble(view[row][predictedColumnName]));
+                    observedData.Add(Convert.ToDouble(view[row][observedColumnName], 
+                                                      System.Globalization.CultureInfo.InvariantCulture));
+                    predictedData.Add(Convert.ToDouble(view[row][predictedColumnName], 
+                                                       System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
 

@@ -7,6 +7,7 @@ namespace UnitTests
     using System;
     using APSIM.Shared.Soils;
 
+    [Serializable]
     class MockSoil : ISoil
     {
         public double[] CL { get; set; }

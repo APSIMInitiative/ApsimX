@@ -6,7 +6,6 @@
 namespace UserInterface.Views
 {
     using System;
-    using Glade;
     using Gtk;
 
     /// <summary>
@@ -95,17 +94,11 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler IntervalChanged;
 
-        [Widget]
         private Table table1 = null;
-        [Widget]
         private Entry entryMin = null;
-        [Widget]
         private Entry entryMax = null;
-        [Widget]
         private Entry entryInterval = null;
-        [Widget]
         private Entry entryTitle = null;
-        [Widget]
         private CheckButton checkbutton1 = null;
 
         /// <summary>
@@ -113,8 +106,13 @@ namespace UserInterface.Views
         /// </summary>
         public AxisView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.AxisView.glade", "table1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.AxisView.glade");
+            table1 = (Table)builder.GetObject("table1");
+            entryMin = (Entry)builder.GetObject("entryMin");
+            entryMax = (Entry)builder.GetObject("entryMax");
+            entryInterval = (Entry)builder.GetObject("entryInterval");
+            entryTitle = (Entry)builder.GetObject("entryTitle");
+            checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             _mainWidget = table1;
             entryTitle.Changed += TitleTextBox_TextChanged;
             entryMin.Changed += OnMinimumChanged;
@@ -131,6 +129,8 @@ namespace UserInterface.Views
             entryMax.Changed -= OnMaximumChanged;
             entryInterval.Changed -= OnIntervalChanged;
             checkbutton1.Toggled -= OnCheckedChanged;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>
@@ -175,7 +175,8 @@ namespace UserInterface.Views
                 if (String.IsNullOrEmpty(entryMin.Text))
                     return double.NaN;
                 else
-                    return Convert.ToDouble(entryMin.Text);
+                    return Convert.ToDouble(entryMin.Text, 
+                                            System.Globalization.CultureInfo.InvariantCulture);
             }
             
             set
@@ -197,7 +198,8 @@ namespace UserInterface.Views
                 if (String.IsNullOrEmpty(entryMax.Text))
                     return double.NaN;
                 else
-                    return Convert.ToDouble(entryMax.Text);
+                    return Convert.ToDouble(entryMax.Text, 
+                                            System.Globalization.CultureInfo.InvariantCulture);
             }
             
             set
@@ -219,7 +221,8 @@ namespace UserInterface.Views
                 if (String.IsNullOrEmpty(entryInterval.Text))
                     return double.NaN;
                 else
-                    return Convert.ToDouble(entryInterval.Text);
+                    return Convert.ToDouble(entryInterval.Text, 
+                                            System.Globalization.CultureInfo.InvariantCulture);
             }
 
             set

@@ -5,20 +5,19 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
+    using System;
+    using System.Data;
+    using System.Linq;
     using APSIM.Shared.Utilities;
-    using Models;
     using Models.Core;
     using Models.Factorial;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
     using Views;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
     {
         /// <summary>The data store model to work with.</summary>
-        private DataStore dataStore;
+        private IStorageReader dataStore;
 
         /// <summary>The data store view to work with.</summary>
         private IDataStoreView view;
@@ -26,10 +25,10 @@ namespace UserInterface.Presenters
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
-        /// <summary>When specified, will only show experiment data.</summary>
+        /// <summary>Gets or sets the experiment filter. When specified, will only show experiment data.</summary>
         public Experiment ExperimentFilter { get; set; }
 
-        /// <summary>When specified, will only show simulation data.</summary>
+        /// <summary>Gets or sets the simulation filter. When specified, will only show simulation data.</summary>
         public Simulation SimulationFilter { get; set; }
 
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
@@ -38,16 +37,21 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            dataStore = model as DataStore;
+            dataStore = model as IStorageReader;
             this.view = view as IDataStoreView;
             this.explorerPresenter = explorerPresenter;
 
             this.view.TableList.IsEditable = false;
             this.view.Grid.ReadOnly = true;
             this.view.Grid.NumericFormat = "N3";
-            this.view.TableList.Values = this.GetTableNames();
-            if (dataStore != null && dataStore.MaximumResultsPerPage > 0)
-                this.view.MaximumNumberRecords.Value = dataStore.MaximumResultsPerPage.ToString();
+            if (dataStore != null)
+            {
+                this.view.TableList.Values = dataStore.TableNames.ToArray();
+                if (Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
+                {
+                    this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
+                }
+            }
 
             this.view.Grid.ResizeControls();
             this.view.TableList.Changed += this.OnTableSelected;
@@ -65,86 +69,74 @@ namespace UserInterface.Presenters
             view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
         }
 
-        /// <summary>Get a list of table names to send to the view.</summary>
-        private string[] GetTableNames()
-        {
-            List<string> tableNames = new List<string>();
-            if (this.dataStore != null)
-            {
-                foreach (string tableName in this.dataStore.TableNames)
-                {
-                    if (tableName != "Messages" && tableName != "InitialConditions" && tableName != DataStore.UnitsTableName)
-                    {
-                        tableNames.Add(tableName);
-                    }
-                }
-            }
-
-            return tableNames.ToArray();
-        }
-
         /// <summary>Populate the grid control with data.</summary>
         public void PopulateGrid()
         {
-            DataTable data  = GetData();
-
-            // Strip out unwanted columns.
-            if (data != null)
+            using (DataTable data = GetData())
             {
-                int numFrozenColumns = 1;
-                for (int i = 0; i < data.Columns.Count; i++)
+                // Strip out unwanted columns.
+                if (data != null)
                 {
-                    if (data.Columns[i].ColumnName.Contains("Date") || data.Columns[i].ColumnName.Contains("Today"))
+                    int numFrozenColumns = 1;
+                    for (int i = 0; i < data.Columns.Count; i++)
                     {
-                        numFrozenColumns = i;
-                        break;
-                    }
-                }
-
-                int simulationId = 0;
-
-                for (int i = 0; i < data.Columns.Count; i++)
-                {
-
-                    if (data.Columns[i].ColumnName == "SimulationID")
-                    {
-                        if (simulationId == 0 && data.Rows.Count > 0)
+                        if (data.Columns[i].ColumnName.Contains("Date") || data.Columns[i].ColumnName.Contains("Today"))
                         {
-                            simulationId = (int)data.Rows[0][i];
+                            numFrozenColumns = i;
+                            break;
                         }
-                        data.Columns.RemoveAt(i);
-                        i--;
                     }
-                    else if (i >= numFrozenColumns &&
-                             this.view.ColumnFilter.Value != string.Empty &&
-                             !data.Columns[i].ColumnName.Contains(this.view.ColumnFilter.Value))
+
+                    int simulationId = 0;
+
+                    for (int i = 0; i < data.Columns.Count; i++)
                     {
-                        data.Columns.RemoveAt(i);
-                        i--;
-                    }
-                }
+                        if (data.Columns[i].ColumnName == "SimulationID")
+                        {
+                            if (simulationId == 0 && data.Rows.Count > 0)
+                            {
+                                simulationId = (int)data.Rows[0][i];
+                            }
 
-                // Convert the last dot to a CRLF so that the columns in the grid are narrower.
-                foreach (DataColumn column in data.Columns)
-                {
-                    string units = null;
-                    // Try to obtain units
-                    if (dataStore != null && simulationId != 0)
+                            data.Columns.RemoveAt(i);
+                            i--;
+                        }
+                        else if (i >= numFrozenColumns &&
+                                 this.view.ColumnFilter.Value != string.Empty &&
+                                 !data.Columns[i].ColumnName.Contains(this.view.ColumnFilter.Value))
+                        {
+                            data.Columns.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    // Convert the last dot to a CRLF so that the columns in the grid are narrower.
+                    foreach (DataColumn column in data.Columns)
                     {
-                        units = dataStore.GetUnits(simulationId, view.TableList.SelectedValue, column.ColumnName);
+                        string units = null;
+
+                        // Try to obtain units
+                        if (dataStore != null && simulationId != 0)
+                        {
+                            units = dataStore.GetUnits(view.TableList.SelectedValue, column.ColumnName);
+                        }
+
+                        int posLastDot = column.ColumnName.LastIndexOf('.');
+                        if (posLastDot != -1)
+                        {
+                            column.ColumnName = column.ColumnName.Insert(posLastDot + 1, "\r\n");
+                        }
+
+                        // Add the units, if they're available
+                        if (units != null)
+                        {
+                            column.ColumnName = column.ColumnName + " " + units;
+                        }
                     }
-                    int posLastDot = column.ColumnName.LastIndexOf('.');
-                    if (posLastDot != -1)
-                        column.ColumnName = column.ColumnName.Insert(posLastDot + 1, "\r\n");
 
-                    // Add the units, if they're available
-                    if (units != null)
-                        column.ColumnName = column.ColumnName + " " + units;
-
+                    this.view.Grid.DataSource = data;
+                    this.view.Grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
                 }
-
-                this.view.Grid.DataSource = data;
-                this.view.Grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
             }
         }
 
@@ -152,23 +144,43 @@ namespace UserInterface.Presenters
         /// <returns>A data table of all data.</returns>
         private DataTable GetData()
         {
-            DataTable data;
+            DataTable data = null;
             if (dataStore != null)
             {
-                int start = 0;
-                int count = dataStore.MaximumResultsPerPage;
-                if (ExperimentFilter != null)
+                try
                 {
-                    string filter = "NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
-                    data = dataStore.GetFilteredData(view.TableList.SelectedValue, filter, start, count);
+                    int start = 0;
+                    int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
+                    if (ExperimentFilter != null)
+                    {
+                        string filter = "NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                        data = dataStore.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
+                    }
+                    else if (SimulationFilter != null)
+                    {
+                        data = dataStore.GetData(
+                                                 simulationName: SimulationFilter.Name,
+                                                 tableName: view.TableList.SelectedValue,
+                                                 from: start, 
+                                                 count: count);
+                    }
+                    else
+                    {
+                        data = dataStore.GetData(
+                                                tableName: view.TableList.SelectedValue,
+                                                count: Utility.Configuration.Settings.MaximumRowsOnReportGrid);
+                    }
                 }
-                else if (SimulationFilter != null)
-                    data = dataStore.GetData(SimulationFilter.Name, view.TableList.SelectedValue, false, start, count);
-                else
-                    data = dataStore.GetData("*", view.TableList.SelectedValue, true, 0, dataStore.MaximumResultsPerPage);
+                catch (Exception e)
+                {
+                    this.explorerPresenter.MainPresenter.ShowMessage("Error reading data tables." + Environment.NewLine + e.ToString(), Simulation.ErrorLevel.Error);
+                }
             }
             else
+            {
                 data = new DataTable();
+            }
+
             return data;
         }
 
@@ -194,16 +206,21 @@ namespace UserInterface.Presenters
         private void OnMaximumNumberRecordsChanged(object sender, EventArgs e)
         {
             if (view.MaximumNumberRecords.Value == string.Empty)
-                dataStore.MaximumResultsPerPage = 0;
+            {
+                Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
+            }
             else
+            {
                 try
                 {
-                    dataStore.MaximumResultsPerPage = Convert.ToInt32(view.MaximumNumberRecords.Value);
+                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(view.MaximumNumberRecords.Value);
                 }
                 catch (Exception)
                 {  // If there are any errors, return 0
-                    dataStore.MaximumResultsPerPage = 0;
+                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
                 }
+            }
+
             PopulateGrid();
         }
     }

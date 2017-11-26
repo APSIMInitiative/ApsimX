@@ -39,11 +39,11 @@ namespace Models.PMF
             }
         }
 
-        public override double NonStructuralN
+        public override double StorageN
         {
             get
             {
-                return Live.NonStructuralN + Dead.NonStructuralN;
+                return Live.StorageN + Dead.StorageN;
             }
             set
             {
@@ -62,11 +62,11 @@ namespace Models.PMF
             }
         }
 
-        public override double NonStructuralWt
+        public override double StorageWt
         {
             get
             {
-                return Live.NonStructuralWt + Dead.NonStructuralWt;
+                return Live.StorageWt + Dead.StorageWt;
             }
             set
             {

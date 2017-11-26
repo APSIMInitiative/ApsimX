@@ -91,7 +91,9 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object model)
         {
             if (model == this.axis)
+            {
                 this.PopulateView();
+            }
         }
 
         /// <summary>

@@ -7,23 +7,26 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
-    using Models.Graph;
-    using Views;
-    using Models;
     using System.Data;
     using System.Drawing;
     using System.Linq;
-    using Models.Core;
-    using System.Reflection;
-    using Interfaces;
     using APSIM.Shared.Utilities;
-    using Models.Factorial;
+    using Interfaces;
+    using Models.Core;
+    using Models.Graph;
+    using Views;
 
     /// <summary>
     /// A presenter class for graph series.
     /// </summary>
-    class SeriesPresenter : IPresenter
+    public class SeriesPresenter : IPresenter
     {
+        /// <summary>
+        /// The storage
+        /// </summary>
+        [Link]
+        private IStorageReader storage = null;
+
         /// <summary>The graph model to work with.</summary>
         private Series series;
 
@@ -50,6 +53,7 @@ namespace UserInterface.Presenters
             if (parentGraph != null)
             {
                 graphPresenter = new GraphPresenter();
+                explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                 graphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
             }
 
@@ -63,7 +67,10 @@ namespace UserInterface.Presenters
         {
             seriesView.EndEdit();
             if (graphPresenter != null)
+            {
                 graphPresenter.Detach();
+            }
+
             DisconnectViewEvents();
         }
 
@@ -127,13 +134,14 @@ namespace UserInterface.Presenters
         /// <summary>Series type has been changed by the user.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        void OnSeriesTypeChanged(object sender, EventArgs e)
+        private void OnSeriesTypeChanged(object sender, EventArgs e)
         {
             SeriesType seriesType = (SeriesType)Enum.Parse(typeof(SeriesType), this.seriesView.SeriesType.SelectedValue);
             this.SetModelProperty("Type", seriesType);
-            /// This doesn't quite work yet. If the previous series was a scatter plot, there is no x2, y2 to work with
-            /// and things go a bit awry.
-            /// this.seriesView.ShowX2Y2(series.Type == SeriesType.Area);
+            
+            // This doesn't quite work yet. If the previous series was a scatter plot, there is no x2, y2 to work with
+            // and things go a bit awry.
+            // this.seriesView.ShowX2Y2(series.Type == SeriesType.Area);
         }
 
         /// <summary>Series line type has been changed by the user.</summary>
@@ -146,7 +154,6 @@ namespace UserInterface.Presenters
             {
                 this.SetModelProperty("Line", lineType);
                 this.SetModelProperty("FactorIndexToVaryLines", -1);
-
             }
             else
             {
@@ -184,7 +191,9 @@ namespace UserInterface.Presenters
         {
             LineThicknessType lineThickness;
             if (Enum.TryParse<LineThicknessType>(this.seriesView.LineThickness.SelectedValue, out lineThickness))
+            {
                 this.SetModelProperty("LineThickness", lineThickness);
+            }
         }
 
         /// <summary>Series marker size has been changed by the user.</summary>
@@ -194,9 +203,10 @@ namespace UserInterface.Presenters
         {
             MarkerSizeType markerSize;
             if (Enum.TryParse<MarkerSizeType>(this.seriesView.MarkerSize.SelectedValue, out markerSize))
+            {
                 this.SetModelProperty("MarkerSize", markerSize);
+            }
         }
-
 
         /// <summary>Series color has been changed by the user.</summary>
         /// <param name="sender">Event sender</param>
@@ -225,7 +235,10 @@ namespace UserInterface.Presenters
         {
             Axis.AxisType axisType = Axis.AxisType.Bottom;
             if (this.seriesView.XOnTop.IsChecked)
+            {
                 axisType = Axis.AxisType.Top;
+            }
+
             this.SetModelProperty("XAxis", axisType);
         }
 
@@ -236,7 +249,10 @@ namespace UserInterface.Presenters
         {
             Axis.AxisType axisType = Axis.AxisType.Left;
             if (this.seriesView.YOnRight.IsChecked)
+            {
                 axisType = Axis.AxisType.Right;
+            }
+
             this.SetModelProperty("YAxis", axisType);
         }
 
@@ -296,9 +312,7 @@ namespace UserInterface.Presenters
             if (series.TableName != this.seriesView.DataSource.SelectedValue)
             {
                 this.SetModelProperty("TableName", this.seriesView.DataSource.SelectedValue);
-                DataStore dataStore = new DataStore(series);
-                PopulateFieldNames(dataStore);
-                dataStore.Disconnect();
+                PopulateFieldNames();
             }
         }
 
@@ -332,13 +346,12 @@ namespace UserInterface.Presenters
         private void PopulateView()
         {
             // Populate the editor with a list of data sources.
-            DataStore dataStore = new DataStore(series);
             List<string> dataSources = new List<string>();
-            foreach (string tableName in dataStore.TableNames)
+            foreach (string tableName in storage.TableNames)
             {
-                if (tableName != "Messages" && tableName != "InitialConditions" && tableName != DataStore.UnitsTableName) 
-                    dataSources.Add(tableName);
+                dataSources.Add(tableName);
             }
+
             dataSources.Sort();
             this.seriesView.DataSource.Values = dataSources.ToArray();
 
@@ -369,8 +382,7 @@ namespace UserInterface.Presenters
             this.seriesView.DataSource.SelectedValue = series.TableName;
             this.seriesView.Filter.Value = series.Filter;
 
-            PopulateFieldNames(dataStore);
-            dataStore.Disconnect();
+            PopulateFieldNames();
 
             this.seriesView.X.SelectedValue = series.XFieldName;
             this.seriesView.Y.SelectedValue = series.YFieldName;
@@ -385,17 +397,24 @@ namespace UserInterface.Presenters
         {
             List<string> values = new List<string>(Enum.GetNames(typeof(LineType)));
             if (series.FactorNamesForVarying != null)
+            {
                 values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
+            }
+
             this.seriesView.LineType.Values = values.ToArray();
             if (series.FactorIndexToVaryLines == -1)
+            {
                 this.seriesView.LineType.SelectedValue = series.Line.ToString();
+            }
             else if (series.FactorIndexToVaryLines >= series.FactorNamesForVarying.Count)
             {
                 series.FactorIndexToVaryLines = -1;
                 this.seriesView.LineType.SelectedValue = series.Line.ToString();
             }
             else
+            {
                 this.seriesView.LineType.SelectedValue = "Vary by " + series.FactorNamesForVarying[series.FactorIndexToVaryLines];
+            }
         }
 
         /// <summary>Populate the marker drop down.</summary>
@@ -403,17 +422,24 @@ namespace UserInterface.Presenters
         {
             List<string> values = new List<string>(Enum.GetNames(typeof(MarkerType)));
             if (series.FactorNamesForVarying != null)
+            {
                 values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
+            }
+
             this.seriesView.MarkerType.Values = values.ToArray();
             if (series.FactorIndexToVaryMarkers == -1)
+            {
                 this.seriesView.MarkerType.SelectedValue = series.Marker.ToString();
+            }
             else if (series.FactorIndexToVaryMarkers >= series.FactorNamesForVarying.Count)
             {
                 series.FactorIndexToVaryMarkers = -1;
                 this.seriesView.MarkerType.SelectedValue = series.Marker.ToString();
             }
             else
+            {
                 this.seriesView.MarkerType.SelectedValue = "Vary by " + series.FactorNamesForVarying[series.FactorIndexToVaryMarkers];
+            }
         }
 
         /// <summary>Populate the colour drop down in the view.</summary>
@@ -421,27 +447,34 @@ namespace UserInterface.Presenters
         {
             List<object> colourOptions = new List<object>();
             foreach (Color colour in ColourUtilities.Colours)
+            {
                 colourOptions.Add(colour);
+            }
 
             // Send colour options to view.
             if (series.FactorNamesForVarying != null)
+            {
                 colourOptions.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
+            }
 
             this.seriesView.Colour.Values = colourOptions.ToArray();
             if (series.FactorIndexToVaryColours == -1)
+            {
                 this.seriesView.Colour.SelectedValue = series.Colour;
+            }
             else if (series.FactorIndexToVaryColours >= series.FactorNamesForVarying.Count)
             {
                 series.FactorIndexToVaryColours = -1;
                 this.seriesView.Colour.SelectedValue = series.Colour;
             }
             else
+            {
                 this.seriesView.Colour.SelectedValue = "Vary by " + series.FactorNamesForVarying[series.FactorIndexToVaryColours];
+            }
         }
 
         /// <summary>Populates the field names in the view.</summary>
-        /// <param name="dataStore">The data store.</param>
-        private void PopulateFieldNames(DataStore dataStore)
+        private void PopulateFieldNames()
         {
             Graph parentGraph = series.Parent as Graph;
             if (this.seriesView.DataSource != null && 
@@ -451,7 +484,7 @@ namespace UserInterface.Presenters
             {
                 List<string> fieldNames = new List<string>();
                 fieldNames.Add("SimulationName");
-                fieldNames.AddRange(dataStore.ColumnNames(seriesView.DataSource.SelectedValue));
+                fieldNames.AddRange(storage.ColumnNames(seriesView.DataSource.SelectedValue));
                 fieldNames.Sort();
 
                 this.seriesView.X.Values = fieldNames.ToArray();
@@ -459,8 +492,6 @@ namespace UserInterface.Presenters
                 this.seriesView.X2.Values = fieldNames.ToArray();
                 this.seriesView.Y2.Values = fieldNames.ToArray();
             }
-
         }
-
     }
 }
