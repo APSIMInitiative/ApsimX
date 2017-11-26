@@ -66,6 +66,7 @@ The model consists of:
       <VariableNames>
         <string>[Clock].Today</string>
         <string>([Barley].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
+        <string>[Barley].Arbitrator.FN</string>
         <string>[Barley].AboveGround.N</string>
         <string>[Barley].AboveGround.Wt</string>
         <string>[Barley].AboveGroundDead.N</string>
@@ -11414,7 +11415,7 @@ namespace Models
                   <double>200</double>
                 </Thickness>
                 <SWCON>
-                  <double>0.9</double>
+                  <double>0.5</double>
                   <double>0.6</double>
                   <double>0.4</double>
                   <double>0.4</double>
@@ -21711,7 +21712,7 @@ This is the mineral nitrogen (N) validation trial conducted at the Lincoln Unive
             <Name>Clock</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <StartDate>2015-09-11T00:00:00</StartDate>
-            <EndDate>2016-03-31T00:00:00</EndDate>
+            <EndDate>2016-01-21T00:00:00</EndDate>
           </Clock>
           <Summary>
             <Name>summaryfile</Name>
@@ -25587,9 +25588,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -27065,9 +27066,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -28538,9 +28539,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -32864,9 +32865,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Grimmett</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Grimmett</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -34147,9 +34148,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Grimmett</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Grimmett</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -34861,7 +34862,7 @@ namespace Models
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
-            <MemoText><![CDATA[NOTE: High N treatment logdged.  Final grain sizes were less than expected.
+            <MemoText><![CDATA[NOTE: High N treatment lodged.  Final grain sizes were less than expected.
 ]]></MemoText>
           </Memo>
           <Factors>
@@ -35351,25 +35352,25 @@ namespace Models
                     <double>300</double>
                   </Thickness>
                   <NO3>
-                    <double>1.3</double>
-                    <double>0.6</double>
-                    <double>0.25</double>
-                    <double>0.2</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
+                    <double>22.691</double>
+                    <double>1.206</double>
+                    <double>1.0125</double>
+                    <double>0.9</double>
+                    <double>0.447</double>
+                    <double>0.438</double>
+                    <double>0.438</double>
                   </NO3>
                   <NH4>
-                    <double>1.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.8</double>
-                    <double>0.8</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
+                    <double>2.691</double>
+                    <double>2.0100000000000002</double>
+                    <double>4.05</double>
+                    <double>3.6</double>
+                    <double>3.576</double>
+                    <double>2.19</double>
+                    <double>2.19</double>
                   </NH4>
-                  <NO3Units>ppm</NO3Units>
-                  <NH4Units>ppm</NH4Units>
+                  <NO3Units>kgha</NO3Units>
+                  <NH4Units>kgha</NH4Units>
                   <SWUnits>Volumetric</SWUnits>
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
@@ -35444,8 +35445,8 @@ namespace Models
                 <Name>SowingRule</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <CultivarName>Grimmett</CultivarName>
                   <SowDate>25-may</SowDate>
+                  <CultivarName>Grimmett</CultivarName>
                   <SowingDepth>30</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>120</Population>
@@ -35585,7 +35586,7 @@ namespace Models
               <EventNamesOnGraph>
                 <Name>EventNamesOnGraph</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
-                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
               </EventNamesOnGraph>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Type>Scatter</Type>
@@ -35601,7 +35602,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Leaf.Fn</YFieldName>
+              <YFieldName>Barley.Phenology.CurrentPhaseName</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
