@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -446,7 +446,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <ShadeInducedSenRate>0</ShadeInducedSenRate>
           <SenescedFrac>0</SenescedFrac>
           <DeltaPotentialArea>0</DeltaPotentialArea>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaStressConstrainedArea>0</DeltaStressConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
@@ -463,27 +463,15 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Rank>1</Rank>
           <Area>50</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Leaf].CohortLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Leaf].CohortDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <CompositeBiomass>
           <Name>Total</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
-            <string>[Leaf].CohortLive</string>
-            <string>[Leaf].CohortDead</string>
+            <string>[Leaf].Live</string>
+            <string>[Leaf].Dead</string>
           </Propertys>
         </CompositeBiomass>
         <ArrayBiomass>
@@ -939,7 +927,28 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
+          <ArrayFunction>
+            <Name>LagDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>SenescenceDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>LeafSizeAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+          </ArrayFunction>
+          <Constant>
+            <Name>RemobilisationCost</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExpansionStressValue>0</ExpansionStressValue>
         </LeafCohortParameters>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
@@ -1006,7 +1015,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiencyFunction</Name>
+          <Name>DMConversionEfficiency</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
@@ -1014,6 +1023,11 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Name>ApexStandard</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </ApexStandard>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1031,7 +1045,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
-        <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -1113,20 +1126,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Leaf].FractionDied</XProperty>
         </LinearInterpolationFunction>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <Constant>
           <Name>StructuralFraction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1276,6 +1275,21 @@ date of Experiment 4 is assumed here.]]></MemoText>
           </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1327,14 +1341,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
         </Constant>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <Constant>
           <Name>DMSinkCapacity</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1442,8 +1448,92 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[StorageRoot].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
+      <CompositeBiomass>
+        <Name>AboveGround</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[StorageRoot].Live</string>
+          <string>[StorageRoot].Dead</string>
+          <string>[Petiole].Live</string>
+          <string>[Petiole].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>BelowGround</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Propertys>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>Total</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Leaf].Dead</string>
+          <string>[StorageRoot].Live</string>
+          <string>[StorageRoot].Dead</string>
+          <string>[Petiole].Live</string>
+          <string>[Petiole].Dead</string>
+          <string>[Root].Live</string>
+          <string>[Root].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalLive</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Petiole].Live</string>
+          <string>[StorageRoot].Live</string>
+          <string>[Root].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalDead</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Propertys>
+          <string>[Leaf].Dead</string>
+          <string>[Petiole].Dead</string>
+          <string>[StorageRoot].Dead</string>
+          <string>[Root].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>LeafPetiole</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Petiole].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <LinearInterpolationFunction>
+        <Name>MortalityRate</Name>
+        <XYPairs>
+          <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <X>
+            <double>0.98</double>
+            <double>1</double>
+          </X>
+          <Y>
+            <double>0</double>
+            <double>1</double>
+          </Y>
+        </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <XProperty>[Leaf].CoverGreen</XProperty>
+      </LinearInterpolationFunction>
       <GenericOrgan>
         <Name>Petiole</Name>
         <Constant>
@@ -1477,46 +1567,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
         </Constant>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <PartitionFractionDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <LinearInterpolationFunction>
-            <Name>PartitionFraction</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>1</double>
-                <double>6</double>
-                <double>15</double>
-                <double>30</double>
-                <double>51</double>
-              </X>
-              <Y>
-                <double>0.1</double>
-                <double>0.15</double>
-                <double>0.24</double>
-                <double>0.15</double>
-                <double>0.1</double>
-              </Y>
-            </XYPairs>
-            <Memo>
-              <Name>Memo</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[Allocation determined by node number - partitioning coefficients have been determined using the sowing date October data]]></MemoText>
-            </Memo>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
-          </LinearInterpolationFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </PartitionFractionDemandFunction>
         <VariableReference>
           <Name>SenescenceRate</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1597,79 +1647,45 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Petiole].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <MaximumFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>Zero</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <MultiplyFunction>
+            <Name>MultiplyFunction</Name>
+            <Constant>
+              <Name>One</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <SubtractFunction>
+              <Name>SubtractFunction</Name>
+              <VariableReference>
+                <Name>leafwt</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[FodderBeet].Leaf.Live.Wt</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>petiolewt</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[FodderBeet].Petiole.Wt</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </SubtractFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </MaximumFunction>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
-      <CompositeBiomass>
-        <Name>AboveGround</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Propertys>
-          <string>[Leaf].Live</string>
-          <string>[Leaf].Dead</string>
-          <string>[StorageRoot].Live</string>
-          <string>[StorageRoot].Dead</string>
-          <string>[Petiole].Live</string>
-          <string>[Petiole].Dead</string>
-        </Propertys>
-      </CompositeBiomass>
-      <CompositeBiomass>
-        <Name>BelowGround</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Propertys>
-          <string>[Root].Live</string>
-          <string>[Root].Dead</string>
-        </Propertys>
-      </CompositeBiomass>
-      <CompositeBiomass>
-        <Name>Total</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Propertys>
-          <string>[Leaf].Live</string>
-          <string>[Leaf].Dead</string>
-          <string>[StorageRoot].Live</string>
-          <string>[StorageRoot].Dead</string>
-          <string>[Petiole].Live</string>
-          <string>[Petiole].Dead</string>
-          <string>[Root].Live</string>
-          <string>[Root].Dead</string>
-        </Propertys>
-      </CompositeBiomass>
-      <CompositeBiomass>
-        <Name>TotalLive</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Propertys>
-          <string>[Leaf].Live</string>
-          <string>[Petiole].Live</string>
-          <string>[StorageRoot].Live</string>
-          <string>[Root].Live</string>
-        </Propertys>
-      </CompositeBiomass>
-      <CompositeBiomass>
-        <Name>TotalDead</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Propertys>
-          <string>[Leaf].Dead</string>
-          <string>[Petiole].Dead</string>
-          <string>[StorageRoot].Dead</string>
-          <string>[Root].Dead</string>
-        </Propertys>
-      </CompositeBiomass>
-      <LinearInterpolationFunction>
-        <Name>MortalityRate</Name>
-        <XYPairs>
-          <Name>XYPairs</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <X>
-            <double>0.98</double>
-            <double>1</double>
-          </X>
-          <Y>
-            <double>0</double>
-            <double>1</double>
-          </Y>
-        </XYPairs>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Leaf].CoverGreen</XProperty>
-      </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>FodderBeet</CropType>
     </Plant>
@@ -1688,6 +1704,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value()</string>
         <string>[FodderBeet].Leaf.Live.Wt</string>
         <string>[FodderBeet].Petiole.Live.Wt</string>
+        <string>[FodderBeet].LeafPetiole.Wt</string>
         <string>[FodderBeet].StorageRoot.Live.Wt</string>
         <string>[FodderBeet].Leaf.LAI</string>
         <string>[FodderBeet].Structure.LeafTipsAppeared</string>
@@ -1718,8 +1735,618 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <string>[Clock].DoReport</string>
       </EventNames>
     </Report>
+    <Graph>
+      <Name>Leaf_N</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-2793984</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.FodderBeet.Leaf.Live.N</XFieldName>
+        <YFieldName>Predicted.FodderBeet.Leaf.Live.N</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+    </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
+  <Folder>
+    <Name>CombinedStats</Name>
+    <Folder>
+      <Name>CanopyStats</Name>
+      <Graph>
+        <Name>LAI</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FodderBeet.Leaf.LAI</XFieldName>
+          <YFieldName>Predicted.FodderBeet.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>LightInterception</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FodderBeet.Leaf.CoverGreen</XFieldName>
+          <YFieldName>Predicted.FodderBeet.Leaf.CoverGreen</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
+    </Folder>
+    <Folder>
+      <Name>BiomassStats</Name>
+      <Graph>
+        <Name>Total</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FodderBeet.AboveGround.Wt</XFieldName>
+          <YFieldName>Predicted.FodderBeet.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>StorageRoot</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FodderBeet.StorageRoot.Live.Wt</XFieldName>
+          <YFieldName>Predicted.FodderBeet.StorageRoot.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Leaf</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FodderBeet.Leaf.Live.Wt</XFieldName>
+          <YFieldName>Predicted.FodderBeet.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Petiole</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FodderBeet.Petiole.Live.Wt</XFieldName>
+          <YFieldName>Predicted.FodderBeet.Petiole.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>LeafPetiole</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FodderBeet.LeafPetiole.Wt</XFieldName>
+          <YFieldName>Predicted.FodderBeet.LeafPetiole.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
+    </Folder>
+    <Folder>
+      <Name>N_uptakeStats</Name>
+      <Graph>
+        <Name>Total_N</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FodderBeet.AboveGround.N</XFieldName>
+          <YFieldName>Predicted.FodderBeet.AboveGround.N</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>StorageRoot_N</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FodderBeet.StorageRoot.Live.N</XFieldName>
+          <YFieldName>Predicted.FodderBeet.StorageRoot.Live.N</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Leaf_N</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FodderBeet.Leaf.Live.N</XFieldName>
+          <YFieldName>Predicted.FodderBeet.Leaf.Live.N</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Petiole_N</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.FodderBeet.Petiole.Live.N</XFieldName>
+          <YFieldName>Predicted.FodderBeet.Petiole.Live.N</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
+    </Folder>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
+  </Folder>
   <DataStore>
     <Name>DataStore</Name>
     <Input>
@@ -1968,8 +2595,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
     <Name>LincolnP21_Cv2011</Name>
@@ -2572,7 +3197,7 @@ namespace Models
 			AccumDrainage += Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 		
 		[EventSubscribe("PlantEnding")]
@@ -4707,7 +5332,7 @@ namespace Models
 			AccumDrainage += Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 		
 		[EventSubscribe("PlantEnding")]
@@ -6961,7 +7586,7 @@ namespace Models
 			AccumDrainage += Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 		
 		[EventSubscribe("PlantEnding")]
@@ -9199,7 +9824,7 @@ namespace Models
 			AccumDrainage += Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 		
 		[EventSubscribe("PlantEnding")]
@@ -9233,9 +9858,9 @@ namespace Models
             <Name>SowDateCv</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <InitialRootDepth>5</InitialRootDepth>
               <CropToSow>Rivage</CropToSow>
               <SowingDate>0001-01-01</SowingDate>
-              <InitialRootDepth>5</InitialRootDepth>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
