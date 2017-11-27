@@ -206,6 +206,14 @@ namespace Models.PMF.Struct
             DeltaTipNumber = 0;
             DeltaHaunStage = 0;
             SenescenceByAge = false;
+            Initialised = false;
+            Germinated = false;
+            Emerged = false;
+            _Height = 0;
+            LeafTipsAppeared = 0;
+            BranchNumber = 0;
+            NextLeafProportion = 0;
+            DeltaPlantPopulation = 0;
         }
 
         #endregion
@@ -466,6 +474,7 @@ namespace Models.PMF.Struct
             CohortToInitialise = 0;
             TipToAppear = 0;
             PotLeafTipsAppeared = 0;
+            ResetStemPopn(); 
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -483,39 +492,6 @@ namespace Models.PMF.Struct
                 ApexNum = PrimaryBudNo;
                 TotalStemPopn = MainStemPopn;
             }
-        }
-
-        /// <summary>Called when crop is being cut.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Cutting")]
-        private void OnCutting(object sender, EventArgs e)
-        {
-            /*PotLeafTipsAppeared = 0;
-            CohortToInitialise = 0;
-            TipToAppear = 0;
-            Emerged = false;
-            Clear();
-            ResetStemPopn();
-            InitialiseLeafCohorts.Invoke(this, args);
-            NextLeafProportion = 1.0;
-            DoEmergence();
-            Emerged = true;*/
-        }
-        
-        /// <summary>Called when crop is being cut.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Harvesting")]
-        private void OnHarvesting(object sender, EventArgs e)
-        {
-            PotLeafTipsAppeared = 0;
-            Clear();
-            ResetStemPopn();
-            Germinated = false;
-            Emerged = false;
-            CohortToInitialise = 0;
-            TipToAppear = 0;
         }
 
         /// <summary>Called when crop recieves a remove biomass event from manager</summary>

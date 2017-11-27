@@ -197,6 +197,9 @@ namespace Models.Graph
 
         /// <summary>The simulation names for each point.</summary>
         public IEnumerable<string> simulationNamesForEachPoint;
+
+        /// <summary>Gets the error values</summary>
+        public IEnumerable error;
     }
 
     /// <summary>Base interface for all annotations</summary>

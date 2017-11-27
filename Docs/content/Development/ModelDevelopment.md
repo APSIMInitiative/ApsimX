@@ -3,8 +3,6 @@ title: "Model Development"
 draft: false
 ---
 
-# Model Development
-
 All models are written as normal .NET classes but must be derived from Model
 
 ## Properties initialised at startup

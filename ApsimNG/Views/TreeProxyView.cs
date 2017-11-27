@@ -886,7 +886,8 @@ namespace UserInterface.Views
                 {
                     if (rowShade[i].ToString() == "")
                         return;
-                    yShade[i - 1] = Convert.ToDouble(rowShade[i]);
+                    yShade[i - 1] = Convert.ToDouble(rowShade[i], 
+                                                     System.Globalization.CultureInfo.InvariantCulture);
                 }
 
                 for (int i = 0; i < x.Length; i++)
@@ -936,7 +937,8 @@ namespace UserInterface.Views
                     double[] data = new double[table.Rows.Count - 4];
                     for (int j = 4; j < table.Rows.Count; j++)
                     {
-                        data[j - 4] = Convert.ToDouble(table.Rows[j].Field<string>(i));
+                        data[j - 4] = Convert.ToDouble(table.Rows[j].Field<string>(i), 
+                                                       System.Globalization.CultureInfo.InvariantCulture);
                     }
 
                     List<DataPoint> points = new List<DataPoint>();
@@ -984,7 +986,7 @@ namespace UserInterface.Views
             foreach (object[] row in heightModel)
             {
                 if (!String.IsNullOrEmpty((string)row[1]))
-                    heights.Add(Convert.ToDouble((string)row[1]) * 1000.0);
+                    heights.Add(Convert.ToDouble((string)row[1], System.Globalization.CultureInfo.InvariantCulture) * 1000.0);
             }
             return heights.ToArray();
         }
@@ -995,7 +997,8 @@ namespace UserInterface.Views
             foreach (object[] row in heightModel)
             {
                 if (!String.IsNullOrEmpty((string)row[2]))
-                    NDemands.Add(Convert.ToDouble((string)row[2]));
+                    NDemands.Add(Convert.ToDouble((string)row[2], 
+                                                  System.Globalization.CultureInfo.InvariantCulture));
             }
             return NDemands.ToArray();
         }
@@ -1006,7 +1009,8 @@ namespace UserInterface.Views
             foreach (object[] row in heightModel)
             {
                 if (!String.IsNullOrEmpty((string)row[3]))
-                    CanopyWidths.Add(Convert.ToDouble((string)row[3]));
+                    CanopyWidths.Add(Convert.ToDouble((string)row[3], 
+                                                      System.Globalization.CultureInfo.InvariantCulture));
             }
             return CanopyWidths.ToArray();
         }
@@ -1017,7 +1021,8 @@ namespace UserInterface.Views
             foreach (object[] row in heightModel)
             {
                 if (!String.IsNullOrEmpty((string)row[4]))
-                    TreeLeafAreas.Add(Convert.ToDouble((string)row[4]));
+                    TreeLeafAreas.Add(Convert.ToDouble((string)row[4], 
+                                                       System.Globalization.CultureInfo.InvariantCulture));
             }
             return TreeLeafAreas.ToArray();
         }

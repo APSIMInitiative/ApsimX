@@ -380,7 +380,7 @@ namespace UserInterface.Commands
             graph.Height = 250;
 
             // Create a line series.
-            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y,
+            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null,
                                      Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
                                      System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None,
                                      Models.Graph.LineThicknessType.Normal, Models.Graph.MarkerSizeType.Normal, true);

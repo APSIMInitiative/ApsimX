@@ -14,12 +14,19 @@ namespace Models.PMF.Struct
     [Serializable]
     public class HeightFunction : Model, IFunction
     {
+        [Link]
+        private Plant plantModel = null;
+
         /// <summary>The potential height</summary>
-        [Link] IFunction PotentialHeight = null;
+        [Link]
+        private IFunction PotentialHeight = null;
+
         /// <summary>The potential height yesterday</summary>
-        double PotentialHeightYesterday = 0;
+        private double PotentialHeightYesterday = 0;
+
         /// <summary>The height</summary>
-        double Height = 0;
+        private double Height = 0;
+        
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
 
@@ -45,5 +52,34 @@ namespace Models.PMF.Struct
             Height += DeltaHeight;
             return Height;
         }
+
+        /// <summary>Clear all variables</summary>
+        private void Clear()
+        {
+            PotentialHeightYesterday = 0;
+            Height = 0;
+            DeltaHeight = 0;
+        }
+
+        /// <summary>Called when crop is sowing</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+            if (sender == plantModel)
+                Clear();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            if (sender == plantModel)
+                Clear();
+        }
+
     }
 }
