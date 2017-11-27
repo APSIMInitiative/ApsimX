@@ -141,6 +141,10 @@
     <Compile Include="CLEM\Reporting\ReportActivitiesPerformed.cs" />
     <Compile Include="CLEM\Reporting\ReportResourceShortfalls.cs" />
     <Compile Include="CLEM\Reporting\ReportResourceBalances.cs" />
+    <Compile Include="CLEM\Resources\Equipment.cs" />
+    <Compile Include="CLEM\Resources\EquipmentType.cs" />
+    <Compile Include="CLEM\Resources\WaterType.cs" />
+    <Compile Include="CLEM\Resources\WaterStore.cs" />
     <Compile Include="Core\APSIMFileConverterUtilities.cs" />
     <Compile Include="Core\APSIMFileConverter.cs" />
     <Compile Include="Core\APSIMFileReader.cs" />
