@@ -5,7 +5,7 @@ using UserInterface.Interfaces;
 namespace UserInterface.Views
 {
     //duplicate of InputView because we want to place this at the top of our simulation not onto the Datastore
-    interface ICLEMCropsInputView
+    interface ICLEMFileCropView
     {
         /// <summary>
         /// Invoked when a browse button is clicked.
@@ -28,7 +28,7 @@ namespace UserInterface.Views
         IGridView GridView { get; }
     }
 
-    public class CLEMCropsInputView : ViewBase, Views.ICLEMCropsInputView
+    public class CLEMFileCropView : ViewBase, Views.ICLEMFileCropView
     {
         /// <summary>
         /// Invoked when a browse button is clicked.
@@ -49,7 +49,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Constructor
         /// </summary>
-        public CLEMCropsInputView(ViewBase owner) : base(owner)
+        public CLEMFileCropView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.InputView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");

@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
     /// <summary>
     /// Attaches an Input model to an Input View.
     /// </summary>
-    public class CLEMCropsInputPresenter : IPresenter
+    public class CLEMFileCropPresenter : IPresenter
     {
         /// <summary>
         /// The filecrop  model
@@ -24,7 +24,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The filecrop view
         /// </summary>
-        private ICLEMCropsInputView view;
+        private ICLEMFileCropView view;
 
         /// <summary>
         /// The Explorer
@@ -40,7 +40,7 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Models.CLEM.FileCrop;
-            this.view = view as ICLEMCropsInputView;
+            this.view = view as ICLEMFileCropView;
             this.explorerPresenter = explorerPresenter;
             this.view.BrowseButtonClicked += this.OnBrowseButtonClicked;
 
