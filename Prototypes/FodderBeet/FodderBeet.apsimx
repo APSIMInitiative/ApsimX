@@ -2058,6 +2058,106 @@ date of Experiment 4 is assumed here.]]></MemoText>
       <Folder>
         <Name>CanopyStats</Name>
         <Graph>
+          <Name>AppearedLeaves</Name>
+          <Series>
+            <Name>Series1</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved</TableName>
+            <XFieldName>Observed.FodderBeet.Structure.LeafTipsAppeared</XFieldName>
+            <YFieldName>Predicted.FodderBeet.Structure.LeafTipsAppeared</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>GreenLeaves</Name>
+          <Series>
+            <Name>Series1</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved</TableName>
+            <XFieldName>Observed.FodderBeet.Leaf.PlantAppearedGreenLeafNo</XFieldName>
+            <YFieldName>Predicted.FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
           <Name>LAI</Name>
           <Series>
             <Name>Series1</Name>
@@ -2538,6 +2638,668 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
+      <Folder>
+        <Name>CombinedStatistics</Name>
+        <Folder>
+          <Name>CanopyStats</Name>
+          <Graph>
+            <Name>AppearedLeaves</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Structure.LeafTipsAppeared</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Structure.LeafTipsAppeared</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>GreenLeaves</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Leaf.PlantAppearedGreenLeafNo</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>LAI</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Leaf.LAI</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Leaf.LAI</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>LightInterception</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Leaf.CoverGreen</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Leaf.CoverGreen</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
+        </Folder>
+        <Folder>
+          <Name>BiomassStats</Name>
+          <Graph>
+            <Name>TotalWt</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.AboveGround.Wt</XFieldName>
+              <YFieldName>Predicted.FodderBeet.AboveGround.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>StorageRoot</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.StorageRoot.Live.Wt</XFieldName>
+              <YFieldName>Predicted.FodderBeet.StorageRoot.Live.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Leaf</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Leaf.Live.Wt</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Leaf.Live.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Petiole</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Petiole.Live.Wt</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Petiole.Live.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
+        </Folder>
+        <Folder>
+          <Name>N_uptakeStats</Name>
+          <Graph>
+            <Name>Total_N</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.AboveGround.N</XFieldName>
+              <YFieldName>Predicted.FodderBeet.AboveGround.N</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>StorageRoot_N</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.StorageRoot.Live.N</XFieldName>
+              <YFieldName>Predicted.FodderBeet.StorageRoot.Live.N</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Leaf_N</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Leaf.Live.N</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Leaf.Live.N</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Petiole</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Petiole.Live.N</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Petiole.Live.N</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
+        </Folder>
+        <Graph>
+          <Name>AppearedLeaves</Name>
+          <Series>
+            <Name>Series1</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObserved</TableName>
+            <XFieldName>Observed.FodderBeet.Structure.LeafTipsAppeared</XFieldName>
+            <YFieldName>Predicted.FodderBeet.Structure.LeafTipsAppeared</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
           </Series>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
@@ -8468,7 +9230,7 @@ namespace Models
           <Folder>
             <Name>BiomassStats</Name>
             <Graph>
-              <Name>Total</Name>
+              <Name>TotalWt</Name>
               <Series>
                 <Name>Series1</Name>
                 <Regression>
@@ -8517,7 +9279,7 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <Graph>
-              <Name>StorageRoot</Name>
+              <Name>StorageRootWt</Name>
               <Series>
                 <Name>Series1</Name>
                 <Regression>
@@ -8566,7 +9328,7 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <Graph>
-              <Name>Leaf</Name>
+              <Name>LeafWt</Name>
               <Series>
                 <Name>Series1</Name>
                 <Regression>
@@ -8615,7 +9377,7 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <Graph>
-              <Name>Petiole</Name>
+              <Name>PetioleWt</Name>
               <Series>
                 <Name>Series1</Name>
                 <Regression>
@@ -8767,7 +9529,7 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <Graph>
-              <Name>Petiole</Name>
+              <Name>Petiole_N</Name>
               <Series>
                 <Name>Series1</Name>
                 <Regression>
@@ -11340,6 +12102,106 @@ namespace Models
           <Folder>
             <Name>CanopyStats</Name>
             <Graph>
+              <Name>AppearedLeaves</Name>
+              <Series>
+                <Name>Series1</Name>
+                <Regression>
+                  <Name>Regression</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ForEachSeries>false</ForEachSeries>
+                </Regression>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-2793984</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>PredictedObserved</TableName>
+                <XFieldName>Observed.FodderBeet.Structure.LeafTipsAppeared</XFieldName>
+                <YFieldName>Predicted.FodderBeet.Structure.LeafTipsAppeared</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>BottomRight</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>GreenLeaves</Name>
+              <Series>
+                <Name>Series1</Name>
+                <Regression>
+                  <Name>Regression</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ForEachSeries>false</ForEachSeries>
+                </Regression>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-2793984</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>PredictedObserved</TableName>
+                <XFieldName>Observed.FodderBeet.Leaf.PlantAppearedGreenLeafNo</XFieldName>
+                <YFieldName>Predicted.FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>BottomRight</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
               <Name>LAI</Name>
               <Series>
                 <Name>Series1</Name>
@@ -11853,7 +12715,7 @@ namespace Models
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
-      <Name>RainShelter</Name>
+      <Name>RainShelter_2016</Name>
       <Experiment>
         <Name>RS_Rotation</Name>
         <Memo>
