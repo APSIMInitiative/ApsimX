@@ -1,5 +1,5 @@
 ---
-title: "Model Validatation"
+title: "Predicted observed graphs"
 draft: false
 ---
 
