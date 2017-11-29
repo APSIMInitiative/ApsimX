@@ -1,5 +1,5 @@
 ---
-title: "Auto documentation"
+title: "6. Auto documentation"
 draft: false
 ---
 

@@ -168,8 +168,7 @@ namespace UserInterface.Presenters
         private void OnPAWChanged(object sender, System.EventArgs e)
         {
             Commands.ChangeProperty command = new Commands.ChangeProperty(
-                this.initialWater, "PAW", Convert.ToDouble(this.initialWaterView.PAW, 
-                                                           System.Globalization.CultureInfo.InvariantCulture));
+                this.initialWater, "PAW", Convert.ToDouble(this.initialWaterView.PAW, System.Globalization.CultureInfo.InvariantCulture));
 
             this.explorerPresenter.CommandHistory.Add(command);
         }
@@ -204,8 +203,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnDepthWetSoilChanged(object sender, System.EventArgs e)
         {
-            double depthOfWetSoil = Convert.ToDouble(this.initialWaterView.DepthOfWetSoil, 
-                                                     System.Globalization.CultureInfo.InvariantCulture) * 10; // cm to mm
+            double depthOfWetSoil = Convert.ToDouble(this.initialWaterView.DepthOfWetSoil, System.Globalization.CultureInfo.InvariantCulture) * 10; // cm to mm
             Commands.ChangeProperty command = new Commands.ChangeProperty(
                 this.initialWater, "DepthWetSoil", depthOfWetSoil);
 

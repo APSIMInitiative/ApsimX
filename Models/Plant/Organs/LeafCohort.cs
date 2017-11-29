@@ -788,16 +788,14 @@ namespace Models.PMF.Organs
         {
             //Reduce leaf Population in Cohort due to plant mortality
             double startPopulation = CohortPopulation;
-            if (!(Apex is ApexTiller))
-            {
-                if (Structure.ProportionPlantMortality > 0)
-                    CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
 
-                //Reduce leaf Population in Cohort  due to branch mortality
-                if ((Structure.ProportionBranchMortality > 0) && (CohortPopulation > Structure.MainStemPopn))
-                    //Ensure we there are some branches.
-                    CohortPopulation -= CohortPopulation * Structure.ProportionBranchMortality;
-            }
+            if (Structure.ProportionPlantMortality > 0)
+                CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
+
+            //Reduce leaf Population in Cohort  due to branch mortality
+            if ((Structure.ProportionBranchMortality > 0) && (CohortPopulation > Structure.MainStemPopn))
+                //Ensure we there are some branches.
+                CohortPopulation -= Math.Min(Structure.ProportionBranchMortality * (CohortPopulation - Structure.MainStemPopn), CohortPopulation - Plant.Population);
 
             double propnStemMortality = (startPopulation - CohortPopulation) / startPopulation;
 

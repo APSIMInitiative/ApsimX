@@ -79,6 +79,7 @@ namespace UserInterface.Interfaces
         /// <param name="title">The series title</param>
         /// <param name="x">The x values for the series</param>
         /// <param name="y">The y values for the series</param>
+        /// <param name="error">The error values for the series</param>
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
@@ -92,6 +93,7 @@ namespace UserInterface.Interfaces
              string title, 
              IEnumerable x, 
              IEnumerable y,
+             IEnumerable error,
              Models.Graph.Axis.AxisType xAxisType, 
              Models.Graph.Axis.AxisType yAxisType,
              Color colour,

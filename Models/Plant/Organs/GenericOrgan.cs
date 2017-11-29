@@ -103,6 +103,11 @@ namespace Models.PMF.Organs
         [Units("/d")]
         private IFunction dmConversionEfficiency = null;
 
+        /// <summary>The cost for remobilisation</summary>
+        [ChildLinkByName]
+        [Units("")]
+        private IFunction remobilisationCost = null;
+
         /// <summary>Tolerance for biomass comparisons</summary>
         private double biomassToleranceValue = 0.0000000001;   // 10E-10
 
@@ -283,8 +288,8 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         public virtual BiomassSupplyType CalculateDryMatterSupply()
         {
-            dryMatterSupply.Retranslocation = AvailableDMRetranslocation();
             dryMatterSupply.Reallocation = AvailableDMReallocation();
+            dryMatterSupply.Retranslocation = AvailableDMRetranslocation();         
             dryMatterSupply.Fixation = 0;
             dryMatterSupply.Uptake = 0;
             return dryMatterSupply;
@@ -310,7 +315,7 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         public virtual BiomassPoolType CalculateDryMatterDemand()
         {
-            dryMatterDemand.Structural = DemandedDMStructural();
+            dryMatterDemand.Structural = DemandedDMStructural() + remobilisationCost.Value();
             dryMatterDemand.Storage = DemandedDMStorage();
             dryMatterDemand.Metabolic = 0;
             return dryMatterDemand;
