@@ -460,7 +460,7 @@ namespace Models.PMF.Organs
         /// <Summary>Spcific leaf nitrogen</Summary>
         [Description("Specific leaf nitrogen")]
         [Units("g/m2")]
-        public double SpecificLeafNitrogen
+        public double SpecificNitrogen
         {
             get
             {
