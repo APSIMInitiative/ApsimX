@@ -1,5 +1,5 @@
 ---
-title: "GIT 2: Bring your development folder up to date"
+title: "3. Bring folder up to date"
 draft: false
 ---
 
@@ -15,3 +15,4 @@ To bring the current branch up to date you get the latest commits from the *mast
 
 Ensure the remote is *MasterRepo* and the branch is *master*. Leave all other checkboxes alone. This will bring down the latest commits from the MasterRepo/master branch into your 'current' branch (the one in bold in SourceTree).
 
+**RECOMMENDATION:** You should always bring your branch up to date at the beginning of a major piece of work. In addition, you should also do a pull regularly, at least weekly.
