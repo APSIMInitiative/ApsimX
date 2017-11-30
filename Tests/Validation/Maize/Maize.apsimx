@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="21">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1029,11 +1029,11 @@ Though tillering is common in some maize varieties under certain agronomic condi
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
-                <Constant>
+                <VariableReference>
                   <Name>MaximumFinalNConc</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <FixedValue>0.013</FixedValue>
-                </Constant>
+                  <VariableName>[Grain].MaximumNConc.LinearPhase.FinalNconc.Value()</VariableName>
+                </VariableReference>
                 <VariableReference>
                   <Name>MaximumSize</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1442,10 +1442,18 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
+              <double>0.2</double>
+              <double>0.5</double>
+              <double>0.6</double>
+              <double>0.8</double>
               <double>1</double>
             </X>
             <Y>
-              <double>0</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.05</double>
+              <double>0.15</double>
+              <double>0.55</double>
               <double>1</double>
             </Y>
           </XYPairs>
@@ -1662,7 +1670,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           <Constant>
             <Name>NRetranslocationFactor</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.03</FixedValue>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
@@ -1816,8 +1824,57 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1000000</FixedValue>
           </Constant>
-          <LinearInterpolationFunction>
+          <AddFunction>
             <Name>MaximumNConc</Name>
+            <VariableReference>
+              <Name>CriticalNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Leaf].CohortParameters.CriticalNConc.Value()</VariableName>
+            </VariableReference>
+            <MultiplyFunction>
+              <Name>StorageNConc</Name>
+              <LinearInterpolationFunction>
+                <Name>NonStructuralNConc</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <X>
+                    <double>1</double>
+                    <double>10</double>
+                  </X>
+                  <Y>
+                    <double>0.034</double>
+                    <double>0.01</double>
+                  </Y>
+                </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <XProperty>[Structure].LeafTipsAppeared</XProperty>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>WaterStressEffect</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <X>
+                    <double>0.5</double>
+                    <double>1</double>
+                    <double>1.3</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <XProperty>[Root].WaterTensionFactor</XProperty>
+              </LinearInterpolationFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </MultiplyFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </AddFunction>
+          <LinearInterpolationFunction>
+            <Name>MaximumNConc1</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1826,8 +1883,8 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>10</double>
               </X>
               <Y>
-                <double>0.054</double>
-                <double>0.03</double>
+                <double>0.044</double>
+                <double>0.02</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1836,13 +1893,13 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           <Constant>
             <Name>CriticalNConc</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.015</FixedValue>
+            <FixedValue>0.01</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>MinimumNConc</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.008</FixedValue>
+            <FixedValue>0.005</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <AddFunction>
@@ -1925,8 +1982,8 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>9</double>
               </X>
               <Y>
-                <double>50000</double>
-                <double>25000</double>
+                <double>30000</double>
+                <double>20000</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1942,8 +1999,8 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>9</double>
               </X>
               <Y>
-                <double>8000</double>
-                <double>8000</double>
+                <double>25000</double>
+                <double>15000</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2299,7 +2356,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Units>/d</Units>
           </Constant>
           <LinearInterpolationFunction>
-            <Name>ExpansionStress</Name>
+            <Name>ExpansionStress2</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2315,6 +2372,67 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
+          <MinimumFunction>
+            <Name>ExpansionStress</Name>
+            <LinearInterpolationFunction>
+              <Name>WaterStressEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0.1</double>
+                  <double>1</double>
+                  <double>1.3</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Root].WaterTensionFactor</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>TemperatureEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>12</double>
+                  <double>14</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Phenology].MeanTemp.Value()</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>NitrogenStressEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>0.5</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Maize].Leaf.Fn</XProperty>
+            </LinearInterpolationFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MinimumFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PopulationBasedDemandFunction>
         <Constant>
@@ -2336,7 +2454,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Constant>
           <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.01</FixedValue>
+          <FixedValue>0.007</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
@@ -2524,7 +2642,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <VariableName>[Rachis].CobNumber.Value()</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
-            <Name>ExpansionStress</Name>
+            <Name>ExpansionStress2</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2540,6 +2658,67 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
+          <MinimumFunction>
+            <Name>ExpansionStress</Name>
+            <LinearInterpolationFunction>
+              <Name>WaterStressEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0.1</double>
+                  <double>1</double>
+                  <double>1.3</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Root].WaterTensionFactor</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>TemperatureEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>12</double>
+                  <double>14</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Phenology].MeanTemp.Value()</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>NitrogenStressEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>0.5</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Maize].Leaf.Fn</XProperty>
+            </LinearInterpolationFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MinimumFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PopulationBasedDemandFunction>
         <Constant>
@@ -2728,7 +2907,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
-              <double>0.5</double>
+              <double>0.9</double>
               <double>1</double>
             </X>
             <Y>
@@ -2743,7 +2922,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Constant>
           <Name>MinimumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.006</FixedValue>
+          <FixedValue>0.004</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -2757,11 +2936,32 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
-        <Constant>
+        <PhaseLookup>
           <Name>NRetranslocationFactor</Name>
+          <PhaseLookupValue>
+            <Name>PreStemElongation</Name>
+            <Constant>
+              <Name>StemFraction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Start>Emergence</Start>
+            <End>FlagLeaf</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>StemElongation</Name>
+            <Constant>
+              <Name>NRetranslocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0.05</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Start>FlagLeaf</Start>
+            <End>HarvestRipe</End>
+          </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.5</FixedValue>
-        </Constant>
+        </PhaseLookup>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2959,11 +3159,52 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
-        <VariableReference>
-          <Name>CriticalNConc</Name>
+        <MultiplyFunction>
+          <Name>CriticalNConc1</Name>
+          <VariableReference>
+            <Name>MaximumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Stem].MaximumNConc.Value()</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>Proportion</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.8</FixedValue>
+          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
-        </VariableReference>
+        </MultiplyFunction>
+        <AddFunction>
+          <Name>CriticalNConc</Name>
+          <VariableReference>
+            <Name>MinimumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+          </VariableReference>
+          <MultiplyFunction>
+            <Name>MetabolicNConc</Name>
+            <SubtractFunction>
+              <Name>NonStructuralNConc</Name>
+              <VariableReference>
+                <Name>MaximumNConc</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Stem].MaximumNConc.Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>MinimumNConc</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </SubtractFunction>
+            <Constant>
+              <Name>Proportion</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0.2</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </AddFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <CompositeBiomass>
@@ -4587,7 +4828,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </DivideFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>5</NumberOfDays>
-          <InitialValue>0</InitialValue>
+          <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
         </MovingAverageFunction>
         <MovingAverageFunction>
           <Name>MeanPhyllochron</Name>
@@ -4598,7 +4839,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
-          <InitialValue>80</InitialValue>
+          <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
         </MovingAverageFunction>
         <HoldFunction>
           <Name>FinalLeafNumber</Name>
@@ -34400,14 +34641,14 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>200</double>
                 </Thickness>
                 <BD>
-                  <double>1.311</double>
-                  <double>1.474</double>
+                  <double>1</double>
+                  <double>1.3</double>
                   <double>1.601</double>
-                  <double>1.68</double>
-                  <double>1.68</double>
-                  <double>1.68</double>
-                  <double>1.68</double>
-                  <double>1.68</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
                 </BD>
                 <AirDry>
                   <double>0.06</double>
@@ -34553,7 +34794,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 </Depth>
                 <OC>
                   <double>3.6</double>
-                  <double>0.97</double>
+                  <double>2.2</double>
                   <double>0.42</double>
                   <double>0.23</double>
                   <double>0.23</double>
@@ -34568,8 +34809,8 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>0.01</double>
                 </FBiom>
                 <FInert>
-                  <double>0.3</double>
-                  <double>0.6</double>
+                  <double>0.2</double>
+                  <double>0.4</double>
                   <double>0.8</double>
                   <double>0.9</double>
                   <double>0.9</double>
@@ -34611,20 +34852,20 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>16.230000000000008</double>
-                  <double>10.759999999999987</double>
-                  <double>7.8300000000000045</double>
-                  <double>6.8499999999999792</double>
-                  <double>4.879999999999999</double>
-                  <double>1.7399999999999989</double>
+                  <double>2.86</double>
+                  <double>1.98</double>
+                  <double>0.3</double>
+                  <double>0.71</double>
+                  <double>1.56</double>
+                  <double>1.07</double>
                 </NO3>
                 <NH4>
-                  <double>0.89999999999999958</double>
-                  <double>2.9200000000000008</double>
-                  <double>0.57000000000000084</double>
-                  <double>0.97999999999999776</double>
-                  <double>0.84000000000000163</double>
-                  <double>0.53999999999999926</double>
+                  <double>0.89</double>
+                  <double>0.99</double>
+                  <double>0.59</double>
+                  <double>0.37</double>
+                  <double>0.21</double>
+                  <double>0</double>
                 </NH4>
                 <SW>
                   <double>0.06</double>
@@ -34634,8 +34875,8 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>0.2</double>
                   <double>0.2</double>
                 </SW>
-                <NO3Units>kgha</NO3Units>
-                <NH4Units>kgha</NH4Units>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
                 <SWUnits>Volumetric</SWUnits>
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
@@ -35236,6 +35477,8 @@ namespace Models
                 <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
                 <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
                 <string>[Maize].Leaf.Photosynthesis.RueAct</string>
+                <string>[Maize].Leaf.SpecificArea</string>
+                <string>[Maize].Leaf.SpecificLeafNitrogen</string>
                 <string>[Maize].Leaf.SenescingCohortNo</string>
                 <string>[Maize].Leaf.Transpiration</string>
                 <string>[Maize].Leaf.WaterDemand</string>
@@ -36753,7 +36996,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36775,7 +37018,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-256</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36797,7 +37040,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-32704</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36841,7 +37084,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36863,7 +37106,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -38632,7 +38875,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Husk.NConc</YFieldName>
+                <YFieldName>Maize.Grain.NConc</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -38948,6 +39191,11 @@ namespace Models
               <Name>StemNitrogen</Name>
               <Series>
                 <Name>Predicted</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ColumnName>Maize.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -40440,7 +40688,7 @@ namespace Models
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
