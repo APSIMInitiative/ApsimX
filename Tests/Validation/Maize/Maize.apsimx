@@ -1407,7 +1407,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
             <Name>XYPairs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
-              <double>0.003</double>
+              <double>0</double>
               <double>0.003</double>
             </X>
             <Y>
@@ -1442,18 +1442,10 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
-              <double>0.2</double>
-              <double>0.5</double>
-              <double>0.6</double>
-              <double>0.8</double>
               <double>1</double>
             </X>
             <Y>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.05</double>
-              <double>0.15</double>
-              <double>0.55</double>
+              <double>0</double>
               <double>1</double>
             </Y>
           </XYPairs>
@@ -1702,8 +1694,8 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <Name>XYPairs</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
-                  <double>0.1</double>
-                  <double>1</double>
+                  <double>0</double>
+                  <double>0.9</double>
                   <double>1.3</double>
                 </X>
                 <Y>
@@ -1783,13 +1775,17 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
-                <double>0.3</double>
                 <double>0.5</double>
+                <double>0.7</double>
+                <double>0.8</double>
+                <double>1</double>
               </X>
               <Y>
                 <double>300</double>
                 <double>300</double>
-                <double>650</double>
+                <double>700</double>
+                <double>900</double>
+                <double>1300</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1857,12 +1853,12 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>0.5</double>
+                    <double>0.95</double>
                     <double>1</double>
-                    <double>1.3</double>
                   </X>
                   <Y>
                     <double>0</double>
-                    <double>1</double>
+                    <double>0</double>
                     <double>1</double>
                   </Y>
                 </XYPairs>
@@ -1873,23 +1869,6 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             </MultiplyFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </AddFunction>
-          <LinearInterpolationFunction>
-            <Name>MaximumNConc1</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>1</double>
-                <double>10</double>
-              </X>
-              <Y>
-                <double>0.044</double>
-                <double>0.02</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
-          </LinearInterpolationFunction>
           <Constant>
             <Name>CriticalNConc</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1914,7 +1893,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <Constant>
                 <Name>StressResponseCoefficient</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>1</FixedValue>
+                <FixedValue>2</FixedValue>
               </Constant>
               <LinearInterpolationFunction>
                 <Name>StressFactor</Name>
@@ -1922,11 +1901,11 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                   <Name>XYPairs</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
-                    <double>0</double>
+                    <double>0.5</double>
                     <double>1</double>
                   </X>
                   <Y>
-                    <double>0.5</double>
+                    <double>1</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -1949,7 +1928,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <Constant>
                 <Name>StressResponseCoefficient</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>1</FixedValue>
+                <FixedValue>0</FixedValue>
               </Constant>
               <LinearInterpolationFunction>
                 <Name>StressFactor</Name>
@@ -1961,12 +1940,12 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                     <double>1</double>
                   </X>
                   <Y>
-                    <double>0.5</double>
+                    <double>1</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[Root].WaterTensionFactor</XProperty>
               </LinearInterpolationFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </MultiplyFunction>
@@ -2381,7 +2360,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0.1</double>
-                  <double>1</double>
+                  <double>0.7</double>
                   <double>1.3</double>
                 </X>
                 <Y>
@@ -2455,12 +2434,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.007</FixedValue>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction2</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.5</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <PhaseLookup>
@@ -2641,23 +2614,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Rachis].CobNumber.Value()</VariableName>
           </VariableReference>
-          <LinearInterpolationFunction>
-            <Name>ExpansionStress2</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>0</double>
-                <double>0.35</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
           <MinimumFunction>
             <Name>ExpansionStress</Name>
             <LinearInterpolationFunction>
@@ -2667,7 +2623,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0.1</double>
-                  <double>1</double>
+                  <double>0.7</double>
                   <double>1.3</double>
                 </X>
                 <Y>
@@ -2863,11 +2819,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
-        <Constant>
-          <Name>StructuralFraction2</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.5</FixedValue>
-        </Constant>
         <PhaseLookup>
           <Name>StructuralFraction</Name>
           <PhaseLookupValue>
@@ -2907,7 +2858,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
-              <double>0.9</double>
+              <double>0.7</double>
               <double>1</double>
             </X>
             <Y>
@@ -2967,102 +2918,8 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.1</FixedValue>
         </Constant>
-        <MinimumFunction>
-          <Name>DMDemandFunctionX</Name>
-          <MultiplyFunction>
-            <Name>PotentialDMAccumulation</Name>
-            <VariableReference>
-              <Name>NodesAppearing</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].DeltaTipNumber</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>Branches</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].TotalStemPopn</VariableName>
-            </VariableReference>
-            <LinearInterpolationFunction>
-              <Name>PotentialInternodeWt</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <X>
-                  <double>0</double>
-                  <double>0.2</double>
-                  <double>0.8</double>
-                  <double>1</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>2</double>
-                  <double>16</double>
-                  <double>16</double>
-                </Y>
-              </XYPairs>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Structure].RelativeNodeApperance</XProperty>
-            </LinearInterpolationFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </MultiplyFunction>
-          <MultiplyFunction>
-            <Name>HightLimitedDMAccumulation</Name>
-            <Constant>
-              <Name>SpecificStemLengthMax</Name>
-              <Constant>
-                <Name>SpecificStemLengthMax</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.1</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.1</FixedValue>
-            </Constant>
-            <VariableReference>
-              <Name>Branches</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].TotalStemPopn</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>DeltaHeight</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].HeightModel.DeltaHeight</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </MultiplyFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </MinimumFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
-          <PhaseLookup>
-            <Name>PartitionFraction1</Name>
-            <Memo>
-              <Name>memo</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[]]></MemoText>
-            </Memo>
-            <PhaseLookupValue>
-              <Name>PreStemElongation</Name>
-              <Constant>
-                <Name>StemFraction</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.1</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>Emergence</Start>
-              <End>FloralInitiation</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>StemElongation</Name>
-              <Constant>
-                <Name>StemFraction</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.82</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>FloralInitiation</Start>
-              <End>Flowering</End>
-            </PhaseLookupValue>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </PhaseLookup>
           <LinearInterpolationFunction>
             <Name>PartitionFraction</Name>
             <XYPairs>
@@ -3159,20 +3016,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
-        <MultiplyFunction>
-          <Name>CriticalNConc1</Name>
-          <VariableReference>
-            <Name>MaximumNConc</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Stem].MaximumNConc.Value()</VariableName>
-          </VariableReference>
-          <Constant>
-            <Name>Proportion</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.8</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </MultiplyFunction>
         <AddFunction>
           <Name>CriticalNConc</Name>
           <VariableReference>
@@ -3427,8 +3270,8 @@ VShort duration variety released in New Zealand by Pioneer
 ]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Phenology].Juvenile.Target.FixedValue = 150</Command>
-          <Command>[Phenology].GrainFilling.Target.FixedValue = 450</Command>
+          <Command>[Phenology].Juvenile.Target.FixedValue = 100</Command>
+          <Command>[Phenology].GrainFilling.Target.FixedValue = 500</Command>
           <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
           <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
           <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
@@ -3881,11 +3724,12 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Cultivar>
           <Name>Pioneer_3153</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Command />
         </Cultivar>
         <Cultivar>
           <Name>Pioneer_39G12</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Phenology].Juvenile.Target.FixedValue = 160</Command>
+          <Command>[Phenology].Juvenile.Target.FixedValue = 180</Command>
           <Command>[Phenology].GrainFilling.Target.FixedValue = 500</Command>
           <Command>[Grain].MaximumGrainsPerCob.FixedValue = 550</Command>
           <Command>[Grain].NumberFunction.GrowthRateFactor.XYPairs.X = 0.2,2,4,10</Command>
@@ -28669,8 +28513,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Operation>
-                <Date>1999-09-16T00:00:00</Date>
-                <Action> [Maize].Sow(population:6.7, cultivar:"Hycorn_53", depth:50, rowSpacing:750);</Action>
+                <Date>1999-09-16</Date>
+                <Action> [Maize].Sow(population:10, cultivar:"Hycorn_53", depth:50, rowSpacing:750);</Action>
               </Operation>
             </Operations>
             <Operations>
@@ -30415,7 +30259,7 @@ namespace Models
                   <string>150-180</string>
                 </Depth>
                 <OC>
-                  <double>1.24</double>
+                  <double>1.64</double>
                   <double>1.24</double>
                   <double>0.8</double>
                   <double>0.75</double>
@@ -30480,8 +30324,8 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>9.99996493384113</double>
-                  <double>4.99998246692056</double>
+                  <double>15</double>
+                  <double>8</double>
                   <double>3.68997730750788</double>
                   <double>3.80997656954065</double>
                   <double>2.46598483477356</double>
@@ -35478,8 +35322,8 @@ namespace Models
                 <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
                 <string>[Maize].Leaf.Photosynthesis.RueAct</string>
                 <string>[Maize].Leaf.SpecificArea</string>
-                <string>[Maize].Leaf.SpecificLeafNitrogen</string>
-                <string>[Maize].Leaf.SenescingCohortNo</string>
+                <string>[Maize].Leaf.SpecificNitrogen</string>
+                <string>[Maize].Leaf.SenescingCohortNo + [Maize].Leaf.DeadCohortNo as NodesStartedSenescing</string>
                 <string>[Maize].Leaf.Transpiration</string>
                 <string>[Maize].Leaf.WaterDemand</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -40397,7 +40241,7 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <Graph>
-              <Name>StartSenesced</Name>
+              <Name>StartedSenescing</Name>
               <Series>
                 <Name>Predicted</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -40414,7 +40258,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Leaf.SenescingCohortNo</YFieldName>
+                <YFieldName>NodesStartedSenescing</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -40436,7 +40280,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Leaf.DeadCohortNo</YFieldName>
+                <YFieldName>NodesStartedSenescing</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -41329,8 +41173,8 @@ This trial was conducted to provide data for parametersising the Leaf Area model
                 <Name>Sow</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Operation>
-                  <Date>2010-10-26T00:00:00</Date>
-                  <Action>[Maize].Sow(population:12, cultivar:"Pioneer_39V43", depth:50, rowSpacing:760);</Action>
+                  <Date>2010-10-26</Date>
+                  <Action>[Maize].Sow(population:10, cultivar:"Pioneer_39V43", depth:50, rowSpacing:760);</Action>
                 </Operation>
               </Operations>
               <Operations>
@@ -42023,7 +41867,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -42045,7 +41889,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -42348,7 +42192,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -42370,7 +42214,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -42413,7 +42257,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -42708,6 +42552,18 @@ namespace Models
                 <Action>[Fertiliser].Apply(161, Fertiliser.Types.UreaN, 10);</Action>
               </Operation>
             </Operations>
+            <Operations>
+              <Name>Plastic</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Operation>
+                <Date>2008-09-16T00:00:00</Date>
+                <Action>[Fertiliser].Apply(140.5, Fertiliser.Types.UreaN, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2008-12-17T00:00:00</Date>
+                <Action>[Fertiliser].Apply(161, Fertiliser.Types.UreaN, 10);</Action>
+              </Operation>
+            </Operations>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
               <string>[Fert]</string>
@@ -42858,7 +42714,7 @@ namespace Models
               <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -44491,9 +44347,9 @@ namespace Models
                     <double>0.154</double>
                     <double>0.152</double>
                     <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
+                    <double>0.14</double>
+                    <double>0.14</double>
+                    <double>0.14</double>
                   </LL>
                   <KL>
                     <double>0.075</double>
@@ -44533,33 +44389,33 @@ namespace Models
                   <double>0.077</double>
                   <double>0.152</double>
                   <double>0.162</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
                 </AirDry>
                 <LL15>
                   <double>0.154</double>
                   <double>0.152</double>
                   <double>0.162</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
                 </LL15>
                 <DUL>
                   <double>0.374</double>
                   <double>0.32</double>
                   <double>0.325</double>
-                  <double>0.15</double>
-                  <double>0.15</double>
-                  <double>0.15</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
                 </DUL>
                 <SAT>
                   <double>0.456</double>
                   <double>0.413</double>
                   <double>0.376</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
                 </SAT>
               </Water>
               <SoilWater>
@@ -44719,8 +44575,8 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>6.18993135011442</double>
-                  <double>3.64993215739484</double>
+                  <double>66.19</double>
+                  <double>3.65</double>
                   <double>2.44534665833854</double>
                   <double>1.35912698412698</double>
                   <double>0.968253968253968</double>
@@ -45280,11 +45136,11 @@ namespace Models
               <Name>SowingRule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
+                <SowingDate>2010-10-04</SowingDate>
+                <CultivarName>Pioneer_39V43</CultivarName>
                 <RowSpace>720</RowSpace>
                 <PlantPopulation>10.5</PlantPopulation>
                 <PlantingDepth>20</PlantingDepth>
-                <CultivarName>Pioneer_39V43</CultivarName>
-                <SowingDate>2010-10-04</SowingDate>
               </Script>
               <Code><![CDATA[
 using System;
