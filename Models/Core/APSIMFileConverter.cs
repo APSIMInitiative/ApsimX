@@ -24,7 +24,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 21; } }
+        public static int LastestVersion { get { return 22; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -180,7 +180,7 @@ namespace Models.Core
 
                 try
                 {
-                    double area = Convert.ToDouble(areaString, 
+                    double area = Convert.ToDouble(areaString,
                                                    System.Globalization.CultureInfo.InvariantCulture);
                     if (area <= 0)
                         XmlUtilities.SetValue(zoneNode, "Area", "1");
@@ -569,7 +569,7 @@ namespace Models.Core
             foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "Leaf"))
             {
                 XmlNode dmFunction = APSIMFileConverterUtilities.FindModelNode(n, "DMConversionEfficiencyFunction");
-                if (dmFunction!=null)
+                if (dmFunction != null)
                 {
                     XmlUtilities.SetValue(dmFunction, "Name", "DMConversionEfficiency");
                 }
@@ -654,6 +654,27 @@ namespace Models.Core
                 if (APSIMFileConverterUtilities.FindModelNode(n, "RemobilisationCost") == null)
                     n.AppendChild(DMnode);
             }
+
+        }
+        /// <summary>
+        /// Upgrades to version 22. Alter MovingAverage Function
+        /// XProperty values.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion22(XmlNode node, string fileName)
+        {
+            string StartStage = "";
+            foreach (XmlNode EmergePhase in XmlUtilities.FindAllRecursivelyByType(node, "EmergingPhase"))
+            {
+                StartStage = XmlUtilities.Value(EmergePhase, "End");
+            }
+            APSIMFileConverterUtilities.RenameVariable(node, "InitialValue", "StageToStartMovingAverage");
+            foreach (XmlNode MovingAverageFunction in XmlUtilities.FindAllRecursivelyByType(node, "MovingAverageFunction"))
+            {
+                XmlUtilities.SetValue(MovingAverageFunction, "StageToStartMovingAverage", StartStage);
+            }
+
         }
     }
 }
