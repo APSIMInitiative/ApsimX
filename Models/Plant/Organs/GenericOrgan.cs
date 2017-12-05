@@ -298,15 +298,14 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
         public virtual BiomassSupplyType CalculateNitrogenSupply()
         {
-            // This is limited to ensure Nconc does not go below MinimumNConc
-            double labileN = Math.Max(0.0, startLive.StorageN - startLive.StorageWt * minimumNConc.Value());
-            nitrogenSupply.Retranslocation = Math.Max(0.0, labileN - nitrogenSupply.Reallocation) * nRetranslocationFactor.Value();
+            nitrogenSupply.Reallocation = Math.Max(0, startLive.StorageN * senescenceRate.Value() * nReallocationFactor.Value());
+            if (nitrogenSupply.Reallocation < -biomassToleranceValue)
+                throw new Exception("Negative N reallocation value computed for " + Name);
+
+            nitrogenSupply.Retranslocation = Math.Max(0, startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
             if (nitrogenSupply.Retranslocation < -biomassToleranceValue)
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
-            nitrogenSupply.Reallocation = startLive.StorageN * senescenceRate.Value() * nReallocationFactor.Value();
-            if (nitrogenSupply.Reallocation < -biomassToleranceValue)
-                throw new Exception("Negative N reallocation value computed for " + Name);
             nitrogenSupply.Fixation = 0;
             nitrogenSupply.Uptake = 0;
             return nitrogenSupply;
