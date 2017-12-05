@@ -305,6 +305,9 @@ namespace Models.PMF.Organs
             nitrogenSupply.Retranslocation = Math.Max(0, startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
             if (nitrogenSupply.Retranslocation < -biomassToleranceValue)
                 throw new Exception("Negative N retranslocation value computed for " + Name);
+
+            nitrogenSupply.Fixation = 0;
+            nitrogenSupply.Uptake = 0;
             return nitrogenSupply;
         }
 
