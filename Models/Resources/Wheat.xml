@@ -3223,6 +3223,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Grain].MaximumNConc.FixedValue = 0.025</Command>
         <Command>[Grain].MaxNConcDailyGrowth.FixedValue = 0.025</Command>
         <Command>[Leaf].ExtinctionCoeff.DevelopmentFactor.XYPairs.Y = 1,1,1.4</Command>
+        <Command>[Leaf].CohortParameters.MinimumNConc.XYPairs.Y = 0.01,0.008,0.008</Command>
+        <Command>[Stem].MinimumNConc.FixedValue = 0.006</Command>
       </Cultivar>
       <Cultivar>
         <Name>Einstein</Name>

@@ -41826,8 +41826,8 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
-                <RootCN>40</RootCN>
-                <RootWt>1000</RootWt>
+                <RootCN>20</RootCN>
+                <RootWt>5000</RootWt>
                 <SoilCN>11</SoilCN>
                 <EnrACoeff>7.4</EnrACoeff>
                 <EnrBCoeff>0.2</EnrBCoeff>
@@ -41891,12 +41891,12 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>9</double>
-                  <double>7</double>
+                  <double>12</double>
+                  <double>12</double>
                   <double>2.05</double>
                   <double>2.87</double>
-                  <double>3.09</double>
-                  <double>1</double>
+                  <double>2.43</double>
+                  <double>1.94</double>
                   <double>1</double>
                 </NO3>
                 <NH4>
@@ -41905,8 +41905,8 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
                   <double>0</double>
                   <double>0.19</double>
                   <double>3.29</double>
-                  <double>2.7</double>
-                  <double>2.7</double>
+                  <double>0.42</double>
+                  <double>0.75</double>
                 </NH4>
                 <SW>
                   <double>0.18</double>
@@ -41969,7 +41969,7 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
                 <BD>
                   <double>1</double>
                   <double>1.1</double>
-                  <double>1.2</double>
+                  <double>1.4</double>
                   <double>1.3</double>
                   <double>1.4</double>
                   <double>1.4</double>
@@ -42164,9 +42164,9 @@ namespace Models
               <Name>StateFactors</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
+                <Nit>0</Nit>
                 <Irr>
                 </Irr>
-                <Nit>0</Nit>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -83621,5 +83621,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>261</ExplorerWidth>
+  <ExplorerWidth>356</ExplorerWidth>
 </Simulations>
