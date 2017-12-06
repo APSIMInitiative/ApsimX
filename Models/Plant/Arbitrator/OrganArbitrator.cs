@@ -518,25 +518,33 @@ namespace Models.PMF
                 {//claw back todays StorageDM allocation to cover the cost
                     double UnallocatedRespirationCost = DM.TotalRespiration - DM.SinkLimitation;
                     if (DM.TotalStorageAllocation > 0)
+                    {
+                        double Costmet = 0;
                         for (int i = 0; i < Organs.Length; i++)
                         {
                             double proportion = DM.StorageAllocation[i] / DM.TotalStorageAllocation;
                             double Clawback = Math.Min(UnallocatedRespirationCost * proportion, DM.StorageAllocation[i]);
                             DM.StorageAllocation[i] -= Clawback;
-                            UnallocatedRespirationCost -= Clawback;
+                            Costmet += Clawback;
                         }
+                        UnallocatedRespirationCost -= Costmet;
+                    }
                     if (UnallocatedRespirationCost == 0)
                     { }//All cost accounted for
                     else
                     {//Remobilise more Non-structural DM to cover the cost
                         if (DM.TotalRetranslocationSupply > 0)
+                        {
+                            double Costmet = 0;
                             for (int i = 0; i < Organs.Length; i++)
                             {
                                 double proportion = DM.RetranslocationSupply[i] / DM.TotalRetranslocationSupply;
                                 double DMRetranslocated = Math.Min(UnallocatedRespirationCost * proportion, DM.RetranslocationSupply[i]);
                                 DM.Retranslocation[i] += DMRetranslocated;
-                                UnallocatedRespirationCost -= DMRetranslocated;
+                                Costmet += DMRetranslocated;
                             }
+                            UnallocatedRespirationCost -= Costmet;
+                        }
                         if (UnallocatedRespirationCost == 0)
                         { }//All cost accounted for
                         else
