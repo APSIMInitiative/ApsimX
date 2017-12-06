@@ -206,6 +206,14 @@ namespace Models.PMF.Struct
             DeltaTipNumber = 0;
             DeltaHaunStage = 0;
             SenescenceByAge = false;
+            Initialised = false;
+            Germinated = false;
+            Emerged = false;
+            _Height = 0;
+            LeafTipsAppeared = 0;
+            BranchNumber = 0;
+            NextLeafProportion = 0;
+            DeltaPlantPopulation = 0;
         }
 
         #endregion
@@ -363,8 +371,10 @@ namespace Models.PMF.Struct
 
                         if (Phenology.Stage > 4 & !SenescenceByAge)
                         {
-                            ApexNum -= Leaf.ApexNumByAge(StemSenescenceAge.Value());
+                            double senescenceNum = Leaf.ApexNumByAge(StemSenescenceAge.Value());
+                            ApexNum -= senescenceNum;
                             SenescenceByAge = true;
+                            TotalStemPopn -= senescenceNum * Plant.Population;
                         }
                     }
 
