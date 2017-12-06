@@ -389,17 +389,18 @@ namespace Models.PMF.Organs
 
             // Retranslocation
             if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - nitrogenSupply.Retranslocation))
-                throw new Exception("N retranslocation exceeds non structural nitrogen in organ: " + Name);
-            double MetabolicNProp = startLive.MetabolicN / (startLive.MetabolicN + startLive.StorageN);
-            Live.MetabolicN -= nitrogen.Retranslocation * MetabolicNProp;
-            Live.StorageN -= nitrogen.Retranslocation * (1-MetabolicNProp);
+                throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
+            double StorageNRetranslocation = Math.Min(nitrogen.Retranslocation,startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
+            Live.StorageN -= StorageNRetranslocation;
+            Live.MetabolicN -= (nitrogen.Retranslocation - StorageNRetranslocation);
             Allocated.StorageN -= nitrogen.Retranslocation;
 
             // Reallocation
             if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))
-                throw new Exception("N reallocation exceeds non structural nitrogen in organ: " + Name);
-            Live.MetabolicN -= nitrogen.Reallocation * MetabolicNProp;
-            Live.StorageN -= nitrogen.Reallocation * (1-MetabolicNProp);
+                throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
+            double StorageNReallocation = Math.Min(nitrogen.Reallocation, startLive.StorageN * senescenceRate.Value() * nReallocationFactor.Value());
+            Live.StorageN -= StorageNReallocation;
+            Live.MetabolicN -= (nitrogen.Reallocation - StorageNReallocation);
             Allocated.StorageN -= nitrogen.Reallocation;
         }
 
