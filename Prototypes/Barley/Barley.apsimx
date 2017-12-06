@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="20">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1159,6 +1159,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>5</NumberOfDays>
           <InitialValue>0</InitialValue>
+          <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
         </MovingAverageFunction>
         <MovingAverageFunction>
           <Name>MeanPhyllochron</Name>
@@ -1170,6 +1171,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
           <InitialValue>80</InitialValue>
+          <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
         </MovingAverageFunction>
         <HoldFunction>
           <Name>FinalLeafNumber</Name>
@@ -1553,6 +1555,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>Biomass</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Dead>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -1839,6 +1845,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
         <ZoneInitialDM />
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
       </Root>
       <Leaf>
         <Name>Leaf</Name>
@@ -2434,6 +2444,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </ArrayFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExpansionStressValue>0</ExpansionStressValue>
+          <Constant>
+            <Name>RemobilisationCost</Name>
+            <FixedValue>0</FixedValue>
+          </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -2648,6 +2662,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
       </Leaf>
       <GenericOrgan>
         <Name>Spike</Name>
@@ -2841,6 +2859,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableName>[Spike].MinimumNConc.Value()</VariableName>
         </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -3104,6 +3126,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableName>[Stem].MinimumNConc.Value()</VariableName>
         </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -3219,12 +3245,14 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Booma</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Bumpa</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Boss</Name>
@@ -3234,47 +3262,56 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Cellar</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>County</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Dash</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Doyen</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Hooded</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Omaka</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Optic</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Pyramid</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Quench</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Retriever</Name>
@@ -3284,27 +3321,32 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Sherwood</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Tavern</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Triumph</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Valetta</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <Cultivar>
             <Name>Vortex</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>
+            </Command>
           </Cultivar>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </CultivarFolder>
@@ -24175,7 +24217,8 @@ namespace Models
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
-                  <string />
+                  <string>
+                  </string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].EndOfSimulation</string>
@@ -24187,7 +24230,8 @@ namespace Models
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
-                  <string />
+                  <string>
+                  </string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].DoReport</string>
@@ -34879,7 +34923,8 @@ namespace Models
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
-                  <string />
+                  <string>
+                  </string>
                 </VariableNames>
                 <EventNames>
                   <string />
@@ -34891,7 +34936,8 @@ namespace Models
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
-                  <string />
+                  <string>
+                  </string>
                 </VariableNames>
                 <EventNames>
                   <string />

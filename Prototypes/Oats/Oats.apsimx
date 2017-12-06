@@ -13409,7 +13409,7 @@ late drought increased screenings.
         <Factors>
           <Name>Factors</Name>
           <Factor>
-            <Name>Nit</Name>
+            <Name>_Nit</Name>
             <Factor>
               <Name>0</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -13432,12 +13432,10 @@ late drought increased screenings.
               </Specifications>
             </Factor>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Specifications>
-              <string>[Initial Soil Settings]</string>
-            </Specifications>
+            <Specifications />
           </Factor>
           <Factor>
-            <Name>Irr</Name>
+            <Name>_Irr</Name>
             <Factor>
               <Name>Full</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -13609,8 +13607,8 @@ namespace Models
                 <Name>StateFactors</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <NitFactor>0</NitFactor>
                   <IrrFactor>False</IrrFactor>
+                  <NitFactor>0</NitFactor>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -25097,5 +25095,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>282</ExplorerWidth>
 </Simulations>
