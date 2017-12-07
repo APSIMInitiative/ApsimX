@@ -1061,7 +1061,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
     <Constant>
       <Name>MaximumPotentialGrainSize</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.043</FixedValue>
+      <FixedValue>0.05</FixedValue>
       <Units>g</Units>
     </Constant>
     <PhaseLookup>
@@ -1950,7 +1950,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
             <double>6</double>
           </X>
           <Y>
-            <double>0.08</double>
+            <double>0.05</double>
             <double>0.05</double>
             <double>0.02</double>
           </Y>
@@ -1971,7 +1971,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
               <double>6</double>
             </X>
             <Y>
-              <double>0.07</double>
+              <double>0.04</double>
               <double>0.04</double>
               <double>0.015</double>
             </Y>
@@ -2010,8 +2010,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
           </X>
           <Y>
             <double>0.01</double>
-            <double>0.005</double>
-            <double>0.005</double>
+            <double>0.01</double>
+            <double>0.01</double>
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2389,7 +2389,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
           <Y>
             <double>1</double>
             <double>1</double>
-            <double>1</double>
+            <double>1.2</double>
           </Y>
         </XYPairs>
         <Memo>
@@ -2544,7 +2544,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
         <Constant>
           <Name>StructuralFractionGF</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.3</FixedValue>
+          <FixedValue>0</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Start>StartGrainFill</Start>
@@ -2552,12 +2552,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       </PhaseLookupValue>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PhaseLookup>
-    <Constant>
-      <Name>SenescenceRate</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0</FixedValue>
-      <Units>/d</Units>
-    </Constant>
     <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2673,11 +2667,59 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
     </Constant>
-    <VariableReference>
+    <AddFunction>
       <Name>CriticalNConc</Name>
+      <VariableReference>
+        <Name>MinimumNConc</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <VariableName>[Spike].MinimumNConc.Value()</VariableName>
+      </VariableReference>
+      <MultiplyFunction>
+        <Name>MetabolicNconc</Name>
+        <SubtractFunction>
+          <Name>NonStructuralN</Name>
+          <VariableReference>
+            <Name>MaximumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Spike].MaximumNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinimumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Spike].MinimumNConc.Value()</VariableName>
+          </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SubtractFunction>
+        <Constant>
+          <Name>Proportion</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.8</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </MultiplyFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <VariableName>[Spike].MinimumNConc.Value()</VariableName>
-    </VariableReference>
+    </AddFunction>
+    <LinearInterpolationFunction>
+      <Name>SenescenceRate</Name>
+      <XYPairs>
+        <Name>XYPairs</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <X>
+          <double>3</double>
+          <double>4</double>
+          <double>5</double>
+          <double>6</double>
+        </X>
+        <Y>
+          <double>0.07</double>
+          <double>0.04</double>
+          <double>0.015</double>
+          <double>0.012</double>
+        </Y>
+      </XYPairs>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <XProperty>[Phenology].Stage</XProperty>
+    </LinearInterpolationFunction>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
@@ -2700,7 +2742,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
         <Constant>
           <Name>Fraction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.3</FixedValue>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Start>StartGrainFill</Start>
@@ -2708,12 +2750,27 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       </PhaseLookupValue>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PhaseLookup>
-    <Constant>
+    <LinearInterpolationFunction>
       <Name>SenescenceRate</Name>
+      <XYPairs>
+        <Name>XYPairs</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <X>
+          <double>3</double>
+          <double>7</double>
+          <double>8</double>
+          <double>9</double>
+        </X>
+        <Y>
+          <double>0</double>
+          <double>0</double>
+          <double>0.2</double>
+          <double>0.5</double>
+        </Y>
+      </XYPairs>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0</FixedValue>
-      <Units>/d</Units>
-    </Constant>
+      <XProperty>[Phenology].Stage</XProperty>
+    </LinearInterpolationFunction>
     <Constant>
       <Name>RemobilisationCost</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2943,11 +3000,38 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
     </Constant>
-    <VariableReference>
+    <AddFunction>
       <Name>CriticalNConc</Name>
+      <VariableReference>
+        <Name>MinimumNConc</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+      </VariableReference>
+      <MultiplyFunction>
+        <Name>MetabolicNconc</Name>
+        <SubtractFunction>
+          <Name>NonStructuralN</Name>
+          <VariableReference>
+            <Name>MaximumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Stem].MaximumNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinimumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+          </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SubtractFunction>
+        <Constant>
+          <Name>Proportion</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.5</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </MultiplyFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <VariableName>[Stem].MinimumNConc.Value()</VariableName>
-    </VariableReference>
+    </AddFunction>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <CompositeBiomass>
@@ -3149,12 +3233,15 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600</Command>
         <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.051</Command>
-        <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26</Command>
+        <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 35</Command>
         <Command>[Leaf].ExtinctionCoeff.VegetativeExtinctionCoeff.FixedValue = 0.5</Command>
         <Command>[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20</Command>
         <Command>[Grain].MaximumNConc.FixedValue = 0.025</Command>
         <Command>[Grain].MaxNConcDailyGrowth.FixedValue = 0.025</Command>
         <Command>[Leaf].ExtinctionCoeff.DevelopmentFactor.XYPairs.Y = 1,1,1.4</Command>
+        <Command>[Leaf].CohortParameters.MinimumNConc.XYPairs.Y = 0.01,0.008,0.008</Command>
+        <Command>[Stem].MinimumNConc.FixedValue = 0.006</Command>
+        <Command>[Spike].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.05</Command>
       </Cultivar>
       <Cultivar>
         <Name>Einstein</Name>
@@ -3616,7 +3703,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
         <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
-        <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22</Command>
+        <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 20</Command>
       </Cultivar>
       <Cultivar>
         <Name>H46</Name>
@@ -3977,7 +4064,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <Cultivar>
         <Name>Spear</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
+        <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
         <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
         <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
@@ -4067,7 +4154,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <Cultivar>
         <Name>Wilgoyne</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
+        <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
         <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
         <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
@@ -4108,13 +4195,16 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Name>Konya</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
-        <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+        <Command>[Phenology].VrnSensitivity.FixedValue = 4</Command>
         <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
         <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 16</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.040</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.050</Command>
         <Command>[Grain].MaximumNConc.FixedValue = 0.026</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 800</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 450</Command>
+        <Command>[Stem].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.2</Command>
+        <Command>[Stem].StructuralFraction.VegetativeGrowth.Fraction.FixedValue = 0.6</Command>
+        <Command>[Leaf].ExtinctionCoeff.VegetativeExtinctionCoeff.FixedValue = 0.8</Command>
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </CultivarFolder>
