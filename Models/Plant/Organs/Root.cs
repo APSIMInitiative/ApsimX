@@ -167,6 +167,10 @@ namespace Models.PMF.Organs
         [Link]
         public IFunction DMConversionEfficiency = null;
 
+        /// <summary>The cost for remobilisation</summary>
+        [Link]
+        public IFunction RemobilisationCost = null;
+
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
@@ -179,6 +183,11 @@ namespace Models.PMF.Organs
 
         /// <summary>The live weights for each addition zone.</summary>
         public List<double> ZoneInitialDM { get; set; }
+
+        /// <summary>The proportion of biomass respired each day</summary> 
+        [Link]
+        [Units("/d")]
+        public IFunction MaintenanceRespirationFunction = null;
 
         private double BiomassToleranceValue = 0.0000000001;   // 10E-10
         
@@ -314,10 +323,6 @@ namespace Models.PMF.Organs
         /// <summary>Layer dead.</summary>
         [XmlIgnore]
         public Biomass[] LayerDead { get { if (PlantZone != null) return PlantZone.LayerDead; else return new Biomass[0]; } }
-
-        /// <summary>Gets or sets the length.</summary>
-        [XmlIgnore]
-        public double Length { get { return PlantZone.Length; } }
 
         /// <summary>Gets or sets the water uptake.</summary>
         [Units("mm")]
@@ -508,7 +513,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
-                PlantZone.Length = MathUtilities.Sum(LengthDensity);
                 DoSupplyCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
             }
         }
@@ -516,10 +520,10 @@ namespace Models.PMF.Organs
         /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
         public void DoSupplyCalculations()
         {
-            DMRetranslocationSupply = AvailableDMRetranslocation();
             DMReallocationSupply = AvailableDMReallocation();
-            NRetranslocationSupply = AvailableNRetranslocation();
+            DMRetranslocationSupply = AvailableDMRetranslocation();
             NReallocationSupply = AvailableNReallocation();
+            NRetranslocationSupply = AvailableNRetranslocation();
         }
 
         /// <summary>Does the nutrient allocations.</summary>
@@ -535,6 +539,14 @@ namespace Models.PMF.Organs
                 // Do Root Senescence
                 DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value() });
             }
+            needToRecalculateLiveDead = false;
+            // Do maintenance respiration
+            MaintenanceRespiration = 0;
+            MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
+            Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
+            MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
+            Live.StorageWt *= (1 - MaintenanceRespirationFunction.Value());
+            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -751,9 +763,9 @@ namespace Models.PMF.Organs
             foreach (ZoneState Z in Zones)
                 TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
-            Allocated.StructuralWt = dryMatter.Structural;
-            Allocated.StorageWt = dryMatter.Storage;
-            Allocated.MetabolicWt = dryMatter.Metabolic;
+            Allocated.StructuralWt = dryMatter.Structural * DMConversionEfficiency.Value();
+            Allocated.StorageWt = dryMatter.Storage * DMConversionEfficiency.Value();
+            Allocated.MetabolicWt = dryMatter.Metabolic * DMConversionEfficiency.Value();
             GrowthRespiration = (dryMatter.Structural + dryMatter.Storage + dryMatter.Metabolic) * (1 - DMConversionEfficiency.Value());
             if (TotalRAw == 0 && Allocated.Wt > 0)
                 throw new Exception("Error trying to partition root biomass");
@@ -829,22 +841,26 @@ namespace Models.PMF.Organs
                 double[] dulmm = myZone.soil.DULmm;
                 double[] bd = myZone.soil.BD;
 
+                double accuDepth = 0;
+                
                 for (int layer = 0; layer < thickness.Length; layer++)
                 {
+                    accuDepth += thickness[layer];
                     if (myZone.LayerLive[layer].Wt > 0)
                     {
+                        double factorRootDepth = Math.Max(0, Math.Min(1, 1 - (accuDepth - Depth ) / thickness[layer]));
                         RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
                         RWC[layer] = Math.Max(0.0, Math.Min(RWC[layer], 1.0));
                         double SWAF = NUptakeSWFactor.Value(layer);
 
                         double kno3 = KNO3.Value(layer);
                         double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF, (MaxDailyNUptake.Value() - NO3Uptake));
+                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (MaxDailyNUptake.Value() - NO3Uptake));
                         NO3Uptake += NO3Supply[layer];
 
                         double knh4 = KNH4.Value(layer);
                         double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF, (MaxDailyNUptake.Value() - NH4Uptake));
+                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (MaxDailyNUptake.Value() - NH4Uptake));
                         NH4Uptake += NH4Supply[layer];
                     }
                 }

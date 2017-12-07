@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
-  <Name>Management toolbox</Name>
-  <Manager>
-    <Name>Sow on a fixed date</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Script>
-      <Crop>Chickpea</Crop>
-      <SowDate>24-Jul</SowDate>
-      <CultivarName>Amethyst</CultivarName>
-      <SowingDepth>50</SowingDepth>
-      <RowSpacing>750</RowSpacing>
-      <Population>6</Population>
-    </Script>
-    <Code><![CDATA[using System;
+	<Name>Management toolbox</Name>
+	<Manager>
+		<Name>Sow on a fixed date</Name>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
+		<Script>
+			<Crop>Chickpea</Crop>
+			<SowDate>24-Jul</SowDate>
+			<CultivarName>Amethyst</CultivarName>
+			<SowingDepth>50</SowingDepth>
+			<RowSpacing>750</RowSpacing>
+			<Population>6</Population>
+		</Script>
+		<Code>
+			<![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
@@ -58,25 +59,27 @@ namespace Models
 		
 	}
 }
-]]></Code>
-  </Manager>
-  <Manager>
-    <Name>Sow using a variable rule</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Script>
-      <Crop>
-      </Crop>
-      <StartDate>1-nov</StartDate>
-      <EndDate>10-jan</EndDate>
-      <MinESW>100</MinESW>
-      <MinRain>25</MinRain>
-      <RainDays>7</RainDays>
-      <CultivarName>Dekalb_XL82</CultivarName>
-      <SowingDepth>30</SowingDepth>
-      <RowSpacing>750</RowSpacing>
-      <Population>6</Population>
-    </Script>
-    <Code><![CDATA[using System;
+]]>
+		</Code>
+	</Manager>
+	<Manager>
+		<Name>Sow using a variable rule</Name>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
+		<Script>
+			<Crop>
+			</Crop>
+			<StartDate>1-nov</StartDate>
+			<EndDate>10-jan</EndDate>
+			<MinESW>100</MinESW>
+			<MinRain>25</MinRain>
+			<RainDays>7</RainDays>
+			<CultivarName>Dekalb_XL82</CultivarName>
+			<SowingDepth>30</SowingDepth>
+			<RowSpacing>750</RowSpacing>
+			<Population>6</Population>
+		</Script>
+		<Code>
+			<![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
@@ -142,14 +145,15 @@ namespace Models
 	}
 }
 ]]></Code>
-  </Manager>
-  <Manager>
-    <Name>Harvesting</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Script>
-      <Crop>Maize</Crop>
-    </Script>
-    <Code><![CDATA[using System;
+	</Manager>
+	<Manager>
+		<Name>Harvesting</Name>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
+		<Script>
+			<Crop>Maize</Crop>
+		</Script>
+		<Code>
+			<![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
@@ -175,17 +179,19 @@ namespace Models
 		}
 	}
 }
-	   ]]></Code>
-  </Manager>
-  <Manager>
-    <Name>Fertilise on a fixed date</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Script>
-      <FertDate>
-      </FertDate>
-      <Amount>160</Amount>
-    </Script>
-    <Code><![CDATA[using System;
+	   ]]>
+		</Code>
+	</Manager>
+	<Manager>
+		<Name>Fertilise on a fixed date</Name>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
+		<Script>
+			<FertDate>
+			</FertDate>
+			<Amount>160</Amount>
+		</Script>
+		<Code>
+			<![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 using APSIM.Shared.Utilities;
@@ -213,16 +219,18 @@ namespace Models
 		}
 	}
 }
-]]></Code>
-  </Manager>
-  <Manager>
-    <Name>Fertilise at sowing</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Script>
-      <Crop>Maize</Crop>
-      <Amount>160</Amount>
-    </Script>
-    <Code><![CDATA[using System;
+]]>
+		</Code>
+	</Manager>
+	<Manager>
+		<Name>Fertilise at sowing</Name>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
+		<Script>
+			<Crop>Maize</Crop>
+			<Amount>160</Amount>
+		</Script>
+		<Code>
+			<![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 namespace Models
@@ -249,19 +257,72 @@ namespace Models
 		
 	}
 }
+]]>
+		</Code>
+	</Manager>
+	<Manager>
+		<Name>Fertilise on Zadok stage</Name>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
+		<Script>
+			<Stage>30</Stage>
+			<Amount>40</Amount>
+		</Script>
+		<Code>
+			<![CDATA[using System; 
+using Models.Core; 
+using Models.PMF; 
+namespace Models 
+{ 
+  [Serializable] 
+  public class Script : Model 
+  { 
+    [Link] Clock Clock; 
+    [Link] Fertiliser Fertiliser; 
+    [Link] Summary Summary; 
+    [Link] Plant Wheat; 
+ 
+    private bool hasFertilised = false; 
+
+    [Description("Fertilise once crop reaches stage:")]
+    public double Stage {get; set;}
+
+    [Description("Amount of fertiliser to be applied (kg/ha)")] 
+    public double Amount { get; set;} 
+     
+    [EventSubscribe("DoManagement")] 
+    private void OnDoManagement(object sender, EventArgs e) 
+    { 
+      double zadok = (double)Apsim.Get(Wheat,"Phenology.Zadok.Stage"); 
+ 
+      if(zadok >= Stage && !hasFertilised) 
+      { 
+         Summary.WriteMessage(this, "Fertilising!!"); 
+         Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NH4N);
+         hasFertilised = true; 
+      } 
+    }
+
+	[EventSubscribe("Sowing")]
+	private void OnSowing(object sender, EventArgs e)
+	{
+		hasFertilised = false;
+    }
+  } 
+} 
 ]]></Code>
-  </Manager>
-  <Manager>
-    <Name>Irrigate on a fixed date</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Script>
-      <IrrigateDate>1-feb</IrrigateDate>
-      <Amount>160</Amount>
-      <Depth>0</Depth>
-      <Efficiency>1</Efficiency>
-      <WillRunoff>False</WillRunoff>
-    </Script>
-    <Code><![CDATA[using System;
+	</Manager>
+	<Manager>
+		<Name>Irrigate on a fixed date</Name>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
+		<Script>
+			<IrrigateDate>1-feb</IrrigateDate>
+			<Amount>160</Amount>
+			<Depth>0</Depth>
+			<Efficiency>1</Efficiency>
+			<WillRunoff>False</WillRunoff>
+		</Script>
+		<Code>
+			<![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 using APSIM.Shared.Utilities;
@@ -298,19 +359,21 @@ namespace Models
 		}
 	}
 }
-]]></Code>
-  </Manager>
-  <Manager>
-    <Name>Automatic irrigation based on water deficit</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Script>
-      <FASW>0</FASW>
-      <WaterDeficit>0</WaterDeficit>
-      <AutoIrrigationOn>True</AutoIrrigationOn>
-      <FASWThreshold>0.9</FASWThreshold>
-      <FASWDepth>600</FASWDepth>
-    </Script>
-    <Code><![CDATA[using System;
+]]>
+		</Code>
+	</Manager>
+	<Manager>
+		<Name>Automatic irrigation based on water deficit</Name>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
+		<Script>
+			<FASW>0</FASW>
+			<WaterDeficit>0</WaterDeficit>
+			<AutoIrrigationOn>True</AutoIrrigationOn>
+			<FASWThreshold>0.9</FASWThreshold>
+			<FASWDepth>600</FASWDepth>
+		</Script>
+		<Code>
+			<![CDATA[using System;
 using Models.Core;
 using System.Collections.Generic;
 using System.Text;
@@ -395,8 +458,139 @@ namespace Models
 
 	}
 }
-	   ]]></Code>
-  </Manager>
-  <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+	   ]]>
+		</Code>
+	</Manager>
+	<Manager>
+		<Name>Reset on sowing</Name>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
+		<Script>
+			<ResetWater>Yes</ResetWater>
+			<ResetN>Yes</ResetN>
+			<ResetSOM>Yes</ResetSOM>
+		</Script>
+		<Code>
+			<![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using Models.SurfaceOM;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Plant Wheat = null;
+		[Link] SoilWater SoilWater = null;
+		[Link] SoilNitrogen SoilN = null;
+		[Link] SurfaceOrganicMatter SOM = null;
+		[Link] Summary Summary;
+
+		[Description("Reset Water?")]
+		public string ResetWater {get;set;}
+
+		[Description("Reset Nitrogen?")]
+		public string ResetN {get;set;}
+
+		[Description("Reset Surface Organic Matter?")]
+		public string ResetSOM {get;set;}
+
+		[EventSubscribe("Sowing")]
+		private void OnSowing(object sender, EventArgs e)
+		{
+			if (ResetWater == "Yes")
+			{
+				Summary.WriteMessage(this, "Reset Water");
+				SoilWater.Reset();
+		    }
+			if (ResetN == "Yes")
+			{
+				Summary.WriteMessage(this, "Reset Nitrogen");
+				SoilN.Reset();
+			}
+			if (ResetSOM == "Yes")
+			{
+				Summary.WriteMessage(this, "Reset Surface OM");
+				SOM.Reset();
+			}
+		}
+	}
+}
+]]>
+		</Code>
+	</Manager> 
+	<Manager>
+		<Name>Reset on date</Name>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
+		<Script>
+			<ResetDate>1-Jan</ResetDate>
+			<ResetWater>Yes</ResetWater>
+			<ResetN>Yes</ResetN>
+			<ResetSOM>Yes</ResetSOM>
+		</Script>
+		<Code>
+			<![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using Models.SurfaceOM;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Plant Wheat = null;
+		[Link] SoilWater SoilWater = null;
+		[Link] SoilNitrogen SoilN = null;
+		[Link] SurfaceOrganicMatter SOM = null;
+		[Link] Summary Summary;
+
+		[Description("Date to reset on:")]
+		public string ResetDate {get;set;}
+
+		[Description("Reset Water?")]
+		public string ResetWater {get;set;}
+
+		[Description("Reset Nitrogen?")]
+		public string ResetN {get;set;}
+
+		[Description("Reset Surface Organic Matter?")]
+		public string ResetSOM {get;set;}
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))
+			{
+				if (ResetWater == "Yes")
+				{
+					Summary.WriteMessage(this, "Reset Water");
+					SoilWater.Reset();
+			    }
+				if (ResetN == "Yes")
+				{
+					Summary.WriteMessage(this, "Reset Nitrogen");
+					SoilN.Reset();
+				}
+				if (ResetSOM == "Yes")
+				{
+					Summary.WriteMessage(this, "Reset Surface OM");
+					SOM.Reset();
+				}
+			}
+		}
+	}
+}
+]]>
+		</Code>
+	</Manager>
+	<IncludeInDocumentation>true</IncludeInDocumentation>
+	<ExplorerWidth>300</ExplorerWidth>
 </Simulations>

@@ -530,7 +530,13 @@ Though tillering is common in some maize varieties under certain agronomic condi
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
-    </Constant>    
+    </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
     <Constant>
       <Name>InitialGrainProportion</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -892,7 +898,13 @@ The parameter KL is is described by Meinke et al (1993) to combine elements of s
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
-    </Constant>    
+    </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
     <Constant>
       <Name>SoilWaterEffect</Name>
       <Memo>
@@ -1130,7 +1142,11 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
     </LinearInterpolationFunction>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
-    <MaintenanceRespiration>0</MaintenanceRespiration>
+    <Constant>
+        <Name>MaintenanceRespirationFunction</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>0</FixedValue>
+    </Constant>
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />
@@ -1219,6 +1235,12 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         <Name>DMReallocationFactor</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0</FixedValue>
+      </Constant>
+      <Constant>
+        <Name>RemobilisationCost</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>0</FixedValue>
+        <Units />
       </Constant>
       <Constant>
         <Name>LeafSizeShapeParameter</Name>
@@ -1834,6 +1856,12 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Phenology].ThermalTime.Value()</VariableName>
     </VariableReference>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
     <MinimumFunction>
       <Name>FRGRFunction</Name>
       <VariableReference>
@@ -1979,6 +2007,12 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
     </Constant>
     <Constant>
       <Name>NRetranslocationFactor</Name>
@@ -2173,6 +2207,12 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <FixedValue>0</FixedValue>
     </Constant>
     <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
+    <Constant>
       <Name>NRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.1</FixedValue>
@@ -2306,6 +2346,12 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>StructuralFraction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.7</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
     </Constant>
     <LinearInterpolationFunction>
       <Name>MaximumNConc</Name>

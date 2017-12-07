@@ -41,7 +41,7 @@
 
                 // Send event telling all models that we're about to begin running.
                 Events events = new Events(simulations);
-                events.Publish("BeginRun", new object[] { SimulationNamesBeingRun, AllSimulationNames });
+                events.Publish("BeginRun", new object[] { AllSimulationNames, SimulationNamesBeingRun });
 
                 modelsToRun.ForEach(model => simulations.Links.Resolve(model));
             }

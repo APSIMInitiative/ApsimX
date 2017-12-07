@@ -5,7 +5,7 @@
 	use source map feature of your browser.
  */
 @font-face {
-  font-family: 'Novacento Sans Wide';
+  font-family: 'Lato';
   src: url("../fonts/Novecentosanswide-UltraLight-webfont.eot");
   src: url("../fonts/Novecentosanswide-UltraLight-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/Novecentosanswide-UltraLight-webfont.woff2") format("woff2"), url("../fonts/Novecentosanswide-UltraLight-webfont.woff") format("woff"), url("../fonts/Novecentosanswide-UltraLight-webfont.ttf") format("truetype"), url("../fonts/Novecentosanswide-UltraLight-webfont.svg#novecento_sans_wideultralight") format("svg");
   font-style: normal;
@@ -271,28 +271,28 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
   font-weight: inherit; }
 
 h2 {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   line-height: 110% !important;
   margin: 2.5rem 0 1.5rem 0;
   text-transform: capitalize; }
 
 h3 {
-  font-size: 2rem;
+  font-size: 1.6rem;
   line-height: 110% !important;
   margin: 2rem 0 1rem 0; }
 
 h4 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   line-height: 110% !important;
   margin: 1.5rem 0 0.75rem 0; }
 
 h5 {
-  font-size: 1rem;
+  font-size: 1.2rem;
   line-height: 110% !important;
   margin: 1rem 0 0.2rem 0; }
 
 h6 {
-  font-size: 0.5rem;
+  font-size: 1.0rem;
   line-height: 110% !important;
   margin: 0.5rem 0 0.2rem 0; }
 
@@ -544,14 +544,15 @@ textarea:focus, input[type="email"]:focus, input[type="number"]:focus, input[typ
 #chapter h3 {
   font-family: "Lato", "Work Sans", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
   font-weight: 300;
-  text-align: center; }
+  text-align: left; }
 
 #chapter h1 {
   font-size: 5rem;
-  border-bottom: 4px solid #F0F2F4; }
+  border-bottom: 4px solid #F0F2F4; 
+  text-align: left; }
 
 #chapter p {
-  text-align: center;
+  text-align: left;
   font-size: 1.2rem; }
 
 #footer {
@@ -572,17 +573,17 @@ body {
     font-weight: bold; }
 
 h2, h3, h4, h5, h6 {
-  font-family: "Lato", "Work Sans Bold", "Helvetica Bold", "Tahoma Bold", "Geneva Bold", "Arial Bold", sans-serif;
+  font-family: "Novacento Sans Wide", "Work Sans Bold", "Helvetica Bold", "Tahoma Bold", "Geneva Bold", "Arial Bold", sans-serif;
   text-rendering: optimizeLegibility;
   color: #5e5e5e;
-  font-weight: 400;
+  font-weight: 200;
   letter-spacing: -1px; }
 
 h1 {
   font-family: "Novacento Sans Wide", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
-  text-align: center;
-  text-transform: uppercase;
+  text-align: left;
   color: #060606;
+  font-size: 2rem;
   font-weight: 200; }
 
 blockquote {

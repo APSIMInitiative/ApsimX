@@ -329,9 +329,7 @@ namespace Models.PMF.Organs
             /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
             [Link]
             public IFunction SenessingLeafRelativeSize = null;
-            /// <summary>
-            /// The proportion of mass that is respired each day
-            /// </summary>
+            /// <summary>The proportion of mass that is respired each day</summary>
             [Link]
             public IFunction MaintenanceRespirationFunction = null;
             /// <summary>Modify leaf size by age</summary>
@@ -343,6 +341,9 @@ namespace Models.PMF.Organs
             /// <summary>Modify senescence duration by age</summary>
             [Link]
             public IFunction SenescenceDurationAgeMultiplier = null;
+            /// <summary>The cost for remobilisation</summary>
+            [Link]
+            public IFunction RemobilisationCost = null;
         }
         #endregion
 
@@ -433,6 +434,20 @@ namespace Models.PMF.Organs
         //Variables that represent the number of primordia or nodes (double) in a particular state on an individual mainstem are called number variables (e.g NodeNo or PrimordiaNo suffix)
         //Variables that the number of leaves on a plant or a primary bud have Plant or Primary bud prefixes
 
+        /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
+        [XmlIgnore]
+        public double Nconc
+        {
+            get
+            {
+                if (Wt > 0.0)
+                    return N / Wt;
+                else
+                    return 0.0;
+            }
+        }
+
+
         /// <summary>Return the</summary>
         public double CohortCurrentRankCoverAbove
         {
@@ -459,7 +474,7 @@ namespace Models.PMF.Organs
         /// <Summary>Spcific leaf nitrogen</Summary>
         [Description("Specific leaf nitrogen")]
         [Units("g/m2")]
-        public double SpecificLeafNitrogen
+        public double SpecificNitrogen
         {
             get
             {
