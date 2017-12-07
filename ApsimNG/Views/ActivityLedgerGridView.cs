@@ -370,7 +370,7 @@ namespace UserInterface.Views
             {
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
                 cell.Visible = true;
-                switch (dataVal)
+                switch (dataVal.ToString())
                 {
                     case "Success":
                     case "Partial":
