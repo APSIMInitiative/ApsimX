@@ -87,7 +87,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Glade\TitleView.glade" />
     <EmbeddedResource Include="Resources\Glade\LegendView.glade" />
-    <EmbeddedResource Include="Resources\Glade\MemoView.glade" />
+    <EmbeddedResource Include="Resources\Glade\MemoView.glade">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Glade\InitialWaterView.glade" />
     <EmbeddedResource Include="Resources\Glade\SeriesView.glade" />
     <EmbeddedResource Include="Resources\Glade\SupplementView.glade">
@@ -166,6 +168,7 @@
     <Compile Include="Presenters\AddFunctionPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
+    <Compile Include="Presenters\CLEMFileGRASPPresenter.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\ActivityLedgerGridPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
@@ -217,6 +220,7 @@
     <Compile Include="Views\AxisView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
+    <Compile Include="Views\CLEMFileGRASPView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
     <Compile Include="Views\ActivityLedgerGridView.cs" />
     <Compile Include="Views\DataStoreView.cs" />

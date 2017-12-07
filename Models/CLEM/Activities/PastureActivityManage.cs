@@ -151,10 +151,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            //get the units of area for this run from the Land resource.
-            unitsOfArea2Ha = Resources.Land().UnitsOfAreaToHaConversion ; 
-			// locate Pasture Type resource
-			LinkedNativeFoodType = Resources.GetResourceItem(this, typeof(GrazeFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+
 		}
 
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
@@ -181,17 +178,25 @@ namespace Models.CLEM.Activities
 			// if we get here we assume some land has been supplied
 			if (ResourceRequestList != null || ResourceRequestList.Count() > 0)
 			{
-				soilIndex = ((LandType)ResourceRequestList[0].Resource).SoilType;
 				gotLandRequested = TakeResources(ResourceRequestList, false);
-			}
+            }
 
             //Now the Land has been allocated we have an Area 
             if (gotLandRequested)
-            {
+            {            
+                //get the units of area for this run from the Land resource parent.
+                unitsOfArea2Ha = Resources.Land().UnitsOfAreaToHaConversion;
+
+                // locate Pasture Type resource
+                LinkedNativeFoodType = Resources.GetResourceItem(this, typeof(GrazeFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+
                 //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
                 Area = ResourceRequestList.FirstOrDefault().Provided;
+
                 LinkedNativeFoodType.Area = Area;
 
+                soilIndex = ((LandType)ResourceRequestList.FirstOrDefault().Resource).SoilType;
+    
                 SetupStartingPasturePools(StartingAmount);
 
                 LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.StartingValue;
@@ -363,7 +368,10 @@ namespace Models.CLEM.Activities
 
         private double CalculateStockingRateRightNow()
         {
-            return Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
+            if (Resources.RuminantHerd() != null)
+                return Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
+            else
+                return 0;
         }
 
 		/// <summary>
@@ -433,7 +441,7 @@ namespace Models.CLEM.Activities
             double stockingRate = LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate;
             pkStkRate = (int)Math.Round(stockingRate);
 
-			PastureDataList = FileGRASP.GetIntervalsPastureData(ZoneCLEM.ClimateRegion, soilIndex, 1,
+			PastureDataList = FileGRASP.GetIntervalsPastureData(ZoneCLEM.ClimateRegion, soilIndex,
                pkGrassBA, pkLandCon, pkStkRate, Clock.Today, ZoneCLEM.EcologicalIndicatorsCalculationInterval);
         }
 
