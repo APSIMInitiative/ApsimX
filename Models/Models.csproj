@@ -492,13 +492,13 @@
     <Compile Include="CLEM\Activities\CropActivityManageCrop.cs" />
     <Compile Include="CLEM\Activities\CropActivityManageProduct.cs" />
     <Compile Include="CLEM\Activities\CropActivityTask.cs" />
-    <Compile Include="CLEM\Activities\IATCropLand.cs" />
-    <Compile Include="CLEM\Activities\IATGrowCropCost.cs" />
+    <Compile Include="CLEM\Old\IATCropLand.cs" />
+    <Compile Include="CLEM\Old\IATGrowCropCost.cs" />
     <Compile Include="CLEM\Activities\ActivityFolder.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityPayExpense.cs" />
     <Compile Include="CLEM\Activities\GrazeBreedPoolLimit.cs" />
-    <Compile Include="CLEM\Activities\IATGrowCrop.cs" />
-    <Compile Include="CLEM\Activities\IATGrowCropCostAndLabour.cs" />
+    <Compile Include="CLEM\Old\IATGrowCrop.cs" />
+    <Compile Include="CLEM\Old\IATGrowCropCostAndLabour.cs" />
     <Compile Include="CLEM\Activities\LabourActivityOffFarm.cs" />
     <Compile Include="CLEM\Activities\OtherAnimalsActivityGrow.cs" />
     <Compile Include="CLEM\Activities\PastureActivityBurn.cs" />
@@ -510,7 +510,7 @@
     <Compile Include="CLEM\Activities\RuminantActivityGrazePasture.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityGrazePastureBreed.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityHerdCost.cs" />
-    <Compile Include="CLEM\Activities\IATGrowCropLabour.cs" />
+    <Compile Include="CLEM\Old\IATGrowCropLabour.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityMilking.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityPredictiveStockingENSO.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityWean.cs" />
