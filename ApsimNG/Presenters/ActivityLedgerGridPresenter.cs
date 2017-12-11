@@ -74,36 +74,39 @@ namespace UserInterface.Presenters
         {
             using (DataTable data = GetData())
             {
-                // get unique rows
-                List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("Name")).Distinct().ToList<string>();
-                // get unique columns
-                List<DateTime> dates = data.AsEnumerable().Select(a => a.Field<DateTime>("Date")).Distinct().ToList<DateTime>();
-                // create table
+                if (data != null)
+                {
+                    // get unique rows
+                    List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("Name")).Distinct().ToList<string>();
+                    // get unique columns
+                    List<DateTime> dates = data.AsEnumerable().Select(a => a.Field<DateTime>("Date")).Distinct().ToList<DateTime>();
+                    // create table
 
-                DataTable tbl = new DataTable();
-                tbl.Columns.Add("Activity");
-                foreach (var item in dates)
-                {
-                    tbl.Columns.Add(item.Month.ToString("00")+"\n"+item.ToString("yy"));
-                }
-                foreach (var item in activities)
-                {
-                    if (item != "TimeStep")
+                    DataTable tbl = new DataTable();
+                    tbl.Columns.Add("Activity");
+                    foreach (var item in dates)
                     {
-                        DataRow dr = tbl.NewRow();
-                        dr["Activity"] = item;
-
-                        foreach (var activityTick in data.AsEnumerable().Where(a => a.Field<string>("Name") == item))
-                        {
-                            DateTime dte = (DateTime)activityTick["Date"];
-                            string status = activityTick["Status"].ToString();
-                            dr[dte.Month.ToString("00") + "\n" + dte.ToString("yy")] = status;
-                        }
-                        tbl.Rows.Add(dr);
+                        tbl.Columns.Add(item.Month.ToString("00") + "\n" + item.ToString("yy"));
                     }
+                    foreach (var item in activities)
+                    {
+                        if (item != "TimeStep")
+                        {
+                            DataRow dr = tbl.NewRow();
+                            dr["Activity"] = item;
+
+                            foreach (var activityTick in data.AsEnumerable().Where(a => a.Field<string>("Name") == item))
+                            {
+                                DateTime dte = (DateTime)activityTick["Date"];
+                                string status = activityTick["Status"].ToString();
+                                dr[dte.Month.ToString("00") + "\n" + dte.ToString("yy")] = status;
+                            }
+                            tbl.Rows.Add(dr);
+                        }
+                    }
+                    this.Grid.DataSource = tbl;
+                    this.Grid.LockLeftMostColumns(1);  // lock simulationname, zone, date.
                 }
-                this.Grid.DataSource = tbl;
-                this.Grid.LockLeftMostColumns(1);  // lock simulationname, zone, date.
             }
         }
 
