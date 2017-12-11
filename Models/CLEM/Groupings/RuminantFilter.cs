@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -22,6 +23,7 @@ namespace Models.CLEM.Groupings
 		/// Name of parameter to filter by
 		/// </summary>
 		[Description("Name of parameter to filter by")]
+        [Required]
 		public RuminantFilterParameters Parameter
 		{
 			get
@@ -41,6 +43,7 @@ namespace Models.CLEM.Groupings
 		/// Name of parameter to filter by
 		/// </summary>
 		[Description("Operator to use for filtering")]
+        [Required]
 		public FilterOperators Operator
 		{
 			get
@@ -59,7 +62,8 @@ namespace Models.CLEM.Groupings
 		/// Value to check for filter
 		/// </summary>
 		[Description("Value to filter by")]
-		public string Value
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Value to filter by required")]
+        public string Value
 		{
 			get
 			{

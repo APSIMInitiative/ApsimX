@@ -19,7 +19,8 @@ namespace Models.CLEM.Groupings
 		/// Days per month selected individuals available
 		/// </summary>
 		[Description("Days per month selected individuals available")]
-		public double[] DaysPerMonth { get; set; }
+        [ArrayItemCount(12)]
+        public double[] DaysPerMonth { get; set; }
 
 		/// <summary>
 		/// Constructor

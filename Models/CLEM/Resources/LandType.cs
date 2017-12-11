@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
         /// Total Area
         /// </summary>
         [Description("Land area")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double LandArea { get; set; }
 
 		/// <summary>

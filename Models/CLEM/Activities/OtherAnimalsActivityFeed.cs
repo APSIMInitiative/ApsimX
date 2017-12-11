@@ -35,7 +35,7 @@ namespace Models.CLEM.Activities
 		/// Name of Feed to use
 		/// </summary>
 		[Description("Feed type name in Animal Food Store")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Feed type name to use required")]
         public string FeedTypeName { get; set; }
 
 		/// <summary>

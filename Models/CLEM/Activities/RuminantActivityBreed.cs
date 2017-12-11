@@ -273,39 +273,54 @@ namespace Models.CLEM.Activities
 			// if first mating and of age or suffcient time since last birth/conception
 			if(isConceptionReady)
 			{
-				// generalised curve
-				switch (female.NumberOfBirths)
-				{
-					case 0:
-						// first mating
-						if (female.BreedParams.MinimumAge1stMating >= 24)
-						{
-							// 1st mated at 24 months or older
-							rate = female.BreedParams.ConceptionRateAsymptote[1] / (1 + Math.Exp(female.BreedParams.ConceptionRateCoefficent[1] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.ConceptionRateIntercept[1]));
-						}
-						else if (female.BreedParams.MinimumAge1stMating >= 12)
-						{
-							// 1st mated between 12 and 24 months
-							double rate24 = female.BreedParams.ConceptionRateAsymptote[1] / (1 + Math.Exp(female.BreedParams.ConceptionRateCoefficent[1] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.ConceptionRateIntercept[1]));
-							double rate12 = female.BreedParams.ConceptionRateAsymptote[0] / (1 + Math.Exp(female.BreedParams.ConceptionRateCoefficent[0] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.ConceptionRateIntercept[0]));
-							rate = (rate12 + rate24) / 2;
-							// Not sure what the next code was doing in old version
-							//Concep_rate = ((730 - Anim_concep(rumcat)) * temp1 + (Anim_concep(rumcat) - 365) * temp2) / 365 ' interpolate between 12 & 24 months
-						}
-						break;
-					case 1:
-						// second offspring mother
-						rate = female.BreedParams.ConceptionRateAsymptote[2] / (1 + Math.Exp(female.BreedParams.ConceptionRateCoefficent[2] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.ConceptionRateIntercept[2]));
-						break;
-					default:
-						// females who have had more then one birth (twins should count as one birth)
-						if (female.WeightAtConception > female.BreedParams.CriticalCowWeight * female.StandardReferenceWeight)
-						{
-							rate = female.BreedParams.ConceptionRateAsymptote[3] / (1 + Math.Exp(female.BreedParams.ConceptionRateCoefficent[3] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.ConceptionRateIntercept[3]));
-						}
-						break;
-				}
-			}
+                // get advanced conception rate if available otherwise use defaults.
+                if(female.BreedParams.AdvancedConceptionParameters != null)
+                {
+                    // generalised curve
+                    switch (female.NumberOfBirths)
+                    {
+                        case 0:
+                            // first mating
+                            if (female.BreedParams.MinimumAge1stMating >= 24)
+                            {
+                                // 1st mated at 24 months or older
+                                rate = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[1] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[1] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[1]));
+                            }
+                            else if (female.BreedParams.MinimumAge1stMating >= 12)
+                            {
+                                // 1st mated between 12 and 24 months
+                                double rate24 = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[1] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[1] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[1]));
+                                double rate12 = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[0] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[0] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[0]));
+                                rate = (rate12 + rate24) / 2;
+                                // Not sure what the next code was doing in old version
+                                //Concep_rate = ((730 - Anim_concep(rumcat)) * temp1 + (Anim_concep(rumcat) - 365) * temp2) / 365 ' interpolate between 12 & 24 months
+                            }
+                            else
+                            {
+                                // first mating < 12 months old
+                                rate = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[0] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[0] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[0]));
+                            }
+                            break;
+                        case 1:
+                            // second offspring mother
+                            rate = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[2] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[2] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[2]));
+                            break;
+                        default:
+                            // females who have had more than two births (twins should count as one birth)
+                            if (female.WeightAtConception > female.BreedParams.CriticalCowWeight * female.StandardReferenceWeight)
+                            {
+                                rate = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[3] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[3] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[3]));
+                            }
+                            break;
+                    }
+                }
+                else
+                {
+                    // use default values 
+                    rate = female.BreedParams.ConceptionRateAsymptote / (1 + Math.Exp(female.BreedParams.ConceptionRateCoefficent * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.ConceptionRateIntercept));
+                }
+
+            }
 			return rate / 100;
 		}
 

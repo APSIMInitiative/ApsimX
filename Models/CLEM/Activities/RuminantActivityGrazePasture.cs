@@ -41,7 +41,7 @@ namespace Models.CLEM.Activities
 		/// Name of paddock or pasture to graze
 		/// </summary>
 		[Description("Name of GrazeFoodStoreType to graze")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Graze Food Store required")]
         public string GrazeFoodStoreTypeName { get; set; }
 
 		/// <summary>

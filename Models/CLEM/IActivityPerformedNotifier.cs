@@ -14,32 +14,9 @@ namespace Models.CLEM
     /// </summary>
     public interface IActivityPerformedNotifier
     {
-
-        ///// <summary>
-        ///// Current status of this activity
-        ///// </summary>
-        //[XmlIgnore]
-        //ActivityStatus Status { get; set; }
-
         /// <summary>
         /// Activity performed event handler
         /// </summary>
         event EventHandler ActivityPerformed;
-
-        ///// <summary>
-        ///// Activity has occurred 
-        ///// </summary>
-        ///// <param name="e"></param>
-        //void OnActivityPerformed(EventArgs e);
-
-        ///// <summary>
-        ///// Method to trigger an Activity Performed event 
-        ///// </summary>
-        //void TriggerOnActivityPerformed();
-
-        ///// <summary>
-        ///// Method to trigger an Activity Performed event 
-        ///// </summary>
-        //void TriggerOnActivityPerformed(ActivityStatus status);
     }
 }

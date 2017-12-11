@@ -29,42 +29,43 @@ namespace Models.CLEM.Activities
         /// Maximum number of breeders that can be kept
         /// </summary>
         [Description("Maximum number of breeders to be kept")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [GreaterThanEqual("MinimumBreedersKept")]
         public int MaximumBreedersKept { get; set; }
 
 		/// <summary>
 		/// Minimum number of breeders that can be kept
 		/// </summary>
 		[Description("Minimum number of breeders to be kept")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public int MinimumBreedersKept { get; set; }
 
         /// <summary>
         /// Maximum breeder age (months) for culling
         /// </summary>
         [Description("Maximum breeder age (months) for culling")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MaximumBreederAge { get; set; }
 
         /// <summary>
         /// Maximum number of breeders in a single purchase
         /// </summary>
         [Description("Maximum number of breeders in a single purchase")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public int MaximumBreedersPerPurchase { get; set; }
 
         /// <summary>
         /// Maximum number of breeding sires kept
         /// </summary>
         [Description("Maximum number of breeding sires kept")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public int MaximumSiresKept { get; set; }
 
 		/// <summary>
 		/// Maximum bull age (months) for culling
 		/// </summary>
 		[Description("Maximum bull age (months) for culling")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MaximumBullAge { get; set; }
 
 		/// <summary>
@@ -78,14 +79,14 @@ namespace Models.CLEM.Activities
         /// Maximum number of sires in a single purchase
         /// </summary>
         [Description("Maximum number of sires in a single purchase")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public int MaximumSiresPerPurchase { get; set; }
 
         /// <summary>
         /// Male selling age (months)
         /// </summary>
         [Description("Male selling age (months)")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MaleSellingAge { get; set; }
 
 		/// <summary>
@@ -105,7 +106,7 @@ namespace Models.CLEM.Activities
 		/// Minimum pasture (kg/ha) before restocking if placed in paddock
 		/// </summary>
 		[Description("Minimum pasture (kg/ha) before restocking if placed in paddock")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MinimumPastureBeforeRestock { get; set; }
 
 		/// <summary>

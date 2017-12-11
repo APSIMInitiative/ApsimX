@@ -29,21 +29,21 @@ namespace Models.CLEM.Activities
         /// Name of account to use
         /// </summary>
         [Description("Name of bank account to use")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
         public string AccountName { get; set; }
 
         /// <summary>
         /// Name of resource group containing resource
         /// </summary>
         [Description("Name of resource group containing resource")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource group required")]
         public string ResourceGroupName { get; set; }
 
         /// <summary>
         /// Name of resource type to sell
         /// </summary>
  		[Description("Name of resource type to sell")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type required")]
         public string ResourceTypeName { get; set; }
 
         /// <summary>

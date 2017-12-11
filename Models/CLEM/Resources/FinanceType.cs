@@ -36,7 +36,7 @@ namespace Models.CLEM.Resources
 		/// The amount this account can be withdrawn to (-ve)
 		/// </summary>
 		[Description("The amount this account can be withdrawn to (<0 credit, 0 no credit)")]
-        [Required]
+        [Required, Range(double.MinValue, double.MaxValue, ErrorMessage = "Value must be in double range")]
         public double WithdrawalLimit { get; set; }
 
 		/// <summary>

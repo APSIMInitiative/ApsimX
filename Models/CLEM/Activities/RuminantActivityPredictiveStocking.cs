@@ -46,14 +46,14 @@ namespace Models.CLEM.Activities
 		/// Number of months to assess
 		/// </summary>
 		[Description("Number of months to assess")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public int DrySeasonLength { get; set; }
 
 		/// <summary>
 		/// Minimum estimated feed (kg/ha) allowed at end of period
 		/// </summary>
 		[Description("Minimum estimated feed (kg/ha) allowed at end of period")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double FeedLowLimit { get; set; }
 
 		/// minimum no that can be sold off... now controlled by sale and transport activity 
@@ -62,7 +62,7 @@ namespace Models.CLEM.Activities
 		/// Minimum breedeer age allowed to be sold
 		/// </summary>
 		[Description("Minimum breedeer age allowed to be sold")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MinimumBreederAgeLimit { get; set; }
 
 		// restock proportion. I don't understand this.

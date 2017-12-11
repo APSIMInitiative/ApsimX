@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Activities
 {
@@ -51,7 +52,8 @@ namespace Models.CLEM.Activities
 		/// Name of paddock or pasture to collect from (blank is yards)
 		/// </summary>
 		[Description("Name of paddock (GrazeFoodStoreType) to collect from (blank is yards)")]
-		public string GrazeFoodStoreTypeName { get; set; }
+        [Required]
+        public string GrazeFoodStoreTypeName { get; set; }
 
 		/// <summary>
 		/// Method to determine resources required for this activity in the current month

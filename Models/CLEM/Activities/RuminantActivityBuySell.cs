@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
 		/// name of account to use
 		/// </summary>
 		[Description("Name of bank account to use")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
         public string BankAccountName { get; set; }
 
 		private FinanceType bankAccount = null;

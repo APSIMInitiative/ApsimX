@@ -21,7 +21,8 @@ namespace Models.CLEM.Groupings
         /// Daily value to supply for each month
         /// </summary>
         [Description("Daily value to supply for each month")]
-		public double[] MonthlyValues { get; set; }
+        [ArrayItemCount(12)]
+        public double[] MonthlyValues { get; set; }
 
 		/// <summary>
 		/// Constructor

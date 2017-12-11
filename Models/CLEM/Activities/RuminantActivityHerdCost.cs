@@ -41,7 +41,7 @@ namespace Models.CLEM.Activities
 		/// name of account to use
 		/// </summary>
 		[Description("Name of account to use")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
         public string AccountName { get; set; }
 
         /// <summary>

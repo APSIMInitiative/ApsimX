@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -13,25 +14,26 @@ namespace Models.CLEM.Resources
 	[Serializable]
 	public class GrazeFoodStorePool : IFeedType
 	{
-//		event EventHandler FodderChanged;
-
 		/// <summary>
 		/// Dry Matter (%)
 		/// </summary>
 		[Description("Dry Matter (%)")]
-		public double DryMatter { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        public double DryMatter { get; set; }
 
 		/// <summary>
 		/// Dry Matter Digestibility (%)
 		/// </summary>
 		[Description("Dry Matter Digestibility (%)")]
-		public double DMD { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        public double DMD { get; set; }
 
 		/// <summary>
 		/// Nitrogen (%)
 		/// </summary>
 		[Description("Nitrogen (%)")]
-		public double Nitrogen { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        public double Nitrogen { get; set; }
 
 		/// <summary>
 		/// Amount (kg)

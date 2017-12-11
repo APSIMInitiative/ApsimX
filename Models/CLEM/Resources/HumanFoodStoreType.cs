@@ -46,20 +46,21 @@ namespace Models.CLEM.Resources
 		/// </summary>
 		[XmlIgnore]
 		[Description("Current store nitrogen (%)")]
-		public double CurrentStoreNitrogen { get; set; }
+        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        public double CurrentStoreNitrogen { get; set; }
 
 		/// <summary>
 		/// Starting Age of the Fodder (Months)
 		/// </summary>
 		[Description("Starting Age of Human Food (Months)")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double StartingAge { get; set; }
 
         /// <summary>
         /// Starting Amount (kg)
         /// </summary>
         [Description("Starting Amount (kg)")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double StartingAmount { get; set; }
 
         /// <summary>

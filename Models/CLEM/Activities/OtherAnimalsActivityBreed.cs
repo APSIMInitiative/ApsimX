@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
 		/// name of other animal type
 		/// </summary>
 		[Description("Name of other animal type")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of other animal type required")]
         public string AnimalType { get; set; }
 
 		/// <summary>

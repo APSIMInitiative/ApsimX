@@ -39,8 +39,8 @@ namespace Models.CLEM.Resources
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(1)]
 		[Description("Unit of area conversion to ha")]
-        [Required]
-		public double UnitsOfAreaToHaConversion { get; set; }
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        public double UnitsOfAreaToHaConversion { get; set; }
 
 		/// <summary>
 		/// Constructor

@@ -23,14 +23,14 @@ namespace Models.CLEM.Resources
 		/// Starting amount
 		/// </summary>
 		[Description("Starting amount")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double StartingAmount { get; set; }
 
         /// <summary>
         /// Service interval
         /// </summary>
         [Description("Servicing interval")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double ServiceInterval { get; set; }
 
         /// <summary>

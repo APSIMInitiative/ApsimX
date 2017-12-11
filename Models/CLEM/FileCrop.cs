@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 // -----------------------------------------------------------------------
 // <copyright file="FileCrop.cs" company="APSIM Initiative">
@@ -88,6 +89,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("Crop file name")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Crop file name must be supplied")]
         public string FileName { get; set; }
 
         /// <summary>

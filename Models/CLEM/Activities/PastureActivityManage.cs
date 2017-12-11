@@ -37,14 +37,14 @@ namespace Models.CLEM.Activities
         /// Name of land type where pasture is located
         /// </summary>
         [Description("Land type where pasture is located")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of land type where pasture is located required")]
         public string LandTypeNameToUse { get; set; }
 
 		/// <summary>
 		/// Name of the pasture type to use
 		/// </summary>
 		[Description("Name of pasture")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of pasture required")]
         public string FeedTypeName { get; set; }
 
 		/// <summary>

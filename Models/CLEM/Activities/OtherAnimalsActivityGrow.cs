@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
 		/// Name of Other Animal Type
 		/// </summary>
 		[Description("Name of Other Animal Type")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Other Animal Type to use required")]
         public string OtherAnimalType { get; set; }
 
 		private OtherAnimalsType animalType { get; set; }

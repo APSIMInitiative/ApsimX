@@ -82,7 +82,7 @@ namespace Models.CLEM.Activities
 		/// 1876 11  0.2 -3  +ve LaNina -ve El Nino
 		/// </summary>
 		[Description("SOI monthly data file")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "SOI monthly data filename required")]
         public string MonthlySIOFile { get; set; }
 
 		private string fullFilename;
@@ -91,7 +91,6 @@ namespace Models.CLEM.Activities
 		/// Name of GrazeFoodStore (paddock) to place purchases in for grazing (leave blank for general yards)
 		/// </summary>
 		[Description("Name of GrazeFoodStore (paddock) to place purchases in (leave blank for general yards)")]
-        [Required]
         public string GrazeFoodStoreName { get; set; }
 
 		private Dictionary<DateTime, double> ForecastSequence;

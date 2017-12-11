@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Groupings
 {
@@ -32,19 +33,22 @@ namespace Models.CLEM.Groupings
         /// Days labour required per unit or fixed (days)
         /// </summary>
         [Description("Days labour required [per unit or fixed] (days)")]
+        [ArrayItemCount(12)]
         public double LabourPerUnit { get; set; }
 
         /// <summary>
         /// Size of unit
         /// </summary>
         [Description("Size of unit")]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double UnitSize { get; set; }
 
         /// <summary>
         /// Labour unit type
         /// </summary>
         [Description("Units for 'Size of unit'")]
-		public LabourUnitType UnitType { get; set; }
+        [Required]
+        public LabourUnitType UnitType { get; set; }
 
 	}
 }

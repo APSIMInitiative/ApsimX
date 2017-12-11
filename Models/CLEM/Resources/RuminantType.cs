@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
         /// Breed
         /// </summary>
         [Description("Breed")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of breed required")]
         public string Breed { get; set; }
 
 		/// <summary>
@@ -70,6 +70,13 @@ namespace Models.CLEM.Resources
 				}
 			}
 			PriceList = PriceList.OrderBy(a => a.Age).ToList();
+
+            // get advanced conception parameters
+            List<RuminantConceptionAdvanced> concepList = Apsim.Children(this, typeof(RuminantConceptionAdvanced)).Cast<RuminantConceptionAdvanced>().ToList();
+            if(concepList.Count == 1)
+            {
+                AdvancedConceptionParameters = concepList.FirstOrDefault();
+            }
 		}
 
 		/// <summary>
@@ -474,14 +481,20 @@ namespace Models.CLEM.Resources
 		[Description("Cashmere coefficient")]
         [Required]
         public double CashmereCoefficient { get; set; }
-		#endregion
+        #endregion
 
-		#region Breed activity
+        #region Breed activity
 
-		/// <summary>
-		/// Milk curve shape suckling
-		/// </summary>
-		[Description("Milk curve shape suckling")]
+        /// <summary>
+        /// Advanced conception parameters if present
+        /// </summary>
+        [XmlIgnore]
+        public RuminantConceptionAdvanced AdvancedConceptionParameters { get; set; }
+
+        /// <summary>
+        /// Milk curve shape suckling
+        /// </summary>
+        [Description("Milk curve shape suckling")]
         [Required]
         public double MilkCurveSuckling { get; set; }
 		/// <summary>
@@ -494,25 +507,25 @@ namespace Models.CLEM.Resources
 		/// Number of days for milking
 		/// </summary>
 		[Description("Number of days for milking")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MilkingDays { get; set; }
 		/// <summary>
 		/// Peak milk yield(kg/day)
 		/// </summary>
 		[Description("Peak milk yield (kg/day)")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MilkPeakYield { get; set; }
 		/// <summary>
 		/// Milk offset day
 		/// </summary>
 		[Description("Milk offset day")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MilkOffsetDay { get; set; }
 		/// <summary>
 		/// Milk peak day
 		/// </summary>
 		[Description("Milk peak day")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MilkPeakDay { get; set; }
 		/// <summary>
 		/// Inter-parturition interval intercept of PW (months)
@@ -530,73 +543,73 @@ namespace Models.CLEM.Resources
 		/// Months between conception and parturition
 		/// </summary>
 		[Description("Months between conception and parturition")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double GestationLength { get; set; }
 		/// <summary>
 		/// Minimum age for 1st mating (months)
 		/// </summary>
 		[Description("Minimum age for 1st mating (months)")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MinimumAge1stMating { get; set; }
 		/// <summary>
 		/// Minimum size for 1st mating, proportion of SRW
 		/// </summary>
 		[Description("Minimum size for 1st mating, proportion of SRW")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MinimumSize1stMating { get; set; }
 		/// <summary>
 		/// Minimum number of days between last birth and conception
 		/// </summary>
 		[Description("Minimum number of days between last birth and conception")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MinimumDaysBirthToConception { get; set; }
 		/// <summary>
 		/// Rate at which twins are concieved
 		/// </summary>
 		[Description("Rate at which twins are concieved")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double TwinRate { get; set; }
 		/// <summary>
 		/// Proportion of SRW for zero calving/lambing rate
 		/// </summary>
 		[Description("Proportion of SRW for zero Calving/lambing rate")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double CriticalCowWeight { get; set; }
 		/// <summary>
 		/// Conception rate coefficient of breeder PW
 		/// </summary>
 		[Description("Conception rate coefficient of breeder PW (12 mnth, 24 mth, 2nd calf, 3rd+ calf)")]
         [Required]
-        public double[] ConceptionRateCoefficent { get; set; }
+        public double ConceptionRateCoefficent { get; set; }
 		/// <summary>
 		/// Conception rate intercept of breeder PW
 		/// </summary>
 		[Description("Conception rate intercept of breeder PW (12 mnth, 24 mth, 2nd calf, 3rd+ calf)")]
         [Required]
-        public double[] ConceptionRateIntercept { get; set; }
+        public double ConceptionRateIntercept { get; set; }
 		/// <summary>
 		/// Conception rate assymtote
 		/// </summary>
 		[Description("Conception rate assymtote (12 mnth, 24 mth, 2nd calf, 3rd+ calf)")]
         [Required]
-        public double[] ConceptionRateAsymptote { get; set; }
+        public double ConceptionRateAsymptote { get; set; }
 		/// <summary>
 		/// Maximum number of matings per male per day
 		/// </summary>
 		[Description("Maximum number of matings per male per day")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MaximumMaleMatingsPerDay { get; set; }
 		/// <summary>
 		/// Prenatal mortality rate
 		/// </summary>
 		[Description("Mortality rate from conception to birth (proportion)")]
-        [Required]
+        [Required, Range(0, 1, ErrorMessage = "Value must be a rate between 0 and 1")]
         public double PrenatalMortality { get; set; }
 		/// <summary>
 		/// Maximum conception rate from uncontrolled breeding 
 		/// </summary>
 		[Description("Maximum conception rate from uncontrolled breeding")]
-        [Required]
+        [Required, Range(0, 1, ErrorMessage = "Value must be a rate between 0 and 1")]
         public double MaximumConceptionUncontrolledBreeding { get; set; }
 
 		#endregion

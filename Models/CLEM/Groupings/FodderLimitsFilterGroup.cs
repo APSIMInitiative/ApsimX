@@ -19,7 +19,8 @@ namespace Models.CLEM.Groupings
 		/// Monthly values to supply selected individuals
 		/// </summary>
 		[Description("Monthly proportion of intake that can come from each pool")]
-		public double[] PoolValues { get; set; }
+        [ArrayItemCount(12)]
+        public double[] PoolValues { get; set; }
 
 		/// <summary>
 		/// Constructor

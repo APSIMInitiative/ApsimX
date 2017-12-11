@@ -143,6 +143,7 @@
     <Compile Include="CLEM\Reporting\ReportResourceBalances.cs" />
     <Compile Include="CLEM\Resources\Equipment.cs" />
     <Compile Include="CLEM\Resources\EquipmentType.cs" />
+    <Compile Include="CLEM\Resources\RuminantConceptionAdvanced.cs" />
     <Compile Include="CLEM\Resources\WaterType.cs" />
     <Compile Include="CLEM\Resources\WaterStore.cs" />
     <Compile Include="Core\APSIMFileConverterUtilities.cs" />

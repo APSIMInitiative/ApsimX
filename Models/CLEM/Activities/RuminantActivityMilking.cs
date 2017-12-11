@@ -23,13 +23,6 @@ namespace Models.CLEM.Activities
 		[Link]
 		private ResourcesHolder Resources = null;
 
-		///// <summary>
-		///// Herd to milk
-		///// </summary>
-		//[Description("Name of herd to milk")]
-  //      [Required]
-  //      public string HerdName { get; set; }
-
 		/// <summary>
 		/// Labour settings
 		/// </summary>

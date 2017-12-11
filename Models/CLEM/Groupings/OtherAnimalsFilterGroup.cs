@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Groupings
 {
@@ -24,7 +25,8 @@ namespace Models.CLEM.Groupings
 		/// Daily amount to supply selected individuals each month
 		/// </summary>
 		[Description("Daily amount to supply selected individuals each month")]
-		public double[] MonthlyValues { get; set; }
+        [ArrayItemCount(12)]
+        public double[] MonthlyValues { get; set; }
 
 		/// <summary>
 		/// Constructor
@@ -38,7 +40,8 @@ namespace Models.CLEM.Groupings
 		/// name of other animal type
 		/// </summary>
 		[Description("Name of other animal type")]
-		public string AnimalType { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Other Animal Type required")]
+        public string AnimalType { get; set; }
 
 		/// <summary>
 		/// The Other animal type this group points to

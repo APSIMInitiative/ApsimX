@@ -42,14 +42,14 @@ namespace Models.CLEM.Activities
 		/// Days worked
 		/// </summary>
 		[Description("Days work available each month")]
-        [Required]
+        [Required, ArrayItemCount(12, ErrorMessage ="Days works required for each of 12 months")]
         public double[] DaysWorkAvailableEachMonth { get; set; }
 
 		/// <summary>
 		/// Bank account name to pay to
 		/// </summary>
 		[Description("Bank account name to pay to")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of bank account to pay to required")]
         public string BankAccountName { get; set; }
 
 		private FinanceType bankType { get; set; }

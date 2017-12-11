@@ -29,21 +29,21 @@ namespace Models.CLEM.Resources
 		/// Age (Months)
 		/// </summary>
 		[Description("Age")]
-        [Required]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public int Age { get; set; }
 
 		/// <summary>
 		/// Starting Number
 		/// </summary>
 		[Description("Number")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double Number { get; set; }
 
 		/// <summary>
 		/// Starting Weight
 		/// </summary>
 		[Description("Weight (kg)")]
-        [Required]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double Weight { get; set; }
 
 		/// <summary>

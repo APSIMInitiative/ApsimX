@@ -138,6 +138,55 @@ namespace Models.CLEM
         }
     }
 
+    /// <summary>
+    /// Tests if date greater than specified property name
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    public class ArrayItemCountAttribute : ValidationAttribute
+    {
+        private string DefaultErrorMessage =
+            "Invalid number of values supplied";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arrayItems"></param>
+        public ArrayItemCountAttribute(int arrayItems)
+        {
+            NumberOfArrayItems = arrayItems;
+        }
+
+        private int NumberOfArrayItems { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            DefaultErrorMessage += " (expecting " + NumberOfArrayItems.ToString() + " values)";
+            string[] memberNames = new string[] { validationContext.MemberName };
+
+            if(value.GetType().IsArray)
+            {
+                if ((value as Array).Length == NumberOfArrayItems)
+                {
+                    return ValidationResult.Success;
+                }
+                else
+                {
+                    return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
+                }
+            }
+            else
+            {
+                return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
+            }
+        }
+    }
+
 
 
 }
