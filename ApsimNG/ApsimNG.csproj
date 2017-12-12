@@ -145,6 +145,7 @@
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
     <Compile Include="Forms\UpgradeForm.cs" />
     <Compile Include="Classes\GridColumn.cs" />
+    <Compile Include="Interfaces\IButtonView.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\ICultivarView.cs" />
     <Compile Include="Interfaces\IExplorerView.cs" />

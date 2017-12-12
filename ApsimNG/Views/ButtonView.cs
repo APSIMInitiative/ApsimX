@@ -7,30 +7,18 @@ namespace UserInterface.Views
 {
     using System;
     using Gtk;
-
-    /// <summary>An interface for a button</summary>
-    public interface IButtonView
-    {
-        /// <summary>Invoked when the user clicks the button.</summary>
-        event EventHandler Clicked;
-
-        /// <summary>Get or sets the text of the button.</summary>
-        string Value { get; set; }
-
-        /// <summary>Return true if dropdown is visible.</summary>
-        bool IsVisible { get; set; }
-    }
-
+    using Interfaces;
 
     /// <summary>A button view.</summary>
     public class ButtonView : ViewBase, IButtonView
     {
-        /// <summary>Invoked when the user clicks the button.</summary>
-        public event EventHandler Clicked;
-
+        /// <summary>
+        /// The button object
+        /// </summary>
         private Button button;
 
-        /// <summary>Constructor</summary>
+        /// <summary>The objects constructor</summary>
+        /// <param name="owner">The owning view</param>
         public ButtonView(ViewBase owner) : base(owner)
         {
             button = new Button();
@@ -40,6 +28,28 @@ namespace UserInterface.Views
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
+        /// <summary>Invoked when the user clicks the button.</summary>
+        public event EventHandler Clicked;
+
+        /// <summary>Gets or sets the text of the button.</summary>
+        public string Value
+        {
+            get { return button.Label; }
+            set { button.Label = value; }
+        }
+
+        /// <summary>Gets or sets a value indicating whether the dropdown is visible.</summary>
+        public bool IsVisible
+        {
+            get { return button.Visible; }
+            set { button.Visible = value; }
+        }
+
+        /// <summary>
+        /// Cleanup objects
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The argument parameters</param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             button.Clicked -= OnButtonClick;
@@ -47,31 +57,15 @@ namespace UserInterface.Views
             _owner = null;
         }
 
-        /// <summary>Get or sets the text of the button.</summary>
-        public string Value
-        {
-            get { return button.Label; }
-            set { button.Label = value; }
-        }
-
-        /// <summary>Return true if dropdown is visible.</summary>
-        public bool IsVisible
-        {
-            get { return button.Visible; }
-            set { button.Visible = value; }
-        }
-
         /// <summary>User has clicked the button.</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The argument parameters</param>
         private void OnButtonClick(object sender, EventArgs e)
         {
             PerformClick();
         }
 
         /// <summary>Click the button.</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         public void PerformClick()
         {
             if (Clicked != null)
