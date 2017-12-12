@@ -153,6 +153,7 @@
     <Compile Include="Interfaces\IGridColumn.cs" />
     <Compile Include="Interfaces\IGridView.cs" />
     <Compile Include="Interfaces\IInitialWaterView.cs" />
+    <Compile Include="Interfaces\IAxisView.cs" />
     <Compile Include="Interfaces\ISeriesView.cs" />
     <Compile Include="Interfaces\ISummaryView.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
