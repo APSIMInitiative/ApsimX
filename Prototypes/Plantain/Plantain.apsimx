@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="18">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -880,15 +880,12 @@ The current model assumes generic responses to enviromental factors, such as tem
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Live>
-          <Name>Biomass</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Live>
-        <Dead>
-          <Name>Biomass</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Dead>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -1265,15 +1262,12 @@ The current model assumes generic responses to enviromental factors, such as tem
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Stem].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Live>
-          <Name>Biomass</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Live>
-        <Dead>
-          <Name>Biomass</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Dead>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Inflorescence</Name>
@@ -1631,15 +1625,12 @@ The current model assumes generic responses to enviromental factors, such as tem
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Inflorescence].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Live>
-          <Name>Biomass</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Live>
-        <Dead>
-          <Name>Biomass</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Dead>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Taproot</Name>
@@ -1916,15 +1907,12 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Taproot].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Live>
-          <Name>Biomass</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Live>
-        <Dead>
-          <Name>Biomass</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Dead>
       </GenericOrgan>
       <Root>
         <Name>Root</Name>
@@ -2346,6 +2334,21 @@ No effect of soil water content on root growth is currently captured in the mode
           </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -2894,19 +2897,19 @@ namespace Models
 		//Outputs
 		//Pasture DM defoliated today (kg/ha)
 		[XmlIgnore] public double DefoliatedDM{ get; set; }
-		//N defoliate today
+		//N defoliate today (kg/ha)
 		[XmlIgnore] public double DefoliatedN{ get; set; }
 		//Pasture DM harvested today (kg/ha)
 		[XmlIgnore] public double HarvestedDM{ get; set; }
-		//N harvested today
+		//N harvested today (kg/ha)
 		[XmlIgnore] public double HarvestedN{ get; set; }
-		//DM removed from the paddock
+		//DM removed from the paddock (kg/ha)
 		[XmlIgnore] public double RemovedDM{ get; set; }
-		//N removed from the paddock
+		//N removed from the paddock (kg/ha)
 		[XmlIgnore] public double RemovedN{ get; set; }
-		//DM returned to the paddock
+		//DM returned to the paddock (kg/ha)
 		[XmlIgnore] public double ReturnedDM{ get; set; }
-		//N returned to the paddock
+		//N returned to the paddock (kg/ha)
 		[XmlIgnore] public double ReturnedN{ get; set; }
 		//N returned as dung (SurfaceOM)
 		[XmlIgnore] public double NReturnedInDung{ get; set; }
@@ -2923,6 +2926,9 @@ namespace Models
 		[XmlIgnore] public double RotationHarvestedDM{ get; set; }
 		//Pasture DM to be harvested this rotation (kg/ha)
 		[XmlIgnore] public double RotationHarvestingDM{ get; set; }
+
+		//N concentration of the defoliated material (kg/kg)
+		[XmlIgnore] public double HarvestedNconc{ get; set; }
 
 		//Internal variables
 		private RemovalFractions removalFractions;
@@ -2963,6 +2969,9 @@ namespace Models
 			// make sure that rotation start when startDate<simulationStartDay
 			if ((Clock.Today > cutPasture_StartDate) && (Clock.Today < cutPasture_EndDate))
 				cutPasture_StartDate = Clock.Today;
+
+			// initialise variables
+			resetVariables();
 		}
 
 		[EventSubscribe("DoManagement")]
@@ -3052,6 +3061,7 @@ namespace Models
 			NReturnedInUrine = 0.0;
 			RotationHarvestedDM = 0.0;
 			RotationHarvestingDM = 0.0;
+			HarvestedNconc = 0.0;
 		}
 
 		// Perform the basic calculations for defoliation
@@ -3174,6 +3184,8 @@ namespace Models
 				// get total defoliation (total plant stuff lost)
 				DefoliatedDM = existingWt - postHarvestWt;
 				DefoliatedN = existingN - postHarvestN;
+				if (DefoliatedDM > 0.0)
+				   HarvestedNconc = DefoliatedN/DefoliatedDM;
 
 				// get total harvested (plant stuff removed from plants)
 				HarvestedDM = (double)zone.Get("Plantain.Leaf.Removed.Wt")
@@ -3537,6 +3549,7 @@ namespace Models
         <string>[Defoliate].Script.DefoliatedDM as HarvestedWt</string>
         <string>[Defoliate].Script.DaysAfterCut</string>
         <string>[ExtraVariables].Script.AccumHarvestedWt as CumulativeHarvestedWt</string>
+        <string>[Defoliate].Script.HarvestedNconc</string>
         <string />
         <string>[Plantain].Phenology.ThermalTime.Value()</string>
         <string>[Plantain].Phenology.Photoperiod.Value()</string>
