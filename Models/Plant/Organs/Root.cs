@@ -34,7 +34,7 @@ namespace Models.PMF.Organs
     /// 
     /// **Nitrogen Uptake**
     /// 
-    /// Potential N uptake by the root system is calculated for each soil layer that the roots have extended into.  
+    /// Potential N uptake by the root system is calculated for each soil layer (i) that the roots have extended into.  
     /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction
     /// (kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries.  
     /// 
