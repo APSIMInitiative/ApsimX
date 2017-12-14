@@ -8,6 +8,7 @@ namespace UserInterface.Presenters
     using System;
     using Models.Graph;
     using Views;
+    using Interfaces;
 
     /// <summary>
     /// This presenter connects an instance of a Model.Graph.Axis with a 
