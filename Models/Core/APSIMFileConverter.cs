@@ -676,5 +676,39 @@ namespace Models.Core
             }
 
         }
+
+        /// <summary>
+        /// Upgrades to version 23. Add CarbonConcentration property to all organs.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion23(XmlNode node, string fileName)
+        {
+            List<XmlNode> nodeList = new List<XmlNode>();
+
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Root"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Leaf"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "ReproductiveOrgan"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "LeafCohortParameters"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Nodule"));
+
+            foreach (XmlNode n in nodeList)
+            {
+                XmlNode DMnode;
+                DMnode = XmlUtilities.CreateNode(node.OwnerDocument, "Constant", "");
+                XmlElement name = node.OwnerDocument.CreateElement("Name");
+                XmlElement element = node.OwnerDocument.CreateElement("FixedValue");
+                name.InnerText = "CarbonConcentration";
+                element.InnerText = "0.4";
+                DMnode.AppendChild(name);
+                DMnode.AppendChild(element);
+
+                if (APSIMFileConverterUtilities.FindModelNode(n, "CarbonConcentration") == null)
+                    n.AppendChild(DMnode);
+            }
+
+        }
     }
 }
