@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
-    public class RuminantType : CLEMModel, IResourceType
+    public class RuminantType : CLEMModel, IResourceType, IValidatableObject
     {
         [Link]
         ISummary Summary = null;
@@ -158,6 +158,23 @@ namespace Models.CLEM.Resources
         public void Initialise()
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Model Validation
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (Apsim.Children(this, typeof(RuminantConceptionAdvanced)).Cast<RuminantConceptionAdvanced>().ToList().Count() > 1)
+            {
+                string[] memberNames = new string[] { "RuminantType.RuminantConceptionAdvanced" };
+                results.Add(new ValidationResult(String.Format("Only one Advanced Conception Parameters is permitted within a Ruminant Type [0]", this.Name, memberNames)));
+            }
+            return results;
         }
 
         /// <summary>
@@ -578,19 +595,19 @@ namespace Models.CLEM.Resources
 		/// <summary>
 		/// Conception rate coefficient of breeder PW
 		/// </summary>
-		[Description("Conception rate coefficient of breeder PW (12 mnth, 24 mth, 2nd calf, 3rd+ calf)")]
+		[Description("Conception rate coefficient of breeder")]
         [Required]
         public double ConceptionRateCoefficent { get; set; }
 		/// <summary>
 		/// Conception rate intercept of breeder PW
 		/// </summary>
-		[Description("Conception rate intercept of breeder PW (12 mnth, 24 mth, 2nd calf, 3rd+ calf)")]
+		[Description("Conception rate intercept of breeder")]
         [Required]
         public double ConceptionRateIntercept { get; set; }
 		/// <summary>
 		/// Conception rate assymtote
 		/// </summary>
-		[Description("Conception rate assymtote (12 mnth, 24 mth, 2nd calf, 3rd+ calf)")]
+		[Description("Conception rate assymtote")]
         [Required]
         public double ConceptionRateAsymptote { get; set; }
 		/// <summary>

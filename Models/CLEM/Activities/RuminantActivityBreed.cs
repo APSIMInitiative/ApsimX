@@ -141,7 +141,7 @@ namespace Models.CLEM.Activities
 						// total mortality / (gestation months + 1) to get monthly mortality
 						// done here before births to account for post birth motality as well..
 						double rnd = ZoneCLEM.RandomGenerator.NextDouble();
-						if (rnd < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)) / 100.0)
+						if (rnd < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
 						{
 							female.OneOffspringDies();
 						}
