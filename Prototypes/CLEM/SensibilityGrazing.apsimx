@@ -434,9 +434,14 @@
             <HerdFilters />
             <ManagedPastureName>NativePasture</ManagedPastureName>
             <PerformAtStartOfSimulation>true</PerformAtStartOfSimulation>
-            <Month>0</Month>
             <MoveSucklings>false</MoveSucklings>
           </RuminantActivityMuster>
+          <Model xsi:type="RuminantActivityGrazeAll">
+            <Name>RuminantActivityGrazeAll</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <HoursGrazed>8</HoursGrazed>
+          </Model>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
         </ActivityFolder>

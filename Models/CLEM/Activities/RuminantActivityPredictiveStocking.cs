@@ -25,8 +25,6 @@ namespace Models.CLEM.Activities
 	{
 		[Link]
 		Clock Clock = null;
-		[Link]
-		private ResourcesHolder Resources = null;
 
 		/// <summary>
 		/// Herd to manage for dry season pasture availability

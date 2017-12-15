@@ -22,8 +22,8 @@ namespace Models.CLEM.Activities
     [Description("This activity manages trade individuals. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
+//		[Link]
+//		private ResourcesHolder Resources = null;
         [Link]
         ISummary Summary = null;
 

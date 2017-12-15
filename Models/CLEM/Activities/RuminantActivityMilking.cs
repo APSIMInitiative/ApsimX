@@ -20,8 +20,8 @@ namespace Models.CLEM.Activities
     [Description("This activity performs milking based upon the current herd filtering.")]
     public class RuminantActivityMilking: CLEMRuminantActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
+//		[Link]
+//		private ResourcesHolder Resources = null;
 
 		/// <summary>
 		/// Labour settings

@@ -22,9 +22,6 @@ namespace Models.CLEM.Activities
     [Description("This activity manages the feeding of a specified type of other animal based on a feeding style.")]
     public class OtherAnimalsActivityFeed : CLEMActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
-
 		/// <summary>
 		/// Get the Clock.
 		/// </summary>

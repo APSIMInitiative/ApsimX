@@ -23,8 +23,8 @@ namespace Models.CLEM.Activities
     [Description("This activity performs sales and purchases of ruminants. It requires activities such as RuminantActivityManage, RuminantActivityTrade and RuminantActivitySellDryBreeders to identify individuals to be bought or sold. It will use a pricing schedule if supplied for the herd and can include additional trucking rules and emissions settings.")]
     public class RuminantActivityBuySell : CLEMRuminantActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
+//		[Link]
+//		private ResourcesHolder Resources = null;
 		[Link]
 		ISummary Summary = null;
 

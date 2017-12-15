@@ -21,10 +21,6 @@ namespace Models.CLEM.Activities
     [Description("This activity applies controlled burning to a specified graze food store (i.e. native pasture paddock).")]
     public class PastureActivityBurn: CLEMActivityBase
 	{
-		[XmlIgnore]
-		[Link]
-		private ResourcesHolder Resources = null;
-
 		/// <summary>
 		/// Minimum proportion green for fire to carry
 		/// </summary>

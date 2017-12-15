@@ -29,9 +29,7 @@ namespace Models.CLEM.Activities
         Simulation Simulation = null;
 
 
-        [Link]
-        private ResourcesHolder Resources = null;
-
+        
 
 
         /// <summary>

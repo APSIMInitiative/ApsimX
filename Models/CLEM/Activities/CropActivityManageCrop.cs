@@ -21,9 +21,6 @@ namespace Models.CLEM.Activities
     [Description("This activity manages a crop by assigning land to be used for child activities.")]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject
     {
-        [Link]
-        private ResourcesHolder Resources = null;
-
         /// <summary>
         /// Name of land type where crop is located
         /// </summary>

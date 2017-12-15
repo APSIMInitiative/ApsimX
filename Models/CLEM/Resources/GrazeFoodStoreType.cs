@@ -175,10 +175,16 @@ namespace Models.CLEM.Resources
 			}
 		}
 
-		/// <summary>
-		/// Initialise the current state to the starting amount of fodder
-		/// </summary>
-		public void Initialise()
+        /// <summary>
+        /// Amount (tonnes per ha)
+        /// </summary>
+        [XmlIgnore]
+        public double TonnesPerHectareStartOfTimeStep { get; set; }
+
+        /// <summary>
+        /// Initialise the current state to the starting amount of fodder
+        /// </summary>
+        public void Initialise()
         {
         }
 
@@ -215,56 +221,23 @@ namespace Models.CLEM.Resources
 			}
 		}
 
-        //        public void Add(GrazeFoodStorePool newpool)
+        /// <summary>Store amount of pasture available for everyone at the start of the step (kg per hectare)</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMPastureReady")]
+        private void ONCLEMPastureReady(object sender, EventArgs e)
+        {
+            this.TonnesPerHectareStartOfTimeStep = this.TonnesPerHectare;
+        }
 
-
-   //     /// <summary>
-   //     /// Add new pasture pool to the list of pools
-   //     /// </summary>
-   //     /// <param name="ResourceAmount"></param>
-   //     /// <param name="ActivityName"></param>
-   //     /// <param name="Reason"></param>
-   //     public void Add(object ResourceAmount, string ActivityName, string Reason)
-   //     {
-   //         if (ResourceAmount.GetType() != typeof(GrazeFoodStorePool))
-   //         {
-   //             throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
-   //         }
-   //         GrazeFoodStorePool pool = ResourceAmount as GrazeFoodStorePool;
-
-   //         if (pool.Amount > 0)
-   //         {
-   //             Pools.Insert(0, pool);
-   //             // update biomass available
-   //             biomassAvailable += pool.Amount;
-
-   //             ResourceTransaction details = new ResourceTransaction();
-   //             details.Credit = pool.Amount;
-   //             details.Activity = ActivityName;
-   //             details.Reason = Reason;
-   //             details.ResourceType = this.Name;
-   //             LastTransaction = details;
-   //             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-   //             OnTransactionOccurred(te);
-   //         }
-
-
-   //         if (newpool.Amount > 0)
-			//{
-			//	Pools.Insert(0, newpool);
-			//	// update biomass available
-			//	biomassAvailable += newpool.Amount;
-   //         }
-   //     }
-
-		/// <summary>
-		/// Graze food add method.
-		/// This style is not supported in GrazeFoodStoreType
-		/// </summary>
-		/// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-		/// <param name="ActivityName"></param>
-		/// <param name="Reason"></param>
-		public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <summary>
+        /// Graze food add method.
+        /// This style is not supported in GrazeFoodStoreType
+        /// </summary>
+        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="ActivityName"></param>
+        /// <param name="Reason"></param>
+        public void Add(object ResourceAmount, string ActivityName, string Reason)
 		{
             if (ResourceAmount.GetType() != typeof(GrazeFoodStorePool))
             {

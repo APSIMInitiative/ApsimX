@@ -22,8 +22,8 @@ namespace Models.CLEM.Activities
     [Description("This activity performs the management of ruminant numbers based upon the current herd filtering. It requires a RuminantActivityBuySell to undertake the purchases and sales.")]
     public class RuminantActivityManage: CLEMRuminantActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
+//		[Link]
+//		private ResourcesHolder Resources = null;
 
         /// <summary>
         /// Maximum number of breeders that can be kept

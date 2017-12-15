@@ -20,9 +20,6 @@ namespace Models.CLEM.Activities
     [Description("This activity performs the collection of manure from all paddocks and yards in the simulation.")]
     public class RuminantActivityCollectManureAll : CLEMActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
-
 		/// <summary>
 		/// Labour settings
 		/// </summary>

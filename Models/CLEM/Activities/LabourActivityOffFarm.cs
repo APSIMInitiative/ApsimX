@@ -22,9 +22,6 @@ namespace Models.CLEM.Activities
     [Description("This activity manages labour supplied and income derived from an off-farm task.")]
     public class LabourActivityOffFarm: CLEMActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
-
 		/// <summary>
 		/// Get the Clock.
 		/// </summary>

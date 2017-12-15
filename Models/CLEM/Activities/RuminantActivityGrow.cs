@@ -29,9 +29,6 @@ namespace Models.CLEM.Activities
 		[Link]
 		Clock Clock = null;
 
-		[Link]
-		private ResourcesHolder Resources = null;
-
 		private GreenhouseGasesType methaneEmissions;
 		private ProductStoreTypeManure manureStore;
 

@@ -21,12 +21,15 @@ namespace Models.CLEM.Activities
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of all herds within a specified pasture (paddock) in the simulation.")]
-    public class RuminantActivityGrazePasture : CLEMActivityBase
+    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase
 	{
+//		[Link]
+//		private ResourcesHolder Resources = null;
+        /// <summary>
+        /// 
+        /// </summary>
 		[Link]
-		private ResourcesHolder Resources = null;
-		[Link]
-		Clock Clock = null;
+		public Clock Clock = null;
 
 		/// <summary>
 		/// Number of hours grazed
@@ -50,28 +53,36 @@ namespace Models.CLEM.Activities
 		[XmlIgnore]
 		public GrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			// limit to 8 hours grazing max
-			HoursGrazed = Math.Min(8.0, HoursGrazed);
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseActivity")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        {
+            // This method will only fire if the user has added this activity to the UI
+            // Otherwise all details will be provided from GrazeAll code [CLEMInitialiseActivity]
 
-			// If GrazeFoodStoreType model has not been set use name
-			if (GrazeFoodStoreModel == null)
+            GrazeFoodStoreModel = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+
+			//Create list of children by breed
+			foreach (RuminantType herdType in Resources.RuminantHerd().Children)
 			{
-				GrazeFoodStoreModel = Resources.GrazeFoodStore().GetByName("GrazeFoodStoreTypeName") as GrazeFoodStoreType;
-
-				//Create list of children by breed
-				foreach (RuminantType herdType in Resources.RuminantHerd().Children)
-				{
-					RuminantActivityGrazePastureBreed ragpb = new RuminantActivityGrazePastureBreed();
-					ragpb.GrazeFoodStoreModel = GrazeFoodStoreModel;
-					ragpb.RuminantTypeModel = herdType;
-					ActivityList.Add(ragpb);
-				}
+                RuminantActivityGrazePastureBreed ragpb = new RuminantActivityGrazePastureBreed
+                {
+                    GrazeFoodStoreModel = GrazeFoodStoreModel,
+                    RuminantTypeModel = herdType,
+                    Parent = this
+                };
+                if (ragpb.Resources == null)
+                {
+                    ragpb.Resources = this.Resources;
+                }
+                ragpb.InitialiseHerd(true, true);
+                if (ActivityList == null)
+                {
+                    ActivityList = new List<CLEMActivityBase>();
+                }
+                ActivityList.Add(ragpb);
 			}
 		}
 

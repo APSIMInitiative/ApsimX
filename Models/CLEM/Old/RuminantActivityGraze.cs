@@ -21,8 +21,6 @@ namespace Models.CLEM.Activities
 	public class RuminantActivityGraze : CLEMActivityBase
 	{
 		[Link]
-		private ResourcesHolder Resources = null;
-		[Link]
 		private Activities.ActivitiesHolder Activities = null;
 
 		/// <summary>

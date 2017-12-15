@@ -24,8 +24,6 @@ namespace Models.CLEM.Activities
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject
 	{
 		[Link]
-		private ResourcesHolder Resources = null;
-		[Link]
 		Clock Clock = null;
         [Link]
         FileGRASP FileGRASP = null;
@@ -371,7 +369,12 @@ namespace Models.CLEM.Activities
             // Add to pasture. This will add pool to pasture available store.
             foreach (var pool in newPools)
             {
-                LinkedNativeFoodType.Add(pool, this.Name, "Initialise");
+                string reason = "Initialise";
+                if(newPools.Count()>1)
+                {
+                    reason = "Initialise pool " + pool.Age.ToString();
+                }
+                LinkedNativeFoodType.Add(pool, this.Name, reason);
             }
         }
 

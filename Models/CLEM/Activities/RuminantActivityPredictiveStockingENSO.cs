@@ -26,8 +26,6 @@ namespace Models.CLEM.Activities
 		[Link]
 		Clock Clock = null;
 		[Link]
-		private ResourcesHolder Resources = null;
-		[Link]
 		ISummary Summary = null;
 
 		/// <summary>

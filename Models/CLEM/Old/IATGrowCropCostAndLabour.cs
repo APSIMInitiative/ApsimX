@@ -33,11 +33,6 @@ namespace Models.CLEM.Activities
         [Link]
         ISummary Summary = null;
 
-        [XmlIgnore]
-        [Link]
-        private ResourcesHolder Resources = null;
-
-
 
 
         /// <summary>

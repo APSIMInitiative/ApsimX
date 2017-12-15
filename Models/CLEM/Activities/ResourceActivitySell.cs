@@ -22,9 +22,6 @@ namespace Models.CLEM.Activities
     [Description("This activity manages the sale of a specified resource.")]
     public class ResourceActivitySell: CLEMActivityBase, IValidatableObject
     {
-        [Link]
-        private ResourcesHolder Resources = null;
-
         /// <summary>
         /// Name of account to use
         /// </summary>

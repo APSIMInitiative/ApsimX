@@ -18,8 +18,11 @@ namespace Models.CLEM.Activities
     [Description("This is the CLEM Activity Base Class and should not be used directly.")]
     public abstract class CLEMActivityBase: CLEMModel
 	{
+        /// <summary>
+        /// 
+        /// </summary>
 		[Link]
-		private ResourcesHolder Resources = null;
+		public ResourcesHolder Resources = null;
 		[Link]
 		ISummary Summary = null;
 
@@ -50,7 +53,7 @@ namespace Models.CLEM.Activities
 			get
 			{
                 int result = 0;
-                IModel current = this;
+                IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM))
                 {
                     result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
@@ -333,7 +336,7 @@ namespace Models.CLEM.Activities
             this.Status = status;
             ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
             {
-                Activity = this
+                Activity = new ActivityFolder() { Name = this.Name, Status = status }
             };
             this.OnActivityPerformed(activitye);
         }

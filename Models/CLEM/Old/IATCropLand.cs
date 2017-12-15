@@ -21,18 +21,6 @@ namespace Models.CLEM.Activities
 	[ValidParent(ParentType = typeof(ActivityFolder))]
 	public class IATCropLand: CLEMActivityBase
 	{
-        //[Link]
-		//Clock Clock = null;
-
-        //[Link]
-        //ISummary Summary = null;
-
-
-        [Link]
-        private ResourcesHolder Resources = null;
-
-
-
         /// <summary>
         /// Name of land type where crop is located
         /// </summary>

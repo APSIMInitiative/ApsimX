@@ -23,8 +23,8 @@ namespace Models.CLEM.Activities
     [Description("This activity flags dry breeders for sale. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     public class RuminantActivitySellDryBreeders : CLEMRuminantActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
+//		[Link]
+//		private ResourcesHolder Resources = null;
 
 		///// <summary>
 		///// Name of herd to sell dry breeders

@@ -22,9 +22,6 @@ namespace Models.CLEM.Activities
     [Description("This activity manages the breeding of a specified type of other animal.")]
     public class OtherAnimalsActivityBreed : CLEMActivityBase, IValidatableObject
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
-
 		/// <summary>
 		/// name of other animal type
 		/// </summary>

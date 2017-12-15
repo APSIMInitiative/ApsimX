@@ -21,8 +21,8 @@ namespace Models.CLEM.Activities
     [Description("This activity performs mustering based upon the current herd filtering. It is also used to assign individuals to pastures (paddocks) at the start of the simulation.")]
     public class RuminantActivityMuster: CLEMRuminantActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
+//		[Link]
+//		private ResourcesHolder Resources = null;
 
 		/// <summary>
 		/// Name of managed pasture to muster to
@@ -38,12 +38,12 @@ namespace Models.CLEM.Activities
         [Required]
         public bool PerformAtStartOfSimulation { get; set; }
 
-		/// <summary>
-		/// Month to muster in (set to 0 to not perform muster)
-		/// </summary>
-		[Description("Month to muster in")]
-        [Required, Range(0, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec), or 0 for initial move only")]
-        public int Month { get; set; }
+		///// <summary>
+		///// Month to muster in (set to 0 to not perform muster)
+		///// </summary>
+		//[Description("Month to muster in")]
+  //      [Required, Range(0, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec), or 0 for initial move only")]
+  //      public int Month { get; set; }
 
 		/// <summary>
 		/// Determines whether sucklings are automatically mustered with the mother or seperated
@@ -168,9 +168,13 @@ namespace Models.CLEM.Activities
 
 			if (this.TimingOK)
 			{
-				// move individuals
-				Muster();
-			}
+                if (this.Status == ActivityStatus.Success || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
+                {
+                    // move individuals
+                    Muster();
+                }
+                TriggerOnActivityPerformed();
+            }
 		}
 
 		/// <summary>

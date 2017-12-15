@@ -23,8 +23,6 @@ namespace Models.CLEM.Activities
         Clock Clock = null;
         [Link]
         Simulation Simulation = null;
-        [Link]
-        private ResourcesHolder Resources = null;
 
         /// <summary>
         /// Name of the model for the crop input file

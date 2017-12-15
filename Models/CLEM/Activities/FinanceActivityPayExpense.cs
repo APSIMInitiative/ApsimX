@@ -23,10 +23,6 @@ namespace Models.CLEM.Activities
     [Description("This activity performs payment of a specified expense.")]
     public class FinanceActivityPayExpense : CLEMActivityBase
 	{
-		[XmlIgnore]
-		[Link]
-		private ResourcesHolder Resources = null;
-
 		/// <summary>
 		/// Amount payable
 		/// </summary>

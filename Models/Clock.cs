@@ -112,8 +112,10 @@ namespace Models
         public event EventHandler CLEMStartOfTimeStep;
         /// <summary>CLEM update pasture</summary>
         public event EventHandler CLEMUpdatePasture;
-		/// <summary>CLEM cut and carry</summary>
-		public event EventHandler CLEMDoCutAndCarry;
+        /// <summary>CLEM pasture has been added and is ready for use</summary>
+        public event EventHandler CLEMPastureReady;
+        /// <summary>CLEM cut and carry</summary>
+        public event EventHandler CLEMDoCutAndCarry;
 		/// <summary>CLEM Do Animal (Ruminant and Other) Breeding and milk calculations</summary>
 		public event EventHandler CLEMAnimalBreeding;
 		/// <summary>Get potential intake. This includes suckling milk consumption</summary>
@@ -284,6 +286,8 @@ namespace Models
                             CLEMStartOfTimeStep.Invoke(this, args);
                         if (CLEMUpdatePasture != null)
                             CLEMUpdatePasture.Invoke(this, args);
+                        if (CLEMPastureReady != null)
+                            CLEMPastureReady.Invoke(this, args);
                         if (CLEMDoCutAndCarry != null)
                             CLEMDoCutAndCarry.Invoke(this, args);
                         if (CLEMAnimalBreeding != null)

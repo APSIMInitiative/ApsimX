@@ -21,12 +21,6 @@ namespace Models.CLEM.Activities
     public class FinanceActivityCalculateInterest : CLEMActivityBase
 	{
 		/// <summary>
-		/// Get the resources.
-		/// </summary>
-		[Link]
-		private ResourcesHolder Resources = null;
-
-		/// <summary>
 		/// Method to determine resources required for this activity in the current month
 		/// </summary>
 		/// <returns></returns>

@@ -20,9 +20,6 @@ namespace Models.CLEM.Activities
     [Description("This activity performs the growth and aging of a specified type of other animal.")]
     public class OtherAnimalsActivityGrow : CLEMActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
-
 		/// <summary>
 		/// Name of Other Animal Type
 		/// </summary>

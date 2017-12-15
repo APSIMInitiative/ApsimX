@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityBreed : CLEMRuminantActivityBase
 	{
 		[Link]
-		private ResourcesHolder Resources = null;
+//		private ResourcesHolder Resources = null;
         private List<LabourFilterGroupSpecified> labour;
 
 		/// <summary>

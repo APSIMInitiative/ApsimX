@@ -23,8 +23,8 @@ namespace Models.CLEM.Activities
     [Description("This activity performs ruminant feeding based upon the current herd filtering and a feeding style.")]
     public class RuminantActivityFeed : CLEMRuminantActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
+//		[Link]
+//		private ResourcesHolder Resources = null;
 
 		/// <summary>
 		/// Get the Clock.

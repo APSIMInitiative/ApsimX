@@ -23,39 +23,57 @@ namespace Models.CLEM.Activities
     [Description("This activity performs grazing of all herds and pastures (paddocks) in the simulation.")]
     public class RuminantActivityGrazeAll : CLEMActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
+        [Link]
+        private Clock Clock = null;
 
-		/// <summary>
-		/// Number of hours grazed
-		/// Based on 8 hour grazing days
-		/// Could be modified to account for rain/heat walking to water etc.
-		/// </summary>
-		[Description("Number of hours grazed")]
+        /// <summary>
+        /// Number of hours grazed
+        /// Based on 8 hour grazing days
+        /// Could be modified to account for rain/heat walking to water etc.
+        /// </summary>
+        [Description("Number of hours grazed")]
         [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day")]
         public double HoursGrazed { get; set; }
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			// create activity for each pasture type and breed at startup
-			foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children)
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseActivity")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        {
+            // create activity for each pasture type and breed at startup
+            foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children)
 			{
 				RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture();
 				ragp.GrazeFoodStoreModel = pastureType;
+                ragp.Clock = Clock;
+                ragp.Parent = this;
 
 				foreach (RuminantType herdType in Resources.RuminantHerd().Children)
 				{
-					RuminantActivityGrazePastureBreed ragpb = new RuminantActivityGrazePastureBreed();
-					ragpb.GrazeFoodStoreModel = pastureType;
-					ragpb.RuminantTypeModel = herdType;
-					ragpb.HoursGrazed = HoursGrazed;
+                    RuminantActivityGrazePastureBreed ragpb = new RuminantActivityGrazePastureBreed
+                    {
+                        GrazeFoodStoreModel = pastureType,
+                        RuminantTypeModel = herdType,
+                        HoursGrazed = HoursGrazed,
+                        Parent = ragp
+                    };
+                    if (ragpb.Resources == null)
+                    {
+                        ragpb.Resources = this.Resources;
+                    }
+                    ragpb.InitialiseHerd(true, true);
+                    if (ragp.ActivityList == null)
+                    {
+                        ragp.ActivityList = new List<CLEMActivityBase>();
+                    }
 					ragp.ActivityList.Add(ragpb);
 				}
-				ActivityList.Add(ragp);
+                if (ActivityList == null)
+                {
+                    ActivityList = new List<CLEMActivityBase>();
+                }
+                ActivityList.Add(ragp);
 			}
 		}
 

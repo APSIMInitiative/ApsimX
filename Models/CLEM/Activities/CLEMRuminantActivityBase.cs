@@ -19,8 +19,8 @@ namespace Models.CLEM.Activities
     [Description("This is the Ruminant specific version of the CLEM Activity Base Class and should not be used directly.")]
     public class CLEMRuminantActivityBase : CLEMActivityBase
     {
-        [Link]
-        private ResourcesHolder Resources = null;
+//        [Link]
+//        public ResourcesHolder Resources = null;
         [Link]
         ISummary Summary = null;
 
@@ -80,13 +80,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Gets the current herd from all herd filters above
         /// </summary>
-        public List<Ruminant> CurrentHerd(bool IncludeCheckHeadMeetsCriteria)
+        public List<Ruminant> CurrentHerd(bool IncludeCheckHerdMeetsCriteria)
         {
             if (HerdFilters == null)
             {
                 throw new ApsimXException(this, "Herd filters have not been defined for ["+ this.Name +"]"+ Environment.NewLine + "You need to perfrom InitialiseHerd() in CLEMInitialiseActivity for this activity.");
             }
-            if(IncludeCheckHeadMeetsCriteria)
+            if(IncludeCheckHerdMeetsCriteria)
             {
                 CheckHerd();
             }

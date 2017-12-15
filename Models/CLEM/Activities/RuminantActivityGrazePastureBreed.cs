@@ -20,10 +20,10 @@ namespace Models.CLEM.Activities
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of a specified herd and pasture (paddock) in the simulation.")]
-    class RuminantActivityGrazePastureBreed : CLEMActivityBase
+    class RuminantActivityGrazePastureBreed : CLEMRuminantActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
+//		[Link]
+//		public ResourcesHolder Resources = null;
 
 		/// <summary>
 		/// Number of hours grazed
@@ -96,23 +96,17 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // limit to 8 hours grazing max
-            HoursGrazed = Math.Min(8.0, HoursGrazed);
+            // This method will only fire if the user has added this activity to the UI
+            // Otherwise all details will be provided from GrazeAll or GrazePaddock code [CLEMInitialiseActivity]
 
-			// If GrazeFoodStoreType model has not been set use name
-			if (GrazeFoodStoreModel == null)
-			{
-				// if no settings have been provided from parent set limiter to 1.0. i.e. no limitation
-				if (GrazingCompetitionLimiter == 0) GrazingCompetitionLimiter = 1.0;
+            this.InitialiseHerd(true, true);
 
-				GrazeFoodStoreModel = Resources.GrazeFoodStore().GetByName(GrazeFoodStoreTypeName) as GrazeFoodStoreType;
-			}
+			// if no settings have been provided from parent set limiter to 1.0. i.e. no limitation
+			if (GrazingCompetitionLimiter == 0) GrazingCompetitionLimiter = 1.0;
 
-			// If RuminantGroup has not been set use name
-			if (RuminantTypeModel == null)
-			{
-				RuminantTypeModel = Resources.RuminantHerd().GetByName(RuminantTypeName) as RuminantType;
-			}
+			GrazeFoodStoreModel = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+
+			RuminantTypeModel = Resources.GetResourceItem(this, typeof(RuminantHerd), RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 		}
 
 		/// <summary>An event handler to allow us to clear requests at start of month.</summary>
@@ -130,7 +124,7 @@ namespace Models.CLEM.Activities
 			if (ResourceRequestList == null)
 			{
 				ResourceRequestList = new List<ResourceRequest>();
-				List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => a.Location == this.GrazeFoodStoreModel.Name & a.Breed == this.RuminantTypeName).ToList();
+                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name & a.Breed == this.RuminantTypeModel.Name).ToList();
 				if (herd.Count() > 0)
 				{
 					double amount = 0;
@@ -140,7 +134,7 @@ namespace Models.CLEM.Activities
 					{
 						// Reduce potential intake based on pasture quality for the proportion consumed calculated in GrazePasture.
 						// calculate intake from potential modified by pasture availability and hours grazed
-						indAmount = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.BiomassPerHectare)) * (HoursGrazed / 8);
+						indAmount = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8);
 						// AL added reduce by amout already eaten to account for other feeding activities
 						indAmount -= ind.Intake;
 						amount += indAmount * GrazingCompetitionLimiter * 30.4;
