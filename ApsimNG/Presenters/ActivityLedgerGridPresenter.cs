@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="DataStorePresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
+// <copyright file="ActivityLedgerGridPresenter.cs" company="CSIRO CLEM">
+//     Copyright (c) CSIRO CLEM based  upon GridePresenter APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
 namespace UserInterface.Presenters
@@ -38,25 +38,7 @@ namespace UserInterface.Presenters
             dataStore = model as IStorageReader;
             this.Grid = view as ActivityLedgerGridView;
             this.explorerPresenter = explorerPresenter;
-
             this.Grid.ReadOnly = true;
-
-            //this.view.TableList.IsEditable = false;
-            //this.view.Grid.ReadOnly = true;
-            //this.view.Grid.NumericFormat = "N3";
-            //if (dataStore != null)
-            //{
-            //    this.view.TableList.Values = dataStore.TableNames.ToArray();
-            //    if (Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
-            //    {
-            //        this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
-            //    }
-            //}
-
-            //this.view.Grid.ResizeControls();
-            //this.view.TableList.Changed += this.OnTableSelected;
-            //this.view.ColumnFilter.Changed += OnColumnFilterChanged;
-            //this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
             PopulateGrid();
         }
 
@@ -105,7 +87,7 @@ namespace UserInterface.Presenters
                         }
                     }
                     this.Grid.DataSource = tbl;
-                    this.Grid.LockLeftMostColumns(1);  // lock simulationname, zone, date.
+                    this.Grid.LockLeftMostColumns(1);  // lock simulation name, zone, date.
                 }
             }
         }
@@ -153,29 +135,5 @@ namespace UserInterface.Presenters
         {
             PopulateGrid();
         }
-
-        ///// <summary>The maximum number of records has changed.</summary>
-        ///// <param name="sender">Sender of the event</param>
-        ///// <param name="e">Event arguments</param>
-        //private void OnMaximumNumberRecordsChanged(object sender, EventArgs e)
-        //{
-        //    if (view.MaximumNumberRecords.Value == string.Empty)
-        //    {
-        //        Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
-        //    }
-        //    else
-        //    {
-        //        try
-        //        {
-        //            Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(view.MaximumNumberRecords.Value);
-        //        }
-        //        catch (Exception)
-        //        {  // If there are any errors, return 0
-        //            Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
-        //        }
-        //    }
-
-        //    //PopulateGrid();
-        //}
     }
 }

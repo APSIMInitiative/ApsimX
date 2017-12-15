@@ -57,7 +57,7 @@ namespace UserInterface.Views
         private HBox hbox1 = null;
         private Gtk.Image image1 = null;
 
-        private Gdk.Pixbuf imagePixbuf;
+        private Gdk.Pixbuf imagePixbuf = null;
 
         private ListStore gridmodel = new ListStore(typeof(string));
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();
@@ -286,7 +286,6 @@ namespace UserInterface.Views
                 }
 
                 column.Sizing = TreeViewColumnSizing.Autosize;
-                //column.FixedWidth = 100;
                 column.Resizable = true;
 
                 if (i == 0)
@@ -332,10 +331,6 @@ namespace UserInterface.Views
                 // We could store data into the grid model, but we don't.
                 // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
                 gridmodel.Append();
-
-                //DataRow dataRow = this.DataSource.Rows[row];
-                //gridmodel.AppendValues(dataRow.ItemArray);
-
             }
             gridview.Model = gridmodel;
 
@@ -343,9 +338,7 @@ namespace UserInterface.Views
             SetColumnHeaders(fixedcolview);
 
             gridview.EnableSearch = false;
-            //gridview.SearchColumn = 0;
             fixedcolview.EnableSearch = false;
-            //fixedcolview.SearchColumn = 0;
 
             gridview.Show();
 
@@ -376,12 +369,13 @@ namespace UserInterface.Views
                     case "Partial":
                     case "Ignore":
                     case "Critical":
+                    case "Calculation":
                     case "Timer":
                         (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages."+dataVal.ToString()+".png");
                         break;
                     default:
+                        // use blank image as setting visible to false did not work.
                         (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.blank.png");
-//                        cell.Visible = false;
                         break;
                 }
             }
