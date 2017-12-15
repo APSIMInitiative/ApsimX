@@ -33,7 +33,7 @@ namespace Models.CLEM
 		/// Seed for random number generator (0 uses clock)
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(1)]
-        [Required, Range(0, Int32.MaxValue, ErrorMessage = "Value must be in range of an 32bit integer") ]
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be in range of an integer") ]
 		[Description("Random number generator seed (0 to use clock)")]
 		public int RandomSeed { get; set; }
 
@@ -150,7 +150,14 @@ namespace Models.CLEM
 
             if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
             {
-                EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                // go back from start month in intervals until
+                DateTime trackDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
+                {
+                    trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
+                }
+                EcologicalIndicatorsNextDueDate = trackDate;
+                //EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
             }
             else
             {

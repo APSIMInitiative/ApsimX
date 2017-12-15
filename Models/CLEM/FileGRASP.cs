@@ -32,11 +32,11 @@ namespace Models.CLEM
     public class FileGRASP : CLEMModel
     {
 
-        ///// <summary>
-        ///// A link to the clock model.
-        ///// </summary>
-        //[Link]
-        //private Clock clock = null;
+        /// <summary>
+        /// A link to the clock model.
+        /// </summary>
+        [Link]
+        private Clock clock = null;
 
         /// <summary>
         /// A reference to the text file reader object
@@ -445,7 +445,11 @@ namespace Models.CLEM
 
             int startYear = EcolCalculationDate.Year;
             int startMonth = EcolCalculationDate.Month;
-            DateTime EndDate = EcolCalculationDate.AddMonths(EcolCalculationInterval);
+            DateTime EndDate = EcolCalculationDate.AddMonths(EcolCalculationInterval+1);
+            if(EndDate > clock.EndDate)
+            {
+                EndDate = clock.EndDate;
+            }
             int endYear = EndDate.Year;
             int endMonth = EndDate.Month;
 
@@ -507,13 +511,14 @@ namespace Models.CLEM
                         + "For Region: " + Region + ", Soil: " + Soil 
                         + ", GrassBA: " + GrassBA + ", LandCon: " + LandCon + ", StkRate: " + StkRate + System.Environment.NewLine;
 
+            if (clock.EndDate == clock.Today) return;
+
             //Check if there is any data
             if ((Filtered == null) || (Filtered.Count == 0))
             {
                 throw new ApsimXException(this, errormessageStart
                     + "Unable to retrieve any data what so ever");
             }
-
 
             //Check no gaps in the months
             DateTime tempdate = StartDate;
@@ -528,7 +533,7 @@ namespace Models.CLEM
             }
 
             //Check months go right up until EndDate
-            if (tempdate != EndDate)
+            if ((tempdate.Month != EndDate.Month)&&(tempdate.Year != EndDate.Year))
             {
                 throw new ApsimXException(this, errormessageStart
                         + "Missing entry for Year: " + tempdate.Year + " and Month: " + tempdate.Month);

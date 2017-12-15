@@ -42,7 +42,7 @@ namespace Models.CLEM.Activities
 		/// Month to muster in (set to 0 to not perform muster)
 		/// </summary>
 		[Description("Month to muster in")]
-        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        [Required, Range(0, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec), or 0 for initial move only")]
         public int Month { get; set; }
 
 		/// <summary>
@@ -73,7 +73,12 @@ namespace Models.CLEM.Activities
 			// get labour specifications
 			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
-		}
+
+            if (PerformAtStartOfSimulation)
+            {
+                Muster();
+            }
+        }
 
 		private void Muster()
 		{
@@ -184,10 +189,10 @@ namespace Models.CLEM.Activities
 		/// </summary>
 		public override void DoInitialisation()
 		{
-			if (PerformAtStartOfSimulation)
-			{
-				Muster();
-			}
+			//if (PerformAtStartOfSimulation)
+			//{
+			//	Muster();
+			//}
 		}
 
 		/// <summary>

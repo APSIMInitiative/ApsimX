@@ -31,7 +31,6 @@ namespace Models.CLEM.Activities
         FileGRASP FileGRASP = null;
         [Link]
 		ZoneCLEM ZoneCLEM = null;
-
  
         /// <summary>
         /// Name of land type where pasture is located
@@ -221,8 +220,8 @@ namespace Models.CLEM.Activities
             {            
 			    double growth = 0;
 
-                int year = Clock.Today.Year;
-                int month = Clock.Today.Month;
+                int year = Clock.Today.AddDays(1).Year;
+                int month = Clock.Today.AddDays(1).Month;
 
                 //Get this months pasture data from the pasture data list
                 PastureDataType pasturedata = PastureDataList.Where(a => a.Year == year && a.Month == month).FirstOrDefault();
@@ -241,19 +240,29 @@ namespace Models.CLEM.Activities
 				    newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen; 
 				    newPasture.DryMatter = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
 				    newPasture.DryMatter = Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatter);
-				    this.LinkedNativeFoodType.Add(newPasture);
+				    this.LinkedNativeFoodType.Add(newPasture,this.Name,"Growth");
 			    }
             }
+            // report activity performed.
+            ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+            {
+                Activity = new BlankActivity()
+                {
+                    Status = ZoneCLEM.IsEcologicalIndicatorsCalculationMonth()? ActivityStatus.Calculation: ActivityStatus.Success,
+                    Name = this.Name
+                }
+            };
+            this.OnActivityPerformed(activitye);
         }
 
-		/// <summary>
-		/// Function to calculate ecological indicators. 
+        /// <summary>
+        /// Function to calculate ecological indicators. 
         /// By summing the monthly stocking rates so when you do yearly ecological calculation 
         /// you can get average monthly stocking rate for the whole year.
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("CLEMCalculateEcologicalState")]
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMCalculateEcologicalState")]
 		private void OnCLEMCalculateEcologicalState(object sender, EventArgs e)
         {
             // This event happens after growth and pasture consumption and animal death
@@ -362,7 +371,7 @@ namespace Models.CLEM.Activities
             // Add to pasture. This will add pool to pasture available store.
             foreach (var pool in newPools)
             {
-                LinkedNativeFoodType.Add(pool);
+                LinkedNativeFoodType.Add(pool, this.Name, "Initialise");
             }
         }
 
@@ -389,8 +398,7 @@ namespace Models.CLEM.Activities
                 LandConditionIndex.Modify(utilisation);
                 LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.Value;
                 GrassBasalArea.Modify(utilisation);
-                //TODO: should line below be GrassBasalArea instead of LandConditionIndex again ?
-                LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.Value;
+                LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.Value;
 
                 // Calculate average monthly stocking rate
                 // Check number of months to use
@@ -420,8 +428,9 @@ namespace Models.CLEM.Activities
 
                 //Get the new Pasture Data using the new Ecological Indicators (ie. GrassBA, LandCon, StRate)
                 GetPastureDataList_TodayToNextEcolCalculation();
+
             }
-		}
+        }
 
 
         /// <summary>
@@ -436,13 +445,28 @@ namespace Models.CLEM.Activities
             //round the doubles to nearest integers so can be used as primary key
             double landConditionIndex = LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex;
             double grassBasalArea = LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea;
-            pkGrassBA = (int)(Math.Round(grassBasalArea / 2, 0) * 2); //weird way but this is how NABSA does it.
-            pkLandCon = (int)(Math.Round((landConditionIndex - 1.1) / 2, 0) * 2 + 1);
+
+            // Shaun's code. back to front from NABSA
+            //pkGrassBA = (int)(Math.Round(grassBasalArea / 2, 0) * 2); //weird way but this is how NABSA does it.
+            //pkLandCon = (int)(Math.Round((landConditionIndex - 1.1) / 2, 0) * 2 + 1);
+            //
+            // No reason for this grouping so just round.
+            //
+            // NABSA
+            //pkLandCon = (int)(Math.Round(landConditionIndex / 2, 0) * 2); //weird way but this is how NABSA does it.
+            //pkGrassBA = (int)(Math.Round((grassBasalArea - 1.1) / 2, 0) * 2 + 1);
+
+            pkLandCon = (int)(Math.Round(landConditionIndex, 0));
+            pkLandCon = Math.Min(10, Math.Max(0, pkLandCon));
+            pkGrassBA = (int)(Math.Round(grassBasalArea, 0));
+            pkGrassBA = Math.Min(6, Math.Max(1, pkGrassBA));
+
             double stockingRate = LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate;
             pkStkRate = (int)Math.Round(stockingRate);
+            pkStkRate = Math.Min(70, Math.Max(1, pkStkRate));
 
-			PastureDataList = FileGRASP.GetIntervalsPastureData(ZoneCLEM.ClimateRegion, soilIndex,
-               pkGrassBA, pkLandCon, pkStkRate, Clock.Today, ZoneCLEM.EcologicalIndicatorsCalculationInterval);
+            PastureDataList = FileGRASP.GetIntervalsPastureData(ZoneCLEM.ClimateRegion, soilIndex,
+               pkGrassBA, pkLandCon, pkStkRate, Clock.Today.AddDays(1), ZoneCLEM.EcologicalIndicatorsCalculationInterval);
         }
 
 

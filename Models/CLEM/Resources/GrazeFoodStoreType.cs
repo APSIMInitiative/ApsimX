@@ -215,19 +215,47 @@ namespace Models.CLEM.Resources
 			}
 		}
 
-		/// <summary>
-		/// Add new pasture pool to the list of pools
-		/// </summary>
-		/// <param name="newpool"></param>
-		public void Add(GrazeFoodStorePool newpool)
-		{
-			if (newpool.Amount > 0)
-			{
-				Pools.Insert(0, newpool);
-				// update biomass available
-				biomassAvailable += newpool.Amount;
-			}
-		}
+        //        public void Add(GrazeFoodStorePool newpool)
+
+
+   //     /// <summary>
+   //     /// Add new pasture pool to the list of pools
+   //     /// </summary>
+   //     /// <param name="ResourceAmount"></param>
+   //     /// <param name="ActivityName"></param>
+   //     /// <param name="Reason"></param>
+   //     public void Add(object ResourceAmount, string ActivityName, string Reason)
+   //     {
+   //         if (ResourceAmount.GetType() != typeof(GrazeFoodStorePool))
+   //         {
+   //             throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+   //         }
+   //         GrazeFoodStorePool pool = ResourceAmount as GrazeFoodStorePool;
+
+   //         if (pool.Amount > 0)
+   //         {
+   //             Pools.Insert(0, pool);
+   //             // update biomass available
+   //             biomassAvailable += pool.Amount;
+
+   //             ResourceTransaction details = new ResourceTransaction();
+   //             details.Credit = pool.Amount;
+   //             details.Activity = ActivityName;
+   //             details.Reason = Reason;
+   //             details.ResourceType = this.Name;
+   //             LastTransaction = details;
+   //             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+   //             OnTransactionOccurred(te);
+   //         }
+
+
+   //         if (newpool.Amount > 0)
+			//{
+			//	Pools.Insert(0, newpool);
+			//	// update biomass available
+			//	biomassAvailable += newpool.Amount;
+   //         }
+   //     }
 
 		/// <summary>
 		/// Graze food add method.
@@ -238,16 +266,36 @@ namespace Models.CLEM.Resources
 		/// <param name="Reason"></param>
 		public void Add(object ResourceAmount, string ActivityName, string Reason)
 		{
-			throw new NotImplementedException();
-		}
+            if (ResourceAmount.GetType() != typeof(GrazeFoodStorePool))
+            {
+                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+            }
+            GrazeFoodStorePool pool = ResourceAmount as GrazeFoodStorePool;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="RemoveAmount"></param>
-		/// <param name="ActivityName"></param>
-		/// <param name="Reason"></param>
-		public double Remove(double RemoveAmount, string ActivityName, string Reason)
+            if (pool.Amount > 0)
+            {
+                Pools.Insert(0, pool);
+                // update biomass available
+                biomassAvailable += pool.Amount;
+
+                ResourceTransaction details = new ResourceTransaction();
+                details.Credit = pool.Amount;
+                details.Activity = ActivityName;
+                details.Reason = Reason;
+                details.ResourceType = this.Name;
+                LastTransaction = details;
+                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+                OnTransactionOccurred(te);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="RemoveAmount"></param>
+        /// <param name="ActivityName"></param>
+        /// <param name="Reason"></param>
+        public double Remove(double RemoveAmount, string ActivityName, string Reason)
 		{
 			throw new NotImplementedException();
 		}

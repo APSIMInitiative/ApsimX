@@ -421,7 +421,11 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Indicates a timer occurred successfully
         /// </summary>
-        Timer
+        Timer,
+        /// <summary>
+        /// Indicates a calculation event occurred
+        /// </summary>
+        Calculation
     }
 
 }
