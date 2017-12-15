@@ -38,7 +38,7 @@ namespace Models.CLEM.Resources
 		/// Conversion of unit of area to hectares (10,000 square metres)
 		/// </summary>
 		[System.ComponentModel.DefaultValueAttribute(1)]
-		[Description("Unit of area conversion to ha")]
+		[Description("Unit of area conversion to hectares")]
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double UnitsOfAreaToHaConversion { get; set; }
 
