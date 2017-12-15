@@ -174,15 +174,5 @@ namespace Models.CLEM.Activities
 			return null;
 		}
 
-		/// <summary>
-		/// Method used to perform initialisation of this activity.
-		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
-		/// It is the responsibility of this activity to determine resources provided.
-		/// </summary>
-		public override void DoInitialisation()
-		{
-			return;
-		}
-
 	}
 }

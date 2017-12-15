@@ -183,19 +183,6 @@ namespace Models.CLEM.Activities
 		}
 
 		/// <summary>
-		/// Method used to perform initialisation of this activity.
-		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
-		/// It is the responsibility of this activity to determine resources provided.
-		/// </summary>
-		public override void DoInitialisation()
-		{
-			//if (PerformAtStartOfSimulation)
-			//{
-			//	Muster();
-			//}
-		}
-
-		/// <summary>
 		/// Resource shortfall occured event handler
 		/// </summary>
 		public override event EventHandler ActivityPerformed;
@@ -210,6 +197,20 @@ namespace Models.CLEM.Activities
 				ActivityPerformed(this, e);
 		}
 
+        /// <summary>
+        /// Resource shortfall event handler
+        /// </summary>
+        public override event EventHandler ResourceShortfallOccurred;
 
-	}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnShortfallOccurred(EventArgs e)
+        {
+            if (ResourceShortfallOccurred != null)
+                ResourceShortfallOccurred(this, e);
+        }
+
+    }
 }

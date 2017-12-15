@@ -152,10 +152,10 @@ namespace Models.CLEM.Activities
 			// if resources are returned (all available or UseResourcesAvailable action) perform Activity
 			// if reportErrorAndStop do not perform Activity
 			// if SkipActivity still attempt to perform initialisation but no resources will show in Supplied fields of ResourceRequestItems
-			if (tookRequestedResources || (ResourceRequestList == null) || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)
-			{
-				DoInitialisation();
-			}
+			//if (tookRequestedResources || (ResourceRequestList == null) || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)
+			//{
+			//	DoInitialisation();
+			//}
 			ResourceRequestList = null;
 		}
 
@@ -360,10 +360,10 @@ namespace Models.CLEM.Activities
 		/// </summary>
 		public abstract void DoActivity();
 
-		/// <summary>
-		/// Method to initialise activity tasks if expected as soon as initialisation resources are provided
-		/// </summary>
-		public abstract void DoInitialisation();
+		///// <summary>
+		///// Method to initialise activity tasks if expected as soon as initialisation resources are provided
+		///// </summary>
+		//public abstract void DoInitialisation();
 
 		/// <summary>
 		/// Resource shortfall occured event handler

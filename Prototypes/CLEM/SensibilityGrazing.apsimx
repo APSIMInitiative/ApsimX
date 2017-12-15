@@ -428,7 +428,7 @@
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
           </RuminantActivityGrow>
           <RuminantActivityMuster>
-            <Name>RuminantActivityMuster</Name>
+            <Name>MusterToNativePasture</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdFilters />

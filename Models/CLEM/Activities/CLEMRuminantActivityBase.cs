@@ -225,14 +225,6 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// 
         /// </summary>
-        public override void DoInitialisation()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <returns></returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {

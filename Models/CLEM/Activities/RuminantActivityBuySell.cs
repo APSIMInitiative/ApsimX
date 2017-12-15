@@ -497,17 +497,6 @@ namespace Models.CLEM.Activities
 		}
 
 		/// <summary>
-		/// Method used to perform initialisation of this activity.
-		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
-		/// It is the responsibility of this activity to determine resources provided.
-		/// </summary>
-		public override void DoInitialisation()
-		{
-            // This must occur in ActivityInitialisation to ensure the herd has been created
-            return;
-		}
-
-		/// <summary>
 		/// Resource shortfall event handler
 		/// </summary>
 		public override event EventHandler ResourceShortfallOccurred;
