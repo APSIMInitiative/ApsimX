@@ -45,10 +45,6 @@ namespace UserInterface.Presenters
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            //(view.MaximumNumberRecords as EditView).EndEdit();
-            //view.TableList.Changed -= OnTableSelected;
-            //view.ColumnFilter.Changed -= OnColumnFilterChanged;
-            //view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
         }
 
         /// <summary>Populate the grid control with data.</summary>
