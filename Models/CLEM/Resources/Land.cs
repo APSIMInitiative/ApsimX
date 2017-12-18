@@ -19,78 +19,78 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all land types for the simulation.")]
     public class Land: ResourceBaseWithTransactions
-	{
+    {
         /// <summary>
         /// Current state of this resource.
         /// </summary>
         [XmlIgnore]
         public List<LandType> Items;
 
-		/// <summary>
-		/// Unit of area to be used in this simulation
-		/// </summary>
-		[System.ComponentModel.DefaultValueAttribute("Hectares")]
-		[Description("Unit of area to be used in this simulation")]
+        /// <summary>
+        /// Unit of area to be used in this simulation
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute("Hectares")]
+        [Description("Unit of area to be used in this simulation")]
         [Required]
-		public string UnitsOfArea { get; set; }
+        public string UnitsOfArea { get; set; }
 
-		/// <summary>
-		/// Conversion of unit of area to hectares (10,000 square metres)
-		/// </summary>
-		[System.ComponentModel.DefaultValueAttribute(1)]
-		[Description("Unit of area conversion to hectares")]
+        /// <summary>
+        /// Conversion of unit of area to hectares (10,000 square metres)
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(1)]
+        [Description("Unit of area conversion to hectares")]
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double UnitsOfAreaToHaConversion { get; set; }
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public Land()
-		{
-			this.SetDefaults();
-		}
-
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Land()
         {
-			foreach (var child in Children)
-			{
-				if (child is IResourceWithTransactionType)
-				{
-					(child as IResourceWithTransactionType).TransactionOccurred += Resource_TransactionOccurred; ;
-				}
-			}
+            this.SetDefaults();
         }
 
-		#region Transactions
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            foreach (var child in Children)
+            {
+                if (child is IResourceWithTransactionType)
+                {
+                    (child as IResourceWithTransactionType).TransactionOccurred += Resource_TransactionOccurred; ;
+                }
+            }
+        }
 
-		// Must be included away from base class so that APSIM Event.Subscriber can find them 
+        #region Transactions
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
-		protected new void OnTransactionOccurred(EventArgs e)
-		{
-			EventHandler invoker = TransactionOccurred;
-			if (invoker != null) invoker(this, e);
-		}
+        // Must be included away from base class so that APSIM Event.Subscriber can find them 
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
-		public new event EventHandler TransactionOccurred;
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        protected new void OnTransactionOccurred(EventArgs e)
+        {
+            EventHandler invoker = TransactionOccurred;
+            if (invoker != null) invoker(this, e);
+        }
 
-		private void Resource_TransactionOccurred(object sender, EventArgs e)
-		{
-			LastTransaction = (e as TransactionEventArgs).Transaction;
-			OnTransactionOccurred(e);
-		}
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        public new event EventHandler TransactionOccurred;
 
-		#endregion
-	}
+        private void Resource_TransactionOccurred(object sender, EventArgs e)
+        {
+            LastTransaction = (e as TransactionEventArgs).Transaction;
+            OnTransactionOccurred(e);
+        }
+
+        #endregion
+    }
 
 
 }

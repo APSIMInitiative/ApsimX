@@ -8,57 +8,57 @@ using System.Xml.Serialization;
 
 namespace Models.CLEM.Resources
 {
-	///<summary>
-	/// Parent model of Ruminant Types.
-	///</summary> 
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(ResourcesHolder))]
+    ///<summary>
+    /// Parent model of Ruminant Types.
+    ///</summary> 
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all other animals types (not ruminants) for the simulation.")]
     public class OtherAnimals: ResourceBaseWithTransactions
-	{
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			// create cohort list that can be modified by simulation
-			foreach (var child in Children)
-			{
-				if (child is IResourceWithTransactionType)
-				{
-					(child as IResourceWithTransactionType).TransactionOccurred += OtherAnimals_TransactionOccurred;
-				}
-			}
-		}
+    {
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            // create cohort list that can be modified by simulation
+            foreach (var child in Children)
+            {
+                if (child is IResourceWithTransactionType)
+                {
+                    (child as IResourceWithTransactionType).TransactionOccurred += OtherAnimals_TransactionOccurred;
+                }
+            }
+        }
 
-		#region Transactions
+        #region Transactions
 
-		// Must be included away from base class so that APSIM Event.Subscriber can find them 
+        // Must be included away from base class so that APSIM Event.Subscriber can find them 
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
-		protected new void OnTransactionOccurred(EventArgs e)
-		{
-			EventHandler invoker = TransactionOccurred;
-			if (invoker != null) invoker(this, e);
-		}
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        protected new void OnTransactionOccurred(EventArgs e)
+        {
+            EventHandler invoker = TransactionOccurred;
+            if (invoker != null) invoker(this, e);
+        }
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
-		public new event EventHandler TransactionOccurred;
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        public new event EventHandler TransactionOccurred;
 
-		private void OtherAnimals_TransactionOccurred(object sender, EventArgs e)
-		{
-			LastTransaction = (e as TransactionEventArgs).Transaction;
-			OnTransactionOccurred(e);
-		}
+        private void OtherAnimals_TransactionOccurred(object sender, EventArgs e)
+        {
+            LastTransaction = (e as TransactionEventArgs).Transaction;
+            OnTransactionOccurred(e);
+        }
 
-		#endregion
+        #endregion
 
-	}
+    }
 }

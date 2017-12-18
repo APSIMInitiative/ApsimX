@@ -10,21 +10,21 @@ using System.Xml.Serialization;
 
 namespace Models.CLEM.Activities
 {
-	/// <summary>
-	/// Activity timer based on monthly interval
-	/// </summary>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(CLEMActivityBase))]
-	[ValidParent(ParentType = typeof(ActivityFolder))]
+    /// <summary>
+    /// Activity timer based on monthly interval
+    /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(CLEMActivityBase))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [Description("This activity timer defines a range between months upon which to perform activities.")]
     public class ActivityTimerMonthRange: CLEMModel, IActivityTimer, IActivityPerformedNotifier
-	{
-		[XmlIgnore]
-		[Link]
-		Clock Clock = null;
+    {
+        [XmlIgnore]
+        [Link]
+        Clock Clock = null;
 
         /// <summary>
         /// Notify CLEM that this Timer was performed
@@ -35,31 +35,31 @@ namespace Models.CLEM.Activities
         /// Start month of annual period to perform activities
         /// </summary>
         [Description("Start month of annual period to perform activities (1-12)")]
-		[System.ComponentModel.DefaultValueAttribute(1)]
+        [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
         public int StartMonth { get; set; }
-		/// <summary>
-		/// End month of annual period to perform activities
-		/// </summary>
-		[Description("End month of annual period to perform activities (1-12)")]
+        /// <summary>
+        /// End month of annual period to perform activities
+        /// </summary>
+        [Description("End month of annual period to perform activities (1-12)")]
         [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
         [System.ComponentModel.DefaultValueAttribute(12)]
-		public int EndMonth { get; set; }
+        public int EndMonth { get; set; }
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public ActivityTimerMonthRange()
-		{
-			this.SetDefaults();
-		}
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ActivityTimerMonthRange()
+        {
+            this.SetDefaults();
+        }
 
-		/// <summary>
-		/// Method to determine whether the activity is due
-		/// </summary>
-		/// <returns>Whether the activity is due in the current month</returns>
-		public bool ActivityDue
-		{
+        /// <summary>
+        /// Method to determine whether the activity is due
+        /// </summary>
+        /// <returns>Whether the activity is due in the current month</returns>
+        public bool ActivityDue
+        {
             get
             {
                 bool due = false;
@@ -92,7 +92,7 @@ namespace Models.CLEM.Activities
                 }
                 return due;
             }
-		}
+        }
 
         /// <summary>
         /// Activity has occurred 

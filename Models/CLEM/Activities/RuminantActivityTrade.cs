@@ -9,21 +9,19 @@ using System.Text;
 
 namespace Models.CLEM.Activities
 {
-	/// <summary>Ruminant herd management activity</summary>
-	/// <summary>This activity will maintain a breeding herd at the desired levels of age/breeders etc</summary>
-	/// <version>1.0</version>
-	/// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(CLEMActivityBase))]
-	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	[ValidParent(ParentType = typeof(ActivityFolder))]
+    /// <summary>Ruminant herd management activity</summary>
+    /// <summary>This activity will maintain a breeding herd at the desired levels of age/breeders etc</summary>
+    /// <version>1.0</version>
+    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(CLEMActivityBase))]
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages trade individuals. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject
-	{
-//		[Link]
-//		private ResourcesHolder Resources = null;
+    {
         [Link]
         ISummary Summary = null;
 
@@ -41,39 +39,39 @@ namespace Models.CLEM.Activities
   //      [Required]
   //      public double BuyWeight { get; set; }
 
-		///// <summary>
-		///// Animal age at purchase (months)
-		///// </summary>
-		//[Description("Animal age at purchase (months)")]
+        ///// <summary>
+        ///// Animal age at purchase (months)
+        ///// </summary>
+        //[Description("Animal age at purchase (months)")]
   //      [Required]
   //      public int BuyAge { get; set; }
 
-		///// <summary>
-		///// Trade price (purchase/sell price /kg LWT)
-		///// </summary>
-		//[Description("Trade price (purchase/sell price /kg LWT)")]
+        ///// <summary>
+        ///// Trade price (purchase/sell price /kg LWT)
+        ///// </summary>
+        //[Description("Trade price (purchase/sell price /kg LWT)")]
   //      [Required]
   //      public double TradePrice { get; set; }
 
-		/// <summary>
-		/// Months kept before sale
-		/// </summary>
-		[Description("Months kept before sale")]
+        /// <summary>
+        /// Months kept before sale
+        /// </summary>
+        [Description("Months kept before sale")]
         [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
         public int MinMonthsKept { get; set; }
 
-		/// <summary>
-		/// Weight to achieve before sale
-		/// </summary>
-		[Description("Weight to achieve before sale")]
+        /// <summary>
+        /// Weight to achieve before sale
+        /// </summary>
+        [Description("Weight to achieve before sale")]
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double TradeWeight { get; set; }
 
-		///// <summary>
-		///// Purchase month
-		///// </summary>
-		//[System.ComponentModel.DefaultValueAttribute(11)]
-		//[Description("Purchase month")]
+        ///// <summary>
+        ///// Purchase month
+        ///// </summary>
+        //[System.ComponentModel.DefaultValueAttribute(11)]
+        //[Description("Purchase month")]
   //      [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
   //      public int PurchaseMonth { get; set; }
 
@@ -89,9 +87,9 @@ namespace Models.CLEM.Activities
         /// Constructor
         /// </summary>
         public RuminantActivityTrade()
-		{
-			this.SetDefaults();
-		}
+        {
+            this.SetDefaults();
+        }
 
         /// <summary>
         /// Validate this model
@@ -153,8 +151,8 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMAnimalManage")]
-		private void OnCLEMAnimalManage(object sender, EventArgs e)
-		{
+        private void OnCLEMAnimalManage(object sender, EventArgs e)
+        {
             // purchase details only on timer
             if(TimingOK)
             {
@@ -222,64 +220,64 @@ namespace Models.CLEM.Activities
                     ind.SaleFlag = HerdChangeReason.TradeSale;
                 }
             }
-		}
+        }
 
-		/// <summary>
-		/// Method to determine resources required for this activity in the current month
-		/// </summary>
-		/// <returns>List of required resource requests</returns>
-		public override List<ResourceRequest> GetResourcesNeededForActivity()
-		{
-			// check for labour
-			return null;
-		}
+        /// <summary>
+        /// Method to determine resources required for this activity in the current month
+        /// </summary>
+        /// <returns>List of required resource requests</returns>
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        {
+            // check for labour
+            return null;
+        }
 
-		/// <summary>
-		/// Method used to perform activity if it can occur as soon as resources are available.
-		/// </summary>
-		public override void DoActivity()
-		{
-			return;
-		}
+        /// <summary>
+        /// Method used to perform activity if it can occur as soon as resources are available.
+        /// </summary>
+        public override void DoActivity()
+        {
+            return;
+        }
 
-		/// <summary>
-		/// Method to determine resources required for initialisation of this activity
-		/// </summary>
-		/// <returns></returns>
-		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-		{
-			return null;
-		}
+        /// <summary>
+        /// Method to determine resources required for initialisation of this activity
+        /// </summary>
+        /// <returns></returns>
+        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        {
+            return null;
+        }
 
-		/// <summary>
-		/// Resource shortfall event handler
-		/// </summary>
-		public override event EventHandler ResourceShortfallOccurred;
+        /// <summary>
+        /// Resource shortfall event handler
+        /// </summary>
+        public override event EventHandler ResourceShortfallOccurred;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnShortfallOccurred(EventArgs e)
-		{
-			if (ResourceShortfallOccurred != null)
-				ResourceShortfallOccurred(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnShortfallOccurred(EventArgs e)
+        {
+            if (ResourceShortfallOccurred != null)
+                ResourceShortfallOccurred(this, e);
+        }
 
-		/// <summary>
-		/// Resource shortfall occured event handler
-		/// </summary>
-		public override event EventHandler ActivityPerformed;
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public override event EventHandler ActivityPerformed;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnActivityPerformed(EventArgs e)
-		{
-			if (ActivityPerformed != null)
-				ActivityPerformed(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
 
     }
 }

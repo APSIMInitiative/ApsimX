@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM
 {
-	/// <summary>
-	/// Interface to add transaction tracking ability to a Resource Type.
-	/// </summary>
-	public interface IResourceWithTransactionType
-	{
-		/// <summary>
-		/// Resource transaction occured event handler
-		/// </summary>
-		event EventHandler TransactionOccurred;
+    /// <summary>
+    /// Interface to add transaction tracking ability to a Resource Type.
+    /// </summary>
+    public interface IResourceWithTransactionType
+    {
+        /// <summary>
+        /// Resource transaction occured event handler
+        /// </summary>
+        event EventHandler TransactionOccurred;
 
-		/// <summary>
-		/// Last transaction received
-		/// </summary>
-		ResourceTransaction LastTransaction { get; set; }
+        /// <summary>
+        /// Last transaction received
+        /// </summary>
+        ResourceTransaction LastTransaction { get; set; }
 
-	}
+    }
 }

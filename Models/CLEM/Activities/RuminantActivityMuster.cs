@@ -9,51 +9,41 @@ using System.Text;
 
 namespace Models.CLEM.Activities
 {
-	/// <summary>Ruminant muster activity</summary>
-	/// <summary>This activity moves specified ruminants to a given pasture</summary>
-	/// <version>1.0</version>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(CLEMActivityBase))]
-	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	[ValidParent(ParentType = typeof(ActivityFolder))]
+    /// <summary>Ruminant muster activity</summary>
+    /// <summary>This activity moves specified ruminants to a given pasture</summary>
+    /// <version>1.0</version>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(CLEMActivityBase))]
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs mustering based upon the current herd filtering. It is also used to assign individuals to pastures (paddocks) at the start of the simulation.")]
     public class RuminantActivityMuster: CLEMRuminantActivityBase
-	{
-//		[Link]
-//		private ResourcesHolder Resources = null;
-
-		/// <summary>
-		/// Name of managed pasture to muster to
-		/// </summary>
-		[Description("Name of managed pasture to muster to")]
+    {
+        /// <summary>
+        /// Name of managed pasture to muster to
+        /// </summary>
+        [Description("Name of managed pasture to muster to")]
         [Required]
         public string ManagedPastureName { get; set; }
 
-		/// <summary>
-		/// Determines whether this must be performed to setup herds at the start of the simulation
-		/// </summary>
-		[Description("Perform muster at start of simulation")]
+        /// <summary>
+        /// Determines whether this must be performed to setup herds at the start of the simulation
+        /// </summary>
+        [Description("Perform muster at start of simulation")]
         [Required]
         public bool PerformAtStartOfSimulation { get; set; }
 
-		///// <summary>
-		///// Month to muster in (set to 0 to not perform muster)
-		///// </summary>
-		//[Description("Month to muster in")]
-  //      [Required, Range(0, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec), or 0 for initial move only")]
-  //      public int Month { get; set; }
-
-		/// <summary>
-		/// Determines whether sucklings are automatically mustered with the mother or seperated
-		/// </summary>
-		[Description("Move sucklings with mother")]
+        /// <summary>
+        /// Determines whether sucklings are automatically mustered with the mother or seperated
+        /// </summary>
+        [Description("Move sucklings with mother")]
         [Required]
         public bool MoveSucklings { get; set; }
 
-		private GrazeFoodStoreType Pasture { get; set; }
-		private List<LabourFilterGroupSpecified> labour { get; set; }
+        private GrazeFoodStoreType Pasture { get; set; }
+        private List<LabourFilterGroupSpecified> labour { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -66,13 +56,13 @@ namespace Models.CLEM.Activities
             // link to graze food store type pasture to muster to
             // blank is general yards.
             if (ManagedPastureName != "")
-			{
-				Pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
-			}
+            {
+                Pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            }
 
-			// get labour specifications
-			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+            // get labour specifications
+            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 
             if (PerformAtStartOfSimulation)
             {
@@ -80,8 +70,8 @@ namespace Models.CLEM.Activities
             }
         }
 
-		private void Muster()
-		{
+        private void Muster()
+        {
             foreach (Ruminant ind in this.CurrentHerd(false))
             {
                 // set new location ID
@@ -105,69 +95,69 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-		}
+        }
 
-		/// <summary>
-		/// Method to determine resources required for this activity in the current month
-		/// </summary>
-		/// <returns>List of required resource requests</returns>
-		public override List<ResourceRequest> GetResourcesNeededForActivity()
-		{
-			ResourceRequestList = null;
-			if (this.TimingOK)
-			{
+        /// <summary>
+        /// Method to determine resources required for this activity in the current month
+        /// </summary>
+        /// <returns>List of required resource requests</returns>
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        {
+            ResourceRequestList = null;
+            if (this.TimingOK)
+            {
                 List<Ruminant> herd = this.CurrentHerd(false);
                 int head = herd.Count();
                 double AE = herd.Sum(a => a.AdultEquivalent);
 
-				if (head == 0) return null;
+                if (head == 0) return null;
 
-				// for each labour item specified
-				foreach (var item in labour)
-				{
-					double daysNeeded = 0;
-					switch (item.UnitType)
-					{
-						case LabourUnitType.Fixed:
-							daysNeeded = item.LabourPerUnit;
-							break;
-						case LabourUnitType.perHead:
-							daysNeeded = Math.Ceiling(head / item.UnitSize) * item.LabourPerUnit;
-							break;
-						case LabourUnitType.perAE:
-							daysNeeded = Math.Ceiling(AE / item.UnitSize) * item.LabourPerUnit;
-							break;
-						default:
-							throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-					}
-					if (daysNeeded > 0)
-					{
-						if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-						ResourceRequestList.Add(new ResourceRequest()
-						{
-							AllowTransmutation = false,
-							Required = daysNeeded,
-							ResourceType = typeof(Labour),
-							ResourceTypeName = "",
-							ActivityModel = this,
-							FilterDetails = new List<object>() { item }
-						}
-						);
-					}
-				}
-			}
-			return ResourceRequestList;
-		}
+                // for each labour item specified
+                foreach (var item in labour)
+                {
+                    double daysNeeded = 0;
+                    switch (item.UnitType)
+                    {
+                        case LabourUnitType.Fixed:
+                            daysNeeded = item.LabourPerUnit;
+                            break;
+                        case LabourUnitType.perHead:
+                            daysNeeded = Math.Ceiling(head / item.UnitSize) * item.LabourPerUnit;
+                            break;
+                        case LabourUnitType.perAE:
+                            daysNeeded = Math.Ceiling(AE / item.UnitSize) * item.LabourPerUnit;
+                            break;
+                        default:
+                            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+                    }
+                    if (daysNeeded > 0)
+                    {
+                        if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+                        ResourceRequestList.Add(new ResourceRequest()
+                        {
+                            AllowTransmutation = false,
+                            Required = daysNeeded,
+                            ResourceType = typeof(Labour),
+                            ResourceTypeName = "",
+                            ActivityModel = this,
+                            FilterDetails = new List<object>() { item }
+                        }
+                        );
+                    }
+                }
+            }
+            return ResourceRequestList;
+        }
 
-		/// <summary>
-		/// Method used to perform activity if it can occur as soon as resources are available.
-		/// </summary>
-		public override void DoActivity()
-		{
-			// check if labour provided or PartialResources allowed
+        /// <summary>
+        /// Method used to perform activity if it can occur as soon as resources are available.
+        /// </summary>
+        public override void DoActivity()
+        {
+            // check if labour provided or PartialResources allowed
 
-			if (this.TimingOK)
-			{
+            if (this.TimingOK)
+            {
                 if (this.Status == ActivityStatus.Success || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
                 {
                     // move individuals
@@ -175,31 +165,31 @@ namespace Models.CLEM.Activities
                 }
                 TriggerOnActivityPerformed();
             }
-		}
+        }
 
-		/// <summary>
-		/// Method to determine resources required for initialisation of this activity
-		/// </summary>
-		/// <returns></returns>
-		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-		{
-			return null;
-		}
+        /// <summary>
+        /// Method to determine resources required for initialisation of this activity
+        /// </summary>
+        /// <returns></returns>
+        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        {
+            return null;
+        }
 
-		/// <summary>
-		/// Resource shortfall occured event handler
-		/// </summary>
-		public override event EventHandler ActivityPerformed;
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public override event EventHandler ActivityPerformed;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnActivityPerformed(EventArgs e)
-		{
-			if (ActivityPerformed != null)
-				ActivityPerformed(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
 
         /// <summary>
         /// Resource shortfall event handler

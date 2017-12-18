@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {
-	/// <summary>Tracking settings for Ruminant purchases and sales</summary>
-	/// <summary>If this model is provided within RuminantActivityBuySell, trucking costs and loading rules will occur</summary>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(RuminantActivityBuySell))]
+    /// <summary>Tracking settings for Ruminant purchases and sales</summary>
+    /// <summary>If this model is provided within RuminantActivityBuySell, trucking costs and loading rules will occur</summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [Description("This provides trucking settings for the Ruminant Buy and Sell Activity and will determine costs and emissions if required.")]
     public class TruckingSettings : CLEMModel
-	{
+    {
         [Link]
         private ResourcesHolder Resources = null;
 
@@ -28,31 +28,31 @@ namespace Models.CLEM.Activities
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double DistanceToMarket { get; set; }
 
-		/// <summary>
-		/// Cost of trucking ($/km/truck)
-		/// </summary>
-		[Description("Cost of trucking ($/km/truck)")]
+        /// <summary>
+        /// Cost of trucking ($/km/truck)
+        /// </summary>
+        [Description("Cost of trucking ($/km/truck)")]
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double CostPerKmTrucking { get; set; }
 
-		/// <summary>
-		/// Number of 450kg animals per truck load
-		/// </summary>
-		[Description("Number of 450kg animals per truck load")]
+        /// <summary>
+        /// Number of 450kg animals per truck load
+        /// </summary>
+        [Description("Number of 450kg animals per truck load")]
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double Number450kgPerTruck { get; set; }
 
-		/// <summary>
-		/// Minimum number of truck loads before selling (0 continuous sales)
-		/// </summary>
-		[Description("Minimum number of truck loads before selling (0 continuous sales)")]
+        /// <summary>
+        /// Minimum number of truck loads before selling (0 continuous sales)
+        /// </summary>
+        [Description("Minimum number of truck loads before selling (0 continuous sales)")]
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MinimumTrucksBeforeSelling { get; set; }
 
-		/// <summary>
-		/// Minimum proportion of truck load before selling (0 continuous sales)
-		/// </summary>
-		[Description("Minimum proportion of truck load before selling (0 continuous sales)")]
+        /// <summary>
+        /// Minimum proportion of truck load before selling (0 continuous sales)
+        /// </summary>
+        [Description("Minimum proportion of truck load before selling (0 continuous sales)")]
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MinimumLoadBeforeSelling { get; set; }
 

@@ -20,9 +20,6 @@ namespace Models.CLEM.Activities
     [Description("This activity manages weaning of suckling ruminant individuals.")]
     public class RuminantActivityWean: CLEMRuminantActivityBase
     {
-//        [Link]
-//        private ResourcesHolder Resources = null;
-
         /// <summary>
         /// Weaning age (months)
         /// </summary>

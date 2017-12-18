@@ -10,61 +10,37 @@ using System.Text;
 
 namespace Models.CLEM.Activities
 {
-	/// <summary>Ruminant dry breeder culling activity</summary>
-	/// <summary>This activity provides functionality for kulling dry breeders</summary>
-	/// <version>1.0</version>
-	/// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(CLEMActivityBase))]
-	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	[ValidParent(ParentType = typeof(ActivityFolder))]
+    /// <summary>Ruminant dry breeder culling activity</summary>
+    /// <summary>This activity provides functionality for kulling dry breeders</summary>
+    /// <version>1.0</version>
+    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(CLEMActivityBase))]
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity flags dry breeders for sale. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     public class RuminantActivitySellDryBreeders : CLEMRuminantActivityBase
-	{
-//		[Link]
-//		private ResourcesHolder Resources = null;
-
-		///// <summary>
-		///// Name of herd to sell dry breeders
-		///// </summary>
-		//[Description("Name of herd")]
-  //      [Required]
-  //      public string HerdName { get; set; }
-
-		///// <summary>
-		///// Determines whether this activity is applied to individuals in a paddock or entire herd
-		///// </summary>
-		//[Description("Apply only to herd in managed paddock")]
-  //      [Required]
-  //      public bool SellFromManagedPaddock { get; set; }
-
-		///// <summary>
-		///// Name of paddock to apply sale of dry breeders
-		///// </summary>
-		//[Description("Name of paddock to apply sale of dry breeders")]
-  //      [Required]
-  //      public string PaddockName { get; set; }
-
-		/// <summary>
-		/// Minimum conception rate before any selling
-		/// </summary>
-		[Description("Minimum conception rate before any selling")]
+    {
+        /// <summary>
+        /// Minimum conception rate before any selling
+        /// </summary>
+        [Description("Minimum conception rate before any selling")]
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be greater than or equal to 0")]
         public double MinimumConceptionBeforeSell { get; set; }
 
-		/// <summary>
-		/// Number of months since last birth to be considered dry
-		/// </summary>
-		[Description("Number of months since last birth to be considered dry")]
+        /// <summary>
+        /// Number of months since last birth to be considered dry
+        /// </summary>
+        [Description("Number of months since last birth to be considered dry")]
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be greater than or equal to 0")]
         public double MonthsSinceBirth { get; set; }
 
-		/// <summary>
-		/// Proportion of dry breeder to sell
-		/// </summary>
-		[Description("Proportion of dry breeders to sell")]
+        /// <summary>
+        /// Proportion of dry breeder to sell
+        /// </summary>
+        [Description("Proportion of dry breeders to sell")]
         [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
         public double ProportionToRemove { get; set; }
 
@@ -87,8 +63,8 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMAnimalMilking")]
-		private void OnCLEMAnimalMilking(object sender, EventArgs e)
-		{
+        private void OnCLEMAnimalMilking(object sender, EventArgs e)
+        {
             if (this.TimingOK & this.Status != ActivityStatus.Ignored)
             {
                 if (ProportionToRemove > 0)
@@ -122,14 +98,14 @@ namespace Models.CLEM.Activities
 
                 }
             }
-		}
+        }
 
-		/// <summary>
-		/// Method to determine resources required for this activity in the current month
-		/// </summary>
-		/// <returns>List of required resource requests</returns>
-		public override List<ResourceRequest> GetResourcesNeededForActivity()
-		{
+        /// <summary>
+        /// Method to determine resources required for this activity in the current month
+        /// </summary>
+        /// <returns>List of required resource requests</returns>
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        {
             ResourceRequestList = null;
             if (this.TimingOK)
             {
@@ -181,50 +157,50 @@ namespace Models.CLEM.Activities
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
         public override void DoActivity()
-		{
-			return; ;
-		}
+        {
+            return; ;
+        }
 
-		/// <summary>
-		/// Method to determine resources required for initialisation of this activity
-		/// </summary>
-		/// <returns></returns>
-		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-		{
-			return null;
-		}
+        /// <summary>
+        /// Method to determine resources required for initialisation of this activity
+        /// </summary>
+        /// <returns></returns>
+        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        {
+            return null;
+        }
 
-		/// <summary>
-		/// Resource shortfall event handler
-		/// </summary>
-		public override event EventHandler ResourceShortfallOccurred;
+        /// <summary>
+        /// Resource shortfall event handler
+        /// </summary>
+        public override event EventHandler ResourceShortfallOccurred;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnShortfallOccurred(EventArgs e)
-		{
-			if (ResourceShortfallOccurred != null)
-				ResourceShortfallOccurred(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnShortfallOccurred(EventArgs e)
+        {
+            if (ResourceShortfallOccurred != null)
+                ResourceShortfallOccurred(this, e);
+        }
 
-		/// <summary>
-		/// Resource shortfall occured event handler
-		/// </summary>
-		public override event EventHandler ActivityPerformed;
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public override event EventHandler ActivityPerformed;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnActivityPerformed(EventArgs e)
-		{
-			if (ActivityPerformed != null)
-				ActivityPerformed(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
 
 
 
-	}
+    }
 }

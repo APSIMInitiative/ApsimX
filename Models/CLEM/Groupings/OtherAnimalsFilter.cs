@@ -8,93 +8,93 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.Groupings
 {
-	///<summary>
-	/// Individual filter term for ruminant group of filters to identify individul ruminants
-	///</summary> 
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(OtherAnimalsFilterGroup))]
+    ///<summary>
+    /// Individual filter term for ruminant group of filters to identify individul ruminants
+    ///</summary> 
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(OtherAnimalsFilterGroup))]
     [Description("This other animal filter filter rule is used to define specific individuals from the other animals. Multiple filters are additive.")]
     public class OtherAnimalsFilter: CLEMModel
-	{
-		/// <summary>
-		/// Name of parameter to filter by
-		/// </summary>
-		[Description("Name of parameter to filter by")]
+    {
+        /// <summary>
+        /// Name of parameter to filter by
+        /// </summary>
+        [Description("Name of parameter to filter by")]
         [Required]
         public OtherAnimalsFilterParameters Parameter
-		{
-			get
-			{
-				return parameter;
-			}
-			set
-			{
-				parameter = value;
-				UpdateName();
-			}
-		}
-		private OtherAnimalsFilterParameters parameter;
+        {
+            get
+            {
+                return parameter;
+            }
+            set
+            {
+                parameter = value;
+                UpdateName();
+            }
+        }
+        private OtherAnimalsFilterParameters parameter;
 
 
-		/// <summary>
-		/// Name of parameter to filter by
-		/// </summary>
-		[Description("Operator to use for filtering")]
+        /// <summary>
+        /// Name of parameter to filter by
+        /// </summary>
+        [Description("Operator to use for filtering")]
         [Required]
-		public FilterOperators Operator
-		{
-			get
-			{
-				return operatr;
-			}
-			set
-			{
-				operatr = value;
-				UpdateName();
-			}
-		}
-		private FilterOperators operatr;
+        public FilterOperators Operator
+        {
+            get
+            {
+                return operatr;
+            }
+            set
+            {
+                operatr = value;
+                UpdateName();
+            }
+        }
+        private FilterOperators operatr;
 
-		/// <summary>
-		/// Value to check for filter
-		/// </summary>
-		[Description("Value to filter by")]
+        /// <summary>
+        /// Value to check for filter
+        /// </summary>
+        [Description("Value to filter by")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Value to filter by required")]
         public string Value
-		{
-			get
-			{
-				return _value;
-			}
-			set
-			{
-				_value = value;
-				UpdateName();
-			}
-		}
-		private string _value;
+        {
+            get
+            {
+                return _value;
+            }
+            set
+            {
+                _value = value;
+                UpdateName();
+            }
+        }
+        private string _value;
 
 
-		private void UpdateName()
-		{
-			this.Name = String.Format("Filter[{0}{1}{2}]", Parameter.ToString(), Operator.ToSymbol(), Value);
-		}
-	}
+        private void UpdateName()
+        {
+            this.Name = String.Format("Filter[{0}{1}{2}]", Parameter.ToString(), Operator.ToSymbol(), Value);
+        }
+    }
 
-	/// <summary>
-	/// Ruminant filter parameters
-	/// </summary>
-	public enum OtherAnimalsFilterParameters
-	{
-		/// <summary>
-		/// Gender of individuals
-		/// </summary>
-		Gender,
-		/// <summary>
-		/// Age (months) of individuals
-		/// </summary>
-		Age
-	}
+    /// <summary>
+    /// Ruminant filter parameters
+    /// </summary>
+    public enum OtherAnimalsFilterParameters
+    {
+        /// <summary>
+        /// Gender of individuals
+        /// </summary>
+        Gender,
+        /// <summary>
+        /// Age (months) of individuals
+        /// </summary>
+        Age
+    }
 }

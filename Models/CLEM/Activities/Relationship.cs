@@ -9,111 +9,111 @@ using System.Xml.Serialization;
 
 namespace Models.CLEM.Activities
 {
-	/// <summary>
-	/// This determines a relationship
-	/// </summary>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    /// <summary>
+    /// This determines a relationship
+    /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model component specifies a relationship to be used by supplying a series of x and y values.")]
     public class Relationship: Model, IValidatableObject
-	{
-		/// <summary>
-		/// Current value
-		/// </summary>
-		[XmlIgnore]
-		public double Value { get; set; }
+    {
+        /// <summary>
+        /// Current value
+        /// </summary>
+        [XmlIgnore]
+        public double Value { get; set; }
 
-		/// <summary>
-		/// Starting value
-		/// </summary>
-		[Description("Value at start of simulation")]
+        /// <summary>
+        /// Starting value
+        /// </summary>
+        [Description("Value at start of simulation")]
         [Required]
         public double StartingValue { get; set; }
 
-		/// <summary>
-		/// Minimum value possible
-		/// </summary>
-		[Description("Minimum value possible")]
+        /// <summary>
+        /// Minimum value possible
+        /// </summary>
+        [Description("Minimum value possible")]
         [Required]
         public double Minimum { get; set; }
 
-		/// <summary>
-		/// Maximum value possible
-		/// </summary>
-		[Description("Maximum value possible")]
+        /// <summary>
+        /// Maximum value possible
+        /// </summary>
+        [Description("Maximum value possible")]
         [Required, GreaterThan("Minimum", ErrorMessage = "Maximum value must be greater than minimum value")]
         public double Maximum { get; set; }
 
-		/// <summary>
-		/// X values of relationship
-		/// </summary>
-		[Description("X values of relationship")]
+        /// <summary>
+        /// X values of relationship
+        /// </summary>
+        [Description("X values of relationship")]
         [Required]
         public double[] XValues { get; set; }
 
-		/// <summary>
-		/// Y values of relationship
-		/// </summary>
-		[Description("Y values of relationship")]
+        /// <summary>
+        /// Y values of relationship
+        /// </summary>
+        [Description("Y values of relationship")]
         [Required]
         public double[] YValues { get; set; }
 
-		/// <summary>
-		/// Solve equation for y given x
-		/// </summary>
-		/// <param name="X">x value to solve y</param>
-		/// <param name="LinearInterpolation">Use linear interpolation between the nearest point before and after x</param>
-		/// <returns>y value for given x</returns>
-		public double SolveY(double X, bool LinearInterpolation)
-		{
-			if (X <= XValues[0])
-				return YValues[0];
-			if (X >= XValues[XValues.Length-1])
-				return YValues[YValues.Length - 1];
+        /// <summary>
+        /// Solve equation for y given x
+        /// </summary>
+        /// <param name="X">x value to solve y</param>
+        /// <param name="LinearInterpolation">Use linear interpolation between the nearest point before and after x</param>
+        /// <returns>y value for given x</returns>
+        public double SolveY(double X, bool LinearInterpolation)
+        {
+            if (X <= XValues[0])
+                return YValues[0];
+            if (X >= XValues[XValues.Length-1])
+                return YValues[YValues.Length - 1];
 
-			int k = 0;
-			for (int i = 0; i < XValues.Length; i++)
-			{
-				if (X <= XValues[i + 1])
-				{
-					k = i;
-					break;
-				}
-			}
+            int k = 0;
+            for (int i = 0; i < XValues.Length; i++)
+            {
+                if (X <= XValues[i + 1])
+                {
+                    k = i;
+                    break;
+                }
+            }
 
-			if(LinearInterpolation)
-			{
-				return YValues[k] + (YValues[k + 1] - YValues[k]) / (XValues[k + 1] - XValues[k]) * (X - YValues[k]);
-			}
-			else
-			{
-				return YValues[k + 1];
-			}
-		}
+            if(LinearInterpolation)
+            {
+                return YValues[k] + (YValues[k + 1] - YValues[k]) / (XValues[k + 1] - XValues[k]) * (X - YValues[k]);
+            }
+            else
+            {
+                return YValues[k + 1];
+            }
+        }
 
-		/// <summary>
-		/// Modify the current value by Y calculated from x
-		/// </summary>
-		/// <param name="x">x value</param>
-		public void Modify(double x)
-		{
-			Value += SolveY(x, true);
-			Value = Math.Min(Value, Maximum);
-			Value = Math.Max(Value, Minimum);
-		}
+        /// <summary>
+        /// Modify the current value by Y calculated from x
+        /// </summary>
+        /// <param name="x">x value</param>
+        public void Modify(double x)
+        {
+            Value += SolveY(x, true);
+            Value = Math.Min(Value, Maximum);
+            Value = Math.Max(Value, Minimum);
+        }
 
-		/// <summary>
-		/// Calculate new value using Y calculated from x
-		/// </summary>
-		/// <param name="x">x value</param>
-		public void Calculate(double x)
-		{
-			Value = SolveY(x, true);
-			Value = Math.Min(Value, Maximum);
-			Value = Math.Max(Value, Minimum);
-		}
+        /// <summary>
+        /// Calculate new value using Y calculated from x
+        /// </summary>
+        /// <param name="x">x value</param>
+        public void Calculate(double x)
+        {
+            Value = SolveY(x, true);
+            Value = Math.Min(Value, Maximum);
+            Value = Math.Max(Value, Minimum);
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -122,7 +122,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             Value = StartingValue;
-		}
+        }
 
         /// <summary>
         /// Validate this object

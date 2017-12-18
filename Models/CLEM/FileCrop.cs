@@ -32,18 +32,11 @@ namespace Models.CLEM
     [Description("This model holds a crop data file for the CLEM simulation.")]
     public class FileCrop : Model
     {
-		///// <summary>
-		///// A link to the clock model.
-		///// </summary>
-		//[Link]
-		//private Clock clock = null;
-
-		/// <summary>
-		/// A reference to the text file reader object
-		/// </summary>
-		[NonSerialized]
+        /// <summary>
+        /// A reference to the text file reader object
+        /// </summary>
+        [NonSerialized]
         private ApsimTextFile reader = null;
-
 
         /// <summary>
         /// The character spacing index for the SoilNum column
@@ -75,14 +68,10 @@ namespace Models.CLEM
         /// </summary>
         private int NpctIndex;
 
-
-
         /// <summary>
         /// The entire Crop File read in as a DataTable with Primary Keys assigned.
         /// </summary>
         private DataTable ForageFileAsTable;
-
-
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
@@ -131,13 +120,13 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-			if (!File.Exists(FullFileName))
-			{
-				string errorMsg = String.Format("Could not locate file ({0}) for ({1})", FullFileName, this.Name);
-				throw new ApsimXException(this, errorMsg);
-			}
+            if (!File.Exists(FullFileName))
+            {
+                string errorMsg = String.Format("Could not locate file ({0}) for ({1})", FullFileName, this.Name);
+                throw new ApsimXException(this, errorMsg);
+            }
 
-			//this.doSeek = true;
+            //this.doSeek = true;
             this.soilNumIndex = 0;
             this.cropNameIndex = 0;
             this.yearIndex = 0;
@@ -165,15 +154,15 @@ namespace Models.CLEM
 
 
 
-		/// <summary>
-		/// Provides an error message to display if something is wrong.
-		/// Used by the UserInterface to give a warning of what is wrong
-		/// 
-		/// When the user selects a file using the browse button in the UserInterface 
-		/// and the file can not be displayed for some reason in the UserInterface.
-		/// </summary>
-		[XmlIgnore]
-		public string ErrorMessage = string.Empty;
+        /// <summary>
+        /// Provides an error message to display if something is wrong.
+        /// Used by the UserInterface to give a warning of what is wrong
+        /// 
+        /// When the user selects a file using the browse button in the UserInterface 
+        /// and the file can not be displayed for some reason in the UserInterface.
+        /// </summary>
+        [XmlIgnore]
+        public string ErrorMessage = string.Empty;
 
         /// <summary>
         /// 
@@ -381,7 +370,7 @@ namespace Models.CLEM
             }
             else
             {
-				return false;
+                return false;
             }
         }
 

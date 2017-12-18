@@ -41,18 +41,18 @@ namespace Models.CLEM.Resources
         [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
         public double Nitrogen { get; set; }
 
-		/// <summary>
-		/// Current store nitrogen (%)
-		/// </summary>
-		[XmlIgnore]
-		[Description("Current store nitrogen (%)")]
+        /// <summary>
+        /// Current store nitrogen (%)
+        /// </summary>
+        [XmlIgnore]
+        [Description("Current store nitrogen (%)")]
         [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
         public double CurrentStoreNitrogen { get; set; }
 
-		/// <summary>
-		/// Starting Age of the Fodder (Months)
-		/// </summary>
-		[Description("Starting Age of Human Food (Months)")]
+        /// <summary>
+        /// Starting Age of the Fodder (Months)
+        /// </summary>
+        [Description("Starting Age of Human Food (Months)")]
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double StartingAge { get; set; }
 
@@ -76,164 +76,164 @@ namespace Models.CLEM.Resources
         public double Amount { get { return amount; } }
         private double amount;
 
-		/// <summary>
-		/// Initialise the current state to the starting amount of fodder
-		/// </summary>
-		public void Initialise()
-		{
-			this.Age = this.StartingAge;
-			this.amount = 0;
-			if (StartingAmount > 0)
-			{
-				Add(StartingAmount, this.Name, "Starting value");
-			}
-		}
+        /// <summary>
+        /// Initialise the current state to the starting amount of fodder
+        /// </summary>
+        public void Initialise()
+        {
+            this.Age = this.StartingAge;
+            this.amount = 0;
+            if (StartingAmount > 0)
+            {
+                Add(StartingAmount, this.Name, "Starting value");
+            }
+        }
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("CLEMInitialiseResource")]
-		private void OnCLEMInitialiseResource(object sender, EventArgs e)
-		{
-			Initialise();
-		}
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseResource")]
+        private void OnCLEMInitialiseResource(object sender, EventArgs e)
+        {
+            Initialise();
+        }
 
-		#region Transactions
+        #region Transactions
 
-		/// <summary>
-		/// Add to food store
-		/// </summary>
-		/// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen in a Res) of food being added</param>
-		/// <param name="ActivityName">Name of activity adding resource</param>
-		/// <param name="Reason">Name of individual radding resource</param>
-		public void Add(object ResourceAmount, string ActivityName, string Reason)
-		{
-			double addAmount = 0;
-			double nAdded = 0;
-			switch (ResourceAmount.GetType().ToString())
-			{
-				case "System.Double":
-					addAmount = (double)ResourceAmount;
-					nAdded = Nitrogen;
-					break;
-				case "Models.CLEM.Resources.FoodResourcePacket":
-					addAmount = ((FoodResourcePacket)ResourceAmount).Amount;
-					nAdded = ((FoodResourcePacket)ResourceAmount).PercentN;
-					break;
-				default:
-					throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
-			}
+        /// <summary>
+        /// Add to food store
+        /// </summary>
+        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen in a Res) of food being added</param>
+        /// <param name="ActivityName">Name of activity adding resource</param>
+        /// <param name="Reason">Name of individual radding resource</param>
+        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        {
+            double addAmount = 0;
+            double nAdded = 0;
+            switch (ResourceAmount.GetType().ToString())
+            {
+                case "System.Double":
+                    addAmount = (double)ResourceAmount;
+                    nAdded = Nitrogen;
+                    break;
+                case "Models.CLEM.Resources.FoodResourcePacket":
+                    addAmount = ((FoodResourcePacket)ResourceAmount).Amount;
+                    nAdded = ((FoodResourcePacket)ResourceAmount).PercentN;
+                    break;
+                default:
+                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+            }
 
-			// update N based on new input added
-			CurrentStoreNitrogen = ((Nitrogen / 100 * Amount) + (nAdded / 100 * addAmount)) / (Amount + addAmount) * 100;
+            // update N based on new input added
+            CurrentStoreNitrogen = ((Nitrogen / 100 * Amount) + (nAdded / 100 * addAmount)) / (Amount + addAmount) * 100;
 
-			this.amount = this.amount + addAmount;
-			ResourceTransaction details = new ResourceTransaction();
-			details.Credit = addAmount;
-			details.Activity = ActivityName;
-			details.Reason = Reason;
-			details.ResourceType = this.Name;
-			LastTransaction = details;
-			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-			OnTransactionOccurred(te);
-		}
+            this.amount = this.amount + addAmount;
+            ResourceTransaction details = new ResourceTransaction();
+            details.Credit = addAmount;
+            details.Activity = ActivityName;
+            details.Reason = Reason;
+            details.ResourceType = this.Name;
+            LastTransaction = details;
+            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+            OnTransactionOccurred(te);
+        }
 
-		/// <summary>
-		/// Remove from human food store
-		/// </summary>
-		/// <param name="Request">Resource request class with details.</param>
-		public void Remove(ResourceRequest Request)
-		{
-			if (Request.Required == 0) return;
-			double amountRemoved = Request.Required;
-			// avoid taking too much
-			amountRemoved = Math.Min(this.amount, amountRemoved);
-			this.amount -= amountRemoved;
+        /// <summary>
+        /// Remove from human food store
+        /// </summary>
+        /// <param name="Request">Resource request class with details.</param>
+        public void Remove(ResourceRequest Request)
+        {
+            if (Request.Required == 0) return;
+            double amountRemoved = Request.Required;
+            // avoid taking too much
+            amountRemoved = Math.Min(this.amount, amountRemoved);
+            this.amount -= amountRemoved;
 
-			Request.Provided = amountRemoved;
-			ResourceTransaction details = new ResourceTransaction();
-			details.ResourceType = this.Name;
-			details.Debit = amountRemoved * -1;
-			details.Activity = Request.ActivityModel.Name;
-			details.Reason = Request.Reason;
-			LastTransaction = details;
-			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-			OnTransactionOccurred(te);
-		}
+            Request.Provided = amountRemoved;
+            ResourceTransaction details = new ResourceTransaction();
+            details.ResourceType = this.Name;
+            details.Debit = amountRemoved * -1;
+            details.Activity = Request.ActivityModel.Name;
+            details.Reason = Request.Reason;
+            LastTransaction = details;
+            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+            OnTransactionOccurred(te);
+        }
 
-		///// <summary>
-		///// Remove from food store
-		///// </summary>
-		///// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
-		///// <param name="ActivityName">Name of activity requesting resource</param>
-		///// <param name="Reason">Name of individual requesting resource</param>
-		//public double Remove(double RemoveAmount, string ActivityName, string Reason)
-		//{
-		//	double amountRemoved = RemoveAmount;
-		//	if (this.amount - RemoveAmount < 0)
-		//	{
-		//		string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
-		//			+ "Current Amount: " + this.amount + Environment.NewLine
-		//			+ "Tried to Remove: " + RemoveAmount;
-		//		Summary.WriteWarning(this, message);
-		//		amountRemoved = this.amount;
-		//		this.amount = 0;
-		//	}
-		//	else
-		//	{
-		//		this.amount = this.amount - RemoveAmount;
-		//	}
-		//	ResourceTransaction details = new ResourceTransaction();
-		//	details.ResourceType = this.Name;
-		//	details.Debit = amountRemoved * -1;
-		//	details.Activity = ActivityName;
-		//	details.Reason = Reason;
-		//	LastTransaction = details;
-		//	TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-		//	OnTransactionOccurred(te);
-		//	return amountRemoved;
-		//}
+        ///// <summary>
+        ///// Remove from food store
+        ///// </summary>
+        ///// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
+        ///// <param name="ActivityName">Name of activity requesting resource</param>
+        ///// <param name="Reason">Name of individual requesting resource</param>
+        //public double Remove(double RemoveAmount, string ActivityName, string Reason)
+        //{
+        //    double amountRemoved = RemoveAmount;
+        //    if (this.amount - RemoveAmount < 0)
+        //    {
+        //        string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
+        //            + "Current Amount: " + this.amount + Environment.NewLine
+        //            + "Tried to Remove: " + RemoveAmount;
+        //        Summary.WriteWarning(this, message);
+        //        amountRemoved = this.amount;
+        //        this.amount = 0;
+        //    }
+        //    else
+        //    {
+        //        this.amount = this.amount - RemoveAmount;
+        //    }
+        //    ResourceTransaction details = new ResourceTransaction();
+        //    details.ResourceType = this.Name;
+        //    details.Debit = amountRemoved * -1;
+        //    details.Activity = ActivityName;
+        //    details.Reason = Reason;
+        //    LastTransaction = details;
+        //    TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+        //    OnTransactionOccurred(te);
+        //    return amountRemoved;
+        //}
 
-		/// <summary>
-		/// Remove Food
-		/// </summary>
-		/// <param name="RemoveRequest">A feed request object with required information</param>
-		public void Remove(object RemoveRequest)
-		{
-			throw new NotImplementedException();
-		}
+        /// <summary>
+        /// Remove Food
+        /// </summary>
+        /// <param name="RemoveRequest">A feed request object with required information</param>
+        public void Remove(object RemoveRequest)
+        {
+            throw new NotImplementedException();
+        }
 
-		/// <summary>
-		/// Set amount of animal food available
-		/// </summary>
-		/// <param name="NewValue">New value to set food store to</param>
-		public void Set(double NewValue)
-		{
-			this.amount = NewValue;
-		}
+        /// <summary>
+        /// Set amount of animal food available
+        /// </summary>
+        /// <param name="NewValue">New value to set food store to</param>
+        public void Set(double NewValue)
+        {
+            this.amount = NewValue;
+        }
 
-		/// <summary>
-		/// Back account transaction occured
-		/// </summary>
-		public event EventHandler TransactionOccurred;
+        /// <summary>
+        /// Back account transaction occured
+        /// </summary>
+        public event EventHandler TransactionOccurred;
 
-		/// <summary>
-		/// Transcation occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected virtual void OnTransactionOccurred(EventArgs e)
-		{
-			if (TransactionOccurred != null)
-				TransactionOccurred(this, e);
-		}
+        /// <summary>
+        /// Transcation occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnTransactionOccurred(EventArgs e)
+        {
+            if (TransactionOccurred != null)
+                TransactionOccurred(this, e);
+        }
 
-		/// <summary>
-		/// Last transaction received
-		/// </summary>
-		[XmlIgnore]
-		public ResourceTransaction LastTransaction { get; set; }
+        /// <summary>
+        /// Last transaction received
+        /// </summary>
+        [XmlIgnore]
+        public ResourceTransaction LastTransaction { get; set; }
 
-		#endregion
+        #endregion
 
-	}
+    }
 }

@@ -39,38 +39,38 @@ namespace Models.CLEM.Resources
             {
                 //cast the generic IModel to a specfic model.
                 AnimalFoodStoreType fodder = childModel as AnimalFoodStoreType;
-				fodder.TransactionOccurred += Resource_TransactionOccurred;
-				Items.Add(fodder);
+                fodder.TransactionOccurred += Resource_TransactionOccurred;
+                Items.Add(fodder);
             }
-		}
+        }
 
-		#region Transactions
+        #region Transactions
 
-		// Must be included away from base class so that APSIM Event.Subscriber can find them 
+        // Must be included away from base class so that APSIM Event.Subscriber can find them 
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
-		protected new void OnTransactionOccurred(EventArgs e)
-		{
-			EventHandler invoker = TransactionOccurred;
-			if (invoker != null) invoker(this, e);
-		}
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        protected new void OnTransactionOccurred(EventArgs e)
+        {
+            EventHandler invoker = TransactionOccurred;
+            if (invoker != null) invoker(this, e);
+        }
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
-		public new event EventHandler TransactionOccurred;
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        public new event EventHandler TransactionOccurred;
 
-		private void Resource_TransactionOccurred(object sender, EventArgs e)
-		{
-			LastTransaction = (e as TransactionEventArgs).Transaction;
-			OnTransactionOccurred(e);
-		}
+        private void Resource_TransactionOccurred(object sender, EventArgs e)
+        {
+            LastTransaction = (e as TransactionEventArgs).Transaction;
+            OnTransactionOccurred(e);
+        }
 
-		#endregion
+        #endregion
 
-	}
+    }
 
 
 }

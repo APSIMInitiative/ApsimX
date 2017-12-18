@@ -6,39 +6,39 @@ using System.Text;
 
 namespace Models.CLEM.Resources
 {
-	/// <summary>
-	/// Animal valuation entry
-	/// </summary>
-	public class AnimalPriceValue
-	{
-		/// <summary>
-		/// Name of herd
-		/// </summary>
-		public string Breed { get; set; }
+    /// <summary>
+    /// Animal valuation entry
+    /// </summary>
+    public class AnimalPriceValue
+    {
+        /// <summary>
+        /// Name of herd
+        /// </summary>
+        public string Breed { get; set; }
 
-		/// <summary>
-		/// Gender
-		/// </summary>
-		public Sex Gender { get; set; }
+        /// <summary>
+        /// Gender
+        /// </summary>
+        public Sex Gender { get; set; }
 
-		/// <summary>
-		/// Age in months
-		/// </summary>
-		public double Age { get; set; }
+        /// <summary>
+        /// Age in months
+        /// </summary>
+        public double Age { get; set; }
 
-		/// <summary>
-		/// Value of individual to buy
-		/// </summary>
-		public double PurchaseValue { get; set; }
+        /// <summary>
+        /// Value of individual to buy
+        /// </summary>
+        public double PurchaseValue { get; set; }
 
-		/// <summary>
-		/// Value of individual to sell
-		/// </summary>
-		public double SellValue { get; set; }
+        /// <summary>
+        /// Value of individual to sell
+        /// </summary>
+        public double SellValue { get; set; }
 
-		/// <summary>
-		/// Type of Styling
-		/// </summary>
-		public PricingStyleType Style { get; set; }
-	}
+        /// <summary>
+        /// Type of Styling
+        /// </summary>
+        public PricingStyleType Style { get; set; }
+    }
 }

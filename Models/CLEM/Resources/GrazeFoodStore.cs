@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
 
     ///<summary>
     /// Store for all the biomass growing in the fields (pasture, crop residue etc)
-	/// This acts like an AnimalFoodStore but in reality the food is in a field
+    /// This acts like an AnimalFoodStore but in reality the food is in a field
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -28,10 +28,10 @@ namespace Models.CLEM.Resources
         [XmlIgnore]
         public List<GrazeFoodStoreType> Items;
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Items = new List<GrazeFoodStoreType>();
@@ -42,69 +42,69 @@ namespace Models.CLEM.Resources
             {
                 //cast the generic IModel to a specfic model.
                 GrazeFoodStoreType grazefood = childModel as GrazeFoodStoreType;
-				grazefood.TransactionOccurred += Resource_TransactionOccurred;
-				grazefood.EcologicalIndicatorsCalculated += Resource_EcologicalIndicatorsCalculated;
-				Items.Add(grazefood);
+                grazefood.TransactionOccurred += Resource_TransactionOccurred;
+                grazefood.EcologicalIndicatorsCalculated += Resource_EcologicalIndicatorsCalculated;
+                Items.Add(grazefood);
             }
         }
 
-		#region Ecological Indicators calculated
+        #region Ecological Indicators calculated
 
-		private void Resource_EcologicalIndicatorsCalculated(object sender, EventArgs e)
-		{
-			LastEcologicalIndicators = (e as EcolIndicatorsEventArgs).Indicators;
-			OnEcologicalIndicatorsCalculated(e);
-		}
+        private void Resource_EcologicalIndicatorsCalculated(object sender, EventArgs e)
+        {
+            LastEcologicalIndicators = (e as EcolIndicatorsEventArgs).Indicators;
+            OnEcologicalIndicatorsCalculated(e);
+        }
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
-		protected void OnEcologicalIndicatorsCalculated(EventArgs e)
-		{
-			EventHandler invoker = EcologicalIndicatorsCalculated;
-			if (invoker != null) invoker(this, e);
-		}
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        protected void OnEcologicalIndicatorsCalculated(EventArgs e)
+        {
+            EventHandler invoker = EcologicalIndicatorsCalculated;
+            if (invoker != null) invoker(this, e);
+        }
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
-		public event EventHandler EcologicalIndicatorsCalculated;
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        public event EventHandler EcologicalIndicatorsCalculated;
 
-		/// <summary>
-		/// Last ecological indicators received
-		/// </summary>
-		[XmlIgnore]
-		public EcologicalIndicators LastEcologicalIndicators { get; set; }
+        /// <summary>
+        /// Last ecological indicators received
+        /// </summary>
+        [XmlIgnore]
+        public EcologicalIndicators LastEcologicalIndicators { get; set; }
 
-		#endregion
+        #endregion
 
-		#region Transactions
+        #region Transactions
 
-		// Must be included away from base class so that APSIM Event.Subscriber can find them 
+        // Must be included away from base class so that APSIM Event.Subscriber can find them 
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
-		protected new void OnTransactionOccurred(EventArgs e)
-		{
-			EventHandler invoker = TransactionOccurred;
-			if (invoker != null) invoker(this, e);
-		}
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        protected new void OnTransactionOccurred(EventArgs e)
+        {
+            EventHandler invoker = TransactionOccurred;
+            if (invoker != null) invoker(this, e);
+        }
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
-		public new event EventHandler TransactionOccurred;
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        public new event EventHandler TransactionOccurred;
 
-		private void Resource_TransactionOccurred(object sender, EventArgs e)
-		{
-			LastTransaction = (e as TransactionEventArgs).Transaction;
-			OnTransactionOccurred(e);
-		}
+        private void Resource_TransactionOccurred(object sender, EventArgs e)
+        {
+            LastTransaction = (e as TransactionEventArgs).Transaction;
+            OnTransactionOccurred(e);
+        }
 
-		#endregion
+        #endregion
 
-	}
+    }
 
 
 }

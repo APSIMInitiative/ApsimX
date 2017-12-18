@@ -9,13 +9,13 @@ using System.Xml.Serialization;
 
 namespace Models.CLEM.Resources
 {
-	///<summary>
-	/// Store for manure
-	///</summary> 
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(ProductStore))]
+    ///<summary>
+    /// Store for manure
+    ///</summary> 
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(ProductStore))]
     [Description("This resource represents a manure store. This is a special type of Porduct Store Type and is needed for manure management and must be named \"Manure\".")]
     public class ProductStoreTypeManure: CLEMModel, IResourceWithTransactionType, IResourceType
     {
@@ -33,31 +33,31 @@ namespace Models.CLEM.Resources
         [Required, Range(0, 100, ErrorMessage = "Value must be a proportion in the range 0 to 1")]
         public double DecayRate { get; set; }
 
-		/// <summary>
-		/// Moisture decay rate each time step
-		/// </summary>
-		[Description("Moisture decay rate each time step")]
+        /// <summary>
+        /// Moisture decay rate each time step
+        /// </summary>
+        [Description("Moisture decay rate each time step")]
         [Required, Range(0, 100, ErrorMessage = "Value must be a proportion in the range 0 to 1")]
         public double MoistureDecayRate { get; set; }
 
-		/// <summary>
-		/// Proportion moisture of fresh manure
-		/// </summary>
-		[Description("Proportion moisture of fresh manure")]
+        /// <summary>
+        /// Proportion moisture of fresh manure
+        /// </summary>
+        [Description("Proportion moisture of fresh manure")]
         [Required, Range(0, 100, ErrorMessage = "Value must be a proportion in the range 0 to 1")]
         public double ProportionMoistureFresh { get; set; }
 
-		/// <summary>
-		/// Maximum age manure lasts
-		/// </summary>
-		[Description("Maximum age (time steps) manure lasts")]
+        /// <summary>
+        /// Maximum age manure lasts
+        /// </summary>
+        [Description("Maximum age (time steps) manure lasts")]
         [Required]
         public int MaximumAge { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("CLEMInitialiseResource")]
+        [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             UncollectedStores = new List<ManureStoreUncollected>();
@@ -70,71 +70,71 @@ namespace Models.CLEM.Resources
         /// <param name="storeName">Name of store to add manure to</param>
         /// <param name="amount">Amount (dry weight) of manure to add</param>
         public void AddUncollectedManure(string storeName, double amount)
-		{
-			ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.ToLower() == storeName.ToLower()).FirstOrDefault();
-			if(store == null)
-			{
-				store = new ManureStoreUncollected() { Name = storeName };
-				UncollectedStores.Add(store);
-			}
-			ManurePool pool = store.Pools.Where(a => a.Age == 0).FirstOrDefault();
-			if(pool == null)
-			{
-				pool = new ManurePool() { Age = 0, ProportionMoisture= ProportionMoistureFresh };
-				store.Pools.Add(pool);
-			}
-			pool.Amount += amount;
-		}
+        {
+            ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.ToLower() == storeName.ToLower()).FirstOrDefault();
+            if(store == null)
+            {
+                store = new ManureStoreUncollected() { Name = storeName };
+                UncollectedStores.Add(store);
+            }
+            ManurePool pool = store.Pools.Where(a => a.Age == 0).FirstOrDefault();
+            if(pool == null)
+            {
+                pool = new ManurePool() { Age = 0, ProportionMoisture= ProportionMoistureFresh };
+                store.Pools.Add(pool);
+            }
+            pool.Amount += amount;
+        }
 
-		/// <summary>
-		/// Function to age manure pools
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("CLEMAgeResources")]
-		private void OnCLEMAgeResources(object sender, EventArgs e)
-		{
-			// decay N and DMD of pools and age by 1 month
-			foreach (ManureStoreUncollected store in UncollectedStores)
-			{
-				foreach (ManurePool pool in store.Pools)
-				{
-					pool.Age++;
-					pool.Amount *= DecayRate;
+        /// <summary>
+        /// Function to age manure pools
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMAgeResources")]
+        private void OnCLEMAgeResources(object sender, EventArgs e)
+        {
+            // decay N and DMD of pools and age by 1 month
+            foreach (ManureStoreUncollected store in UncollectedStores)
+            {
+                foreach (ManurePool pool in store.Pools)
+                {
+                    pool.Age++;
+                    pool.Amount *= DecayRate;
                     pool.ProportionMoisture *= MoistureDecayRate;
-				}
-				store.Pools.RemoveAll(a => a.Age > MaximumAge);
-			}
-		}
+                }
+                store.Pools.RemoveAll(a => a.Age > MaximumAge);
+            }
+        }
 
-		/// <summary>
-		/// Method to collect manure from uncollected manure stores
-		/// Manure is collected from freshest to oldest
-		/// </summary>
-		/// <param name="storeName">Name of store to add manure to</param>
-		/// <param name="resourceLimiter">Reduction due to limited resources</param>
-		/// <param name="activityName">Name of activity performing collection</param>
-		public void Collect(string storeName, double resourceLimiter, string activityName)
-		{
-			ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.ToLower() == storeName.ToLower()).FirstOrDefault();
-			if (store != null)
-			{
-				double limiter = Math.Max(Math.Min(resourceLimiter, 1.0), 0);
-				double amountPossible = store.Pools.Sum(a => a.Amount) * limiter;
-				double amountMoved = 0;
+        /// <summary>
+        /// Method to collect manure from uncollected manure stores
+        /// Manure is collected from freshest to oldest
+        /// </summary>
+        /// <param name="storeName">Name of store to add manure to</param>
+        /// <param name="resourceLimiter">Reduction due to limited resources</param>
+        /// <param name="activityName">Name of activity performing collection</param>
+        public void Collect(string storeName, double resourceLimiter, string activityName)
+        {
+            ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.ToLower() == storeName.ToLower()).FirstOrDefault();
+            if (store != null)
+            {
+                double limiter = Math.Max(Math.Min(resourceLimiter, 1.0), 0);
+                double amountPossible = store.Pools.Sum(a => a.Amount) * limiter;
+                double amountMoved = 0;
 
-				while (store.Pools.Count > 0 && amountMoved<amountPossible)
-				{
-					// take needed
-					double take = Math.Min(amountPossible - amountMoved, store.Pools[0].Amount);
-					amountMoved += take;
-					store.Pools[0].Amount -= take; 
-					// if 0 delete
-					store.Pools.RemoveAll(a => a.Amount == 0);
-				}
-				this.Add(amountMoved, activityName, ((storeName=="")?"General":storeName));
-			}
-		}
+                while (store.Pools.Count > 0 && amountMoved<amountPossible)
+                {
+                    // take needed
+                    double take = Math.Min(amountPossible - amountMoved, store.Pools[0].Amount);
+                    amountMoved += take;
+                    store.Pools[0].Amount -= take; 
+                    // if 0 delete
+                    store.Pools.RemoveAll(a => a.Amount == 0);
+                }
+                this.Add(amountMoved, activityName, ((storeName=="")?"General":storeName));
+            }
+        }
 
         private double amount;
         /// <summary>
@@ -148,10 +148,6 @@ namespace Models.CLEM.Resources
         public void Initialise()
         {
             this.amount = 0;
-            //if (StartingAmount > 0)
-            //{
-            //    Add(StartingAmount, this.Name, "Starting value");
-            //}
         }
 
         #region transactions
@@ -246,90 +242,37 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
-
-
-
-
-
-
-
-
-        ///// <summary>
-        ///// Back account transaction occured
-        ///// </summary>
-        //public event EventHandler TransactionOccurred;
-
-        ///// <summary>
-        ///// Transcation occurred 
-        ///// </summary>
-        ///// <param name="e"></param>
-        //protected virtual void OnTransactionOccurred(EventArgs e)
-        //{
-        //    if (TransactionOccurred != null)
-        //        TransactionOccurred(this, e);
-        //}
-
-        //public void Add(object ResourceAmount, string ActivityName, string Reason)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public void Remove(ResourceRequest Request)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public void Set(double NewAmount)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //public void Initialise()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        ///// <summary>
-        ///// Last transaction received
-        ///// </summary>
-        //[XmlIgnore]
-        //public ResourceTransaction LastTransaction { get; set; }
-
-        //public double Amount => throw new NotImplementedException();
     }
 
     /// <summary>
     /// Individual store of uncollected manure
     /// </summary>
     public class ManureStoreUncollected
-	{
-		/// <summary>
-		/// Name of store (eg yards, paddock name etc)
-		/// </summary>
-		public string Name { get; set; }
+    {
+        /// <summary>
+        /// Name of store (eg yards, paddock name etc)
+        /// </summary>
+        public string Name { get; set; }
 
-		/// <summary>
-		/// Pools of manure in this store
-		/// </summary>
-		public List<ManurePool> Pools = new List<ManurePool>();
-	}
+        /// <summary>
+        /// Pools of manure in this store
+        /// </summary>
+        public List<ManurePool> Pools = new List<ManurePool>();
+    }
 
-	/// <summary>
-	/// Individual uncollected manure pool to track age and decomposition
-	/// </summary>
-	public class ManurePool
-	{
-		/// <summary>
-		/// Age of pool (in timesteps)
-		/// </summary>
-		public int Age { get; set; }
-		/// <summary>
-		/// Amount (dry weight) in pool
-		/// </summary>
-		public double Amount { get; set; }
+    /// <summary>
+    /// Individual uncollected manure pool to track age and decomposition
+    /// </summary>
+    public class ManurePool
+    {
+        /// <summary>
+        /// Age of pool (in timesteps)
+        /// </summary>
+        public int Age { get; set; }
+        /// <summary>
+        /// Amount (dry weight) in pool
+        /// </summary>
+        public double Amount { get; set; }
         /// <summary>
         /// Proportion water in pool
         /// </summary>
@@ -342,15 +285,15 @@ namespace Models.CLEM.Resources
         /// <param name="ProportionMoistureFresh"></param>
         /// <returns></returns>
         public double WetWeight(double MoistureDecayRate, double ProportionMoistureFresh)
-		{
-			double moisture = ProportionMoistureFresh;
-			for (int i = 0; i < Age; i++)
-			{
-				moisture *= MoistureDecayRate;
-			}
+        {
+            double moisture = ProportionMoistureFresh;
+            for (int i = 0; i < Age; i++)
+            {
+                moisture *= MoistureDecayRate;
+            }
             moisture = Math.Max(moisture, 0.05);
-			return Amount * (1 + moisture);
-		}
+            return Amount * (1 + moisture);
+        }
 
-	}
+    }
 }

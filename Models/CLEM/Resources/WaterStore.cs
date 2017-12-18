@@ -7,56 +7,56 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {
-	///<summary>
-	/// Parent model of water stores.
-	/// e.g. tap, bore, tank, dam
-	///</summary> 
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(ResourcesHolder))]
+    ///<summary>
+    /// Parent model of water stores.
+    /// e.g. tap, bore, tank, dam
+    ///</summary> 
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all water store types (e.g. tank, dam, bore) for the simulation.")]
     public class WaterStore : ResourceBaseWithTransactions
-	{
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			foreach (var child in Children)
-			{
-				if (child is IResourceWithTransactionType)
-				{
-					(child as IResourceWithTransactionType).TransactionOccurred += Resource_TransactionOccurred; ;
-				}
+    {
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            foreach (var child in Children)
+            {
+                if (child is IResourceWithTransactionType)
+                {
+                    (child as IResourceWithTransactionType).TransactionOccurred += Resource_TransactionOccurred; ;
+                }
             }
         }
 
-		#region Transactions
+        #region Transactions
 
-		// Must be included away from base class so that APSIM Event.Subscriber can find them 
+        // Must be included away from base class so that APSIM Event.Subscriber can find them 
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
-		protected new void OnTransactionOccurred(EventArgs e)
-		{
-			EventHandler invoker = TransactionOccurred;
-			if (invoker != null) invoker(this, e);
-		}
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        protected new void OnTransactionOccurred(EventArgs e)
+        {
+            EventHandler invoker = TransactionOccurred;
+            if (invoker != null) invoker(this, e);
+        }
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
-		public new event EventHandler TransactionOccurred;
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        public new event EventHandler TransactionOccurred;
 
-		private void Resource_TransactionOccurred(object sender, EventArgs e)
-		{
-			LastTransaction = (e as TransactionEventArgs).Transaction;
-			OnTransactionOccurred(e);
-		}
+        private void Resource_TransactionOccurred(object sender, EventArgs e)
+        {
+            LastTransaction = (e as TransactionEventArgs).Transaction;
+            OnTransactionOccurred(e);
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

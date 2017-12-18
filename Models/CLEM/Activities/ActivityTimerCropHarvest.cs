@@ -36,11 +36,11 @@ namespace Models.CLEM.Activities
         [Description("Months before harvest to stop performing activities")]
         [Required]
         public int MonthsBeforeHarvestStop { get; set; }
-	
-		///// <summary>
-		///// Invert (NOT in selected range)
-		///// </summary>
-		//[Description("Invert (NOT in selected range)")]
+    
+        ///// <summary>
+        ///// Invert (NOT in selected range)
+        ///// </summary>
+        //[Description("Invert (NOT in selected range)")]
   //      [Required]
   //      public bool Invert { get; set; }
 
@@ -55,9 +55,9 @@ namespace Models.CLEM.Activities
         /// Constructor
         /// </summary>
         public ActivityTimerCropHarvest()
-		{
-			this.SetDefaults();
-		}
+        {
+            this.SetDefaults();
+        }
 
         /// <summary>
         /// Validate model
@@ -93,7 +93,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <returns>Whether the activity is due in the current month</returns>
         public bool ActivityDue
-		{
+        {
             get
             {
                 int[] range = new int[2] { MonthsBeforeHarvestStart, MonthsBeforeHarvestStop };
@@ -134,7 +134,7 @@ namespace Models.CLEM.Activities
                 return (month[0] <= today && month[1] >= today);
             }
 
-		}
+        }
 
         /// <summary>
         /// Activity has occurred 
