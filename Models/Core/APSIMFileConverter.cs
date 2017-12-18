@@ -57,6 +57,16 @@ namespace Models.Core
         /// <returns>Returns true if something was changed.</returns>
         public static bool ConvertToLatestVersion(XmlNode rootNode, string fileName)
         {
+            return ConvertToVersion(rootNode, fileName, LastestVersion);
+        }
+
+        /// <summary>Converts XML to the latest version.</summary>
+        /// <param name="rootNode">The root node.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        /// <param name="toVersion">Version number to convert to</param>
+        /// <returns>Returns true if something was changed.</returns>
+        public static bool ConvertToVersion(XmlNode rootNode, string fileName, int toVersion)
+        {
             string fileVersionString = XmlUtilities.Attribute(rootNode, "Version");
             int fileVersion = 0;
             if (fileVersionString != string.Empty)
@@ -64,15 +74,15 @@ namespace Models.Core
 
             // Update the xml if not at the latest version.
             bool changed = false;
-            while (fileVersion < LastestVersion)
+            while (fileVersion < toVersion)
             {
                 changed = true;
 
                 // Find the method to call to upgrade the file by one version.
-                int toVersion = fileVersion + 1;
-                MethodInfo method = typeof(APSIMFileConverter).GetMethod("UpgradeToVersion" + toVersion, BindingFlags.NonPublic | BindingFlags.Static);
+                int versionFunction = fileVersion + 1;
+                MethodInfo method = typeof(APSIMFileConverter).GetMethod("UpgradeToVersion" + versionFunction, BindingFlags.NonPublic | BindingFlags.Static);
                 if (method == null)
-                    throw new Exception("Cannot find converter to go to version " + toVersion);
+                    throw new Exception("Cannot find converter to go to version " + versionFunction);
 
                 // Found converter method so call it.
                 method.Invoke(null, new object[] { rootNode, fileName });
@@ -108,29 +118,29 @@ namespace Models.Core
         /// <param name="node">The node to upgrade.</param>
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion1(XmlNode node, string fileName)
+    {
+        foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
         {
-            foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
-            {
-                XmlUtilities.Rename(seriesNode, "Title", "Name");
-                XmlUtilities.Move(seriesNode, "X/TableName", seriesNode, "TableName");
-                XmlUtilities.Move(seriesNode, "X/FieldName", seriesNode, "XFieldName");
-                XmlUtilities.Move(seriesNode, "Y/FieldName", seriesNode, "YFieldName");
-                XmlUtilities.Move(seriesNode, "X2/FieldName", seriesNode, "X2FieldName");
-                XmlUtilities.Move(seriesNode, "Y2/FieldName", seriesNode, "Y2FieldName");
+            XmlUtilities.Rename(seriesNode, "Title", "Name");
+            XmlUtilities.Move(seriesNode, "X/TableName", seriesNode, "TableName");
+            XmlUtilities.Move(seriesNode, "X/FieldName", seriesNode, "XFieldName");
+            XmlUtilities.Move(seriesNode, "Y/FieldName", seriesNode, "YFieldName");
+            XmlUtilities.Move(seriesNode, "X2/FieldName", seriesNode, "X2FieldName");
+            XmlUtilities.Move(seriesNode, "Y2/FieldName", seriesNode, "Y2FieldName");
 
-                bool showRegression = XmlUtilities.Value(seriesNode.ParentNode, "ShowRegressionLine") == "true";
-                if (showRegression)
-                    seriesNode.AppendChild(seriesNode.OwnerDocument.CreateElement("Regression"));
+            bool showRegression = XmlUtilities.Value(seriesNode.ParentNode, "ShowRegressionLine") == "true";
+            if (showRegression)
+                seriesNode.AppendChild(seriesNode.OwnerDocument.CreateElement("Regression"));
 
-                string seriesType = XmlUtilities.Value(seriesNode, "Type");
-                if (seriesType == "Line")
-                    XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
+            string seriesType = XmlUtilities.Value(seriesNode, "Type");
+            if (seriesType == "Line")
+                XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
 
-                XmlUtilities.DeleteValue(seriesNode, "X");
-                XmlUtilities.DeleteValue(seriesNode, "Y");
+            XmlUtilities.DeleteValue(seriesNode, "X");
+            XmlUtilities.DeleteValue(seriesNode, "Y");
 
-            }
         }
+    }
 
         /// <summary>Upgrades to version 2.</summary>
         /// <remarks>
