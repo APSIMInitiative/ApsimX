@@ -39321,5 +39321,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>387</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

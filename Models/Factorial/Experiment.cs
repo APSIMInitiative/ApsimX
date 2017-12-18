@@ -15,7 +15,7 @@
     [ViewName("UserInterface.Views.MemoView")]
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class Experiment : Model, IJobGenerator
+    public class Experiment : Model, ISimulationGenerator
     {
         [Link]
         IStorageReader storage = null;
@@ -28,17 +28,21 @@
         [EventSubscribe("BeginRun")]
         private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
-            allCombinations = AllCombinations();
-            parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-            Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
-            serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
         }
 
         /// <summary>Gets the next job to run</summary>
-        public IRunnable NextJobToRun()
+        public Simulation NextSimulationToRun()
         {
             if (allCombinations == null || allCombinations.Count == 0)
                 return null;
+
+            if (serialisedBase == null)
+            {
+                allCombinations = AllCombinations();
+                parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
+                serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
+            }
 
             var combination = allCombinations[0];
             allCombinations.RemoveAt(0);
@@ -65,7 +69,7 @@
 
             PushFactorsToReportModels(newSimulation, combination);
             StoreFactorsInDataStore(newSimulation, combination);
-            return new RunSimulation(newSimulation, doClone: false);
+            return newSimulation;
         }
 
         /// <summary>Gets a list of simulation names</summary>
@@ -130,34 +134,37 @@
         /// <param name="simulation">The simulation to search for report models.</param>
         private void StoreFactorsInDataStore(Simulation simulation, List<FactorValue> factorValues)
         {
-            List<string> names = new List<string>();
-            List<string> values = new List<string>();
-
-            GetFactorNamesAndValues(factorValues, names, values);
-
-            string parentFolderName = null;
-            IModel parentFolder = Apsim.Parent(this, typeof(Folder));
-            if (parentFolder != null)
-                parentFolderName = parentFolder.Name;
-
-            DataTable factorTable = new DataTable();
-            factorTable.TableName = "_Factors";
-            factorTable.Columns.Add("ExperimentName", typeof(string));
-            factorTable.Columns.Add("SimulationName", typeof(string));
-            factorTable.Columns.Add("FolderName", typeof(string));
-            factorTable.Columns.Add("FactorName", typeof(string));
-            factorTable.Columns.Add("FactorValue", typeof(string));
-            for (int i = 0; i < names.Count; i++)
+            if (storage != null)
             {
-                DataRow row = factorTable.NewRow();
-                row[0] = Name;
-                row[1] = simulation.Name;
-                row[2] = parentFolderName;
-                row[3] = names[i];
-                row[4] = values[i];
-                factorTable.Rows.Add(row);
+                List<string> names = new List<string>();
+                List<string> values = new List<string>();
+
+                GetFactorNamesAndValues(factorValues, names, values);
+
+                string parentFolderName = null;
+                IModel parentFolder = Apsim.Parent(this, typeof(Folder));
+                if (parentFolder != null)
+                    parentFolderName = parentFolder.Name;
+
+                DataTable factorTable = new DataTable();
+                factorTable.TableName = "_Factors";
+                factorTable.Columns.Add("ExperimentName", typeof(string));
+                factorTable.Columns.Add("SimulationName", typeof(string));
+                factorTable.Columns.Add("FolderName", typeof(string));
+                factorTable.Columns.Add("FactorName", typeof(string));
+                factorTable.Columns.Add("FactorValue", typeof(string));
+                for (int i = 0; i < names.Count; i++)
+                {
+                    DataRow row = factorTable.NewRow();
+                    row[0] = Name;
+                    row[1] = simulation.Name;
+                    row[2] = parentFolderName;
+                    row[3] = names[i];
+                    row[4] = values[i];
+                    factorTable.Rows.Add(row);
+                }
+                storage.WriteTable(factorTable);
             }
-            storage.WriteTable(factorTable);
         }
 
         /// <summary>

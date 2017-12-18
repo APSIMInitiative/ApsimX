@@ -7,7 +7,7 @@ using System.Data;
 namespace UnitTests
 {
     [Serializable]
-    internal class MockStorage : IStorageReader, IStorageWriter
+    internal class MockStorage : Model, IStorageReader, IStorageWriter
     {
         internal List<string> columnNames = new List<string>();
         internal List<Row> rows = new List<Row>();
@@ -36,6 +36,7 @@ namespace UnitTests
             }
         }
 
+        [Serializable]
         internal class Row
         {
             public IEnumerable<object> values;
@@ -56,72 +57,63 @@ namespace UnitTests
 
         public DataTable GetData(string tableName, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public string GetUnits(string tableName, string columnHeading)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public void WriteTable(DataTable table)
         {
-            throw new NotImplementedException();
         }
 
         public void DeleteTable(string tableName)
         {
-            throw new NotImplementedException();
         }
 
         public DataTable RunQuery(string sql)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public IEnumerable<string> ColumnNames(string tableName)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public void DeleteAllTables(bool cleanSlate = false)
         {
-            throw new NotImplementedException();
         }
 
         public void BeginWriting(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
-            throw new NotImplementedException();
         }
 
         public void EndWriting()
         {
-            throw new NotImplementedException();
         }
 
         public void DeleteAllTables()
         {
-            throw new NotImplementedException();
         }
 
         public int GetSimulationID(string simulationName)
         {
-            throw new NotImplementedException();
+            return 0;
         }
 
         public void AllCompleted()
         {
-            throw new NotImplementedException();
         }
 
         public void CompletedWritingSimulationData(string simulationName)
         {
-            throw new NotImplementedException();
         }
 
         public void WriteTableRaw(DataTable data)
         {
-            throw new NotImplementedException();
         }
     }
 }
