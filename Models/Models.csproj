@@ -149,7 +149,7 @@
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\FileFormat.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
-    <Compile Include="Core\IJobGenerator.cs" />
+    <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Core\IStorageWriter.cs" />
     <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobRunnerMultiProcess.cs" />
