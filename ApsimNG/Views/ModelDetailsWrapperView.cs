@@ -50,7 +50,6 @@ namespace UserInterface.Views
                 Xpad=4
             };
             modelDescriptionLabel.LineWrapMode = Pango.WrapMode.Word;
-//            modelDescriptionLabel.SingleLineMode = false;
             modelDescriptionLabel.Wrap = false;
             modelDescriptionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
 
@@ -72,12 +71,6 @@ namespace UserInterface.Views
             vbox1.PackStart(modelHelpLinkLabel, false, true, 0);
             vbox1.Add(bottomView);
 
-            //Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ModelDetailsWrapperView.glade");
-            //vbox1 = (VBox)builder.GetObject("vbox");
-            //modelTypeLabel = (Label)builder.GetObject("ModelTypeLabel");
-            //modelDescriptionLabel = (Label)builder.GetObject("ModelDescriptionLabel");
-            //modelHelpLinkLabel = (Label)builder.GetObject("ModelHelpLinkLabel");
-            //bottomView = (Viewport)builder.GetObject("BottomView");
             _mainWidget = vbox1;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
