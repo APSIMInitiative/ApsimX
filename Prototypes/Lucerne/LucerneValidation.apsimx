@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="19">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="21">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -478,6 +478,16 @@
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -660,6 +670,11 @@
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Nodule].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Nodule>
       <SimpleLeaf>
@@ -1158,6 +1173,11 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
@@ -1355,6 +1375,11 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Stem].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1525,6 +1550,11 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Shell].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1695,6 +1725,11 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Grain].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -2834,6 +2869,11 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[TapRoot].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <CompositeBiomass>
@@ -3110,7 +3150,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
               <Name>Cutting</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
-                <Date>2001-01-23</Date>
+                <Date>2001-01-24</Date>
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
@@ -3138,15 +3178,15 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
-                <Date>2002-01-31</Date>
-                <Action> [Mower].Script.Cut();</Action>
+                <Date>2002-02-04</Date>
+                <Action>[Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
                 <Date>2002-04-04</Date>
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
-                <Date>2002-06-14</Date>
+                <Date>2002-06-12</Date>
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
             </Operations>
@@ -3187,7 +3227,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
-                <Date>2002-01-31</Date>
+                <Date>2002-02-04</Date>
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
@@ -3195,7 +3235,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
-                <Date>2002-06-14</Date>
+                <Date>2002-06-12</Date>
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
             </Operations>
@@ -3236,7 +3276,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
-                <Date>2002-01-31</Date>
+                <Date>2002-02-04</Date>
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
@@ -3285,7 +3325,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
-                <Date>2002-01-31</Date>
+                <Date>2002-02-04</Date>
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
@@ -3293,7 +3333,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
-                <Date>2002-06-14</Date>
+                <Date>2002-06-12</Date>
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
             </Operations>
@@ -11740,7 +11780,7 @@ namespace Models
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
-              <Date>1999-01-13</Date>
+              <Date>1999-01-14</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
@@ -11752,7 +11792,7 @@ namespace Models
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
-              <Date>1999-07-02</Date>
+              <Date>1999-06-24</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
@@ -11768,7 +11808,7 @@ namespace Models
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
-              <Date>2000-01-26</Date>
+              <Date>2000-01-27</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
@@ -11788,7 +11828,7 @@ namespace Models
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
-              <Date>2000-12-22</Date>
+              <Date>2000-12-19</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
@@ -11808,11 +11848,11 @@ namespace Models
               <Action> [Mower].Script.Cut();  </Action>
             </Operation>
             <Operation>
-              <Date>2001-10-05</Date>
+              <Date>2001-10-06</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
-              <Date>2001-11-20</Date>
+              <Date>2001-11-21</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
