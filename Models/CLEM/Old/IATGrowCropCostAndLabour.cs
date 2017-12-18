@@ -13,15 +13,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Activities
 {
-	/// <summary>Activity to remove the costs and labour used for graowing a crop as a single resource request.
+    /// <summary>Activity to remove the costs and labour used for graowing a crop as a single resource request.
     /// So either both cost and labour is taken or neither is.</summary>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IATGrowCrop))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     public class IATGrowCropCostAndLabour : CLEMActivityBase
-	{
+    {
         /// <summary>
         /// Get the Clock.
         /// </summary>
@@ -135,7 +135,7 @@ namespace Models.CLEM.Activities
 
             // get labour specifications
             labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 
             costDate = CostDateFromHarvestDate();
         }
@@ -195,7 +195,7 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-			ResourceRequestList = null;
+            ResourceRequestList = null;
 
             if ((costDate.Year == Clock.Today.Year) && (costDate.Month == Clock.Today.Month))
             {
@@ -303,7 +303,7 @@ namespace Models.CLEM.Activities
             costDate = CostDateFromHarvestDate();
 
             return ResourceRequestList;
-		}
+        }
 
         /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.
@@ -327,30 +327,30 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override event EventHandler ResourceShortfallOccurred;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnShortfallOccurred(EventArgs e)
-		{
-			if (ResourceShortfallOccurred != null)
-				ResourceShortfallOccurred(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnShortfallOccurred(EventArgs e)
+        {
+            if (ResourceShortfallOccurred != null)
+                ResourceShortfallOccurred(this, e);
+        }
 
-		/// <summary>
-		/// Resource shortfall occured event handler
-		/// </summary>
-		public override event EventHandler ActivityPerformed;
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public override event EventHandler ActivityPerformed;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnActivityPerformed(EventArgs e)
-		{
-			if (ActivityPerformed != null)
-				ActivityPerformed(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
 
-	}
+    }
 }

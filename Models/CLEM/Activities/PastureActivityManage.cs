@@ -9,26 +9,26 @@ using System.Xml.Serialization;
 
 namespace Models.CLEM.Activities
 {
-	/// <summary>Pasture management activity</summary>
-	/// <summary>This activity provides a pasture based on land unit, area and pasture type</summary>
-	/// <summary>Ruminant mustering activities place individuals in the paddack after which they will graze pasture for the paddock stored in the PastureP Pools</summary>
-	/// <version>1.0</version>
-	/// <updates>First implementation of this activity using NABSA grazing processes</updates>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(CLEMActivityBase))]
-	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	[ValidParent(ParentType = typeof(ActivityFolder))]
+    /// <summary>Pasture management activity</summary>
+    /// <summary>This activity provides a pasture based on land unit, area and pasture type</summary>
+    /// <summary>Ruminant mustering activities place individuals in the paddack after which they will graze pasture for the paddock stored in the PastureP Pools</summary>
+    /// <version>1.0</version>
+    /// <updates>First implementation of this activity using NABSA grazing processes</updates>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(CLEMActivityBase))]
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with the GRASP data file.")]
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject
-	{
-		[Link]
-		Clock Clock = null;
+    {
+        [Link]
+        Clock Clock = null;
         [Link]
         FileGRASP FileGRASP = null;
         [Link]
-		ZoneCLEM ZoneCLEM = null;
+        ZoneCLEM ZoneCLEM = null;
  
         /// <summary>
         /// Name of land type where pasture is located
@@ -37,17 +37,17 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of land type where pasture is located required")]
         public string LandTypeNameToUse { get; set; }
 
-		/// <summary>
-		/// Name of the pasture type to use
-		/// </summary>
-		[Description("Name of pasture")]
+        /// <summary>
+        /// Name of the pasture type to use
+        /// </summary>
+        [Description("Name of pasture")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of pasture required")]
         public string FeedTypeName { get; set; }
 
-		/// <summary>
-		/// Starting amount (kg)
-		/// </summary>
-		[Description("Starting Amount (kg/ha)")]
+        /// <summary>
+        /// Starting amount (kg)
+        /// </summary>
+        [Description("Starting Amount (kg/ha)")]
         [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double StartingAmount { get; set; }
 
@@ -62,52 +62,52 @@ namespace Models.CLEM.Activities
         /// Area of pasture
         /// </summary>
         [XmlIgnore]
-		public double Area { get; set; }
+        public double Area { get; set; }
 
-		/// <summary>
-		/// Current land condition index
-		/// </summary>
-		[XmlIgnore]
-		public Relationship LandConditionIndex { get; set; }
+        /// <summary>
+        /// Current land condition index
+        /// </summary>
+        [XmlIgnore]
+        public Relationship LandConditionIndex { get; set; }
         private int pkLandCon = 0; //rounded integer value used as primary key in GRASP file.
 
         /// <summary>
         /// Grass basal area
         /// </summary>
         [XmlIgnore]
-		public Relationship GrassBasalArea { get; set; }
+        public Relationship GrassBasalArea { get; set; }
 
         /// <summary>
         /// Perennials
         /// </summary>
         [XmlIgnore]
-		public double Perennials { get; set; }
+        public double Perennials { get; set; }
 
-		/// <summary>
-		/// Area requested
-		/// </summary>
-		[Description("Area requested")]
+        /// <summary>
+        /// Area requested
+        /// </summary>
+        [Description("Area requested")]
         [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double AreaRequested { get; set; }
 
-		/// <summary>
-		/// Feed type
-		/// </summary>
-		[XmlIgnore]
-		public GrazeFoodStoreType LinkedNativeFoodType { get; set; }
+        /// <summary>
+        /// Feed type
+        /// </summary>
+        [XmlIgnore]
+        public GrazeFoodStoreType LinkedNativeFoodType { get; set; }
 
         /// <summary>
         /// Conversion of simulation units of area to hectares
         /// </summary>
         private double unitsOfArea2Ha;
 
-		// private properties
-		private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
-		private int soilIndex = 0; // obtained from LandType used
-		private double StockingRateSummed;  //summed since last Ecological Calculation.
-		private int pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
+        // private properties
+        private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
+        private int soilIndex = 0; // obtained from LandType used
+        private double StockingRateSummed;  //summed since last Ecological Calculation.
+        private int pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
 
-		private double ha2sqkm = 0.01; //convert ha to square km
+        private double ha2sqkm = 0.01; //convert ha to square km
         private bool gotLandRequested = false; //was this pasture able to get the land it requested ?
         //EcologicalCalculationIntervals worth of data read from GRASP file 
         private List<PastureDataType> PastureDataList;
@@ -149,7 +149,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
 
-		}
+        }
 
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
@@ -172,10 +172,10 @@ namespace Models.CLEM.Activities
                 }
                 );
             }
-			// if we get here we assume some land has been supplied
-			if (ResourceRequestList != null || ResourceRequestList.Count() > 0)
-			{
-				gotLandRequested = TakeResources(ResourceRequestList, false);
+            // if we get here we assume some land has been supplied
+            if (ResourceRequestList != null || ResourceRequestList.Count() > 0)
+            {
+                gotLandRequested = TakeResources(ResourceRequestList, false);
             }
 
             //Now the Land has been allocated we have an Area 
@@ -212,11 +212,11 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMUpdatePasture")]
-		private void OnCLEMUpdatePasture(object sender, EventArgs e)
-		{
+        private void OnCLEMUpdatePasture(object sender, EventArgs e)
+        {
             if (PastureDataList != null)
             {            
-			    double growth = 0;
+                double growth = 0;
 
                 int year = Clock.Today.AddDays(1).Year;
                 int month = Clock.Today.AddDays(1).Month;
@@ -225,21 +225,21 @@ namespace Models.CLEM.Activities
                 PastureDataType pasturedata = PastureDataList.Where(a => a.Year == year && a.Month == month).FirstOrDefault();
 
                 growth = pasturedata.Growth;
-				//TODO: check units from input files.
-				// convert from kg/ha to kg/area unit
-				growth = growth * unitsOfArea2Ha;
+                //TODO: check units from input files.
+                // convert from kg/ha to kg/area unit
+                growth = growth * unitsOfArea2Ha;
 
-				if (growth > 0)
-			    {
-				    GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
-				    newPasture.Age = 0;
-				    newPasture.Set(growth * Area);  
-				    newPasture.DMD = this.LinkedNativeFoodType.DMD;
-				    newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen; 
-				    newPasture.DryMatter = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
-				    newPasture.DryMatter = Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatter);
-				    this.LinkedNativeFoodType.Add(newPasture,this.Name,"Growth");
-			    }
+                if (growth > 0)
+                {
+                    GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
+                    newPasture.Age = 0;
+                    newPasture.Set(growth * Area);  
+                    newPasture.DMD = this.LinkedNativeFoodType.DMD;
+                    newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen; 
+                    newPasture.DryMatter = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
+                    newPasture.DryMatter = Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatter);
+                    this.LinkedNativeFoodType.Add(newPasture,this.Name,"Growth");
+                }
             }
             // report activity performed.
             ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
@@ -261,7 +261,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMCalculateEcologicalState")]
-		private void OnCLEMCalculateEcologicalState(object sender, EventArgs e)
+        private void OnCLEMCalculateEcologicalState(object sender, EventArgs e)
         {
             // This event happens after growth and pasture consumption and animal death
             // But before any management, buying and selling of animals.
@@ -386,11 +386,11 @@ namespace Models.CLEM.Activities
                 return 0;
         }
 
-		/// <summary>
-		/// Method to perform calculation of all ecological indicators.
-		/// </summary>
-		private void CalculateEcologicalIndicators()
-		{
+        /// <summary>
+        /// Method to perform calculation of all ecological indicators.
+        /// </summary>
+        private void CalculateEcologicalIndicators()
+        {
 
             //If it is time to do yearly calculation
             if (ZoneCLEM.IsEcologicalIndicatorsCalculationMonth())
@@ -478,56 +478,56 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <returns>A list of resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
-		{
-			return null;
-		}
+        {
+            return null;
+        }
 
-		/// <summary>
-		/// Method used to perform activity if it can occur as soon as resources are available.
-		/// </summary>
-		public override void DoActivity()
-		{
-			return;
-		}
+        /// <summary>
+        /// Method used to perform activity if it can occur as soon as resources are available.
+        /// </summary>
+        public override void DoActivity()
+        {
+            return;
+        }
 
-		/// <summary>
-		/// Method to determine resources required for initialisation of this activity
-		/// </summary>
-		/// <returns></returns>
-		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-		{
-			return null;
-		}
+        /// <summary>
+        /// Method to determine resources required for initialisation of this activity
+        /// </summary>
+        /// <returns></returns>
+        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        {
+            return null;
+        }
 
-		/// <summary>
-		/// Resource shortfall event handler
-		/// </summary>
-		public override event EventHandler ResourceShortfallOccurred;
+        /// <summary>
+        /// Resource shortfall event handler
+        /// </summary>
+        public override event EventHandler ResourceShortfallOccurred;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnShortfallOccurred(EventArgs e)
-		{
-			if (ResourceShortfallOccurred != null)
-				ResourceShortfallOccurred(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnShortfallOccurred(EventArgs e)
+        {
+            if (ResourceShortfallOccurred != null)
+                ResourceShortfallOccurred(this, e);
+        }
 
-		/// <summary>
-		/// Resource shortfall occured event handler
-		/// </summary>
-		public override event EventHandler ActivityPerformed;
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public override event EventHandler ActivityPerformed;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnActivityPerformed(EventArgs e)
-		{
-			if (ActivityPerformed != null)
-				ActivityPerformed(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
 
     }
 

@@ -9,18 +9,18 @@ using System.Xml.Serialization;
 
 namespace Models.CLEM.Activities
 {
-	/// <summary>Grow a crop activity</summary>
-	/// <summary>This activity sows, grows and harvests crops.</summary>
-	/// <version>1.0</version>
-	/// <updates>First implementation of this activity recreating IAT logic</updates>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(IATCropLand))]
-	public class IATGrowCrop: CLEMActivityBase
-	{
+    /// <summary>Grow a crop activity</summary>
+    /// <summary>This activity sows, grows and harvests crops.</summary>
+    /// <version>1.0</version>
+    /// <updates>First implementation of this activity recreating IAT logic</updates>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(IATCropLand))]
+    public class IATGrowCrop: CLEMActivityBase
+    {
         [Link]
-		Clock Clock = null;
+        Clock Clock = null;
 
         //[Link]
         //ISummary Summary = null;
@@ -100,7 +100,7 @@ namespace Models.CLEM.Activities
         /// Feed item
         /// </summary>
         [XmlIgnore]
-		public AnimalFoodStoreType LinkedAnimalFoodItem { get; set; }
+        public AnimalFoodStoreType LinkedAnimalFoodItem { get; set; }
 
         /// <summary>
         /// Inedible crop product item
@@ -125,14 +125,14 @@ namespace Models.CLEM.Activities
         /// </summary>
         private IATCropLand cropLand;
 
-		private double unitsToHaConverter;
+        private double unitsToHaConverter;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
             fileCrop = Apsim.Child(Simulation, ModelNameFileCrop) as FileCrop;
             if (fileCrop == null)
             {
@@ -169,7 +169,7 @@ namespace Models.CLEM.Activities
 
             IsTreeCrop = (TreesPerHa == 0) ? false : true;  //using this boolean just makes things more readable.
 
-			unitsToHaConverter = (cropLand.LinkedLandItem.Parent as Land).UnitsOfAreaToHaConversion;
+            unitsToHaConverter = (cropLand.LinkedLandItem.Parent as Land).UnitsOfAreaToHaConversion;
         }
 
 
@@ -201,23 +201,23 @@ namespace Models.CLEM.Activities
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
         public override void DoActivity()
-		{
-			return;
-		}
+        {
+            return;
+        }
 
-		/// <summary>
-		/// Method to determine resources required for initialisation of this activity
-		/// </summary>
-		/// <returns></returns>
-		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-		{
-			return null;
-		}
+        /// <summary>
+        /// Method to determine resources required for initialisation of this activity
+        /// </summary>
+        /// <returns></returns>
+        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        {
+            return null;
+        }
 
-		/// <summary>An event handler for a Cut and Carry</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("CLEMDoCutAndCarry")]
+        /// <summary>An event handler for a Cut and Carry</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMDoCutAndCarry")]
         private void OnCLEMDoCutAndCarry(object sender, EventArgs e)
         {
             int year = Clock.Today.Year;
@@ -307,31 +307,31 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override event EventHandler ResourceShortfallOccurred;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnShortfallOccurred(EventArgs e)
-		{
-			if (ResourceShortfallOccurred != null)
-				ResourceShortfallOccurred(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnShortfallOccurred(EventArgs e)
+        {
+            if (ResourceShortfallOccurred != null)
+                ResourceShortfallOccurred(this, e);
+        }
 
-		/// <summary>
-		/// Resource shortfall occured event handler
-		/// </summary>
-		public override event EventHandler ActivityPerformed;
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public override event EventHandler ActivityPerformed;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnActivityPerformed(EventArgs e)
-		{
-			if (ActivityPerformed != null)
-				ActivityPerformed(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
 
-	}
+    }
 
 }

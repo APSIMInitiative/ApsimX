@@ -9,20 +9,20 @@ using System.Xml.Serialization;
 
 namespace Models.CLEM.Activities
 {
-	/// <summary>Ruminant graze activity</summary>
-	/// <summary>This activity determines how a ruminant group will graze</summary>
-	/// <summary>It is designed to request food via a food store arbitrator</summary>
-	/// <version>1.0</version>
-	/// <updates>1.0 First implementation of this activity using NABSA processes</updates>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(CLEMActivityBase))]
-	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	[ValidParent(ParentType = typeof(ActivityFolder))]
+    /// <summary>Ruminant graze activity</summary>
+    /// <summary>This activity determines how a ruminant group will graze</summary>
+    /// <summary>It is designed to request food via a food store arbitrator</summary>
+    /// <version>1.0</version>
+    /// <updates>1.0 First implementation of this activity using NABSA processes</updates>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(CLEMActivityBase))]
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of all herds and pastures (paddocks) in the simulation.")]
     public class RuminantActivityGrazeAll : CLEMActivityBase
-	{
+    {
         [Link]
         private Clock Clock = null;
 
@@ -43,14 +43,14 @@ namespace Models.CLEM.Activities
         {
             // create activity for each pasture type and breed at startup
             foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children)
-			{
-				RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture();
-				ragp.GrazeFoodStoreModel = pastureType;
+            {
+                RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture();
+                ragp.GrazeFoodStoreModel = pastureType;
                 ragp.Clock = Clock;
                 ragp.Parent = this;
 
-				foreach (RuminantType herdType in Resources.RuminantHerd().Children)
-				{
+                foreach (RuminantType herdType in Resources.RuminantHerd().Children)
+                {
                     RuminantActivityGrazePastureBreed ragpb = new RuminantActivityGrazePastureBreed
                     {
                         GrazeFoodStoreModel = pastureType,
@@ -67,72 +67,72 @@ namespace Models.CLEM.Activities
                     {
                         ragp.ActivityList = new List<CLEMActivityBase>();
                     }
-					ragp.ActivityList.Add(ragpb);
-				}
+                    ragp.ActivityList.Add(ragpb);
+                }
                 if (ActivityList == null)
                 {
                     ActivityList = new List<CLEMActivityBase>();
                 }
                 ActivityList.Add(ragp);
-			}
-		}
+            }
+        }
 
-		/// <summary>
-		/// Method to determine resources required for this activity in the current month
-		/// </summary>
-		/// <returns>List of required resource requests</returns>
-		public override List<ResourceRequest> GetResourcesNeededForActivity()
-		{
-			return null;
-		}
+        /// <summary>
+        /// Method to determine resources required for this activity in the current month
+        /// </summary>
+        /// <returns>List of required resource requests</returns>
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        {
+            return null;
+        }
 
-		/// <summary>
-		/// Method used to perform activity if it can occur as soon as resources are available.
-		/// </summary>
-		public override void DoActivity()
-		{
-			return;
-		}
+        /// <summary>
+        /// Method used to perform activity if it can occur as soon as resources are available.
+        /// </summary>
+        public override void DoActivity()
+        {
+            return;
+        }
 
-		/// <summary>
-		/// Method to determine resources required for initialisation of this activity
-		/// </summary>
-		/// <returns></returns>
-		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-		{
-			return null;
-		}
+        /// <summary>
+        /// Method to determine resources required for initialisation of this activity
+        /// </summary>
+        /// <returns></returns>
+        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        {
+            return null;
+        }
 
-		/// <summary>
-		/// Resource shortfall event handler
-		/// </summary>
-		public override event EventHandler ResourceShortfallOccurred;
+        /// <summary>
+        /// Resource shortfall event handler
+        /// </summary>
+        public override event EventHandler ResourceShortfallOccurred;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnShortfallOccurred(EventArgs e)
-		{
-			if (ResourceShortfallOccurred != null)
-				ResourceShortfallOccurred(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnShortfallOccurred(EventArgs e)
+        {
+            if (ResourceShortfallOccurred != null)
+                ResourceShortfallOccurred(this, e);
+        }
 
-		/// <summary>
-		/// Resource shortfall occured event handler
-		/// </summary>
-		public override event EventHandler ActivityPerformed;
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public override event EventHandler ActivityPerformed;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnActivityPerformed(EventArgs e)
-		{
-			if (ActivityPerformed != null)
-				ActivityPerformed(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
 
 
-	}
+    }
 }

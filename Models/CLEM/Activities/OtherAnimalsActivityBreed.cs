@@ -11,75 +11,75 @@ using System.Xml.Serialization;
 
 namespace Models.CLEM.Activities
 {
-	/// <summary>Other animals breed activity</summary>
-	/// <summary>This activity handles breeding in other animals types</summary>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(CLEMActivityBase))]
-	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	[ValidParent(ParentType = typeof(ActivityFolder))]
+    /// <summary>Other animals breed activity</summary>
+    /// <summary>This activity handles breeding in other animals types</summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(CLEMActivityBase))]
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of a specified type of other animal.")]
     public class OtherAnimalsActivityBreed : CLEMActivityBase, IValidatableObject
-	{
-		/// <summary>
-		/// name of other animal type
-		/// </summary>
-		[Description("Name of other animal type")]
+    {
+        /// <summary>
+        /// name of other animal type
+        /// </summary>
+        [Description("Name of other animal type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of other animal type required")]
         public string AnimalType { get; set; }
 
-		/// <summary>
-		/// Offspring per female breeder
-		/// </summary>
-		[Description("Offspring per female breeder")]
+        /// <summary>
+        /// Offspring per female breeder
+        /// </summary>
+        [Description("Offspring per female breeder")]
         [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
         public double OffspringPerBreeder { get; set; }
 
-		/// <summary>
-		/// Cost per female breeder
-		/// </summary>
-		[Description("Cost per female breeder")]
+        /// <summary>
+        /// Cost per female breeder
+        /// </summary>
+        [Description("Cost per female breeder")]
         [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public int CostPerBreeder { get; set; }
 
-		/// <summary>
-		/// Breeding female age
-		/// </summary>
-		[Description("Breeding age (months)")]
+        /// <summary>
+        /// Breeding female age
+        /// </summary>
+        [Description("Breeding age (months)")]
         [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
         public int BreedingAge { get; set; }
 
-		/// <summary>
-		/// Use local males for breeding
-		/// </summary>
-		[Description("Use local males for breeding")]
+        /// <summary>
+        /// Use local males for breeding
+        /// </summary>
+        [Description("Use local males for breeding")]
         [Required]
         public bool UseLocalMales { get; set; }
 
-		/// <summary>
-		/// The Other animal type this group points to
-		/// </summary>
-		public OtherAnimalsType SelectedOtherAnimalsType;
+        /// <summary>
+        /// The Other animal type this group points to
+        /// </summary>
+        public OtherAnimalsType SelectedOtherAnimalsType;
 
-		/// <summary>
-		/// Month this overhead is next due.
-		/// </summary>
-		[XmlIgnore]
-		public DateTime NextDueDate { get; set; }
+        /// <summary>
+        /// Month this overhead is next due.
+        /// </summary>
+        [XmlIgnore]
+        public DateTime NextDueDate { get; set; }
 
-		/// <summary>
-		/// Labour settings
-		/// </summary>
-		private List<LabourFilterGroupSpecified> labour { get; set; }
+        /// <summary>
+        /// Labour settings
+        /// </summary>
+        private List<LabourFilterGroupSpecified> labour { get; set; }
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public OtherAnimalsActivityBreed()
-		{
-			this.SetDefaults();
-		}
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public OtherAnimalsActivityBreed()
+        {
+            this.SetDefaults();
+        }
 
         /// <summary>
         /// Object validation
@@ -106,64 +106,64 @@ namespace Models.CLEM.Activities
         {
             // get labour specifications
             labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
-		}
+            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+        }
 
-		/// <summary>An event handler to perform herd breeding </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("CLEMAnimalBreeding")]
-		private void OnCLEMAnimalBreeding(object sender, EventArgs e)
-		{
+        /// <summary>An event handler to perform herd breeding </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMAnimalBreeding")]
+        private void OnCLEMAnimalBreeding(object sender, EventArgs e)
+        {
             if(this.TimingOK)
-			{
-				double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Male).Sum(b => b.Number);
-				if (!UseLocalMales || malebreeders > 0)
-				{
-					// get number of females
-					double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Female).Sum(b => b.Number);
-					// create new cohorts (male and female)
-					if (breeders > 0)
-					{
-						double newbysex = breeders * this.OffspringPerBreeder / 2.0;
-						OtherAnimalsTypeCohort newmales = new OtherAnimalsTypeCohort()
-						{
-							Age = 0,
-							Weight = 0,
-							Gender = Sex.Male,
-							Number = newbysex,
-							SaleFlag = HerdChangeReason.Born
-						};
-						SelectedOtherAnimalsType.Add(newmales, this.Name, SelectedOtherAnimalsType.Name);
-						OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
-						{
-							Age = 0,
-							Weight = 0,
-							Gender = Sex.Female,
-							Number = newbysex,
-							SaleFlag = HerdChangeReason.Born
-						};
-						SelectedOtherAnimalsType.Add(newfemales, this.Name, SelectedOtherAnimalsType.Name);
-					}
-				}
-			}
-		}
+            {
+                double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Male).Sum(b => b.Number);
+                if (!UseLocalMales || malebreeders > 0)
+                {
+                    // get number of females
+                    double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Female).Sum(b => b.Number);
+                    // create new cohorts (male and female)
+                    if (breeders > 0)
+                    {
+                        double newbysex = breeders * this.OffspringPerBreeder / 2.0;
+                        OtherAnimalsTypeCohort newmales = new OtherAnimalsTypeCohort()
+                        {
+                            Age = 0,
+                            Weight = 0,
+                            Gender = Sex.Male,
+                            Number = newbysex,
+                            SaleFlag = HerdChangeReason.Born
+                        };
+                        SelectedOtherAnimalsType.Add(newmales, this.Name, SelectedOtherAnimalsType.Name);
+                        OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
+                        {
+                            Age = 0,
+                            Weight = 0,
+                            Gender = Sex.Female,
+                            Number = newbysex,
+                            SaleFlag = HerdChangeReason.Born
+                        };
+                        SelectedOtherAnimalsType.Add(newfemales, this.Name, SelectedOtherAnimalsType.Name);
+                    }
+                }
+            }
+        }
 
-		/// <summary>
-		/// Method used to perform activity if it can occur as soon as resources are available.
-		/// </summary>
-		public override void DoActivity()
-		{
-			// this activity is performed in CLEMAnimalBreeding event
-			throw new NotImplementedException();
-		}
+        /// <summary>
+        /// Method used to perform activity if it can occur as soon as resources are available.
+        /// </summary>
+        public override void DoActivity()
+        {
+            // this activity is performed in CLEMAnimalBreeding event
+            throw new NotImplementedException();
+        }
 
-		/// <summary>
-		/// Method to determine resources required for this activity in the current month
-		/// </summary>
-		/// <returns></returns>
-		public override List<ResourceRequest> GetResourcesNeededForActivity()
-		{
+        /// <summary>
+        /// Method to determine resources required for this activity in the current month
+        /// </summary>
+        /// <returns></returns>
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        {
             ResourceRequestList = null;
             if (this.TimingOK)
             {
@@ -201,47 +201,47 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-			return ResourceRequestList;
-		}
+            return ResourceRequestList;
+        }
 
-		/// <summary>
-		/// Method to determine resources required for initialisation of this activity
-		/// </summary>
-		/// <returns></returns>
-		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-		{
-			return null;
-		}
+        /// <summary>
+        /// Method to determine resources required for initialisation of this activity
+        /// </summary>
+        /// <returns></returns>
+        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        {
+            return null;
+        }
 
-		/// <summary>
-		/// Resource shortfall event handler
-		/// </summary>
-		public override event EventHandler ResourceShortfallOccurred;
+        /// <summary>
+        /// Resource shortfall event handler
+        /// </summary>
+        public override event EventHandler ResourceShortfallOccurred;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnShortfallOccurred(EventArgs e)
-		{
-			if (ResourceShortfallOccurred != null)
-				ResourceShortfallOccurred(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnShortfallOccurred(EventArgs e)
+        {
+            if (ResourceShortfallOccurred != null)
+                ResourceShortfallOccurred(this, e);
+        }
 
-		/// <summary>
-		/// Resource shortfall occured event handler
-		/// </summary>
-		public override event EventHandler ActivityPerformed;
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public override event EventHandler ActivityPerformed;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnActivityPerformed(EventArgs e)
-		{
-			if (ActivityPerformed != null)
-				ActivityPerformed(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
 
     }
 }

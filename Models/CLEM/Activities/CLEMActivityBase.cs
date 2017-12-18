@@ -9,49 +9,49 @@ using System.Xml.Serialization;
 
 namespace Models.CLEM.Activities
 {
-	///<summary>
-	/// CLEM Activity base model
-	///</summary> 
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    ///<summary>
+    /// CLEM Activity base model
+    ///</summary> 
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Activity Base Class and should not be used directly.")]
     public abstract class CLEMActivityBase: CLEMModel
-	{
+    {
         /// <summary>
         /// 
         /// </summary>
-		[Link]
-		public ResourcesHolder Resources = null;
-		[Link]
-		ISummary Summary = null;
+        [Link]
+        public ResourcesHolder Resources = null;
+        [Link]
+        ISummary Summary = null;
 
-		/// <summary>
-		/// Current list of resources requested by this activity
-		/// </summary>
-		[XmlIgnore]
-		public List<ResourceRequest> ResourceRequestList { get; set; }
+        /// <summary>
+        /// Current list of resources requested by this activity
+        /// </summary>
+        [XmlIgnore]
+        public List<ResourceRequest> ResourceRequestList { get; set; }
 
-		/// <summary>
-		/// Current list of activities under this activity
-		/// </summary>
-		[XmlIgnore]
-		public List<CLEMActivityBase> ActivityList { get; set; }
+        /// <summary>
+        /// Current list of activities under this activity
+        /// </summary>
+        [XmlIgnore]
+        public List<CLEMActivityBase> ActivityList { get; set; }
 
-		/// <summary>
-		/// Current status of this activity
-		/// </summary>
-		[XmlIgnore]
-		public ActivityStatus Status { get; set; }
+        /// <summary>
+        /// Current status of this activity
+        /// </summary>
+        [XmlIgnore]
+        public ActivityStatus Status { get; set; }
 
-		/// <summary>
-		/// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
-		/// </summary>
-		/// <returns>T/F</returns>
-		public bool TimingOK
-		{
-			get
-			{
+        /// <summary>
+        /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
+        /// </summary>
+        /// <returns>T/F</returns>
+        public bool TimingOK
+        {
+            get
+            {
                 int result = 0;
                 IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM))
@@ -61,131 +61,131 @@ namespace Models.CLEM.Activities
                 }
                 return (result == 0);
 
-				// sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
-				// return this.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.ActivityDue() ? 0 : 1) == 0;
-			}
-		}
-
-		/// <summary>
-		/// Method to cascade calls for resources for all activities in the UI tree. 
-		/// Responds to CLEMInitialiseActivity in the Activity model holing top level list of activities
-		/// </summary>
-		public virtual void GetResourcesForAllActivityInitialisation()
-		{
-			ResourcesForAllActivityInitialisation();
-		}
-
-		/// <summary>
-		/// Protected method to cascade calls for resources for all activities in the UI tree. 
-		/// </summary>
-		protected void ResourcesForAllActivityInitialisation()
-		{
-			// Get resources needed and use substitution if needed and provided, then move through children getting their resources.
-			GetResourcesRequiredForInitialisation();
-
-			// get resources required for all dynamically created CLEMActivityBase activities
-			if (ActivityList != null)
-			{
-				foreach (CLEMActivityBase activity in ActivityList)
-				{
-					activity.GetResourcesForAllActivityInitialisation();
-				}
-			}
-			// get resources required for all children of type CLEMActivityBase
-			foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
-			{
-				activity.GetResourcesForAllActivityInitialisation();
-			}
-		}
-
-		/// <summary>
-		/// Method to cascade calls for resources for all activities in the UI tree. 
-		/// Responds to CLEMGetResourcesRequired in the Activity model holing top level list of activities
-		/// </summary>
-		public virtual void GetResourcesForAllActivities()
-		{
-			if (this.TimingOK)
-			{
-				ResourcesForAllActivities();
-			}
-		}
-
-		/// <summary>
-		/// protected method to cascade calls for resources for all activities in the UI tree. 
-		/// </summary>
-		protected void ResourcesForAllActivities()
-		{
-			// Get resources needed and use substitution if needed and provided, then move through children getting their resources.
-			GetResourcesRequiredForActivity();
-
-			// get resources required for all dynamically created CLEMActivityBase activities
-			if (ActivityList != null)
-			{
-				foreach (CLEMActivityBase activity in ActivityList)
-				{
-					activity.GetResourcesForAllActivities();
-				}
-			}
-			// get resources required for all children of type CLEMActivityBase
-			foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
-			{
-				activity.GetResourcesForAllActivities();
-			}
-		}
-
-		/// <summary>
-		/// Method to get required resources for initialisation of this activity. 
-		/// </summary>
-		public virtual void GetResourcesRequiredForInitialisation()
-		{
-			ResourcesRequiredForInitialisation();
-		}
-
-		/// <summary>
-		/// Protected method to get required resources for initialisation of this activity. 
-		/// </summary>
-		protected void ResourcesRequiredForInitialisation()
-		{
-			// determine what resources are needed for initialisation
-			ResourceRequestList = GetResourcesNeededForinitialisation();
-
-			bool tookRequestedResources = TakeResources(ResourceRequestList, false);
-
-			// no resources required perform Activity if code is present.
-			// if resources are returned (all available or UseResourcesAvailable action) perform Activity
-			// if reportErrorAndStop do not perform Activity
-			// if SkipActivity still attempt to perform initialisation but no resources will show in Supplied fields of ResourceRequestItems
-			//if (tookRequestedResources || (ResourceRequestList == null) || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)
-			//{
-			//	DoInitialisation();
-			//}
-			ResourceRequestList = null;
-		}
-
-		/// <summary>
-		/// Method to get this time steps current required resources for this activity. 
-		/// </summary>
-		public virtual void GetResourcesRequiredForActivity()
-        {
-			ResourcesRequiredForActivity();
+                // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
+                // return this.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.ActivityDue() ? 0 : 1) == 0;
+            }
         }
 
-		/// <summary>
-		/// Protected method to get this time steps current required resources for this activity. 
-		/// </summary>
-		protected void ResourcesRequiredForActivity()
-		{
-			// determine what resources are needed
-			ResourceRequestList = GetResourcesNeededForActivity();
+        /// <summary>
+        /// Method to cascade calls for resources for all activities in the UI tree. 
+        /// Responds to CLEMInitialiseActivity in the Activity model holing top level list of activities
+        /// </summary>
+        public virtual void GetResourcesForAllActivityInitialisation()
+        {
+            ResourcesForAllActivityInitialisation();
+        }
 
-			bool tookRequestedResources = TakeResources(ResourceRequestList, true);
+        /// <summary>
+        /// Protected method to cascade calls for resources for all activities in the UI tree. 
+        /// </summary>
+        protected void ResourcesForAllActivityInitialisation()
+        {
+            // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
+            GetResourcesRequiredForInitialisation();
 
-			// if no resources required perform Activity if code is present.
-			// if resources are returned (all available or UseResourcesAvailable action) perform Activity
-			// if reportErrorAndStop or SkipActivity do not perform Activity
-			if (tookRequestedResources || (ResourceRequestList == null))
-				DoActivity();
-		}
+            // get resources required for all dynamically created CLEMActivityBase activities
+            if (ActivityList != null)
+            {
+                foreach (CLEMActivityBase activity in ActivityList)
+                {
+                    activity.GetResourcesForAllActivityInitialisation();
+                }
+            }
+            // get resources required for all children of type CLEMActivityBase
+            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+            {
+                activity.GetResourcesForAllActivityInitialisation();
+            }
+        }
+
+        /// <summary>
+        /// Method to cascade calls for resources for all activities in the UI tree. 
+        /// Responds to CLEMGetResourcesRequired in the Activity model holing top level list of activities
+        /// </summary>
+        public virtual void GetResourcesForAllActivities()
+        {
+            if (this.TimingOK)
+            {
+                ResourcesForAllActivities();
+            }
+        }
+
+        /// <summary>
+        /// protected method to cascade calls for resources for all activities in the UI tree. 
+        /// </summary>
+        protected void ResourcesForAllActivities()
+        {
+            // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
+            GetResourcesRequiredForActivity();
+
+            // get resources required for all dynamically created CLEMActivityBase activities
+            if (ActivityList != null)
+            {
+                foreach (CLEMActivityBase activity in ActivityList)
+                {
+                    activity.GetResourcesForAllActivities();
+                }
+            }
+            // get resources required for all children of type CLEMActivityBase
+            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+            {
+                activity.GetResourcesForAllActivities();
+            }
+        }
+
+        /// <summary>
+        /// Method to get required resources for initialisation of this activity. 
+        /// </summary>
+        public virtual void GetResourcesRequiredForInitialisation()
+        {
+            ResourcesRequiredForInitialisation();
+        }
+
+        /// <summary>
+        /// Protected method to get required resources for initialisation of this activity. 
+        /// </summary>
+        protected void ResourcesRequiredForInitialisation()
+        {
+            // determine what resources are needed for initialisation
+            ResourceRequestList = GetResourcesNeededForinitialisation();
+
+            bool tookRequestedResources = TakeResources(ResourceRequestList, false);
+
+            // no resources required perform Activity if code is present.
+            // if resources are returned (all available or UseResourcesAvailable action) perform Activity
+            // if reportErrorAndStop do not perform Activity
+            // if SkipActivity still attempt to perform initialisation but no resources will show in Supplied fields of ResourceRequestItems
+            //if (tookRequestedResources || (ResourceRequestList == null) || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)
+            //{
+            //    DoInitialisation();
+            //}
+            ResourceRequestList = null;
+        }
+
+        /// <summary>
+        /// Method to get this time steps current required resources for this activity. 
+        /// </summary>
+        public virtual void GetResourcesRequiredForActivity()
+        {
+            ResourcesRequiredForActivity();
+        }
+
+        /// <summary>
+        /// Protected method to get this time steps current required resources for this activity. 
+        /// </summary>
+        protected void ResourcesRequiredForActivity()
+        {
+            // determine what resources are needed
+            ResourceRequestList = GetResourcesNeededForActivity();
+
+            bool tookRequestedResources = TakeResources(ResourceRequestList, true);
+
+            // if no resources required perform Activity if code is present.
+            // if resources are returned (all available or UseResourcesAvailable action) perform Activity
+            // if reportErrorAndStop or SkipActivity do not perform Activity
+            if (tookRequestedResources || (ResourceRequestList == null))
+                DoActivity();
+        }
 
         /// <summary>
         /// Try to take the Resources based on Resource Request List provided.
@@ -196,11 +196,11 @@ namespace Models.CLEM.Activities
         /// <param name="TriggerActivityPerformed"></param>
         public bool TakeResources(List<ResourceRequest> ResourceRequestList, bool TriggerActivityPerformed)
         {
-			this.Status = ActivityStatus.Success;
+            this.Status = ActivityStatus.Success;
             bool resourceAvailable = false;
 
             // no resources required or this is an Activity folder.
-			if ((ResourceRequestList == null)||(ResourceRequestList.Count() ==0)) return false;
+            if ((ResourceRequestList == null)||(ResourceRequestList.Count() ==0)) return false;
 
             Guid uniqueRequestID = Guid.NewGuid();
             // check resource amounts available
@@ -244,7 +244,7 @@ namespace Models.CLEM.Activities
             bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationPossible == false & a.AllowTransmutation).Count() == 0);
 
             // OR at least one transmutation successful and PerformWithPartialResources
-			if (((countShortfallRequests > 0) & (countShortfallRequests == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 & OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
+            if (((countShortfallRequests > 0) & (countShortfallRequests == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 & OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
             {
                 // do transmutations.
                 Resources.TransmutateShortfall(shortfallRequests, false);
@@ -267,28 +267,28 @@ namespace Models.CLEM.Activities
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
                 OnShortfallOccurred(rrEventArgs);
-				Status = ActivityStatus.Partial;
-			}
+                Status = ActivityStatus.Partial;
+            }
 
-			// remove activity resources 
-			// check if deficit and performWithPartial
-			if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) || OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity)
-			{
-				if(OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
-				{
-					string resourcelist = "";
-					foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
-					{
-						Summary.WriteWarning(this, String.Format("Insufficient ({0}) resource of type ({1}) for activity ({2})", item.ResourceType, item.ResourceTypeName, this.Name));
-						resourcelist += ((resourcelist.Length >0)?",":"")+item.ResourceType.Name;
-					}
-					if (resourcelist.Length > 0)
-					{
-						Summary.WriteWarning(this, String.Format("Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity ({0}) to handle previous error", this.Name));
-						Status = ActivityStatus.Critical;
-						throw new Exception(String.Format("Insufficient resources ({0}) for activity ({1}) (see Summary for details)", resourcelist, this.Name));
-					}
-				}
+            // remove activity resources 
+            // check if deficit and performWithPartial
+            if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) || OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity)
+            {
+                if(OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                {
+                    string resourcelist = "";
+                    foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
+                    {
+                        Summary.WriteWarning(this, String.Format("Insufficient ({0}) resource of type ({1}) for activity ({2})", item.ResourceType, item.ResourceTypeName, this.Name));
+                        resourcelist += ((resourcelist.Length >0)?",":"")+item.ResourceType.Name;
+                    }
+                    if (resourcelist.Length > 0)
+                    {
+                        Summary.WriteWarning(this, String.Format("Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity ({0}) to handle previous error", this.Name));
+                        Status = ActivityStatus.Critical;
+                        throw new Exception(String.Format("Insufficient resources ({0}) for activity ({1}) (see Summary for details)", resourcelist, this.Name));
+                    }
+                }
 
                 foreach (ResourceRequest request in ResourceRequestList)
                 {
@@ -304,11 +304,11 @@ namespace Models.CLEM.Activities
             }
             else
             {
-				Status = ActivityStatus.Ignored;
+                Status = ActivityStatus.Ignored;
                 //return false;  //could not take all the resources it needed.
             }
 
-			// report activity occurred
+            // report activity occurred
             if(TriggerActivityPerformed)
             {
                 this.TriggerOnActivityPerformed();
@@ -316,17 +316,17 @@ namespace Models.CLEM.Activities
             return Status != ActivityStatus.Ignored;
         }
 
-		/// <summary>
-		/// Method to trigger an Activity Performed event 
-		/// </summary>
-		public void TriggerOnActivityPerformed()
-		{
+        /// <summary>
+        /// Method to trigger an Activity Performed event 
+        /// </summary>
+        public void TriggerOnActivityPerformed()
+        {
             ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
             {
                 Activity = this
             };
             this.OnActivityPerformed(activitye);
-		}
+        }
 
         /// <summary>
         /// Method to trigger an Activity Performed event 
@@ -346,81 +346,76 @@ namespace Models.CLEM.Activities
         /// Insufficient resources available action
         /// </summary>
         [Description("Insufficient resources available action")]
-		public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
+        public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
-		/// <summary>
-		/// Abstract method to determine list of resources and amounts needed. 
-		/// </summary>
-		public abstract List<ResourceRequest> GetResourcesNeededForActivity();
+        /// <summary>
+        /// Abstract method to determine list of resources and amounts needed. 
+        /// </summary>
+        public abstract List<ResourceRequest> GetResourcesNeededForActivity();
 
-		/// <summary>
-		/// Abstract method to determine list of resources and amounts needed for initilaisation. 
-		/// </summary>
-		public abstract List<ResourceRequest> GetResourcesNeededForinitialisation();
+        /// <summary>
+        /// Abstract method to determine list of resources and amounts needed for initilaisation. 
+        /// </summary>
+        public abstract List<ResourceRequest> GetResourcesNeededForinitialisation();
 
-		/// <summary>
-		/// Method to perform activity tasks if expected as soon as resources are available
-		/// </summary>
-		public abstract void DoActivity();
+        /// <summary>
+        /// Method to perform activity tasks if expected as soon as resources are available
+        /// </summary>
+        public abstract void DoActivity();
 
-		///// <summary>
-		///// Method to initialise activity tasks if expected as soon as initialisation resources are provided
-		///// </summary>
-		//public abstract void DoInitialisation();
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public virtual event EventHandler ResourceShortfallOccurred;
 
-		/// <summary>
-		/// Resource shortfall occured event handler
-		/// </summary>
-		public virtual event EventHandler ResourceShortfallOccurred;
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnShortfallOccurred(EventArgs e)
+        {
+            if (ResourceShortfallOccurred != null)
+                ResourceShortfallOccurred(this, e);
+        }
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected virtual void OnShortfallOccurred(EventArgs e)
-		{
-			if (ResourceShortfallOccurred != null)
-				ResourceShortfallOccurred(this, e);
-		}
+        /// <summary>
+        /// Activity performed event handler
+        /// </summary>
+        public virtual event EventHandler ActivityPerformed;
 
-		/// <summary>
-		/// Activity performed event handler
-		/// </summary>
-		public virtual event EventHandler ActivityPerformed;
+        /// <summary>
+        /// Activity has occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
 
-		/// <summary>
-		/// Activity has occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected virtual void OnActivityPerformed(EventArgs e)
-		{
-			if (ActivityPerformed != null)
-				ActivityPerformed(this, e);
-		}
+    }
 
-	}
-
-	/// <summary>
-	/// Status of activity
-	/// </summary>
-	public enum ActivityStatus
-	{
-		/// <summary>
-		/// Performed with all resources available
-		/// </summary>
-		Success,
-		/// <summary>
-		/// Performed with partial resources available
-		/// </summary>
-		Partial,
-		/// <summary>
-		/// Insufficient resources so activity ignored
-		/// </summary>
-		Ignored,
-		/// <summary>
-		/// Insufficient resources so simulation stopped
-		/// </summary>
-		Critical,
+    /// <summary>
+    /// Status of activity
+    /// </summary>
+    public enum ActivityStatus
+    {
+        /// <summary>
+        /// Performed with all resources available
+        /// </summary>
+        Success,
+        /// <summary>
+        /// Performed with partial resources available
+        /// </summary>
+        Partial,
+        /// <summary>
+        /// Insufficient resources so activity ignored
+        /// </summary>
+        Ignored,
+        /// <summary>
+        /// Insufficient resources so simulation stopped
+        /// </summary>
+        Critical,
         /// <summary>
         /// Indicates a timer occurred successfully
         /// </summary>

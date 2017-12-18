@@ -72,24 +72,6 @@ namespace Models.CLEM.Activities
         [XmlIgnore]
         public bool IsTreeCrop;
 
-        ///// <summary>
-        ///// Human Food item
-        ///// </summary>
-        //[XmlIgnore]
-        //public HumanFoodStoreType LinkedHumanFoodItem { get; set; }
-
-        ///// <summary>
-        ///// Feed item
-        ///// </summary>
-        //[XmlIgnore]
-        //public AnimalFoodStoreType LinkedAnimalFoodItem { get; set; }
-
-        ///// <summary>
-        ///// Inedible crop product item
-        ///// </summary>
-        //[XmlIgnore]
-        //public ProductStoreType LinkedProductItem { get; set; }
-
         /// <summary>
         /// resource item
         /// </summary>

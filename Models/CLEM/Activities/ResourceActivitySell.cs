@@ -13,7 +13,7 @@ namespace Models.CLEM.Activities
     /// <summary>
     /// Activity to price and sell resources
     /// </summary>
-	[Serializable]
+    [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
@@ -39,35 +39,35 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Name of resource type to sell
         /// </summary>
- 		[Description("Name of resource type to sell")]
+         [Description("Name of resource type to sell")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type required")]
         public string ResourceTypeName { get; set; }
 
         /// <summary>
         /// Determines whether sales are restricted to whole units
         /// </summary>
- 		[Description("Restrict sales to whole units")]
+         [Description("Restrict sales to whole units")]
         [Required]
         public bool SellWholeUnitsOnly { get; set; }
 
         /// <summary>
         /// Amount reserved from sale
         /// </summary>
- 		[Description("Amount reserved from sale")]
+         [Description("Amount reserved from sale")]
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double AmountReserved { get; set; }
 
         /// <summary>
         /// Unit size (amount of the resource per sale unit)
         /// </summary>
- 		[Description("Unit size (amount of the resource per sale unit)")]
+         [Description("Unit size (amount of the resource per sale unit)")]
         [Required, Range(1, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
         public double UnitSize { get; set; }
 
         /// <summary>
         /// Unit price (value of each sale unit)
         /// </summary>
- 		[Description("Unit price (value of each sale unit)")]
+         [Description("Unit price (value of each sale unit)")]
         [Required, Range(1, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
         public double UnitPrice { get; set; }
 
@@ -188,7 +188,6 @@ namespace Models.CLEM.Activities
                                 break;
                             default:
                                 break;
-//                                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
                         }
                         if (daysNeeded > 0)
                         {

@@ -19,8 +19,6 @@ namespace Models.CLEM.Activities
     [Description("This is the Ruminant specific version of the CLEM Activity Base Class and should not be used directly.")]
     public class CLEMRuminantActivityBase : CLEMActivityBase
     {
-//        [Link]
-//        public ResourcesHolder Resources = null;
         [Link]
         ISummary Summary = null;
 

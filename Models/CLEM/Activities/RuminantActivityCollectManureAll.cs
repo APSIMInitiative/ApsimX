@@ -9,23 +9,23 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {
-	/// <summary>Ruminant manure collection activity</summary>
-	/// <summary>This activity performs the collection of all manure</summary>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(CLEMActivityBase))]
-	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	[ValidParent(ParentType = typeof(ActivityFolder))]
+    /// <summary>Ruminant manure collection activity</summary>
+    /// <summary>This activity performs the collection of all manure</summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(CLEMActivityBase))]
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the collection of manure from all paddocks and yards in the simulation.")]
     public class RuminantActivityCollectManureAll : CLEMActivityBase
-	{
-		/// <summary>
-		/// Labour settings
-		/// </summary>
-		private List<LabourFilterGroupSpecified> labour { get; set; }
+    {
+        /// <summary>
+        /// Labour settings
+        /// </summary>
+        private List<LabourFilterGroupSpecified> labour { get; set; }
 
-		private ProductStoreTypeManure manureStore;
+        private ProductStoreTypeManure manureStore;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -35,74 +35,74 @@ namespace Models.CLEM.Activities
         {
             manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as ProductStoreTypeManure;
 
-			// get labour specifications
-			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
-		}
+            // get labour specifications
+            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+        }
 
-		/// <summary>
-		/// Method to determine resources required for this activity in the current month
-		/// </summary>
-		/// <returns>List of required resource requests</returns>
-		private List<ResourceRequest> GetResourcesNeededForActivityLocal()
-		{
-			ResourceRequestList = null;
-			double amountAvailable = 0;
-			// determine wet weight to move
-			foreach (ManureStoreUncollected msu in manureStore.UncollectedStores)
-			{
-				amountAvailable = msu.Pools.Sum(a => a.WetWeight(manureStore.MoistureDecayRate, manureStore.ProportionMoistureFresh));
-			}
-			// determine labour required
-			if (amountAvailable > 0)
-			{
-				// for each labour item specified
-				foreach (var item in labour)
-				{
-					double daysNeeded = 0;
-					switch (item.UnitType)
-					{
-						case LabourUnitType.perKg:
-							daysNeeded = item.LabourPerUnit * (amountAvailable/ item.UnitSize);
-							break;
-						default:
-							throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-					}
-					if (daysNeeded > 0)
-					{
-						if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-						ResourceRequestList.Add(new ResourceRequest()
-						{
-							AllowTransmutation = false,
-							Required = daysNeeded,
-							ResourceType = typeof(Labour),
-							ResourceTypeName = "",
-							ActivityModel = this,
-							Reason = "Manure collection",
-							FilterDetails = new List<object>() { item }
-						}
-						);
-					}
-				}
+        /// <summary>
+        /// Method to determine resources required for this activity in the current month
+        /// </summary>
+        /// <returns>List of required resource requests</returns>
+        private List<ResourceRequest> GetResourcesNeededForActivityLocal()
+        {
+            ResourceRequestList = null;
+            double amountAvailable = 0;
+            // determine wet weight to move
+            foreach (ManureStoreUncollected msu in manureStore.UncollectedStores)
+            {
+                amountAvailable = msu.Pools.Sum(a => a.WetWeight(manureStore.MoistureDecayRate, manureStore.ProportionMoistureFresh));
+            }
+            // determine labour required
+            if (amountAvailable > 0)
+            {
+                // for each labour item specified
+                foreach (var item in labour)
+                {
+                    double daysNeeded = 0;
+                    switch (item.UnitType)
+                    {
+                        case LabourUnitType.perKg:
+                            daysNeeded = item.LabourPerUnit * (amountAvailable/ item.UnitSize);
+                            break;
+                        default:
+                            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+                    }
+                    if (daysNeeded > 0)
+                    {
+                        if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+                        ResourceRequestList.Add(new ResourceRequest()
+                        {
+                            AllowTransmutation = false,
+                            Required = daysNeeded,
+                            ResourceType = typeof(Labour),
+                            ResourceTypeName = "",
+                            ActivityModel = this,
+                            Reason = "Manure collection",
+                            FilterDetails = new List<object>() { item }
+                        }
+                        );
+                    }
+                }
 
-			}
-			return ResourceRequestList;
-		}
+            }
+            return ResourceRequestList;
+        }
 
-		/// <summary>
-		/// Method used to perform activity if it can occur as soon as resources are available.
-		/// </summary>
-		public override void DoActivity()
-		{
-			return;
-		}
+        /// <summary>
+        /// Method used to perform activity if it can occur as soon as resources are available.
+        /// </summary>
+        public override void DoActivity()
+        {
+            return;
+        }
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("CLEMCollectManure")]
-		private void OnCLEMCollectManure(object sender, EventArgs e)
-		{
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMCollectManure")]
+        private void OnCLEMCollectManure(object sender, EventArgs e)
+        {
             // is manure in resources
             if (manureStore != null)
             {
@@ -128,8 +128,8 @@ namespace Models.CLEM.Activities
                         }
                     }
                 }
-			}
-		}
+            }
+        }
 
 
         /// <summary>
@@ -146,39 +146,39 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <returns></returns>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-		{
-			return null;
-		}
+        {
+            return null;
+        }
 
-		/// <summary>
-		/// Resource shortfall event handler
-		/// </summary>
-		public override event EventHandler ResourceShortfallOccurred;
+        /// <summary>
+        /// Resource shortfall event handler
+        /// </summary>
+        public override event EventHandler ResourceShortfallOccurred;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnShortfallOccurred(EventArgs e)
-		{
-			if (ResourceShortfallOccurred != null)
-				ResourceShortfallOccurred(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnShortfallOccurred(EventArgs e)
+        {
+            if (ResourceShortfallOccurred != null)
+                ResourceShortfallOccurred(this, e);
+        }
 
-		/// <summary>
-		/// Resource shortfall occured event handler
-		/// </summary>
-		public override event EventHandler ActivityPerformed;
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public override event EventHandler ActivityPerformed;
 
-		/// <summary>
-		/// Shortfall occurred 
-		/// </summary>
-		/// <param name="e"></param>
-		protected override void OnActivityPerformed(EventArgs e)
-		{
-			if (ActivityPerformed != null)
-				ActivityPerformed(this, e);
-		}
+        /// <summary>
+        /// Shortfall occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnActivityPerformed(EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(this, e);
+        }
 
-	}
+    }
 }
