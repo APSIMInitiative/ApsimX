@@ -23,7 +23,7 @@
     using APSIM.Shared.Utilities;
 
     public class NewAzureJobPresenter : IPresenter
-    {
+    {        
         /// <summary>The new azure job view</summary>
         private INewAzureJobView view;
         
@@ -34,7 +34,9 @@
         private FileUploader uploader;
         private BatchClient batchClient;
         private CloudStorageAccount storageAccount;
-
+        private StorageCredentials storageCredentials;
+        private BatchCredentials batchCredentials;
+        private PoolSettings poolSettings;
         public NewAzureJobPresenter()
         {
             NewJobs = new List<JobParameters>();
@@ -42,12 +44,51 @@
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.view = (INewAzureJobView)view;
-            this.view.SetDefaultJobName( ((Models.Factorial.Experiment)model).Name );
             this.explorerPresenter = explorerPresenter;
+            this.view = (INewAzureJobView)view;
+            this.view.SubmitJob.DoWork += SubmitJob_DoWork;
+            this.view.Presenter = this;
+
+
+            // read Azure credentials from a file. If credentials file doesn't exist, abort.
+            string credentialsFileName = (string)Settings.Default["AzureLicenceFilePath"];
+
+            // Properties.Settings are stored in:
+            // ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+
+            // if the file name in Properties.Settings doesn't exist then prompt user for a new one
+            if (credentialsFileName == "" || !File.Exists(credentialsFileName))
+            {
+                credentialsFileName = this.view.GetFile(new List<string> { "lic" }, "Azure Licence file");
+            }
+            if (SetCredentials(credentialsFileName))
+            {
+                // licence file is valid, remember this file for next time
+                Settings.Default["AzureLicenceFilePath"] = credentialsFileName;
+                Settings.Default.Save();                    
+            } else
+            {
+                // licence file is invalid or non-existent. Show an error and remove the job submission form from the right hand panel.
+                ShowError("Missing or invalid Azure Licence file: " + credentialsFileName);                
+                explorerPresenter.HideRightHandPanel();
+                return;                
+            }
+            
+            // store credentials
+            storageCredentials = StorageCredentials.FromConfiguration();
+            batchCredentials = BatchCredentials.FromConfiguration();
+            poolSettings = PoolSettings.FromConfiguration();
+
+            storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
+            uploader = new FileUploader(storageAccount);
+            var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
+            batchClient = BatchClient.Open(sharedCredentials);
+
+
+            this.view.SetDefaultJobName( ((Models.Factorial.Experiment)model).Name );
             this.model = (IModel)model;
 
-            this.view.SubmitJob.DoWork += SubmitJob_DoWork;
+
         }
 
         /// <summary>
@@ -56,20 +97,7 @@
         /// </summary>
         /// <param name="e">Event arg, containing the job parameters</param>
         private void SubmitJob_DoWork(object o, DoWorkEventArgs e)
-        {
-            // read Azure credentials from a file. If credentials file doesn't exist, abort.
-            if (!SetCredentials()) return;
-
-            // store credentials
-            StorageCredentials storageCredentials = StorageCredentials.FromConfiguration();
-            BatchCredentials batchCredentials = BatchCredentials.FromConfiguration();
-            PoolSettings poolSettings = PoolSettings.FromConfiguration();
-
-            storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
-            uploader = new FileUploader(storageAccount);
-            var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
-            batchClient = BatchClient.Open(sharedCredentials);            
-
+        {   
             JobParameters jp = (JobParameters)e.Argument;
             jp.JobId = Guid.NewGuid();
             jp.CoresPerProcess = 1;
@@ -88,7 +116,7 @@
                 tmpZip = Path.Combine(Path.GetTempPath(), "Apsim-tmp-X-" + Environment.UserName.ToLower() + ".zip");
                 if (File.Exists(tmpZip)) File.Delete(tmpZip);
 
-                if (createApsimXZip(jp.ApplicationPackagePath, tmpZip) > 0) view.ShowError("Error zipping up Apsim");
+                if (createApsimXZip(jp.ApplicationPackagePath, tmpZip) > 0) ShowError("Error zipping up Apsim");
 
                 jp.ApplicationPackagePath = tmpZip;
                 jp.ApplicationPackageVersion = Path.GetFileName(tmpZip).Substring(Path.GetFileName(tmpZip).IndexOf('-') + 1);
@@ -112,7 +140,7 @@
             string toolsDir = Path.Combine(executableDirectory, "tools");
             if (!Directory.Exists(toolsDir))
             {
-                view.ShowError("Tools Directory not found: " + toolsDir);                
+                ShowError("Tools Directory not found: " + toolsDir);                
             }
             
             foreach (string filePath in Directory.EnumerateFiles(toolsDir))
@@ -206,7 +234,7 @@
                 cloudJob.Commit();
             } catch (Exception ex)
             {
-                view.ShowError(ex.Message);
+                ShowError(ex.ToString());
             }
             
             UpdateStatus(ref jp, "Job Successfully submitted");
@@ -246,7 +274,7 @@
             {
                 if (Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly).Length > 0)
                 {
-                    if (!view.ShowWarning("There are already files in the output directory")) return 1;                    
+                    ShowError("There are already files in the output directory");                    
                 }
             }
             return 0;
@@ -259,7 +287,7 @@
                 Directory.CreateDirectory(path);
             } catch (Exception e)
             {
-                view.ShowError("Error: creation of simulation directory " + path + " failed: " + e.Message);
+                ShowError("Error: creation of simulation directory " + path + " failed: " + e.ToString());
                 return 1;
             }
             return 0;
@@ -318,7 +346,7 @@
                 {
                     if (++attempt == 10)
                     {
-                       view.ShowError("No unique temporary file name is available: " + e.Message);
+                       ShowError("No unique temporary file name is available: " + e.ToString());
                     }
                 }
             }
@@ -347,7 +375,7 @@
             }
             catch (Exception e)
             {                
-                view.ShowError(e.Message);
+                ShowError(e.ToString());
             }
         }
 
@@ -356,14 +384,12 @@
         /// This is a temporary measure - will probably need to allow user to specify a file.
         /// </summary>
         /// <returns>True if credentials file exists, false otherwise.</returns>
-        private bool SetCredentials()
-        {
-            // TODO : allow user to specify a credentials file?
-            string credentialsFile = Directory.GetParent(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)).ToString() + "\\AzureAgR.lic";
-            if (File.Exists(credentialsFile))
+        private bool SetCredentials(string path)
+        {            
+            if (File.Exists(path))
             {
                 string line;
-                StreamReader file = new StreamReader(credentialsFile);
+                StreamReader file = new StreamReader(path);
                 while ((line = file.ReadLine()) != null)
                 {
                     int separatorIndex = line.IndexOf("=");
@@ -373,14 +399,26 @@
                         string val = line.Substring(separatorIndex + 1);
 
                         Settings.Default[key] = val;
+                    } else
+                    {
+                        return false;
                     }
                 }
                 return true;
             } else
-            {
-                explorerPresenter.MainPresenter.ShowMessage("Azure Licence file " + credentialsFile + " not found.", Simulation.ErrorLevel.Error);
+            {                
                 return false;
             }
+        }
+
+
+        /// <summary>
+        /// Displays an error message to the user.
+        /// </summary>
+        /// <param name="msg">Message to be displayed.</param>
+        public void ShowError(string msg)
+        {
+            explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
         }
 
         /// <summary>
@@ -448,7 +486,7 @@
             }
             catch (Exception e)
             {
-                view.ShowError(e.Message);
+                ShowError(e.ToString());
                 return 1;
             }
         }
@@ -479,7 +517,7 @@
             }
             catch (Exception e)
             {
-                view.ShowError(e.Message);
+                ShowError(e.ToString());
                 return 1;
             }
         }
@@ -514,7 +552,7 @@
             }
             catch (Exception e)
             {
-                view.ShowError(e.Message);
+                ShowError(e.ToString());
             }
         }
 
@@ -564,6 +602,6 @@
         public string ConvertToHtml(string folder)
         {
             return "";
-        }        
+        }     
     }
 }

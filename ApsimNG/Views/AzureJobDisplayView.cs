@@ -11,6 +11,8 @@ namespace UserInterface.Views
 {
     public class AzureJobDisplayView : ViewBase, IAzureJobDisplayView
     {
+        public Presenters.AzureJobDisplayPresenter Presenter { get; set; }
+
         private List<JobDetails> jobList;
         private TreeView tree;
         private ListStore store;
@@ -313,9 +315,13 @@ namespace UserInterface.Views
         /// <param name="jobs"></param>
         public void AddJobsToTableIfNecessary(List<JobDetails> jobs)
         {
-            if (jobList.SequenceEqual(jobs)) return;
-            
-            AddJobsToTable(jobs);
+            if (jobList.Count == 0) AddJobsToTable(jobs);
+            for (int i = 0; i < jobList.Count; i++)
+            {
+                if (!((jobList[i].Id == jobs[i].Id) && (jobList[i].State == jobs[i].State))) AddJobsToTable(jobs);
+            }
+
+            return;
         }
 
         /// <summary>
@@ -360,6 +366,54 @@ namespace UserInterface.Views
             md.Title = "Sanity Check Failed - High-Grade Insanity Detected!!!";
             md.Run();
             md.Destroy();
+        }
+
+        /// <summary>
+        /// Tests if a string starts with a vowel.
+        /// </summary>
+        /// <param name="st"></param>
+        /// <returns>True if st starts with a vowel, false otherwise.</returns>
+        private bool StartsWithVowel(string st)
+        {
+            return "aeiou".IndexOf(st[0]) >= 0;
+        }
+
+        /// <summary>
+        /// Opens a file chooser dialog so the user can choose a file with a specific extension.
+        /// </summary>
+        /// <param name="extensions">List of allowed file extensions. Extensions should not have a . in them, e.g. zip or tar or cs are valid but .cpp is not</param>
+        /// <param name="extName">Name of the file type</param>
+        /// <returns></returns>
+        public string GetFile(List<string> extensions, string extName = "")
+        {
+            string path = "";
+            string indefiniteArticle = StartsWithVowel(extName) ? "an" : "a";
+            FileChooserDialog f = new FileChooserDialog("Choose " + indefiniteArticle + " " + extName + " file",
+                                                         null,
+                                                         FileChooserAction.Open,
+                                                         "Cancel", ResponseType.Cancel,
+                                                         "Select", ResponseType.Accept);
+            FileFilter filter = new FileFilter();
+            filter.Name = extName;
+            foreach (string extension in extensions)
+            {
+                filter.AddPattern("*." + extension);
+            }
+            f.AddFilter(filter);
+
+            try
+            {
+                if (f.Run() == (int)ResponseType.Accept)
+                {
+                    path = f.Filename;
+                }
+            }
+            catch (Exception e)
+            {
+                Presenter.ShowError(e.ToString());
+            }
+            f.Destroy();
+            return path;
         }
     }
 }

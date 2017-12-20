@@ -13,6 +13,7 @@ namespace UserInterface.Views
 {   
     public class NewAzureJobView : ViewBase, INewAzureJobView
     {
+        public Presenters.NewAzureJobPresenter Presenter { get; set; }
         public BackgroundWorker SubmitJob { get; set; }
         public JobParameters jobParams { get; set; }             
         public Button btnOK;
@@ -20,15 +21,15 @@ namespace UserInterface.Views
 
         private Entry entryName;
         private RadioButton radioApsimDir;
-        private RadioButton radioBob;
+        //private RadioButton radioBob;
         private RadioButton radioApsimZip;
-        private Entry entryVersion;
-        private Entry entryRevision;
+        //private Entry entryVersion;
+        //private Entry entryRevision;
         private Entry entryApsimDir;
         private Entry entryApsimZip;
         private Button btnApsimDir;
         private Button btnApsimZip;
-        private Button btnBob;
+        //private Button btnBob;
         private Entry entryOutputDir;
         private ComboBox comboCoreCount;
         private CheckButton chkEmail;
@@ -121,7 +122,7 @@ namespace UserInterface.Views
 
             //Apsim Version Selection frame/table		
             Frame frmVersion = new Frame("APSIM Next Generation Version Selection");
-            Table tblVersion = new Table(3, 3, false);
+            Table tblVersion = new Table(2, 3, false);            
             tblVersion.ColumnSpacing = 5;
             tblVersion.RowSpacing = 10;
 
@@ -129,6 +130,7 @@ namespace UserInterface.Views
             Alignment alignVersion = new Alignment(0f, 0f, 1f, 1f);
             alignVersion.LeftPadding = alignVersion.RightPadding = alignVersion.TopPadding = alignVersion.BottomPadding = 5;
 
+            /*
             // use from online source
             // TODO: find/implement a Bob equivalent
             HBox hbxBob = new HBox();
@@ -150,30 +152,30 @@ namespace UserInterface.Views
 
             tblVersion.Attach(hbxBob, 0, 2, 0, 1, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
             tblVersion.Attach(btnBob, 2, 3, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-
+            */
             // use Apsim from a directory
 
-            radioApsimDir = new RadioButton(radioBob, "Use APSIM Next Generation from a directory");
+            radioApsimDir = new RadioButton("Use APSIM Next Generation from a directory");
             radioApsimDir.Toggled += new EventHandler(radioApsimDir_Changed);
             // populate this input field with the directory containing this executable		
             entryApsimDir = new Entry(Directory.GetParent(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)).ToString());
             btnApsimDir = new Button("...");
             btnApsimDir.Clicked += new EventHandler(btnApsimDir_Click);
-            tblVersion.Attach(radioApsimDir, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            tblVersion.Attach(entryApsimDir, 1, 2, 1, 2, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
-            tblVersion.Attach(btnApsimDir, 2, 3, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            tblVersion.Attach(radioApsimDir, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            tblVersion.Attach(entryApsimDir, 1, 2, 0, 1, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
+            tblVersion.Attach(btnApsimDir, 2, 3, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
 
             // use a zipped version of Apsim
 
-            radioApsimZip = new RadioButton(radioBob, "Use a zipped version of APSIM Next Generation");
+            radioApsimZip = new RadioButton(radioApsimDir, "Use a zipped version of APSIM Next Generation");
             radioApsimZip.Toggled += new EventHandler(radioApsimZip_Changed);
             entryApsimZip = new Entry((string)ApsimNG.Properties.Settings.Default["ApsimZipPath"]);
             btnApsimZip = new Button("...");
             btnApsimZip.Clicked += new EventHandler(btnApsimZip_Click);
 
-            tblVersion.Attach(radioApsimZip, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            tblVersion.Attach(entryApsimZip, 1, 2, 2, 3, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
-            tblVersion.Attach(btnApsimZip, 2, 3, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            tblVersion.Attach(radioApsimZip, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            tblVersion.Attach(entryApsimZip, 1, 2, 1, 2, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
+            tblVersion.Attach(btnApsimZip, 2, 3, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
 
             
 
@@ -273,20 +275,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Displays a warning message and asks the user if they want to continue
-        /// </summary>
-        /// <param name="msg">Message to be displayed</param>
-        /// <returns>true if the user wants to continue, false otherwise</returns>
-        public bool ShowWarning(string msg)
-        {
-            MessageDialog md = new MessageDialog(null, DialogFlags.DestroyWithParent, MessageType.Warning, ButtonsType.YesNo, "WARNING: " + msg + " - Continue?");
-            md.Title = "Sanity Check Failed - High-Grade Insanity Detected!!!";
-            ResponseType res = (ResponseType)md.Run();
-            md.Destroy();
-            return res == ResponseType.Yes;
-        }
-
-        /// <summary>
         /// Updates the status label. This is a temporary measure.
         /// </summary>
         /// <param name="status">Status to be displayed.</param>
@@ -295,40 +283,36 @@ namespace UserInterface.Views
             lblStatus.Text = status;
         }
 
-        public void ShowError(string msg)
-        {
-            MessageDialog md = new MessageDialog(null, DialogFlags.DestroyWithParent, MessageType.Error, ButtonsType.Ok, msg);
-            md.Title = "Sanity Check Failed - High-Grade Insanity Detected!!!";
-            md.Run();
-            md.Destroy();
-        }
-
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (entryName.Text.Length < 1)
             {
-                ShowError("A description is required");
+                Presenter.ShowError("A description is required");
                 return;
             }
             
             if (!Directory.Exists(entryApsimDir.Text) && radioApsimDir.Active)
             {
-                ShowError("Directory not found: " + entryApsimDir.Text);
+                Presenter.ShowError("Directory not found: " + entryApsimDir.Text);
                 return;
             }
 
             if (!File.Exists(entryApsimZip.Text) && radioApsimZip.Active)
             {
-                ShowError("File not found: " + entryApsimZip.Text);
+                Presenter.ShowError("File not found: " + entryApsimZip.Text);
                 return;
             }
 
             if (comboCoreCount.ActiveText == null)
             {
-                ShowError("Number of cores per CPU is a required field");
+                Presenter.ShowError("Number of cores per CPU is a required field");
                 return;
             }
 
+            if (chkSaveModels.Active && entryModelPath.Text.Length < 1)
+            {
+
+            }
             // save user's choices to ApsimNG.Properties.Settings            
             ApsimNG.Properties.Settings.Default["ApsimFromDir"] = radioApsimDir.Active;
             ApsimNG.Properties.Settings.Default["OutputDir"] = entryOutputDir.Text;
@@ -363,9 +347,58 @@ namespace UserInterface.Views
 
         }
 
+        /// <summary>
+        /// Tests if a string starts with a vowel.
+        /// </summary>
+        /// <param name="st"></param>
+        /// <returns>True if st starts with a vowel, false otherwise.</returns>
+        private bool StartsWithVowel(string st)
+        {
+             return "aeiou".IndexOf(st[0]) >= 0;
+        }
+
+        /// <summary>
+        /// Opens a file chooser dialog so the user can choose a file with a specific extension.
+        /// </summary>
+        /// <param name="extensions">List of allowed file extensions. Extensions should not have a . in them, e.g. zip or tar or cs are valid but .cpp is not</param>
+        /// <param name="extName">Name of the file type</param>
+        /// <returns></returns>
+        public string GetFile(List<string> extensions, string extName = "")
+        {
+            string path = "";
+            string indefiniteArticle = StartsWithVowel(extName) ? "an" : "a";
+            FileChooserDialog f = new FileChooserDialog("Choose " + indefiniteArticle + " " + extName + " file",
+                                                         null,
+                                                         FileChooserAction.Open,
+                                                         "Cancel", ResponseType.Cancel,
+                                                         "Select", ResponseType.Accept);
+            FileFilter filter = new FileFilter();
+            filter.Name = extName;
+            foreach (string extension in extensions)
+            {
+                filter.AddPattern("*." + extension);
+            }
+            f.AddFilter(filter);
+
+            try
+            {
+                if (f.Run() == (int)ResponseType.Accept)
+                {
+                    path = f.Filename;
+                }
+            }
+            catch (Exception e)
+            {
+                Presenter.ShowError(e.ToString());
+            }
+            f.Destroy();
+            return path;
+        }
+        
+
         /// <summary>Opens a file chooser dialog for the user to choose a .zip file.</summary>	
         /// <return>The path of the chosen zip file</return>
-        private string GetZipFile()
+        public string GetZipFile()
         {
             // this could easily be modified to accomodate for other file types - just pass them in as arguments		
             // and zipFilter.AddPattern("*." + extension); for each extension. 
@@ -427,7 +460,7 @@ namespace UserInterface.Views
             fc.Destroy();
             return path;            
         }
-
+        /*
         /// <summary>
         /// Toggle Event handler for online version of ApsimX radio button.
         /// Greys out the input fields/buttons associated with the other radio buttons in this group.
@@ -453,6 +486,7 @@ namespace UserInterface.Views
                 btnBob.Sensitive = true;
             }
         }
+        */
 
         /// <summary>
         /// Toggle Event handler for run ApsimX from a directory radio button.
@@ -462,6 +496,7 @@ namespace UserInterface.Views
         {
             if (radioApsimDir.Active)
             {
+                /*
                 entryVersion.IsEditable = false;
                 entryVersion.Sensitive = false;
 
@@ -469,7 +504,7 @@ namespace UserInterface.Views
                 entryRevision.Sensitive = false;
 
                 btnBob.Sensitive = false;
-
+                */
                 entryApsimZip.IsEditable = false;
                 entryApsimZip.Sensitive = false;
                 btnApsimZip.Sensitive = false;
@@ -488,6 +523,7 @@ namespace UserInterface.Views
         {
             if (radioApsimZip.Active)
             {
+                /*
                 entryVersion.IsEditable = false;
                 entryVersion.Sensitive = false;
 
@@ -496,7 +532,7 @@ namespace UserInterface.Views
                 entryRevision.Text = "";
 
                 btnBob.Sensitive = false;
-
+                */
                 entryApsimDir.IsEditable = false;
                 entryApsimDir.Sensitive = false;
                 btnApsimDir.Sensitive = false;

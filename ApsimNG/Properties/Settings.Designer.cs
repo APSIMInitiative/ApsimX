@@ -154,5 +154,17 @@ namespace ApsimNG.Properties {
                 this["ModelPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AzureLicenceFilepath {
+            get {
+                return ((string)(this["AzureLicenceFilepath"]));
+            }
+            set {
+                this["AzureLicenceFilepath"] = value;
+            }
+        }
     }
 }

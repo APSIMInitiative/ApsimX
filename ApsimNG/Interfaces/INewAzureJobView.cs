@@ -13,13 +13,12 @@ namespace UserInterface.Interfaces
         void SetDefaultJobName(string st);
         JobParameters jobParams { get; }
         BackgroundWorker SubmitJob { get; }
-        void ShowError(string msg);
-        /// <summary>
-        /// Displays a warning message and asks the user if they want to continue.
-        /// </summary>
-        /// <param name="msg">Message to be displayed</param>
-        /// <returns>true if the user wants to continue, false otherwise</returns>
-        bool ShowWarning(string msg);
+        Presenters.NewAzureJobPresenter Presenter { get; set; }
+        
         void DisplayStatus(string status);
+
+        string GetFile(List<string> extensions, string extName = "");        
+
+        string GetZipFile();
     }
 }

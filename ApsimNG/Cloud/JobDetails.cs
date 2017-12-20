@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ApsimNG.Cloud
 {
-    public class JobDetails : Object
+    public class JobDetails
     {
         public string Id { get; set; }
         public string DisplayName { get; set; }
@@ -24,11 +24,5 @@ namespace ApsimNG.Cloud
             }
         }
         public PoolSettings PoolSettings { get; set; }
-
-        public override bool Equals(Object job)
-        {
-            JobDetails parsedJob = (JobDetails)job;
-            return (Id == parsedJob.Id) && (DisplayName == parsedJob.DisplayName) && (State == parsedJob.State) && (Owner == parsedJob.Owner) && (StartTime == parsedJob.StartTime) && (EndTime == parsedJob.EndTime);
-        }
     }
 }

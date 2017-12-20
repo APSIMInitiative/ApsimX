@@ -36,13 +36,31 @@ namespace UserInterface.Presenters
         {
             this.explorerPresenter = explorerPresenter;
             this.view = (IAzureJobDisplayView)view;
+            this.view.Presenter = this;
             this.model = (IModel)model;
 
-            // store credentials
-            if (!SetCredentials())
-            {                
+            // read Azure credentials from a file. If credentials file doesn't exist, abort.
+            string credentialsFileName = (string)Settings.Default["AzureLicenceFilePath"];
+
+            // if the file name in Properties.Settings doesn't exist then prompt user for a new one
+            if (credentialsFileName == "" || !File.Exists(credentialsFileName))
+            {
+                credentialsFileName = this.view.GetFile(new List<string> { "lic" }, "Azure Licence file");
+            }
+            if (SetCredentials(credentialsFileName))
+            {
+                // licence file is valid, remember this file for next time
+                Settings.Default["AzureLicenceFilePath"] = credentialsFileName;
+                Settings.Default.Save();
+            }
+            else
+            {
+                // licence file is invalid or non-existent. Show an error and remove the job submission form from the right hand panel.
+                ShowError("Missing or invalid Azure Licence file: " + credentialsFileName);
+                explorerPresenter.HideRightHandPanel();
                 return;
             }
+
             storageCredentials = StorageCredentials.FromConfiguration();
             batchCredentials = BatchCredentials.FromConfiguration();
             poolSettings = PoolSettings.FromConfiguration();
@@ -187,14 +205,12 @@ namespace UserInterface.Presenters
         /// This is a temporary measure - will probably need to allow user to specify a file.
         /// </summary>
         /// <returns>True if the credentials file exists, false otherwise.</returns>
-        private bool SetCredentials()
+        private bool SetCredentials(string path)
         {
-            // TODO : allow user to specify a credentials file?
-            string credentialsFile = Directory.GetParent(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)).ToString() + "\\AzureAgR.lic";
-            if (File.Exists(credentialsFile))
+            if (File.Exists(path))
             {
                 string line;
-                StreamReader file = new StreamReader(credentialsFile);
+                StreamReader file = new StreamReader(path);
                 while ((line = file.ReadLine()) != null)
                 {
                     int separatorIndex = line.IndexOf("=");
@@ -205,11 +221,15 @@ namespace UserInterface.Presenters
 
                         Settings.Default[key] = val;
                     }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 return true;
-            } else
+            }
+            else
             {
-                explorerPresenter.MainPresenter.ShowMessage("Azure Licence file " + credentialsFile + " not found.", Simulation.ErrorLevel.Error);
                 return false;
             }
         }
@@ -267,6 +287,11 @@ namespace UserInterface.Presenters
             CloudJob job = batchClient.JobOperations.ListJobs(detailLevel).FirstOrDefault(j => string.Equals(jobId.ToString(), j.Id));
             if (job == null) return null;
             return batchClient.JobOperations.GetJob(jobId.ToString());
+        }
+
+        public void ShowError(string msg)
+        {
+            explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
         }
     }
 }
