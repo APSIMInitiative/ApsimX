@@ -410,6 +410,38 @@ namespace UserInterface.Presenters
             }
         }
 
+        [ContextMenu(MenuName = "View Azure Jobs (In development)")]
+        public void ViewAzureJobs(object sender, EventArgs e)
+        {
+            object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+            explorerPresenter.HideRightHandPanel();
+            explorerPresenter.ShowInRightHandPanel(model,
+                                                   "UserInterface.Views.AzureJobDisplayView",
+                                                   "UserInterface.Presenters.AzureJobDisplayPresenter");
+        }
+
+        [ContextMenu(MenuName = "Run on cloud (In development - DO NOT USE)",
+                     AppliesTo = new Type[] { typeof(Simulation),
+                                              typeof(Simulations),
+                                              typeof(Experiment),
+                                              typeof(Folder)
+                                            }            
+                    )
+        ]
+        /// <summary>
+        /// Event handler for the run on cloud action
+        /// </summary>        
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        public void RunOnCloud(object sender, EventArgs e)
+        {
+            object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+            explorerPresenter.HideRightHandPanel();
+            explorerPresenter.ShowInRightHandPanel(model,
+                                                   "UserInterface.Views.NewAzureJobView",
+                                                   "UserInterface.Presenters.NewAzureJobPresenter");
+        }
+        
         /// <summary>
         /// Event handler for a Add model action
         /// </summary>
