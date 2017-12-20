@@ -104,6 +104,13 @@
     <EmbeddedResource Include="Resources\Glade\MainView.glade" />
     <EmbeddedResource Include="Resources\Glade\UpgradeForm.glade" />
     <EmbeddedResource Include="Resources\Glade\TreeProxyView.glade" />
+    <EmbeddedResource Include="Resources\Glade\NewAzureJobView.glade">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Test.xshd" />
@@ -124,6 +131,17 @@
     <Compile Include="Attributes\MainMenuAttribute.cs" />
     <Compile Include="Classes\GridCell.cs" />
     <Compile Include="Classes\HtmlToMigraDoc.cs" />
+    <Compile Include="Cloud\APSIMJob.cs" />
+    <Compile Include="Cloud\ApsimJobManagerExtension.cs" />
+    <Compile Include="Cloud\ApsimJobPrepExtension.cs" />
+    <Compile Include="Cloud\BatchConstants.cs" />
+    <Compile Include="Cloud\BatchCredentials.cs" />
+    <Compile Include="Cloud\FileUploader.cs" />
+    <Compile Include="Cloud\JobDetails.cs" />
+    <Compile Include="Cloud\JobParameters.cs" />
+    <Compile Include="Cloud\PoolSettings.cs" />
+    <Compile Include="Cloud\StorageCredentials.cs" />
+    <Compile Include="Cloud\TaskDetails.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\BibTeX.cs" />
@@ -145,6 +163,8 @@
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
     <Compile Include="Forms\UpgradeForm.cs" />
     <Compile Include="Classes\GridColumn.cs" />
+    <Compile Include="Interfaces\IAxisView.cs" />
+    <Compile Include="Interfaces\IAzureJobDisplayView.cs" />
     <Compile Include="Interfaces\IButtonView.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\ICultivarView.cs" />
@@ -154,7 +174,7 @@
     <Compile Include="Interfaces\IGridColumn.cs" />
     <Compile Include="Interfaces\IGridView.cs" />
     <Compile Include="Interfaces\IInitialWaterView.cs" />
-    <Compile Include="Interfaces\IAxisView.cs" />
+    <Compile Include="Interfaces\INewAzureJobView.cs" />
     <Compile Include="Interfaces\ISeriesView.cs" />
     <Compile Include="Interfaces\ISummaryView.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
@@ -165,6 +185,7 @@
     <Compile Include="Presenters\AddFunctionPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
+    <Compile Include="Presenters\AzureJobDisplayPresenter.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
     <Compile Include="Presenters\ExperimentPresenter.cs" />
@@ -183,6 +204,7 @@
     <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Presenters\MemoPresenter.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
+    <Compile Include="Presenters\NewAzureJobPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
     <Compile Include="Presenters\ProfilePresenter.cs" />
     <Compile Include="Presenters\PropertyPresenter.cs" />
@@ -199,6 +221,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Utility\ColourPickerCell.cs" />
     <Compile Include="Utility\ColumnXYSeries.cs" />
     <Compile Include="Utility\Configuration.cs" />
@@ -210,6 +237,7 @@
     <Compile Include="Utility\Graph.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
     <Compile Include="Views\AxisView.cs" />
+    <Compile Include="Views\AzureJobDisplayView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
@@ -232,6 +260,7 @@
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
     <Compile Include="Views\MemoView.cs" />
+    <Compile Include="Views\NewAzureJobView.cs" />
     <Compile Include="Views\ProfileView.cs" />
     <Compile Include="Views\ReportView.cs" />
     <Compile Include="Views\SeriesView.cs" />
@@ -388,6 +417,7 @@
     <EmbeddedResource Include="Resources\help.png" />
     <EmbeddedResource Include="Resources\DebugDoc.xsl" />
     <Content Include="ApsimLogo.ico" />
+    <EmbeddedResource Include="Resources\Toolboxes\Cloud.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
@@ -690,9 +720,12 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.XML" />
     <Reference Include="webkit-sharp, Version=1.1.15.0, Culture=neutral, PublicKeyToken=eaa1d335d2e19745, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
