@@ -20,6 +20,7 @@ using Models.PostSimulationTools;
 using PdfSharp.Fonts;
 using System.Data;
 using PdfSharp.Drawing;
+using Models.Interfaces;
 
 namespace UserInterface.Commands
 {
@@ -642,7 +643,7 @@ namespace UserInterface.Commands
                     mapPresenter.Attach(tag, mapView, ExplorerPresenter);
                     string PNGFileName = mapPresenter.ExportToPDF(workingDirectory);
                     if (!String.IsNullOrEmpty(PNGFileName))
-                       section.AddImage(PNGFileName);
+                        section.AddImage(PNGFileName);
                     mapPresenter.Detach();
                     mapView.MainWidget.Destroy();
                 }
@@ -655,6 +656,31 @@ namespace UserInterface.Commands
                     imageTag.image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
                     section.AddImage(PNGFileName);
                     figureNumber++;
+                }
+                else if (tag is DirectedGraph)
+                {
+
+                    DirectedGraphPresenter presenter = new DirectedGraphPresenter();
+                    ExplorerPresenter.ApsimXFile.Links.Resolve(presenter);
+                    DirectedGraphView view = new DirectedGraphView();
+                    presenter.Attach(new DirectedGraphContainer(tag as DirectedGraph), view, ExplorerPresenter);
+
+                    Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
+                    popupWin.SetSizeRequest(800, 800);
+                    // Move the window offscreen; the user doesn't need to see it.
+                    // This works with IE, but not with WebKit
+                    // Not yet tested on OSX
+                    if (ProcessUtilities.CurrentOS.IsWindows)
+                        popupWin.Move(-10000, -10000);
+                    popupWin.Add(view.MainWidget);
+                    popupWin.ShowAll();
+                    while (Gtk.Application.EventsPending())
+                        Gtk.Application.RunIteration();
+
+                    string PNGFileName = presenter.ExportToPNG(workingDirectory);
+                    section.AddImage(PNGFileName);
+                    presenter.Detach();
+                    view.MainWidget.Destroy();
                 }
             }
         }
@@ -874,6 +900,19 @@ namespace UserInterface.Commands
                 stream.Read(data, 0, count);
                 return data;
             }
+        }
+    }
+
+
+    /// <summary>A simple container for holding a directed graph - used in auto-doc</summary>
+    public class DirectedGraphContainer : IVisualiseAsDirectedGraph
+    {
+        /// <summary>A property for holding the graph</summary>
+        public DirectedGraph DirectedGraphInfo { get; set; }
+
+        public DirectedGraphContainer(DirectedGraph graph)
+        {
+            DirectedGraphInfo = graph;
         }
     }
 }
