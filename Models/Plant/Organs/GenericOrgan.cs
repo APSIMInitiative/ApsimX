@@ -154,6 +154,10 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Total { get { return Live + Dead; } }
 
+        /// <summary>Carbon concentration</summary>
+        /// [Units("-")]
+        public double CarbonConcentration { get; set; }
+
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [XmlIgnore]
         public Biomass Allocated { get; private set; }
@@ -350,11 +354,18 @@ namespace Models.PMF.Organs
                 throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
 
             // get DM lost by respiration (growth respiration)
+            // GrowthRespiration with unit CO2 
+            // GrowthRespiration is calculated as 
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // CO2 (44/12).
+            double growthRespFactor = ((1 / dmConversionEfficiency.Value()) * (12 / 30) - 1 * CarbonConcentration) * 44 / 12;
+
             GrowthRespiration = 0.0;
-            GrowthRespiration += dryMatter.Structural * (1.0 - dmConversionEfficiency.Value());
             // allocate structural DM
             Allocated.StructuralWt = Math.Min(dryMatter.Structural * dmConversionEfficiency.Value(), dryMatterDemand.Structural);
             Live.StructuralWt += Allocated.StructuralWt;
+            GrowthRespiration += Allocated.StructuralWt * growthRespFactor;
 
             // allocate non structural DM
             if ((dryMatter.Storage * dmConversionEfficiency.Value() - DMDemand.Storage) > biomassToleranceValue)
@@ -364,14 +375,14 @@ namespace Models.PMF.Organs
             if (diffWt > 0)
             {
                 diffWt *= dmConversionEfficiency.Value();
-                GrowthRespiration += diffWt;
+                
             }
             Allocated.StorageWt = diffWt;
             Live.StorageWt += diffWt;
-            
+            GrowthRespiration += Allocated.StorageWt * growthRespFactor;
             // allocate metabolic DM
             Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
-            GrowthRespiration += dryMatter.Metabolic * (1.0 - dmConversionEfficiency.Value());
+            GrowthRespiration += Allocated.MetabolicWt * growthRespFactor;
 
         }
 

@@ -1345,11 +1345,14 @@ namespace Models.PMF.Organs
         public override void SetDryMatterAllocation(BiomassAllocationType value)
         {
             // get DM lost by respiration (growth respiration)
-            GrowthRespiration = 0.0;
-            GrowthRespiration += value.Structural * (1.0 - DMConversionEfficiency.Value())
-                              + value.Storage * (1.0 - DMConversionEfficiency.Value())
-                              + value.Metabolic * (1.0 - DMConversionEfficiency.Value());
-
+            // GrowthRespiration with unit CO2 
+            // GrowthRespiration is calculated as 
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // CO2 (44/12).
+            double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12 / 30) - 1 * CarbonConcentration) * 44 / 12;
+            GrowthRespiration = (value.Structural + value.Storage + value.Metabolic) * growthRespFactor;
+            
             double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];
             double StartWt = Live.StructuralWt + Live.MetabolicWt + Live.StorageWt;
             //Structural DM allocation
