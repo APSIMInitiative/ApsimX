@@ -701,90 +701,110 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Node>
             <Name>Inert</Name>
             <Location>
-              <X>394</X>
-              <Y>661</Y>
+              <X>103</X>
+              <Y>476</Y>
             </Location>
             <Colour />
+            <OutlineColour />
           </Node>
           <Node>
             <Name>SurfaceResidue</Name>
             <Location>
-              <X>621</X>
-              <Y>180</Y>
+              <X>649</X>
+              <Y>60</Y>
             </Location>
             <Colour />
+            <OutlineColour />
           </Node>
           <Node>
             <Name>Biomass</Name>
             <Location>
-              <X>305</X>
-              <Y>192</Y>
+              <X>179</X>
+              <Y>340</Y>
             </Location>
             <Colour />
+            <OutlineColour />
           </Node>
           <Node>
             <Name>Humic</Name>
             <Location>
-              <X>456</X>
-              <Y>304</Y>
+              <X>473</X>
+              <Y>332</Y>
             </Location>
             <Colour />
+            <OutlineColour />
           </Node>
           <Node>
             <Name>FOMLignin</Name>
             <Location>
-              <X>74</X>
-              <Y>226</Y>
+              <X>120</X>
+              <Y>59</Y>
             </Location>
             <Colour />
+            <OutlineColour />
           </Node>
           <Node>
             <Name>FOMCellulose</Name>
             <Location>
-              <X>503</X>
-              <Y>63</Y>
+              <X>441</X>
+              <Y>67</Y>
             </Location>
             <Colour />
+            <OutlineColour />
           </Node>
           <Node>
             <Name>FOMCarbohydrate</Name>
             <Location>
-              <X>167</X>
-              <Y>63</Y>
+              <X>281</X>
+              <Y>69</Y>
             </Location>
             <Colour />
+            <OutlineColour />
           </Node>
           <Node>
             <Name>Urea</Name>
             <Location>
-              <X>504</X>
-              <Y>468</Y>
+              <X>530</X>
+              <Y>641</Y>
             </Location>
             <Colour />
+            <OutlineColour />
           </Node>
           <Node>
             <Name>NO3</Name>
             <Location>
-              <X>126</X>
-              <Y>475</Y>
+              <X>143</X>
+              <Y>646</Y>
             </Location>
             <Colour />
+            <OutlineColour />
           </Node>
           <Node>
             <Name>NH4</Name>
             <Location>
-              <X>325</X>
-              <Y>477</Y>
+              <X>335</X>
+              <Y>632</Y>
             </Location>
             <Colour />
+            <OutlineColour />
           </Node>
           <Node>
             <Name>Biochar</Name>
             <Location>
-              <X>555</X>
-              <Y>660</Y>
+              <X>621</X>
+              <Y>472</Y>
             </Location>
             <Colour />
+            <OutlineColour />
+          </Node>
+          <Node>
+            <Name>Atmosphere</Name>
+            <Location>
+              <X>274</X>
+              <Y>780</Y>
+            </Location>
+            <Colour />
+            <OutlineColour />
           </Node>
         </Nodes>
         <Arcs>
@@ -810,8 +830,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>Biomass</SourceName>
             <DestinationName>Biomass</DestinationName>
             <Location>
-              <X>181</X>
-              <Y>234</Y>
+              <X>334</X>
+              <Y>353</Y>
             </Location>
             <Colour />
           </Arc>
@@ -828,8 +848,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>Humic</SourceName>
             <DestinationName>Biomass</DestinationName>
             <Location>
-              <X>379</X>
-              <Y>185</Y>
+              <X>324</X>
+              <Y>469</Y>
             </Location>
             <Colour />
           </Arc>
@@ -846,8 +866,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>FOMLignin</SourceName>
             <DestinationName>Humic</DestinationName>
             <Location>
-              <X>189</X>
-              <Y>376</Y>
+              <X>374</X>
+              <Y>274</Y>
             </Location>
             <Colour />
           </Arc>
@@ -855,8 +875,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>FOMCellulose</SourceName>
             <DestinationName>Biomass</DestinationName>
             <Location>
-              <X>336</X>
-              <Y>59</Y>
+              <X>435</X>
+              <Y>84</Y>
             </Location>
             <Colour />
           </Arc>
@@ -891,16 +911,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>Urea</SourceName>
             <DestinationName>NH4</DestinationName>
             <Location>
-              <X>408</X>
-              <Y>398</Y>
-            </Location>
-            <Colour />
-          </Arc>
-          <Arc>
-            <SourceName>NO3</SourceName>
-            <Location>
-              <X>0</X>
-              <Y>0</Y>
+              <X>412</X>
+              <Y>569</Y>
             </Location>
             <Colour />
           </Arc>
@@ -908,8 +920,17 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>NH4</SourceName>
             <DestinationName>NO3</DestinationName>
             <Location>
-              <X>224</X>
-              <Y>382</Y>
+              <X>217</X>
+              <Y>560</Y>
+            </Location>
+            <Colour />
+          </Arc>
+          <Arc>
+            <SourceName>NO3</SourceName>
+            <DestinationName>Atmosphere</DestinationName>
+            <Location>
+              <X>202</X>
+              <Y>735</Y>
             </Location>
             <Colour />
           </Arc>

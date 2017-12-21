@@ -19,10 +19,14 @@
         /// <summary>Fill colour of node</summary>
         public Color Colour { get; set; }
 
+        /// <summary>Outline colour of node</summary>
+        public Color OutlineColour { get; set; }
+
         /// <summary>Constructor</summary>
         public Node()
         {
             Colour = Color.Beige;
+            OutlineColour = Color.Black;
         }
     }
 
@@ -84,7 +88,7 @@
         }
 
         /// <summary>Add a new node to the graph</summary>
-        public void AddNode(string name, Color colour)
+        public void AddNode(string name, Color colour, Color outlineColour)
         {
             Node newNode = Nodes.Find(node => node.Name == name);
             if (newNode == null)
@@ -101,6 +105,7 @@
             }
             newNode.Name = name;
             newNode.Colour = colour;
+            newNode.OutlineColour = outlineColour;
             nodesToKeep.Add(newNode);
         }
 

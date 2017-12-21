@@ -263,22 +263,45 @@
 
             _directedGraphInfo.Begin();
 
+            bool needAtmosphereNode = false;
+
             foreach (NutrientPool pool in Apsim.Children(this, typeof(NutrientPool)))
             {
-                _directedGraphInfo.AddNode(pool.Name, Color.LightGreen);
+                _directedGraphInfo.AddNode(pool.Name, Color.LightGreen, Color.Black);
                 foreach (CarbonFlow cFlow in Apsim.Children(pool, typeof(CarbonFlow)))
                 {
                     foreach (string destinationName in cFlow.destinationNames)
-                        _directedGraphInfo.AddArc(null, pool.Name, destinationName, Color.Black);
+                    {
+                        string destName = destinationName;
+                        if (destName == null)
+                        {
+                            destName = "Atmosphere";
+                            needAtmosphereNode = true;
+                        }
+                        _directedGraphInfo.AddArc(null, pool.Name, destName, Color.Black);
+
+                    }
                 }
             }
 
             foreach (Solute solute in Apsim.Children(this, typeof(Solute)))
             {
-                _directedGraphInfo.AddNode(solute.Name, Color.LightCoral);
+                _directedGraphInfo.AddNode(solute.Name, Color.LightCoral, Color.Black);
                 foreach (NFlow nitrogenFlow in Apsim.Children(solute, typeof(NFlow)))
-                    _directedGraphInfo.AddArc(null, nitrogenFlow.sourceName, nitrogenFlow.destinationName, Color.SaddleBrown);
+                {
+                    string destName = nitrogenFlow.destinationName;
+                    if (destName == null)
+                    {
+                        destName = "Atmosphere";
+                        needAtmosphereNode = true;
+                    }
+
+                    _directedGraphInfo.AddArc(null, nitrogenFlow.sourceName, destName, Color.Black);
+                }
             }
+
+            if (needAtmosphereNode)
+                _directedGraphInfo.AddNode("Atmosphere", Color.White, Color.White);
 
             _directedGraphInfo.End();
         }

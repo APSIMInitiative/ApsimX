@@ -18,7 +18,6 @@ namespace ApsimNG.Classes.DirectedGraph
     public class DGNode : DGObject
     {
         public OxyColor ForegroundColour = OxyColors.Black;
-        public OxyColor BackgroundColour = OxyColors.Beige;
         public string Description { get; set; }
         public int Width { get { return 120; } }
 
@@ -27,7 +26,8 @@ namespace ApsimNG.Classes.DirectedGraph
         {
             Name = directedGraphNode.Name;
             Location = new PointD(directedGraphNode.Location.X, directedGraphNode.Location.Y);
-            BackgroundColour = OxyPlot.OxyColor.FromRgb(directedGraphNode.Colour.R, directedGraphNode.Colour.G, directedGraphNode.Colour.B);
+            Colour = OxyPlot.OxyColor.FromRgb(directedGraphNode.Colour.R, directedGraphNode.Colour.G, directedGraphNode.Colour.B);
+            ForegroundColour = OxyPlot.OxyColor.FromRgb(directedGraphNode.OutlineColour.R, directedGraphNode.OutlineColour.G, directedGraphNode.OutlineColour.B);
         }
 
         /// <summary>Get a DirectedGraph node from this instance.</summary>
@@ -36,7 +36,8 @@ namespace ApsimNG.Classes.DirectedGraph
             Node n = new Node();
             n.Name = Name;
             n.Location = new System.Drawing.Point((int)Location.X, (int)Location.Y);
-            n.Colour = System.Drawing.Color.FromArgb(BackgroundColour.R, BackgroundColour.G, BackgroundColour.B);
+            n.Colour = System.Drawing.Color.FromArgb(Colour.R, Colour.G, Colour.B);
+            n.OutlineColour = System.Drawing.Color.FromArgb(ForegroundColour.R, ForegroundColour.G, ForegroundColour.B);
             return n;
         }
 
@@ -47,14 +48,14 @@ namespace ApsimNG.Classes.DirectedGraph
             if (Selected)
                 context.SetSourceColor(OxyColors.Blue);
             else
-                context.SetSourceColor(Colour);
+                context.SetSourceColor(ForegroundColour);
 
             // Draw circle
             context.LineWidth = 3;
             context.NewPath();
             context.Arc(Location.X, Location.Y, Width/2, 0, 2 * Math.PI);
             context.StrokePreserve();
-            context.SetSourceColor(BackgroundColour);
+            context.SetSourceColor(Colour);
             context.Fill();
 
             // Write text
