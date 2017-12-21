@@ -7,6 +7,7 @@
     using System;
 
     /// <summary>Encapsulates a node on a directed graph</summary>
+    [Serializable]
     public class Node
     {
         /// <summary>Name of node</summary>
@@ -26,6 +27,7 @@
     }
 
     /// <summary>Encapsulates an arc on a directed graph</summary>
+    [Serializable]
     public class Arc
     {
         /// <summary>Source node (where arc starts)</summary>
@@ -45,6 +47,7 @@
     }
 
     /// <summary>Encapsulates a directed graph</summary>
+    [Serializable]
     public class DirectedGraph : AutoDocumentation.ITag
     {
         private Point nextNodePosition = new Point(50, 50);
