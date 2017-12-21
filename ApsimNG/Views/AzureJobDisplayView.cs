@@ -22,6 +22,7 @@ namespace UserInterface.Views
         private TreeViewColumn columnProgress;
         private TreeViewColumn columnStartTime;
         private TreeViewColumn columnEndTime;
+        private TreeViewColumn columnDownload;
 
         private CellRendererText cellName;
         private CellRendererText cellId;
@@ -29,6 +30,7 @@ namespace UserInterface.Views
         private CellRendererText cellProgress;
         private CellRendererText cellStartTime;
         private CellRendererText cellEndTime;
+        private CellRendererPixbuf cellDownload;
         private TreeModelFilter filterOwner;
         private TreeModelSort sort;
         private VBox vboxPrimary;
@@ -80,6 +82,11 @@ namespace UserInterface.Views
                 SortColumnId = 5,
             };
 
+            columnDownload = new TreeViewColumn
+            {
+                Title = "Download"
+            };
+
             // create cells for each column
             cellName = new CellRendererText();            
             cellId = new CellRendererText();
@@ -87,6 +94,8 @@ namespace UserInterface.Views
             cellProgress = new CellRendererText();
             cellStartTime = new CellRendererText();
             cellEndTime = new CellRendererText();
+            cellDownload = new CellRendererPixbuf();            
+            cellDownload.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Download.png");
 
             // bind cells to column
             columnName.PackStart(cellName, false);
@@ -95,23 +104,26 @@ namespace UserInterface.Views
             columnProgress.PackStart(cellProgress, false);
             columnStartTime.PackStart(cellStartTime, false);
             columnEndTime.PackStart(cellEndTime, false);
-
+            columnDownload.PackStart(cellDownload, false);            
 
             columnName.AddAttribute(cellName, "text", 0);
             columnId.AddAttribute(cellId, "text", 1);
             columnState.AddAttribute(cellState, "text", 2);
             columnProgress.AddAttribute(cellProgress, "text", 3);
             columnStartTime.AddAttribute(cellStartTime, "text", 4);
-            columnEndTime.AddAttribute(cellEndTime, "text", 5);
+            columnEndTime.AddAttribute(cellEndTime, "text", 5);            
 
             tree = new TreeView();
+            tree.ButtonPressEvent += TreeClickEvent;
+            tree.RowActivated += TreeRowActivated;
+
             tree.AppendColumn(columnName);
             tree.AppendColumn(columnId);
             tree.AppendColumn(columnState);
             tree.AppendColumn(columnProgress);
             tree.AppendColumn(columnStartTime);
             tree.AppendColumn(columnEndTime);
-
+            tree.AppendColumn(columnDownload);
 
             chkFilterOwner = new CheckButton("Display my jobs only");
             chkFilterOwner.Toggled += RedrawJobs;
@@ -150,6 +162,28 @@ namespace UserInterface.Views
 
             vboxPrimary.PackStart(progress, false, false, 0);
             _mainWidget = vboxPrimary;
+        }
+
+        [GLib.ConnectBefore]
+        private void TreeClickEvent(object sender, ButtonPressEventArgs e)
+        {
+            int x = Int32.Parse(((Gdk.EventButton)e.Args[0]).X.ToString());            
+            int y = Int32.Parse(((Gdk.EventButton)e.Args[0]).Y.ToString());
+            
+            TreePath path;
+            tree.GetPathAtPos(x, y, out path);
+            TreeIter iter;
+            tree.Model.GetIter(out iter, path);
+            int[] arr = new int[] { 1, 2 };
+
+            string id = (string)tree.Model.GetValue(iter, 1);
+            Presenter.DownloadResults(id);
+        }
+
+        [GLib.ConnectBefore]
+        private void TreeRowActivated(object sender, EventArgs e)
+        {
+            Console.WriteLine("Click");
         }
 
         private int SortName(TreeModel model, TreeIter a, TreeIter b)

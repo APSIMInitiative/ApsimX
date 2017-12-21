@@ -603,5 +603,10 @@
         {
             return "";
         }     
+
+        public void CancelJobSubmission()
+        {
+            explorerPresenter.HideRightHandPanel();
+        }
     }
 }

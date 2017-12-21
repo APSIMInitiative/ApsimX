@@ -15,6 +15,7 @@ using System.Timers;
 using Models.Core.Runners;
 using Models.Core;
 using APSIM.Shared.Utilities;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace UserInterface.Presenters
 {
@@ -31,6 +32,8 @@ namespace UserInterface.Presenters
         private PoolSettings poolSettings;
         private BackgroundWorker FetchJobs;
         private Timer updateJobsTimer;
+        private CloudBlobClient blobClient;
+        private BackgroundWorker downloader;
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
@@ -63,11 +66,13 @@ namespace UserInterface.Presenters
 
             storageCredentials = StorageCredentials.FromConfiguration();
             batchCredentials = BatchCredentials.FromConfiguration();
-            poolSettings = PoolSettings.FromConfiguration();
+            poolSettings = PoolSettings.FromConfiguration();            
 
             storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
             var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
             batchClient = BatchClient.Open(sharedCredentials);
+            blobClient = storageAccount.CreateCloudBlobClient();
+            blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);
             
             FetchJobs = new BackgroundWorker();
             FetchJobs.DoWork += FetchJobs_DoWork;            
@@ -289,9 +294,17 @@ namespace UserInterface.Presenters
             return batchClient.JobOperations.GetJob(jobId.ToString());
         }
 
+        public void DownloadResults(string jobId)
+        {
+            string path = (string)Settings.Default["OutputDir"];
+            AzureResultsDownloader downloader = new AzureResultsDownloader(Guid.Parse(jobId), path, explorerPresenter);
+            downloader.DownloadResults();
+        }
+
         public void ShowError(string msg)
         {
             explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
         }
+
     }
 }

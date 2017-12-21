@@ -255,6 +255,7 @@ namespace UserInterface.Views
             btnOK = new Button("OK");
             btnOK.Clicked += new EventHandler(btnOK_Click);
             Button btnCancel = new Button("Cancel");
+            btnCancel.Clicked += new EventHandler(btnCancel_Click);
             HBox hbxButtons = new HBox(true, 0);
             hbxButtons.PackEnd(btnCancel, false, true, 0);
             hbxButtons.PackEnd(btnOK, false, true, 0);
@@ -281,6 +282,11 @@ namespace UserInterface.Views
         public void DisplayStatus(string status)
         {
             lblStatus.Text = status;
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Presenter.CancelJobSubmission();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
