@@ -60,7 +60,7 @@ namespace ApsimNG.Classes.DirectedGraph
 
             // Write text
             context.LineWidth = 1;
-            context.SetSourceColor(ForegroundColour);
+            context.SetSourceColor(OxyColors.Black);
             context.SetFontSize(13);
 
             DrawCentredText(context, Name, Location);
