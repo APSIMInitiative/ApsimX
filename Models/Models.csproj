@@ -164,6 +164,8 @@
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
+    <Compile Include="Graph\DirectedGraph.cs" />
+    <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
     <Compile Include="Plant\Functions\ArrayFunction.cs" />
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
