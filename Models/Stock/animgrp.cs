@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Reflection;
-using StdUnits;
+
 
 namespace Models.GrazPlan
 {
+    using System;
+    using System.Collections.Generic;
+    using StdUnits;
+
     /// <summary>
     /// Record containing the different sources from which an animal acquires energy, protein etc                                
     /// </summary>
@@ -910,6 +906,11 @@ namespace Models.GrazPlan
         protected int FPrevOffspring;
 
         /// <summary>
+        /// The daily deaths
+        /// </summary>
+        protected int FDeaths;
+
+        /// <summary>
         /// The mothers animal group
         /// </summary>
         protected TAnimalGroup Mothers;
@@ -1654,7 +1655,7 @@ namespace Models.GrazPlan
                 YoungLosses = RandFactory.RndPropn(Young.NoAnimals, ExposureFunc());
             else
                 YoungLosses = 0;
-
+            FDeaths = NoLosses;
             if ((Young == null) && (NoLosses > 0))
                 SplitSex(MaleLosses, FemaleLosses, false, Diffs);
 
@@ -1760,6 +1761,7 @@ namespace Models.GrazPlan
                     ToxaemiaRate = StdMath.SIG((MidLatePregWt - BaseWeight) / NormalWt,
                                          AParams.ToxaemiaSigs);
                     NoLosses = RandFactory.RndPropn(NoFemales, ToxaemiaRate);
+                    FDeaths += NoLosses;
                     if (NoLosses > 0)
                         Split(NoLosses, false, NODIFF, NODIFF);
                 } // ELSE IF (NoFoetuses >= 2) 
@@ -2942,6 +2944,12 @@ namespace Models.GrazPlan
         /// Condition at birth
         /// </summary>
         public double BirthCondition { get { return ConditionAtBirthing; } set { ConditionAtBirthing = value; } }
+
+        /// <summary>
+        /// The daily deaths
+        /// </summary>
+        public int Deaths { get { return FDeaths; } set { FDeaths = value; } }
+        
         /// <summary>
         /// Condition score
         /// </summary>

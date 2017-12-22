@@ -34,7 +34,7 @@ namespace Models.PMF.Organs
     /// 
     /// **Nitrogen Uptake**
     /// 
-    /// Potential N uptake by the root system is calculated for each soil layer that the roots have extended into.  
+    /// Potential N uptake by the root system is calculated for each soil layer (i) that the roots have extended into.  
     /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction
     /// (kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries.  
     /// 
@@ -766,7 +766,13 @@ namespace Models.PMF.Organs
             Allocated.StructuralWt = dryMatter.Structural * DMConversionEfficiency.Value();
             Allocated.StorageWt = dryMatter.Storage * DMConversionEfficiency.Value();
             Allocated.MetabolicWt = dryMatter.Metabolic * DMConversionEfficiency.Value();
-            GrowthRespiration = (dryMatter.Structural + dryMatter.Storage + dryMatter.Metabolic) * (1 - DMConversionEfficiency.Value());
+            // GrowthRespiration with unit CO2 
+            // GrowthRespiration is calculated as 
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // CO2 (44/12).
+            double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12 / 30) - 1 * CarbonConcentration) * 44 / 12;
+            GrowthRespiration = (Allocated.StructuralWt + Allocated.StorageWt + Allocated.MetabolicWt) * growthRespFactor;
             if (TotalRAw == 0 && Allocated.Wt > 0)
                 throw new Exception("Error trying to partition root biomass");
 
