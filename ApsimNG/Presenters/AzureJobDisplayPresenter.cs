@@ -33,7 +33,7 @@ namespace UserInterface.Presenters
         private BackgroundWorker FetchJobs;
         private Timer updateJobsTimer;
         private CloudBlobClient blobClient;
-        private BackgroundWorker downloader;
+        private AzureResultsDownloader downloader;
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
@@ -127,6 +127,8 @@ namespace UserInterface.Presenters
             var cloudJobs = batchClient.JobOperations.ListJobs(jobDetailLevel);
             var length = cloudJobs.Count();
             int i = 1;            
+            var updateProgressMutex = new object();
+
             foreach (var cloudJob in cloudJobs)
             {
                 if (FetchJobs.CancellationPending)
@@ -171,15 +173,11 @@ namespace UserInterface.Presenters
                 jobs.Add(job);
                 i++;
 
-                // TODO : find a neater solution to the threading problem than this try/catch
-                try
+                
+                lock(updateProgressMutex)
                 {
                     view.UpdateJobLoadStatus(100.0 * i / length);
-                }
-                catch
-                {
-                    return jobs;
-                }
+                }                
             }            
             return jobs;
         }
@@ -297,7 +295,7 @@ namespace UserInterface.Presenters
         public void DownloadResults(string jobId)
         {
             string path = (string)Settings.Default["OutputDir"];
-            AzureResultsDownloader downloader = new AzureResultsDownloader(Guid.Parse(jobId), path, explorerPresenter);
+            downloader = new AzureResultsDownloader(Guid.Parse(jobId), path, this);
             downloader.DownloadResults();
         }
 
@@ -306,5 +304,9 @@ namespace UserInterface.Presenters
             explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
         }
 
+        public void DisplayFinishedDownloadStatus(string path, bool successful)
+        {
+            view.UpdateDownloadStatus(path, successful);
+        }
     }
 }

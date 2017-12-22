@@ -12,6 +12,7 @@ namespace UserInterface.Interfaces
         void AddJobsToTableIfNecessary(List<ApsimNG.Cloud.JobDetails> jobs);
         void ShowError(string msg);
         void UpdateJobLoadStatus(double progress);
-        string GetFile(List<string> extensions, string extName);        
+        string GetFile(List<string> extensions, string extName);
+        void UpdateDownloadStatus(string path, bool successful);
     }
 }

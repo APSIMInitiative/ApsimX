@@ -21,14 +21,15 @@ namespace ApsimNG.Cloud
         private CloudStorageAccount storageAccount;
         private BatchClient batchClient;
         private CloudBlobClient blobClient;
-        private ExplorerPresenter presenter;
+        private AzureJobDisplayPresenter presenter;
         private CloudJob job;
         private BackgroundWorker downloader;
 
-        public AzureResultsDownloader(Guid id, string path, ExplorerPresenter explorer)
+        public AzureResultsDownloader(Guid id, string path, AzureJobDisplayPresenter explorer)
         {
             jobId = id;
             outputPath = path;
+            presenter = explorer;
 
             StorageCredentials storageCredentials = StorageCredentials.FromConfiguration();
             BatchCredentials batchCredentials = BatchCredentials.FromConfiguration();
@@ -58,7 +59,7 @@ namespace ApsimNG.Cloud
                 }
                 catch (Exception e)
                 {
-                    //ShowError(e.ToString());
+                    presenter.ShowError(e.ToString());
                 }
             }
             downloader = new BackgroundWorker();
@@ -68,7 +69,6 @@ namespace ApsimNG.Cloud
 
         private void Downloader_DoWork(object sender, DoWorkEventArgs e)
         {
-            string outputDir = (string)e.Argument;
             CancellationToken ct;
 
             var outputHashLock = new object();
@@ -91,15 +91,16 @@ namespace ApsimNG.Cloud
                                          //if (extension == ".stdout" || extension == ".sum") skip = true;
                                          if (!skip && !downloadedOutputs.Contains(blob.Name))
                                          {
-                                             blob.DownloadToFile(Path.Combine(outputDir, blob.Name), FileMode.Create);
+                                             blob.DownloadToFile(Path.Combine(outputPath, blob.Name), FileMode.Create);
                                              lock (outputHashLock)
                                              {
                                                  downloadedOutputs.Add(blob.Name);
                                              }
                                          }
-                                         Console.WriteLine(DateTime.Now.ToLongTimeString() + ": Downloaded " + Path.Combine(outputDir, blob.Name));
+                                         Console.WriteLine(DateTime.Now.ToLongTimeString() + ": Downloaded " + Path.Combine(outputPath, blob.Name));                                         
                                          // report progress?
                                      });
+                    presenter.DisplayFinishedDownloadStatus(outputPath, true);
                     if (complete) break;
                 }
                 catch (AggregateException ae)
@@ -175,6 +176,11 @@ namespace ApsimNG.Cloud
         {
             if (job == null) return true;
             return job.State == JobState.Completed || job.State == JobState.Disabled;
+        }
+
+        private void ReportFinished(bool successful)
+        {
+            presenter.DisplayFinishedDownloadStatus(outputPath, successful);
         }
     }
 }

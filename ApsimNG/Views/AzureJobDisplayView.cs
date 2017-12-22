@@ -36,9 +36,16 @@ namespace UserInterface.Views
         private VBox vboxPrimary;
         private CheckButton chkFilterOwner;
         private Label lblProgress;
+        private Label lblDownloadStatus;
         private ProgressBar loadingProgress;
         private HBox progress;
-
+        private Button btnChangeDownloadDir;
+        private Entry entryChangeDownloadDir;
+        private Button btnSave;
+        private HBox hboxChangeDownloadDir;
+        private Table tblButtonContainer;
+        private Button btnDirSelect;
+        
         public AzureJobDisplayView(ViewBase owner) : base(owner)
         {
             jobList = new List<JobDetails>();
@@ -56,7 +63,6 @@ namespace UserInterface.Views
                 Title = "Job ID",
                 SortColumnId = 1
             };
-
 
             columnState = new TreeViewColumn
             {
@@ -88,13 +94,13 @@ namespace UserInterface.Views
             };
 
             // create cells for each column
-            cellName = new CellRendererText();            
+            cellName = new CellRendererText();
             cellId = new CellRendererText();
             cellState = new CellRendererText();
             cellProgress = new CellRendererText();
             cellStartTime = new CellRendererText();
             cellEndTime = new CellRendererText();
-            cellDownload = new CellRendererPixbuf();            
+            cellDownload = new CellRendererPixbuf();
             cellDownload.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Download.png");
 
             // bind cells to column
@@ -105,7 +111,7 @@ namespace UserInterface.Views
             columnStartTime.PackStart(cellStartTime, false);
             columnEndTime.PackStart(cellEndTime, false);
             columnDownload.PackStart(cellDownload, false);            
-
+            
             columnName.AddAttribute(cellName, "text", 0);
             columnId.AddAttribute(cellId, "text", 1);
             columnState.AddAttribute(cellState, "text", 2);
@@ -115,18 +121,20 @@ namespace UserInterface.Views
 
             tree = new TreeView();
             tree.ButtonPressEvent += TreeClickEvent;
-            tree.RowActivated += TreeRowActivated;
-
+            //tree.RowActivated += TreeRowActivated;
+            
             tree.AppendColumn(columnName);
             tree.AppendColumn(columnId);
             tree.AppendColumn(columnState);
             tree.AppendColumn(columnProgress);
             tree.AppendColumn(columnStartTime);
             tree.AppendColumn(columnEndTime);
-            tree.AppendColumn(columnDownload);
+            tree.AppendColumn(columnDownload);            
 
             chkFilterOwner = new CheckButton("Display my jobs only");
             chkFilterOwner.Toggled += RedrawJobs;
+            chkFilterOwner.Yalign = 0;
+
             filterOwner = new TreeModelFilter(store, null);
             filterOwner.VisibleFunc = FilterOwnerFunc;
 
@@ -136,10 +144,9 @@ namespace UserInterface.Views
             sort.SetSortFunc(0, SortName);
             sort.SetSortFunc(1, SortId);
             sort.SetSortFunc(2, SortState);
-            sort.SetSortFunc(3, SortProgress);            
+            sort.SetSortFunc(3, SortProgress);
             sort.SetSortFunc(4, SortStartDate);
             sort.SetSortFunc(5, SortStartDate);
-
             
             tree.Model = sort;
 
@@ -151,23 +158,48 @@ namespace UserInterface.Views
             loadingProgress.Adjustment.Lower = 0;
             loadingProgress.Adjustment.Upper = 100;
 
-            vboxPrimary = new VBox();
-            vboxPrimary.PackStart(tree, false, false, 0);
-            vboxPrimary.PackStart(chkFilterOwner, false, true, 0);
+            ScrolledWindow scroll = new ScrolledWindow();
+            scroll.Add(tree);
+            scroll.HscrollbarPolicy = PolicyType.Never;
+            scroll.VscrollbarPolicy = PolicyType.Automatic;
+
+            lblDownloadStatus = new Label("");
+            lblDownloadStatus.Xalign = 0;
+
+            btnChangeDownloadDir = new Button("Change Download Directory");
+            btnChangeDownloadDir.Clicked += btnChangeDownloadDir_Click;
+
+            tblButtonContainer = new Table(1, 1, false);
+            tblButtonContainer.Attach(btnChangeDownloadDir, 0, 1, 0, 1, AttachOptions.Shrink, AttachOptions.Shrink, 0, 0);
 
             progress = new HBox();
             progress.PackStart(new Label("Loading Jobs: "), false, false, 0);
-            progress.PackStart(loadingProgress, false, false, 0);
-            progress.PackStart(new Label(""), false, false, 0);
+            progress.PackStart(loadingProgress, false, false, 0);            
+                        
+            vboxPrimary = new VBox();
+            vboxPrimary.PackStart(scroll, true, true, 0);
+            vboxPrimary.PackStart(chkFilterOwner, false, true, 0);
+            vboxPrimary.PackStart(tblButtonContainer, false, false, 0);
+            vboxPrimary.PackStart(lblDownloadStatus, false, false, 0);
+            
+            vboxPrimary.PackEnd(progress, false, false, 0);
 
-            vboxPrimary.PackStart(progress, false, false, 0);
             _mainWidget = vboxPrimary;
         }
 
         [GLib.ConnectBefore]
         private void TreeClickEvent(object sender, ButtonPressEventArgs e)
         {
-            int x = Int32.Parse(((Gdk.EventButton)e.Args[0]).X.ToString());            
+            lblDownloadStatus.Text = "";
+
+            int minWidth = 0;
+            for (int i = 0; i < tree.Columns.Length - 1; i++)
+            {
+                minWidth += tree.Columns[i].Width;
+            }
+            int x = Int32.Parse(((Gdk.EventButton)e.Args[0]).X.ToString());
+            if (x < minWidth) return;            
+
             int y = Int32.Parse(((Gdk.EventButton)e.Args[0]).Y.ToString());
             
             TreePath path;
@@ -179,13 +211,7 @@ namespace UserInterface.Views
             string id = (string)tree.Model.GetValue(iter, 1);
             Presenter.DownloadResults(id);
         }
-
-        [GLib.ConnectBefore]
-        private void TreeRowActivated(object sender, EventArgs e)
-        {
-            Console.WriteLine("Click");
-        }
-
+        
         private int SortName(TreeModel model, TreeIter a, TreeIter b)
         {
             return SortStrings(model, a, b, 0);
@@ -259,11 +285,12 @@ namespace UserInterface.Views
             //loadingProgress.Text = Math.Round(proportion, 2).ToString() + "%";
             if (Math.Abs(proportion - 100) < Math.Pow(10, -6))
             {
-                vboxPrimary.Remove(progress);
+                // sometimes the UI crashes upon getting to this point
+                vboxPrimary.Remove(progress);                
             }
             else if (proportion < Math.Pow(10, -6))
-            {
-                vboxPrimary.PackStart(progress, false, false, 0);
+            {                
+                vboxPrimary.PackStart(progress, false, false, 0);                                
             }
         }
 
@@ -448,6 +475,73 @@ namespace UserInterface.Views
             }
             f.Destroy();
             return path;
+        }
+
+        public void UpdateDownloadStatus(string path, bool successful)
+        {
+            lblDownloadStatus.Text = successful ? "Successfully downloaded results to " + path : "Failed to download results to " + path;                                    
+        }
+
+        private void btnChangeDownloadDir_Click(object sender, EventArgs e)
+        {            
+            vboxPrimary.Remove(tblButtonContainer);
+
+            entryChangeDownloadDir = new Entry((string)ApsimNG.Properties.Settings.Default["OutputDir"]);
+
+            btnSave = new Button("Save");
+            btnSave.Clicked += btnSave_Click;
+
+            btnDirSelect = new Button("...");
+            btnDirSelect.Clicked += btnDirSelect_Click;
+
+            hboxChangeDownloadDir = new HBox();
+            hboxChangeDownloadDir.PackStart(entryChangeDownloadDir, false, true, 0);
+            hboxChangeDownloadDir.PackStart(btnDirSelect, false, true, 0);
+            hboxChangeDownloadDir.PackStart(btnSave, false, true, 0);
+
+            vboxPrimary.PackStart(hboxChangeDownloadDir, false, true, 0);
+            hboxChangeDownloadDir.ShowAll();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            ApsimNG.Properties.Settings.Default["OutputDir"] = entryChangeDownloadDir.Text;
+            ApsimNG.Properties.Settings.Default.Save();
+            vboxPrimary.Remove(hboxChangeDownloadDir);
+            vboxPrimary.PackStart(tblButtonContainer, false, false, 0);
+        }
+        
+        private void btnDirSelect_Click(object sender, EventArgs e)
+        {
+            entryChangeDownloadDir.Text = GetDirectory();
+        }
+
+        /// <summary>Opens a file chooser dialog for the user to choose a directory.</summary>	
+        /// <return>The path of the chosen directory</return>
+        private string GetDirectory()
+        {
+            
+            FileChooserDialog fc =
+            new FileChooserDialog("Choose the file to open",
+                                        null,
+                                        FileChooserAction.SelectFolder,
+                                        "Cancel", ResponseType.Cancel,
+                                        "Select Folder", ResponseType.Accept);
+            string path = "";
+
+            try
+            {
+                if (fc.Run() == (int)ResponseType.Accept)
+                {
+                    path = fc.Filename;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            fc.Destroy();
+            return path;            
         }
     }
 }
