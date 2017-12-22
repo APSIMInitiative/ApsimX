@@ -3,6 +3,7 @@ namespace Models.PMF.Organs
     using APSIM.Shared.Utilities;
     using Library;
     using Models.Core;
+    using Models.Interfaces;
     using Models.PMF.Functions;
     using Models.PMF.Interfaces;
     using Models.Soils;
@@ -60,8 +61,16 @@ namespace Models.PMF.Organs
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Root : BaseOrgan, IWaterNitrogenUptake, IArbitration
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan
     {
+        /// <summary>The plant</summary>
+        [Link]
+        protected Plant Plant = null;
+
+        /// <summary>The surface organic matter model</summary>
+        [Link]
+        public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
         private BiomassRemoval biomassRemovalModel = null;
@@ -184,6 +193,18 @@ namespace Models.PMF.Organs
         /// <summary>Dead biomass</summary>
         private Biomass deadBiomass = new Biomass();
 
+        /// <summary>The dry matter supply</summary>
+        private BiomassSupplyType dryMatterSupply = new BiomassSupplyType();
+
+        /// <summary>The nitrogen supply</summary>
+        private BiomassSupplyType nitrogenSupply = new BiomassSupplyType();
+
+        /// <summary>The dry matter demand</summary>
+        private BiomassPoolType dryMatterDemand = new BiomassPoolType();
+
+        /// <summary>Structural nitrogen demand</summary>
+        private BiomassPoolType nitrogenDemand = new BiomassPoolType();
+
         /// <summary>The DM supply for retranslocation</summary>
         private double dmRetranslocationSupply = 0.0;
 
@@ -274,14 +295,9 @@ namespace Models.PMF.Organs
             get
             {
                 double[] value;
-                if (PlantZone == null)
-                    value = new double[0];
-                else
-                {
-                    value = new double[PlantZone.soil.Thickness.Length];
-                    for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
-                        value[i] = PlantZone.LayerLive[i].Wt * specificRootLength.Value() * 1000 / 1000000 / PlantZone.soil.Thickness[i];
-                }
+                value = new double[PlantZone.soil.Thickness.Length];
+                for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
+                    value[i] = PlantZone.LayerLive[i].Wt * specificRootLength.Value() * 1000 / 1000000 / PlantZone.soil.Thickness[i];
                 return value;
             }
         }
@@ -298,15 +314,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Root depth.</summary>
         [XmlIgnore]
-        public double Depth { get { return (PlantZone != null )? PlantZone.Depth:0; } }
+        public double Depth { get { return PlantZone.Depth; } }
 
         /// <summary>Layer live</summary>
         [XmlIgnore]
-        public Biomass[] LayerLive { get { if (PlantZone != null) return PlantZone.LayerLive; else return new Biomass[0]; } }
+        public Biomass[] LayerLive { get { return PlantZone.LayerLive; } }
 
         /// <summary>Layer dead.</summary>
         [XmlIgnore]
-        public Biomass[] LayerDead { get { if (PlantZone != null) return PlantZone.LayerDead; else return new Biomass[0]; } }
+        public Biomass[] LayerDead { get { return PlantZone.LayerDead; } }
 
         /// <summary>Gets or sets the water uptake.</summary>
         [Units("mm")]
@@ -366,7 +382,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public override double MinNconc { get { return minimumNConc.Value(); } }
+        public double MinNconc { get { return minimumNConc.Value(); } }
 
         /// <summary>Gets the total biomass</summary>
         public Biomass Total { get { return Live + Dead; } }
@@ -378,6 +394,37 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total grain N</summary>
         [Units("g/m2")]
         public double N { get { return Total.N; } }
+
+        /// <summary>Gets or sets the n fixation cost.</summary>
+        [XmlIgnore]
+        public double NFixationCost { get { return 0; } }
+
+        /// <summary>Growth Respiration</summary>
+        /// [Units("CO_2")]
+        public double GrowthRespiration { get; set; }
+
+        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
+        public double MaintenanceRespiration { get; set; }
+
+        /// <summary>Carbon concentration</summary>
+        /// [Units("-")]
+        public double CarbonConcentration { get; set; }
+
+        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
+        [XmlIgnore]
+        public Biomass Allocated { get; set; }
+
+        /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
+        [XmlIgnore]
+        public Biomass Senesced { get; set; }
+
+        /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
+        [XmlIgnore]
+        public Biomass Detached { get; set; }
+
+        /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public Biomass Removed { get; set; }
 
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
@@ -410,7 +457,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public override BiomassSupplyType CalculateDryMatterSupply()
+        public BiomassSupplyType CalculateDryMatterSupply()
         {
             dryMatterSupply.Fixation = 0.0;
             dryMatterSupply.Retranslocation = dmRetranslocationSupply;
@@ -419,7 +466,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public override BiomassSupplyType CalculateNitrogenSupply()
+        public BiomassSupplyType CalculateNitrogenSupply()
         {
             nitrogenSupply.Fixation = 0.0;
             nitrogenSupply.Uptake = 0.0;
@@ -430,7 +477,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public override BiomassPoolType CalculateDryMatterDemand()
+        public BiomassPoolType CalculateDryMatterDemand()
         {
             if (Plant.SowingData.Depth < PlantZone.Depth)
             {
@@ -448,7 +495,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public override BiomassPoolType CalculateNitrogenDemand()
+        public BiomassPoolType CalculateNitrogenDemand()
         {
             // This is basically the old/original function with added metabolicN.
             // Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum.
@@ -483,7 +530,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the dry matter potential allocation.</summary>
-        public override void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
+        public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
             if (PlantZone.Uptake == null)
                 throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
@@ -491,7 +538,7 @@ namespace Models.PMF.Organs
             if (PlantZone.Depth <= 0)
                 return; //cannot allocate growth where no length
 
-            if (DMDemand.Structural == 0 && dryMatter.Structural > 0.000000000001)
+            if (dryMatterDemand.Structural == 0 && dryMatter.Structural > 0.000000000001)
                 throw new Exception("Invalid allocation of potential DM in" + Name);
 
 
@@ -515,7 +562,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the dry matter allocation.</summary>
-        public override void SetDryMatterAllocation(BiomassAllocationType dryMatter)
+        public void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
             double TotalRAw = 0;
             foreach (ZoneState Z in Zones)
@@ -587,7 +634,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the n allocation.</summary>
-        public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
+        public void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
             double totalStructuralNDemand = 0;
             double totalNDemand = 0;
@@ -664,7 +711,7 @@ namespace Models.PMF.Organs
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="removal">The fractions of biomass to remove</param>
-        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType removal)
+        public void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType removal)
         {
             biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, removal, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
         }
@@ -714,13 +761,10 @@ namespace Models.PMF.Organs
                 needToRecalculateLiveDead = false;
                 liveBiomass.Clear();
                 deadBiomass.Clear();
-                if (PlantZone != null)
-                {
-                    foreach (Biomass b in PlantZone.LayerLive)
-                        liveBiomass.Add(b);
-                    foreach (Biomass b in PlantZone.LayerDead)
-                        deadBiomass.Add(b);
-                }
+                foreach (Biomass b in PlantZone.LayerLive)
+                    liveBiomass.Add(b);
+                foreach (Biomass b in PlantZone.LayerDead)
+                    deadBiomass.Add(b);
             }
         }
 
@@ -873,7 +917,7 @@ namespace Models.PMF.Organs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <exception cref="ApsimXException">Cannot find a soil crop parameterisation for  + Name</exception>
         [EventSubscribe("Commencing")]
-        private new void OnSimulationCommencing(object sender, EventArgs e)
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
             if (soil == null)
@@ -884,7 +928,25 @@ namespace Models.PMF.Organs
             PlantZone = new ZoneState(Plant, this, soil, 0, initialDM.Value(), Plant.Population, maximumNConc.Value(),
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
             Zones = new List<ZoneState>();
-            base.OnSimulationCommencing(sender, e);
+            Allocated = new PMF.Biomass();
+            Senesced = new Biomass();
+            Detached = new Biomass();
+            Removed = new Biomass();
+        }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+            {
+                Allocated = new PMF.Biomass();
+                Senesced = new Biomass();
+                Detached = new Biomass();
+                Removed = new Biomass();
+            }
         }
 
         /// <summary>Called when crop is sown</summary>
