@@ -426,6 +426,22 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Removed { get; set; }
 
+        /// <summary>Gets the dry matter supply.</summary>
+        [XmlIgnore]
+        public BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
+        
+        /// <summary>Gets dry matter demand.</summary>
+        [XmlIgnore]
+        public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
+
+        /// <summary>Gets the nitrogen supply.</summary>
+        [XmlIgnore]
+        public BiomassSupplyType NSupply { get { return nitrogenSupply; } }
+        
+        /// <summary>Gets the nitrogen demand.</summary>
+        [XmlIgnore]
+        public BiomassPoolType NDemand { get { return nitrogenDemand; } }
+
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
