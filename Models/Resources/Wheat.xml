@@ -2372,7 +2372,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
     <MultiplyFunction>
       <Name>ExtinctionCoeff</Name>
       <Constant>
-        <Name>VegetativeExtinctionCoeff</Name>
+        <Name>VegetativePhase</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0.5</FixedValue>
       </Constant>
@@ -2482,9 +2482,9 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
     <PhaseLookup>
       <Name>NRetranslocationFactor</Name>
       <PhaseLookupValue>
-        <Name>VegetativeGrowth</Name>
+        <Name>EarlyGrowth</Name>
         <Constant>
-          <Name>StructuralFractionEG</Name>
+          <Name>ValueDuringEarlyGrowth</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
@@ -2495,7 +2495,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <PhaseLookupValue>
         <Name>ReproductiveGrowth</Name>
         <Constant>
-          <Name>StructuralFractionGF</Name>
+          <Name>ValueDuringGrainFill</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.5</FixedValue>
         </Constant>
@@ -3178,7 +3178,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
         <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
-        <Command>[Leaf].ExtinctionCoeff.VegetativeExtinctionCoeff.FixedValue = 0.7</Command>
+        <Command>[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7</Command>
         <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22</Command>
       </Cultivar>
       <Cultivar>
@@ -3189,7 +3189,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
         <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
-        <Command>[Leaf].ExtinctionCoeff.VegetativeExtinctionCoeff.FixedValue = 0.7</Command>
+        <Command>[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7</Command>
         <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22</Command>
       </Cultivar>
       <Cultivar>
@@ -3234,7 +3234,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600</Command>
         <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.051</Command>
         <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 35</Command>
-        <Command>[Leaf].ExtinctionCoeff.VegetativeExtinctionCoeff.FixedValue = 0.5</Command>
+        <Command>[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.5</Command>
         <Command>[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20</Command>
         <Command>[Grain].MaximumNConc.FixedValue = 0.025</Command>
         <Command>[Grain].MaxNConcDailyGrowth.FixedValue = 0.025</Command>
@@ -3376,7 +3376,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
         <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.X = 0,1,8</Command>
         <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.Y = 0,1.204,0</Command>
-        <Command>[Leaf].ExtinctionCoeff.VegetativeExtinctionCoeff.FixedValue = 0.7</Command>
+        <Command>[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7</Command>
         <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22</Command>
         <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.035</Command>
         <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000</Command>
@@ -4204,7 +4204,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Phenology].GrainFilling.Target.FixedValue = 450</Command>
         <Command>[Stem].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.2</Command>
         <Command>[Stem].StructuralFraction.VegetativeGrowth.Fraction.FixedValue = 0.6</Command>
-        <Command>[Leaf].ExtinctionCoeff.VegetativeExtinctionCoeff.FixedValue = 0.8</Command>
+        <Command>[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8</Command>
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </CultivarFolder>
@@ -4279,7 +4279,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
         <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
-        <Command>[Leaf].ExtinctionCoeff.VegetativeExtinctionCoeff.FixedValue = 0.8</Command>
+        <Command>[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8</Command>
       </Cultivar>
       <Cultivar>
         <Name>Rosario</Name>
@@ -4289,7 +4289,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
         <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
-        <Command>[Leaf].ExtinctionCoeff.VegetativeExtinctionCoeff.FixedValue = 0.8</Command>
+        <Command>[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8</Command>
       </Cultivar>
       <Cultivar>
         <Name>Ararat</Name>
@@ -4299,7 +4299,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
         <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
-        <Command>[Leaf].ExtinctionCoeff.VegetativeExtinctionCoeff.FixedValue = 0.8</Command>
+        <Command>[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8</Command>
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </CultivarFolder>
