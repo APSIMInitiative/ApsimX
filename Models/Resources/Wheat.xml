@@ -1,4 +1,4 @@
-<Plant>
+<Plant> 
   <Name>Wheat</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1296,7 +1296,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.4</FixedValue>
     </Constant>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
+	<IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <MaintenanceRespiration>0</MaintenanceRespiration>
     <RipeStage>Ripe</RipeStage>
@@ -1593,6 +1593,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <Name>CarbonConcentration</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.4</FixedValue>
+    </Constant>
+	<Constant>
+      <Name>MaintenanceRespirationFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
@@ -2417,15 +2422,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
     </Constant>
-    <ApexStandard>
-      <Name>ApexStandard</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </ApexStandard>
     <Constant>
       <Name>CarbonConcentration</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.4</FixedValue>
     </Constant>
+	<ApexStandard>
+      <Name>ApexStandard</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </ApexStandard>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -2730,16 +2735,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Phenology].Stage</XProperty>
     </LinearInterpolationFunction>
-      <Name>CriticalNConc</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <VariableName>[Spike].MinimumNConc.Value()</VariableName>
-    </VariableReference>
     <Constant>
       <Name>CarbonConcentration</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.4</FixedValue>
     </Constant>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
+	<IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Stem</Name>
@@ -3050,14 +3051,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </MultiplyFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <VariableName>[Stem].MinimumNConc.Value()</VariableName>
-    </VariableReference>
+    </AddFunction>
     <Constant>
       <Name>CarbonConcentration</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.4</FixedValue>
     </Constant>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
+	<IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <CompositeBiomass>
     <Name>AboveGround</Name>
