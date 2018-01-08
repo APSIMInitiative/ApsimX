@@ -14,23 +14,28 @@ namespace UserInterface.Views
         public Presenters.AzureJobDisplayPresenter Presenter { get; set; }
 
         private List<JobDetails> jobList;
+        private bool myJobsOnly;
+
         private TreeView tree;
         private ListStore store;
         private TreeViewColumn columnName;
-        private TreeViewColumn columnId;
+        //private TreeViewColumn columnId;
         private TreeViewColumn columnState;
         private TreeViewColumn columnProgress;
         private TreeViewColumn columnStartTime;
         private TreeViewColumn columnEndTime;
         private TreeViewColumn columnDownload;
+        private TreeViewColumn columnDelete;
 
         private CellRendererText cellName;
-        private CellRendererText cellId;
+        //private CellRendererText cellId;
         private CellRendererText cellState;
         private CellRendererText cellProgress;
         private CellRendererText cellStartTime;
         private CellRendererText cellEndTime;
         private CellRendererPixbuf cellDownload;
+        private CellRendererPixbuf cellDelete;
+
         private TreeModelFilter filterOwner;
         private TreeModelSort sort;
         private VBox vboxPrimary;
@@ -49,7 +54,7 @@ namespace UserInterface.Views
         public AzureJobDisplayView(ViewBase owner) : base(owner)
         {
             jobList = new List<JobDetails>();
-            store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
+            store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
 
             // create colummns
             columnName = new TreeViewColumn
@@ -58,34 +63,36 @@ namespace UserInterface.Views
                 SortColumnId = 0
             };
 
+            /*
             columnId = new TreeViewColumn
             {
                 Title = "Job ID",
                 SortColumnId = 1
             };
+            */
 
             columnState = new TreeViewColumn
             {
                 Title = "Status",
-                SortColumnId = 2
+                SortColumnId = 1
             };
 
             columnProgress = new TreeViewColumn
             {
                 Title = "Progress",
-                SortColumnId = 3
+                SortColumnId = 2
             };
 
             columnStartTime = new TreeViewColumn
             {
                 Title = "Start Time",
-                SortColumnId = 4
+                SortColumnId = 3
             };
 
             columnEndTime = new TreeViewColumn
             {
                 Title = "End Time",
-                SortColumnId = 5,
+                SortColumnId = 4,
             };
 
             columnDownload = new TreeViewColumn
@@ -93,9 +100,14 @@ namespace UserInterface.Views
                 Title = "Download"
             };
 
+            columnDelete = new TreeViewColumn
+            {
+                Title = "Delete"
+            };
+
             // create cells for each column
             cellName = new CellRendererText();
-            cellId = new CellRendererText();
+            //cellId = new CellRendererText();
             cellState = new CellRendererText();
             cellProgress = new CellRendererText();
             cellStartTime = new CellRendererText();
@@ -103,36 +115,42 @@ namespace UserInterface.Views
             cellDownload = new CellRendererPixbuf();
             cellDownload.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Download.png");
 
+            cellDelete = new CellRendererPixbuf();
+            cellDelete.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Delete16.png");
+
             // bind cells to column
             columnName.PackStart(cellName, false);
-            columnId.PackStart(cellId, false);
+            //columnId.PackStart(cellId, false);
             columnState.PackStart(cellState, false);
             columnProgress.PackStart(cellProgress, false);
             columnStartTime.PackStart(cellStartTime, false);
             columnEndTime.PackStart(cellEndTime, false);
-            columnDownload.PackStart(cellDownload, false);            
+            columnDownload.PackStart(cellDownload, false);
+            columnDelete.PackStart(cellDelete, false);
             
             columnName.AddAttribute(cellName, "text", 0);
-            columnId.AddAttribute(cellId, "text", 1);
-            columnState.AddAttribute(cellState, "text", 2);
-            columnProgress.AddAttribute(cellProgress, "text", 3);
-            columnStartTime.AddAttribute(cellStartTime, "text", 4);
-            columnEndTime.AddAttribute(cellEndTime, "text", 5);            
+            //columnId.AddAttribute(cellId, "text", 1);
+            columnState.AddAttribute(cellState, "text", 1);
+            columnProgress.AddAttribute(cellProgress, "text", 2);
+            columnStartTime.AddAttribute(cellStartTime, "text", 3);
+            columnEndTime.AddAttribute(cellEndTime, "text", 4);
 
             tree = new TreeView();
             tree.ButtonPressEvent += TreeClickEvent;
             //tree.RowActivated += TreeRowActivated;
             
             tree.AppendColumn(columnName);
-            tree.AppendColumn(columnId);
+            //tree.AppendColumn(columnId);
             tree.AppendColumn(columnState);
             tree.AppendColumn(columnProgress);
             tree.AppendColumn(columnStartTime);
             tree.AppendColumn(columnEndTime);
-            tree.AppendColumn(columnDownload);            
+            tree.AppendColumn(columnDownload);
+            tree.AppendColumn(columnDelete);
 
             chkFilterOwner = new CheckButton("Display my jobs only");
-            chkFilterOwner.Toggled += RedrawJobs;
+            myJobsOnly = false;
+            chkFilterOwner.Toggled += ApplyFilter;
             chkFilterOwner.Yalign = 0;
 
             filterOwner = new TreeModelFilter(store, null);
@@ -142,11 +160,11 @@ namespace UserInterface.Views
             sort = new TreeModelSort(filterOwner);
             
             sort.SetSortFunc(0, SortName);
-            sort.SetSortFunc(1, SortId);
-            sort.SetSortFunc(2, SortState);
-            sort.SetSortFunc(3, SortProgress);
+            //sort.SetSortFunc(1, SortId);
+            sort.SetSortFunc(1, SortState);
+            sort.SetSortFunc(2, SortProgress);
+            sort.SetSortFunc(3, SortStartDate);
             sort.SetSortFunc(4, SortStartDate);
-            sort.SetSortFunc(5, SortStartDate);
             
             tree.Model = sort;
 
@@ -192,13 +210,21 @@ namespace UserInterface.Views
         {
             lblDownloadStatus.Text = "";
 
-            int minWidth = 0;
-            for (int i = 0; i < tree.Columns.Length - 1; i++)
+            int downloadLeftDist = 0;
+            int downloadRightDist = 0;
+            for (int i = 0; i < tree.Columns.Length; i++)
             {
-                minWidth += tree.Columns[i].Width;
+                if (tree.Columns[i].Title == "Download")
+                {
+                    downloadRightDist = downloadLeftDist + tree.Columns[i].Width;
+                    break;
+                }
+                downloadLeftDist += tree.Columns[i].Width;
             }
+            
+
             int x = Int32.Parse(((Gdk.EventButton)e.Args[0]).X.ToString());
-            if (x < minWidth) return;            
+            if (x < downloadLeftDist) return;            
 
             int y = Int32.Parse(((Gdk.EventButton)e.Args[0]).Y.ToString());
             
@@ -206,12 +232,37 @@ namespace UserInterface.Views
             tree.GetPathAtPos(x, y, out path);
             TreeIter iter;
             tree.Model.GetIter(out iter, path);
-            int[] arr = new int[] { 1, 2 };
-
-            string id = (string)tree.Model.GetValue(iter, 1);
-            Presenter.DownloadResults(id);
+            int[] arr = new int[] { 1, 2 };            
+            string id = GetIdFromName((string)tree.Model.GetValue(iter, 0));
+            if (x < downloadRightDist)
+            {
+                Presenter.DownloadResults(id);
+            } else
+            {
+                // delete the job                
+                if (GetJobOwner(id).ToLower() != Environment.UserName.ToLower())
+                {
+                    Presenter.ShowError("Deleting other people's jobs is not allowed.");
+                    return;
+                }
+                Presenter.DeleteJob(Guid.Parse(id));
+            }
         }
         
+        private string GetIdFromName(string name)
+        {
+            if (!myJobsOnly)
+            {
+                string[] split = name.Split(' ');
+                split = split.Take(split.Count() - 1).ToArray();
+                name = String.Join(" ", split);
+            }
+            foreach (JobDetails x in jobList)
+            {
+                if (x.DisplayName == name) return x.Id.ToString();                
+            }
+            return "";
+        }
         private int SortName(TreeModel model, TreeIter a, TreeIter b)
         {
             return SortStrings(model, a, b, 0);
@@ -237,10 +288,11 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="o"></param>
         /// <param name="e"></param>
-        private void RedrawJobs(object o, EventArgs e)
+        private void ApplyFilter(object o, EventArgs e)
         {
+            myJobsOnly = !myJobsOnly;
             filterOwner.Refilter();
-            AddJobsToTable(jobList);            
+            UpdateTreeView();
         }
 
         /// <summary>
@@ -250,9 +302,9 @@ namespace UserInterface.Views
         /// <param name="iter"></param>
         /// <returns>True if the display my jobs only checkbox is inactive, or if the job's owner is the same as the user's username. False otherwise.</returns>
         private bool FilterOwnerFunc(TreeModel model, TreeIter iter)
-        {
-            string owner = GetJobOwner((string)model.GetValue(iter, 1));
-            return !chkFilterOwner.Active || owner.ToLower() == Environment.UserName.ToLower();            
+        {            
+            string owner = GetJobOwner(GetIdFromName((string)model.GetValue(iter, 0)));
+            return !myJobsOnly || owner.ToLower() == Environment.UserName.ToLower();            
         }
 
         private int SortStartDate(TreeModel model, TreeIter a, TreeIter b)
@@ -376,45 +428,60 @@ namespace UserInterface.Views
         /// <param name="jobs"></param>
         public void AddJobsToTableIfNecessary(List<JobDetails> jobs)
         {
-            if (jobList.Count == 0) AddJobsToTable(jobs);
+            if (jobList.Count == 0)
+            {
+                jobList = jobs;
+                UpdateTreeView();
+            }
             for (int i = 0; i < jobList.Count; i++)
             {
-                if (!((jobList[i].Id == jobs[i].Id) && (jobList[i].State == jobs[i].State))) AddJobsToTable(jobs);
+                if (!((jobList[i].Id == jobs[i].Id) && (jobList[i].State == jobs[i].State)))
+                {
+                    jobList = jobs;
+                    UpdateTreeView();
+                }
             }
 
             return;
         }
 
-        /// <summary>
-        /// Redraws the TreeView.
-        /// </summary>
-        /// <param name="jobs">List of jobs to insert into the TreeView.</param>
-        private void AddJobsToTable(List<JobDetails> jobs)
-        {            
-            jobList = jobs;            
-            store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));            
-            foreach (JobDetails job in jobs)
+        public void UpdateTreeView()
+        {
+            store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
+            foreach (JobDetails job in jobList)
             {
                 string startTimeString = job.StartTime == null ? DateTime.UtcNow.ToLocalTime().ToString() : ((DateTime)job.StartTime).ToLocalTime().ToString();
-                string endTimeString = job.EndTime == null ? "" : ((DateTime)job.EndTime).ToLocalTime().ToString();                
-                string dispName = chkFilterOwner.Active ? job.DisplayName : job.DisplayName + " (" + job.Owner + ")";
-                string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";                
-                store.AppendValues(dispName, job.Id, job.State, progressString, startTimeString, endTimeString);
+                string endTimeString = job.EndTime == null ? "" : ((DateTime)job.EndTime).ToLocalTime().ToString();
+                string dispName = myJobsOnly ? job.DisplayName : job.DisplayName + " (" + job.Owner + ")";
+                string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";
+                store.AppendValues(dispName, job.State, progressString, startTimeString, endTimeString);
             }
 
             filterOwner = new TreeModelFilter(store, null);
-            filterOwner.VisibleFunc = FilterOwnerFunc;            
+            filterOwner.VisibleFunc = FilterOwnerFunc;
             filterOwner.Refilter();
 
             sort = new TreeModelSort(filterOwner);
             sort.SetSortFunc(0, SortName);
-            sort.SetSortFunc(1, SortId);
-            sort.SetSortFunc(2, SortState);
-            sort.SetSortFunc(3, SortProgress);
+            //sort.SetSortFunc(1, SortId);
+            sort.SetSortFunc(1, SortState);
+            sort.SetSortFunc(2, SortProgress);
+            sort.SetSortFunc(3, SortStartDate);
             sort.SetSortFunc(4, SortStartDate);
-            sort.SetSortFunc(5, SortStartDate);
-            
+
             tree.Model = sort;
+        }
+
+        public void RemoveJobFromJobList(Guid jobId)
+        {
+            foreach (JobDetails job in jobList)
+            {
+                if (job.Id == jobId.ToString())
+                {
+                    jobList.Remove(job);
+                    return;
+                }
+            }
         }
 
         /// <summary>

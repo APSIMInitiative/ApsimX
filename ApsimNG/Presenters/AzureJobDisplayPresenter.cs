@@ -295,18 +295,73 @@ namespace UserInterface.Presenters
         public void DownloadResults(string jobId)
         {
             string path = (string)Settings.Default["OutputDir"];
-            downloader = new AzureResultsDownloader(Guid.Parse(jobId), path, this);
-            downloader.DownloadResults();
+            if (Directory.GetFiles(path).Length == 0 || ShowWarning("Files detected in output directory. Results will be generated from ALL files in this directory. Are you certain you wish to continue?"))
+            {
+                downloader = new AzureResultsDownloader(Guid.Parse(jobId), path, this);
+                string resultFile = downloader.DownloadResults();                
+            }            
         }
 
         public void ShowError(string msg)
         {
-            explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
+            explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);            
         }
+
+        /// <summary>
+        /// Displays a warning to the user.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns>True if the user wants to continue, false otherwise.</returns>
+        public bool ShowWarning(string msg)
+        {
+            int x = explorerPresenter.MainPresenter.ShowMsgDialog(msg, "Sanity Check Failed - High-Grade Insanity Detected!", Gtk.MessageType.Warning, Gtk.ButtonsType.OkCancel);
+            return x == -5;
+        }
+
 
         public void DisplayFinishedDownloadStatus(string path, bool successful)
         {
             view.UpdateDownloadStatus(path, successful);
+        }
+
+        /// <summary>
+        /// Creates a dialog box asking if the user wishes to continue.
+        /// </summary>
+        /// <param name="msg">Message to be displayed</param>
+        /// <param name="title">Title of dialog box</param>
+        /// <returns>True if the user wishes to continue. False otherwise.</returns>
+        public bool AskToContinue(string msg, string title)
+        {
+            int x = explorerPresenter.MainPresenter.ShowMsgDialog(msg, title, Gtk.MessageType.Question, Gtk.ButtonsType.OkCancel);
+            return x == -5;
+        }
+
+        /// <summary>
+        /// Deletes a job (and all associated files (I think)) from Azure cloud storage.
+        /// </summary>
+        /// <param name="id">id of the job</param>
+        public void DeleteJob(Guid id)
+        {
+            // ask the user if they want to delete the job
+            if (AskToContinue("Are you sure you wish to delete this job?", "Delete job confirmation"))
+            {
+                CloudBlobContainer containerRef;
+
+                // this is done 3 times in MARS - not sure why
+                for (int i = 0; i < 2; i++)
+                {
+                    containerRef = blobClient.GetContainerReference(StorageConstants.GetJobOutputContainer(id));
+                    if (containerRef.Exists())
+                    {
+                        containerRef.Delete();
+                    }
+                }
+                var job = GetJob(id);
+                if (job != null) batchClient.JobOperations.DeleteJob(id.ToString());
+
+                view.RemoveJobFromJobList(id);
+                view.UpdateTreeView();
+            }
         }
     }
 }

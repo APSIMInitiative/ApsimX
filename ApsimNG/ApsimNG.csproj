@@ -417,6 +417,8 @@
     <EmbeddedResource Include="Resources\DebugDoc.xsl" />
     <Content Include="ApsimLogo.ico" />
     <EmbeddedResource Include="Resources\Download.png" />
+    <EmbeddedResource Include="Resources\Delete.png" />
+    <EmbeddedResource Include="Resources\Delete16.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
@@ -722,6 +724,10 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.SQLite, Version=1.0.79.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />

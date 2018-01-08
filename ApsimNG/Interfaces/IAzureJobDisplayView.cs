@@ -14,5 +14,7 @@ namespace UserInterface.Interfaces
         void UpdateJobLoadStatus(double progress);
         string GetFile(List<string> extensions, string extName);
         void UpdateDownloadStatus(string path, bool successful);
+        void RemoveJobFromJobList(Guid jobId);
+        void UpdateTreeView();
     }
 }

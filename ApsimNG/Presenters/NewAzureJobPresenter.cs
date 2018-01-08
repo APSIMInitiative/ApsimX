@@ -178,10 +178,24 @@
             // generate xml
             string xml = "";
             
-            foreach (Simulation sim in Runner.AllSimulations((IModel)model))
+            foreach (Simulation sim in Runner.AllSimulations(model))
             {
-                path = jp.ModelPath + "\\" + sim.Name + ".apsimx";
-                //xml = Apsim.Serialise(sim, false);
+                // if weather file is not in the same directory as the .apsimx file, display an error then abort
+                foreach (var child in sim.Children)
+                {
+                    if (child is Models.Weather)
+                    {
+                        string childPath = ((Models.Weather)sim.Children[0]).FileName;                        
+                        if (Path.GetDirectoryName(childPath) != "")
+                        {
+                            ShowError(childPath + " must be in the same directory as the .apsimx file" + sim.FileName != null ? " (" + Path.GetDirectoryName(sim.FileName) + ")" : "");
+                            UpdateStatus(ref jp, "Cancelled");
+                            return;
+                        }
+                    }
+                }
+                
+                path = jp.ModelPath + "\\" + sim.Name + ".apsimx";                
                 xml = Apsim.Serialise(sim);
                 // delete model file if it already exists
                 if (File.Exists(path)) File.Delete(path);
@@ -197,7 +211,7 @@
             tmpZip = "";
             
             // zip up models directory
-            if (Directory.Exists(jp.ModelPath)) // TODO : remove this test?
+            if (Directory.Exists(jp.ModelPath)) // this test may be unnecessary
             {
                 tmpZip = GetTempFileName("Model-", ".zip", true);
                 ZipFile.CreateFromDirectory(jp.ModelPath, tmpZip, CompressionLevel.Fastest, false);                
@@ -242,7 +256,7 @@
             var x = ListJobs();
             foreach (JobDetails j in x)
             {
-                Console.WriteLine(job.DisplayName);
+                //Console.WriteLine(job.DisplayName);
             }
         }
 
