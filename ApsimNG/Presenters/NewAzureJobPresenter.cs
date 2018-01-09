@@ -397,7 +397,7 @@
         /// Read Azure credentials from the file ApsimX\AzureAgR.lic
         /// This is a temporary measure - will probably need to allow user to specify a file.
         /// </summary>
-        /// <returns>True if credentials file exists, false otherwise.</returns>
+        /// <returns>True if credentials file exists and is correctly formatted, false otherwise.</returns>
         private bool SetCredentials(string path)
         {            
             if (File.Exists(path))
@@ -411,8 +411,13 @@
                     {
                         string key = line.Substring(0, separatorIndex);
                         string val = line.Substring(separatorIndex + 1);
-
-                        Settings.Default[key] = val;
+                        try
+                        {
+                            Settings.Default[key] = val;
+                        } catch // key does not exist in ApsimNG.Properties.Settings.Default
+                        {
+                            return false;
+                        }                        
                     } else
                     {
                         return false;

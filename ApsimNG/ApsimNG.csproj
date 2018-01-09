@@ -419,6 +419,7 @@
     <EmbeddedResource Include="Resources\Download.png" />
     <EmbeddedResource Include="Resources\Delete.png" />
     <EmbeddedResource Include="Resources\Delete16.png" />
+    <EmbeddedResource Include="Resources\Cloud.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

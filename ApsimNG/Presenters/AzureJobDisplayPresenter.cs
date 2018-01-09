@@ -19,29 +19,61 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace UserInterface.Presenters
 {
-    public class AzureJobDisplayPresenter : IPresenter
+    public class AzureJobDisplayPresenter : ExplorerPresenter
     {
+        /// <summary>
+        /// List of jobs which are currently being downloaded.        
+        /// </summary>
+        private List<Guid> currentlyDownloading;
 
-        private CloudStorageAccount storageAccount;
-        private BatchClient batchClient;        
+        private MainPresenter mainPresenter;
         private IAzureJobDisplayView view;
-        private ExplorerPresenter explorerPresenter;
+        public MainPresenter MainPresenter { get; set; }
+
+        /// <summary>
+        /// Model associated with the context of the right click. Unused. 
+        /// Remove this when this presenter is accessed directly from the home tab.
+        /// </summary>
         private Models.Core.IModel model;
+
+        /// <summary>
+        /// 
+        /// </summary>        
         private StorageCredentials storageCredentials;
         private BatchCredentials batchCredentials;
+        private CloudStorageAccount storageAccount;
         private PoolSettings poolSettings;
-        private BackgroundWorker FetchJobs;
-        private Timer updateJobsTimer;
+        private BatchClient batchClient;
         private CloudBlobClient blobClient;
+
+        private BackgroundWorker FetchJobs;
+        //private Timer updateJobsTimer;
+        
         private AzureResultsDownloader downloader;
+
+        /// <summary>
+        /// Semaphore controlling access to the section of code relating to the log file.        
+        /// </summary>
+        private Object logFileMutex;
+        
+        public AzureJobDisplayPresenter(MainPresenter mainPresenter) : base(mainPresenter)
+        {
+            MainPresenter = mainPresenter;
+        }
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.explorerPresenter = explorerPresenter;
+
+        }
+
+        public void Attach(object model, object view, MainPresenter main)
+        {
+            MainPresenter = main;
             this.view = (IAzureJobDisplayView)view;
             this.view.Presenter = this;
-            this.model = (IModel)model;
-
+            //this.model = (IModel)model;
+            currentlyDownloading = new List<Guid>();
+            logFileMutex = new object();
             // read Azure credentials from a file. If credentials file doesn't exist, abort.
             string credentialsFileName = (string)Settings.Default["AzureLicenceFilePath"];
 
@@ -60,7 +92,8 @@ namespace UserInterface.Presenters
             {
                 // licence file is invalid or non-existent. Show an error and remove the job submission form from the right hand panel.
                 ShowError("Missing or invalid Azure Licence file: " + credentialsFileName);
-                explorerPresenter.HideRightHandPanel();
+                // TODO : find an equivalent of this (kill the tab)
+                //explorerPresenter.HideRightHandPanel();
                 return;
             }
 
@@ -83,16 +116,20 @@ namespace UserInterface.Presenters
             }
             FetchJobs.RunWorkerAsync();
 
+            /*
+            // old timer-based code
+
             // timer to automatically update the list of jobs every 30 seconds
             updateJobsTimer = new Timer(30000);
             updateJobsTimer.Elapsed += TimerElapsed;
             updateJobsTimer.AutoReset = true;
             updateJobsTimer.Start();
+            */
         }
 
         public void Detach()
         {
-
+            Console.WriteLine("Closing cloud job viewer...");
         }
 
         private void TimerElapsed(object sender, EventArgs e)
@@ -102,16 +139,22 @@ namespace UserInterface.Presenters
 
         private void FetchJobs_DoWork(object sender, DoWorkEventArgs args)
         {
-            var jobs = ListJobs();
-            try
+            while (!FetchJobs.CancellationPending) // this check is performed regularly inside the ListJobs() function as well.
             {
-                view.AddJobsToTableIfNecessary(jobs);
+                var jobs = ListJobs();
+                if (jobs == null) return;
+                try
+                {
+                    view.AddJobsToTableIfNecessary(jobs);
+                }
+                catch
+                {
+                    // the most likely error here occurs if the user has moved to a different right hand panel at an unfortunate time
+                    // in which case this thread can no longer access the original view (or rather, the view is no longer attached to the right hand panel)
+                }                
+                System.Threading.Thread.Sleep(10000);
             }
-            catch
-            {
-                // the most likely error here occurs if the user has moved to a different right hand panel at an unfortunate time
-                // in which case this thread can no longer access the original view (or rather, the view is no longer attached to the right hand panel)
-            }            
+            
         }
 
 
@@ -133,7 +176,7 @@ namespace UserInterface.Presenters
             {
                 if (FetchJobs.CancellationPending)
                 {
-                    return jobs;
+                    return null;
                 }
 
                 
@@ -182,6 +225,12 @@ namespace UserInterface.Presenters
             return jobs;
         }
 
+        /// <summary>
+        /// Gets a value of particular metadata associated with a job.
+        /// </summary>
+        /// <param name="containerName">Container the job is stored in.</param>
+        /// <param name="key">Metadata key (e.g. owner).</param>
+        /// <returns></returns>
         private string GetAzureMetaData(string containerName, string key)
         {
             try
@@ -198,7 +247,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception e)
             {                
-                explorerPresenter.MainPresenter.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+                MainPresenter.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
             }
             return "";
         }
@@ -284,6 +333,11 @@ namespace UserInterface.Presenters
             return tasks;
         }
 
+        /// <summary>
+        /// Gets a job stored on Azure with a given ID.
+        /// </summary>
+        /// <param name="jobId">ID of the job.</param>
+        /// <returns>Azure CloudJob object representing the Apsim Job.</returns>
         private CloudJob GetJob(Guid jobId)
         {
             ODATADetailLevel detailLevel = new ODATADetailLevel { SelectClause = "id" };
@@ -292,19 +346,34 @@ namespace UserInterface.Presenters
             return batchClient.JobOperations.GetJob(jobId.ToString());
         }
 
-        public void DownloadResults(string jobId)
+        public bool OngoingDownload()
         {
-            string path = (string)Settings.Default["OutputDir"];
-            if (Directory.GetFiles(path).Length == 0 || ShowWarning("Files detected in output directory. Results will be generated from ALL files in this directory. Are you certain you wish to continue?"))
-            {
-                downloader = new AzureResultsDownloader(Guid.Parse(jobId), path, this);
-                string resultFile = downloader.DownloadResults();                
-            }            
+            return currentlyDownloading.Count() > 0;
         }
 
+        public void DownloadResults(string jobId, string jobName, bool saveToCsv)
+        {
+            currentlyDownloading.Add(Guid.Parse(jobId));            
+            downloader = new AzureResultsDownloader(Guid.Parse(jobId), jobName, (string)Settings.Default["OutputDir"], this, saveToCsv);
+            downloader.DownloadResults();
+        }
+
+        /// <summary>
+        /// Removes a job from the list of currently downloading jobs.
+        /// </summary>
+        /// <param name="jobId">ID of the job.</param>
+        public void DownloadComplete(Guid jobId)
+        {
+            currentlyDownloading.Remove(jobId);
+        }
+
+        /// <summary>
+        /// Displays an error message.
+        /// </summary>
+        /// <param name="msg"></param>
         public void ShowError(string msg)
         {
-            explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);            
+            MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);            
         }
 
         /// <summary>
@@ -314,14 +383,46 @@ namespace UserInterface.Presenters
         /// <returns>True if the user wants to continue, false otherwise.</returns>
         public bool ShowWarning(string msg)
         {
-            int x = explorerPresenter.MainPresenter.ShowMsgDialog(msg, "Sanity Check Failed - High-Grade Insanity Detected!", Gtk.MessageType.Warning, Gtk.ButtonsType.OkCancel);
+            int x = MainPresenter.ShowMsgDialog(msg, "Sanity Check Failed - High-Grade Insanity Detected!", Gtk.MessageType.Warning, Gtk.ButtonsType.OkCancel);
             return x == -5;
         }
 
-
-        public void DisplayFinishedDownloadStatus(string path, bool successful)
+        /// <summary>
+        /// Writes to a log file and asks the view to display an error message if download was unsuccessful.
+        /// </summary>
+        /// <param name="code"></param>
+        public void DisplayFinishedDownloadStatus(string name, int code, string path)
         {
-            view.UpdateDownloadStatus(path, successful);
+            if (code == 0) return;
+            string msg = name + ": ";
+            switch (code)
+            {
+                case 1:
+                    msg += "Unable to generate a .csv file.";
+                    break;
+                default:
+                    msg += "Download unsuccessful.";
+                    break;
+            }
+            string logFile = path + "\\downloadError.log";
+            view.UpdateDownloadStatus("One or more downloads encountered an error. See " + logFile + " for more details.");
+            lock (logFileMutex)
+            {
+                try
+                {
+                    if (!File.Exists(logFile)) File.Create(logFile);
+                    using (StreamWriter sw = File.AppendText(logFile))
+                    {
+                        sw.WriteLine(msg);
+                    }
+                } catch
+                {
+
+                }
+            }
+            
+            
+                        
         }
 
         /// <summary>
@@ -332,7 +433,7 @@ namespace UserInterface.Presenters
         /// <returns>True if the user wishes to continue. False otherwise.</returns>
         public bool AskToContinue(string msg, string title)
         {
-            int x = explorerPresenter.MainPresenter.ShowMsgDialog(msg, title, Gtk.MessageType.Question, Gtk.ButtonsType.OkCancel);
+            int x = MainPresenter.ShowMsgDialog(msg, title, Gtk.MessageType.Question, Gtk.ButtonsType.OkCancel);
             return x == -5;
         }
 

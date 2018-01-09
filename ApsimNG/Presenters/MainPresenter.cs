@@ -368,6 +368,10 @@ namespace UserInterface.Presenters
                                 "Upgrade",
                                         new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
                                         this.OnUpgrade);
+            startPage.AddButton(
+                                "View Cloud Jobs",
+                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
+                                        this.OnViewCloudJobs);
             
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
@@ -777,6 +781,35 @@ namespace UserInterface.Presenters
             {
                 throw new Exception("Failed import: " + exp.Message);
             }
+        }
+
+        /// <summary>
+        /// Open a tab which shows a list of jobs submitted to the cloud.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event Arguments</param>
+        private void OnViewCloudJobs(object sender, EventArgs e)
+        {
+            bool onLeftTabControl = view.IsControlOnLeft(sender);
+            string label = "View Cloud Jobs";
+            
+            view.ShowMessage(" ", Simulation.ErrorLevel.Information); // Clear the message window
+            AzureJobDisplayView azureView = new AzureJobDisplayView(null);
+            AzureJobDisplayPresenter azurePresenter = new AzureJobDisplayPresenter(this);
+
+            if (onLeftTabControl)
+            {
+                presenters1.Add(azurePresenter);
+            }
+            else
+            {
+                presenters2.Add(azurePresenter);
+            }
+
+            XmlDocument doc = new XmlDocument();
+            azurePresenter.Attach(new Model(), azureView, this);
+            
+            view.AddTab(label, null, azureView.MainWidget, onLeftTabControl);
         }
 
         /// <summary>

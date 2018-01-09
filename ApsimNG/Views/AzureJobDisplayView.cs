@@ -15,6 +15,7 @@ namespace UserInterface.Views
 
         private List<JobDetails> jobList;
         private bool myJobsOnly;
+        private bool exportToCsv;
 
         private TreeView tree;
         private ListStore store;
@@ -40,6 +41,7 @@ namespace UserInterface.Views
         private TreeModelSort sort;
         private VBox vboxPrimary;
         private CheckButton chkFilterOwner;
+        private CheckButton chkSaveToCsv;
         private Label lblProgress;
         private Label lblDownloadStatus;
         private ProgressBar loadingProgress;
@@ -50,7 +52,10 @@ namespace UserInterface.Views
         private HBox hboxChangeDownloadDir;
         private Table tblButtonContainer;
         private Button btnDirSelect;
-        
+        private Button btnDownload;
+        private Button btnDelete;
+        private VBox vboxDownloadStatuses;
+
         public AzureJobDisplayView(ViewBase owner) : base(owner)
         {
             jobList = new List<JobDetails>();
@@ -148,6 +153,10 @@ namespace UserInterface.Views
             tree.AppendColumn(columnDownload);
             tree.AppendColumn(columnDelete);
 
+            tree.Selection.Mode = SelectionMode.Multiple;
+            tree.CanFocus = true;
+            tree.RubberBanding = true;
+
             chkFilterOwner = new CheckButton("Display my jobs only");
             myJobsOnly = false;
             chkFilterOwner.Toggled += ApplyFilter;
@@ -190,26 +199,44 @@ namespace UserInterface.Views
             tblButtonContainer = new Table(1, 1, false);
             tblButtonContainer.Attach(btnChangeDownloadDir, 0, 1, 0, 1, AttachOptions.Shrink, AttachOptions.Shrink, 0, 0);
 
+            btnDownload = new Button("Download");
+            btnDownload.Clicked += BtnDownload_Click;
+            HBox tempHbox = new HBox();
+            tempHbox.PackStart(btnDownload, false, true, 0);
+
+            chkSaveToCsv = new CheckButton("Export results to .csv file");
+            chkSaveToCsv.Active = false;
+            exportToCsv = false;
+            chkSaveToCsv.Toggled += ChkSaveToCsv_Toggled;
+
+            btnDelete = new Button("Delete Job(s)");
+            btnDelete.Clicked += BtnDelete_Click;
+            
             progress = new HBox();
             progress.PackStart(new Label("Loading Jobs: "), false, false, 0);
-            progress.PackStart(loadingProgress, false, false, 0);            
-                        
+            progress.PackStart(loadingProgress, false, false, 0);
+
+            vboxDownloadStatuses = new VBox();
+
             vboxPrimary = new VBox();
             vboxPrimary.PackStart(scroll, true, true, 0);
             vboxPrimary.PackStart(chkFilterOwner, false, true, 0);
+            vboxPrimary.PackStart(tempHbox, false, false, 0);
+            vboxPrimary.PackStart(chkSaveToCsv, false, true, 0);
+
             vboxPrimary.PackStart(tblButtonContainer, false, false, 0);
             vboxPrimary.PackStart(lblDownloadStatus, false, false, 0);
-            
+            vboxPrimary.PackStart(vboxDownloadStatuses, false, true, 0);
             vboxPrimary.PackEnd(progress, false, false, 0);
 
             _mainWidget = vboxPrimary;
+            vboxPrimary.ShowAll();
         }
 
         [GLib.ConnectBefore]
         private void TreeClickEvent(object sender, ButtonPressEventArgs e)
         {
-            lblDownloadStatus.Text = "";
-
+            lblDownloadStatus.Text = "";            
             int downloadLeftDist = 0;
             int downloadRightDist = 0;
             for (int i = 0; i < tree.Columns.Length; i++)
@@ -232,11 +259,12 @@ namespace UserInterface.Views
             tree.GetPathAtPos(x, y, out path);
             TreeIter iter;
             tree.Model.GetIter(out iter, path);
-            int[] arr = new int[] { 1, 2 };            
-            string id = GetIdFromName((string)tree.Model.GetValue(iter, 0));
+            int[] arr = new int[] { 1, 2 };
+            string jobName = (string)tree.Model.GetValue(iter, 0);
+            string id = GetIdFromName(jobName);
             if (x < downloadRightDist)
             {
-                Presenter.DownloadResults(id);
+                Presenter.DownloadResults(id, jobName, exportToCsv);
             } else
             {
                 // delete the job                
@@ -284,15 +312,25 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Event Handler for the "view my jobs only" checkbox. Re-applies the job owner filter.
+        /// Event Handler for the "view my jobs only" checkbutton. Re-applies the job owner filter.
         /// </summary>
-        /// <param name="o"></param>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ApplyFilter(object o, EventArgs e)
+        private void ApplyFilter(object sender, EventArgs e)
         {
             myJobsOnly = !myJobsOnly;
             filterOwner.Refilter();
             UpdateTreeView();
+        }
+
+        /// <summary>
+        /// Event Handler for toggling the "Export to csv" checkbutton.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChkSaveToCsv_Toggled(object sender, EventArgs e)
+        {
+            exportToCsv = !exportToCsv;
         }
 
         /// <summary>
@@ -470,6 +508,9 @@ namespace UserInterface.Views
             sort.SetSortFunc(4, SortStartDate);
 
             tree.Model = sort;
+            tree.Selection.Mode = SelectionMode.Multiple;
+            tree.CanFocus = true;
+            tree.RubberBanding = true;
         }
 
         public void RemoveJobFromJobList(Guid jobId)
@@ -544,9 +585,10 @@ namespace UserInterface.Views
             return path;
         }
 
-        public void UpdateDownloadStatus(string path, bool successful)
+        public void UpdateDownloadStatus(string message)
         {
-            lblDownloadStatus.Text = successful ? "Successfully downloaded results to " + path : "Failed to download results to " + path;                                    
+            lblDownloadStatus.Text = message;
+            vboxDownloadStatuses.PackStart(new Label(message), false, true, 0);
         }
 
         private void btnChangeDownloadDir_Click(object sender, EventArgs e)
@@ -566,10 +608,40 @@ namespace UserInterface.Views
             hboxChangeDownloadDir.PackStart(btnDirSelect, false, true, 0);
             hboxChangeDownloadDir.PackStart(btnSave, false, true, 0);
 
-            vboxPrimary.PackStart(hboxChangeDownloadDir, false, true, 0);
+            vboxPrimary.PackStart(hboxChangeDownloadDir, false, true, 0);            
             hboxChangeDownloadDir.ShowAll();
         }
 
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnDownload_Click(object sender, EventArgs e)
+        {
+            vboxDownloadStatuses = new VBox();
+            if (Presenter.OngoingDownload())
+            {
+                Presenter.ShowError("Unable to start a new batch of downloads - a download is already ongoing!");
+                return;
+            }
+
+            //if there are already files in the output directory, ask the user if they want to continue
+            if (System.IO.Directory.GetFiles((string)ApsimNG.Properties.Settings.Default["OutputDir"]).Length > 0 && !Presenter.ShowWarning("Files detected in output directory. Results will be generated from ALL files in this directory. Are you certain you wish to continue?"))
+                return;
+
+            TreePath[] selectedRows = tree.Selection.GetSelectedRows();
+            TreeIter x;
+            string jobName, jobId;
+            for (int i = 0; i < selectedRows.Count(); i++)
+            {                
+                tree.Model.GetIter(out x, selectedRows[i]);
+                jobName = (string)tree.Model.GetValue(x, 0);
+                jobId = GetIdFromName(jobName);
+                Presenter.DownloadResults(jobId, jobName, exportToCsv);
+            }
+            //lblDownloadStatus.Text = "Finished Downloading Results";
+        }
         private void btnSave_Click(object sender, EventArgs e)
         {
             ApsimNG.Properties.Settings.Default["OutputDir"] = entryChangeDownloadDir.Text;

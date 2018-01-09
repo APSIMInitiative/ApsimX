@@ -13,7 +13,7 @@ namespace UserInterface.Interfaces
         void ShowError(string msg);
         void UpdateJobLoadStatus(double progress);
         string GetFile(List<string> extensions, string extName);
-        void UpdateDownloadStatus(string path, bool successful);
+        void UpdateDownloadStatus(string message);
         void RemoveJobFromJobList(Guid jobId);
         void UpdateTreeView();
     }

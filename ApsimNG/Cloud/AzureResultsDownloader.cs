@@ -19,22 +19,81 @@ using System.Data.SQLite;
 namespace ApsimNG.Cloud
 {
     class AzureResultsDownloader
-    {
-        private Guid jobId;
+    {        
+        /// <summary>
+        /// User-specified download directory. 
+        /// This is where any .csv files should be saved to.
+        /// </summary>
         private string outputPath;
+
+        /// <summary>
+        /// Temporary directory to contain the result (.db) and debugging (.out | .stdout) files.
+        /// Located at outputPath\jobId.
+        /// This directory gets deleted once finished.
+        /// </summary>
+        private string rawResultsPath;
+
+        /// <summary>
+        /// Job ID.
+        /// </summary>
+        private Guid jobId;
+
+        /// <summary>
+        /// Job name/description.
+        /// </summary>
+        private string name;
+
+        /// <summary>
+        /// Whether or not results should be combined and exported to a .csv file.
+        /// </summary>
+        private bool exportCsv;
+
+        /// <summary>
+        /// Azure cloud storage account.
+        /// </summary>
         private CloudStorageAccount storageAccount;
+
+
         private BatchClient batchClient;
         private CloudBlobClient blobClient;
+
+        /// <summary>
+        /// Presenter trying to download the jobs.
+        /// </summary>
         private AzureJobDisplayPresenter presenter;
         private CloudJob job;
-        private BackgroundWorker downloader;        
 
-        public AzureResultsDownloader(Guid id, string path, AzureJobDisplayPresenter explorer)
+        /// <summary>
+        /// Background worker to asynchronously download the job.
+        /// </summary>
+        private BackgroundWorker downloader;
+
+        public AzureResultsDownloader(Guid id, string jobName, string path, AzureJobDisplayPresenter explorer, bool export)
         {
             jobId = id;
+            exportCsv = export;
             outputPath = path;
-            presenter = explorer;
+            rawResultsPath = outputPath + "\\" + jobId.ToString();
+            try
+            {
+                if (!Directory.Exists(rawResultsPath)) Directory.CreateDirectory(rawResultsPath);
+            }
+            catch (Exception ex)
+            {
+                presenter.ShowError(ex.ToString());
+                return;
+            }
+            // this step is handled by the presenter as well so in theory it shouldn't be needed
+            try
+            {
+                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            } catch (Exception e)
+            {
+                presenter.ShowError(e.ToString());
+            }
 
+            presenter = explorer;
+            name = jobName;
             StorageCredentials storageCredentials = StorageCredentials.FromConfiguration();
             BatchCredentials batchCredentials = BatchCredentials.FromConfiguration();
             storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
@@ -48,28 +107,14 @@ namespace ApsimNG.Cloud
             job = tmpJob == null ? tmpJob : batchClient.JobOperations.GetJob(jobId.ToString());
         }
 
-        public string DownloadResults()
+        public void DownloadResults()
         {
             // TODO : add a checkbox to include debugging files
-            int numJobs = CountBlobs(false);
+            int numJobs = CountBlobs(false); // TODO : implement a progress bar using this
 
-            // progress bar. maximum is numJobs
-
-            if (!Directory.Exists(outputPath))
-            {
-                try
-                {
-                    Directory.CreateDirectory(outputPath);
-                }
-                catch (Exception e)
-                {
-                    presenter.ShowError(e.ToString());
-                }
-            }
             downloader = new BackgroundWorker();
             downloader.DoWork += Downloader_DoWork;
-            downloader.RunWorkerAsync(outputPath);
-            return outputPath + "\\Results.csv";
+            downloader.RunWorkerAsync();
         }
 
         private void Downloader_DoWork(object sender, DoWorkEventArgs e)
@@ -77,7 +122,7 @@ namespace ApsimNG.Cloud
             CancellationToken ct;
 
             var outputHashLock = new object();
-            HashSet<string> downloadedOutputs = GetDownloadedOutputFiles();
+            HashSet<string> downloadedOutputs = GetDownloadedOutputFiles();      
 
             while (true)
             {
@@ -96,15 +141,14 @@ namespace ApsimNG.Cloud
                                          //if (extension == ".stdout" || extension == ".sum") skip = true;
                                          if (!skip && !downloadedOutputs.Contains(blob.Name))
                                          {
-                                             blob.DownloadToFile(Path.Combine(outputPath, blob.Name), FileMode.Create);
+                                             blob.DownloadToFile(Path.Combine(rawResultsPath, blob.Name), FileMode.Create);
                                              lock (outputHashLock)
                                              {
                                                  downloadedOutputs.Add(blob.Name);
                                              }
                                          }                                         
                                          // report progress?
-                                     });
-                    presenter.DisplayFinishedDownloadStatus(outputPath, true);
+                                     });                    
                     if (complete) break;
                 }
                 catch (AggregateException ae)
@@ -112,23 +156,40 @@ namespace ApsimNG.Cloud
                     Console.WriteLine(ae.InnerException.ToString());
                 }
             }
-            SummariseResults(outputPath, true);            
+            // todo : remember to set success appropriately after moving the results into the data store
+            int success = -1;
+            if (exportCsv)
+            {
+                success = SummariseResults(true);
+            }
+            while (Directory.Exists(rawResultsPath))
+            {
+                try
+                {
+                    Directory.Delete(rawResultsPath, true);
+                }
+                catch
+                {
+                    Thread.Sleep(100);
+                }
+            }            
+            presenter.DownloadComplete(jobId);
+            presenter.DisplayFinishedDownloadStatus(name, success, outputPath);
         }
 
         /// <summary>
         /// Summarises a directory of results into a single file.
-        /// </summary>
-        /// <param name="path">Directory containing the results</param>
+        /// </summary>        
         /// <param name="includeFileNames">Whether or not to include the file names as a column</param>
-        /// <returns>The path of the output file</returns>
-        public void SummariseResults(string path, bool includeFileNames)
+        /// <returns>An error code. -1 means unknown error, 0 means success, 1 means invalid simulation (no results).</returns>
+        public int SummariseResults(bool includeFileNames)
         {
             try
             {
                 bool isClassic = false;
                 string fileSpec = ".out";
                 // do we need to test if we are summarising classic or X results?
-                foreach (string f in Directory.GetFiles(path))
+                foreach (string f in Directory.GetFiles(rawResultsPath))
                 {
                     if (Path.GetExtension(f) == ".db")
                     {
@@ -138,7 +199,10 @@ namespace ApsimNG.Cloud
                     }
                 }
 
-                string[] resultFiles = Directory.GetFiles(path, "*" + fileSpec);
+                string[] resultFiles = Directory.GetFiles(rawResultsPath, "*" + fileSpec);
+
+                // if there are no results (possibly a bad simulation?), no need to create an empty csv file.
+                if (resultFiles.Count() == 0) return 1;
 
                 int count = 0;
                 int lastComplete = -1;
@@ -148,10 +212,9 @@ namespace ApsimNG.Cloud
                 string sep = "";
 
                 StringBuilder output = new StringBuilder();
-                string outPath = Path.GetFullPath(path) + "\\Results.csv";
-
+                string csvPath = outputPath + "\\" + name + ".csv";
                 Regex rx_name = detectCommonChars(resultFiles);
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@outPath, false))
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(csvPath, false))
                 {
                     foreach (string currentFile in resultFiles)
                     {
@@ -193,6 +256,7 @@ namespace ApsimNG.Cloud
                                 {
                                     output.Append(sr.ReadToEnd());
                                 }
+                                sr.Close();
                             }
                             file.Write(output.ToString());
                             output.Clear();
@@ -205,11 +269,13 @@ namespace ApsimNG.Cloud
                     }
                     file.Close();
                 }
+                return 0;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-            }            
+                return -1;
+            }
         }
 
         /// <summary>
@@ -394,7 +460,7 @@ namespace ApsimNG.Cloud
         /// <returns></returns>
         private HashSet<string> GetDownloadedOutputFiles()
         {
-            return new HashSet<string>(Directory.EnumerateFiles(outputPath).Select(f => Path.GetFileName(f)));
+            return new HashSet<string>(Directory.EnumerateFiles(rawResultsPath).Select(f => Path.GetFileName(f)));
         }
 
         private IEnumerable<CloudBlockBlob> ListJobOutputsFromStorage()
@@ -412,14 +478,13 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <returns>True if the job was completed or disabled, otherwise false.</returns>
         private bool IsJobComplete()
-        {
-            if (job == null) return true;
-            return job.State == JobState.Completed || job.State == JobState.Disabled;
+        {            
+            return job == null || job.State == JobState.Completed || job.State == JobState.Disabled;
         }
 
         private void ReportFinished(bool successful)
         {
-            presenter.DisplayFinishedDownloadStatus(outputPath, successful);
+
         }
     }
 }
