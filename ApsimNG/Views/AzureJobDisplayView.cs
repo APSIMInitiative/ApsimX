@@ -22,20 +22,18 @@ namespace UserInterface.Views
         private TreeViewColumn columnName;
         //private TreeViewColumn columnId;
         private TreeViewColumn columnState;
+        private TreeViewColumn columnNumSims;
         private TreeViewColumn columnProgress;
         private TreeViewColumn columnStartTime;
         private TreeViewColumn columnEndTime;
-        private TreeViewColumn columnDownload;
-        private TreeViewColumn columnDelete;
 
         private CellRendererText cellName;
         //private CellRendererText cellId;
         private CellRendererText cellState;
+        private CellRendererText cellNumSims;
         private CellRendererText cellProgress;
         private CellRendererText cellStartTime;
-        private CellRendererText cellEndTime;
-        private CellRendererPixbuf cellDownload;
-        private CellRendererPixbuf cellDelete;
+        private CellRendererText cellEndTime;        
 
         private TreeModelFilter filterOwner;
         private TreeModelSort sort;
@@ -51,114 +49,98 @@ namespace UserInterface.Views
         private Button btnSave;
         private HBox hboxChangeDownloadDir;
         private Table tblButtonContainer;
+
         private Button btnDirSelect;
         private Button btnDownload;
         private Button btnDelete;
+        private Button btnStop;
         private VBox vboxDownloadStatuses;
 
+        private readonly string[] columnIndices = { "Name", "State", "NumSims", "Progress", "StartTime", "EndTime" };        
         public AzureJobDisplayView(ViewBase owner) : base(owner)
         {
             jobList = new List<JobDetails>();
             store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
 
-            // create colummns
+            // perhaps these should be stored as a list? then just iterate over them
+            // initialise colummns
             columnName = new TreeViewColumn
             {
                 Title = "Name/Description",
-                SortColumnId = 0
+                SortColumnId = Array.IndexOf(columnIndices, "Name")
             };
-
-            /*
-            columnId = new TreeViewColumn
-            {
-                Title = "Job ID",
-                SortColumnId = 1
-            };
-            */
 
             columnState = new TreeViewColumn
             {
                 Title = "Status",
-                SortColumnId = 1
+                SortColumnId = Array.IndexOf(columnIndices, "State")
+            };
+
+            columnNumSims = new TreeViewColumn
+            {
+                Title = "#Sims",
+                SortColumnId = Array.IndexOf(columnIndices, "NumSims")
             };
 
             columnProgress = new TreeViewColumn
             {
                 Title = "Progress",
-                SortColumnId = 2
+                SortColumnId = Array.IndexOf(columnIndices, "Progress")
             };
 
             columnStartTime = new TreeViewColumn
             {
                 Title = "Start Time",
-                SortColumnId = 3
+                SortColumnId = Array.IndexOf(columnIndices, "StartTime")
             };
 
             columnEndTime = new TreeViewColumn
             {
                 Title = "End Time",
-                SortColumnId = 4,
-            };
-
-            columnDownload = new TreeViewColumn
-            {
-                Title = "Download"
-            };
-
-            columnDelete = new TreeViewColumn
-            {
-                Title = "Delete"
+                SortColumnId = Array.IndexOf(columnIndices, "EndTime")
             };
 
             // create cells for each column
-            cellName = new CellRendererText();
-            //cellId = new CellRendererText();
+            cellName = new CellRendererText();            
             cellState = new CellRendererText();
+            cellNumSims = new CellRendererText();
             cellProgress = new CellRendererText();
             cellStartTime = new CellRendererText();
-            cellEndTime = new CellRendererText();
-            cellDownload = new CellRendererPixbuf();
-            cellDownload.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Download.png");
-
-            cellDelete = new CellRendererPixbuf();
-            cellDelete.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Delete16.png");
+            cellEndTime = new CellRendererText();            
 
             // bind cells to column
-            columnName.PackStart(cellName, false);
-            //columnId.PackStart(cellId, false);
+            columnName.PackStart(cellName, false);            
             columnState.PackStart(cellState, false);
+            columnNumSims.PackStart(cellNumSims, false);
             columnProgress.PackStart(cellProgress, false);
             columnStartTime.PackStart(cellStartTime, false);
-            columnEndTime.PackStart(cellEndTime, false);
-            columnDownload.PackStart(cellDownload, false);
-            columnDelete.PackStart(cellDelete, false);
+            columnEndTime.PackStart(cellEndTime, false);            
             
-            columnName.AddAttribute(cellName, "text", 0);
-            //columnId.AddAttribute(cellId, "text", 1);
-            columnState.AddAttribute(cellState, "text", 1);
-            columnProgress.AddAttribute(cellProgress, "text", 2);
-            columnStartTime.AddAttribute(cellStartTime, "text", 3);
-            columnEndTime.AddAttribute(cellEndTime, "text", 4);
+            columnName.AddAttribute(cellName, "text", Array.IndexOf(columnIndices, "Name"));            
+            columnState.AddAttribute(cellState, "text", Array.IndexOf(columnIndices, "State"));
+            columnNumSims.AddAttribute(cellNumSims, "text", Array.IndexOf(columnIndices, "NumSims"));
+            columnProgress.AddAttribute(cellProgress, "text", Array.IndexOf(columnIndices, "Progress"));
+            columnStartTime.AddAttribute(cellStartTime, "text", Array.IndexOf(columnIndices, "StartTime"));
+            columnEndTime.AddAttribute(cellEndTime, "text", Array.IndexOf(columnIndices, "EndTIme"));
 
             tree = new TreeView();
-            tree.ButtonPressEvent += TreeClickEvent;
+            //tree.ButtonPressEvent += TreeClickEvent;
             //tree.RowActivated += TreeRowActivated;
             
-            tree.AppendColumn(columnName);
-            //tree.AppendColumn(columnId);
+            tree.AppendColumn(columnName);            
             tree.AppendColumn(columnState);
+            tree.AppendColumn(columnNumSims);
             tree.AppendColumn(columnProgress);
             tree.AppendColumn(columnStartTime);
-            tree.AppendColumn(columnEndTime);
-            tree.AppendColumn(columnDownload);
-            tree.AppendColumn(columnDelete);
+            tree.AppendColumn(columnEndTime);            
 
             tree.Selection.Mode = SelectionMode.Multiple;
             tree.CanFocus = true;
             tree.RubberBanding = true;
 
             chkFilterOwner = new CheckButton("Display my jobs only");
-            myJobsOnly = false;
+            myJobsOnly = true;
+            chkFilterOwner.Active = true;
             chkFilterOwner.Toggled += ApplyFilter;
             chkFilterOwner.Yalign = 0;
 
@@ -167,14 +149,17 @@ namespace UserInterface.Views
 
             filterOwner.Refilter();
             sort = new TreeModelSort(filterOwner);
-            
+            //sort.SetDefaultSortFunc(SortStrings, null, null);
             sort.SetSortFunc(0, SortName);
             //sort.SetSortFunc(1, SortId);
             sort.SetSortFunc(1, SortState);
-            sort.SetSortFunc(2, SortProgress);
+            sort.SetSortFunc(2, SortProgress); // can't sort a progress bar - need to prevent this from being sorted by the default sort func
             sort.SetSortFunc(3, SortStartDate);
             sort.SetSortFunc(4, SortStartDate);
             
+
+            // sort by start time ascending by default
+            //sort.SetSortColumnId(3, SortType.Ascending);
             tree.Model = sort;
 
             lblProgress = new Label("Loading: 0.00%");
@@ -204,14 +189,22 @@ namespace UserInterface.Views
             HBox tempHbox = new HBox();
             tempHbox.PackStart(btnDownload, false, true, 0);
 
+            btnDelete = new Button("Delete Job(s)");
+            btnDelete.Clicked += BtnDelete_Click;
+            HBox tempHbox2 = new HBox();
+            tempHbox2.PackStart(btnDelete, false, true, 0);
+
+            btnStop = new Button("Stop Job(s)");
+            btnStop.Clicked += BtnStop_Click;
+            HBox tempHBox3 = new HBox();
+            tempHBox3.PackStart(btnStop, false, true, 0);
+
+
             chkSaveToCsv = new CheckButton("Export results to .csv file");
             chkSaveToCsv.Active = false;
             exportToCsv = false;
             chkSaveToCsv.Toggled += ChkSaveToCsv_Toggled;
 
-            btnDelete = new Button("Delete Job(s)");
-            btnDelete.Clicked += BtnDelete_Click;
-            
             progress = new HBox();
             progress.PackStart(new Label("Loading Jobs: "), false, false, 0);
             progress.PackStart(loadingProgress, false, false, 0);
@@ -222,6 +215,8 @@ namespace UserInterface.Views
             vboxPrimary.PackStart(scroll, true, true, 0);
             vboxPrimary.PackStart(chkFilterOwner, false, true, 0);
             vboxPrimary.PackStart(tempHbox, false, false, 0);
+            vboxPrimary.PackStart(tempHbox2, false, false, 0);
+            vboxPrimary.PackStart(tempHBox3, false, false, 0);
             vboxPrimary.PackStart(chkSaveToCsv, false, true, 0);
 
             vboxPrimary.PackStart(tblButtonContainer, false, false, 0);
@@ -232,7 +227,14 @@ namespace UserInterface.Views
             _mainWidget = vboxPrimary;
             vboxPrimary.ShowAll();
         }
-
+        /*
+         * deprecated
+        /// <summary>
+        /// Event handler for a click event on the TreeView. 
+        /// If the click is in the download or delete column, it will perform the appropriate action on the selected job. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         [GLib.ConnectBefore]
         private void TreeClickEvent(object sender, ButtonPressEventArgs e)
         {
@@ -276,7 +278,8 @@ namespace UserInterface.Views
                 Presenter.DeleteJob(Guid.Parse(id));
             }
         }
-        
+        */
+
         private string GetIdFromName(string name)
         {
             if (!myJobsOnly)
@@ -485,6 +488,15 @@ namespace UserInterface.Views
 
         public void UpdateTreeView()
         {
+            // remember which column is being sorted. If the results are not sorted at all, order by start time ascending
+            int sortIndex;
+            SortType order;
+            if (!sort.GetSortColumnId(out sortIndex, out order))
+            {
+                sortIndex = 3;
+                order = SortType.Ascending;
+            }
+
             store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
             foreach (JobDetails job in jobList)
             {
@@ -508,9 +520,7 @@ namespace UserInterface.Views
             sort.SetSortFunc(4, SortStartDate);
 
             tree.Model = sort;
-            tree.Selection.Mode = SelectionMode.Multiple;
-            tree.CanFocus = true;
-            tree.RubberBanding = true;
+            sort.SetSortColumnId(sortIndex, order);
         }
 
         public void RemoveJobFromJobList(Guid jobId)
@@ -612,13 +622,61 @@ namespace UserInterface.Views
             hboxChangeDownloadDir.ShowAll();
         }
 
+        /// <summary>
+        /// Event handler for the stop job button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnStop_Click(object sender, EventArgs e)
+        {
+            TreePath[] selectedRows = tree.Selection.GetSelectedRows();
+
+            // get the grammar right when asking for confirmation
+            bool stopMultiple = selectedRows.Count() > 1;
+            string msg = "Are you sure you want to stop " + (stopMultiple ? "these " + selectedRows.Count() + " jobs?" : "this job?") + " There is no way to resume their execution!";
+            string label = stopMultiple ? "Stop these jobs?" : "Stop this job?";
+
+            int response = Presenter.MainPresenter.ShowMsgDialog(msg, label, MessageType.Question, ButtonsType.YesNo);
+            if (response == -8) return;
+
+            TreeIter iter;
+            string jobName, jobId;
+            for (int i = 0; i < selectedRows.Count(); i++)
+            {
+                tree.Model.GetIter(out iter, selectedRows[i]);
+                jobName = (string)tree.Model.GetValue(iter, 0);
+                jobId = GetIdFromName(jobName);
+                Presenter.StopJob(Guid.Parse(jobId));
+            }
+
+        }
+
         private void BtnDelete_Click(object sender, EventArgs e)
         {
+            TreePath[] selectedRows = tree.Selection.GetSelectedRows();
 
+            // get the grammar right when asking for confirmation
+            bool deletingMultiple = selectedRows.Count() > 1;
+            string msg = "Are you sure you want to delete " + (deletingMultiple ? "these " + selectedRows.Count() + " jobs?" : "this job?");
+            string label = deletingMultiple ? "Delete these jobs?" : "Delete this job?";
+
+            // if user says no to the popup, no further action required
+            if (Presenter.MainPresenter.ShowMsgDialog(msg, label, MessageType.Question, ButtonsType.YesNo) == -8) return;
+            
+            TreeIter iter;
+            string jobName, jobId;
+            for (int i = 0; i < selectedRows.Count(); i++)
+            {
+                tree.Model.GetIter(out iter, selectedRows[i]);
+                jobName = (string)tree.Model.GetValue(iter, 0);
+                jobId = GetIdFromName(jobName);                
+                Presenter.DeleteJob(Guid.Parse(jobId));
+            }
         }
 
         private void BtnDownload_Click(object sender, EventArgs e)
         {
+            lblDownloadStatus.Text = "";
             vboxDownloadStatuses = new VBox();
             if (Presenter.OngoingDownload())
             {

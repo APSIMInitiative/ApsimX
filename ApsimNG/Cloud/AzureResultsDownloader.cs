@@ -174,7 +174,7 @@ namespace ApsimNG.Cloud
                 }
             }            
             presenter.DownloadComplete(jobId);
-            presenter.DisplayFinishedDownloadStatus(name, success, outputPath);
+            presenter.DisplayFinishedDownloadStatus(name, success, outputPath, DateTime.Now);
         }
 
         /// <summary>

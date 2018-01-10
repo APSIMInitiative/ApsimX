@@ -246,6 +246,13 @@
                 cloudJob.JobReleaseTask = job.ToJobReleaseTask(jp.JobId, storageAccount.CreateCloudBlobClient());
                 cloudJob.JobManagerTask = job.ToJobManagerTask(jp.JobId, storageAccount.CreateCloudBlobClient(), jp.JobManagerShouldSubmitTasks, jp.AutoScale);
                 cloudJob.Commit();
+
+                /*
+                cloudJob.AddTask(new CloudTask("jobComplete", "jobComplete.cmd")
+                {
+                    DependsOn = TaskDependencies.OnIds(); // insert all task ids here
+                });
+                */
             } catch (Exception ex)
             {
                 ShowError(ex.ToString());

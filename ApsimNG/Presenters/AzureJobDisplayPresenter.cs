@@ -61,7 +61,7 @@ namespace UserInterface.Presenters
             MainPresenter = mainPresenter;
         }
 
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        new public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
 
         }
@@ -115,21 +115,11 @@ namespace UserInterface.Presenters
                 FetchJobs.CancelAsync();
             }
             FetchJobs.RunWorkerAsync();
-
-            /*
-            // old timer-based code
-
-            // timer to automatically update the list of jobs every 30 seconds
-            updateJobsTimer = new Timer(30000);
-            updateJobsTimer.Elapsed += TimerElapsed;
-            updateJobsTimer.AutoReset = true;
-            updateJobsTimer.Start();
-            */
         }
 
-        public void Detach()
+        new public void Detach()
         {
-            Console.WriteLine("Closing cloud job viewer...");
+            FetchJobs.CancelAsync();
         }
 
         private void TimerElapsed(object sender, EventArgs e)
@@ -142,16 +132,20 @@ namespace UserInterface.Presenters
             while (!FetchJobs.CancellationPending) // this check is performed regularly inside the ListJobs() function as well.
             {
                 var jobs = ListJobs();
-                if (jobs == null) return;
-                try
+                if (jobs != null)
                 {
-                    view.AddJobsToTableIfNecessary(jobs);
-                }
-                catch
-                {
-                    // the most likely error here occurs if the user has moved to a different right hand panel at an unfortunate time
-                    // in which case this thread can no longer access the original view (or rather, the view is no longer attached to the right hand panel)
-                }                
+                    try
+                    {
+                        view.AddJobsToTableIfNecessary(jobs);
+                    }
+                    catch
+                    {
+                        // the most likely error here occurs if the user has moved to a different right hand panel at an unfortunate time
+                        // in which case this thread can no longer access the original view (or rather, the view is no longer attached to the right hand panel)                        
+                        return;
+                    }
+                }                                
+                // refresh every 10 seconds
                 System.Threading.Thread.Sleep(10000);
             }
             
@@ -163,7 +157,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <returns>List of Jobs</returns>
         private List<JobDetails> ListJobs()
-        {
+        {            
             List<JobDetails> jobs = new List<JobDetails>();
             var pools = batchClient.PoolOperations.ListPools();
             var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
@@ -181,15 +175,26 @@ namespace UserInterface.Presenters
 
                 
                 string owner = GetAzureMetaData("job-" + cloudJob.Id, "Owner");
-                //double jobProgress = GetProgress(Guid.Parse(cloudJob.Id));
-                double jobProgress = -1;
+                //var tasks = ListTasks(Guid.Parse(cloudJob.Id));
+                // for some reason the succeeded task count is always exactly double the actual number of tasks
+                // and the number of tasks is the number of sims + 1 (the job manager?)
+
+                /*
+                long taskCount = batchClient.JobOperations.GetTaskCount();
+                long numSims = taskCount.;
+                long numCompleteSims = (cloudJob.Statistics.SucceededTaskCount + cloudJob.Statistics.FailedTaskCount);
+                */
+
+                long numCompletedTasks = cloudJob.Statistics.SucceededTaskCount + cloudJob.Statistics.FailedTaskCount;
+                double progress = cloudJob.State.ToString() == "Completed" ? 100.0 : 50.0;
                 var job = new JobDetails
                 {
                     Id = cloudJob.Id,
                     DisplayName = cloudJob.DisplayName,
                     State = cloudJob.State.ToString(),
                     Owner = owner,
-                    Progress = jobProgress
+                    NumSims = numCompletedTasks,
+                    Progress = progress
                 };
 
                 if (cloudJob.ExecutionInformation != null)
@@ -286,7 +291,6 @@ namespace UserInterface.Presenters
             }
         }
 
-
         /// <summary>
         /// Gets the job progress as a percentage.
         /// </summary>
@@ -302,34 +306,62 @@ namespace UserInterface.Presenters
                 {
                     tasksComplete++;
                 }
-            }
-            return 100.0 * tasksComplete / tasks.Count;
+            }            
+            return 100.0 * tasksComplete / tasks.Length;            
         }
+
+        private long CountCompleteTasks(Guid jobId)
+        {
+            ODATADetailLevel detailLevel = new ODATADetailLevel { SelectClause = "state" };
+            var taskList = batchClient.JobOperations.ListTasks(jobId.ToString(), detailLevel).ToArray();
+            int completeTasks = 0;
+            for (int i = 0; i < taskList.Length; i++)
+            {
+                if (taskList[i].State.ToString() == "Complete") completeTasks++;
+            }
+            return completeTasks;
+        }
+
 
         /// <summary>
         /// Gets the Azure tasks in a job.
         /// </summary>
         /// <param name="jobId">ID of the job.</param>
         /// <returns>List of TaskDetail objects.</returns>
-        private List<TaskDetails> ListTasks(Guid jobId)
+        private TaskDetails[] ListTasks(Guid jobId)
         {
-            List<TaskDetails> tasks = new List<TaskDetails>();
-            CloudJob job = GetJob(jobId);
-            if (job != null)
+            ODATADetailLevel detailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo" };
+            var taskList = batchClient.JobOperations.ListTasks(jobId.ToString(), detailLevel).ToArray();
+
+            /*
+            foreach (var cloudTask in )
             {
-                ODATADetailLevel detailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo" };
-                foreach (var cloudTask in batchClient.JobOperations.ListTasks(jobId.ToString(), detailLevel))
+                tasks.Add(new TaskDetails
                 {
-                    tasks.Add(new TaskDetails
-                    {
-                        Id = cloudTask.Id,
-                        DisplayName = cloudTask.DisplayName,
-                        State = cloudTask.State.ToString(),
-                        StartTime = cloudTask.ExecutionInformation == null ? null : cloudTask.ExecutionInformation.StartTime,
-                        EndTime = cloudTask.ExecutionInformation == null ? null : cloudTask.ExecutionInformation.EndTime
-                    });
-                }
+                    Id = cloudTask.Id,
+                    DisplayName = cloudTask.DisplayName,
+                    State = cloudTask.State.ToString(),
+                    StartTime = cloudTask.ExecutionInformation == null ? null : cloudTask.ExecutionInformation.StartTime,
+                    EndTime = cloudTask.ExecutionInformation == null ? null : cloudTask.ExecutionInformation.EndTime
+                });
             }
+            */
+
+            int n = taskList.Count();
+            TaskDetails[] tasks = new TaskDetails[n];
+            for (int i = 0; i < n; i++) {
+                CloudTask task = taskList[i];                
+                TaskDetails test = new TaskDetails
+                {
+                    Id = task.Id,
+                    DisplayName = task.DisplayName,
+                    State = task.State.ToString(),
+                    StartTime = task.ExecutionInformation == null ? null : taskList.ElementAt(i).ExecutionInformation.StartTime,
+                    EndTime = task.ExecutionInformation == null ? null : taskList.ElementAt(i).ExecutionInformation.EndTime
+                };
+                tasks[i] = test;
+            }
+
             return tasks;
         }
 
@@ -391,10 +423,10 @@ namespace UserInterface.Presenters
         /// Writes to a log file and asks the view to display an error message if download was unsuccessful.
         /// </summary>
         /// <param name="code"></param>
-        public void DisplayFinishedDownloadStatus(string name, int code, string path)
+        public void DisplayFinishedDownloadStatus(string name, int code, string path, DateTime timeStamp)
         {
             if (code == 0) return;
-            string msg = name + ": ";
+            string msg = timeStamp.ToLongTimeString().Split(' ')[0] + ": " +  name + ": ";
             switch (code)
             {
                 case 1:
@@ -404,7 +436,7 @@ namespace UserInterface.Presenters
                     msg += "Download unsuccessful.";
                     break;
             }
-            string logFile = path + "\\downloadError.log";
+            string logFile = path + "\\download.log";
             view.UpdateDownloadStatus("One or more downloads encountered an error. See " + logFile + " for more details.");
             lock (logFileMutex)
             {
@@ -437,32 +469,40 @@ namespace UserInterface.Presenters
             return x == -5;
         }
 
+        public void StopJob(Guid id)
+        {
+            try
+            {
+                batchClient.JobOperations.TerminateJob(id.ToString());
+            } catch (Exception e)
+            {
+                MainPresenter.ShowMessage(e.Message, Simulation.ErrorLevel.Error);
+            }
+        }
+
         /// <summary>
         /// Deletes a job (and all associated files (I think)) from Azure cloud storage.
         /// </summary>
         /// <param name="id">id of the job</param>
         public void DeleteJob(Guid id)
-        {
-            // ask the user if they want to delete the job
-            if (AskToContinue("Are you sure you wish to delete this job?", "Delete job confirmation"))
+        {            
+            CloudBlobContainer containerRef;
+
+            // this is done 3 times in MARS - not sure why
+            for (int i = 0; i < 2; i++)
             {
-                CloudBlobContainer containerRef;
-
-                // this is done 3 times in MARS - not sure why
-                for (int i = 0; i < 2; i++)
+                containerRef = blobClient.GetContainerReference(StorageConstants.GetJobOutputContainer(id));
+                if (containerRef.Exists())
                 {
-                    containerRef = blobClient.GetContainerReference(StorageConstants.GetJobOutputContainer(id));
-                    if (containerRef.Exists())
-                    {
-                        containerRef.Delete();
-                    }
+                    containerRef.Delete();
                 }
-                var job = GetJob(id);
-                if (job != null) batchClient.JobOperations.DeleteJob(id.ToString());
-
-                view.RemoveJobFromJobList(id);
-                view.UpdateTreeView();
             }
+            var job = GetJob(id);
+            if (job != null) batchClient.JobOperations.DeleteJob(id.ToString());
+
+            view.RemoveJobFromJobList(id);
+            view.UpdateTreeView();
+            
         }
     }
 }
