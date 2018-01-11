@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
         [Link]
         Clock Clock = null;
         [Link]
-        FileGRASP FileGRASP = null;
+        IFileGRASP FileGRASP = null;
         [Link]
         ZoneCLEM ZoneCLEM = null;
  

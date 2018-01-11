@@ -337,6 +337,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLiteGRASP.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Equipment.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\EquipmentType.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\WaterStore.png" />

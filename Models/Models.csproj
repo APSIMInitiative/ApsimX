@@ -137,7 +137,9 @@
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
+    <Compile Include="CLEM\FileSQLiteGRASP.cs" />
     <Compile Include="CLEM\IActivityPerformedNotifier.cs" />
+    <Compile Include="CLEM\IFileGRASP.cs" />
     <Compile Include="CLEM\Reporting\ReportActivitiesPerformed.cs" />
     <Compile Include="CLEM\Reporting\ReportResourceShortfalls.cs" />
     <Compile Include="CLEM\Reporting\ReportResourceBalances.cs" />
@@ -509,7 +511,7 @@
     <Compile Include="CLEM\Activities\RuminantActivityCollectManurePaddock.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityGrazeAll.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityGrazePasture.cs" />
-    <Compile Include="CLEM\Activities\RuminantActivityGrazePastureBreed.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityGrazePastureHerd.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityHerdCost.cs" />
     <Compile Include="CLEM\Old\IATGrowCropLabour.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityMilking.cs" />

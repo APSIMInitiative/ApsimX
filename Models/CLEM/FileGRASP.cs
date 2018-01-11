@@ -29,7 +29,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.CLEMFileGRASPPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
     [Description("This model holds a GRASP data file for native pasture used in the CLEM simulation.")]
-    public class FileGRASP : CLEMModel
+    public class FileGRASP : CLEMModel, IFileGRASP
     {
 
         /// <summary>
