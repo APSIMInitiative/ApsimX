@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="23">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -29,7 +29,7 @@ The model consists of:
         <ExpressionFunction>
           <Name>InitialCarbon</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Expression>[SoilOrganicMatter].FInert*[SoilOrganicMatter].OC * 100 * [Soil].BD * [Soil].Thickness</Expression>
+          <Expression>[Soil].FInert*[Soil].OC * 100 * [Soil].BD * [Soil].Thickness</Expression>
         </ExpressionFunction>
         <ExpressionFunction>
           <Name>InitialNitrogen</Name>
@@ -243,7 +243,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
         <ExpressionFunction>
           <Name>InitialCarbon</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Expression>(([SoilOrganicMatter].OC * 100 * [Soil].BD * [Soil].Thickness -[Inert].C) * [SoilOrganicMatter].FBiom) / (1 + [SoilOrganicMatter].FBiom)</Expression>
+          <Expression>(([Soil].OC * 100 * [Soil].BD * [Soil].Thickness -[Inert].C) * [Soil].FBiom) / (1 + [Soil].FBiom)</Expression>
         </ExpressionFunction>
         <ExpressionFunction>
           <Name>InitialNitrogen</Name>
@@ -298,7 +298,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
         <ExpressionFunction>
           <Name>InitialCarbon</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Expression>(1-[SoilOrganicMatter].FInert)*[SoilOrganicMatter].OC * 100 * [Soil].BD * [Soil].Thickness - [Biomass].C</Expression>
+          <Expression>(1-[Soil].FInert)*[Soil].OC * 100 * [Soil].BD * [Soil].Thickness - [Biomass].C</Expression>
         </ExpressionFunction>
         <ExpressionFunction>
           <Name>InitialNitrogen</Name>
@@ -1668,6 +1668,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <XProperty>[Bambatsi].Age.Value()</XProperty>
         </LinearInterpolationFunction>
         <IncludeInDocumentation>false</IncludeInDocumentation>
+        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
         <CohortsInitialised>false</CohortsInitialised>
@@ -1888,8 +1889,14 @@ But their data suggests a value of 0.3]]></MemoText>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
+        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
@@ -2048,7 +2055,13 @@ But their data suggests a value of 0.3]]></MemoText>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>false</IncludeInDocumentation>
+        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <Cultivar>
         <Name>Bambatsi</Name>
@@ -2220,10 +2233,10 @@ But their data suggests a value of 0.3]]></MemoText>
       <Name>Map</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Center>
-        <Latitude>0</Latitude>
-        <Longitude>0</Longitude>
+        <Latitude>44.71551373202449</Latitude>
+        <Longitude>94.833984375</Longitude>
       </Center>
-      <Zoom>1.4</Zoom>
+      <Zoom>3</Zoom>
     </Map>
     <Folder>
       <Name>Combined Results</Name>
@@ -3134,7 +3147,7 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -3696,6 +3709,11 @@ namespace Models
       </Folder>
       <Folder>
         <Name>Hudson</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This dataset demonstrates cropping system performance and soil carbon dynamics under continuous winter cereal versus perrenial pasture.  The cropping and pasture systems experiment was established in August 1994 on the farming property ‘Hudson’ located in the foothills of the Liverpool Ranges (31.758S, 150.458E; average annual rainfall 684mm with some summer dominance, average annual pan evaporation 1718 mm).  Further details about the experiment and the data can be found at [Young2009_HudsonCarbon] and [paydar_deep_2005].]]></MemoText>
+        </Memo>
         <Simulation>
           <Name>HudsonW1</Name>
           <Clock>
@@ -5589,6 +5607,11 @@ namespace Models
       </Folder>
       <Folder>
         <Name>Brigalow Catchment Study</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This dataset was originally simulated using APSIM by [huth_impacts_2010].  The study was conducted near Theodore, Queensland, Australia (24.81°S, 149.80°E). Several catchments were monitored under different land uses following clearing of native Brigalow Forest (Acacia Harpophylla).  Data for part of the cropping catchment are used here.]]></MemoText>
+        </Memo>
         <Simulation>
           <Name>Brigalow</Name>
           <Weather>
