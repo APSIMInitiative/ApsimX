@@ -27,7 +27,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
     [Description("This component reads a SQLite database with GRASP data for native pasture production used in the CLEM simulation.")]
-    public class FileSQLiteGRASP : CLEMModel, IFileGRASP
+    public class FileSQLiteGRASP : CLEMModel, IFileGRASP, IValidatableObject
     {
         /// <summary>
         /// A link to the clock model.
@@ -55,6 +55,62 @@ namespace Models.CLEM
         public string FileName { get; set; }
 
         /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // check for file
+            if(!File.Exists(FullFileName))
+            {
+                string[] memberNames = new string[] { "FileName" };
+                results.Add(new ValidationResult("This SQLite database ("+FullFileName+") cound not be found", memberNames));
+            }
+            else
+            {
+                // check SQL file
+                SQLiteReader = new SQLite();
+                try
+                {
+                    SQLiteReader.OpenDatabase(FullFileName, true);
+                }
+                catch(Exception ex)
+                {
+                    string[] memberNames = new string[] { "SQLite database error" };
+                    results.Add(new ValidationResult("There was a problem opening the SQLite database (" + FullFileName + ")\n"+ex.Message, memberNames));
+                }
+
+                // check all columns present
+                List<string> expectedColumns = new List<string>()
+                {
+                "Region","Soil","GrassBA","LandCon","StkRate",
+                "Year", "Month", "Growth", "BP1", "BP2"
+                };
+
+                DataTable res = SQLiteReader.ExecuteQuery("PRAGMA table_info(Native_Inputs)");
+
+                List<string> DBcolumns = new List<string>();
+                foreach (DataRow row in res.Rows)
+                {
+                    DBcolumns.Add(row[1].ToString());
+                }
+
+                foreach (string col in expectedColumns)
+                {
+                    if (!DBcolumns.Contains(col))
+                    {
+                        string[] memberNames = new string[] { "Missing SQLite database column" };
+                        results.Add(new ValidationResult("Unable to find column " + col + " in GRASP database (" + FullFileName +")", memberNames));
+                    }
+                }
+            }
+            return results;
+        }
+
+        /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
         /// </summary>
         [XmlIgnore]
@@ -78,19 +134,15 @@ namespace Models.CLEM
             }
         }
 
-        /// <summary>
-        /// Overrides the base class method to allow for initialization.
-        /// </summary>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        /// <summary>An event handler to allow us to initialise</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            SQLiteReader = new SQLite();
-            SQLiteReader.OpenDatabase(FullFileName, true);
-
-            if (CheckDatabase())
-            {
-                this.distinctStkRates = GetStkRateCategories();
-            }
+            // get list of distinct stocking rates available in database
+            // database has already been opened and checked in Validate()
+            this.distinctStkRates = GetStkRateCategories();
         }
 
         /// <summary>
@@ -148,8 +200,7 @@ namespace Models.CLEM
             //https://stackoverflow.com/questions/41277957/get-closest-value-in-an-array
             //https://msdn.microsoft.com/en-us/library/2cy9f6wb(v=vs.110).aspx
 
-            // sort not needed as now down at array creation
-            //Array.Sort(distinctStkRates);
+            // sorting not needed as now done at array creation
             int index = Array.BinarySearch(distinctStkRates, StkRate); 
             double category = (index < 0) ? distinctStkRates[~index] : distinctStkRates[index];
             return category;
@@ -279,33 +330,6 @@ namespace Models.CLEM
                 BP2 = double.Parse(dr["BP2"].ToString())
             };
             return pasturedata;
-        }
-
-        private bool CheckDatabase()
-        {
-            List<string> expectedColumns = new List<string>()
-            {
-                "Region","Soil","GrassBA","LandCon","StkRate",
-                "Year", "Month", "Growth", "BP1", "BP2"
-            };
-
-            DataTable res = SQLiteReader.ExecuteQuery("PRAGMA table_info(Native_Inputs)");
-
-            List<string> DBcolumns = new List<string>();
-            foreach (DataRow row in res.Rows)
-            {
-                DBcolumns.Add(row[1].ToString());
-            }
-
-            foreach (string col in expectedColumns)
-            {
-                if(!DBcolumns.Contains(col))
-                {
-                    // report error. fatal so stop simulation
-                    throw new ApsimXException(this, "Unable to find column "+col+" in GRASP database "+FullFileName);
-                }
-            }
-            return true;
         }
 
     }
