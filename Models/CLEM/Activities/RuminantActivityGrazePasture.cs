@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     {
         /// <summary>
         /// Link to clock
-        /// Public so children can be dynamically creaed after links defined
+        /// Public so children can be dynamically created after links defined
         /// </summary>
         [Link]
         public Clock Clock = null;
@@ -66,15 +66,21 @@ namespace Models.CLEM.Activities
             //Create list of children by breed
             foreach (RuminantType herdType in Resources.RuminantHerd().Children)
             {
-                RuminantActivityGrazePastureBreed ragpb = new RuminantActivityGrazePastureBreed
+                RuminantActivityGrazePastureHerd ragpb = new RuminantActivityGrazePastureHerd
                 {
                     GrazeFoodStoreModel = GrazeFoodStoreModel,
                     RuminantTypeModel = herdType,
-                    Parent = this
+                    Parent = this,
+                    Clock = this.Clock,
+                    Name = "Graze_" + GrazeFoodStoreModel.Name + "_" + herdType.Name
                 };
                 if (ragpb.Resources == null)
                 {
                     ragpb.Resources = this.Resources;
+                }
+                if (ragpb.Clock == null)
+                {
+                    ragpb.Clock = this.Clock;
                 }
                 ragpb.InitialiseHerd(true, true);
                 if (ActivityList == null)
@@ -106,7 +112,7 @@ namespace Models.CLEM.Activities
 
             // check nested graze breed requirements for this pasture
             double totalNeeded = 0;
-            foreach (RuminantActivityGrazePastureBreed item in ActivityList)
+            foreach (RuminantActivityGrazePastureHerd item in ActivityList)
             {
                 item.ResourceRequestList = null;
                 item.PotentialIntakePastureQualityLimiter = potentialIntakeLimiter;
@@ -128,43 +134,9 @@ namespace Models.CLEM.Activities
             }
 
             // apply limits to children
-            foreach (RuminantActivityGrazePastureBreed item in ActivityList)
+            foreach (RuminantActivityGrazePastureHerd item in ActivityList)
             {
-                item.GrazingCompetitionLimiter = limit;
-                // store kg/ha available for consumption calculation
-                item.BiomassPerHectare = GrazeFoodStoreModel.kgPerHa;
-
-                // calculate breed feed limits
-                if(item.PoolFeedLimits == null)
-                {
-                    item.PoolFeedLimits = new List<GrazeBreedPoolLimit>();
-                }
-                else
-                {
-                    item.PoolFeedLimits.Clear();
-                }
-
-                foreach (var pool in GrazeFoodStoreModel.Pools)
-                {
-                    item.PoolFeedLimits.Add(new GrazeBreedPoolLimit() { Limit=1.0, Pool=pool });
-                }
-
-                // if Jan-March then user first three months otherwise use 2
-                int greenage = (Clock.Today.Month <= 3) ? 3 : 2;
-
-                double green = GrazeFoodStoreModel.Pools.Where(a => (a.Age <= greenage)).Sum(b => b.Amount);
-                double propgreen = green / available;
-                double greenlimit =  item.RuminantTypeModel.GreenDietMax * (1 - Math.Exp(-item.RuminantTypeModel.GreenDietCoefficient * ((propgreen * 100.0) - item.RuminantTypeModel.GreenDietZero)));
-                greenlimit = Math.Max(0.0, greenlimit);
-                if (propgreen > 90)
-                {
-                    greenlimit = 100;
-                }
-
-                foreach (var pool in item.PoolFeedLimits.Where(a => a.Pool.Age <= greenage))
-                {
-                    pool.Limit = greenlimit / 100.0;
-                }
+                item.SetupPoolsAndLimits(limit);
             }
             return null;
         }

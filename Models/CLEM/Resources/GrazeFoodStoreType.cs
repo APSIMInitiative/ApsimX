@@ -281,9 +281,9 @@ namespace Models.CLEM.Resources
         {
             // handles grazing by breed from this pasture pools based on breed pool limits
 
-            if (Request.AdditionalDetails != null && Request.AdditionalDetails.GetType() == typeof(RuminantActivityGrazePastureBreed))
+            if (Request.AdditionalDetails != null && Request.AdditionalDetails.GetType() == typeof(RuminantActivityGrazePastureHerd))
             {
-                RuminantActivityGrazePastureBreed thisBreed = Request.AdditionalDetails as RuminantActivityGrazePastureBreed;
+                RuminantActivityGrazePastureHerd thisBreed = Request.AdditionalDetails as RuminantActivityGrazePastureHerd;
 
                 // take from pools as specified for the breed
                 double amountRequired = Request.Required;
@@ -326,25 +326,26 @@ namespace Models.CLEM.Resources
                 // adjust DMD and N of biomass consumed
                 thisBreed.DMD /= Request.Provided;
                 thisBreed.N /= Request.Provided;
+
+                //if graze activity
+                biomassConsumed += Request.Provided;
+
+                // report 
+                ResourceTransaction details = new ResourceTransaction();
+                details.ResourceType = this.Name;
+                details.Debit = Request.Provided * -1;
+                details.Activity = Request.ActivityModel.Name;
+                details.Reason = Request.Reason;
+                LastTransaction = details;
+                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+                OnTransactionOccurred(te);
+
             }
             else
             {
                 // Need to add new section here to allow non grazing activity to remove resources from pasture.
                 throw new Exception("Removing resources from native food store can only be performed by a grazing activity at this stage");
             }
-
-            //if graze activity
-            biomassConsumed += Request.Provided;
-
-            // report 
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Debit = Request.Provided * -1;
-            details.Activity = Request.ActivityModel.Name;
-            details.Reason = Request.Reason;
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
         }
 
         /// <summary>

@@ -48,19 +48,25 @@ namespace Models.CLEM.Activities
                 ragp.GrazeFoodStoreModel = pastureType;
                 ragp.Clock = Clock;
                 ragp.Parent = this;
+                ragp.Name = "Graze_" + pastureType.Name;
 
                 foreach (RuminantType herdType in Resources.RuminantHerd().Children)
                 {
-                    RuminantActivityGrazePastureBreed ragpb = new RuminantActivityGrazePastureBreed
+                    RuminantActivityGrazePastureHerd ragpb = new RuminantActivityGrazePastureHerd
                     {
                         GrazeFoodStoreModel = pastureType,
                         RuminantTypeModel = herdType,
                         HoursGrazed = HoursGrazed,
-                        Parent = ragp
+                        Parent = ragp,
+                        Name = ragp.Name+"_"+herdType.Name
                     };
                     if (ragpb.Resources == null)
                     {
                         ragpb.Resources = this.Resources;
+                    }
+                    if (ragpb.Clock == null)
+                    {
+                        ragpb.Clock = this.Clock;
                     }
                     ragpb.InitialiseHerd(true, true);
                     if (ragp.ActivityList == null)

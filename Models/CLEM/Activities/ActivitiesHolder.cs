@@ -182,7 +182,6 @@ namespace Models.CLEM.Activities
                 Activity = TimeStep
             };
             LastActivityPerformed = TimeStep;
-            // call ActivityPerformedEventhandler
             OnActivityPerformed(ea);
         }
     }

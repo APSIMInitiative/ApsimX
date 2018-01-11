@@ -20,10 +20,14 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of a specified herd and pasture (paddock) in the simulation.")]
-    class RuminantActivityGrazePastureBreed : CLEMRuminantActivityBase
+    class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase
     {
-//        [Link]
-//        public ResourcesHolder Resources = null;
+        /// <summary>
+        /// Link to clock
+        /// Public so children can be dynamically created after links defined
+        /// </summary>
+        [Link]
+        public Clock Clock = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -116,6 +120,23 @@ namespace Models.CLEM.Activities
         private void OnStartOfMonth(object sender, EventArgs e)
         {
             ResourceRequestList = null;
+            this.PoolFeedLimits = null;
+        }
+
+        /// <summary>
+        /// Method to get the resources required for this activity
+        /// this method overrides the base method to allow specific resource rules
+        /// and not remove resources immediately
+        /// </summary>
+        public override void GetResourcesRequiredForActivity()
+        {
+            // if there is no ResourceRequestList (i.e. not created from parent pasture)
+            if (ResourceRequestList == null)
+            {
+                GetResourcesNeededForActivity();
+            }
+            // this has all the code to feed animals.
+            DoActivity();
         }
 
         public override List<ResourceRequest> GetResourcesNeededForActivity()
@@ -124,7 +145,7 @@ namespace Models.CLEM.Activities
             if (ResourceRequestList == null)
             {
                 ResourceRequestList = new List<ResourceRequest>();
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name & a.Breed == this.RuminantTypeModel.Name).ToList();
+                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name & a.HerdName == this.RuminantTypeModel.Name).ToList();
                 if (herd.Count() > 0)
                 {
                     double amount = 0;
@@ -136,8 +157,8 @@ namespace Models.CLEM.Activities
                         // calculate intake from potential modified by pasture availability and hours grazed
                         indAmount = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8);
                         // AL added reduce by amout already eaten to account for other feeding activities
-                        indAmount -= ind.Intake;
-                        amount += indAmount * GrazingCompetitionLimiter * 30.4;
+                        //indAmount -= ind.Intake;
+                        amount += indAmount *  30.4;
                     }
                     if (amount > 0)
                     {
@@ -152,19 +173,110 @@ namespace Models.CLEM.Activities
                         }
                         );
                     }
+
+                    if ( GrazeFoodStoreTypeName != null & GrazeFoodStoreModel != null)
+                    {
+                        // Stand alone model has not been set by parent RuminantActivityGrazePasture
+                        SetupPoolsAndLimits(1.0);
+                    }
                 }
             }
             return ResourceRequestList;
         }
 
+        /// <summary>
+        /// Method to set up pools from currently available graze pools and limit based upon green content herd limit parameters
+        /// </summary>
+        /// <param name="limit">The competition limit defined from GrazePasture parent</param>
+        public void SetupPoolsAndLimits(double limit)
+        {
+            this.GrazingCompetitionLimiter = limit;
+            // store kg/ha available for consumption calculation
+            this.BiomassPerHectare = GrazeFoodStoreModel.kgPerHa;
+
+            // calculate breed feed limits
+            if (this.PoolFeedLimits == null)
+            {
+                this.PoolFeedLimits = new List<GrazeBreedPoolLimit>();
+            }
+            else
+            {
+                this.PoolFeedLimits.Clear();
+            }
+
+            foreach (var pool in GrazeFoodStoreModel.Pools)
+            {
+                this.PoolFeedLimits.Add(new GrazeBreedPoolLimit() { Limit = 1.0, Pool = pool });
+            }
+
+            // if Jan-March then user first three months otherwise use 2
+            int greenage = (Clock.Today.Month <= 3) ? 3 : 2;
+
+            double green = GrazeFoodStoreModel.Pools.Where(a => (a.Age <= greenage)).Sum(b => b.Amount);
+            double propgreen = green / GrazeFoodStoreModel.Amount;
+            double greenlimit = this.RuminantTypeModel.GreenDietMax * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen * 100.0) - this.RuminantTypeModel.GreenDietZero)));
+            greenlimit = Math.Max(0.0, greenlimit);
+            if (propgreen > 90)
+            {
+                greenlimit = 100;
+            }
+
+            foreach (var pool in this.PoolFeedLimits.Where(a => a.Pool.Age <= greenage))
+            {
+                pool.Limit = greenlimit / 100.0;
+            }
+        }
+
         public override void DoActivity()
         {
-            //TODO: go through amount received and put it into the animals intake with quality measures.
+            //Go through amount received and put it into the animals intake with quality measures.
+            if (ResourceRequestList != null)
+            {
+                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name & a.HerdName == this.RuminantTypeModel.Name).ToList();
+                if (herd.Count() > 0)
+                {
+                    //Get total amount
+                    double totalEaten = herd.Sum(a => a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
+                    totalEaten *= GrazingCompetitionLimiter  * 30.4;
 
-            // the quality of mixed pasture eaten will be returned with ResourceRequest
+                    // take resource
+                    ResourceRequest request = new ResourceRequest()
+                    {
+                        ActivityModel = this,
+                        AdditionalDetails = this,
+                        Reason = "Grazing",
+                        Required = totalEaten,
+                        Resource = GrazeFoodStoreModel
+                    };
+                    GrazeFoodStoreModel.Remove(request);
 
+                    FoodResourcePacket food = new FoodResourcePacket()
+                    {
+                        DMD = ((RuminantActivityGrazePastureHerd)request.AdditionalDetails).DMD,
+                        PercentN = ((RuminantActivityGrazePastureHerd)request.AdditionalDetails).N
+                    };
 
-            throw new NotImplementedException();
+                    double shortfall = GrazingCompetitionLimiter * request.Provided / request.Required;
+
+                    // allocate to individuals
+                    foreach (Ruminant ind in herd)
+                    {
+                        double eaten = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8);
+                        food.Amount = eaten * 30.4 * shortfall;
+                        ind.AddIntake(food);
+                    }
+
+                    // shortfall
+                    if (request.Provided < request.Required)
+                    {
+                        request.Required = totalEaten;
+                        request.ResourceType = typeof(GrazeFoodStore);
+                        request.ResourceTypeName = GrazeFoodStoreModel.Name;
+                        ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = request };
+                        OnShortfallOccurred(rre);
+                    }
+                }
+            }
         }
 
         /// <summary>
