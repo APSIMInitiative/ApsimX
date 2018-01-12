@@ -8,13 +8,12 @@ namespace UserInterface.Interfaces
 {
     public interface IAzureJobDisplayView
     {
-        Presenters.AzureJobDisplayPresenter Presenter { get; set; }
-        void AddJobsToTableIfNecessary(List<ApsimNG.Cloud.JobDetails> jobs);
+        Presenters.AzureJobDisplayPresenter Presenter { get; set; }        
         void ShowError(string msg);
         void UpdateJobLoadStatus(double progress);
         string GetFile(List<string> extensions, string extName);
         void UpdateDownloadStatus(string message);
         void RemoveJobFromJobList(Guid jobId);
-        void UpdateTreeView();
+        void UpdateTreeView(List<ApsimNG.Cloud.JobDetails> jobs);
     }
 }

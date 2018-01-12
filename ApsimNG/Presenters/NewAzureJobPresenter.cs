@@ -127,7 +127,7 @@
             NewJobs.Add(jp);
 
             // TODO : do we actually need/use the APSIMJob class?
-            APSIMJob job = new APSIMJob(jp.JobDisplayName, "", jp.ApplicationPackage, jp.ApplicationPackagePath, jp.ApplicationPackageVersion, "", jp.Recipient, batchCredentials, storageCredentials, PoolSettings.FromConfiguration());
+            APSIMJob job = new APSIMJob(jp.JobDisplayName, "", jp.ApplicationPackagePath, jp.ApplicationPackageVersion, jp.Recipient, batchCredentials, storageCredentials, PoolSettings.FromConfiguration());
             job.PoolInfo.MaxTasksPerVM = jp.PoolMaxTasksPerVM;
             job.PoolInfo.VMCount = jp.PoolVMCount;
 
@@ -245,26 +245,28 @@
                 cloudJob.JobPreparationTask = job.ToJobPreparationTask(jp.JobId, storageAccount.CreateCloudBlobClient());
                 cloudJob.JobReleaseTask = job.ToJobReleaseTask(jp.JobId, storageAccount.CreateCloudBlobClient());
                 cloudJob.JobManagerTask = job.ToJobManagerTask(jp.JobId, storageAccount.CreateCloudBlobClient(), jp.JobManagerShouldSubmitTasks, jp.AutoScale);
-                cloudJob.Commit();
 
-                /*
-                cloudJob.AddTask(new CloudTask("jobComplete", "jobComplete.cmd")
-                {
-                    DependsOn = TaskDependencies.OnIds(); // insert all task ids here
-                });
-                */
+                cloudJob.Commit();
             } catch (Exception ex)
             {
                 ShowError(ex.ToString());
             }
             
-            UpdateStatus(ref jp, "Job Successfully submitted");
-
-            var x = ListJobs();
-            foreach (JobDetails j in x)
+            try
             {
-                //Console.WriteLine(job.DisplayName);
+                var taskList = batchClient.JobOperations.ListTasks(jp.JobId.ToString()).ToArray().Select(task => task.Id);
+
+                // this task will run after the job manager finishes (ie after everything else finishes)
+                CloudTask completeTask = new CloudTask("jobcomplete-" + jp.JobId.ToString(), "cmd.exe /c echo JobDone");
+                completeTask.DependsOn = TaskDependencies.OnIds(taskList);
+
+                batchClient.JobOperations.AddTask(jp.JobId.ToString(), completeTask);
+            } catch (Exception ex)
+            {
+                ShowError(ex.ToString());
             }
+
+            UpdateStatus(ref jp, "Job Successfully submitted");            
         }
 
         private void UpdateStatus(ref JobParameters jobParams, string st)
@@ -621,8 +623,7 @@
         }
 
         public void Detach()
-        {
-            
+        {            
         }
 
         public string ConvertToHtml(string folder)

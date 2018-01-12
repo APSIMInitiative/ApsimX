@@ -16,29 +16,20 @@ using Models.Core.Runners;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Microsoft.WindowsAzure.Storage.Blob;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
-    public class AzureJobDisplayPresenter : ExplorerPresenter
+    public class AzureJobDisplayPresenter : IPresenter
     {
         /// <summary>
         /// List of jobs which are currently being downloaded.        
         /// </summary>
         private List<Guid> currentlyDownloading;
-
-        private MainPresenter mainPresenter;
-        private IAzureJobDisplayView view;
+        
+        private AzureJobDisplayView view;
         public MainPresenter MainPresenter { get; set; }
 
-        /// <summary>
-        /// Model associated with the context of the right click. Unused. 
-        /// Remove this when this presenter is accessed directly from the home tab.
-        /// </summary>
-        private Models.Core.IModel model;
-
-        /// <summary>
-        /// 
-        /// </summary>        
         private StorageCredentials storageCredentials;
         private BatchCredentials batchCredentials;
         private CloudStorageAccount storageAccount;
@@ -48,32 +39,46 @@ namespace UserInterface.Presenters
 
         private BackgroundWorker FetchJobs;
         //private Timer updateJobsTimer;
-        
-        private AzureResultsDownloader downloader;
 
         /// <summary>
-        /// Semaphore controlling access to the section of code relating to the log file.        
+        /// Mutual exclusion semaphore controlling access to the section of code relating to the log file.        
         /// </summary>
         private Object logFileMutex;
-        
-        public AzureJobDisplayPresenter(MainPresenter mainPresenter) : base(mainPresenter)
+
+        /// <summary>
+        /// Mutual exclusion semaphore controlling access to the section of code updating the progress bar.
+        /// </summary>
+        private Object updateProgressMutex;
+
+        /// <summary>
+        /// List of all Azure jobs.
+        /// </summary>
+        private List<JobDetails> jobList;
+
+        public AzureJobDisplayPresenter(MainPresenter mainPresenter)
         {
             MainPresenter = mainPresenter;
-        }
-
-        new public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
-        {
-
-        }
-
-        public void Attach(object model, object view, MainPresenter main)
-        {
-            MainPresenter = main;
-            this.view = (IAzureJobDisplayView)view;
-            this.view.Presenter = this;
-            //this.model = (IModel)model;
-            currentlyDownloading = new List<Guid>();
+            jobList = new List<JobDetails>();
             logFileMutex = new object();
+            updateProgressMutex = new object();
+            currentlyDownloading = new List<Guid>();
+
+            FetchJobs = new BackgroundWorker();
+            FetchJobs.WorkerSupportsCancellation = true;
+            FetchJobs.DoWork += FetchJobs_DoWork;
+        }
+
+        /// <summary>
+        /// Attach the view to this presenter.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="view"></param>
+        /// <param name="explorerPresenter"></param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        {
+            this.view = (AzureJobDisplayView)view;
+            this.view.Presenter = this;
+
             // read Azure credentials from a file. If credentials file doesn't exist, abort.
             string credentialsFileName = (string)Settings.Default["AzureLicenceFilePath"];
 
@@ -91,15 +96,13 @@ namespace UserInterface.Presenters
             else
             {
                 // licence file is invalid or non-existent. Show an error and remove the job submission form from the right hand panel.
-                ShowError("Missing or invalid Azure Licence file: " + credentialsFileName);
-                // TODO : find an equivalent of this (kill the tab)
-                //explorerPresenter.HideRightHandPanel();
+                ShowError("Missing or invalid Azure Licence file: " + credentialsFileName);                
                 return;
             }
 
             storageCredentials = StorageCredentials.FromConfiguration();
             batchCredentials = BatchCredentials.FromConfiguration();
-            poolSettings = PoolSettings.FromConfiguration();            
+            poolSettings = PoolSettings.FromConfiguration();
 
             storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
             var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
@@ -107,19 +110,16 @@ namespace UserInterface.Presenters
             blobClient = storageAccount.CreateCloudBlobClient();
             blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);
             
-            FetchJobs = new BackgroundWorker();
-            FetchJobs.DoWork += FetchJobs_DoWork;            
             // start downloading the list of jobs immediately
-            if (FetchJobs.IsBusy)
-            {
-                FetchJobs.CancelAsync();
-            }
             FetchJobs.RunWorkerAsync();
         }
 
-        new public void Detach()
+
+        public void Detach()
         {
             FetchJobs.CancelAsync();
+            view.RemoveEventHandlers();
+            view.MainWidget.Destroy();
         }
 
         private void TimerElapsed(object sender, EventArgs e)
@@ -131,40 +131,104 @@ namespace UserInterface.Presenters
         {
             while (!FetchJobs.CancellationPending) // this check is performed regularly inside the ListJobs() function as well.
             {
-                var jobs = ListJobs();
-                if (jobs != null)
+                // TODO : find a way to detect when this tab has been closed. If this occurs, this thread needs to stop                
+
+                // update the list of jobs. this will take a bit of time
+                var newJobs = ListJobs();
+                if (FetchJobs.CancellationPending) return;
+                if (newJobs != null)
                 {
-                    try
+                    // if the new job list is different, update the tree view
+                    if (newJobs.Count() != jobList.Count())
                     {
-                        view.AddJobsToTableIfNecessary(jobs);
+                        jobList = newJobs;
+                        if (UpdateDisplay() == 1) return;
+                        
+                        
                     }
-                    catch
+                    for (int i = 0; i < newJobs.Count(); i++)
                     {
-                        // the most likely error here occurs if the user has moved to a different right hand panel at an unfortunate time
-                        // in which case this thread can no longer access the original view (or rather, the view is no longer attached to the right hand panel)                        
-                        return;
+                        if (!IsEqual(newJobs[i], jobList[i]))
+                        {
+                            jobList = newJobs;
+                            if (UpdateDisplay() == 1) return;
+                            break;
+                        }
                     }
-                }                                
+                    jobList = newJobs;
+                } else
+                {
+                    // ListJobs() will only return null if the thread is asked to cancel or if unable to talk to
+                    // the view (due to a null ref.)
+                    return;
+                }
+                
                 // refresh every 10 seconds
                 System.Threading.Thread.Sleep(10000);
             }
             
         }
 
+        /// <summary>
+        /// Gets the formatted display name of a job.
+        /// </summary>
+        /// <param name="id">ID of the job.</param>
+        /// <param name="withOwner">If true, the return value will include the job owner's name in brackets.</param>
+        /// <returns></returns>
+        public string GetJobName(string id, bool withOwner)
+        {
+            JobDetails job = GetLocalJob(id);
+            return withOwner ? job.DisplayName + " (" + job.Owner + ")" : job.DisplayName;
+        }
+
+        /// <summary>
+        /// Asks the view to update the tree view.
+        /// </summary>
+        /// <returns>0 if the operation is successful, 1 if a NullRefEx. occurs, 2 if another exception is generated.</returns>
+        private int UpdateDisplay()
+        {
+            try
+            {
+                view.UpdateTreeView(jobList);
+            }
+            catch (NullReferenceException)
+            {                
+                return 1;
+            }
+            catch (Exception e)
+            {
+                ShowError(e.ToString());
+                return 2;
+            }
+            return 0;
+        }
 
         /// <summary>
         /// Gets the list of jobs submitted to Azure.
         /// </summary>
-        /// <returns>List of Jobs</returns>
+        /// <returns>List of Jobs. Null if the thread is asked to cancel, or if unable to update the progress bar.</returns>
         private List<JobDetails> ListJobs()
-        {            
+        {
+            lock (updateProgressMutex)
+            {
+                try
+                {
+                    view.UpdateJobLoadStatus(0);
+                } catch (NullReferenceException)
+                {
+                    return null;
+                } catch (Exception e)
+                {
+                    ShowError(e.ToString());
+                }                
+            }
+            
             List<JobDetails> jobs = new List<JobDetails>();
             var pools = batchClient.PoolOperations.ListPools();
             var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
             var cloudJobs = batchClient.JobOperations.ListJobs(jobDetailLevel);
             var length = cloudJobs.Count();
-            int i = 1;            
-            var updateProgressMutex = new object();
+            int i = 1;                        
 
             foreach (var cloudJob in cloudJobs)
             {
@@ -184,9 +248,10 @@ namespace UserInterface.Presenters
                 long numSims = taskCount.;
                 long numCompleteSims = (cloudJob.Statistics.SucceededTaskCount + cloudJob.Statistics.FailedTaskCount);
                 */
-
-                long numCompletedTasks = cloudJob.Statistics.SucceededTaskCount + cloudJob.Statistics.FailedTaskCount;
-                double progress = cloudJob.State.ToString() == "Completed" ? 100.0 : 50.0;
+                //long numCompletedTasks = cloudJob.Statistics.SucceededTaskCount + cloudJob.Statistics.FailedTaskCount;
+                //double progress = cloudJob.State.ToString() == "Completed" ? 100.0 : 50.0;
+                long numCompletedTasks = 100;
+                double progress = 100;
                 var job = new JobDetails
                 {
                     Id = cloudJob.Id,
@@ -224,9 +289,20 @@ namespace UserInterface.Presenters
                 
                 lock(updateProgressMutex)
                 {
-                    view.UpdateJobLoadStatus(100.0 * i / length);
+                    try
+                    {
+                        view.UpdateJobLoadStatus(100.0 * i / length);
+                    } catch (NullReferenceException)
+                    {
+                        return null;
+                    } catch (Exception e)
+                    {
+                        ShowError(e.ToString());
+                    }
+                    
                 }                
-            }            
+            }
+            if (jobs == null) return new List<JobDetails>();
             return jobs;
         }
 
@@ -322,6 +398,16 @@ namespace UserInterface.Presenters
             return completeTasks;
         }
 
+        /// <summary>
+        /// Tests if two jobs are equal.
+        /// </summary>
+        /// <param name="a">The first job.</param>
+        /// <param name="b">The second job.</param>
+        /// <returns>True if the jobs have the same ID and they are in the same state.</returns>
+        private bool IsEqual(JobDetails a, JobDetails b)
+        {
+            return (a.Id == b.Id && a.State == b.State);
+        }
 
         /// <summary>
         /// Gets the Azure tasks in a job.
@@ -378,16 +464,35 @@ namespace UserInterface.Presenters
             return batchClient.JobOperations.GetJob(jobId.ToString());
         }
 
+        /// <summary>
+        /// Gets a job with a given ID.
+        /// </summary>
+        /// <param name="id">ID of the job.</param>
+        /// <returns>A job from the local job list. The job is not live but should have been recently updated.</returns>
+        public JobDetails GetLocalJob(string id)
+        {
+            return jobList.FirstOrDefault(x => x.Id == id);
+        }
+
         public bool OngoingDownload()
         {
             return currentlyDownloading.Count() > 0;
         }
 
-        public void DownloadResults(string jobId, string jobName, bool saveToCsv)
+        public void DownloadResults(List<string> jobsToDownload, bool saveToCsv)
         {
-            currentlyDownloading.Add(Guid.Parse(jobId));            
-            downloader = new AzureResultsDownloader(Guid.Parse(jobId), jobName, (string)Settings.Default["OutputDir"], this, saveToCsv);
-            downloader.DownloadResults();
+            string path = (string)Settings.Default["OutputDir"];
+            AzureResultsDownloader dl;
+            Guid jobId;
+            foreach (string id in jobsToDownload)
+            {
+                // if the job id is invalid, just skip downloading this job                
+                if (!Guid.TryParse(id, out jobId)) continue;
+
+                //dl = new AzureResultsDownloader(jobId, GetJob(jobId).DisplayName, this, saveToCsv);
+                dl = new AzureResultsDownloader(jobId, GetJob(jobId).DisplayName, path, this, saveToCsv);                
+                dl.DownloadResults();
+            }
         }
 
         /// <summary>
@@ -484,25 +589,39 @@ namespace UserInterface.Presenters
         /// Deletes a job (and all associated files (I think)) from Azure cloud storage.
         /// </summary>
         /// <param name="id">id of the job</param>
-        public void DeleteJob(Guid id)
-        {            
+        public void DeleteJob(string id)
+        {
+            // cancel the fetch jobs worker
+            FetchJobs.CancelAsync();
+            view.HideProgressBar();
+
+            // try to parse the id. if it is not a valid Guid, return
+            Guid jobId;
+            if (!Guid.TryParse(id, out jobId)) return;
+
+            // delete the job from Azure
             CloudBlobContainer containerRef;
 
-            // this is done 3 times in MARS - not sure why
-            for (int i = 0; i < 2; i++)
-            {
-                containerRef = blobClient.GetContainerReference(StorageConstants.GetJobOutputContainer(id));
-                if (containerRef.Exists())
-                {
-                    containerRef.Delete();
-                }
-            }
-            var job = GetJob(id);
-            if (job != null) batchClient.JobOperations.DeleteJob(id.ToString());
-
-            view.RemoveJobFromJobList(id);
-            view.UpdateTreeView();
+            containerRef = blobClient.GetContainerReference(StorageConstants.GetJobOutputContainer(jobId));
+            if (containerRef.Exists()) containerRef.Delete();
             
+            containerRef = blobClient.GetContainerReference(StorageConstants.GetJobOutputContainer(jobId));
+            if (containerRef.Exists()) containerRef.Delete();
+
+            containerRef = blobClient.GetContainerReference(jobId.ToString());
+            if (containerRef.Exists()) containerRef.Delete();
+
+            var job = GetJob(jobId);
+            if (job != null) batchClient.JobOperations.DeleteJob(id);
+
+            // remove the job from the locally stored list of jobs
+            jobList.RemoveAt(jobList.IndexOf(GetLocalJob(id)));            
+            
+            // refresh the tree view
+            view.UpdateTreeView(jobList);
+
+            // restart the fetch jobs worker
+            FetchJobs.RunWorkerAsync();
         }
     }
 }

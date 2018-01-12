@@ -108,7 +108,7 @@ namespace UserInterface.Views
             entryModelPath = new Entry((string)ApsimNG.Properties.Settings.Default["ModelPath"]);
             btnModelPath = new Button("...");
             btnModelPath.Clicked += btnModelPath_Click;
-
+            
             chkSaveModels.Active = true;
             chkSaveModels.Active = false;
             
@@ -444,12 +444,13 @@ namespace UserInterface.Views
         private string GetDirectory()
         {
             
-            Gtk.FileChooserDialog fc =
-            new Gtk.FileChooserDialog("Choose the file to open",
+            FileChooserDialog fc = new FileChooserDialog(
+                                        "Choose the file to open",
                                         null,
                                         FileChooserAction.SelectFolder,
                                         "Cancel", ResponseType.Cancel,
-                                        "Select Folder", ResponseType.Accept);
+                                        "Select Folder", ResponseType.Accept);            
+            //FileChooserDialog fileChooser = new FileChooserDialog(prompt, null, action, "Cancel", ResponseType.Cancel, btnText, ResponseType.Accept);
             string path = "";
 
             try

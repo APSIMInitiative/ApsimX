@@ -53,18 +53,23 @@ namespace ApsimNG.Cloud
         /// </summary>
         private CloudStorageAccount storageAccount;
 
-
+        /// <summary>
+        /// Client for the user's batch account.
+        /// </summary>
         private BatchClient batchClient;
+
+        /// <summary>
+        /// Client for user's cloud storage.
+        /// </summary>
         private CloudBlobClient blobClient;
 
         /// <summary>
         /// Presenter trying to download the jobs.
         /// </summary>
         private AzureJobDisplayPresenter presenter;
-        private CloudJob job;
 
         /// <summary>
-        /// Background worker to asynchronously download the job.
+        /// Worker thread to asynchronously download the job.
         /// </summary>
         private BackgroundWorker downloader;
 
@@ -100,11 +105,7 @@ namespace ApsimNG.Cloud
             var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
             batchClient = BatchClient.Open(sharedCredentials);
             blobClient = storageAccount.CreateCloudBlobClient();
-            blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);
-
-            ODATADetailLevel detailLevel = new ODATADetailLevel { SelectClause = "id" };
-            CloudJob tmpJob = batchClient.JobOperations.ListJobs(detailLevel).FirstOrDefault(j => string.Equals(jobId.ToString(), j.Id));
-            job = tmpJob == null ? tmpJob : batchClient.JobOperations.GetJob(jobId.ToString());
+            blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);        
         }
 
         public void DownloadResults()
@@ -478,8 +479,15 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <returns>True if the job was completed or disabled, otherwise false.</returns>
         private bool IsJobComplete()
-        {            
+        {
+            ODATADetailLevel detailLevel = new ODATADetailLevel { SelectClause = "id" };
+            // This is how it was done in MARS. Not sure that both of these are necessary.
+            CloudJob tmpJob = batchClient.JobOperations.ListJobs(detailLevel).FirstOrDefault(j => string.Equals(jobId.ToString(), j.Id));
+            CloudJob job = tmpJob == null ? tmpJob : batchClient.JobOperations.GetJob(jobId.ToString());
             return job == null || job.State == JobState.Completed || job.State == JobState.Disabled;
+
+            // a simpler solution would be -
+            //return batchClient.JobOperations.GetJob(jobId.ToString()).Id;
         }
 
         private void ReportFinished(bool successful)

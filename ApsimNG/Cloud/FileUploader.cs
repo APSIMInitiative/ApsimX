@@ -20,7 +20,13 @@ namespace ApsimNG.Cloud
             account = acct;
         }
 
-
+        /// <summary>
+        /// Uploads a file to an Azure container.
+        /// </summary>
+        /// <param name="filePath">Path of the local file to be uploaded.</param>
+        /// <param name="container">Container to upload the file to.</param>
+        /// <param name="remoteFileName">Name of the remote file (once it has been uploaded). Name of the local file will not be changed.</param>
+        /// <returns></returns>
         public string UploadFile(string filePath, string container, string remoteFileName)
         {
             CloudBlobClient blobClient = account.CreateCloudBlobClient();
