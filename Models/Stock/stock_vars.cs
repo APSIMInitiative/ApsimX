@@ -4,6 +4,48 @@ using System.Collections.Generic;
 namespace Models.GrazPlan
 {
     /// <summary>
+    /// Livestock metabolizable energy partition
+    /// </summary>
+    public class TEnergyUse
+    {
+        /// <summary>
+        /// basal maintenance requirement       
+        /// MJ
+        /// </summary>
+        public double maint_base { get; set; }
+        /// <summary>
+        /// E(graze) + E(move)                  
+        /// MJ
+        /// </summary>
+        public double maint_move_graze { get; set; }
+        /// <summary>
+        /// E(cold)         
+        /// MJ
+        /// </summary>
+        public double maint_cold { get; set; }
+        /// <summary>
+        /// ME(c)           
+        /// MJ
+        /// </summary>
+        public double conceptus { get; set; }
+        /// <summary>
+        /// ME(l) 
+        /// MJ
+        /// </summary>
+        public double lactation { get; set; }
+        /// <summary>
+        /// ME(w) = NE(w) / k(w)           
+        /// MJ
+        /// </summary>
+        public double fleece { get; set; }
+        /// <summary>
+        /// ME(g)      
+        /// MJ
+        /// </summary>
+        public double gain { get; set; }
+    } 
+
+    /// <summary>
     /// The stock genotype
     /// </summary>
     public class TStockGeno
@@ -657,18 +699,22 @@ namespace Models.GrazPlan
             /// <summary>
             /// Male animals
             /// </summary>
-            eMale
+            eMale,
+            /// <summary>
+            /// Deaths of non suckling animals
+            /// </summary>
+            eDeaths
         };
 
         /// <summary>
         /// Populate the numbers array for the type of output required
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="code"></param>
-        /// <param name="bUseYoung"></param>
-        /// <param name="bUseAll"></param>
-        /// <param name="bUseTag"></param>
-        /// <param name="numbers"></param>
+        /// <param name="Model">The Stock list model</param>
+        /// <param name="code">The count type</param>
+        /// <param name="bUseYoung">Report for young animals</param>
+        /// <param name="bUseAll">Combined value</param>
+        /// <param name="bUseTag">Use tag groups</param>
+        /// <param name="numbers">The populated array of numbers</param>
         /// <returns></returns>
         public static bool PopulateNumberValue(TStockList Model, CountType code, bool bUseYoung, bool bUseAll, bool bUseTag, ref int[] numbers)
         {
@@ -711,6 +757,9 @@ namespace Models.GrazPlan
                                     break;
                                 case CountType.eMale:
                                     iValue = aGroup.MaleNo;
+                                    break;
+                                case CountType.eDeaths:
+                                    iValue = aGroup.Deaths;
                                     break;
                                 default:
                                     Result = false;
@@ -1014,6 +1063,34 @@ namespace Models.GrazPlan
                     aValue[Idx].eaten = Model.Paddocks.byIndex(iPadd).SuppRemovalKG;
                     Idx++;
                 }
+        }
+
+        /// <summary>
+        /// Populate metabolizable energy use array 
+        /// Note: these are an* ME* partition                                          
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <param name="aValue"></param>
+        public static void MakeEnergyUse(TStockList Model, ref TEnergyUse[] aValue)
+        {
+            double dME_Metab;
+            double dME_MoveGraze;
+            int Idx;
+
+            for (Idx = 1; Idx <= Model.Count(); Idx++)
+            {
+                TAnimalGroup group = Model.At(Idx);
+                dME_Metab = group.AnimalState.EnergyUse.Metab / group.AnimalState.Efficiency.Maint;
+                dME_MoveGraze = group.AnimalState.EnergyUse.Maint - dME_Metab - group.AnimalState.EnergyUse.Cold;
+
+                aValue[Idx].maint_base = dME_Metab;
+                aValue[Idx].maint_move_graze = dME_MoveGraze;  // Separating E(graze) and E(move) requires work in AnimGRP.pas...
+                aValue[Idx].maint_cold = group.AnimalState.EnergyUse.Cold;
+                aValue[Idx].conceptus = group.AnimalState.EnergyUse.Preg;
+                aValue[Idx].lactation = group.AnimalState.EnergyUse.Lact;
+                aValue[Idx].fleece  = group.AnimalState.EnergyUse.Wool / group.AnimalState.Efficiency.Gain;
+                aValue[Idx].gain = group.AnimalState.EnergyUse.Gain / group.AnimalState.Efficiency.Gain;
+            }
         }
     }
 }

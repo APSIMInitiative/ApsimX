@@ -94,10 +94,10 @@ namespace Models.Core
         /// Create a simulations model
         /// </summary>
         /// <param name="children">The child models</param>
-        public static Simulations Create(IEnumerable<Model> children)
+        public static Simulations Create(IEnumerable<IModel> children)
         {
             Simulations newSimulations = new Core.Simulations();
-            newSimulations.Children.AddRange(children);
+            newSimulations.Children.AddRange(children.Cast<Model>());
 
             // Call the OnDeserialised method in each model.
             Events events = new Core.Events(newSimulations);
@@ -204,7 +204,7 @@ namespace Models.Core
         public void Run(Simulation simulation, bool doClone)
         {
             Apsim.ParentAllChildren(simulation);
-            RunSimulation simulationRunner = new RunSimulation(simulation, doClone);
+            RunSimulation simulationRunner = new RunSimulation(this, simulation, doClone);
             Links.Resolve(simulationRunner);
             simulationRunner.Run(new System.Threading.CancellationTokenSource());
         }
