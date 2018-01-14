@@ -165,13 +165,16 @@ namespace Models.Graph
 
                 // Get data for each simulation / zone object
                 DataTable baseData = GetBaseData(storage, simulationZones);
-                simulationZones.ForEach(simulationZone => simulationZone.CreateDataView(baseData, this));
+                if (baseData != null && baseData.Rows.Count > 0)
+                {
+                    simulationZones.ForEach(simulationZone => simulationZone.CreateDataView(baseData, this));
 
-                // Setup all colour, marker, line types etc in all simulation / zone objects.
-                PaintAllSimulationZones(simulationZones);
+                    // Setup all colour, marker, line types etc in all simulation / zone objects.
+                    PaintAllSimulationZones(simulationZones);
 
-                // Convert all simulation / zone objects to seriesdefinitions.
-                simulationZones.ForEach(simZone => ourDefinitions.Add(ConvertToSeriesDefinition(storage, simZone)));
+                    // Convert all simulation / zone objects to seriesdefinitions.
+                    simulationZones.ForEach(simZone => ourDefinitions.Add(ConvertToSeriesDefinition(storage, simZone)));
+                }
             }
 
             // Get all data.
@@ -479,6 +482,7 @@ namespace Models.Graph
                 seriesDefinition.y = GetDataFromTable(seriesDefinition.data, YFieldName);
                 seriesDefinition.x2 = GetDataFromTable(seriesDefinition.data, X2FieldName);
                 seriesDefinition.y2 = GetDataFromTable(seriesDefinition.data, Y2FieldName);
+                seriesDefinition.error = GetErrorDataFromTable(seriesDefinition.data, YFieldName);
                 if (Cumulative)
                     seriesDefinition.y = MathUtilities.Cumulative(seriesDefinition.y as IEnumerable<double>);
                 if (CumulativeX)
@@ -545,6 +549,21 @@ namespace Models.Graph
                     return DataTableUtilities.GetColumnAsStrings(data, fieldName);
                 else
                     return DataTableUtilities.GetColumnAsDoubles(data, fieldName);
+            }
+            return null;
+        }
+
+        /// <summary>Gets a column of error data from a table.</summary>
+        /// <param name="data">The table</param>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <returns>The column of data.</returns>
+        private IEnumerable GetErrorDataFromTable(DataTable data, string fieldName)
+        {
+            string errorFieldName = fieldName + "Error";
+            if (fieldName != null && data != null && data.Columns.Contains(errorFieldName))
+            {
+                if (data.Columns[errorFieldName].DataType == typeof(double))
+                    return DataTableUtilities.GetColumnAsDoubles(data, errorFieldName);
             }
             return null;
         }
@@ -632,6 +651,11 @@ namespace Models.Graph
                 fieldNames.Add(XFieldName);
             if (YFieldName != null && !fieldNames.Contains(YFieldName))
                 fieldNames.Add(YFieldName);
+            if (YFieldName != null && !fieldNames.Contains(YFieldName + "Error"))
+            {
+                if (storage.ColumnNames(TableName).Contains(YFieldName + "Error"))
+                    fieldNames.Add(YFieldName + "Error");
+            }
             if (X2FieldName != null && !fieldNames.Contains(X2FieldName))
                 fieldNames.Add(X2FieldName);
             if (Y2FieldName != null && !fieldNames.Contains(Y2FieldName))

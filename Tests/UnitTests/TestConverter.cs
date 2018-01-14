@@ -178,9 +178,9 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
+            Assert.IsTrue(APSIMFileConverter.ConvertToVersion(doc.DocumentElement, null, 10));
 
-            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"10\">" +
                              "<GenericOrgan>" +
                                "<Name>Stem</Name>" +
                                "<Constant>" +
@@ -203,10 +203,6 @@ namespace UnitTests
                                  "<Name>CriticalNConc</Name>" +
                                  "<VariableName>[Stem].MinimumNConc.Value()</VariableName>" +
                                "</VariableReference>" +
-                               "<Constant>" +
-                                 "<Name>DMConversionEfficiency</Name>" +
-                                 "<FixedValue>1.0</FixedValue>" +
-                               "</Constant>" +
                              "</GenericOrgan>" +
                             "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);

@@ -35,10 +35,11 @@ namespace Models.PMF.Functions
             if (o is IFunction)
                 return (o as IFunction).Value(arrayIndex);
             else if (o is Array)
-                return Convert.ToDouble((o as Array).GetValue(arrayIndex));
+                return Convert.ToDouble((o as Array).GetValue(arrayIndex), 
+                                        System.Globalization.CultureInfo.InvariantCulture);
             else
             {
-                double doubleValue = Convert.ToDouble(o);
+                double doubleValue = Convert.ToDouble(o, System.Globalization.CultureInfo.InvariantCulture);
                 if (double.IsNaN(doubleValue))
                     throw new Exception("NaN (not a number) found when getting variable: " + VariableName);
                 return doubleValue;

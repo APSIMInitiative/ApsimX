@@ -93,6 +93,13 @@ zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
+      <Units>g/m2</Units>
+    </Constant>   
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
     </Constant>    
     <Constant>
       <Name>MaximumRootDepth</Name>
@@ -259,6 +266,11 @@ This is important in SLURP as it is set for each species to represent their diff
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Root].RWC</XProperty>
     </LinearInterpolationFunction>
+    <Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <Constant>
@@ -277,6 +289,12 @@ This is important in SLURP as it is set for each species to represent their diff
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>/d</Units>
+    </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
     </Constant>
     <MultiplyFunction>
       <Name>InitialWtFunction</Name>
@@ -496,6 +514,11 @@ This is important in SLURP as it is set for each species to represent their diff
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
     </VariableReference>
+    <Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <CohortsInitialised>false</CohortsInitialised>
     <TipsAtEmergence>0</TipsAtEmergence>

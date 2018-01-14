@@ -64,6 +64,10 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         public IFunction MaintenanceRespirationFunction = null;
 
+        /// <summary>The cost for remobilisation</summary>
+        [Link]
+        public IFunction RemobilisationCost = null;
+
         #endregion
 
         #region Class Fields
@@ -293,14 +297,22 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dry matter allocation.</summary>
         public override void SetDryMatterAllocation(BiomassAllocationType value)
         {
-            GrowthRespiration = value.Structural * (1 - DMConversionEfficiency.Value());
+            // GrowthRespiration with unit CO2 
+            // GrowthRespiration is calculated as 
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // CO2 (44/12).
+            double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12 / 30) - 1 * CarbonConcentration) * 44 / 12;
+            GrowthRespiration = (value.Structural) * growthRespFactor;
+
             Live.StructuralWt += value.Structural * DMConversionEfficiency.Value();
-            Allocated.StructuralWt = value.Structural;
+            Allocated.StructuralWt = value.Structural * DMConversionEfficiency.Value();
         }
         /// <summary>Sets the n allocation.</summary>
         public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
             Live.StructuralN += nitrogen.Structural;
+            Allocated.StructuralN = nitrogen.Structural;
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
         public double MaxNconc

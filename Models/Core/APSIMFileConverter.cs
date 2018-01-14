@@ -24,7 +24,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 20; } }
+        public static int LastestVersion { get { return 23; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -57,6 +57,16 @@ namespace Models.Core
         /// <returns>Returns true if something was changed.</returns>
         public static bool ConvertToLatestVersion(XmlNode rootNode, string fileName)
         {
+            return ConvertToVersion(rootNode, fileName, LastestVersion);
+        }
+
+        /// <summary>Converts XML to the latest version.</summary>
+        /// <param name="rootNode">The root node.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        /// <param name="toVersion">Version number to convert to</param>
+        /// <returns>Returns true if something was changed.</returns>
+        public static bool ConvertToVersion(XmlNode rootNode, string fileName, int toVersion)
+        {
             string fileVersionString = XmlUtilities.Attribute(rootNode, "Version");
             int fileVersion = 0;
             if (fileVersionString != string.Empty)
@@ -64,15 +74,15 @@ namespace Models.Core
 
             // Update the xml if not at the latest version.
             bool changed = false;
-            while (fileVersion < LastestVersion)
+            while (fileVersion < toVersion)
             {
                 changed = true;
 
                 // Find the method to call to upgrade the file by one version.
-                int toVersion = fileVersion + 1;
-                MethodInfo method = typeof(APSIMFileConverter).GetMethod("UpgradeToVersion" + toVersion, BindingFlags.NonPublic | BindingFlags.Static);
+                int versionFunction = fileVersion + 1;
+                MethodInfo method = typeof(APSIMFileConverter).GetMethod("UpgradeToVersion" + versionFunction, BindingFlags.NonPublic | BindingFlags.Static);
                 if (method == null)
-                    throw new Exception("Cannot find converter to go to version " + toVersion);
+                    throw new Exception("Cannot find converter to go to version " + versionFunction);
 
                 // Found converter method so call it.
                 method.Invoke(null, new object[] { rootNode, fileName });
@@ -108,29 +118,29 @@ namespace Models.Core
         /// <param name="node">The node to upgrade.</param>
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion1(XmlNode node, string fileName)
+    {
+        foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
         {
-            foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
-            {
-                XmlUtilities.Rename(seriesNode, "Title", "Name");
-                XmlUtilities.Move(seriesNode, "X/TableName", seriesNode, "TableName");
-                XmlUtilities.Move(seriesNode, "X/FieldName", seriesNode, "XFieldName");
-                XmlUtilities.Move(seriesNode, "Y/FieldName", seriesNode, "YFieldName");
-                XmlUtilities.Move(seriesNode, "X2/FieldName", seriesNode, "X2FieldName");
-                XmlUtilities.Move(seriesNode, "Y2/FieldName", seriesNode, "Y2FieldName");
+            XmlUtilities.Rename(seriesNode, "Title", "Name");
+            XmlUtilities.Move(seriesNode, "X/TableName", seriesNode, "TableName");
+            XmlUtilities.Move(seriesNode, "X/FieldName", seriesNode, "XFieldName");
+            XmlUtilities.Move(seriesNode, "Y/FieldName", seriesNode, "YFieldName");
+            XmlUtilities.Move(seriesNode, "X2/FieldName", seriesNode, "X2FieldName");
+            XmlUtilities.Move(seriesNode, "Y2/FieldName", seriesNode, "Y2FieldName");
 
-                bool showRegression = XmlUtilities.Value(seriesNode.ParentNode, "ShowRegressionLine") == "true";
-                if (showRegression)
-                    seriesNode.AppendChild(seriesNode.OwnerDocument.CreateElement("Regression"));
+            bool showRegression = XmlUtilities.Value(seriesNode.ParentNode, "ShowRegressionLine") == "true";
+            if (showRegression)
+                seriesNode.AppendChild(seriesNode.OwnerDocument.CreateElement("Regression"));
 
-                string seriesType = XmlUtilities.Value(seriesNode, "Type");
-                if (seriesType == "Line")
-                    XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
+            string seriesType = XmlUtilities.Value(seriesNode, "Type");
+            if (seriesType == "Line")
+                XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
 
-                XmlUtilities.DeleteValue(seriesNode, "X");
-                XmlUtilities.DeleteValue(seriesNode, "Y");
+            XmlUtilities.DeleteValue(seriesNode, "X");
+            XmlUtilities.DeleteValue(seriesNode, "Y");
 
-            }
         }
+    }
 
         /// <summary>Upgrades to version 2.</summary>
         /// <remarks>
@@ -180,7 +190,8 @@ namespace Models.Core
 
                 try
                 {
-                    double area = Convert.ToDouble(areaString);
+                    double area = Convert.ToDouble(areaString,
+                                                   System.Globalization.CultureInfo.InvariantCulture);
                     if (area <= 0)
                         XmlUtilities.SetValue(zoneNode, "Area", "1");
                 }
@@ -568,7 +579,7 @@ namespace Models.Core
             foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "Leaf"))
             {
                 XmlNode dmFunction = APSIMFileConverterUtilities.FindModelNode(n, "DMConversionEfficiencyFunction");
-                if (dmFunction!=null)
+                if (dmFunction != null)
                 {
                     XmlUtilities.SetValue(dmFunction, "Name", "DMConversionEfficiency");
                 }
@@ -619,7 +630,95 @@ namespace Models.Core
 
                 if (APSIMFileConverterUtilities.FindModelNode(n, "MaintenanceRespirationFunction") == null)
                     n.AppendChild(MRFnode);
-            }        
+            }
+        }
+
+        /// <summary>
+        /// Add RemobilisationCost to all organs
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion21(XmlNode node, string fileName)
+        {
+            List<XmlNode> nodeList = new List<XmlNode>();
+
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Root"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Leaf"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "ReproductiveOrgan"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "LeafCohortParameters"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Nodule"));
+
+            foreach (XmlNode n in nodeList)
+            {
+                XmlNode DMnode;
+                DMnode = XmlUtilities.CreateNode(node.OwnerDocument, "Constant", "");
+                XmlElement name = node.OwnerDocument.CreateElement("Name");
+                XmlElement element = node.OwnerDocument.CreateElement("FixedValue");
+                name.InnerText = "RemobilisationCost";
+                element.InnerText = "0";
+                DMnode.AppendChild(name);
+                DMnode.AppendChild(element);
+
+                if (APSIMFileConverterUtilities.FindModelNode(n, "RemobilisationCost") == null)
+                    n.AppendChild(DMnode);
+            }
+
+        }
+        /// <summary>
+        /// Upgrades to version 22. Alter MovingAverage Function
+        /// XProperty values.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion22(XmlNode node, string fileName)
+        {
+            string StartStage = "";
+            foreach (XmlNode EmergePhase in XmlUtilities.FindAllRecursivelyByType(node, "EmergingPhase"))
+            {
+                StartStage = XmlUtilities.Value(EmergePhase, "End");
+            }
+            APSIMFileConverterUtilities.RenameVariable(node, "InitialValue", "StageToStartMovingAverage");
+            foreach (XmlNode MovingAverageFunction in XmlUtilities.FindAllRecursivelyByType(node, "MovingAverageFunction"))
+            {
+                XmlUtilities.SetValue(MovingAverageFunction, "StageToStartMovingAverage", StartStage);
+            }
+
+        }
+
+        /// <summary>
+        /// Upgrades to version 23. Add CarbonConcentration property to all organs.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion23(XmlNode node, string fileName)
+        {
+            List<XmlNode> nodeList = new List<XmlNode>();
+
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Root"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Leaf"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "ReproductiveOrgan"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "LeafCohortParameters"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Nodule"));
+
+            foreach (XmlNode n in nodeList)
+            {
+                XmlNode DMnode;
+                DMnode = XmlUtilities.CreateNode(node.OwnerDocument, "Constant", "");
+                XmlElement name = node.OwnerDocument.CreateElement("Name");
+                XmlElement element = node.OwnerDocument.CreateElement("FixedValue");
+                name.InnerText = "CarbonConcentration";
+                element.InnerText = "0.4";
+                DMnode.AppendChild(name);
+                DMnode.AppendChild(element);
+
+                if (APSIMFileConverterUtilities.FindModelNode(n, "CarbonConcentration") == null)
+                    n.AppendChild(DMnode);
+            }
+
         }
     }
 }

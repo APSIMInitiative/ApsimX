@@ -341,6 +341,9 @@ namespace Models.PMF.Organs
             /// <summary>Modify senescence duration by age</summary>
             [Link]
             public IFunction SenescenceDurationAgeMultiplier = null;
+            /// <summary>The cost for remobilisation</summary>
+            [Link]
+            public IFunction RemobilisationCost = null;
         }
         #endregion
 
@@ -431,6 +434,20 @@ namespace Models.PMF.Organs
         //Variables that represent the number of primordia or nodes (double) in a particular state on an individual mainstem are called number variables (e.g NodeNo or PrimordiaNo suffix)
         //Variables that the number of leaves on a plant or a primary bud have Plant or Primary bud prefixes
 
+        /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
+        [XmlIgnore]
+        public double Nconc
+        {
+            get
+            {
+                if (Wt > 0.0)
+                    return N / Wt;
+                else
+                    return 0.0;
+            }
+        }
+
+
         /// <summary>Return the</summary>
         public double CohortCurrentRankCoverAbove
         {
@@ -457,7 +474,7 @@ namespace Models.PMF.Organs
         /// <Summary>Spcific leaf nitrogen</Summary>
         [Description("Specific leaf nitrogen")]
         [Units("g/m2")]
-        public double SpecificLeafNitrogen
+        public double SpecificNitrogen
         {
             get
             {
@@ -1001,6 +1018,7 @@ namespace Models.PMF.Organs
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
+            Structure.TipToAppear = 0;
             apexGroupAge.Clear();
             dryMatterSupply.Clear();
             dryMatterDemand.Clear();
@@ -1328,11 +1346,14 @@ namespace Models.PMF.Organs
         public override void SetDryMatterAllocation(BiomassAllocationType value)
         {
             // get DM lost by respiration (growth respiration)
-            GrowthRespiration = 0.0;
-            GrowthRespiration += value.Structural * (1.0 - DMConversionEfficiency.Value())
-                              + value.Storage * (1.0 - DMConversionEfficiency.Value())
-                              + value.Metabolic * (1.0 - DMConversionEfficiency.Value());
-
+            // GrowthRespiration with unit CO2 
+            // GrowthRespiration is calculated as 
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // CO2 (44/12).
+            double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12 / 30) - 1 * CarbonConcentration) * 44 / 12;
+            GrowthRespiration = (value.Structural + value.Storage + value.Metabolic) * growthRespFactor;
+            
             double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];
             double StartWt = Live.StructuralWt + Live.MetabolicWt + Live.StorageWt;
             //Structural DM allocation

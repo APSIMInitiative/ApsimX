@@ -360,41 +360,22 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
       <ShootLag>40</ShootLag>
       <ShootRate>1.5</ShootRate>
     </EmergingPhase>
-    <GenericPhase>
+    <NodeNumberPhase>
       <Name>Vegetative</Name>
-      <Memo>
-        <Name>Memo</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[The duration of the vegetative phase is set by a target Haun Stage for the occurence of Terminal Spikelet and the rate of leaf appearance.  ]]></MemoText>
-      </Memo>
       <VariableReference>
         <Name>ThermalTime</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
-      <MultiplyFunction>
-        <Name>Target</Name>
-        <VariableReference>
-          <Name>Phyllochron</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Structure].MeanPhyllochron.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>HSTS</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Structure].HaunStageTerminalSpikelet.Value()</VariableName>
-        </VariableReference>
+      <VariableReference>
+        <Name>CompletionNodeNumber</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-      </MultiplyFunction>
-      <Memo>
-        <Name>Memo1</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[HaunStageTerminalSpiklet decreases as vernalisation is accumulated and as photoperiod extends, capturing the effect of these responses on the duration of the Vegetative phase]]></MemoText>
-      </Memo>
+        <VariableName>[Structure].HaunStageTerminalSpikelet.Value()</VariableName>
+      </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>Emergence</Start>
       <End>TerminalSpikelet</End>
-    </GenericPhase>
+    </NodeNumberPhase>
     <LeafAppearancePhase>
       <Name>StemElongation</Name>
       <Memo>
@@ -926,7 +907,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       </DivideFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <NumberOfDays>5</NumberOfDays>
-      <InitialValue>0</InitialValue>
+      <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
     </MovingAverageFunction>
     <MovingAverageFunction>
       <Name>MeanPhyllochron</Name>
@@ -937,7 +918,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <NumberOfDays>300</NumberOfDays>
-      <InitialValue>80</InitialValue>
+      <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
     </MovingAverageFunction>
     <HoldFunction>
       <Name>FinalLeafNumber</Name>
@@ -1065,6 +1046,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
     </Constant>
     <Constant>
       <Name>InitialGrainProportion</Name>
@@ -1309,6 +1296,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       </OrganBiomassRemovalType>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
+    <Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1320,6 +1312,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
     </Constant>
     <Constant>
       <Name>KLModifier</Name>
@@ -1588,6 +1586,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       </PhaseLookup>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PartitionFractionDemandFunction>
+    <Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <Constant>
@@ -1679,6 +1682,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
         <Name>NReallocationFactor</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>1</FixedValue>
+      </Constant>
+      <Constant>
+        <Name>RemobilisationCost</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>0</FixedValue>
+        <Units />
       </Constant>
       <Constant>
         <Name>MaintenanceRespirationFunction</Name>
@@ -2281,6 +2290,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
     </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
     <VariableReference>
       <Name>ThermalTime</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2372,6 +2387,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <Name>ApexStandard</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </ApexStandard>
+    <Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -2443,6 +2463,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
     </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>    
     <Constant>
       <Name>NRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2584,6 +2610,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Spike].MinimumNConc.Value()</VariableName>
     </VariableReference>
+    <Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
@@ -2619,6 +2650,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>/d</Units>
+    </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
     </Constant>
     <LinearInterpolationFunction>
       <Name>MaximumNConc</Name>
@@ -2847,6 +2884,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Stem].MinimumNConc.Value()</VariableName>
     </VariableReference>
+    <Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <CompositeBiomass>
