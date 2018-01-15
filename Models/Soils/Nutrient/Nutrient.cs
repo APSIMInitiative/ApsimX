@@ -7,14 +7,33 @@
     using Models.SurfaceOM;
     using Models.Soils;
     using System.Collections.Generic;
+    using Models.Graph;
+    using System.Drawing;
 
     /// <summary>
     /// The soil nutrient model includes functionality for simulating pools of organmic matter and mineral nitrogen.  The processes for each are described below.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Nutrient : Model, INutrient
+    [ViewName("UserInterface.Views.DirectedGraphView")]
+    [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
+    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph
     {
+        private DirectedGraph _directedGraphInfo;
+
+        /// <summary>Get directed graph from model</summary>
+        public DirectedGraph DirectedGraphInfo
+        {
+            get
+            {
+                CalculateDirectedGraph();
+                return _directedGraphInfo;
+            }
+            set
+            {
+                _directedGraphInfo = value;
+            }
+        }
 
         /// <summary>
         /// Summary file Link
@@ -234,6 +253,77 @@
             }
 
             
+        }
+
+        /// <summary>Calculate / create a directed graph from model</summary>
+        public void CalculateDirectedGraph()
+        {
+            if (_directedGraphInfo == null)
+                _directedGraphInfo = new DirectedGraph();
+
+            _directedGraphInfo.Begin();
+
+            bool needAtmosphereNode = false;
+
+            foreach (NutrientPool pool in Apsim.Children(this, typeof(NutrientPool)))
+            {
+                _directedGraphInfo.AddNode(pool.Name, Color.LightGreen, Color.Black);
+                foreach (CarbonFlow cFlow in Apsim.Children(pool, typeof(CarbonFlow)))
+                {
+                    foreach (string destinationName in cFlow.destinationNames)
+                    {
+                        string destName = destinationName;
+                        if (destName == null)
+                        {
+                            destName = "Atmosphere";
+                            needAtmosphereNode = true;
+                        }
+                        _directedGraphInfo.AddArc(null, pool.Name, destName, Color.Black);
+
+                    }
+                }
+            }
+
+            foreach (Solute solute in Apsim.Children(this, typeof(Solute)))
+            {
+                _directedGraphInfo.AddNode(solute.Name, Color.LightCoral, Color.Black);
+                foreach (NFlow nitrogenFlow in Apsim.Children(solute, typeof(NFlow)))
+                {
+                    string destName = nitrogenFlow.destinationName;
+                    if (destName == null)
+                    {
+                        destName = "Atmosphere";
+                        needAtmosphereNode = true;
+                    }
+
+                    _directedGraphInfo.AddArc(null, nitrogenFlow.sourceName, destName, Color.Black);
+                }
+            }
+
+            if (needAtmosphereNode)
+                _directedGraphInfo.AddNode("Atmosphere", Color.White, Color.White);
+
+            _directedGraphInfo.End();
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                tags.Add(new AutoDocumentation.Heading("Structure of nutrient model", headingLevel+1));
+                tags.Add(_directedGraphInfo);
+
+                // write description of this class.
+                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent, true);
+
+            }
         }
     }
 }
