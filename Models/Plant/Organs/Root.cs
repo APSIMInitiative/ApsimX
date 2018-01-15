@@ -3,6 +3,7 @@ namespace Models.PMF.Organs
     using APSIM.Shared.Utilities;
     using Library;
     using Models.Core;
+    using Models.Interfaces;
     using Models.PMF.Functions;
     using Models.PMF.Interfaces;
     using Models.Soils;
@@ -60,144 +61,200 @@ namespace Models.PMF.Organs
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Root : BaseOrgan, IWaterNitrogenUptake, IArbitration
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan
     {
-        #region Links
-
-        #endregion
-
-        #region Parameters
-        /// <summary>The DM demand function</summary>
+        /// <summary>The plant</summary>
         [Link]
-        [Units("g/m2/d")]
-        IFunction DMDemandFunction = null;
+        protected Plant Plant = null;
 
-        /// <summary>Link to the KNO3 link</summary>
+        /// <summary>The surface organic matter model</summary>
         [Link]
-        IFunction KNO3 = null;
-
-        /// <summary>Link to the KNH4 link</summary>
-        [Link]
-        IFunction KNH4 = null;
-
-        /// <summary>Soil water factor for N Uptake</summary>
-        [Link]
-        IFunction NUptakeSWFactor = null;
-
-        /// <summary>Gets or sets the initial biomass dry matter weight</summary>
-        [Link]
-        [Units("g/plant")]
-        IFunction InitialDM = null;
-
-        /// <summary>Gets or sets the specific root length</summary>
-        [Link]
-        [Units("m/g")]
-        IFunction SpecificRootLength = null;
-
-        /// <summary>The nitrogen demand switch</summary>
-        [Link]
-        IFunction NitrogenDemandSwitch = null;
-
-        /// <summary>The N retranslocation factor</summary>
-        [Link(IsOptional = true)]
-        [Units("/d")]
-        IFunction NRetranslocationFactor = null;
-
-        /// <summary>The N reallocation factor</summary>
-        [Link(IsOptional = true)]
-        [Units("/d")]
-        IFunction NReallocationFactor = null;
-
-        /// <summary>The DM retranslocation factor</summary>
-        [Link(IsOptional = true)]
-        [Units("/d")]
-        IFunction DMRetranslocationFactor = null;
-
-        /// <summary>The DM reallocation factor</summary>
-        [Link(IsOptional = true)]
-        [Units("/d")]
-        IFunction DMReallocationFactor = null;
-
-        /// <summary>The biomass senescence rate</summary>
-        [Link]
-        [Units("/d")]
-        IFunction SenescenceRate = null;
-
-        /// <summary>The root front velocity</summary>
-        [Link]
-        [Units("mm/d")]
-        public IFunction RootFrontVelocity = null;
-
-        /// <summary>The DM structural fraction</summary>
-        [Link(IsOptional = true)]
-        [Units("g/g")]
-        IFunction StructuralFraction = null;
-
-        /// <summary>The maximum N concentration</summary>
-        [Link]
-        [Units("g/g")]
-        IFunction MaximumNConc = null;
-
-        /// <summary>The minimum N concentration</summary>
-        [Link]
-        [Units("g/g")]
-        IFunction MinimumNConc = null;
-
-        /// <summary>The critical N concentration</summary>
-        [Link(IsOptional = true)]
-        [Units("g/g")]
-        IFunction CriticalNConc = null;
-
-        /// <summary>The maximum daily N uptake</summary>
-        [Link]
-        [Units("kg N/ha")]
-        IFunction MaxDailyNUptake = null;
-
-        /// <summary>The kl modifier</summary>
-        [Link]
-        [Units("0-1")]
-        IFunction KLModifier = null;
-
-        /// <summary>The Maximum Root Depth</summary>
-        [Link]
-        [Units("mm")]
-        public IFunction MaximumRootDepth = null;
-        
-        /// <summary>Dry matter efficiency function</summary>
-        [Link]
-        public IFunction DMConversionEfficiency = null;
-
-        /// <summary>The cost for remobilisation</summary>
-        [Link]
-        public IFunction RemobilisationCost = null;
+        public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
-        public BiomassRemoval biomassRemovalModel = null;
+        private BiomassRemoval biomassRemovalModel = null;
+        
+        /// <summary>The DM demand function</summary>
+        [ChildLinkByName]
+        [Units("g/m2/d")]
+        private IFunction dmDemandFunction = null;
+
+        /// <summary>Link to the KNO3 link</summary>
+        [ChildLinkByName]
+        private IFunction kno3 = null;
+
+        /// <summary>Link to the KNH4 link</summary>
+        [ChildLinkByName]
+        private IFunction knh4 = null;
+
+        /// <summary>Soil water factor for N Uptake</summary>
+        [ChildLinkByName]
+        private IFunction nUptakeSWFactor = null;
+
+        /// <summary>Gets or sets the initial biomass dry matter weight</summary>
+        [ChildLinkByName]
+        [Units("g/plant")]
+        private IFunction initialDM = null;
+
+        /// <summary>Gets or sets the specific root length</summary>
+        [ChildLinkByName]
+        [Units("m/g")]
+        private IFunction specificRootLength = null;
+
+        /// <summary>The nitrogen demand switch</summary>
+        [ChildLinkByName]
+        private IFunction nitrogenDemandSwitch = null;
+
+        /// <summary>The N retranslocation factor</summary>
+        [ChildLinkByName(IsOptional = true)]
+        [Units("/d")]
+        private IFunction nRetranslocationFactor = null;
+
+        /// <summary>The N reallocation factor</summary>
+        [ChildLinkByName(IsOptional = true)]
+        [Units("/d")]
+        private IFunction nReallocationFactor = null;
+
+        /// <summary>The DM retranslocation factor</summary>
+        [ChildLinkByName(IsOptional = true)]
+        [Units("/d")]
+        private IFunction dmRetranslocationFactor = null;
+
+        /// <summary>The DM reallocation factor</summary>
+        [ChildLinkByName(IsOptional = true)]
+        [Units("/d")]
+        private IFunction dmReallocationFactor = null;
+
+        /// <summary>The biomass senescence rate</summary>
+        [ChildLinkByName]
+        [Units("/d")]
+        private IFunction senescenceRate = null;
+
+        /// <summary>The root front velocity</summary>
+        [ChildLinkByName]
+        [Units("mm/d")]
+        private IFunction rootFrontVelocity = null;
+
+        /// <summary>The DM structural fraction</summary>
+        [ChildLinkByName(IsOptional = true)]
+        [Units("g/g")]
+        private IFunction structuralFraction = null;
+
+        /// <summary>The maximum N concentration</summary>
+        [ChildLinkByName]
+        [Units("g/g")]
+        private IFunction maximumNConc = null;
+
+        /// <summary>The minimum N concentration</summary>
+        [ChildLinkByName]
+        [Units("g/g")]
+        private IFunction minimumNConc = null;
+
+        /// <summary>The critical N concentration</summary>
+        [ChildLinkByName(IsOptional = true)]
+        [Units("g/g")]
+        private IFunction criticalNConc = null;
+
+        /// <summary>The maximum daily N uptake</summary>
+        [ChildLinkByName]
+        [Units("kg N/ha")]
+        private IFunction maxDailyNUptake = null;
+
+        /// <summary>The kl modifier</summary>
+        [ChildLinkByName]
+        [Units("0-1")]
+        private IFunction klModifier = null;
+
+        /// <summary>The Maximum Root Depth</summary>
+        [ChildLinkByName]
+        [Units("mm")]
+        private IFunction maximumRootDepth = null;
+        
+        /// <summary>Dry matter efficiency function</summary>
+        [ChildLinkByName]
+        private IFunction dmConversionEfficiency = null;
+
+        /// <summary>The cost for remobilisation</summary>
+        [ChildLinkByName]
+        private IFunction remobilisationCost = null;
+
+        /// <summary>The proportion of biomass respired each day</summary> 
+        [ChildLinkByName]
+        [Units("/d")]
+        private IFunction maintenanceRespirationFunction = null;
+
+        /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
+        private bool needToRecalculateLiveDead = true;
+
+        /// <summary>Live biomass</summary>
+        private Biomass liveBiomass = new Biomass();
+
+        /// <summary>Dead biomass</summary>
+        private Biomass deadBiomass = new Biomass();
+
+        /// <summary>The dry matter supply</summary>
+        private BiomassSupplyType dryMatterSupply = new BiomassSupplyType();
+
+        /// <summary>The nitrogen supply</summary>
+        private BiomassSupplyType nitrogenSupply = new BiomassSupplyType();
+
+        /// <summary>The dry matter demand</summary>
+        private BiomassPoolType dryMatterDemand = new BiomassPoolType();
+
+        /// <summary>Structural nitrogen demand</summary>
+        private BiomassPoolType nitrogenDemand = new BiomassPoolType();
+
+        /// <summary>The DM supply for retranslocation</summary>
+        private double dmRetranslocationSupply = 0.0;
+
+        /// <summary>The DM supply for reallocation</summary>
+        private double dmMReallocationSupply = 0.0;
+
+        /// <summary>The N supply for retranslocation</summary>
+        private double nRetranslocationSupply = 0.0;
+
+        /// <summary>The N supply for reallocation</summary>
+        private double nReallocationSupply = 0.0;
+
+        /// <summary>The structural DM demand</summary>
+        private double structuralDMDemand = 0.0;
+
+        /// <summary>The non structural DM demand</summary>
+        private double storageDMDemand = 0.0;
+
+        /// <summary>The metabolic DM demand</summary>
+        private double metabolicDMDemand = 0.0;
+
+        /// <summary>The structural N demand</summary>
+        private double structuralNDemand = 0.0;
+
+        /// <summary>The non structural N demand</summary>
+        private double storageNDemand = 0.0;
+
+        /// <summary>The metabolic N demand</summary>
+        private double metabolicNDemand = 0.0;
+
+        /// <summary>Constructor</summary>
+        public Root()
+        {
+            Zones = new List<ZoneState>();
+            ZoneNamesToGrowRootsIn = new List<string>();
+            ZoneRootDepths = new List<double>();
+            ZoneInitialDM = new List<double>();
+        }
 
         /// <summary>A list of other zone names to grow roots in</summary>
+        [XmlIgnore]
         public List<string> ZoneNamesToGrowRootsIn { get; set; }
 
         /// <summary>The root depths for each addition zone.</summary>
+        [XmlIgnore]
         public List<double> ZoneRootDepths { get; set; }
 
         /// <summary>The live weights for each addition zone.</summary>
+        [XmlIgnore]
         public List<double> ZoneInitialDM { get; set; }
-
-        /// <summary>The proportion of biomass respired each day</summary> 
-        [Link]
-        [Units("/d")]
-        public IFunction MaintenanceRespirationFunction = null;
-
-        private double BiomassToleranceValue = 0.0000000001;   // 10E-10
-        
-        /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
-        private bool needToRecalculateLiveDead = true;
-        private Biomass liveBiomass = new Biomass();
-        private Biomass deadBiomass = new Biomass();
-        #endregion
-
-        #region States
 
         /// <summary>A list of all zones to grow roots in</summary>
         [XmlIgnore]
@@ -206,40 +263,6 @@ namespace Models.PMF.Organs
         /// <summary>The zone where the plant is growing</summary>
         [XmlIgnore]
         public ZoneState PlantZone { get; set; }
-
-        /// <summary>The DM supply for retranslocation</summary>
-        private double DMRetranslocationSupply = 0.0;
-
-        /// <summary>The DM supply for reallocation</summary>
-        private double DMReallocationSupply = 0.0;
-
-        /// <summary>The N supply for retranslocation</summary>
-        private double NRetranslocationSupply = 0.0;
-
-        /// <summary>The N supply for reallocation</summary>
-        private double NReallocationSupply = 0.0;
-
-        /// <summary>The structural DM demand</summary>
-        private double StructuralDMDemand = 0.0;
-
-        /// <summary>The non structural DM demand</summary>
-        private double StorageDMDemand = 0.0;
-
-        /// <summary>The metabolic DM demand</summary>
-        private double MetabolicDMDemand = 0.0;
-
-        /// <summary>The structural N demand</summary>
-        private double StructuralNDemand = 0.0;
-
-        /// <summary>The non structural N demand</summary>
-        private double StorageNDemand = 0.0;
-
-        /// <summary>The metabolic N demand</summary>
-        private double MetabolicNDemand = 0.0;
-
-        #endregion
-
-        #region Outputs
 
         /// <summary>Gets the live biomass.</summary>
         [XmlIgnore]
@@ -265,24 +288,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Recalculate live and dead biomass if necessary</summary>
-        private void RecalculateLiveDead()
-        {
-            if (needToRecalculateLiveDead)
-            {
-                needToRecalculateLiveDead = false;
-                liveBiomass.Clear();
-                deadBiomass.Clear();
-                if (PlantZone != null)
-                {
-                    foreach (Biomass b in PlantZone.LayerLive)
-                        liveBiomass.Add(b);
-                    foreach (Biomass b in PlantZone.LayerDead)
-                        deadBiomass.Add(b);
-                }
-            }
-        }
-
         /// <summary>Gets the root length density.</summary>
         [Units("mm/mm3")]
         public double[] LengthDensity
@@ -290,14 +295,9 @@ namespace Models.PMF.Organs
             get
             {
                 double[] value;
-                if (PlantZone == null)
-                    value = new double[0];
-                else
-                {
-                    value = new double[PlantZone.soil.Thickness.Length];
-                    for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
-                        value[i] = PlantZone.LayerLive[i].Wt * SpecificRootLength.Value() * 1000 / 1000000 / PlantZone.soil.Thickness[i];
-                }
+                value = new double[PlantZone.soil.Thickness.Length];
+                for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
+                    value[i] = PlantZone.LayerLive[i].Wt * specificRootLength.Value() * 1000 / 1000000 / PlantZone.soil.Thickness[i];
                 return value;
             }
         }
@@ -314,15 +314,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Root depth.</summary>
         [XmlIgnore]
-        public double Depth { get { return (PlantZone != null )? PlantZone.Depth:0; } }
+        public double Depth { get { return PlantZone.Depth; } }
 
         /// <summary>Layer live</summary>
         [XmlIgnore]
-        public Biomass[] LayerLive { get { if (PlantZone != null) return PlantZone.LayerLive; else return new Biomass[0]; } }
+        public Biomass[] LayerLive { get { return PlantZone.LayerLive; } }
 
         /// <summary>Layer dead.</summary>
         [XmlIgnore]
-        public Biomass[] LayerDead { get { if (PlantZone != null) return PlantZone.LayerDead; else return new Biomass[0]; } }
+        public Biomass[] LayerDead { get { return PlantZone.LayerDead; } }
 
         /// <summary>Gets or sets the water uptake.</summary>
         [Units("mm")]
@@ -358,44 +358,89 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double[] RWC { get; private set; }
 
-        #endregion
-
-        #region Functions
-
-        /// <summary>Constructor</summary>
-        public Root()
+        /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
+        [Units("0-1")]
+        public double WaterTensionFactor
         {
-            Zones = new List<ZoneState>();
-            ZoneNamesToGrowRootsIn = new List<string>();
-            ZoneRootDepths = new List<double>();
-            ZoneInitialDM = new List<double>();
-        }
-
-        /// <summary>Initialise all zones.</summary>
-        private void InitialiseZones()
-        {
-            Zones.Clear();
-            Zones.Add(PlantZone);
-            if (ZoneRootDepths.Count != ZoneNamesToGrowRootsIn.Count ||
-                ZoneRootDepths.Count != ZoneInitialDM.Count)
-                throw new Exception("The root zone variables (ZoneRootDepths, ZoneNamesToGrowRootsIn, ZoneInitialDM) need to have the same number of values");
-
-            for (int i = 0; i < ZoneNamesToGrowRootsIn.Count; i++)
+            get
             {
-                Zone zone = Apsim.Find(this, ZoneNamesToGrowRootsIn[i]) as Zone;
-                if (zone != null)
-                {
-                    Soil soil = Apsim.Find(zone, typeof(Soil)) as Soil;
-                    if (soil == null)
-                        throw new Exception("Cannot find soil in zone: " + zone.Name);
-                    if (soil.Crop(Plant.Name) == null)
-                        throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
-                    ZoneState newZone = new ZoneState(Plant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, MaximumNConc.Value());
-                    Zones.Add(newZone);
-                }
+                double MeanWTF = 0;
+
+                double liveWt = Live.Wt;
+                if (liveWt > 0)
+                    foreach (ZoneState Z in Zones)
+                    {
+                        double[] paw = Z.soil.PAW;
+                        double[] pawc = Z.soil.PAWC;
+                        Biomass[] layerLiveForZone = Z.LayerLive;
+                        for (int i = 0; i < Z.LayerLive.Length; i++)
+                            MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(2 * paw[i] / pawc[i], 0, 1);
+                    }
+
+                return MeanWTF;
             }
-            needToRecalculateLiveDead = true;
         }
+
+        /// <summary>Gets or sets the minimum nconc.</summary>
+        public double MinNconc { get { return minimumNConc.Value(); } }
+
+        /// <summary>Gets the total biomass</summary>
+        public Biomass Total { get { return Live + Dead; } }
+
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
+
+        /// <summary>Gets or sets the n fixation cost.</summary>
+        [XmlIgnore]
+        public double NFixationCost { get { return 0; } }
+
+        /// <summary>Growth Respiration</summary>
+        /// [Units("CO_2")]
+        public double GrowthRespiration { get; set; }
+
+        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
+        public double MaintenanceRespiration { get; set; }
+
+        /// <summary>Carbon concentration</summary>
+        /// [Units("-")]
+        public double CarbonConcentration { get; set; }
+
+        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
+        [XmlIgnore]
+        public Biomass Allocated { get; set; }
+
+        /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
+        [XmlIgnore]
+        public Biomass Senesced { get; set; }
+
+        /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
+        [XmlIgnore]
+        public Biomass Detached { get; set; }
+
+        /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public Biomass Removed { get; set; }
+
+        /// <summary>Gets the dry matter supply.</summary>
+        [XmlIgnore]
+        public BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
+        
+        /// <summary>Gets dry matter demand.</summary>
+        [XmlIgnore]
+        public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
+
+        /// <summary>Gets the nitrogen supply.</summary>
+        [XmlIgnore]
+        public BiomassSupplyType NSupply { get { return nitrogenSupply; } }
+        
+        /// <summary>Gets the nitrogen demand.</summary>
+        [XmlIgnore]
+        public BiomassPoolType NDemand { get { return nitrogenDemand; } }
 
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
@@ -427,199 +472,56 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Called when crop is ending</summary>
-        [EventSubscribe("PlantEnding")]
-        protected void DoPlantEnding(object sender, EventArgs e)
-        {
-            //Send all root biomass to soil FOM
-            DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
-            Clear();
-        }
-
-        /// <summary>Clears this instance.</summary>
-        protected void Clear()
-        {
-            Live.Clear();
-            Dead.Clear();
-            PlantZone.Clear();
-            Zones.Clear();
-            needToRecalculateLiveDead = true;
-        }
-
-        /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
-        [Units("0-1")]
-        public double WaterTensionFactor
-        {
-            get
-            {
-                double MeanWTF = 0;
-
-                double liveWt = Live.Wt;
-                if (liveWt > 0)
-                    foreach (ZoneState Z in Zones)
-                    {
-                        double[] paw = Z.soil.PAW;
-                        double[] pawc = Z.soil.PAWC;
-                        Biomass[] layerLiveForZone = Z.LayerLive;
-                        for (int i = 0; i < Z.LayerLive.Length; i++)
-                            MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(2 * paw[i] / pawc[i], 0, 1);
-                    }
-
-                return MeanWTF;
-            }
-        }
-
-        #endregion
-
-        #region Event Handlers
-
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        /// <exception cref="ApsimXException">Cannot find a soil crop parameterisation for  + Name</exception>
-        [EventSubscribe("Commencing")]
-        private new void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
-            if (soil == null)
-                throw new Exception("Cannot find soil");
-            if (soil.Crop(Plant.Name) == null && soil.Weirdo == null)
-                throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
-
-            PlantZone = new ZoneState(Plant, this, soil, 0, InitialDM.Value(), Plant.Population, MaximumNConc.Value());
-            Zones = new List<ZoneState>();
-            base.OnSimulationCommencing(sender, e);
-        }
-
-        /// <summary>Called when crop is sown</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowPlant2Type data)
-        {
-            if (data.Plant == Plant)
-            {
-                PlantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value(), Plant.Population, MaximumNConc.Value());
-                InitialiseZones();
-                needToRecalculateLiveDead = true;
-            }
-        }
-
-        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantGrowth")]
-        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-        {
-            if (Plant.IsEmerged)
-            {
-                DoSupplyCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
-            }
-        }
-
-        /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
-        public void DoSupplyCalculations()
-        {
-            DMReallocationSupply = AvailableDMReallocation();
-            DMRetranslocationSupply = AvailableDMRetranslocation();
-            NReallocationSupply = AvailableNReallocation();
-            NRetranslocationSupply = AvailableNRetranslocation();
-        }
-
-        /// <summary>Does the nutrient allocations.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantGrowth")]
-        private void OnDoActualPlantGrowth(object sender, EventArgs e)
-        {
-            if (Plant.IsAlive)
-            {
-                foreach (ZoneState Z in Zones)
-                    Z.GrowRootDepth();
-                // Do Root Senescence
-                DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value() });
-            }
-            needToRecalculateLiveDead = false;
-            // Do maintenance respiration
-            MaintenanceRespiration = 0;
-            MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
-            Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
-            MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
-            Live.StorageWt *= (1 - MaintenanceRespirationFunction.Value());
-            needToRecalculateLiveDead = true;
-        }
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
-        {
-            Biomass total = Live + Dead;
-
-            if (total.Wt > 0.0)
-            {
-                Detached.Add(Live);
-                Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
-            }
-            Clear();
-        }
-
-        #endregion
-
-        #region IArbitrator interface
-
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public override BiomassSupplyType CalculateDryMatterSupply()
+        public BiomassSupplyType CalculateDryMatterSupply()
         {
             dryMatterSupply.Fixation = 0.0;
-            dryMatterSupply.Retranslocation = DMRetranslocationSupply;
-            dryMatterSupply.Reallocation = DMReallocationSupply;
+            dryMatterSupply.Retranslocation = dmRetranslocationSupply;
+            dryMatterSupply.Reallocation = dmMReallocationSupply;
             return dryMatterSupply;
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public override BiomassSupplyType CalculateNitrogenSupply()
+        public BiomassSupplyType CalculateNitrogenSupply()
         {
             nitrogenSupply.Fixation = 0.0;
             nitrogenSupply.Uptake = 0.0;
-            nitrogenSupply.Retranslocation = NRetranslocationSupply;
-            nitrogenSupply.Reallocation = NReallocationSupply;
+            nitrogenSupply.Retranslocation = nRetranslocationSupply;
+            nitrogenSupply.Reallocation = nReallocationSupply;
 
             return nitrogenSupply;
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public override BiomassPoolType CalculateDryMatterDemand()
+        public BiomassPoolType CalculateDryMatterDemand()
         {
             if (Plant.SowingData.Depth < PlantZone.Depth)
             {
-                StructuralDMDemand = DemandedDMStructural();
-                StorageDMDemand = DemandedDMStorage();
-                TotalDMDemand = StructuralDMDemand + StorageDMDemand + MetabolicDMDemand;
+                structuralDMDemand = DemandedDMStructural();
+                storageDMDemand = DemandedDMStorage();
+                TotalDMDemand = structuralDMDemand + storageDMDemand + metabolicDMDemand;
                 ////This sum is currently not necessary as demand is not calculated on a layer basis.
                 //// However it might be some day... and can consider non structural too
             }
 
-            dryMatterDemand.Structural = StructuralDMDemand;
-            dryMatterDemand.Storage = StorageDMDemand;
+            dryMatterDemand.Structural = structuralDMDemand;
+            dryMatterDemand.Storage = storageDMDemand;
 
             return dryMatterDemand;
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public override BiomassPoolType CalculateNitrogenDemand()
+        public BiomassPoolType CalculateNitrogenDemand()
         {
             // This is basically the old/original function with added metabolicN.
             // Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum.
 
-            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value();
-            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value() : CriticalNConc.Value();
+            double NitrogenSwitch = (nitrogenDemandSwitch == null) ? 1.0 : nitrogenDemandSwitch.Value();
+            double criticalN = (criticalNConc == null) ? minimumNConc.Value() : criticalNConc.Value();
 
-            StructuralNDemand = 0.0;
-            MetabolicNDemand = 0.0;
-            StorageNDemand = 0.0;
+            structuralNDemand = 0.0;
+            metabolicNDemand = 0.0;
+            storageNDemand = 0.0;
             foreach (ZoneState Z in Zones)
             {
                 Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
@@ -629,103 +531,22 @@ namespace Models.PMF.Organs
                 double NDeficit = 0.0;
                 for (int i = 0; i < Z.LayerLive.Length; i++)
                 {
-                    Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * MinimumNConc.Value() * NitrogenSwitch;
-                    NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
+                    Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * minimumNConc.Value() * NitrogenSwitch;
+                    NDeficit = Math.Max(0.0, maximumNConc.Value() * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
                     Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
 
-                    StructuralNDemand += Z.StructuralNDemand[i];
-                    StorageNDemand += Z.StorageNDemand[i];
+                    structuralNDemand += Z.StructuralNDemand[i];
+                    storageNDemand += Z.StorageNDemand[i];
                 }
             }
-            nitrogenDemand.Structural = StructuralNDemand;
-            nitrogenDemand.Storage = StorageNDemand;
-            nitrogenDemand.Metabolic = MetabolicNDemand;
+            nitrogenDemand.Structural = structuralNDemand;
+            nitrogenDemand.Storage = storageNDemand;
+            nitrogenDemand.Metabolic = metabolicNDemand;
             return nitrogenDemand;
         }
 
-        /// <summary>Computes the amount of structural DM demanded.</summary>
-        public double DemandedDMStructural()
-        {
-            if (DMConversionEfficiency.Value() > 0.0)
-            {
-                double demandedDM = DMDemandFunction.Value();
-                if (StructuralFraction != null)
-                    demandedDM *= StructuralFraction.Value() / DMConversionEfficiency.Value();
-                else
-                    demandedDM /= DMConversionEfficiency.Value();
-
-                return demandedDM;
-            }
-            // Conversion efficiency is zero!!!!
-            return 0.0;
-        }
-
-        /// <summary>Computes the amount of non structural DM demanded.</summary>
-        public double DemandedDMStorage()
-        {
-            if ((DMConversionEfficiency.Value() > 0.0) && (StructuralFraction != null))
-            {
-                double rootLiveStructuralWt = 0.0;
-                double rootLiveStorageWt = 0.0;
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                    {
-                        rootLiveStructuralWt += Z.LayerLive[i].StructuralWt;
-                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
-                    }
-
-                double theoreticalMaximumDM = (rootLiveStructuralWt + StructuralDMDemand) / StructuralFraction.Value();
-                double baseAllocated = rootLiveStructuralWt + rootLiveStorageWt + StructuralDMDemand;
-                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency.Value();
-                return demandedDM;
-            }
-            // Either there is no Storage fraction or conversion efficiency is zero!!!!
-            return 0.0;
-        }
-
-        /// <summary>Computes the amount of DM available for retranslocation.</summary>
-        public double AvailableDMRetranslocation()
-        {
-            if (DMRetranslocationFactor != null)
-            {
-                double rootLiveStorageWt = 0.0;
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
-
-                double availableDM = Math.Max(0.0, rootLiveStorageWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
-                if (availableDM < -BiomassToleranceValue)
-                    throw new Exception("Negative DM retranslocation value computed for " + Name);
-
-                return availableDM;
-            }
-            else
-            { // By default retranslocation is turned off!!!!
-                return 0.0;
-            }
-        }
-
-        /// <summary>Computes the amount of DM available for reallocation.</summary>
-        public double AvailableDMReallocation()
-        {
-            if (DMReallocationFactor != null)
-            {
-                double rootLiveStorageWt = 0.0;
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
-
-                double availableDM = rootLiveStorageWt * SenescenceRate.Value() * DMReallocationFactor.Value();
-                if (availableDM < -BiomassToleranceValue)
-                    throw new Exception("Negative DM reallocation value computed for " + Name);
-                return availableDM;
-            }
-            // By default reallocation is turned off!!!!
-            return 0.0;
-        }
-
         /// <summary>Sets the dry matter potential allocation.</summary>
-        public override void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
+        public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
             if (PlantZone.Uptake == null)
                 throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
@@ -733,7 +554,7 @@ namespace Models.PMF.Organs
             if (PlantZone.Depth <= 0)
                 return; //cannot allocate growth where no length
 
-            if (DMDemand.Structural == 0 && dryMatter.Structural > 0.000000000001)
+            if (dryMatterDemand.Structural == 0 && dryMatter.Structural > 0.000000000001)
                 throw new Exception("Invalid allocation of potential DM in" + Name);
 
 
@@ -757,21 +578,21 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the dry matter allocation.</summary>
-        public override void SetDryMatterAllocation(BiomassAllocationType dryMatter)
+        public void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
             double TotalRAw = 0;
             foreach (ZoneState Z in Zones)
                 TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
-            Allocated.StructuralWt = dryMatter.Structural * DMConversionEfficiency.Value();
-            Allocated.StorageWt = dryMatter.Storage * DMConversionEfficiency.Value();
-            Allocated.MetabolicWt = dryMatter.Metabolic * DMConversionEfficiency.Value();
+            Allocated.StructuralWt = dryMatter.Structural * dmConversionEfficiency.Value();
+            Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
+            Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
             // GrowthRespiration with unit CO2 
             // GrowthRespiration is calculated as 
             // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
             // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
             // CO2 (44/12).
-            double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12 / 30) - 1 * CarbonConcentration) * 44 / 12;
+            double growthRespFactor = ((1 / dmConversionEfficiency.Value()) * (12 / 30) - 1 * CarbonConcentration) * 44 / 12;
             GrowthRespiration = (Allocated.StructuralWt + Allocated.StorageWt + Allocated.MetabolicWt) * growthRespFactor;
             if (TotalRAw == 0 && Allocated.Wt > 0)
                 throw new Exception("Error trying to partition root biomass");
@@ -779,51 +600,6 @@ namespace Models.PMF.Organs
             foreach (ZoneState Z in Zones)
                 Z.PartitionRootMass(TotalRAw, Allocated.Wt);
             needToRecalculateLiveDead = true;
-        }
-
-        /// <summary>Computes the N amount available for retranslocation.</summary>
-        /// <remarks>This is limited to ensure Nconc does not go below MinimumNConc</remarks>
-        public double AvailableNRetranslocation()
-        {
-            if (NRetranslocationFactor != null)
-            {
-                double labileN = 0.0;
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                        labileN += Math.Max(0.0, Z.LayerLive[i].StorageN - Z.LayerLive[i].StorageWt * MinimumNConc.Value());
-
-                double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value();
-                if (availableN < -BiomassToleranceValue)
-                    throw new Exception("Negative N retranslocation value computed for " + Name);
-
-                return availableN;
-            }
-            else
-            {  // By default retranslocation is turned off!!!!
-                return 0.0;
-            }
-        }
-
-        /// <summary>Computes the N amount available for reallocation.</summary>
-        public double AvailableNReallocation()
-        {
-            if (NReallocationFactor != null)
-            {
-                double rootLiveStorageN = 0.0;
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveStorageN += Z.LayerLive[i].StorageN;
-
-                double availableN = rootLiveStorageN * SenescenceRate.Value() * NReallocationFactor.Value();
-                if (availableN < -BiomassToleranceValue)
-                    throw new Exception("Negative N reallocation value computed for " + Name);
-
-                return availableN;
-            }
-            else
-            {  // By default reallocation is turned off!!!!
-                return 0.0;
-            }
         }
 
         /// <summary>Gets the nitrogen supply from the specified zone.</summary>
@@ -857,16 +633,16 @@ namespace Models.PMF.Organs
                         double factorRootDepth = Math.Max(0, Math.Min(1, 1 - (accuDepth - Depth ) / thickness[layer]));
                         RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
                         RWC[layer] = Math.Max(0.0, Math.Min(RWC[layer], 1.0));
-                        double SWAF = NUptakeSWFactor.Value(layer);
+                        double SWAF = nUptakeSWFactor.Value(layer);
 
-                        double kno3 = KNO3.Value(layer);
+                        double kno3 = this.kno3.Value(layer);
                         double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (MaxDailyNUptake.Value() - NO3Uptake));
+                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxDailyNUptake.Value() - NO3Uptake));
                         NO3Uptake += NO3Supply[layer];
 
-                        double knh4 = KNH4.Value(layer);
+                        double knh4 = this.knh4.Value(layer);
                         double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (MaxDailyNUptake.Value() - NH4Uptake));
+                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxDailyNUptake.Value() - NH4Uptake));
                         NH4Uptake += NH4Supply[layer];
                     }
                 }
@@ -874,7 +650,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the n allocation.</summary>
-        public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
+        public void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
             double totalStructuralNDemand = 0;
             double totalNDemand = 0;
@@ -919,20 +695,6 @@ namespace Models.PMF.Organs
                 throw new Exception("Error in N Allocation: " + Name);
         }
 
-        /// <summary>Gets or sets the minimum nconc.</summary>
-        public override double MinNconc { get { return MinimumNConc.Value(); } }
-
-        /// <summary>Gets the total biomass</summary>
-        public Biomass Total { get { return Live + Dead; } }
-
-        /// <summary>Gets the total grain weight</summary>
-        [Units("g/m2")]
-        public double Wt { get { return Total.Wt; } }
-
-        /// <summary>Gets the total grain N</summary>
-        [Units("g/m2")]
-        public double N { get { return Total.N; } }
-
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         public double[] CalculateWaterSupply(ZoneWaterAndN zone)
@@ -954,7 +716,7 @@ namespace Models.PMF.Organs
                 {
                     if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
                     {
-                        supply[layer] = Math.Max(0.0, kl[layer] * KLModifier.Value(layer) *
+                        supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
                             (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
                     }
                 }
@@ -962,17 +724,312 @@ namespace Models.PMF.Organs
             }            
         }
 
-        #endregion
-
-        #region Biomass Removal
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="removal">The fractions of biomass to remove</param>
-        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType removal)
+        public void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType removal)
         {
             biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, removal, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
         }
-        #endregion
+
+        /// <summary>Initialise all zones.</summary>
+        private void InitialiseZones()
+        {
+            Zones.Clear();
+            Zones.Add(PlantZone);
+            if (ZoneRootDepths.Count != ZoneNamesToGrowRootsIn.Count ||
+                ZoneRootDepths.Count != ZoneInitialDM.Count)
+                throw new Exception("The root zone variables (ZoneRootDepths, ZoneNamesToGrowRootsIn, ZoneInitialDM) need to have the same number of values");
+
+            for (int i = 0; i < ZoneNamesToGrowRootsIn.Count; i++)
+            {
+                Zone zone = Apsim.Find(this, ZoneNamesToGrowRootsIn[i]) as Zone;
+                if (zone != null)
+                {
+                    Soil soil = Apsim.Find(zone, typeof(Soil)) as Soil;
+                    if (soil == null)
+                        throw new Exception("Cannot find soil in zone: " + zone.Name);
+                    if (soil.Crop(Plant.Name) == null)
+                        throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
+                    ZoneState newZone = new ZoneState(Plant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, maximumNConc.Value(),
+                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost);
+                    Zones.Add(newZone);
+                }
+            }
+            needToRecalculateLiveDead = true;
+        }
+
+        /// <summary>Clears this instance.</summary>
+        private void Clear()
+        {
+            Live.Clear();
+            Dead.Clear();
+            PlantZone.Clear();
+            Zones.Clear();
+            needToRecalculateLiveDead = true;
+        }
+
+        /// <summary>Recalculate live and dead biomass if necessary</summary>
+        private void RecalculateLiveDead()
+        {
+            if (needToRecalculateLiveDead)
+            {
+                needToRecalculateLiveDead = false;
+                liveBiomass.Clear();
+                deadBiomass.Clear();
+                foreach (Biomass b in PlantZone.LayerLive)
+                    liveBiomass.Add(b);
+                foreach (Biomass b in PlantZone.LayerDead)
+                    deadBiomass.Add(b);
+            }
+        }
+
+        /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
+        private void DoSupplyCalculations()
+        {
+            dmMReallocationSupply = AvailableDMReallocation();
+            dmRetranslocationSupply = AvailableDMRetranslocation();
+            nReallocationSupply = AvailableNReallocation();
+            nRetranslocationSupply = AvailableNRetranslocation();
+        }
+
+        /// <summary>Computes the amount of DM available for reallocation.</summary>
+        private double AvailableDMReallocation()
+        {
+            if (dmReallocationFactor != null)
+            {
+                double rootLiveStorageWt = 0.0;
+                foreach (ZoneState Z in Zones)
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
+
+                double availableDM = rootLiveStorageWt * senescenceRate.Value() * dmReallocationFactor.Value();
+                if (availableDM < -Util.BiomassToleranceValue)
+                    throw new Exception("Negative DM reallocation value computed for " + Name);
+                return availableDM;
+            }
+            // By default reallocation is turned off!!!!
+            return 0.0;
+        }
+
+        /// <summary>Computes the N amount available for retranslocation.</summary>
+        /// <remarks>This is limited to ensure Nconc does not go below MinimumNConc</remarks>
+        private double AvailableNRetranslocation()
+        {
+            if (nRetranslocationFactor != null)
+            {
+                double labileN = 0.0;
+                foreach (ZoneState Z in Zones)
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                        labileN += Math.Max(0.0, Z.LayerLive[i].StorageN - Z.LayerLive[i].StorageWt * minimumNConc.Value());
+
+                double availableN = Math.Max(0.0, labileN - nReallocationSupply) * nRetranslocationFactor.Value();
+                if (availableN < -Util.BiomassToleranceValue)
+                    throw new Exception("Negative N retranslocation value computed for " + Name);
+
+                return availableN;
+            }
+            else
+            {  // By default retranslocation is turned off!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Computes the N amount available for reallocation.</summary>
+        private double AvailableNReallocation()
+        {
+            if (nReallocationFactor != null)
+            {
+                double rootLiveStorageN = 0.0;
+                foreach (ZoneState Z in Zones)
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                        rootLiveStorageN += Z.LayerLive[i].StorageN;
+
+                double availableN = rootLiveStorageN * senescenceRate.Value() * nReallocationFactor.Value();
+                if (availableN < -Util.BiomassToleranceValue)
+                    throw new Exception("Negative N reallocation value computed for " + Name);
+
+                return availableN;
+            }
+            else
+            {  // By default reallocation is turned off!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Computes the amount of structural DM demanded.</summary>
+        private double DemandedDMStructural()
+        {
+            if (dmConversionEfficiency.Value() > 0.0)
+            {
+                double demandedDM = dmDemandFunction.Value();
+                if (structuralFraction != null)
+                    demandedDM *= structuralFraction.Value() / dmConversionEfficiency.Value();
+                else
+                    demandedDM /= dmConversionEfficiency.Value();
+
+                return demandedDM;
+            }
+            // Conversion efficiency is zero!!!!
+            return 0.0;
+        }
+
+        /// <summary>Computes the amount of non structural DM demanded.</summary>
+        private double DemandedDMStorage()
+        {
+            if ((dmConversionEfficiency.Value() > 0.0) && (structuralFraction != null))
+            {
+                double rootLiveStructuralWt = 0.0;
+                double rootLiveStorageWt = 0.0;
+                foreach (ZoneState Z in Zones)
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                    {
+                        rootLiveStructuralWt += Z.LayerLive[i].StructuralWt;
+                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
+                    }
+
+                double theoreticalMaximumDM = (rootLiveStructuralWt + structuralDMDemand) / structuralFraction.Value();
+                double baseAllocated = rootLiveStructuralWt + rootLiveStorageWt + structuralDMDemand;
+                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / dmConversionEfficiency.Value();
+                return demandedDM;
+            }
+            // Either there is no Storage fraction or conversion efficiency is zero!!!!
+            return 0.0;
+        }
+
+        /// <summary>Computes the amount of DM available for retranslocation.</summary>
+        private double AvailableDMRetranslocation()
+        {
+            if (dmRetranslocationFactor != null)
+            {
+                double rootLiveStorageWt = 0.0;
+                foreach (ZoneState Z in Zones)
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
+
+                double availableDM = Math.Max(0.0, rootLiveStorageWt - dmMReallocationSupply) * dmRetranslocationFactor.Value();
+                if (availableDM < -Util.BiomassToleranceValue)
+                    throw new Exception("Negative DM retranslocation value computed for " + Name);
+
+                return availableDM;
+            }
+            else
+            { // By default retranslocation is turned off!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        [EventSubscribe("PlantEnding")]
+        private void DoPlantEnding(object sender, EventArgs e)
+        {
+            //Send all root biomass to soil FOM
+            DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
+            Clear();
+        }
+
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="ApsimXException">Cannot find a soil crop parameterisation for  + Name</exception>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
+            if (soil == null)
+                throw new Exception("Cannot find soil");
+            if (soil.Crop(Plant.Name) == null && soil.Weirdo == null)
+                throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
+
+            PlantZone = new ZoneState(Plant, this, soil, 0, initialDM.Value(), Plant.Population, maximumNConc.Value(),
+                                      rootFrontVelocity, maximumRootDepth, remobilisationCost);
+            Zones = new List<ZoneState>();
+            Allocated = new PMF.Biomass();
+            Senesced = new Biomass();
+            Detached = new Biomass();
+            Removed = new Biomass();
+        }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+            {
+                Allocated = new PMF.Biomass();
+                Senesced = new Biomass();
+                Detached = new Biomass();
+                Removed = new Biomass();
+            }
+        }
+
+        /// <summary>Called when crop is sown</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+            if (data.Plant == Plant)
+            {
+                PlantZone.Initialise(Plant.SowingData.Depth, initialDM.Value(), Plant.Population, maximumNConc.Value());
+                InitialiseZones();
+                needToRecalculateLiveDead = true;
+            }
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            if (Plant.IsEmerged)
+            {
+                DoSupplyCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
+            }
+        }
+
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+            {
+                foreach (ZoneState Z in Zones)
+                    Z.GrowRootDepth();
+                // Do Root Senescence
+                DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
+            }
+            needToRecalculateLiveDead = false;
+            // Do maintenance respiration
+            MaintenanceRespiration = 0;
+            MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
+            Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
+            MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+            Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
+            needToRecalculateLiveDead = true;
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            Biomass total = Live + Dead;
+
+            if (total.Wt > 0.0)
+            {
+                Detached.Add(Live);
+                Detached.Add(Dead);
+                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
+            }
+            Clear();
+        }
 
     }
 }
