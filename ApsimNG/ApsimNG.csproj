@@ -131,10 +131,13 @@
     <Compile Include="Cloud\APSIMJob.cs" />
     <Compile Include="Cloud\ApsimJobManagerExtension.cs" />
     <Compile Include="Cloud\ApsimJobPrepExtension.cs" />
+    <Compile Include="Cloud\AzureCredentialsSetup.cs" />
     <Compile Include="Cloud\AzureResultsDownloader.cs" />
     <Compile Include="Cloud\BatchConstants.cs" />
     <Compile Include="Cloud\BatchCredentials.cs" />
+    <Compile Include="Cloud\DownloadWindow.cs" />
     <Compile Include="Cloud\FileUploader.cs" />
+    <Compile Include="Cloud\ICloudJobPresenter.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
     <Compile Include="Cloud\JobParameters.cs" />
     <Compile Include="Cloud\PoolSettings.cs" />
@@ -584,12 +587,12 @@
     <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DeploymentSupport\Windows\Bin\\gdk-sharp.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DeploymentSupport\Windows\Bin\glib-sharp.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="gtk-dotnet, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -599,7 +602,7 @@
     <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DeploymentSupport\Windows\Bin\gtk-sharp.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.6.3.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.6.3\lib\Net45\HtmlAgilityPack.dll</HintPath>

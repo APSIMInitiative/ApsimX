@@ -53,6 +53,7 @@ namespace UserInterface.Views
         private TreeViewColumn columnProgress;
         private TreeViewColumn columnStartTime;
         private TreeViewColumn columnEndTime;
+        private TreeViewColumn columnCpuTime;
 
         /** cells **/
         private CellRendererText cellName;
@@ -62,6 +63,7 @@ namespace UserInterface.Views
         private CellRendererText cellProgress;
         private CellRendererText cellStartTime;
         private CellRendererText cellEndTime;
+        private CellRendererText cellCpuTime;
 
         /** containers **/
         private VBox vboxPrimary;
@@ -126,18 +128,23 @@ namespace UserInterface.Views
         /// Button to terminate execution of the currently selected jobs.
         /// </summary>
         private Button btnStop;
-        
+
+        /// <summary>
+        /// Button to modify the cloud credentials.
+        /// </summary>
+        private Button btnSetup;
 
         /// <summary>
         /// Indices of the column headers. If columns are added or removed, change this.
         /// Name, ID, State, NumSims, Progress, StartTime, EndTime
         /// </summary>
-        private readonly string[] columnIndices = { "Name", "ID", "State", "NumSims", "Progress", "StartTime", "EndTime" };
-        private enum columns { Name, ID, State, NumSims, Progress, StartTime, EndTime };
+        private readonly string[] columnIndices = { "Name", "ID", "State", "NumSims", "Progress", "StartTime", "EndTime", "CpuTime" };
+        private enum columns { Name, ID, State, NumSims, Progress, StartTime, EndTime, CpuTime };
 
+        private const string TIMESPAN_FORMAT = @"dddd\d\ hh\h\ mm\m\ ss\s";
         public AzureJobDisplayView(ViewBase owner) : base(owner)
         {            
-            store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
+            store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
 
             // perhaps these should be stored as a list? then just iterate over them            
 
@@ -184,6 +191,12 @@ namespace UserInterface.Views
                 SortColumnId = (int)columns.EndTime
             };
 
+            columnCpuTime = new TreeViewColumn
+            {
+                Title = "CPU Time",
+                SortColumnId = (int)columns.CpuTime
+            };
+
             
             // create cells for each column
             cellName = new CellRendererText();
@@ -192,7 +205,8 @@ namespace UserInterface.Views
             cellNumSims = new CellRendererText();
             cellProgress = new CellRendererText();
             cellStartTime = new CellRendererText();
-            cellEndTime = new CellRendererText();            
+            cellEndTime = new CellRendererText();
+            cellCpuTime = new CellRendererText();
 
             // bind cells to column
             columnName.PackStart(cellName, false);
@@ -201,7 +215,8 @@ namespace UserInterface.Views
             columnNumSims.PackStart(cellNumSims, false);
             columnProgress.PackStart(cellProgress, false);
             columnStartTime.PackStart(cellStartTime, false);
-            columnEndTime.PackStart(cellEndTime, false);            
+            columnEndTime.PackStart(cellEndTime, false);
+            columnCpuTime.PackStart(cellCpuTime, false);
             
             columnName.AddAttribute(cellName, "text", (int)columns.Name);
             columnId.AddAttribute(cellId, "text", (int)columns.ID);
@@ -210,6 +225,7 @@ namespace UserInterface.Views
             columnProgress.AddAttribute(cellProgress, "text", (int)columns.Progress);
             columnStartTime.AddAttribute(cellStartTime, "text", (int)columns.StartTime);
             columnEndTime.AddAttribute(cellEndTime, "text", (int)columns.EndTime);
+            columnCpuTime.AddAttribute(cellCpuTime, "text", (int)columns.CpuTime);
 
             // bind columns to tree view
             tree = new TreeView();            
@@ -219,8 +235,8 @@ namespace UserInterface.Views
             tree.AppendColumn(columnNumSims);
             tree.AppendColumn(columnProgress);
             tree.AppendColumn(columnStartTime);
-            tree.AppendColumn(columnEndTime);            
-
+            tree.AppendColumn(columnEndTime);
+            tree.AppendColumn(columnCpuTime);
             // allow user to select multiple jobs simultaneously
             tree.Selection.Mode = SelectionMode.Multiple;
             tree.CanFocus = true;
@@ -242,6 +258,7 @@ namespace UserInterface.Views
             sort.SetSortFunc(Array.IndexOf(columnIndices, "Progress"), SortProgress);
             sort.SetSortFunc(Array.IndexOf(columnIndices, "StartTime"), SortStartDate);
             sort.SetSortFunc(Array.IndexOf(columnIndices, "EndTime"), SortEndDate);
+            sort.SetSortFunc((int)columns.CpuTime, SortCpuTime);
 
             // the tree holds the sorted, filtered data
             tree.Model = sort;
@@ -296,6 +313,10 @@ namespace UserInterface.Views
             HBox stopButtonContainer = new HBox();
             stopButtonContainer.PackStart(btnStop, false, true, 0);
 
+            btnSetup = new Button("Setup");
+            btnSetup.Clicked += BtnSetup_Click;
+            HBox setupButtonContainer = new HBox();
+            setupButtonContainer.PackStart(btnSetup, false, true, 0);
 
             chkSaveToCsv = new CheckButton("Export results to .csv file");
             chkSaveToCsv.Active = false;
@@ -331,6 +352,7 @@ namespace UserInterface.Views
             controlsContainer.PackStart(downloadButtonContainer, false, false, 0);
             controlsContainer.PackStart(stopButtonContainer, false, false, 0);
             controlsContainer.PackStart(deleteButtonContainer, false, false, 0);
+            controlsContainer.PackStart(setupButtonContainer, false, false, 0);
             controlsContainer.PackEnd(tblButtonContainer, false, false, 0);
 
             hboxPrimary = new HBox();
@@ -454,6 +476,20 @@ namespace UserInterface.Views
             return SortDateStrings(model, a, b, (int)columns.EndTime);
         }
 
+        private int SortCpuTime(TreeModel model, TreeIter a, TreeIter b)
+        {
+            int index = (int)columns.CpuTime;            
+            string str1 = (string)model.GetValue(a, index);
+            string str2 = (string)model.GetValue(b, index);
+            if (str1 == "" || str1 == null) return -1;
+            if (str2 == "" || str2 == null) return 1;
+
+            TimeSpan t1, t2;
+            if (!TimeSpan.TryParseExact(str1, TIMESPAN_FORMAT, null, out t1)) return -1;
+            if (!TimeSpan.TryParseExact(str2, TIMESPAN_FORMAT, null, out t2)) return 1;
+            return TimeSpan.Compare(t1, t2);
+        }
+
         /// <summary>
         /// Makes the job load progress bar invisible.
         /// </summary>
@@ -462,22 +498,25 @@ namespace UserInterface.Views
             progress.HideAll();
         }
 
+        public void ShowProgressBar()
+        {
+            progress.ShowAll();
+        }
+
         /// <summary>
         /// Displays the progress of downloading the job details from the cloud.
         /// </summary>
         /// <param name="proportion"></param>
         public void UpdateJobLoadStatus(double proportion)
         {
-            if (Math.Abs(proportion - 100) < Math.Pow(10, -6))
+            if (proportion > loadingProgress.Adjustment.Upper)
             {
-                // sometimes the UI crashes upon getting to this point ¯\_(ツ)_/¯                
-                progress.HideAll();
+                loadingProgress.Adjustment.Value = loadingProgress.Adjustment.Upper;
+            } else
+            {                
+                loadingProgress.Adjustment.Value = proportion;
             }
-            else if (proportion < Math.Pow(10, -6))
-            {                       
-                progress.ShowAll();
-            }            
-            loadingProgress.Adjustment.Value = proportion;
+            
         }
 
         /// <summary>
@@ -575,14 +614,15 @@ namespace UserInterface.Views
                 order = SortType.Ascending;
             }
             
-            store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
+            store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
             foreach (JobDetails job in jobs)
             {
                 string startTimeString = job.StartTime == null ? DateTime.UtcNow.ToLocalTime().ToString() : ((DateTime)job.StartTime).ToLocalTime().ToString();
                 string endTimeString = job.EndTime == null ? "" : ((DateTime)job.EndTime).ToLocalTime().ToString();
                 string dispName = myJobsOnly ? job.DisplayName : job.DisplayName + " (" + job.Owner + ")";
-                string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";
-                store.AppendValues(dispName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString);
+                string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";                                
+                string timeStr = job.CpuTime.ToString(TIMESPAN_FORMAT);
+                store.AppendValues(dispName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, timeStr);
             }
 
             filterOwner = new TreeModelFilter(store, null);
@@ -597,6 +637,7 @@ namespace UserInterface.Views
             sort.SetSortFunc((int)columns.Progress, SortProgress);
             sort.SetSortFunc((int)columns.StartTime, SortStartDate);
             sort.SetSortFunc((int)columns.EndTime, SortEndDate);
+            sort.SetSortFunc((int)columns.CpuTime, SortCpuTime);
             sort.SetSortColumnId(sortIndex, order);
             
             tree.Model = sort;            
@@ -724,6 +765,16 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Opens a window allowing the user to edit cloud account credentials.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnSetup_Click(object sender, EventArgs e)
+        {
+            Presenter.SetupCredentials();
+        }
+
+        /// <summary>
         /// Detaches all event handlers from view controls.
         /// </summary>
         public void RemoveEventHandlers()
@@ -732,9 +783,9 @@ namespace UserInterface.Views
             btnChangeDownloadDir.Clicked -= btnChangeDownloadDir_Click;
             btnDownload.Clicked -= BtnDownload_Click;
             btnDelete.Clicked -= BtnDelete_Click;
+            btnSetup.Clicked -= BtnSetup_Click;
             btnStop.Clicked -= BtnStop_Click;
             chkSaveToCsv.Toggled -= ChkSaveToCsv_Toggled;
-
         }
         /// <summary>
         /// Event handler for the click event on the download job button. 
@@ -743,7 +794,7 @@ namespace UserInterface.Views
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnDownload_Click(object sender, EventArgs e)
-        {
+        {            
             lblDownloadStatus.Text = "";
             vboxDownloadStatuses = new VBox();
             if (Presenter.OngoingDownload())
@@ -751,18 +802,21 @@ namespace UserInterface.Views
                 Presenter.ShowError("Unable to start a new batch of downloads - a download is already ongoing!");
                 return;
             }
-
+            DownloadWindow dl = new DownloadWindow();
+            /*
             //if there are already files in the output directory, ask the user if they want to continue
             if (Directory.GetFiles((string)ApsimNG.Properties.Settings.Default["OutputDir"]).Length > 0 && !Presenter.ShowWarning("Files detected in output directory. Results will be generated from ALL files in this directory. Are you certain you wish to continue?"))
                 return;
-
+            */
             TreePath[] selectedRows = tree.Selection.GetSelectedRows();            
             List<string> jobIds = new List<string>();
             foreach (TreePath row in selectedRows)
             {
                 jobIds.Add(GetId(row));
-            }            
-            Presenter.DownloadResults(jobIds, exportToCsv);
+            }
+            // it's there if we need it
+            //DownloadWindow downloadWindow = new DownloadWindow(Presenter, jobIds);
+            Presenter.DownloadResults(jobIds, exportToCsv, false, false);
         }
 
         /// <summary>

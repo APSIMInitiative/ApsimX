@@ -17,10 +17,11 @@ using Models.Core;
 using APSIM.Shared.Utilities;
 using Microsoft.WindowsAzure.Storage.Blob;
 using UserInterface.Views;
+using System.Net;
 
 namespace UserInterface.Presenters
 {
-    public class AzureJobDisplayPresenter : IPresenter
+    public class AzureJobDisplayPresenter : IPresenter, ICloudJobPresenter
     {
         /// <summary>
         /// List of jobs which are currently being downloaded.        
@@ -133,14 +134,15 @@ namespace UserInterface.Presenters
             {
                 // TODO : find a way to detect when this tab has been closed. If this occurs, this thread needs to stop                
 
-                // update the list of jobs. this will take a bit of time
+                // update the list of jobs. this will take a bit of time                
                 var newJobs = ListJobs();
+                
                 if (FetchJobs.CancellationPending) return;
                 if (newJobs != null)
                 {
                     // if the new job list is different, update the tree view
                     if (newJobs.Count() != jobList.Count())
-                    {
+                    {                        
                         jobList = newJobs;
                         if (UpdateDisplay() == 1) return;
                         
@@ -149,7 +151,7 @@ namespace UserInterface.Presenters
                     for (int i = 0; i < newJobs.Count(); i++)
                     {
                         if (!IsEqual(newJobs[i], jobList[i]))
-                        {
+                        {                            
                             jobList = newJobs;
                             if (UpdateDisplay() == 1) return;
                             break;
@@ -157,12 +159,11 @@ namespace UserInterface.Presenters
                     }
                     jobList = newJobs;
                 } else
-                {
+                {                    
                     // ListJobs() will only return null if the thread is asked to cancel or if unable to talk to
                     // the view (due to a null ref.)
                     return;
                 }
-                
                 // refresh every 10 seconds
                 System.Threading.Thread.Sleep(10000);
             }
@@ -213,6 +214,7 @@ namespace UserInterface.Presenters
             {
                 try
                 {
+                    view.ShowProgressBar();
                     view.UpdateJobLoadStatus(0);
                 } catch (NullReferenceException)
                 {
@@ -222,13 +224,14 @@ namespace UserInterface.Presenters
                     ShowError(e.ToString());
                 }                
             }
-            
+
+            double progress;
             List<JobDetails> jobs = new List<JobDetails>();
             var pools = batchClient.PoolOperations.ListPools();
-            var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
-            var cloudJobs = batchClient.JobOperations.ListJobs(jobDetailLevel);
+            var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };            
+            var cloudJobs = batchClient.JobOperations.ListJobs(jobDetailLevel);            
             var length = cloudJobs.Count();
-            int i = 1;                        
+            int i = 0;                        
 
             foreach (var cloudJob in cloudJobs)
             {
@@ -237,8 +240,40 @@ namespace UserInterface.Presenters
                     return null;
                 }
 
-                
+                lock (updateProgressMutex)
+                {
+                    try
+                    {                        
+                        view.UpdateJobLoadStatus(Math.Min(100.0 * i / length, 100));
+                    }
+                    catch (NullReferenceException)
+                    {
+                        return null;
+                    }
+                    catch (Exception e)
+                    {
+                        ShowError(e.ToString());
+                    }
+
+                }                
                 string owner = GetAzureMetaData("job-" + cloudJob.Id, "Owner");
+
+                /*
+                string html = "";
+                string url = @"https://batch.core.windows.net/jobs/{" + cloudJob.Id + "}/taskcounts?api-version=2017-09-01.6.0";
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                using (HttpWebResponse response = (HttpWebResponse)req.GetResponse())
+                {
+                    using (Stream stream = response.GetResponseStream())
+                    {
+                        using (StreamReader reader = new StreamReader(stream))
+                        {
+                            html = reader.ReadToEnd();
+                        }
+                    }
+                }
+                */
+
                 //var tasks = ListTasks(Guid.Parse(cloudJob.Id));
                 // for some reason the succeeded task count is always exactly double the actual number of tasks
                 // and the number of tasks is the number of sims + 1 (the job manager?)
@@ -250,8 +285,11 @@ namespace UserInterface.Presenters
                 */
                 //long numCompletedTasks = cloudJob.Statistics.SucceededTaskCount + cloudJob.Statistics.FailedTaskCount;
                 //double progress = cloudJob.State.ToString() == "Completed" ? 100.0 : 50.0;
-                long numCompletedTasks = 100;
-                double progress = 100;
+
+                // move the comment to be around 100 if you want to see the accurate task count
+
+                long numCompletedTasks = (cloudJob.Statistics.FailedTaskCount + cloudJob.Statistics.SucceededTaskCount) / 2 - 1;
+                double jobProgress = cloudJob.State.ToString().ToLower() == "completed" ? 100 : 0;
                 var job = new JobDetails
                 {
                     Id = cloudJob.Id,
@@ -259,7 +297,8 @@ namespace UserInterface.Presenters
                     State = cloudJob.State.ToString(),
                     Owner = owner,
                     NumSims = numCompletedTasks,
-                    Progress = progress
+                    Progress = jobProgress,
+                    CpuTime = cloudJob.Statistics.KernelCpuTime + cloudJob.Statistics.UserCpuTime
                 };
 
                 if (cloudJob.ExecutionInformation != null)
@@ -285,24 +324,10 @@ namespace UserInterface.Presenters
                 }                
                 jobs.Add(job);
                 i++;
-
-                
-                lock(updateProgressMutex)
-                {
-                    try
-                    {
-                        view.UpdateJobLoadStatus(100.0 * i / length);
-                    } catch (NullReferenceException)
-                    {
-                        return null;
-                    } catch (Exception e)
-                    {
-                        ShowError(e.ToString());
-                    }
-                    
-                }                
             }
+            view.HideProgressBar();
             if (jobs == null) return new List<JobDetails>();
+            Console.WriteLine("Finished getting jobs");
             return jobs;
         }
 
@@ -479,8 +504,10 @@ namespace UserInterface.Presenters
             return currentlyDownloading.Count() > 0;
         }
 
-        public void DownloadResults(List<string> jobsToDownload, bool saveToCsv)
+        public void DownloadResults(List<string> jobsToDownload, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles)
         {
+            if (Directory.GetFiles((string)Settings.Default["OutputDir"]).Length > 0 && !ShowWarning("Files detected in output directory. Results will be generated from ALL files in this directory. Are you certain you wish to continue?"))
+                return;
             string path = (string)Settings.Default["OutputDir"];
             AzureResultsDownloader dl;
             Guid jobId;
@@ -562,6 +589,11 @@ namespace UserInterface.Presenters
                         
         }
 
+
+        public void SetupCredentials()
+        {
+            AzureCredentialsSetup credentialsWindow = new AzureCredentialsSetup();
+        }
         /// <summary>
         /// Creates a dialog box asking if the user wishes to continue.
         /// </summary>

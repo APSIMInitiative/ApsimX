@@ -64,5 +64,7 @@ namespace ApsimNG.Cloud
         /// Pool settings of the job.
         /// </summary>
         public PoolSettings PoolSettings { get; set; }
+
+        public TimeSpan CpuTime { get; set; }
     }
 }

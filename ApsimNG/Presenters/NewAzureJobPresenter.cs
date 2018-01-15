@@ -48,31 +48,8 @@
             this.view = (INewAzureJobView)view;
             this.view.SubmitJob.DoWork += SubmitJob_DoWork;
             this.view.Presenter = this;
-
-
-            // read Azure credentials from a file. If credentials file doesn't exist, abort.
-            string credentialsFileName = (string)Settings.Default["AzureLicenceFilePath"];
-
-            // Properties.Settings are stored in:
-            // ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
-
-            // if the file name in Properties.Settings doesn't exist then prompt user for a new one
-            if (credentialsFileName == "" || !File.Exists(credentialsFileName))
-            {
-                credentialsFileName = this.view.GetFile(new List<string> { "lic" }, "Azure Licence file");
-            }
-            if (SetCredentials(credentialsFileName))
-            {
-                // licence file is valid, remember this file for next time
-                Settings.Default["AzureLicenceFilePath"] = credentialsFileName;
-                Settings.Default.Save();                    
-            } else
-            {
-                // licence file is invalid or non-existent. Show an error and remove the job submission form from the right hand panel.
-                ShowError("Missing or invalid Azure Licence file: " + credentialsFileName);                
-                explorerPresenter.HideRightHandPanel();
-                return;                
-            }
+            
+            GetCredentials(null, null);
             
             // store credentials
             storageCredentials = StorageCredentials.FromConfiguration();
@@ -624,6 +601,26 @@
 
         public void Detach()
         {            
+        }
+
+        private void GetCredentials(object sender, EventArgs e)
+        {
+            if (!CredentialsExist())
+            {
+                AzureCredentialsSetup cred = new AzureCredentialsSetup();
+                cred.Destroyed += GetCredentials;
+            }
+        }
+
+        private bool CredentialsExist()
+        {
+            string[] credentials = new string[] { "BatchAccount", "BatchUrl", "BatchKey", "StorageAccount", "StorageKey" };
+            foreach (string key in credentials)
+            {
+                string value = (string)Settings.Default[key];
+                if (key == "" || key == null) return false;
+            }
+            return true;
         }
 
         public string ConvertToHtml(string folder)
