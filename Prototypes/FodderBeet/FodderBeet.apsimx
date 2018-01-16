@@ -633,7 +633,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
           <Constant>
-            <Name>SenessingLeafRelativeSize</Name>
+            <Name>SenescingLeafRelativeSize</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
             <Units>0-1</Units>
@@ -12750,9 +12750,9 @@ namespace Models
                 <Name>SowDateCv</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>5</InitialRootDepth>
                   <CropToSow>Rivage</CropToSow>
                   <SowingDate>2016-10-18</SowingDate>
+                  <InitialRootDepth>5</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -14531,5 +14531,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>383</ExplorerWidth>
+  <ExplorerWidth>426</ExplorerWidth>
 </Simulations>
