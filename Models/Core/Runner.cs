@@ -42,7 +42,7 @@
             if (!File.Exists(fileName))
                 throw new Exception("Cannot find file: " + fileName);
 
-            Simulations simulations =Simulations.Read(fileName);
+            Simulations simulations = Simulations.Read(fileName);
             return ForSimulations(simulations, simulations, runTests);
         }
 
@@ -101,7 +101,7 @@
             }
 
             /// <summary>Return the current simulation</summary>
-            Simulation IEnumerator<Simulation>.Current {  get { return currentSimulation; } }
+            Simulation IEnumerator<Simulation>.Current { get { return currentSimulation; } }
 
             /// <summary>Return the current simulation</summary>
             object IEnumerator.Current { get { return currentSimulation; } }
@@ -110,21 +110,24 @@
             void IDisposable.Dispose() { }
 
             /// <summary>Move to next simulation</summary>
-            bool IEnumerator.MoveNext() 
+            bool IEnumerator.MoveNext()
             {
                 if (modelsToRun == null)
                     return false;
                 else
                 {
                     // Iterate through all jobs and return the next one.
-                    currentSimulation = modelsToRun[0].NextSimulationToRun();
-                    while (currentSimulation == null && modelsToRun.Count > 0)
+                    currentSimulation = null;
+                    if (modelsToRun.Count > 0)
                     {
-                        modelsToRun.RemoveAt(0);
-                        if (modelsToRun.Count > 0)
-                            currentSimulation = modelsToRun[0].NextSimulationToRun();
+                        currentSimulation = modelsToRun[0].NextSimulationToRun();
+                        while (currentSimulation == null && modelsToRun.Count > 0)
+                        {
+                            modelsToRun.RemoveAt(0);
+                            if (modelsToRun.Count > 0)
+                                currentSimulation = modelsToRun[0].NextSimulationToRun();
+                        }
                     }
-
                     return currentSimulation != null;
                 }
             }
