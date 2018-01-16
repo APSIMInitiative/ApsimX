@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="21">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -58,184 +58,184 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
           <RegrStats>
             <Name>LAImax</Name>
             <n>74</n>
-            <Slope>0.95255868015570988</Slope>
-            <Intercept>0.38093493112386767</Intercept>
-            <SEslope>0.045520037935424848</SEslope>
-            <SEintercept>0.13704519008120866</SEintercept>
-            <R2>0.85879676429301044</R2>
-            <RMSE>0.58144972329714784</RMSE>
-            <NSE>0.81313895756031074</NSE>
-            <ME>0.25315323202053142</ME>
-            <MAE>0.43998844976248236</MAE>
-            <RSR>0.42934356081992353</RSR>
+            <Slope>1.0007497049374521</Slope>
+            <Intercept>0.43562425371302593</Intercept>
+            <SEslope>0.045778085119757256</SEslope>
+            <SEintercept>0.1378220814686219</SEintercept>
+            <R2>0.86906675365434372</R2>
+            <RMSE>0.68156220087435382</RMSE>
+            <NSE>0.74325297248570243</NSE>
+            <ME>0.43764356032271312</ME>
+            <MAE>0.53606378807474175</MAE>
+            <RSR>0.50326680109900823</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.AboveGround.N</Name>
             <n>6</n>
-            <Slope>1.2227773013733165</Slope>
-            <Intercept>-2.5639895759523093</Intercept>
-            <SEslope>0.082669412474229681</SEslope>
-            <SEintercept>1.453969384215027</SEintercept>
-            <R2>0.9820449619790903</R2>
-            <RMSE>2.3560603946057546</RMSE>
-            <NSE>0.90804940438059556</NSE>
-            <ME>0.95109127029272333</ME>
-            <MAE>1.7390664396435205</MAE>
-            <RSR>0.27681310725741232</RSR>
+            <Slope>1.11349644801129</Slope>
+            <Intercept>-2.6355415470370165</Intercept>
+            <SEslope>0.063226654750477729</SEslope>
+            <SEintercept>1.1120149221114302</SEintercept>
+            <R2>0.98726738758156141</R2>
+            <RMSE>1.5673465892420113</RMSE>
+            <NSE>0.9593077414372525</NSE>
+            <ME>-0.8447433460443754</ME>
+            <MAE>1.3768341727869751</MAE>
+            <RSR>0.18414726571132209</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.AboveGround.Wt</Name>
             <n>88</n>
-            <Slope>1.0334028140300515</Slope>
-            <Intercept>16.0275914051806</Intercept>
-            <SEslope>0.043551499216978574</SEslope>
-            <SEintercept>59.691800430825275</SEintercept>
-            <R2>0.86749497221278182</R2>
-            <RMSE>244.63407012513096</RMSE>
-            <NSE>0.82619606233985765</NSE>
-            <ME>57.401559346516628</ME>
-            <MAE>174.07800197898214</MAE>
-            <RSR>0.41452248782666118</RSR>
+            <Slope>1.0274087978411115</Slope>
+            <Intercept>21.338999130492994</Intercept>
+            <SEslope>0.03751176147153007</SEslope>
+            <SEintercept>51.413719844904023</SEintercept>
+            <R2>0.89714839113758649</R2>
+            <RMSE>212.09426515671592</RMSE>
+            <NSE>0.869357771209135</NSE>
+            <ME>55.288555660923677</ME>
+            <MAE>160.81440570277169</MAE>
+            <RSR>0.35938511100092974</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Grain.N</Name>
             <n>6</n>
-            <Slope>1.3078918382153038</Slope>
-            <Intercept>-0.82603391899072953</Intercept>
-            <SEslope>0.09310877694809612</SEslope>
-            <SEintercept>1.0141773612236582</SEintercept>
-            <R2>0.98013074477982964</R2>
-            <RMSE>2.8449924650578251</RMSE>
-            <NSE>0.71690793025743427</NSE>
-            <ME>2.0957424471704096</ME>
-            <MAE>2.0957424471704096</MAE>
-            <RSR>0.48570573202177136</RSR>
+            <Slope>1.0180925815105593</Slope>
+            <Intercept>0.26952855768724326</Intercept>
+            <SEslope>0.06197617036856231</SEslope>
+            <SEintercept>0.67506878495649325</SEintercept>
+            <R2>0.98539355139276419</R2>
+            <RMSE>0.80207048387520263</RMSE>
+            <NSE>0.97749958481644483</NSE>
+            <ME>0.44122027048747176</ME>
+            <MAE>0.72190702764608483</MAE>
+            <RSR>0.13693190273378933</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Grain.Number</Name>
             <n>84</n>
-            <Slope>0.93866303035173182</Slope>
-            <Intercept>179.02238966704272</Intercept>
-            <SEslope>0.042459598431031816</SEslope>
-            <SEintercept>101.78691834370653</SEintercept>
-            <R2>0.85632397787101278</R2>
-            <RMSE>473.75475007861331</RMSE>
-            <NSE>0.84655343970614871</NSE>
-            <ME>52.065260004519587</ME>
-            <MAE>336.9189198785304</MAE>
-            <RSR>0.38938389223033903</RSR>
+            <Slope>0.91413284214816981</Slope>
+            <Intercept>291.7691074671859</Intercept>
+            <SEslope>0.045684781401877705</SEslope>
+            <SEintercept>109.518537290368</SEintercept>
+            <R2>0.83001055835658855</R2>
+            <RMSE>523.560873348773</RMSE>
+            <NSE>0.81259362089993514</NSE>
+            <ME>114.03864644733773</ME>
+            <MAE>375.5461098222242</MAE>
+            <RSR>0.43032005621100783</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Grain.Size</Name>
             <n>84</n>
-            <Slope>0.61103475013920916</Slope>
-            <Intercept>0.12890533083255262</Intercept>
-            <SEslope>0.12652658772620004</SEslope>
-            <SEintercept>0.0358070538133181</SEintercept>
-            <R2>0.22143618505139606</R2>
-            <RMSE>0.071459174440012069</RMSE>
-            <NSE>-0.60298806520535231</NSE>
-            <ME>0.021039458280788771</ME>
-            <MAE>0.053083649081393465</MAE>
-            <RSR>1.2585328259337965</RSR>
+            <Slope>0.56058039550140082</Slope>
+            <Intercept>0.1475872368308693</Intercept>
+            <SEslope>0.12053676049955307</SEslope>
+            <SEintercept>0.034111931312258079</SEintercept>
+            <R2>0.20871583626054946</R2>
+            <RMSE>0.07122040311880512</RMSE>
+            <NSE>-0.59229361956823912</NSE>
+            <ME>0.025729618258114838</ME>
+            <MAE>0.053380814846940676</MAE>
+            <RSR>1.2543276059884865</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Grain.Wt</Name>
             <n>103</n>
-            <Slope>0.89117806428171986</Slope>
-            <Intercept>99.816655519998</Intercept>
-            <SEslope>0.040486821511531476</SEslope>
-            <SEintercept>28.19253140101398</SEintercept>
-            <R2>0.82750043821972108</R2>
-            <RMSE>148.57837204160731</RMSE>
-            <NSE>0.812859008409528</NSE>
-            <ME>33.898471569801735</ME>
-            <MAE>113.68517990481219</MAE>
-            <RSR>0.43049284402820981</RSR>
+            <Slope>0.87849406856882628</Slope>
+            <Intercept>145.29163255246783</Intercept>
+            <SEslope>0.040392189438915233</SEslope>
+            <SEintercept>28.126635448228047</SEintercept>
+            <R2>0.824049069122905</R2>
+            <RMSE>162.23238425609341</RMSE>
+            <NSE>0.776882910010031</NSE>
+            <ME>71.690200210232575</ME>
+            <MAE>127.09386520165967</MAE>
+            <RSR>0.47005415076378232</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Husk.Wt</Name>
             <n>6</n>
-            <Slope>0.41971790094406991</Slope>
-            <Intercept>22.663810606140217</Intercept>
-            <SEslope>0.11055616501194916</SEslope>
-            <SEintercept>10.17308070428415</SEintercept>
-            <R2>0.782760090783961</R2>
-            <RMSE>35.211663418199244</RMSE>
-            <NSE>0.1659654000524351</NSE>
-            <ME>-25.81875876998275</ME>
-            <MAE>28.307078990304248</MAE>
-            <RSR>0.83368389290524092</RSR>
+            <Slope>1.30176989210172</Slope>
+            <Intercept>-3.3955734112594911</Intercept>
+            <SEslope>0.20992695973845552</SEslope>
+            <SEintercept>19.316913744190533</SEintercept>
+            <R2>0.90577850549138972</R2>
+            <RMSE>29.55369912484489</RMSE>
+            <NSE>0.41246373345451215</NSE>
+            <ME>21.817301073839197</ME>
+            <MAE>23.159489415530167</MAE>
+            <RSR>0.69972391373639153</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Leaf.Live.N</Name>
             <n>6</n>
-            <Slope>0.30903609807372551</Slope>
-            <Intercept>-0.062601222155550362</Intercept>
-            <SEslope>0.026868831607295411</SEslope>
-            <SEintercept>0.046781485236001771</SEintercept>
-            <R2>0.97065041429494248</R2>
-            <RMSE>1.2503451589094414</RMSE>
-            <NSE>-0.058724076999374653</NSE>
-            <ME>-0.92417587317012129</ME>
-            <MAE>0.92417587317012129</MAE>
-            <RSR>0.9392923209343006</RSR>
+            <Slope>0.99480413487498986</Slope>
+            <Intercept>0.00022065530551973467</Intercept>
+            <SEslope>0.13917264648231545</SEslope>
+            <SEintercept>0.2423143366196821</SEintercept>
+            <R2>0.927396423302203</R2>
+            <RMSE>0.33835480988048344</RMSE>
+            <NSE>0.92247037828107892</NSE>
+            <ME>-0.0062581573637375491</ME>
+            <MAE>0.28232192293336422</MAE>
+            <RSR>0.25418107344784913</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Leaf.Live.Wt</Name>
             <n>6</n>
-            <Slope>0.35944467945010755</Slope>
-            <Intercept>-1.5124286913044713</Intercept>
-            <SEslope>0.034216406975700449</SEslope>
-            <SEintercept>3.791121276889692</SEintercept>
-            <R2>0.96502146224486807</R2>
-            <RMSE>72.267942812287814</RMSE>
-            <NSE>0.095571844122601113</NSE>
-            <ME>-53.162539371644129</ME>
-            <MAE>53.162539371644129</MAE>
-            <RSR>0.86815328709729156</RSR>
+            <Slope>0.95485873099945662</Slope>
+            <Intercept>-3.6484740628205685</Intercept>
+            <SEslope>0.095520600127683722</SEslope>
+            <SEintercept>10.583524441432699</SEintercept>
+            <R2>0.96151155742947958</R2>
+            <RMSE>16.6023819349925</RMSE>
+            <NSE>0.9522664768184802</NSE>
+            <ME>-7.2883650532310469</ME>
+            <MAE>13.694177896318053</MAE>
+            <RSR>0.19944406730860614</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Rachis.Wt</Name>
             <n>6</n>
-            <Slope>0.99507559705272741</Slope>
-            <Intercept>28.758677746687113</Intercept>
-            <SEslope>0.15142287755436373</SEslope>
-            <SEintercept>24.918565747080894</SEintercept>
-            <R2>0.91522662468665283</R2>
-            <RMSE>33.185303883898989</RMSE>
-            <NSE>0.68145863460225986</NSE>
-            <ME>28.001797013691334</ME>
-            <MAE>28.001797013691334</MAE>
-            <RSR>0.51521950451380427</RSR>
+            <Slope>1.1796088571317864</Slope>
+            <Intercept>2.6517546571887465</Intercept>
+            <SEslope>0.14868239195562949</SEslope>
+            <SEintercept>24.467583889689688</SEintercept>
+            <R2>0.94024890655245374</R2>
+            <RMSE>36.506964613881465</RMSE>
+            <NSE>0.61449884001284472</NSE>
+            <ME>30.257635998344334</ME>
+            <MAE>31.54396257348067</MAE>
+            <RSR>0.56679005518442427</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Stem.N</Name>
             <n>6</n>
-            <Slope>1.5082447492453956</Slope>
-            <Intercept>-0.85241132456499824</Intercept>
-            <SEslope>0.31759533906249937</SEslope>
-            <SEintercept>0.63268150823939939</SEintercept>
-            <R2>0.84935526113140636</R2>
-            <RMSE>0.68778517559263552</RMSE>
-            <NSE>0.33220788772905696</NSE>
-            <ME>0.0652602150959772</ME>
-            <MAE>0.5631098601446427</MAE>
-            <RSR>0.74598487041792771</RSR>
+            <Slope>1.2321397395899922</Slope>
+            <Intercept>-0.35191060717294342</Intercept>
+            <SEslope>0.18839322511781922</SEslope>
+            <SEintercept>0.37529804486888479</SEintercept>
+            <R2>0.91448411593964007</R2>
+            <RMSE>0.37849819683556096</RMSE>
+            <NSE>0.79776175261297633</NSE>
+            <ME>0.067233973390524171</ME>
+            <MAE>0.27145579959202587</MAE>
+            <RSR>0.41052633633242058</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Stem.Wt</Name>
             <n>6</n>
-            <Slope>0.83769468347269993</Slope>
-            <Intercept>279.85099197175657</Intercept>
-            <SEslope>0.10301607963435443</SEslope>
-            <SEintercept>43.519183788647638</SEintercept>
-            <R2>0.94295848116995384</R2>
-            <RMSE>223.54049266213718</RMSE>
-            <NSE>-0.45988527545963453</NSE>
-            <ME>218.21013784329682</ME>
-            <MAE>218.21013784329682</MAE>
-            <RSR>1.1029828026234265</RSR>
+            <Slope>0.945557948044225</Slope>
+            <Intercept>79.679564704553911</Intercept>
+            <SEslope>0.073122348262538869</SEslope>
+            <SEintercept>30.890565088381607</SEintercept>
+            <R2>0.97663760330369886</R2>
+            <RMSE>65.688078374474173</RMSE>
+            <NSE>0.87393938099057256</NSE>
+            <ME>59.003380739283159</ME>
+            <MAE>59.003380739283159</MAE>
+            <RSR>0.32411497318264937</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Structure.FinalLeafNumber</Name>
@@ -20909,8 +20909,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Operation>
-                <Date>1999-09-16T00:00:00</Date>
-                <Action> [Maize].Sow(population:6.7, cultivar:"Hycorn_53", depth:50, rowSpacing:750);</Action>
+                <Date>1999-09-16</Date>
+                <Action> [Maize].Sow(population:10, cultivar:"Hycorn_53", depth:50, rowSpacing:750);</Action>
               </Operation>
             </Operations>
             <Operations>
@@ -22655,7 +22655,7 @@ namespace Models
                   <string>150-180</string>
                 </Depth>
                 <OC>
-                  <double>1.24</double>
+                  <double>1.64</double>
                   <double>1.24</double>
                   <double>0.8</double>
                   <double>0.75</double>
@@ -22720,8 +22720,8 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>9.99996493384113</double>
-                  <double>4.99998246692056</double>
+                  <double>15</double>
+                  <double>8</double>
                   <double>3.68997730750788</double>
                   <double>3.80997656954065</double>
                   <double>2.46598483477356</double>
@@ -26881,14 +26881,14 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>200</double>
                 </Thickness>
                 <BD>
-                  <double>1.311</double>
-                  <double>1.474</double>
+                  <double>1</double>
+                  <double>1.3</double>
                   <double>1.601</double>
-                  <double>1.68</double>
-                  <double>1.68</double>
-                  <double>1.68</double>
-                  <double>1.68</double>
-                  <double>1.68</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
                 </BD>
                 <AirDry>
                   <double>0.06</double>
@@ -27034,7 +27034,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 </Depth>
                 <OC>
                   <double>3.6</double>
-                  <double>0.97</double>
+                  <double>2.2</double>
                   <double>0.42</double>
                   <double>0.23</double>
                   <double>0.23</double>
@@ -27049,8 +27049,8 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>0.01</double>
                 </FBiom>
                 <FInert>
-                  <double>0.3</double>
-                  <double>0.6</double>
+                  <double>0.2</double>
+                  <double>0.4</double>
                   <double>0.8</double>
                   <double>0.9</double>
                   <double>0.9</double>
@@ -27092,20 +27092,20 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>16.230000000000008</double>
-                  <double>10.759999999999987</double>
-                  <double>7.8300000000000045</double>
-                  <double>6.8499999999999792</double>
-                  <double>4.879999999999999</double>
-                  <double>1.7399999999999989</double>
+                  <double>2.86</double>
+                  <double>1.98</double>
+                  <double>0.3</double>
+                  <double>0.71</double>
+                  <double>1.56</double>
+                  <double>1.07</double>
                 </NO3>
                 <NH4>
-                  <double>0.89999999999999958</double>
-                  <double>2.9200000000000008</double>
-                  <double>0.57000000000000084</double>
-                  <double>0.97999999999999776</double>
-                  <double>0.84000000000000163</double>
-                  <double>0.53999999999999926</double>
+                  <double>0.89</double>
+                  <double>0.99</double>
+                  <double>0.59</double>
+                  <double>0.37</double>
+                  <double>0.21</double>
+                  <double>0</double>
                 </NH4>
                 <SW>
                   <double>0.06</double>
@@ -27115,8 +27115,8 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>0.2</double>
                   <double>0.2</double>
                 </SW>
-                <NO3Units>kgha</NO3Units>
-                <NH4Units>kgha</NH4Units>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
                 <SWUnits>Volumetric</SWUnits>
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
@@ -27234,7 +27234,13 @@ namespace Models
 		private void OnPreparingNewWeatherData(object sender, EventArgs e)
 		{
 			if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
-				Met.Rain = 0;		
+				{			    
+				//Rainshelter stops rain
+				Met.Rain = 0;	
+				//Rainshelter stops frost
+				if (Met.MinT < 2.0)
+					Met.MinT = 2.0;	
+				}
 		}
 	}
 }]]></Code>
@@ -27675,6 +27681,7 @@ namespace Models
                 <string>[Maize].EarLive.N</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Grain.GrowthRateGrainDevelopment.Value()</string>
+                <string>[Maize].Grain.Size</string>
                 <string>[Maize].Grain.N</string>
                 <string>[Maize].Grain.NConc</string>
                 <string>[Maize].Grain.Wt</string>
@@ -27710,10 +27717,13 @@ namespace Models
                 <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
                 <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
                 <string>[Maize].Leaf.Photosynthesis.RueAct</string>
-                <string>[Maize].Leaf.SenescingCohortNo</string>
+                <string>[Maize].Leaf.SpecificArea</string>
+                <string>[Maize].Leaf.SpecificNitrogen</string>
+                <string>[Maize].Leaf.SenescingCohortNo + [Maize].Leaf.DeadCohortNo as NodesStartedSenescing</string>
                 <string>[Maize].Leaf.Transpiration</string>
                 <string>[Maize].Leaf.WaterDemand</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
+                <string>[Maize].Phenology.CurrentStageName</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Rachis.N</string>
@@ -27724,6 +27734,9 @@ namespace Models
                 <string>[Maize].Root.Live.Wt</string>
                 <string>[Maize].Root.WaterSupply</string>
                 <string>[Maize].Root.WaterUptake</string>
+                <string>[Maize].Spike.N</string>
+                <string>[Maize].Spike.NConc</string>
+                <string>[Maize].Spike.Wt</string>
                 <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
                 <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
                 <string>[Maize].Stem.N</string>
@@ -29026,8 +29039,8 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
@@ -29048,7 +29061,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29070,7 +29083,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-32768</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29114,7 +29127,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-256</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29223,7 +29236,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29245,7 +29258,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-256</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29267,7 +29280,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-32704</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29311,7 +29324,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29333,7 +29346,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29944,7 +29957,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744193</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29966,7 +29979,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -30009,7 +30022,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744193</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -30031,7 +30044,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -30074,7 +30087,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744193</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -30096,7 +30109,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -30118,7 +30131,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -31102,7 +31115,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Husk.NConc</YFieldName>
+                <YFieldName>Maize.Grain.NConc</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31418,6 +31431,11 @@ namespace Models
               <Name>StemNitrogen</Name>
               <Series>
                 <Name>Predicted</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ColumnName>Maize.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -31813,6 +31831,11 @@ namespace Models
               <Name>StemBiomass</Name>
               <Series>
                 <Name>Predicted</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ColumnName>Maize.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -32074,6 +32097,11 @@ namespace Models
               <Name>DeadLeafBiomass</Name>
               <Series>
                 <Name>Predicted</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ColumnName>Maize.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -32609,7 +32637,7 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <Graph>
-              <Name>StartSenesced</Name>
+              <Name>StartedSenescing</Name>
               <Series>
                 <Name>Predicted</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -32626,7 +32654,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Leaf.SenescingCohortNo</YFieldName>
+                <YFieldName>NodesStartedSenescing</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -32648,7 +32676,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Leaf.DeadCohortNo</YFieldName>
+                <YFieldName>NodesStartedSenescing</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -32900,7 +32928,7 @@ namespace Models
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -33045,6 +33073,71 @@ namespace Models
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Maize.Grain.Number</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Grain number (grains/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>GrainSize</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Maize.Grain.Size</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Maize.Grain.Size</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -33476,8 +33569,8 @@ This trial was conducted to provide data for parametersising the Leaf Area model
                 <Name>Sow</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Operation>
-                  <Date>2010-10-26T00:00:00</Date>
-                  <Action>[Maize].Sow(population:12, cultivar:"Pioneer_39V43", depth:50, rowSpacing:760);</Action>
+                  <Date>2010-10-26</Date>
+                  <Action>[Maize].Sow(population:10, cultivar:"Pioneer_39V43", depth:50, rowSpacing:760);</Action>
                 </Operation>
               </Operations>
               <Operations>
@@ -34170,7 +34263,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34192,7 +34285,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34235,7 +34328,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34257,7 +34350,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34300,7 +34393,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34322,7 +34415,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34365,7 +34458,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34387,7 +34480,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34430,7 +34523,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34452,7 +34545,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34495,7 +34588,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34517,7 +34610,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34560,7 +34653,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34855,6 +34948,18 @@ namespace Models
                 <Action>[Fertiliser].Apply(161, Fertiliser.Types.UreaN, 10);</Action>
               </Operation>
             </Operations>
+            <Operations>
+              <Name>Plastic</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Operation>
+                <Date>2008-09-16T00:00:00</Date>
+                <Action>[Fertiliser].Apply(140.5, Fertiliser.Types.UreaN, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2008-12-17T00:00:00</Date>
+                <Action>[Fertiliser].Apply(161, Fertiliser.Types.UreaN, 10);</Action>
+              </Operation>
+            </Operations>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
               <string>[Fert]</string>
@@ -35005,7 +35110,7 @@ namespace Models
               <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -36638,9 +36743,9 @@ namespace Models
                     <double>0.154</double>
                     <double>0.152</double>
                     <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
+                    <double>0.14</double>
+                    <double>0.14</double>
+                    <double>0.14</double>
                   </LL>
                   <KL>
                     <double>0.075</double>
@@ -36680,33 +36785,33 @@ namespace Models
                   <double>0.077</double>
                   <double>0.152</double>
                   <double>0.162</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
                 </AirDry>
                 <LL15>
                   <double>0.154</double>
                   <double>0.152</double>
                   <double>0.162</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
                 </LL15>
                 <DUL>
                   <double>0.374</double>
                   <double>0.32</double>
                   <double>0.325</double>
-                  <double>0.15</double>
-                  <double>0.15</double>
-                  <double>0.15</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
                 </DUL>
                 <SAT>
                   <double>0.456</double>
                   <double>0.413</double>
                   <double>0.376</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
                 </SAT>
               </Water>
               <SoilWater>
@@ -36866,8 +36971,8 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>6.18993135011442</double>
-                  <double>3.64993215739484</double>
+                  <double>66.19</double>
+                  <double>3.65</double>
                   <double>2.44534665833854</double>
                   <double>1.35912698412698</double>
                   <double>0.968253968253968</double>
@@ -37427,11 +37532,11 @@ namespace Models
               <Name>SowingRule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
+                <SowingDate>2010-10-04</SowingDate>
+                <CultivarName>Pioneer_39V43</CultivarName>
                 <RowSpace>720</RowSpace>
                 <PlantPopulation>10.5</PlantPopulation>
                 <PlantingDepth>20</PlantingDepth>
-                <CultivarName>Pioneer_39V43</CultivarName>
-                <SowingDate>2010-10-04</SowingDate>
               </Script>
               <Code><![CDATA[
 using System;
@@ -39216,5 +39321,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>282</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

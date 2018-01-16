@@ -1,5 +1,5 @@
 ---
-title: "GIT 4: Contributing changes back to the master repository"
+title: "5. Merge changes into the master repository"
 draft: false
 ---
 

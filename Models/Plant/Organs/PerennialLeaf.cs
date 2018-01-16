@@ -25,6 +25,11 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
+
+        /// <summary>Carbon concentration</summary>
+        /// [Units("-")]
+        public double CarbonConcentration { get; set; }
+
         /// <summary>Gets the cohort live.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
@@ -614,9 +619,14 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dry matter allocation.</summary>
         public void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
-            GrowthRespiration = dryMatter.Structural * (1 - DMConversionEfficiency.Value())
-                              + dryMatter.Storage * (1 - DMConversionEfficiency.Value());
-
+            // GrowthRespiration with unit CO2 
+            // GrowthRespiration is calculated as 
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // CO2 (44/12).
+            double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12 / 30) - 1 * CarbonConcentration) * 44 / 12;
+            GrowthRespiration = (dryMatter.Structural + dryMatter.Storage) * growthRespFactor;
+            
             AddNewLeafMaterial(StructuralWt: Math.Min(dryMatter.Structural * DMConversionEfficiency.Value(), StructuralDMDemand),
                                StorageWt: dryMatter.Storage * DMConversionEfficiency.Value(),
                                StructuralN: 0,

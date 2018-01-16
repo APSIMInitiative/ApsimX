@@ -149,7 +149,7 @@
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\FileFormat.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
-    <Compile Include="Core\IJobGenerator.cs" />
+    <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Core\IStorageWriter.cs" />
     <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobRunnerMultiProcess.cs" />
@@ -164,6 +164,8 @@
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
+    <Compile Include="Graph\DirectedGraph.cs" />
+    <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
     <Compile Include="Plant\Functions\ArrayFunction.cs" />
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
@@ -613,6 +615,7 @@
   <ItemGroup>
     <None Include="Resources\Maize.xml" />
     <None Include="Resources\Chicory.xml" />
+    <None Include="Resources\Potato.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>
