@@ -94,6 +94,21 @@
             }
         }
         /// <summary>
+        /// total Net N Mineralisaed in each soil layer
+        /// </summary>
+        public double[] MineralN
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                double[] NH4 = solutes.GetSolute("NH4");
+                double[] NO3 = solutes.GetSolute("NO3");
+                values = MathUtilities.Add(values, NH4);
+                values = MathUtilities.Add(values, NO3);
+                return values;
+            }
+        }
+        /// <summary>
         /// Total C in each soil layer
         /// </summary>
         public double[] TotalN
