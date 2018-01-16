@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="23">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -633,7 +633,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
           <Constant>
-            <Name>SenescingLeafRelativeSize</Name>
+            <Name>SenessingLeafRelativeSize</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
             <Units>0-1</Units>
@@ -660,8 +660,8 @@ date of Experiment 4 is assumed here.]]></MemoText>
                 <double>50000</double>
                 <double>40000</double>
                 <double>20000</double>
+                <double>20000</double>
                 <double>15000</double>
-                <double>10000</double>
               </Y>
             </XYPairs>
             <Memo>
@@ -970,6 +970,11 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
+          <Constant>
+            <Name>CarbonConcentration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExpansionStressValue>0</ExpansionStressValue>
         </LeafCohortParameters>
@@ -1051,8 +1056,14 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
+        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <Leaves />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -1313,8 +1324,14 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
+        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
@@ -1476,7 +1493,13 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Petiole</Name>
@@ -1628,7 +1651,13 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -9822,9 +9851,9 @@ namespace Models
                 <Name>SowDateCv</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>5</InitialRootDepth>
                   <CropToSow>Rivage</CropToSow>
                   <SowingDate>0001-01-01</SowingDate>
+                  <InitialRootDepth>5</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -12482,8 +12511,8 @@ namespace Models
                 <Name>StateFactors</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <IrrFactor>False</IrrFactor>
                   <NitFactor>0</NitFactor>
+                  <IrrFactor>False</IrrFactor>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
