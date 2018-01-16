@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="23">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1006,7 +1006,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </DivideFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>5</NumberOfDays>
-          <InitialValue>0</InitialValue>
+          <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
         </MovingAverageFunction>
         <MovingAverageFunction>
           <Name>MeanPhyllochron</Name>
@@ -1017,7 +1017,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
-          <InitialValue>80</InitialValue>
+          <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
         </MovingAverageFunction>
         <DivideFunction>
           <Name>HaunStageTerminalSpikelet</Name>
@@ -1306,14 +1306,6 @@ The grain Number model model left here does nothing, it is there so we can switc
 N conc values are from Zhao et al 2009
 ]]></MemoText>
         </Memo>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <Constant>
           <Name>MaxNConcDailyGrowth</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1619,27 +1611,37 @@ N conc values are from Zhao et al 2009
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <WhenToHold>Flowering</WhenToHold>
         </HoldFunction>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
+        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
+        <Live>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Live>
+        <Dead>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Dead>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>
@@ -1874,8 +1876,29 @@ N conc values are from Zhao et al 2009
           </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
+        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
@@ -1893,7 +1916,7 @@ N conc values are from Zhao et al 2009
           <ShadeInducedSenRate>0</ShadeInducedSenRate>
           <SenescedFrac>0</SenescedFrac>
           <DeltaPotentialArea>0</DeltaPotentialArea>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaStressConstrainedArea>0</DeltaStressConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
@@ -1910,6 +1933,8 @@ N conc values are from Zhao et al 2009
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -1921,7 +1946,7 @@ N conc values are from Zhao et al 2009
           <ShadeInducedSenRate>0</ShadeInducedSenRate>
           <SenescedFrac>0</SenescedFrac>
           <DeltaPotentialArea>0</DeltaPotentialArea>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaStressConstrainedArea>0</DeltaStressConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
@@ -1938,21 +1963,9 @@ N conc values are from Zhao et al 2009
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Leaf].CohortLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Leaf].CohortDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2669,7 +2682,33 @@ N conc values are from Zhao et al 2009
             </PhaseLookupValue>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </PhaseLookup>
+          <ArrayFunction>
+            <Name>LagDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>SenescenceDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>LeafSizeAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+          </ArrayFunction>
+          <Constant>
+            <Name>RemobilisationCost</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>CarbonConcentration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExpansionStressValue>0</ExpansionStressValue>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -2870,7 +2909,7 @@ N conc values are from Zhao et al 2009
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiencyFunction</Name>
+          <Name>DMConversionEfficiency</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
@@ -2879,8 +2918,19 @@ N conc values are from Zhao et al 2009
           <Name>ApexStandard</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </ApexStandard>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
+        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <Leaves />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -2896,7 +2946,6 @@ N conc values are from Zhao et al 2009
         <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
-        <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -2946,14 +2995,6 @@ N conc values are from Zhao et al 2009
           </AddFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PopulationBasedDemandFunction>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3109,7 +3150,18 @@ N conc values are from Zhao et al 2009
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Panicle].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -3121,14 +3173,6 @@ N conc values are from Zhao et al 2009
 N conc values are from Zhao et al 2009
 ]]></MemoText>
         </Memo>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <PhaseLookup>
           <Name>StructuralFraction</Name>
           <PhaseLookupValue>
@@ -3480,7 +3524,18 @@ N conc values are from Zhao et al 2009
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Stem].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -4749,7 +4804,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           </DivideFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>5</NumberOfDays>
-          <InitialValue>0</InitialValue>
+          <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
         </MovingAverageFunction>
         <MovingAverageFunction>
           <Name>MeanPhyllochron</Name>
@@ -4760,7 +4815,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
-          <InitialValue>80</InitialValue>
+          <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
         </MovingAverageFunction>
         <HoldFunction>
           <Name>FinalLeafNumber</Name>
@@ -4864,14 +4919,6 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <MultiplyFunction>
           <Name>NumberFunction</Name>
           <VariableReference>
@@ -5196,32 +5243,37 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
+        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
+        <Live>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Live>
+        <Dead>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Dead>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <Constant>
-            <Name>KLModifier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <Constant>
           <Name>KLModifier</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -5489,8 +5541,29 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
+        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
@@ -5508,7 +5581,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <ShadeInducedSenRate>0</ShadeInducedSenRate>
           <SenescedFrac>0</SenescedFrac>
           <DeltaPotentialArea>0</DeltaPotentialArea>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaStressConstrainedArea>0</DeltaStressConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
@@ -5525,6 +5598,8 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -5536,7 +5611,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <ShadeInducedSenRate>0</ShadeInducedSenRate>
           <SenescedFrac>0</SenescedFrac>
           <DeltaPotentialArea>0</DeltaPotentialArea>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaStressConstrainedArea>0</DeltaStressConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
@@ -5553,21 +5628,9 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Leaf].CohortLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Leaf].CohortDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6095,7 +6158,33 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
+          <ArrayFunction>
+            <Name>LagDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>SenescenceDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>LeafSizeAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+          </ArrayFunction>
+          <Constant>
+            <Name>RemobilisationCost</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>CarbonConcentration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExpansionStressValue>0</ExpansionStressValue>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -6293,7 +6382,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiencyFunction</Name>
+          <Name>DMConversionEfficiency</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
@@ -6301,8 +6390,19 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <Name>ApexStandard</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </ApexStandard>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
+        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <Leaves />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -6318,7 +6418,6 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
         <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
-        <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -6369,14 +6468,6 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           </AddFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PopulationBasedDemandFunction>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6533,18 +6624,21 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Panicle].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <PhaseLookup>
           <Name>StructuralFraction</Name>
           <PhaseLookupValue>
@@ -6804,7 +6898,18 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Stem].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -7111,8 +7216,6 @@ namespace Models
       <FieldNameUsedForMatch>Oats.Phenology.CurrentStageName</FieldNameUsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>Validation</Name>
@@ -21797,9 +21900,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <SowDate>02-Feb</SowDate>
                   <CultivarName>
                   </CultivarName>
-                  <SowDate>02-Feb</SowDate>
                   <SowingDepth>30</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>

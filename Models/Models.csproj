@@ -287,17 +287,17 @@
     <Compile Include="Report\ReportColumnWithValues.cs" />
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
-    <Compile Include="Soils\Nutrient\NFlow.cs" />
-    <Compile Include="Soils\Nutrient\CFlow.cs" />
-    <Compile Include="Soils\Nutrient\NutrientPool.cs" />
-    <Compile Include="Soils\Nutrient\Nutrient.cs" />
+    <Compile Include="Soils\Nutrients\NFlow.cs" />
+    <Compile Include="Soils\Nutrients\CarbonFlow.cs" />
+    <Compile Include="Soils\Nutrients\NutrientPool.cs" />
+    <Compile Include="Soils\Nutrients\Nutrient.cs" />
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
     <Compile Include="Soils\Arbitrator\Estimate.cs" />
     <Compile Include="Soils\Arbitrator\SoilState.cs" />
     <Compile Include="Soils\HydraulicProperties.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
-    <Compile Include="Soils\Nutrient\Solute.cs" />
+    <Compile Include="Soils\Nutrients\Solute.cs" />
     <Compile Include="Soils\OutputLayers.cs" />
     <Compile Include="Soils\MultiPoreWater\Evapotranspiration.cs" />
     <Compile Include="Soils\MultiPoreWater\MRSpline.cs" />
@@ -613,6 +613,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Nutrient.xml" />
     <None Include="Resources\Maize.xml" />
     <None Include="Resources\Chicory.xml" />
     <None Include="Resources\Potato.xml" />

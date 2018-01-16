@@ -13,6 +13,7 @@ namespace Models.Soils
     using Models.Core;
     using APSIM.Shared.Utilities;
     using Interfaces;
+    using Soils.Nutrients;
 
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
@@ -39,6 +40,11 @@ namespace Models.Soils
         [XmlIgnore]
         public SoilNitrogen SoilNitrogen { get; private set; }
 
+        /// <summary>
+        /// Soil Nutrient model
+        /// </summary>
+        [XmlIgnore]
+        public Nutrient Nutrient { get; private set; }
 
         /// <summary>
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional

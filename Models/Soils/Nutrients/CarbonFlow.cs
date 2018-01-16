@@ -1,5 +1,5 @@
 ﻿
-namespace Models.Soils.Nutrient
+namespace Models.Soils.Nutrients
 {
     using Core;
     using Models.PMF.Functions;
@@ -26,6 +26,11 @@ namespace Models.Soils.Nutrient
 
         [Link]
         private SoluteManager solutes = null;
+
+        /// <summary>
+        /// Net N Mineralisation
+        /// </summary>
+        public double[] MineralisedN { get; set; }
 
         /// <summary>
         /// Name of destination pool
@@ -67,6 +72,7 @@ namespace Models.Soils.Nutrient
 
             for (int i = 0; i < source.C.Length; i++)
             {
+
                 double carbonFlowFromSource = Rate.Value(i) * source.C[i];
                 double nitrogenFlowFromSource = MathUtilities.Divide(carbonFlowFromSource, source.CNRatio[i], 0);
 
@@ -90,8 +96,6 @@ namespace Models.Soils.Nutrient
                     {
                         carbonFlowToDestination[j] *= NSupplyFactor;
                         nitrogenFlowToDestination[j] *= NSupplyFactor;
-                        if (nitrogenFlowToDestination[j] > 0.5)
-                        { }
                     }
                     TotalNitrogenFlowToDestinations *= NSupplyFactor;
 
@@ -110,7 +114,10 @@ namespace Models.Soils.Nutrient
 
 
                 if (TotalNitrogenFlowToDestinations <= nitrogenFlowFromSource)
-                    NH4[i] += nitrogenFlowFromSource - TotalNitrogenFlowToDestinations;
+                {
+                    MineralisedN[i] = nitrogenFlowFromSource - TotalNitrogenFlowToDestinations;
+                    NH4[i] += MineralisedN[i];
+                }
                 else
                 {
                     double NDeficit = TotalNitrogenFlowToDestinations - nitrogenFlowFromSource;
@@ -121,6 +128,8 @@ namespace Models.Soils.Nutrient
                     double NO3Immobilisation = Math.Min(NO3[i], NDeficit);
                     NO3[i] -= NO3Immobilisation;
                     NDeficit -= NO3Immobilisation;
+
+                    MineralisedN[i] = -NH4Immobilisation - NO3Immobilisation;
 
                     if (MathUtilities.IsGreaterThan(NDeficit, 0.0))
                         throw new Exception("Insufficient mineral N for immobilisation demand for C flow " + Name);

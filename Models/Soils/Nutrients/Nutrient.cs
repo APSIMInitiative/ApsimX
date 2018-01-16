@@ -1,4 +1,4 @@
-﻿namespace Models.Soils.Nutrient
+﻿namespace Models.Soils.Nutrients
 {
     using Interfaces;
     using Models.Core;
@@ -17,7 +17,7 @@
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
-    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph
+    public class Nutrient : ModelCollectionFromResource, INutrient, IVisualiseAsDirectedGraph
     {
         private DirectedGraph _directedGraphInfo;
 
@@ -78,6 +78,21 @@
             }
         }
 
+        /// <summary>
+        /// total Net N Mineralisaed in each soil layer
+        /// </summary>
+        public double[] MineralisedN
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Flows = Apsim.Children(this, typeof(CarbonFlow));
+
+                foreach (CarbonFlow f in Flows)
+                    values = MathUtilities.Add(values, f.MineralisedN);
+                return values;
+            }
+        }
         /// <summary>
         /// Total C in each soil layer
         /// </summary>

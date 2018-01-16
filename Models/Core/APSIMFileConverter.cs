@@ -24,7 +24,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 23; } }
+        public static int LastestVersion { get { return 24; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -118,29 +118,29 @@ namespace Models.Core
         /// <param name="node">The node to upgrade.</param>
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion1(XmlNode node, string fileName)
-    {
-        foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
         {
-            XmlUtilities.Rename(seriesNode, "Title", "Name");
-            XmlUtilities.Move(seriesNode, "X/TableName", seriesNode, "TableName");
-            XmlUtilities.Move(seriesNode, "X/FieldName", seriesNode, "XFieldName");
-            XmlUtilities.Move(seriesNode, "Y/FieldName", seriesNode, "YFieldName");
-            XmlUtilities.Move(seriesNode, "X2/FieldName", seriesNode, "X2FieldName");
-            XmlUtilities.Move(seriesNode, "Y2/FieldName", seriesNode, "Y2FieldName");
+            foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
+            {
+                XmlUtilities.Rename(seriesNode, "Title", "Name");
+                XmlUtilities.Move(seriesNode, "X/TableName", seriesNode, "TableName");
+                XmlUtilities.Move(seriesNode, "X/FieldName", seriesNode, "XFieldName");
+                XmlUtilities.Move(seriesNode, "Y/FieldName", seriesNode, "YFieldName");
+                XmlUtilities.Move(seriesNode, "X2/FieldName", seriesNode, "X2FieldName");
+                XmlUtilities.Move(seriesNode, "Y2/FieldName", seriesNode, "Y2FieldName");
 
-            bool showRegression = XmlUtilities.Value(seriesNode.ParentNode, "ShowRegressionLine") == "true";
-            if (showRegression)
-                seriesNode.AppendChild(seriesNode.OwnerDocument.CreateElement("Regression"));
+                bool showRegression = XmlUtilities.Value(seriesNode.ParentNode, "ShowRegressionLine") == "true";
+                if (showRegression)
+                    seriesNode.AppendChild(seriesNode.OwnerDocument.CreateElement("Regression"));
 
-            string seriesType = XmlUtilities.Value(seriesNode, "Type");
-            if (seriesType == "Line")
-                XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
+                string seriesType = XmlUtilities.Value(seriesNode, "Type");
+                if (seriesType == "Line")
+                    XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
 
-            XmlUtilities.DeleteValue(seriesNode, "X");
-            XmlUtilities.DeleteValue(seriesNode, "Y");
+                XmlUtilities.DeleteValue(seriesNode, "X");
+                XmlUtilities.DeleteValue(seriesNode, "Y");
 
+            }
         }
-    }
 
         /// <summary>Upgrades to version 2.</summary>
         /// <remarks>
@@ -718,7 +718,50 @@ namespace Models.Core
                 if (APSIMFileConverterUtilities.FindModelNode(n, "CarbonConcentration") == null)
                     n.AppendChild(DMnode);
             }
+        }
 
+        /// <summary>
+        /// Upgrades to version 24. Replace SoilNitrogen model with Nutrient.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion24(XmlNode node, string fileName)
+        {
+            // Delete all alias children.
+            foreach (XmlNode soilNitrogen in XmlUtilities.FindAllRecursivelyByType(node, "SoilNitrogen"))
+            {
+                XmlUtilities.SetValue(soilNitrogen.ParentNode, "Nutrient/ResourceName", "Nutrient");
+                soilNitrogen.ParentNode.RemoveChild(soilNitrogen);
+            }
+
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.FOMN", ".Nutrient.FOMN");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.FOMC", ".Nutrient.FOMC");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.HumicN", ".Nutrient.Humic.N");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.HumicC", ".Nutrient.Humic.C");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.MicrobialN", ".Nutrient.Biomass.N");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.MicrobialC", ".Nutrient.Biomass.C");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.urea", ".Nutrient.Urea.kgha");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.dlt_n_min_res", ".Nutrient.SurfaceResidue.MineralisedN");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.Denitrification", ".Nutrient.NO3.Denitrification.Value");
+            }
+
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+            {
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.FOMN", ".Nutrient.FOMN");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.FOMC", ".Nutrient.FOMC");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.HumicN", ".Nutrient.Humic.N");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.HumicC", ".Nutrient.Humic.C");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MicrobialN", ".Nutrient.Biomass.N");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MicrobialC", ".Nutrient.Biomass.C");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.urea", ".Nutrient.Urea.kgha");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.dlt_n_min_res", ".Nutrient.SurfaceResidue.MineralisedN");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.Denitrification", ".Nutrient.NO3.Denitrification.Value");
+
+            }
         }
     }
 }

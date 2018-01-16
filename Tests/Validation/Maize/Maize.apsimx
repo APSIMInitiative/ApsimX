@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="24">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -830,16 +830,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Soil.Nutrient.Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.Nutrient.SurfaceResidue.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -851,8 +851,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.Nutrient.NO3.Denitrification.Value);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -877,9 +877,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -1157,42 +1157,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -1367,6 +1331,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -1937,16 +1904,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Soil.Nutrient.Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.Nutrient.SurfaceResidue.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -1958,8 +1925,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.Nutrient.NO3.Denitrification.Value);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -1984,9 +1951,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -2257,42 +2224,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -2467,6 +2398,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -3077,42 +3011,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -3287,6 +3185,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -3515,42 +3416,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -3737,6 +3602,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -3962,42 +3830,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -4172,6 +4004,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -4389,42 +4224,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -4599,6 +4398,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -4791,42 +4593,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -5013,6 +4779,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -5205,42 +4974,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -5427,6 +5160,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -5611,42 +5347,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -5833,6 +5533,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -5995,42 +5698,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -6193,6 +5860,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -6385,42 +6055,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -6607,6 +6241,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -6769,42 +6406,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -6967,6 +6568,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -7140,42 +6744,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -7350,6 +6918,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -7512,42 +7083,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -7710,6 +7245,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -7894,42 +7432,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -8116,6 +7618,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -8300,42 +7805,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -8522,6 +7991,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -8714,42 +8186,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -8936,6 +8372,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -9117,42 +8556,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -9327,6 +8730,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -9519,42 +8925,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -9741,6 +9111,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -9903,42 +9276,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -10101,6 +9438,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -10260,42 +9600,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -10446,6 +9750,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -10597,42 +9904,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -10783,6 +10054,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -10989,42 +10263,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -11187,6 +10425,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -11401,42 +10642,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -11599,6 +10804,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -11794,42 +11002,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -11980,6 +11152,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -12205,42 +11380,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -12415,6 +11554,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
@@ -12612,16 +11754,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Soil.Nutrient.Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.Nutrient.SurfaceResidue.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -12633,8 +11775,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.Nutrient.NO3.Denitrification.Value);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -12659,9 +11801,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -12932,42 +12074,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -13142,6 +12248,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -14260,16 +13369,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Soil.Nutrient.Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.Nutrient.SurfaceResidue.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -14281,8 +13390,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.Nutrient.NO3.Denitrification.Value);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -14307,9 +13416,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -14580,42 +13689,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -14792,6 +13865,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -15440,16 +14516,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Soil.Nutrient.Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.Nutrient.SurfaceResidue.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -15461,8 +14537,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.Nutrient.NO3.Denitrification.Value);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -15487,9 +14563,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -15760,42 +14836,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -15972,6 +15012,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -16697,42 +15740,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -16895,6 +15902,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -17673,42 +16683,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -17871,6 +16845,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -18568,42 +17545,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -18766,6 +17707,9 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -19604,42 +18548,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -19768,6 +18676,9 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Manager>
               <Name>CropManagement</Name>
@@ -21148,42 +20059,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -21312,6 +20187,9 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Manager>
               <Name>CropManagement</Name>
@@ -22592,42 +21470,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -22756,6 +21598,9 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Manager>
               <Name>CropManagement</Name>
@@ -23965,16 +22810,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Soil.Nutrient.Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.Nutrient.SurfaceResidue.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -23986,8 +22831,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.Nutrient.NO3.Denitrification.Value);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -24012,9 +22857,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -24278,42 +23123,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -24484,6 +23293,9 @@ namespace Models
               <Longitude>0</Longitude>
               <DataSource>for Mahli al-Kaisi paper (Marsden Research farm), tes file , long term soybean</DataSource>
               <Comments>all data only from WSS</Comments>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -24778,16 +23590,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Soil.Nutrient.Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.Nutrient.SurfaceResidue.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -24799,8 +23611,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.Nutrient.NO3.Denitrification.Value);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -24825,9 +23637,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -25109,42 +23921,6 @@ namespace Models
               </SWCON>
               <residueinterception>0</residueinterception>
             </SoilWater>
-            <SoilNitrogen>
-              <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <fom_type>
-                <string>default</string>
-                <string>manure</string>
-                <string>mucuna</string>
-                <string>lablab</string>
-                <string>shemp</string>
-                <string>stable</string>
-              </fom_type>
-              <fract_carb>
-                <double>0.2</double>
-                <double>0.3</double>
-                <double>0.54</double>
-                <double>0.57</double>
-                <double>0.45</double>
-                <double>0</double>
-              </fract_carb>
-              <fract_cell>
-                <double>0.7</double>
-                <double>0.3</double>
-                <double>0.37</double>
-                <double>0.37</double>
-                <double>0.47</double>
-                <double>0.1</double>
-              </fract_cell>
-              <fract_lign>
-                <double>0.1</double>
-                <double>0.4</double>
-                <double>0.09</double>
-                <double>0.06</double>
-                <double>0.08</double>
-                <double>0.9</double>
-              </fract_lign>
-            </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -25338,6 +24114,9 @@ namespace Models
             <Latitude>42.48</Latitude>
             <Longitude>-92.23</Longitude>
             <DataSource>from DSSAT soybean williams 1982</DataSource>
+            <Nutrient>
+              <ResourceName>Nutrient</ResourceName>
+            </Nutrient>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -25806,16 +24585,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Soil.Nutrient.Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.Nutrient.SurfaceResidue.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -25827,8 +24606,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.Nutrient.NO3.Denitrification.Value);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -25853,9 +24632,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -26113,42 +24892,6 @@ namespace Models
               </SWCON>
               <residueinterception>0</residueinterception>
             </SoilWater>
-            <SoilNitrogen>
-              <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <fom_type>
-                <string>default</string>
-                <string>manure</string>
-                <string>mucuna</string>
-                <string>lablab</string>
-                <string>shemp</string>
-                <string>stable</string>
-              </fom_type>
-              <fract_carb>
-                <double>0.2</double>
-                <double>0.3</double>
-                <double>0.54</double>
-                <double>0.57</double>
-                <double>0.45</double>
-                <double>0</double>
-              </fract_carb>
-              <fract_cell>
-                <double>0.7</double>
-                <double>0.3</double>
-                <double>0.37</double>
-                <double>0.37</double>
-                <double>0.47</double>
-                <double>0.1</double>
-              </fract_cell>
-              <fract_lign>
-                <double>0.1</double>
-                <double>0.4</double>
-                <double>0.09</double>
-                <double>0.06</double>
-                <double>0.08</double>
-                <double>0.9</double>
-              </fract_lign>
-            </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -26307,6 +25050,9 @@ namespace Models
             <Longitude>0</Longitude>
             <DataSource>for varius test</DataSource>
             <Comments>from WSS and saxton</Comments>
+            <Nutrient>
+              <ResourceName>Nutrient</ResourceName>
+            </Nutrient>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -26972,42 +25718,6 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -27133,6 +25843,9 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               <Latitude>999999</Latitude>
               <Longitude>999999</Longitude>
               <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <MicroClimate>
               <Name>MicroClimate</Name>
@@ -27481,16 +26194,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+			BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Soil.Nutrient.Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.Nutrient.SurfaceResidue.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
 			int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -27502,8 +26215,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.Nutrient.NO3.Denitrification.Value);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -27528,9 +26241,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+			BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -33364,42 +32077,6 @@ This trial was conducted to provide data for parametersising the Leaf Area model
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -33517,6 +32194,9 @@ This trial was conducted to provide data for parametersising the Leaf Area model
               <Latitude>999999</Latitude>
               <Longitude>999999</Longitude>
               <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -33799,16 +32479,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Soil.Nutrient.Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.Nutrient.SurfaceResidue.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -33820,8 +32500,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.Nutrient.NO3.Denitrification.Value);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -33846,9 +32526,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -35947,42 +34627,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -36100,6 +34744,9 @@ namespace Models
               <Latitude>999999</Latitude>
               <Longitude>999999</Longitude>
               <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -36505,16 +35152,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Soil.Nutrient.Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.Nutrient.SurfaceResidue.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -36526,8 +35173,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.Nutrient.NO3.Denitrification.Value);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -36552,9 +35199,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+		    BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -36851,42 +35498,6 @@ namespace Models
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -37004,6 +35615,9 @@ namespace Models
               <Latitude>999999</Latitude>
               <Longitude>999999</Longitude>
               <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
+              <Nutrient>
+                <ResourceName>Nutrient</ResourceName>
+              </Nutrient>
             </Soil>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -37401,16 +36015,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+			BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Soil.Nutrient.Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.Nutrient.SurfaceResidue.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
 			int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -37422,8 +36036,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.Nutrient.NO3.Denitrification.Value);
 			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -37448,9 +36062,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Soil.Nutrient.Humic.N);
+			BiomN = MathUtilities.Sum(Soil.Nutrient.Biomass.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -38673,42 +37287,6 @@ namespace Models
               </SWCON>
               <residueinterception>0</residueinterception>
             </SoilWater>
-            <SoilNitrogen>
-              <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <fom_type>
-                <string>default</string>
-                <string>manure</string>
-                <string>mucuna</string>
-                <string>lablab</string>
-                <string>shemp</string>
-                <string>stable</string>
-              </fom_type>
-              <fract_carb>
-                <double>0.2</double>
-                <double>0.3</double>
-                <double>0.54</double>
-                <double>0.57</double>
-                <double>0.45</double>
-                <double>0</double>
-              </fract_carb>
-              <fract_cell>
-                <double>0.7</double>
-                <double>0.3</double>
-                <double>0.37</double>
-                <double>0.37</double>
-                <double>0.47</double>
-                <double>0.1</double>
-              </fract_cell>
-              <fract_lign>
-                <double>0.1</double>
-                <double>0.4</double>
-                <double>0.09</double>
-                <double>0.06</double>
-                <double>0.08</double>
-                <double>0.9</double>
-              </fract_lign>
-            </SoilNitrogen>
             <InitialWater>
               <Name>InitialWater</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -38980,6 +37558,9 @@ namespace Models
             <Latitude>-2.15</Latitude>
             <Longitude>30.45</Longitude>
             <DataSource>Rwanda soil database using properties for Ferralsol</DataSource>
+            <Nutrient>
+              <ResourceName>Nutrient</ResourceName>
+            </Nutrient>
           </Soil>
           <Plant>
             <Name>Maize</Name>
