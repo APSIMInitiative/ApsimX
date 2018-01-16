@@ -47,11 +47,6 @@ namespace UserInterface.Presenters
         private Object logFileMutex;
 
         /// <summary>
-        /// Mutual exclusion semaphore controlling access to the section of code updating the progress bar.
-        /// </summary>
-        private Object updateProgressMutex;
-
-        /// <summary>
         /// List of all Azure jobs.
         /// </summary>
         private List<JobDetails> jobList;
@@ -60,8 +55,7 @@ namespace UserInterface.Presenters
         {
             MainPresenter = mainPresenter;
             jobList = new List<JobDetails>();
-            logFileMutex = new object();
-            updateProgressMutex = new object();
+            logFileMutex = new object();            
             currentlyDownloading = new List<Guid>();
 
             FetchJobs = new BackgroundWorker();
@@ -166,8 +160,7 @@ namespace UserInterface.Presenters
                 }
                 // refresh every 10 seconds
                 System.Threading.Thread.Sleep(10000);
-            }
-            
+            }            
         }
 
         /// <summary>
@@ -210,22 +203,18 @@ namespace UserInterface.Presenters
         /// <returns>List of Jobs. Null if the thread is asked to cancel, or if unable to update the progress bar.</returns>
         private List<JobDetails> ListJobs()
         {
-            lock (updateProgressMutex)
+            try
             {
-                try
-                {
-                    view.ShowProgressBar();
-                    view.UpdateJobLoadStatus(0);
-                } catch (NullReferenceException)
-                {
-                    return null;
-                } catch (Exception e)
-                {
-                    ShowError(e.ToString());
-                }                
+                view.ShowLoadingProgressBar();
+                view.UpdateJobLoadStatus(0);
+            } catch (NullReferenceException)
+            {
+                return null;
+            } catch (Exception e)
+            {
+                ShowError(e.ToString());
             }
-
-            double progress;
+            
             List<JobDetails> jobs = new List<JobDetails>();
             var pools = batchClient.PoolOperations.ListPools();
             var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };            
@@ -240,39 +229,19 @@ namespace UserInterface.Presenters
                     return null;
                 }
 
-                lock (updateProgressMutex)
+                try
+                {                        
+                    view.UpdateJobLoadStatus(Math.Min(100.0 * i / length, 100));
+                } catch (NullReferenceException)
                 {
-                    try
-                    {                        
-                        view.UpdateJobLoadStatus(Math.Min(100.0 * i / length, 100));
-                    }
-                    catch (NullReferenceException)
-                    {
-                        return null;
-                    }
-                    catch (Exception e)
-                    {
-                        ShowError(e.ToString());
-                    }
-
-                }                
-                string owner = GetAzureMetaData("job-" + cloudJob.Id, "Owner");
-
-                /*
-                string html = "";
-                string url = @"https://batch.core.windows.net/jobs/{" + cloudJob.Id + "}/taskcounts?api-version=2017-09-01.6.0";
-                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-                using (HttpWebResponse response = (HttpWebResponse)req.GetResponse())
+                    return null;
+                } catch (Exception e)
                 {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        using (StreamReader reader = new StreamReader(stream))
-                        {
-                            html = reader.ReadToEnd();
-                        }
-                    }
+                    ShowError(e.ToString());
                 }
-                */
+
+                          
+                string owner = GetAzureMetaData("job-" + cloudJob.Id, "Owner");
 
                 //var tasks = ListTasks(Guid.Parse(cloudJob.Id));
                 // for some reason the succeeded task count is always exactly double the actual number of tasks
@@ -325,9 +294,8 @@ namespace UserInterface.Presenters
                 jobs.Add(job);
                 i++;
             }
-            view.HideProgressBar();
-            if (jobs == null) return new List<JobDetails>();
-            Console.WriteLine("Finished getting jobs");
+            view.HideLoadingProgressBar();
+            if (jobs == null) return new List<JobDetails>();            
             return jobs;
         }
 
@@ -499,29 +467,52 @@ namespace UserInterface.Presenters
             return jobList.FirstOrDefault(x => x.Id == id);
         }
 
+        public void UpdateDownloadProgress(double progress, string jobName)
+        {
+            view.UpdateDownloadProgress(progress, jobName);
+        }
+
         public bool OngoingDownload()
         {
             return currentlyDownloading.Count() > 0;
         }
 
+        /// <summary>
+        /// Downloads the results of a list of jobs.
+        /// </summary>
+        /// <param name="jobsToDownload">List of IDs of the jobs.</param>
+        /// <param name="saveToCsv">If true, results will be combined into a csv file.</param>
+        /// <param name="includeDebugFiles">If true, debug files will be downloaded.</param>
+        /// <param name="keepOutputFiles">If true, the raw .db output files will be saved.</param>
         public void DownloadResults(List<string> jobsToDownload, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles)
         {
-            if (Directory.GetFiles((string)Settings.Default["OutputDir"]).Length > 0 && !ShowWarning("Files detected in output directory. Results will be generated from ALL files in this directory. Are you certain you wish to continue?"))
+            // TODO : make jobs download serially
+            if (OngoingDownload())
+            {
+                ShowError("Unable to start a new batch of downloads - one or more downloads are already ongoing.");
                 return;
+            }
+
+            if (Directory.GetFiles((string)Settings.Default["OutputDir"]).Length > 0 && !view.ShowWarning("Files detected in output directory. Results will be generated from ALL files in this directory. Are you certain you wish to continue?"))
+                return;
+            view.ShowDownloadProgressBar();            
             string path = (string)Settings.Default["OutputDir"];
             AzureResultsDownloader dl;
             Guid jobId;
             foreach (string id in jobsToDownload)
-            {
-                // if the job id is invalid, just skip downloading this job                
+            {                
+                // if the job id is invalid, skip downloading this job                
                 if (!Guid.TryParse(id, out jobId)) continue;
-
-                //dl = new AzureResultsDownloader(jobId, GetJob(jobId).DisplayName, this, saveToCsv);
-                dl = new AzureResultsDownloader(jobId, GetJob(jobId).DisplayName, path, this, saveToCsv);                
+                view.UpdateDownloadProgress(0, GetJob(jobId).DisplayName);                
+                dl = new AzureResultsDownloader(jobId, GetJob(jobId).DisplayName, path, this, saveToCsv, includeDebugFiles, keepOutputFiles);                
                 dl.DownloadResults();
-            }
+            }            
         }
 
+        public void SetupCredentials()
+        {
+            AzureCredentialsSetup setup = new AzureCredentialsSetup();
+        }
         /// <summary>
         /// Removes a job from the list of currently downloading jobs.
         /// </summary>
@@ -541,22 +532,12 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Displays a warning to the user.
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <returns>True if the user wants to continue, false otherwise.</returns>
-        public bool ShowWarning(string msg)
-        {
-            int x = MainPresenter.ShowMsgDialog(msg, "Sanity Check Failed - High-Grade Insanity Detected!", Gtk.MessageType.Warning, Gtk.ButtonsType.OkCancel);
-            return x == -5;
-        }
-
-        /// <summary>
         /// Writes to a log file and asks the view to display an error message if download was unsuccessful.
         /// </summary>
         /// <param name="code"></param>
         public void DisplayFinishedDownloadStatus(string name, int code, string path, DateTime timeStamp)
         {
+            view.HideDownloadProgressBar();
             if (code == 0) return;
             string msg = timeStamp.ToLongTimeString().Split(' ')[0] + ": " +  name + ": ";
             switch (code)
@@ -584,28 +565,12 @@ namespace UserInterface.Presenters
 
                 }
             }
-            
-            
-                        
         }
 
-
-        public void SetupCredentials()
-        {
-            AzureCredentialsSetup credentialsWindow = new AzureCredentialsSetup();
-        }
         /// <summary>
-        /// Creates a dialog box asking if the user wishes to continue.
+        /// Halts the execution of a job. 
         /// </summary>
-        /// <param name="msg">Message to be displayed</param>
-        /// <param name="title">Title of dialog box</param>
-        /// <returns>True if the user wishes to continue. False otherwise.</returns>
-        public bool AskToContinue(string msg, string title)
-        {
-            int x = MainPresenter.ShowMsgDialog(msg, title, Gtk.MessageType.Question, Gtk.ButtonsType.OkCancel);
-            return x == -5;
-        }
-
+        /// <param name="id">ID of the job.</param>
         public void StopJob(Guid id)
         {
             try
@@ -620,12 +585,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Deletes a job (and all associated files (I think)) from Azure cloud storage.
         /// </summary>
-        /// <param name="id">id of the job</param>
+        /// <param name="id">ID of the job.</param>
         public void DeleteJob(string id)
         {
             // cancel the fetch jobs worker
             FetchJobs.CancelAsync();
-            view.HideProgressBar();
+            view.HideLoadingProgressBar();
 
             // try to parse the id. if it is not a valid Guid, return
             Guid jobId;

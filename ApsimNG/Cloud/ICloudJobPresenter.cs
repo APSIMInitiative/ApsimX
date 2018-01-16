@@ -10,6 +10,7 @@ namespace ApsimNG.Cloud
     /// Interface defining standard functionality which all cloud job presenters much implement.
     /// </summary>
     interface ICloudJobPresenter
-    {        
+    {
+        void DownloadResults(List<string> jobIds, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles);
     }
 }

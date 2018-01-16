@@ -13,7 +13,7 @@ namespace ApsimNG.Cloud
         private CheckButton keepRawOutputs;
         private CheckButton generateCsv;
 
-        private Button btnSave;
+        private Button btnDownload;
         private Button btnChangeOutputDir;
 
         private ProgressBar currentFileProgress;
@@ -57,14 +57,14 @@ namespace ApsimNG.Cloud
             keepRawOutputs = new CheckButton("Keep raw output files");
             generateCsv = new CheckButton("Export results to .csv");
 
-            btnSave = new Button("Save");
-            btnSave.Clicked += SaveOptions;
+            btnDownload = new Button("Download");
+            btnDownload.Clicked += Download;
 
             btnChangeOutputDir = new Button("...");
             btnChangeOutputDir.Clicked += ChangeOutputDir;
 
             entryOutputDir = new Entry((string)Properties.Settings.Default["OutputDir"]) { Sensitive = false };
-            
+            entryOutputDir.WidthChars = entryOutputDir.Text.Length;
 
             downloadDirectoryContainer.PackStart(new Label("Output Directory: "), false, false, 0);
             downloadDirectoryContainer.PackStart(entryOutputDir, true, true, 0);
@@ -82,18 +82,30 @@ namespace ApsimNG.Cloud
             vboxPrimary.PackStart(new Label(""));
 
             vboxPrimary.PackEnd(new Label(""));
-            vboxPrimary.PackEnd(btnSave, false, false, 0);
+            vboxPrimary.PackEnd(btnDownload, false, false, 0);
 
-            Add(vboxPrimary);
+            Frame primaryContainer = new Frame("Download Settings");
+            primaryContainer.Add(vboxPrimary);
+            Add(primaryContainer);
             ShowAll();
-
+            
             currentFileProgress.HideAll();
             overallProgress.HideAll();
+            
         }
 
-        private void SaveOptions(object sender, EventArgs e)
+        /// <summary>
+        /// Downloads the currently selected jobs, taking into account the settings.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Download(object sender, EventArgs e)
         {
-        }        
+            presenter.DownloadResults(jobs, generateCsv.Active, includeDebugFiles.Active, keepRawOutputs.Active);
+            btnDownload.Clicked -= Download;
+            btnChangeOutputDir.Clicked -= ChangeOutputDir;
+            Destroy();
+        }
 
         private void ChangeOutputDir(object sender, EventArgs e)
         {

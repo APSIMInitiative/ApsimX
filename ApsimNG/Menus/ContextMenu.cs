@@ -410,6 +410,16 @@ namespace UserInterface.Presenters
             }
         }
 
+        [ContextMenu(MenuName = "Factor Control")]
+        public void OpenFactorControl(object sender, EventArgs e)
+        {
+            object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+            explorerPresenter.HideRightHandPanel();
+            explorerPresenter.ShowInRightHandPanel(model,
+                                                   "UserInterface.Views.FactorControlView",
+                                                   "UserInterface.Presenters.FactorControlPresenter");
+        }
+
         [ContextMenu(MenuName = "Run on cloud (In development - DO NOT USE)",
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),

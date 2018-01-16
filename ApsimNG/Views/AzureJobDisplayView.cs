@@ -71,6 +71,15 @@ namespace UserInterface.Views
         private HBox hboxPrimary;
         private VBox controlsContainer;
 
+        /// <summary>
+        /// Container for the job load progress bar.
+        /// Only visible when the job list is being updated.
+        /// </summary>
+        private HBox progress;
+
+        private HBox downloadProgressContainer;
+
+
         /** controls **/
 
         /// <summary>
@@ -97,11 +106,15 @@ namespace UserInterface.Views
         private ProgressBar loadingProgress;
 
         /// <summary>
-        /// Container for the job load progress bar.
-        /// Only visible when the job list is being updated.
+        /// Progress bar for downloading job results.
         /// </summary>
-        private HBox progress;
+        private ProgressBar downloadProgress;
 
+        /// <summary>
+        /// Label to display info about download in progress.
+        /// </summary>
+        private Label lblDownloadProgress;
+        
         /// <summary>
         /// Allows the user to change the download directory.        
         /// </summary>
@@ -283,6 +296,13 @@ namespace UserInterface.Views
             chkFilterOwner.Toggled += ApplyFilter;
             chkFilterOwner.Yalign = 0;
 
+            downloadProgress = new ProgressBar(new Adjustment(0, 0, 1, 0.01, 0.01, 1));
+            lblDownloadProgress = new Label("Downloading: ");
+
+            downloadProgressContainer = new HBox();
+            downloadProgressContainer.PackStart(lblDownloadProgress, false, false, 0);
+            downloadProgressContainer.PackStart(downloadProgress, false, false, 0);
+
             loadingProgress = new ProgressBar(new Adjustment(0, 0, 100, 0.01, 0.01, 100));            
             loadingProgress.Adjustment.Lower = 0;
             loadingProgress.Adjustment.Upper = 100;
@@ -362,12 +382,39 @@ namespace UserInterface.Views
 
             vboxPrimary = new VBox();
             vboxPrimary.PackStart(hboxPrimary);
-            vboxPrimary.PackStart(lblDownloadStatus, false, false, 0);
+            vboxPrimary.PackStart(lblDownloadStatus, false, false, 0);            
             vboxPrimary.PackEnd(progress, false, false, 0);
+            vboxPrimary.PackEnd(downloadProgressContainer, false, false, 0);
 
             _mainWidget = vboxPrimary;
             vboxPrimary.ShowAll();
+
+            downloadProgressContainer.HideAll();
         }
+
+        /// <summary>
+        /// Creates a dialog box asking if the user wishes to continue.
+        /// </summary>
+        /// <param name="msg">Message to be displayed</param>
+        /// <param name="title">Title of dialog box</param>
+        /// <returns>True if the user wishes to continue. False otherwise.</returns>
+        public bool AskToContinue(string msg, string title)
+        {
+            int x = Presenter.MainPresenter.ShowMsgDialog(msg, title, MessageType.Question, ButtonsType.OkCancel);
+            return x == -5;
+        }
+
+        /// <summary>
+        /// Displays a warning to the user.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns>True if the user wants to continue, false otherwise.</returns>
+        public bool ShowWarning(string msg)
+        {
+            int x = Presenter.MainPresenter.ShowMsgDialog(msg, "Sanity Check Failed - High-Grade Insanity Detected!", Gtk.MessageType.Warning, Gtk.ButtonsType.OkCancel);
+            return x == -5;
+        }
+
 
         // TODO : combine functionality in these sorting methods - this is a horrible solution
         private int SortName(TreeModel model, TreeIter a, TreeIter b)
@@ -490,15 +537,25 @@ namespace UserInterface.Views
             return TimeSpan.Compare(t1, t2);
         }
 
+        public void HideDownloadProgressBar()
+        {
+            downloadProgressContainer.HideAll();
+        }
+
+        public void ShowDownloadProgressBar()
+        {
+            downloadProgressContainer.ShowAll();
+        }
+
         /// <summary>
         /// Makes the job load progress bar invisible.
         /// </summary>
-        public void HideProgressBar()
+        public void HideLoadingProgressBar()
         {
             progress.HideAll();
         }
 
-        public void ShowProgressBar()
+        public void ShowLoadingProgressBar()
         {
             progress.ShowAll();
         }
@@ -711,6 +768,16 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Updates the download progress bar.
+        /// </summary>
+        /// <param name="progress">Progress of the download in the range [0, 1]</param>
+        /// <param name="jobName">Name of the job being downloaded.</param>
+        public void UpdateDownloadProgress(double progress, string jobName)
+        {
+            downloadProgress.Adjustment.Value = Math.Round(progress, 2);            
+        }
+
+        /// <summary>
         /// Event handler for the stop job button.
         /// Asks the user for confirmation and halts the execution of any 
         /// selected jobs which have not already finished.
@@ -773,6 +840,7 @@ namespace UserInterface.Views
         {
             Presenter.SetupCredentials();
         }
+        
 
         /// <summary>
         /// Detaches all event handlers from view controls.
@@ -797,27 +865,16 @@ namespace UserInterface.Views
         {            
             lblDownloadStatus.Text = "";
             vboxDownloadStatuses = new VBox();
-            if (Presenter.OngoingDownload())
-            {
-                Presenter.ShowError("Unable to start a new batch of downloads - a download is already ongoing!");
-                return;
-            }
-            DownloadWindow dl = new DownloadWindow();
-            /*
-            //if there are already files in the output directory, ask the user if they want to continue
-            if (Directory.GetFiles((string)ApsimNG.Properties.Settings.Default["OutputDir"]).Length > 0 && !Presenter.ShowWarning("Files detected in output directory. Results will be generated from ALL files in this directory. Are you certain you wish to continue?"))
-                return;
-            */
+            
             TreePath[] selectedRows = tree.Selection.GetSelectedRows();            
             List<string> jobIds = new List<string>();
             foreach (TreePath row in selectedRows)
             {
                 jobIds.Add(GetId(row));
-            }
-            // it's there if we need it
-            //DownloadWindow downloadWindow = new DownloadWindow(Presenter, jobIds);
-            Presenter.DownloadResults(jobIds, exportToCsv, false, false);
+            }            
+            DownloadWindow dl = new DownloadWindow(Presenter, jobIds);            
         }
+        
 
         /// <summary>
         /// Gets the ID of a specific job.

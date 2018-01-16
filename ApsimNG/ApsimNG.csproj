@@ -192,6 +192,7 @@
     <Compile Include="Presenters\DataStorePresenter.cs" />
     <Compile Include="Presenters\ExperimentPresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
+    <Compile Include="Presenters\FactorControlPresenter.cs" />
     <Compile Include="Presenters\FactorPresenter.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
     <Compile Include="Presenters\GenericPresenter.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Views\EditBoxView.cs" />
     <Compile Include="Views\EditorView.cs" />
     <Compile Include="Views\ExplorerView.cs" />
+    <Compile Include="Views\FactorControlView.cs" />
     <Compile Include="Views\FolderView.cs" />
     <Compile Include="Views\GeneralView.cs" />
     <Compile Include="Views\GraphView.cs" />

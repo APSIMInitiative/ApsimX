@@ -50,17 +50,6 @@
             this.view.Presenter = this;
             
             GetCredentials(null, null);
-            
-            // store credentials
-            storageCredentials = StorageCredentials.FromConfiguration();
-            batchCredentials = BatchCredentials.FromConfiguration();
-            poolSettings = PoolSettings.FromConfiguration();
-
-            storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
-            uploader = new FileUploader(storageAccount);
-            var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
-            batchClient = BatchClient.Open(sharedCredentials);
-
 
             this.view.SetDefaultJobName( ((Models.Factorial.Experiment)model).Name );
             this.model = (IModel)model;
@@ -600,20 +589,42 @@
         }
 
         public void Detach()
-        {            
+        {
         }
 
+        /// <summary>
+        /// Initialises the uploader and batch client. Asks user for an Azure licence file and saves the credentials
+        /// if the credentials have not previously been set.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GetCredentials(object sender, EventArgs e)
         {
-            if (!CredentialsExist())
+            if (CredentialsExist())
             {
+                // store credentials
+                storageCredentials = StorageCredentials.FromConfiguration();
+                batchCredentials = BatchCredentials.FromConfiguration();
+                poolSettings = PoolSettings.FromConfiguration();
+
+                storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
+                uploader = new FileUploader(storageAccount);
+                var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
+                batchClient = BatchClient.Open(sharedCredentials);
+            } else
+            {
+                // ask user for a credentials file
                 AzureCredentialsSetup cred = new AzureCredentialsSetup();
                 cred.Destroyed += GetCredentials;
             }
         }
 
+        /// <summary>
+        /// Checks if Azure credentials exist in Settings.Default. This method does not check their validity.
+        /// </summary>
+        /// <returns>True if credentials exist, false otherwise.</returns>
         private bool CredentialsExist()
-        {
+        {            
             string[] credentials = new string[] { "BatchAccount", "BatchUrl", "BatchKey", "StorageAccount", "StorageKey" };
             foreach (string key in credentials)
             {
@@ -622,12 +633,7 @@
             }
             return true;
         }
-
-        public string ConvertToHtml(string folder)
-        {
-            return "";
-        }     
-
+        
         public void CancelJobSubmission()
         {
             explorerPresenter.HideRightHandPanel();

@@ -49,6 +49,16 @@ namespace ApsimNG.Cloud
         private bool exportCsv;
 
         /// <summary>
+        /// Whether or not the debugging files should also be downloaded.
+        /// </summary>
+        private bool includeDebugs;
+
+        /// <summary>
+        /// Whether or not the raw output files should be saved.
+        /// </summary>
+        private bool keepOutputs;
+
+        /// <summary>
         /// Azure cloud storage account.
         /// </summary>
         private CloudStorageAccount storageAccount;
@@ -73,12 +83,31 @@ namespace ApsimNG.Cloud
         /// </summary>
         private BackgroundWorker downloader;
 
-        public AzureResultsDownloader(Guid id, string jobName, string path, AzureJobDisplayPresenter explorer, bool export)
+        /// <summary>
+        /// How many blobs have been downloaded.
+        /// </summary>
+        private int numBlobsComplete;
+
+        /// <summary>
+        /// Total number of blobs to download.
+        /// </summary>
+        private int numBlobs;
+
+        /// <summary>
+        /// Mutual exclusion semaphore for updating the progress of a job.
+        /// </summary>
+        private object progressMutex;
+
+        public AzureResultsDownloader(Guid id, string jobName, string path, AzureJobDisplayPresenter explorer, bool export, bool includeDebugFiles, bool keepOutputFiles)
         {
+            numBlobsComplete = 0;
             jobId = id;
             exportCsv = export;
+            includeDebugs = includeDebugFiles;
+            keepOutputs = keepOutputFiles;
             outputPath = path;
             rawResultsPath = outputPath + "\\" + jobId.ToString();
+            progressMutex = new object();
             try
             {
                 if (!Directory.Exists(rawResultsPath)) Directory.CreateDirectory(rawResultsPath);
@@ -111,10 +140,12 @@ namespace ApsimNG.Cloud
         public void DownloadResults()
         {
             // TODO : add a checkbox to include debugging files
-            int numJobs = CountBlobs(false); // TODO : implement a progress bar using this
+            numBlobs = CountBlobs(); // TODO : implement a progress bar using this
 
             downloader = new BackgroundWorker();
+            downloader.WorkerReportsProgress = true;
             downloader.DoWork += Downloader_DoWork;
+            downloader.ProgressChanged += DownloadProgressChanged;
             downloader.RunWorkerAsync();
         }
 
@@ -139,7 +170,8 @@ namespace ApsimNG.Cloud
                                      {
                                          bool skip = false;
                                          string extension = Path.GetExtension(blob.Name.ToLower());
-                                         //if (extension == ".stdout" || extension == ".sum") skip = true;
+                                         // if we don't want to download debugging files and this is a debugging file, skip it
+                                         if (!includeDebugs && (extension == ".stdout" || extension == ".sum")) skip = true;
                                          if (!skip && !downloadedOutputs.Contains(blob.Name))
                                          {
                                              blob.DownloadToFile(Path.Combine(rawResultsPath, blob.Name), FileMode.Create);
@@ -147,8 +179,8 @@ namespace ApsimNG.Cloud
                                              {
                                                  downloadedOutputs.Add(blob.Name);
                                              }
-                                         }                                         
-                                         // report progress?
+                                         }
+                                         downloader.ReportProgress(0, blob.Name);
                                      });                    
                     if (complete) break;
                 }
@@ -176,6 +208,22 @@ namespace ApsimNG.Cloud
             }            
             presenter.DownloadComplete(jobId);
             presenter.DisplayFinishedDownloadStatus(name, success, outputPath, DateTime.Now);
+        }
+
+        /// <summary>
+        /// Event handler for the background worker's progress changed event. Passes the download progress and job name on to the presenter.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DownloadProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            string jobName = e.UserState.ToString();
+            lock (progressMutex)
+            {
+                numBlobsComplete++;
+                double progress = 1.0 * numBlobsComplete / numBlobs;
+                presenter.UpdateDownloadProgress(progress, jobName);
+            }
         }
 
         /// <summary>
@@ -433,7 +481,7 @@ namespace ApsimNG.Cloud
         /// <param name="jobId">Id of the container.</param>
         /// <param name="includeDebugFiles">Whether or not to count debug file blobs.</param>
         /// <returns></returns>
-        private int CountBlobs(bool includeDebugFiles)
+        private int CountBlobs()
         {
             try
             {
@@ -445,7 +493,7 @@ namespace ApsimNG.Cloud
                 foreach (var blob in blobs)
                 {
                     string extension = Path.GetExtension(blob.Uri.LocalPath.ToLower());
-                    if (includeDebugFiles || !(extension == ".stdout" || extension == ".sum")) count++;
+                    if (includeDebugs || !(extension == ".stdout" || extension == ".sum")) count++;
                 }
                 return count;
             }
