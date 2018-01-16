@@ -216,7 +216,7 @@ namespace UnitTests
         public void ChildrenRecursivelyTest()
         {
             List<IModel> allChildren = Apsim.ChildrenRecursively(simulation);
-            Assert.AreEqual(allChildren.Count, 24);
+            Assert.AreEqual(allChildren.Count, 149);
 
             List<IModel> childZones = Apsim.ChildrenRecursively(simulation, typeof(Zone));
             Assert.AreEqual(childZones.Count, 3);
@@ -247,7 +247,7 @@ namespace UnitTests
            
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "wheat"));
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "clock"));
-            Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilNitrogen"));
+            Assert.IsNotNull(Apsim.Find(testrunSimulations, "Nutrient"));
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilWater"));
         }
 
