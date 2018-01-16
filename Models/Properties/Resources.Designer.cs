@@ -81,7 +81,7 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///&lt;Plant xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+        ///&lt;Plant&gt;
         ///  &lt;Name&gt;Maize&lt;/Name&gt;
         ///  &lt;OrganArbitrator&gt;
         ///    &lt;Name&gt;Arbitrator&lt;/Name&gt;
@@ -93,11 +93,34 @@ namespace Models.Properties {
         ///      &lt;Name&gt;DMArbitrator&lt;/Name&gt;
         ///      &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
         ///    &lt;/RelativeAllocation&gt;
-        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInD [rest of string was truncated]&quot;;.
+        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
+        ///  &lt;/OrganArbitrator&gt;
+        ///  &lt;Phenology&gt;
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Maize {
             get {
                 return ResourceManager.GetString("Maize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;Windows-1252&quot;?&gt;
+        ///    &lt;Nutrient&gt;
+        ///      &lt;Name&gt;Nutrient&lt;/Name&gt;
+        ///      &lt;Memo&gt;
+        ///        &lt;Name&gt;TitlePage&lt;/Name&gt;
+        ///        &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
+        ///        &lt;MemoText&gt;&lt;![CDATA[
+        ///# The APSIM Soil Nutrient Model
+        ///
+        ///The APSIM soil nutrient model has been developed to simulate soil organic matter pools and the flows and losses of soil nutrients.  This model captures the functionality previously provided in the APSIM SoilN model ([probert_apsims_1998]).
+        ///
+        ///The  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Nutrient {
+            get {
+                return ResourceManager.GetString("Nutrient", resourceCulture);
             }
         }
         

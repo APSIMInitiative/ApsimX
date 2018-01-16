@@ -1,4 +1,4 @@
-﻿namespace Models.Soils.Nutrient
+﻿namespace Models.Soils.Nutrients
 {
     using Models.Core;
     using PMF.Functions;
