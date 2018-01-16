@@ -750,6 +750,8 @@ namespace Models.Core
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.Denitrification", ".Nutrient.NO3.Denitrification.Value");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.TotalC", ".Nutrient.TotalC");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.NO3", ".Nutrient.NO3.kgha");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.NH4", ".Nutrient.NH4.kgha");
             }
 
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
@@ -766,6 +768,9 @@ namespace Models.Core
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.Denitrification", ".Nutrient.NO3.Denitrification.Value");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.TotalC", ".Nutrient.TotalC");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.NO3", ".Nutrient.NO3.kgha");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.NH4", ".Nutrient.NH4.kgha");
+
             }
         }
     }
