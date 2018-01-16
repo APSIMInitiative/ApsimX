@@ -760,14 +760,13 @@ namespace Models.Core
                     APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute NO3;");
                 if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.NH4", "NH4.kgha"))
                     APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute NH4;");
-                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.Denitrification", "Denitrification.Value"))
-                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NFlow Denitrification;");
-
 
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.TotalC", ".Nutrient.TotalC");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.Denitrification", ".Nutrient.Natm");
+                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
             }
 
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
@@ -781,7 +780,8 @@ namespace Models.Core
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.urea", ".Nutrient.Urea.kgha");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.dlt_n_min_res", ".Nutrient.SurfaceResidue.ResidueDecomposition.MineralisedN");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.Denitrification", ".Nutrient.NO3.Denitrification.Value");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.Denitrification", ".Nutrient.Natm");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.TotalC", ".Nutrient.TotalC");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.NO3", ".Nutrient.NO3.kgha");

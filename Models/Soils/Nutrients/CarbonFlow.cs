@@ -33,6 +33,11 @@ namespace Models.Soils.Nutrients
         public double[] MineralisedN { get; set; }
 
         /// <summary>
+        /// CO2 lost to the atmosphere
+        /// </summary>
+        public double[] Catm { get; set; }
+
+        /// <summary>
         /// Name of destination pool
         /// </summary>
         [Description("Names of destination pools (CSV)")]
@@ -57,6 +62,7 @@ namespace Models.Soils.Nutrients
                 destinations.Add(destination);
             }
             MineralisedN = new double[(Parent as NutrientPool).C.Length];
+            Catm = new double[(Parent as NutrientPool).C.Length];
         }
 
         /// <summary>
@@ -107,12 +113,12 @@ namespace Models.Soils.Nutrients
 
                 source.C[i] -= carbonFlowFromSource;
                 source.N[i] -= nitrogenFlowFromSource;
+                Catm[i] = carbonFlowFromSource - MathUtilities.Sum(carbonFlowToDestination);
                 for (int j = 0; j < destinations.Count; j++)
                 {
                     destinations[j].C[i] += carbonFlowToDestination[j];
                     destinations[j].N[i] += nitrogenFlowToDestination[j];
                 }
-
 
                 if (TotalNitrogenFlowToDestinations <= nitrogenFlowFromSource)
                 {

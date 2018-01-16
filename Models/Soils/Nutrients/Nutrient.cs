@@ -78,6 +78,56 @@
             }
         }
 
+
+        /// <summary>
+        /// total C lost to the atmosphere
+        /// </summary>
+        public double[] Catm
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Flows = Apsim.Children(this, typeof(CarbonFlow));
+
+                foreach (CarbonFlow f in Flows)
+                    values = MathUtilities.Add(values, f.Catm);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// total N lost to the atmosphere
+        /// </summary>
+        public double[] Natm
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Flows = Apsim.Children(this, typeof(NFlow));
+
+                foreach (NFlow f in Flows)
+                    values = MathUtilities.Add(values, f.Natm);
+                return values;
+            }
+        }
+
+
+        /// <summary>
+        /// total N lost to the atmosphere
+        /// </summary>
+        public double[] N2Oatm
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Flows = Apsim.Children(this, typeof(NFlow));
+
+                foreach (NFlow f in Flows)
+                    values = MathUtilities.Add(values, f.N2Oatm);
+                return values;
+            }
+        }
+
         /// <summary>
         /// total Net N Mineralisaed in each soil layer
         /// </summary>

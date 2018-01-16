@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="23">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="24">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -51,7 +51,7 @@ The model consists of:
           <FixedValue>0</FixedValue>
         </Constant>
         <CarbonFlow>
-          <Name>Decomposition</Name>
+          <Name>ResidueDecomposition</Name>
           <Constant>
             <Name>Rate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -61,6 +61,11 @@ The model consists of:
             <Name>CO2Efficiency</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.4</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>N2OFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
           </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <destinationNames>
@@ -148,6 +153,11 @@ The model consists of:
             </MinimumFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
+          <Constant>
+            <Name>N2OFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <sourceName>Urea</sourceName>
           <destinationName>NH4</destinationName>
@@ -233,6 +243,64 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             </LinearInterpolationFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
+          <ExpressionFunction>
+            <Name>N2OFraction</Name>
+            <MinimumFunction>
+              <Name>N2N2ORatio</Name>
+              <Constant>
+                <Name>Zero</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <MultiplyFunction>
+                <Name>Ratio</Name>
+                <Constant>
+                  <Name>Constant</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>25.1</FixedValue>
+                </Constant>
+                <LinearInterpolationFunction>
+                  <Name>WFPSEffect</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <X>
+                      <double>0</double>
+                      <double>28</double>
+                      <double>88</double>
+                      <double>100</double>
+                    </X>
+                    <Y>
+                      <double>0.1</double>
+                      <double>0.1</double>
+                      <double>1</double>
+                      <double>1.18</double>
+                    </Y>
+                  </XYPairs>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <XProperty>[SoilWaterScale]</XProperty>
+                </LinearInterpolationFunction>
+                <MinimumFunction>
+                  <Name>CO2Effect</Name>
+                  <Constant>
+                    <Name>Constant</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <FixedValue>0.16</FixedValue>
+                  </Constant>
+                  <ExpressionFunction>
+                    <Name>Effect</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Expression>Math.Exp(-0.8 * [Nutrient].NO3.kgha / [Nutrient].Catm)</Expression>
+                  </ExpressionFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MinimumFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </MultiplyFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </MinimumFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Expression>1 / ([N2N2ORatio].Value() + 1)</Expression>
+          </ExpressionFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <sourceName>NO3</sourceName>
         </NFlow>
@@ -520,7 +588,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <ExpressionFunction>
               <Name>MichaelisMenton</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Expression>40/([Soil].Nutrient.NH4.ppm+90)</Expression>
+              <Expression>40/([Nutrient].NH4.ppm+90)</Expression>
             </ExpressionFunction>
             <MinimumFunction>
               <Name>PNI</Name>
@@ -579,6 +647,11 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             </MinimumFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
+          <Constant>
+            <Name>N2OFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <sourceName>NH4</sourceName>
           <destinationName>NO3</destinationName>
@@ -701,8 +774,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Node>
             <Name>Inert</Name>
             <Location>
-              <X>103</X>
-              <Y>476</Y>
+              <X>2324</X>
+              <Y>647</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -710,8 +783,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Node>
             <Name>SurfaceResidue</Name>
             <Location>
-              <X>649</X>
-              <Y>60</Y>
+              <X>1871</X>
+              <Y>88</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -719,8 +792,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Node>
             <Name>Biomass</Name>
             <Location>
-              <X>179</X>
-              <Y>340</Y>
+              <X>178</X>
+              <Y>403</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -728,8 +801,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Node>
             <Name>Humic</Name>
             <Location>
-              <X>473</X>
-              <Y>332</Y>
+              <X>371</X>
+              <Y>417</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -737,8 +810,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Node>
             <Name>FOMLignin</Name>
             <Location>
-              <X>120</X>
-              <Y>59</Y>
+              <X>50</X>
+              <Y>200</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -746,8 +819,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Node>
             <Name>FOMCellulose</Name>
             <Location>
-              <X>441</X>
-              <Y>67</Y>
+              <X>200</X>
+              <Y>200</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -755,35 +828,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Node>
             <Name>FOMCarbohydrate</Name>
             <Location>
-              <X>281</X>
-              <Y>69</Y>
-            </Location>
-            <Colour />
-            <OutlineColour />
-          </Node>
-          <Node>
-            <Name>Urea</Name>
-            <Location>
-              <X>530</X>
-              <Y>641</Y>
-            </Location>
-            <Colour />
-            <OutlineColour />
-          </Node>
-          <Node>
-            <Name>NO3</Name>
-            <Location>
-              <X>143</X>
-              <Y>646</Y>
-            </Location>
-            <Colour />
-            <OutlineColour />
-          </Node>
-          <Node>
-            <Name>NH4</Name>
-            <Location>
-              <X>335</X>
-              <Y>632</Y>
+              <X>350</X>
+              <Y>200</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -791,8 +837,35 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Node>
             <Name>Biochar</Name>
             <Location>
-              <X>621</X>
-              <Y>472</Y>
+              <X>2331</X>
+              <Y>480</Y>
+            </Location>
+            <Colour />
+            <OutlineColour />
+          </Node>
+          <Node>
+            <Name>Urea</Name>
+            <Location>
+              <X>1244</X>
+              <Y>886</Y>
+            </Location>
+            <Colour />
+            <OutlineColour />
+          </Node>
+          <Node>
+            <Name>NO3</Name>
+            <Location>
+              <X>729</X>
+              <Y>880</Y>
+            </Location>
+            <Colour />
+            <OutlineColour />
+          </Node>
+          <Node>
+            <Name>NH4</Name>
+            <Location>
+              <X>988</X>
+              <Y>871</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -800,8 +873,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Node>
             <Name>Atmosphere</Name>
             <Location>
-              <X>274</X>
-              <Y>780</Y>
+              <X>66</X>
+              <Y>840</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -812,8 +885,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>SurfaceResidue</SourceName>
             <DestinationName>Biomass</DestinationName>
             <Location>
-              <X>402</X>
-              <Y>156</Y>
+              <X>0</X>
+              <Y>0</Y>
             </Location>
             <Colour />
           </Arc>
@@ -821,8 +894,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>SurfaceResidue</SourceName>
             <DestinationName>Humic</DestinationName>
             <Location>
-              <X>526</X>
-              <Y>242</Y>
+              <X>0</X>
+              <Y>0</Y>
             </Location>
             <Colour />
           </Arc>
@@ -830,8 +903,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>Biomass</SourceName>
             <DestinationName>Biomass</DestinationName>
             <Location>
-              <X>334</X>
-              <Y>353</Y>
+              <X>0</X>
+              <Y>0</Y>
             </Location>
             <Colour />
           </Arc>
@@ -839,8 +912,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>Biomass</SourceName>
             <DestinationName>Humic</DestinationName>
             <Location>
-              <X>297</X>
-              <Y>307</Y>
+              <X>0</X>
+              <Y>0</Y>
             </Location>
             <Colour />
           </Arc>
@@ -848,8 +921,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>Humic</SourceName>
             <DestinationName>Biomass</DestinationName>
             <Location>
-              <X>324</X>
-              <Y>469</Y>
+              <X>0</X>
+              <Y>0</Y>
             </Location>
             <Colour />
           </Arc>
@@ -857,8 +930,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>FOMLignin</SourceName>
             <DestinationName>Biomass</DestinationName>
             <Location>
-              <X>230</X>
-              <Y>310</Y>
+              <X>0</X>
+              <Y>0</Y>
             </Location>
             <Colour />
           </Arc>
@@ -866,8 +939,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>FOMLignin</SourceName>
             <DestinationName>Humic</DestinationName>
             <Location>
-              <X>374</X>
-              <Y>274</Y>
+              <X>0</X>
+              <Y>0</Y>
             </Location>
             <Colour />
           </Arc>
@@ -875,8 +948,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>FOMCellulose</SourceName>
             <DestinationName>Biomass</DestinationName>
             <Location>
-              <X>435</X>
-              <Y>84</Y>
+              <X>0</X>
+              <Y>0</Y>
             </Location>
             <Colour />
           </Arc>
@@ -884,8 +957,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>FOMCellulose</SourceName>
             <DestinationName>Humic</DestinationName>
             <Location>
-              <X>515</X>
-              <Y>150</Y>
+              <X>0</X>
+              <Y>0</Y>
             </Location>
             <Colour />
           </Arc>
@@ -893,8 +966,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>FOMCarbohydrate</SourceName>
             <DestinationName>Biomass</DestinationName>
             <Location>
-              <X>285</X>
-              <Y>129</Y>
+              <X>0</X>
+              <Y>0</Y>
             </Location>
             <Colour />
           </Arc>
@@ -902,8 +975,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>FOMCarbohydrate</SourceName>
             <DestinationName>Humic</DestinationName>
             <Location>
-              <X>414</X>
-              <Y>138</Y>
+              <X>0</X>
+              <Y>0</Y>
             </Location>
             <Colour />
           </Arc>
@@ -911,17 +984,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>Urea</SourceName>
             <DestinationName>NH4</DestinationName>
             <Location>
-              <X>412</X>
-              <Y>569</Y>
-            </Location>
-            <Colour />
-          </Arc>
-          <Arc>
-            <SourceName>NH4</SourceName>
-            <DestinationName>NO3</DestinationName>
-            <Location>
-              <X>217</X>
-              <Y>560</Y>
+              <X>1158</X>
+              <Y>853</Y>
             </Location>
             <Colour />
           </Arc>
@@ -929,8 +993,17 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
             <SourceName>NO3</SourceName>
             <DestinationName>Atmosphere</DestinationName>
             <Location>
-              <X>202</X>
-              <Y>735</Y>
+              <X>0</X>
+              <Y>0</Y>
+            </Location>
+            <Colour />
+          </Arc>
+          <Arc>
+            <SourceName>NH4</SourceName>
+            <DestinationName>NO3</DestinationName>
+            <Location>
+              <X>0</X>
+              <Y>0</Y>
             </Location>
             <Colour />
           </Arc>
@@ -2806,6 +2879,7 @@ But their data suggests a value of 0.3]]></MemoText>
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
 
@@ -6444,7 +6518,7 @@ using Models.PMF;
 using Models.PMF;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
-using Models.Soils.Nutrient;
+using Models.Soils.Nutrients;
 using System.Diagnostics;
 
 namespace Models
@@ -6487,6 +6561,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF;
 using Models.Soils;
+using Models.Soils.Nutrients;
 namespace Models
 {
 	[Serializable]
@@ -7241,6 +7316,7 @@ endif
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
 
@@ -10417,6 +10493,7 @@ namespace Models
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
 using Models.SurfaceOM;
@@ -10561,6 +10638,7 @@ namespace Models
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
 
@@ -11678,5 +11756,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>279</ExplorerWidth>
 </Simulations>
