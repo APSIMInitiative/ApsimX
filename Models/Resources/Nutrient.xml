@@ -25,7 +25,7 @@ The model consists of:
         <ExpressionFunction>
           <Name>InitialCarbon</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Expression>[SoilOrganicMatter].FInert*[SoilOrganicMatter].OC * 100 * [Soil].BD * [Soil].Thickness</Expression>
+          <Expression>[Soil].FInert*[Soil].OC * 100 * [Soil].BD * [Soil].Thickness</Expression>
         </ExpressionFunction>
         <ExpressionFunction>
           <Name>InitialNitrogen</Name>
@@ -47,7 +47,7 @@ The model consists of:
           <FixedValue>0</FixedValue>
         </Constant>
         <CarbonFlow>
-          <Name>Decomposition</Name>
+          <Name>ResidueDecomposition</Name>
           <Constant>
             <Name>Rate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -239,7 +239,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
         <ExpressionFunction>
           <Name>InitialCarbon</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Expression>(([SoilOrganicMatter].OC * 100 * [Soil].BD * [Soil].Thickness -[Inert].C) * [SoilOrganicMatter].FBiom) / (1 + [SoilOrganicMatter].FBiom)</Expression>
+          <Expression>(([Soil].OC * 100 * [Soil].BD * [Soil].Thickness -[Inert].C) * [Soil].FBiom) / (1 + [Soil].FBiom)</Expression>
         </ExpressionFunction>
         <ExpressionFunction>
           <Name>InitialNitrogen</Name>
@@ -294,7 +294,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
         <ExpressionFunction>
           <Name>InitialCarbon</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Expression>(1-[SoilOrganicMatter].FInert)*[SoilOrganicMatter].OC * 100 * [Soil].BD * [Soil].Thickness - [Biomass].C</Expression>
+          <Expression>(1-[Soil].FInert)*[Soil].OC * 100 * [Soil].BD * [Soil].Thickness - [Biomass].C</Expression>
         </ExpressionFunction>
         <ExpressionFunction>
           <Name>InitialNitrogen</Name>

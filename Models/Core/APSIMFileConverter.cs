@@ -740,18 +740,33 @@ namespace Models.Core
             {
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.FOMN", ".Nutrient.FOMN");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.FOMC", ".Nutrient.FOMC");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.HumicN", ".Nutrient.Humic.N");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.HumicC", ".Nutrient.Humic.C");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.MicrobialN", ".Nutrient.Biomass.N");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.MicrobialC", ".Nutrient.Biomass.C");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.urea", ".Nutrient.Urea.kgha");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.dlt_n_min_res", ".Nutrient.SurfaceResidue.MineralisedN");
+
+                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.HumicN", "Humic.N"))
+                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Humic;");
+                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.HumicC", "Humic.C"))
+                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Humic;");
+
+                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.MicrobialN", "Biomass.N"))
+                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Biomass;");
+                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.MicrobialC", "Biomass.C"))
+                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Biomass;");
+
+                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.dlt_n_min_res", "ResidueDecomposition.MineralisedN"))
+                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] CarbonFlow ResidueDecomposition;");
+
+                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.urea", "Urea.kgha"))
+                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute Urea;");
+                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.NO3", "NO3.kgha"))
+                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute NO3;");
+                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.NH4", "NH4.kgha"))
+                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute NH4;");
+                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.Denitrification", "Denitrification.Value"))
+                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NFlow Denitrification;");
+
+
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.Denitrification", ".Nutrient.NO3.Denitrification.Value");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
                 APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.TotalC", ".Nutrient.TotalC");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.NO3", ".Nutrient.NO3.kgha");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.NH4", ".Nutrient.NH4.kgha");
             }
 
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
