@@ -639,6 +639,11 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 			<IncludeInDocumentation>true</IncludeInDocumentation>
 			<FixedValue>0</FixedValue>
 		</Constant>
+		<Constant>
+		  <Name>CarbonConcentration</Name>
+		  <IncludeInDocumentation>true</IncludeInDocumentation>
+		  <FixedValue>0.4</FixedValue>
+		</Constant>
 		<IncludeInDocumentation>false</IncludeInDocumentation>
 	</GenericOrgan>
 	<Root>
@@ -851,6 +856,11 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 			<Name>RemobilisationCost</Name>
 			<IncludeInDocumentation>true</IncludeInDocumentation>
 			<FixedValue>0</FixedValue>
+		</Constant>
+		<Constant>
+		  <Name>CarbonConcentration</Name>
+		  <IncludeInDocumentation>true</IncludeInDocumentation>
+		  <FixedValue>0.4</FixedValue>
 		</Constant>
 		<IncludeInDocumentation>false</IncludeInDocumentation>
 		<GrowthRespiration>0</GrowthRespiration>
@@ -1460,6 +1470,11 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 			<IncludeInDocumentation>true</IncludeInDocumentation>
 			<FixedValue>0</FixedValue>
 		</Constant>
+		<Constant>
+		  <Name>CarbonConcentration</Name>
+		  <IncludeInDocumentation>true</IncludeInDocumentation>
+		  <FixedValue>0.4</FixedValue>
+		</Constant>
 		<IncludeInDocumentation>false</IncludeInDocumentation>
 		<GrowthRespiration>0</GrowthRespiration>
 		<MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1642,6 +1657,11 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 			<IncludeInDocumentation>true</IncludeInDocumentation>
 			<FixedValue>0</FixedValue>
 		</Constant>
+		<Constant>
+		  <Name>CarbonConcentration</Name>
+		  <IncludeInDocumentation>true</IncludeInDocumentation>
+		  <FixedValue>0.4</FixedValue>
+		</Constant>
 		<IncludeInDocumentation>false</IncludeInDocumentation>
 	</GenericOrgan>
 	<CompositeBiomass>
@@ -1795,4 +1815,4 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 	<IncludeInDocumentation>false</IncludeInDocumentation>
 	<CropType>Potato</CropType>
 </Plant>
-    
+	

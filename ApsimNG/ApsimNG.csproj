@@ -128,6 +128,10 @@
     </Compile>
     <Compile Include="Attributes\ContextMenuAttribute.cs" />
     <Compile Include="Attributes\MainMenuAttribute.cs" />
+    <Compile Include="Classes\DirectedGraph\BezierCurve.cs" />
+    <Compile Include="Classes\DirectedGraph\DGArc.cs" />
+    <Compile Include="Classes\DirectedGraph\DGNode.cs" />
+    <Compile Include="Classes\DirectedGraph\DGObject.cs" />
     <Compile Include="Classes\GridCell.cs" />
     <Compile Include="Classes\HtmlToMigraDoc.cs" />
     <Compile Include="Cloud\APSIMJob.cs" />
@@ -216,6 +220,7 @@
     <Compile Include="Presenters\SeriesPresenter.cs" />
     <Compile Include="Presenters\SummaryPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
+    <Compile Include="Presenters\DirectedGraphPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
@@ -253,6 +258,7 @@
     <Compile Include="Views\FactorControlView.cs" />
     <Compile Include="Views\FolderView.cs" />
     <Compile Include="Views\GeneralView.cs" />
+    <Compile Include="Views\DirectedGraphView.cs" />
     <Compile Include="Views\GraphView.cs" />
     <Compile Include="Views\GridView.cs" />
     <Compile Include="Views\HTMLView.cs" />

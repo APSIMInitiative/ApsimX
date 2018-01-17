@@ -52,8 +52,10 @@ namespace Models.PMF.Functions
                         tags.Add(new AutoDocumentation.Paragraph(Name + " is the value of " + (child as IModel).Name + " bound between a lower and upper bound where:", indent));
                         (child as IModel).Document(tags, -1, indent + 1);
                     }
-                (Lower as IModel).Document(tags, -1, indent + 1);
-                (Upper as IModel).Document(tags, -1, indent + 1);
+                if (Lower != null)
+                    (Lower as IModel).Document(tags, -1, indent + 1);
+                if (Upper != null)
+                    (Upper as IModel).Document(tags, -1, indent + 1);
             }
         }
     }
