@@ -176,7 +176,7 @@ namespace Models.Core
                     namePath = namePath.Remove(0, posPeriod);
                     if (namePath.StartsWith("."))
                     {
-                        namePath.Remove(1);
+                        namePath = namePath.Remove(0, 1);
                     }
                 }
 
