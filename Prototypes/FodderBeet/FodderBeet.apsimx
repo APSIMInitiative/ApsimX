@@ -735,40 +735,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
             </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
-          <LinearInterpolationFunction>
-            <Name>GrowthDurationXXX</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>1</double>
-                <double>6</double>
-                <double>11</double>
-                <double>15</double>
-                <double>21</double>
-                <double>35</double>
-                <double>45</double>
-                <double>50</double>
-              </X>
-              <Y>
-                <double>200</double>
-                <double>300</double>
-                <double>500</double>
-                <double>500</double>
-                <double>500</double>
-                <double>400</double>
-                <double>300</double>
-                <double>200</double>
-              </Y>
-            </XYPairs>
-            <Memo>
-              <Name>Memo</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[The pattern is assumed to be similar to that of maize (Teixeira et al 2011).]]></MemoText>
-            </Memo>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
-          </LinearInterpolationFunction>
           <MultiplyFunction>
             <Name>GrowthDuration</Name>
             <Constant>
@@ -13630,7 +13596,7 @@ namespace Models
         <Folder>
           <Name>BiomassGraphs</Name>
           <Graph>
-            <Name>AboveGroundWeight</Name>
+            <Name>TotalWt</Name>
             <Series>
               <Name>Simulated</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -13696,7 +13662,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>StorageRootWeight</Name>
+            <Name>StorageRootWt</Name>
             <Series>
               <Name>Simulated</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -13762,7 +13728,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>LeafWeight</Name>
+            <Name>LeafWt</Name>
             <Series>
               <Name>Simulated</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -13828,7 +13794,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>PetioleWeight</Name>
+            <Name>PetioleWt</Name>
             <Series>
               <Name>Simulated</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
