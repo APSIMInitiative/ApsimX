@@ -41,6 +41,16 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            Cohorts.Clear();
+            Cohorts = null;
+        }
+
+        /// <summary>
         /// Age when individuals become adults for feeding and breeding rates
         /// </summary>
         [Description("Age when adult (months)")]

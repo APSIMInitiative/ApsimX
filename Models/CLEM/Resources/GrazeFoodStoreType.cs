@@ -148,7 +148,24 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Pools.Sum(a => a.Amount*a.DMD)/this.Amount;
+                double dmd = 0;
+                if (this.Amount > 0)
+                {
+                    dmd = Pools.Sum(a => a.Amount * a.DMD) / this.Amount;
+                }
+                return Math.Max(MinimumDMD, dmd);
+            }
+        }
+
+        /// <summary>
+        /// DecayOfPasture
+        /// </summary>
+        [XmlIgnore]
+        public bool PastureDecays
+        {
+            get
+            {
+                return (DetachRate+CarryoverDetachRate+DecayDMD+DecayNitrogen != 0);
             }
         }
 
@@ -196,6 +213,16 @@ namespace Models.CLEM.Resources
         {
             CurrentEcologicalIndicators = new EcologicalIndicators();
             CurrentEcologicalIndicators.ResourceType = this.Name;
+        }
+
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            Pools.Clear();
+            Pools = null;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -247,7 +274,15 @@ namespace Models.CLEM.Resources
 
             if (pool.Amount > 0)
             {
-                Pools.Insert(0, pool);
+                // allow decaying or no pools currently available
+                if(PastureDecays | Pools.Count() == 0)
+                {
+                    Pools.Insert(0, pool);
+                }
+                else
+                {
+                    Pools[0].Add(pool);
+                }
                 // update biomass available
                 biomassAvailable += pool.Amount;
 

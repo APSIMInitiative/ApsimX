@@ -48,6 +48,22 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            foreach (GrazeFoodStoreType childModel in Apsim.Children(this, typeof(GrazeFoodStoreType)))
+            {
+                childModel.TransactionOccurred -= Resource_TransactionOccurred;
+                childModel.EcologicalIndicatorsCalculated -= Resource_EcologicalIndicatorsCalculated;
+            }
+            Items.Clear();
+            Items = null;
+        }
+
+
         #region Ecological Indicators calculated
 
         private void Resource_EcologicalIndicatorsCalculated(object sender, EventArgs e)

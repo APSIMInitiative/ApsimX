@@ -77,6 +77,20 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            foreach (LabourType childModel in Apsim.Children(this, typeof(LabourType)))
+            {
+                childModel.TransactionOccurred -= Resource_TransactionOccurred;
+            }
+            Items.Clear();
+            Items = null;
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

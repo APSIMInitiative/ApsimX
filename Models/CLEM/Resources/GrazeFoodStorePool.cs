@@ -72,6 +72,27 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Add to Resource method.
+        /// This style is used when a pool needs to be added to the current pool
+        /// This occurs when no detachment and decay (values of zero) are included in the GrazeFoodStore parameters
+        /// </summary>
+        /// <param name="pool">GrazeFoodStorePool to add to this pool</param>
+        public void Add(GrazeFoodStorePool pool)
+        {
+            if (pool.Amount > 0)
+            {
+                // adjust DMD and N% based on incoming if needed
+                if (DMD != pool.DMD | Nitrogen != pool.Nitrogen)
+                {
+                    //TODO: run calculation passed others.
+                    DMD = ((DMD * Amount) + (pool.DMD * pool.Amount)) / (Amount + pool.Amount);
+                    Nitrogen = ((Nitrogen * Amount) + (pool.Nitrogen * pool.Amount)) / (Amount + pool.Amount);
+                }
+                amount += pool.Amount;
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="RemoveAmount"></param>
@@ -81,9 +102,6 @@ namespace Models.CLEM.Resources
         {
             RemoveAmount = Math.Min(this.amount, RemoveAmount);
             this.amount = this.amount - RemoveAmount;
-
-            //if (FodderChanged != null)
-            //    FodderChanged.Invoke(this, new EventArgs());
 
             return RemoveAmount;
         }

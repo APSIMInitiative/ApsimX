@@ -33,17 +33,27 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Items = new List<HumanFoodStoreType>();
-
-            List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
-
-            foreach (IModel childModel in childNodes)
+            foreach (HumanFoodStoreType childModel in Apsim.Children(this, typeof(HumanFoodStoreType)))
             {
-                //cast the generic IModel to a specfic model.
-                HumanFoodStoreType food = childModel as HumanFoodStoreType;
-                food.TransactionOccurred += Resource_TransactionOccurred;
-                Items.Add(food);
+                childModel.TransactionOccurred += Resource_TransactionOccurred;
+                Items.Add(childModel);
             }
         }
+
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            foreach (HumanFoodStoreType childModel in Apsim.Children(this, typeof(HumanFoodStoreType)))
+            {
+                childModel.TransactionOccurred -= Resource_TransactionOccurred;
+            }
+            Items.Clear();
+            Items = null;
+        }
+
 
         #region Transactions
 

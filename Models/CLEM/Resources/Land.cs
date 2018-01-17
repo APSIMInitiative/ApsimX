@@ -20,11 +20,11 @@ namespace Models.CLEM.Resources
     [Description("This resource group holds all land types for the simulation.")]
     public class Land: ResourceBaseWithTransactions
     {
-        /// <summary>
-        /// Current state of this resource.
-        /// </summary>
-        [XmlIgnore]
-        public List<LandType> Items;
+        ///// <summary>
+        ///// Current state of this resource.
+        ///// </summary>
+//        [XmlIgnore]
+//        public List<LandType> Items;
 
         /// <summary>
         /// Unit of area to be used in this simulation
@@ -64,6 +64,21 @@ namespace Models.CLEM.Resources
                 }
             }
         }
+
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            foreach (IResourceWithTransactionType childModel in Apsim.Children(this, typeof(IResourceWithTransactionType)))
+            {
+                childModel.TransactionOccurred -= Resource_TransactionOccurred;
+            }
+//            Items.Clear();
+//            Items = null;
+        }
+
 
         #region Transactions
 

@@ -102,12 +102,13 @@ namespace Models.CLEM.Activities
             // determine pasture quality from all pools (DMD) at start of grazing
             double pastureDMD = GrazeFoodStoreModel.DMD;
 
-            // Reduce potential intake based on pasture quality for the proportion consumed.
+            // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
             // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
+            // NABSA uses Diet_DMD, but we cant adjust Potential using diet before anything consumed.
             double potentialIntakeLimiter = 1.0;
             if ((0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100) >= 0)
             {
-                potentialIntakeLimiter = GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
+                potentialIntakeLimiter = 1 - GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
             }
 
             // check nested graze breed requirements for this pasture

@@ -194,8 +194,6 @@ namespace Models.CLEM.Activities
 
                 soilIndex = ((LandType)ResourceRequestList.FirstOrDefault().Resource).SoilType;
     
-                SetupStartingPasturePools(StartingAmount);
-
                 LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.StartingValue;
                 LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.StartingValue;
                 LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = StartingStockingRate;
@@ -204,6 +202,8 @@ namespace Models.CLEM.Activities
                 //Now we have a stocking rate and we have starting values for Land Condition and Grass Basal Area
                 //get the starting pasture data list from GRASP
                 GetPastureDataList_TodayToNextEcolCalculation();
+
+                SetupStartingPasturePools(StartingAmount);
             }
 
         }
@@ -218,6 +218,7 @@ namespace Models.CLEM.Activities
             {            
                 double growth = 0;
 
+                // method is performed on last day of month but needs to work with next month's details
                 int year = Clock.Today.AddDays(1).Year;
                 int month = Clock.Today.AddDays(1).Month;
 
@@ -234,13 +235,17 @@ namespace Models.CLEM.Activities
                     GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
                     newPasture.Age = 0;
                     newPasture.Set(growth * Area);  
-                    newPasture.DMD = this.LinkedNativeFoodType.DMD;
                     newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen; 
-                    newPasture.DryMatter = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
-                    newPasture.DryMatter = Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatter);
+                    newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
+                    newPasture.DMD = Math.Min(100,Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DMD));
                     this.LinkedNativeFoodType.Add(newPasture,this.Name,"Growth");
                 }
             }
+            else
+            {
+                throw new Exception("No pasture data");
+            }
+
             // report activity performed.
             ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
             {
@@ -352,17 +357,20 @@ namespace Models.CLEM.Activities
                 pool.Set(amountToAdd * (pool.StartingAmount / total));
             }
 
-            // remove this months growth from pool age 0 to keep biomass at approximately setup.
+            // Previously: remove this months growth from pool age 0 to keep biomass at approximately setup.
+            // But as updates happen at the end of the month, the fist months biomass is never added so stay with 0 or delete following section
             // Get this months growth
-            double growth = 0; // GRASPFile.Get(xxxxxxxxx)
+            //Get this months pasture data from the pasture data list
+            PastureDataType pasturedata = PastureDataList.Where(a => a.Year == Clock.StartDate.Year && a.Month == Clock.StartDate.Month).FirstOrDefault();
+            //double growth = ; // GRASPFile.Get(xxxxxxxxx)
 
-            double thisMonthsGrowth = 0;
+            double thisMonthsGrowth = pasturedata.Growth;
             if (thisMonthsGrowth > 0)
             {
                 GrazeFoodStorePool thisMonth = newPools.Where(a => a.Age == 0).FirstOrDefault() as GrazeFoodStorePool;
                 if (thisMonth != null)
                 {
-                    thisMonth.Set(Math.Max(0, thisMonth.Amount - growth));
+                    thisMonth.Set(Math.Max(0, thisMonth.Amount - thisMonthsGrowth));
                 }
             }
 

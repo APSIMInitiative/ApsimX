@@ -33,7 +33,7 @@ namespace Models.CLEM.Resources
         {
             Items = new List<AnimalFoodStoreType>();
 
-            List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
+            List<IModel> childNodes = Apsim.Children(this, typeof(AnimalFoodStore));
 
             foreach (IModel childModel in childNodes)
             {
@@ -43,6 +43,21 @@ namespace Models.CLEM.Resources
                 Items.Add(fodder);
             }
         }
+
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            foreach (AnimalFoodStore childModel in Apsim.Children(this, typeof(AnimalFoodStore)))
+            {
+                childModel.TransactionOccurred -= Resource_TransactionOccurred;
+            }
+            Items.Clear();
+            Items = null;
+        }
+
 
         #region Transactions
 

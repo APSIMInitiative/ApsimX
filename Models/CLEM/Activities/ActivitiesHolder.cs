@@ -44,6 +44,24 @@ namespace Models.CLEM.Activities
             }
         }
 
+        private void UnBindEvents(List<IModel> root)
+        {
+            foreach (var item in root.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
+            {
+                if (item.GetType() != typeof(ActivityFolder))
+                {
+                    (item as CLEMActivityBase).ResourceShortfallOccurred -= ActivitiesHolder_ResourceShortfallOccurred;
+                    (item as CLEMActivityBase).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
+                }
+                UnBindEvents(item.Children.Cast<IModel>().ToList());
+            }
+            // add link to all timers as children so they can fire activity performed
+            foreach (var timer in root.Where(a => typeof(IActivityPerformedNotifier).IsAssignableFrom(a.GetType())))
+            {
+                (timer as IActivityPerformedNotifier).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
+            }
+        }
+
         /// <summary>
         /// Last resource request that was in defecit
         /// </summary>
@@ -145,6 +163,15 @@ namespace Models.CLEM.Activities
         {
             activities = Apsim.Children(this, typeof(IModel));
             BindEvents(activities);
+        }
+
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            UnBindEvents(activities);
         }
 
         /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>

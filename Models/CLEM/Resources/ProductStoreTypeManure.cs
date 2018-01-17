@@ -65,6 +65,16 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            UncollectedStores.Clear();
+            UncollectedStores = null;
+        }
+
+        /// <summary>
         /// Method to add uncollected manure to stores
         /// </summary>
         /// <param name="storeName">Name of store to add manure to</param>

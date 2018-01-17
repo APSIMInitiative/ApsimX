@@ -233,6 +233,18 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            Herd.Clear();
+            Herd = null;
+            PurchaseIndividuals.Clear();
+            PurchaseIndividuals = null;
+        }
+
+        /// <summary>
         /// Remove list of Ruminants from the herd
         /// </summary>
         /// <param name="list">List of Ruminants to remove</param>

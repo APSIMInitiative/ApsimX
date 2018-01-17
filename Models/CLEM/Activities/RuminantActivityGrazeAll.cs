@@ -49,6 +49,7 @@ namespace Models.CLEM.Activities
                 ragp.Clock = Clock;
                 ragp.Parent = this;
                 ragp.Name = "Graze_" + pastureType.Name;
+                ragp.OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction;
 
                 foreach (RuminantType herdType in Resources.RuminantHerd().Children)
                 {
@@ -58,7 +59,8 @@ namespace Models.CLEM.Activities
                         RuminantTypeModel = herdType,
                         HoursGrazed = HoursGrazed,
                         Parent = ragp,
-                        Name = ragp.Name+"_"+herdType.Name
+                        Name = ragp.Name+"_"+herdType.Name,
+                        OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
                     };
                     if (ragpb.Resources == null)
                     {
@@ -74,13 +76,36 @@ namespace Models.CLEM.Activities
                         ragp.ActivityList = new List<CLEMActivityBase>();
                     }
                     ragp.ActivityList.Add(ragpb);
+                    ragpb.ResourceShortfallOccurred += GrazeAll_ResourceShortfallOccurred;
                 }
                 if (ActivityList == null)
                 {
                     ActivityList = new List<CLEMActivityBase>();
                 }
                 ActivityList.Add(ragp);
+
             }
+        }
+
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            foreach (RuminantActivityGrazePasture pastureGraze in ActivityList)
+            {
+                foreach (RuminantActivityGrazePastureHerd pastureHerd in pastureGraze.ActivityList)
+                {
+                    pastureHerd.ResourceShortfallOccurred -= GrazeAll_ResourceShortfallOccurred;
+                }
+            }
+        }
+
+        private void GrazeAll_ResourceShortfallOccurred(object sender, EventArgs e)
+        {
+            // bubble shortfall to Activity base for reporting
+            OnShortfallOccurred(e);
         }
 
         /// <summary>

@@ -133,6 +133,18 @@ namespace Models.CLEM.Activities
             // if there is no ResourceRequestList (i.e. not created from parent pasture)
             if (ResourceRequestList == null)
             {
+                // determine pasture quality from all pools (DMD) at start of grazing
+                double pastureDMD = GrazeFoodStoreModel.DMD;
+
+                // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
+                // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
+                // NABSA uses Diet_DMD, but we cant adjust Potential using diet before anything consumed.
+                PotentialIntakePastureQualityLimiter = 1.0;
+                if ((0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100) >= 0)
+                {
+                    PotentialIntakePastureQualityLimiter = 1 - GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
+                }
+
                 GetResourcesNeededForActivity();
             }
             // this has all the code to feed animals.
@@ -156,12 +168,11 @@ namespace Models.CLEM.Activities
                         // Reduce potential intake based on pasture quality for the proportion consumed calculated in GrazePasture.
                         // calculate intake from potential modified by pasture availability and hours grazed
                         indAmount = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8);
-                        // AL added reduce by amout already eaten to account for other feeding activities
-                        //indAmount -= ind.Intake;
                         amount += indAmount *  30.4;
                     }
-                    if (amount > 0)
-                    {
+                    // report even if zero so shortfalls can be reported.
+                    //if (amount > 0)
+                    //{
                         ResourceRequestList.Add(new ResourceRequest()
                         {
                             AllowTransmutation = true,
@@ -172,7 +183,7 @@ namespace Models.CLEM.Activities
                             AdditionalDetails = this
                         }
                         );
-                    }
+                    //}
 
                     if ( GrazeFoodStoreTypeName != null & GrazeFoodStoreModel != null)
                     {
@@ -236,15 +247,17 @@ namespace Models.CLEM.Activities
                 if (herd.Count() > 0)
                 {
                     //Get total amount
+                    double totalDesired = herd.Sum(a => a.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8));
+                    totalDesired *= 30.4;
                     double totalEaten = herd.Sum(a => a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
-                    totalEaten *= GrazingCompetitionLimiter  * 30.4;
+                    totalEaten *= 30.4 * GrazingCompetitionLimiter;
 
                     // take resource
                     ResourceRequest request = new ResourceRequest()
                     {
                         ActivityModel = this,
                         AdditionalDetails = this,
-                        Reason = "Grazing",
+                        Reason = RuminantTypeModel.Name+" grazing",
                         Required = totalEaten,
                         Resource = GrazeFoodStoreModel
                     };
@@ -256,24 +269,30 @@ namespace Models.CLEM.Activities
                         PercentN = ((RuminantActivityGrazePastureHerd)request.AdditionalDetails).N
                     };
 
-                    double shortfall = GrazingCompetitionLimiter * request.Provided / request.Required;
+                    double shortfall = request.Provided / request.Required;
 
                     // allocate to individuals
                     foreach (Ruminant ind in herd)
                     {
-                        double eaten = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8);
-                        food.Amount = eaten * 30.4 * shortfall;
+                        double eaten = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8);
+                        food.Amount = eaten * GrazingCompetitionLimiter * 30.4 * shortfall;
                         ind.AddIntake(food);
                     }
 
-                    // shortfall
-                    if (request.Provided < request.Required)
+                    // if insufficent provided or no pasture (nothing eaten) use totalNeededifPasturePresent
+                    if (GrazingCompetitionLimiter < 1)
                     {
-                        request.Required = totalEaten;
+                        request.Available = request.Provided; // display all that was given
+                        request.Required = totalDesired;
                         request.ResourceType = typeof(GrazeFoodStore);
                         request.ResourceTypeName = GrazeFoodStoreModel.Name;
                         ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = request };
                         OnShortfallOccurred(rre);
+
+                        if(this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                        {
+                            throw new ApsimXException(this, "Insufficient pasture available for grazing in paddock ("+GrazeFoodStoreModel.Name+") in "+Clock.Today.Month.ToString()+"\\"+Clock.Today.Year.ToString());
+                        }
                     }
                 }
             }

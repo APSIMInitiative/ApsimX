@@ -32,6 +32,18 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            foreach (IResourceWithTransactionType childModel in Apsim.Children(this, typeof(IResourceWithTransactionType)))
+            {
+                childModel.TransactionOccurred -= Resource_TransactionOccurred;
+            }
+        }
+
         #region Transactions
 
         // Must be included away from base class so that APSIM Event.Subscriber can find them 
