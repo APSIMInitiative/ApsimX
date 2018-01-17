@@ -795,18 +795,24 @@ namespace Models.Core
                 double rootWt = Convert.ToDouble(XmlUtilities.Value(SOM, "RootWt"));
                 XmlUtilities.DeleteValue(SOM, "RootWt");
                 double[] thickness = MathUtilities.StringsToDoubles(XmlUtilities.Values(SOM, "Thickness/double"));
-                double[] rootWtVector = new double[thickness.Length];
-
-
+                
                 double profileDepth = MathUtilities.Sum(thickness);
                 double cumDepth = 0;
+                double[] rootWtFraction = new double[thickness.Length];
 
                 for (int layer = 0; layer < thickness.Length; layer++)
                 {
                     double fracLayer = Math.Min(1.0, MathUtilities.Divide(profileDepth - cumDepth, thickness[layer], 0.0));
                     cumDepth += thickness[layer];
-                    rootWtVector[layer] = rootWt * fracLayer * Math.Exp(-3.0 * Math.Min(1.0, MathUtilities.Divide(cumDepth, profileDepth, 0.0)));
+                    rootWtFraction[layer] = fracLayer * Math.Exp(-3.0 * Math.Min(1.0, MathUtilities.Divide(cumDepth, profileDepth, 0.0)));
                 }
+                // get the actuall FOM distribution through layers (adds up to one)
+                double totFOMfraction = MathUtilities.Sum(rootWtFraction);
+                for (int layer = 0; layer < thickness.Length; layer++)
+                    rootWtFraction[layer] /= totFOMfraction;
+                double[] rootWtVector = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
+                    
+
                 XmlUtilities.EnsureNodeExists(SOM, "RootWt");
                 XmlUtilities.SetValues(SOM, "RootWt/double", MathUtilities.DoublesToStrings(rootWtVector));
             }
