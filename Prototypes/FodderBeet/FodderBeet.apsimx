@@ -80,6 +80,30 @@ as driving functions. The effect of temperature is quantified using a thermal-ti
 Thermal-time is calculated in degree days for ambient temperature above a base temperature (Tbase). Tbase is 
 assumed to be 0°C (Chakwizira et al., 2016).]]></MemoText>
         </Memo>
+        <DivideFunction>
+          <Name>MeanTemp</Name>
+          <AddFunction>
+            <Name>AddFunction</Name>
+            <VariableReference>
+              <Name>MaxT</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Weather].MaxT</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>MinT</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Weather].MinT</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </AddFunction>
+          <Constant>
+            <Name>Constant</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>2</FixedValue>
+            <Units />
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </DivideFunction>
         <MultiplyFunction>
           <Name>ThermalTime</Name>
           <PhaseLookup>
@@ -523,18 +547,46 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Constant>
             <Name>RUE</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1.4</FixedValue>
+            <FixedValue>1.5</FixedValue>
           </Constant>
-          <Constant>
+          <LinearInterpolationFunction>
             <Name>FN</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <X>
+                <double>0</double>
+                <double>0.4</double>
+                <double>1.5</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>FVPD</Name>
+            <XProperty>[Leaf].Fn</XProperty>
+          </LinearInterpolationFunction>
+          <LinearInterpolationFunction>
+            <Name>FW</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <X>
+                <double>0</double>
+                <double>0.4</double>
+                <double>1.5</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1</FixedValue>
-          </Constant>
+            <XProperty>[Leaf].Fw</XProperty>
+          </LinearInterpolationFunction>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
             <XYPairs>
@@ -557,7 +609,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
           </WeightedTemperatureFunction>
           <LinearInterpolationFunction>
-            <Name>FW</Name>
+            <Name>FVPD</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -573,7 +625,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Leaf].Fw</XProperty>
+            <XProperty>[Photosynthesis].VPD</XProperty>
           </LinearInterpolationFunction>
           <RUECO2Function>
             <Name>FCO2</Name>
@@ -1110,7 +1162,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <Constant>
           <Name>MaximumRootDepth</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1000000</FixedValue>
+          <FixedValue>1000</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
@@ -9851,9 +9903,9 @@ namespace Models
                 <Name>SowDateCv</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>5</InitialRootDepth>
                   <CropToSow>Rivage</CropToSow>
                   <SowingDate>0001-01-01</SowingDate>
-                  <InitialRootDepth>5</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -12779,9 +12831,9 @@ namespace Models
                 <Name>SowDateCv</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>5</InitialRootDepth>
                   <CropToSow>Rivage</CropToSow>
                   <SowingDate>2016-10-18</SowingDate>
-                  <InitialRootDepth>5</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -13671,7 +13723,7 @@ namespace Models
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
-              <Maximum>4000</Maximum>
+              <Maximum>2500</Maximum>
               <Interval>500</Interval>
             </Axis>
             <Axis>
