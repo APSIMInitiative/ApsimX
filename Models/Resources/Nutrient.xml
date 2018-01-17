@@ -411,11 +411,11 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
   </NutrientPool>
   <NutrientPool>
     <Name>FOMLignin</Name>
-    <Constant>
+    <ExpressionFunction>
       <Name>InitialCarbon</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0</FixedValue>
-    </Constant>
+      <Expression>[SoilOrganicMatter].RootWt * 0.1 * 0.4</Expression>
+    </ExpressionFunction>
     <Constant>
       <Name>InitialNitrogen</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -466,11 +466,11 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
   </NutrientPool>
   <NutrientPool>
     <Name>FOMCellulose</Name>
-    <Constant>
+    <ExpressionFunction>
       <Name>InitialCarbon</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0</FixedValue>
-    </Constant>
+      <Expression>[SoilOrganicMatter].RootWt * 0.7 * 0.4</Expression>
+    </ExpressionFunction>
     <Constant>
       <Name>InitialNitrogen</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -521,11 +521,11 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
   </NutrientPool>
   <NutrientPool>
     <Name>FOMCarbohydrate</Name>
-    <Constant>
+    <ExpressionFunction>
       <Name>InitialCarbon</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0</FixedValue>
-    </Constant>
+      <Expression>[SoilOrganicMatter].RootWt * 0.2 * 0.4</Expression>
+    </ExpressionFunction>
     <Constant>
       <Name>InitialNitrogen</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>

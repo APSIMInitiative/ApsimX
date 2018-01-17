@@ -23,13 +23,6 @@ namespace Models.Soils
         [Description("Root C:N ratio")]
         public double RootCN { get; set; }
 
-        /// <summary>Gets or sets the root wt.</summary>
-        /// <value>The root wt.</value>
-        [Summary]
-        [Units("kg/ha")]
-        [Description("Root Weight")]
-        public double RootWt { get; set; }
-
         /// <summary>Gets or sets the soil cn.</summary>
         /// <value>The soil cn.</value>
         [Summary]
@@ -92,6 +85,16 @@ namespace Models.Soils
         [Description("FInert")]
         [Units("0-1")]
         public double[] FInert { get; set; }
+
+
+        /// <summary>Gets or sets the f inert.</summary>
+        /// <value>The f inert.</value>
+        [Summary]
+        [Description("RootWt")]
+        [Units("kg/ha")]
+        [Display(Format = "N1")]
+        public double[] RootWt { get; set; }
+
 
         /// <summary>The PPM</summary>
         private const double ppm = 1000000.0;

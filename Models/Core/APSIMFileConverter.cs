@@ -789,6 +789,28 @@ namespace Models.Core
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
 
             }
+
+            foreach (XmlNode SOM in XmlUtilities.FindAllRecursivelyByType(node, "SoilOrganicMatter"))
+            {
+                double rootWt = Convert.ToDouble(XmlUtilities.Value(SOM, "RootWt"));
+                XmlUtilities.DeleteValue(SOM, "RootWt");
+                double[] thickness = MathUtilities.StringsToDoubles(XmlUtilities.Values(SOM, "Thickness/double"));
+                double[] rootWtVector = new double[thickness.Length];
+
+
+                double profileDepth = MathUtilities.Sum(thickness);
+                double cumDepth = 0;
+
+                for (int layer = 0; layer < thickness.Length; layer++)
+                {
+                    double fracLayer = Math.Min(1.0, MathUtilities.Divide(profileDepth - cumDepth, thickness[layer], 0.0));
+                    cumDepth += thickness[layer];
+                    rootWtVector[layer] = rootWt * fracLayer * Math.Exp(-3.0 * Math.Min(1.0, MathUtilities.Divide(cumDepth, profileDepth, 0.0)));
+                }
+                XmlUtilities.EnsureNodeExists(SOM, "RootWt");
+                XmlUtilities.SetValues(SOM, "RootWt/double", MathUtilities.DoublesToStrings(rootWtVector));
+            }
+
         }
     }
 }

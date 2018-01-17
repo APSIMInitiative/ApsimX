@@ -114,7 +114,7 @@ namespace Models.Soils
             FBiom = Soil.FBiom;
             FInert = Soil.FInert;
             HumusCNr = Soil.SoilOrganicMatter.SoilCN;
-            InitialFOMWt = Soil.SoilOrganicMatter.RootWt;
+            InitialFOMWt = MathUtilities.Sum(Soil.SoilOrganicMatter.RootWt);
             InitialFOMCNr = Soil.SoilOrganicMatter.RootCN;
             enr_a_coeff = Soil.SoilOrganicMatter.EnrACoeff;
             enr_b_coeff = Soil.SoilOrganicMatter.EnrBCoeff;
