@@ -25,11 +25,10 @@
     public class NewAzureJobPresenter : IPresenter
     {        
         /// <summary>The new azure job view</summary>
-        private INewAzureJobView view;
+        private NewAzureJobView view;
         
         /// <summary>The explorer presenter</summary>
-        private ExplorerPresenter explorerPresenter;
-        private List<JobParameters> NewJobs;
+        private ExplorerPresenter explorerPresenter;        
         private IModel model;
         private FileUploader uploader;
         private BatchClient batchClient;
@@ -37,16 +36,17 @@
         private StorageCredentials storageCredentials;
         private BatchCredentials batchCredentials;
         private PoolSettings poolSettings;
+        private BackgroundWorker submissionWorker;
+
         public NewAzureJobPresenter()
-        {
-            NewJobs = new List<JobParameters>();
+        {            
         }
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.explorerPresenter = explorerPresenter;
-            this.view = (INewAzureJobView)view;
-            this.view.SubmitJob.DoWork += SubmitJob_DoWork;
+            this.view = (NewAzureJobView)view;
+            
             this.view.Presenter = this;
             
             GetCredentials(null, null);
@@ -54,7 +54,18 @@
             this.view.SetDefaultJobName( ((Models.Factorial.Experiment)model).Name );
             this.model = (IModel)model;
 
+            submissionWorker = new BackgroundWorker();
+            submissionWorker.DoWork += SubmitJob_DoWork;
+            submissionWorker.WorkerSupportsCancellation = true;
+        }
 
+        /// <summary>
+        /// Starts the job submission in a separate thread.
+        /// </summary>
+        /// <param name="jp">Job Parameters.</param>
+        public void SubmitJob(JobParameters jp)
+        {
+            submissionWorker.RunWorkerAsync(jp);
         }
 
         /// <summary>
@@ -88,9 +99,7 @@
                 jp.ApplicationPackageVersion = Path.GetFileName(tmpZip).Substring(Path.GetFileName(tmpZip).IndexOf('-') + 1);
             }
 
-            // add current job to the list of jobs
-            // TODO : do we actually need/use NewJobs?
-            NewJobs.Add(jp);
+            // add current job to the list of jobs                        
 
             // TODO : do we actually need/use the APSIMJob class?
             APSIMJob job = new APSIMJob(jp.JobDisplayName, "", jp.ApplicationPackagePath, jp.ApplicationPackageVersion, jp.Recipient, batchCredentials, storageCredentials, PoolSettings.FromConfiguration());
@@ -636,6 +645,7 @@
         
         public void CancelJobSubmission()
         {
+            submissionWorker.CancelAsync();
             explorerPresenter.HideRightHandPanel();
         }
     }

@@ -11,7 +11,7 @@ using ApsimNG.Cloud;
 
 namespace UserInterface.Views
 {   
-    public class NewAzureJobView : ViewBase, INewAzureJobView
+    public class NewAzureJobView : ViewBase
     {
         public Presenters.NewAzureJobPresenter Presenter { get; set; }
         public BackgroundWorker SubmitJob { get; set; }
@@ -58,7 +58,7 @@ namespace UserInterface.Views
             alignTblAzure.LeftPadding = alignTblAzure.RightPadding = alignTblAzure.TopPadding = alignTblAzure.BottomPadding = 5;
 
             // Azure table - contains all fields in the azure job frame
-            Table tblAzure = new Table(5, 2, false);
+            Table tblAzure = new Table(4, 2, false);
             tblAzure.RowSpacing = 5;
             // Job Name
             Label lblName = new Label("Job Description/Name:");
@@ -276,19 +276,33 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Updates the status label. This is a temporary measure.
+        /// Updates the status label.
         /// </summary>
         /// <param name="status">Status to be displayed.</param>
         public void DisplayStatus(string status)
         {
-            lblStatus.Text = status;
+            // run IO on Gtk main loop thread
+            Application.Invoke(delegate
+            {
+                lblStatus.Text = status;
+            });            
         }
 
+        /// <summary>
+        /// Closes the job submission panel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Presenter.CancelJobSubmission();
         }
 
+        /// <summary>
+        /// Validates the user's input (to an extent) and submits the job.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (entryName.Text.Length < 1)
@@ -327,16 +341,13 @@ namespace UserInterface.Views
             if (entryModelPath.Text.Length > 0) ApsimNG.Properties.Settings.Default["ModelPath"] = entryModelPath.Text;
             ApsimNG.Properties.Settings.Default.Save();
 
-
-            // TODO : test validity of online source input boxes
-
             jobParams = new JobParameters();
             jobParams.PoolVMCount = Int32.Parse(comboCoreCount.ActiveText) / 16;
             jobParams.JobDisplayName = entryName.Text;
             jobParams.Recipient = chkEmail.Active ? entryEmail.Text : "";
             jobParams.ModelPath = chkSaveModels.Active ? entryModelPath.Text : Path.GetTempPath() + Guid.NewGuid();
             jobParams.SaveModelFiles = chkSaveModels.Active;
-            // TODO : test for running from online source
+            
             string apsimPath = radioApsimDir.Active ? entryApsimDir.Text : entryApsimZip.Text;
 
             jobParams.ApplicationPackageVersion = Path.GetFileName(apsimPath).Substring(Path.GetFileName(apsimPath).IndexOf('-') + 1);
@@ -345,7 +356,7 @@ namespace UserInterface.Views
             jobParams.OutputDir = entryOutputDir.Text;
             jobParams.Summarise = chkSummarise.Active;
 
-            SubmitJob.RunWorkerAsync(jobParams);
+            Presenter.SubmitJob(jobParams);
         }
 
         private void backgroundWorkerNewJob_DoWork(object o, DoWorkEventArgs e)

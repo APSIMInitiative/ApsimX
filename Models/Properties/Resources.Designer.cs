@@ -19,7 +19,7 @@ namespace Models.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -81,7 +81,7 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///&lt;Plant xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+        ///&lt;Plant&gt;
         ///  &lt;Name&gt;Maize&lt;/Name&gt;
         ///  &lt;OrganArbitrator&gt;
         ///    &lt;Name&gt;Arbitrator&lt;/Name&gt;
@@ -93,7 +93,10 @@ namespace Models.Properties {
         ///      &lt;Name&gt;DMArbitrator&lt;/Name&gt;
         ///      &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
         ///    &lt;/RelativeAllocation&gt;
-        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInD [rest of string was truncated]&quot;;.
+        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
+        ///  &lt;/OrganArbitrator&gt;
+        ///  &lt;Phenology&gt;
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Maize {
             get {

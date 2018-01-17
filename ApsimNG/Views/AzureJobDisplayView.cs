@@ -690,7 +690,7 @@ namespace UserInterface.Views
                     string endTimeString = job.EndTime == null ? "" : ((DateTime)job.EndTime).ToLocalTime().ToString();
                     string dispName = myJobsOnly ? job.DisplayName : job.DisplayName + " (" + job.Owner + ")";
                     string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";
-                    string timeStr = job.CpuTime.ToString(TIMESPAN_FORMAT);
+                    string timeStr = job.CpuTime == TimeSpan.Zero ? "" : job.CpuTime.ToString(TIMESPAN_FORMAT);
                     store.AppendValues(dispName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, timeStr);
                 }
 

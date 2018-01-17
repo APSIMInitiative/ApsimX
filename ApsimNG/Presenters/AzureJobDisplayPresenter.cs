@@ -246,28 +246,23 @@ namespace UserInterface.Presenters
                 //var tasks = ListTasks(Guid.Parse(cloudJob.Id));
                 // for some reason the succeeded task count is always exactly double the actual number of tasks
                 // and the number of tasks is the number of sims + 1 (the job manager?)
+                
+                var tasks = batchClient.JobOperations.GetJobTaskCounts(cloudJob.Id);                                
+                long numTasks = tasks.Active + tasks.Running + tasks.Completed;
 
-                /*
-                long taskCount = batchClient.JobOperations.GetTaskCount();
-                long numSims = taskCount.;
-                long numCompleteSims = (cloudJob.Statistics.SucceededTaskCount + cloudJob.Statistics.FailedTaskCount);
-                */
-                //long numCompletedTasks = cloudJob.Statistics.SucceededTaskCount + cloudJob.Statistics.FailedTaskCount;
-                //double progress = cloudJob.State.ToString() == "Completed" ? 100.0 : 50.0;
-
-                // move the comment to be around 100 if you want to see the accurate task count
-
-                long numCompletedTasks = (cloudJob.Statistics.FailedTaskCount + cloudJob.Statistics.SucceededTaskCount) / 2 - 1;
-                double jobProgress = cloudJob.State.ToString().ToLower() == "completed" ? 100 : 0;
+                // if there are no tasks, set progress to 100%
+                double jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
+                // if cpu time is unavailable, set this field to 0
+                TimeSpan cpu = cloudJob.Statistics == null ? TimeSpan.Zero : cloudJob.Statistics.KernelCpuTime + cloudJob.Statistics.UserCpuTime;
                 var job = new JobDetails
                 {
                     Id = cloudJob.Id,
                     DisplayName = cloudJob.DisplayName,
                     State = cloudJob.State.ToString(),
                     Owner = owner,
-                    NumSims = numCompletedTasks,
+                    NumSims = numTasks,
                     Progress = jobProgress,
-                    CpuTime = cloudJob.Statistics.KernelCpuTime + cloudJob.Statistics.UserCpuTime
+                    CpuTime = cpu
                 };
 
                 if (cloudJob.ExecutionInformation != null)
@@ -408,7 +403,7 @@ namespace UserInterface.Presenters
         /// <returns>True if the jobs have the same ID and they are in the same state.</returns>
         private bool IsEqual(JobDetails a, JobDetails b)
         {
-            return (a.Id == b.Id && a.State == b.State);
+            return (a.Id == b.Id && a.State == b.State && a.Progress == b.Progress);
         }
 
         /// <summary>
