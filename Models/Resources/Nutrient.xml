@@ -67,7 +67,7 @@ The model consists of:
       </Constant>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <destinationNames>
-        <string>Biomass</string>
+        <string>Microbial</string>
         <string>Humic</string>
       </destinationNames>
       <destinationFraction>
@@ -307,7 +307,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Solute>
   <NutrientPool>
-    <Name>Biomass</Name>
+    <Name>Microbial</Name>
     <ExpressionFunction>
       <Name>InitialCarbon</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -316,7 +316,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
     <ExpressionFunction>
       <Name>InitialNitrogen</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Expression>[Biomass].C /  [CNRatio]</Expression>
+      <Expression>[Microbial].C /  [CNRatio]</Expression>
     </ExpressionFunction>
     <Constant>
       <Name>CNRatio</Name>
@@ -351,7 +351,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </Constant>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <destinationNames>
-        <string>Biomass</string>
+        <string>Microbial</string>
         <string>Humic</string>
       </destinationNames>
       <destinationFraction>
@@ -366,7 +366,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
     <ExpressionFunction>
       <Name>InitialCarbon</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Expression>(1-[Soil].FInert)*[Soil].OC * 100 * [Soil].BD * [Soil].Thickness - [Biomass].C</Expression>
+      <Expression>(1-[Soil].FInert)*[Soil].OC * 100 * [Soil].BD * [Soil].Thickness - [Microbial].C</Expression>
     </ExpressionFunction>
     <ExpressionFunction>
       <Name>InitialNitrogen</Name>
@@ -401,7 +401,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </Constant>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <destinationNames>
-        <string>Biomass</string>
+        <string>Microbial</string>
       </destinationNames>
       <destinationFraction>
         <double>1</double>
@@ -454,7 +454,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </Constant>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <destinationNames>
-        <string>Biomass</string>
+        <string>Microbial</string>
         <string>Humic</string>
       </destinationNames>
       <destinationFraction>
@@ -509,7 +509,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </Constant>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <destinationNames>
-        <string>Biomass</string>
+        <string>Microbial</string>
         <string>Humic</string>
       </destinationNames>
       <destinationFraction>
@@ -564,7 +564,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </Constant>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <destinationNames>
-        <string>Biomass</string>
+        <string>Microbial</string>
         <string>Humic</string>
       </destinationNames>
       <destinationFraction>
@@ -790,7 +790,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
         <OutlineColour />
       </Node>
       <Node>
-        <Name>Biomass</Name>
+        <Name>Microbial</Name>
         <Location>
           <X>178</X>
           <Y>403</Y>
@@ -883,7 +883,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
     <Arcs>
       <Arc>
         <SourceName>SurfaceResidue</SourceName>
-        <DestinationName>Biomass</DestinationName>
+        <DestinationName>Microbial</DestinationName>
         <Location>
           <X>0</X>
           <Y>0</Y>
@@ -900,8 +900,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
         <Colour />
       </Arc>
       <Arc>
-        <SourceName>Biomass</SourceName>
-        <DestinationName>Biomass</DestinationName>
+        <SourceName>Microbial</SourceName>
+        <DestinationName>Microbial</DestinationName>
         <Location>
           <X>0</X>
           <Y>0</Y>
@@ -909,7 +909,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
         <Colour />
       </Arc>
       <Arc>
-        <SourceName>Biomass</SourceName>
+        <SourceName>Microbial</SourceName>
         <DestinationName>Humic</DestinationName>
         <Location>
           <X>0</X>
@@ -919,7 +919,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </Arc>
       <Arc>
         <SourceName>Humic</SourceName>
-        <DestinationName>Biomass</DestinationName>
+        <DestinationName>Microbial</DestinationName>
         <Location>
           <X>0</X>
           <Y>0</Y>
@@ -928,7 +928,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </Arc>
       <Arc>
         <SourceName>FOMLignin</SourceName>
-        <DestinationName>Biomass</DestinationName>
+        <DestinationName>Microbial</DestinationName>
         <Location>
           <X>0</X>
           <Y>0</Y>
@@ -946,7 +946,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </Arc>
       <Arc>
         <SourceName>FOMCellulose</SourceName>
-        <DestinationName>Biomass</DestinationName>
+        <DestinationName>Microbial</DestinationName>
         <Location>
           <X>0</X>
           <Y>0</Y>
@@ -964,7 +964,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </Arc>
       <Arc>
         <SourceName>FOMCarbohydrate</SourceName>
-        <DestinationName>Biomass</DestinationName>
+        <DestinationName>Microbial</DestinationName>
         <Location>
           <X>0</X>
           <Y>0</Y>

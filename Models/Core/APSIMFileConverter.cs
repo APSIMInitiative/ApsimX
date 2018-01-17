@@ -747,10 +747,10 @@ namespace Models.Core
                 if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.HumicC", "Humic.C"))
                     APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Humic;");
 
-                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.MicrobialN", "Biomass.N"))
-                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Biomass;");
-                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.MicrobialC", "Biomass.C"))
-                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Biomass;");
+                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.MicrobialN", "Microbial.N"))
+                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Microbial;");
+                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.MicrobialC", "Microbial.C"))
+                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Microbial;");
 
                 if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.dlt_n_min_res", "ResidueDecomposition.MineralisedN"))
                     APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] CarbonFlow ResidueDecomposition;");
@@ -776,8 +776,8 @@ namespace Models.Core
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.FOMC", ".Nutrient.FOMC");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.HumicN", ".Nutrient.Humic.N");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.HumicC", ".Nutrient.Humic.C");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MicrobialN", ".Nutrient.Biomass.N");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MicrobialC", ".Nutrient.Biomass.C");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MicrobialN", ".Nutrient.Microbial.N");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MicrobialC", ".Nutrient.Microbial.C");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.urea", ".Nutrient.Urea.kgha");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.dlt_n_min_res", ".Nutrient.SurfaceResidue.ResidueDecomposition.MineralisedN");
                 APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
