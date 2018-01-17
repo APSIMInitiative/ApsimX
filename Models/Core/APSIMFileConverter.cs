@@ -703,6 +703,7 @@ namespace Models.Core
             nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "LeafCohortParameters"));
             nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"));
             nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Nodule"));
+            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "PerennialLeaf"));
 
             foreach (XmlNode n in nodeList)
             {
