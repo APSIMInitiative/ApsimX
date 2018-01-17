@@ -379,6 +379,10 @@ namespace Models.PMF.Organs
         [Link]
         IFunction DMConversionEfficiency = null;
 
+        /// <summary>Carbon concentration</summary>
+        /// [Units("-")]
+        [Link]
+        IFunction CarbonConcentration = null;
 
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
@@ -1350,7 +1354,7 @@ namespace Models.PMF.Organs
             // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
             // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
             // CO2 (44/12).
-            double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12 / 30) - 1 * CarbonConcentration) * 44 / 12;
+            double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1 * CarbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = (value.Structural + value.Storage + value.Metabolic) * growthRespFactor;
             
             double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];

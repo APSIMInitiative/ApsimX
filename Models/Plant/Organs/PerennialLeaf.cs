@@ -28,7 +28,8 @@ namespace Models.PMF.Organs
 
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
-        public double CarbonConcentration { get; set; }
+        [Link]
+        IFunction CarbonConcentration = null;
 
         /// <summary>Gets the cohort live.</summary>
         [XmlIgnore]
@@ -624,7 +625,7 @@ namespace Models.PMF.Organs
             // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
             // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
             // CO2 (44/12).
-            double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12 / 30) - 1 * CarbonConcentration) * 44 / 12;
+            double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = (dryMatter.Structural + dryMatter.Storage) * growthRespFactor;
             
             AddNewLeafMaterial(StructuralWt: Math.Min(dryMatter.Structural * DMConversionEfficiency.Value(), StructuralDMDemand),

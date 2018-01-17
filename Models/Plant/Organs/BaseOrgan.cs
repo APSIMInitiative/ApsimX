@@ -116,11 +116,6 @@ namespace Models.PMF.Organs
         /// [Units("CO_2")]
         public double GrowthRespiration { get; set; }
 
-        /// <summary>Carbon concentration</summary>
-        /// [Units("-")]
-        public double CarbonConcentration { get; set; }
-
-
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [XmlIgnore]
