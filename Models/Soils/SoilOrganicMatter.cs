@@ -20,36 +20,41 @@ namespace Models.Soils
         /// <summary>Gets or sets the root cn.</summary>
         /// <value>The root cn.</value>
         [Summary]
-        [Description("Root C:N ratio")]
+        [Description("Root C:N ratio (0-500)")]
+        [Bounds(Lower = 0.0, Upper = 500.0)]
         public double RootCN { get; set; }
 
         /// <summary>Gets or sets the soil cn.</summary>
         /// <value>The soil cn.</value>
         [Summary]
-        [Description("Soil C:N ratio")]
+        [Description("Soil C:N ratio (5-30)")]
+		[Bounds(Lower = 5.0, Upper = 30.0)]
         public double SoilCN { get; set; }
 
         /// <summary>Gets or sets the enr a coeff.</summary>
         /// <value>The enr a coeff.</value>
         [Summary]
-        [Description("Erosion enrichment coefficient A")]
+        [Description("Erosion enrichment coefficient A (1-20)")]
+        [Bounds(Lower = 1.0, Upper = 20.0)]
         public double EnrACoeff { get; set; }
 
         /// <summary>Gets or sets the enr b coeff.</summary>
         /// <value>The enr b coeff.</value>
         [Summary]
-        [Description("Erosion enrichment coefficient B")]
+        [Description("Erosion enrichment coefficient B (0-20)")]
+        [Bounds(Lower = 0.0, Upper = 20.0)]
         public double EnrBCoeff { get; set; }
 
-        /// <summary>Gets or sets the thickness.</summary>
+        /// <summary>Soil layer thickness for each layer (mm)</summary>
         /// <value>The thickness.</value>
+        [Units("mm")]
         public double[] Thickness { get; set; }
 
-        /// <summary>Gets or sets the depth.</summary>
+        /// <summary>Soil layer thickness for each layer in cm (only used in the GUI)</summary>
         /// <value>The depth.</value>
         [Summary]
         [Units("cm")]
-        [Description("Depth")]
+        [Description("Soil Depth")]
         public string[] Depth
         {
             get
@@ -62,10 +67,12 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>Gets or sets the oc.</summary>
+        /// <summary>Organic carbon concentration (0.1 - 10%)</summary>
         /// <value>The oc.</value>
         [Summary]
-        [Description("OC")]
+        [Description("Organic Carbon (0.1-10)")]
+        [Bounds(Lower = 0.1, Upper = 10.0)]
+        [Units("%")]
         [Display(Format = "N2")]
         public double[] OC { get; set; }
         /// <summary>Gets or sets the oc metadata.</summary>
@@ -75,8 +82,8 @@ namespace Models.Soils
         /// <summary>Gets or sets the f biom.</summary>
         /// <value>The f biom.</value>
         [Summary]
-        [Description("FBiom")]
-        [Units("0-1")]
+        [Description("FBiom (0-1)")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] FBiom { get; set; }
 
         /// <summary>Gets or sets the f inert.</summary>
@@ -139,8 +146,9 @@ namespace Models.Soils
         }
 
 
-        /// <summary>Organic carbon. Units: Total %</summary>
+        /// <summary>Soil organic carbon</summary>
         /// <value>The oc total.</value>
+        [Units("kg/ha")]
         public double[] OCTotal
         {
             get
@@ -154,7 +162,7 @@ namespace Models.Soils
 
 
         /// <summary>
-        /// Calculate and return amount of inert carbon on the same layer structure as OC. Units: kg/ha
+        /// Humic C that is not subject to mineralization (kg/ha) on the same layer structure as OC.
         /// </summary>
         /// <value>The inert c.</value>
         [Display(Format = "N0")]
@@ -191,7 +199,7 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Calculate and return the amount of biom carbon on the same layer structure as OC. Units: kg/ha
+        /// Calculate and return the amount of biomass carbon on the same layer structure as OC. 
         /// </summary>
         /// <value>The biom c.</value>
         [Display(Format = "N0")]
@@ -234,7 +242,7 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Calculate and return the amount of humic carbon on the same layer structure as OC. Units: kg/ha
+        /// Calculate and return the amount of humic carbon on the same layer structure as OC.
         /// </summary>
         /// <value>The hum c.</value>
         [Display(Format = "N0")]

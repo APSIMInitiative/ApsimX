@@ -149,6 +149,12 @@ namespace Models.Core
                             matches = new List<object>();
                             matches.Add(GetParent(obj, fieldType));
                         }
+                        else if (link is LinkByPathAttribute)
+                        {
+                            object match = Apsim.Get(obj as IModel, (link as LinkByPathAttribute).Path);
+                            if (match != null)
+                                matches.Add(match);
+                        }
                         else if (link.IsScoped(field))
                             matches = GetModelsInScope(obj, allModels);
                         else
