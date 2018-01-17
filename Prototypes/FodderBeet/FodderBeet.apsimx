@@ -690,44 +690,53 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
-          <LinearInterpolationFunction>
+          <MultiplyFunction>
             <Name>MaxArea</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
+            <Constant>
+              <Name>AreaLargestLeaf</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>1</double>
-                <double>6</double>
-                <double>11</double>
-                <double>15</double>
-                <double>21</double>
-                <double>35</double>
-                <double>45</double>
-                <double>50</double>
-              </X>
-              <Y>
-                <double>8000</double>
-                <double>10000</double>
-                <double>40000</double>
-                <double>50000</double>
-                <double>40000</double>
-                <double>20000</double>
-                <double>20000</double>
-                <double>15000</double>
-              </Y>
-            </XYPairs>
+              <FixedValue>50000</FixedValue>
+              <Units>mm^2</Units>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>AgeFactor</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>1</double>
+                  <double>6</double>
+                  <double>11</double>
+                  <double>15</double>
+                  <double>21</double>
+                  <double>35</double>
+                  <double>45</double>
+                  <double>50</double>
+                </X>
+                <Y>
+                  <double>0.16</double>
+                  <double>0.2</double>
+                  <double>0.8</double>
+                  <double>1</double>
+                  <double>0.8</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.3</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Structure].LeafTipsAppeared</XProperty>
+            </LinearInterpolationFunction>
             <Memo>
               <Name>Memo</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[Data of expansion of  laminae at three leaf positions ( twelfth, sixteenth and twentieth) on six plants  from the sowing date  experiment were used to give indication of ontogenic increase in maximum leaf area. The pattern of maximum leaf area for sugar beet (Milford et al. 1985) was assumed.
-
+              <MemoText><![CDATA[The pattern is assumed to be similar to that of maize (Teixeira et al 2011).
 ]]></MemoText>
             </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
-          </LinearInterpolationFunction>
+          </MultiplyFunction>
           <LinearInterpolationFunction>
-            <Name>GrowthDuration</Name>
+            <Name>GrowthDurationXXX</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -760,6 +769,21 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
+          <MultiplyFunction>
+            <Name>GrowthDuration</Name>
+            <Constant>
+              <Name>Multiplier</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>10</FixedValue>
+              <Units />
+            </Constant>
+            <VariableReference>
+              <Name>Phyllochron</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
           <MultiplyFunction>
             <Name>LagDuration</Name>
             <LinearInterpolationFunction>
@@ -1669,14 +1693,14 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <MaximumFunction>
           <Name>DMDemandFunction</Name>
           <Constant>
-            <Name>Constant1</Name>
+            <Name>Zero</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
           <MultiplyFunction>
             <Name>MultiplyFunction</Name>
             <Constant>
-              <Name>Constant</Name>
+              <Name>One</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1</FixedValue>
             </Constant>
