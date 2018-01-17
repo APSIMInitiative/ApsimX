@@ -46,35 +46,53 @@ namespace UserInterface.Views
             primaryContainer.ShowAll();
         }
 
-        public void Initialise(List<string> experimentNames, List<string> factorNames)
+        /// <summary>
+        /// Initialises and populates the TreeView.
+        /// </summary>
+        /// <param name="factors">Dictionary mapping factor names to lists of factor values (stored as strings).</param>
+        /// <param name="n">Total number of combinations.</param>
+        public void Initialise(List<List<Tuple<string, string, string>>> allCombinations)
         {
-            
-            Type[] types = new Type[factorNames.Count + 1];
+            if (allCombinations.Count < 1) return;
+
+            Type[] types = new Type[allCombinations[0].Count + 1];
             tree = new TreeView();
             columns = new List<TreeViewColumn>();
-            cells = new List<CellRendererText>();
-            List<string> data = new List<string>();
-            
-            for (int i = 0; i < factorNames.Count + 1; i++)
+            cells = new List<CellRendererText>();            
+
+            types[0] = typeof(string);
+            cells.Add(new CellRendererText());
+            columns.Add(new TreeViewColumn { Title = "Simulation Name" });
+            columns[0].PackStart(cells[0], false);
+            columns[0].AddAttribute(cells[0], "text", 0);
+            tree.AppendColumn(columns[0]);
+
+            int i = 1;
+            // initialise column headers
+            foreach (Tuple<string, string, string> factor in allCombinations[0])
             {
-                types[i] = typeof(string);
-                data.Add(i == 0 ? experimentNames[0] : i % 2 == 0 ? "Active" : "Inactive");
-                string header = i == 0 ? "Simulation Name" : factorNames[i - 1];
-
+                types[i] = typeof(string);                                
                 cells.Add(new CellRendererText());
-
-                columns.Add(new TreeViewColumn { Title = header });
+                columns.Add(new TreeViewColumn { Title = factor.Item1 });
                 columns[i].PackStart(cells[i], false);
                 columns[i].AddAttribute(cells[i], "text", i);
 
                 tree.AppendColumn(columns[i]);
+                i++;
+            }
+
+            store = new ListStore(types);
+
+            foreach (List<Tuple<string, string, string>> factors in allCombinations)
+            {
+                List<string> data = new List<string> { factors[0].Item3 };
+                foreach(Tuple<string, string, string> factor in factors)
+                {
+                    data.Add(factor.Item2);
+                }
+                store.AppendValues(data.ToArray());
             }
             
-            
-            store = new ListStore(types);
-            store.AppendValues(data.ToArray());
-            data.ForEach(x => x = x == "Active" ? "Inactive" : x == "Inactive" ? "Active" : factorNames[0]);
-            store.AppendValues(data);
             tree.Selection.Mode = SelectionMode.Multiple;
             tree.RubberBanding = true;
             tree.CanFocus = true;

@@ -27,12 +27,16 @@ namespace ApsimNG.Cloud
         private string outputPath;
 
         /// <summary>
-        /// Temporary directory to contain the result (.db) and debugging (.out | .stdout) files.
-        /// Located at outputPath\jobId.
-        /// This directory gets deleted once finished.
+        /// Directory to contain the result (.db) and debugging (.out | .stdout) files.
+        /// Located at outputPath\jobName.        
         /// </summary>
         private string rawResultsPath;
 
+        /// <summary>
+        /// Temporary directory to hold the result files if the user does not wish to keep them.
+        /// This directory and its contents are deleted once the download is complete.
+        /// </summary>
+        private string tempPath;
         /// <summary>
         /// Job ID.
         /// </summary>
@@ -106,24 +110,18 @@ namespace ApsimNG.Cloud
             includeDebugs = includeDebugFiles;
             keepOutputs = keepOutputFiles;
             outputPath = path;
-            rawResultsPath = outputPath + "\\" + jobId.ToString();
+            rawResultsPath = outputPath + "\\" + jobName.ToString();
+            tempPath = Path.GetTempPath() + "\\" + jobId;
             progressMutex = new object();
             try
             {
-                if (!Directory.Exists(rawResultsPath)) Directory.CreateDirectory(rawResultsPath);
+                // if we need to save files, create a directory under the output directory
+                if ((includeDebugs|| keepOutputs || exportCsv) && !Directory.Exists(rawResultsPath)) Directory.CreateDirectory(rawResultsPath);
             }
             catch (Exception ex)
             {
                 presenter.ShowError(ex.ToString());
                 return;
-            }
-            // this step is handled by the presenter as well so in theory it shouldn't be needed
-            try
-            {
-                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            } catch (Exception e)
-            {
-                presenter.ShowError(e.ToString());
             }
 
             presenter = explorer;
@@ -137,16 +135,20 @@ namespace ApsimNG.Cloud
             blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);        
         }
 
-        public void DownloadResults()
-        {
-            // TODO : add a checkbox to include debugging files
-            numBlobs = CountBlobs(); // TODO : implement a progress bar using this
+        /// <summary>
+        /// Downloads the results of a job.
+        /// </summary>
+        /// <param name="async">If true, results will be downloaded in a separate thread.</param>
+        public void DownloadResults(bool async)
+        {            
+            numBlobs = CountBlobs();
 
             downloader = new BackgroundWorker();
             downloader.WorkerReportsProgress = true;
             downloader.DoWork += Downloader_DoWork;
             downloader.ProgressChanged += DownloadProgressChanged;
-            downloader.RunWorkerAsync();
+            if (async) downloader.RunWorkerAsync();
+            else Downloader_DoWork(null, null);
         }
 
         private void Downloader_DoWork(object sender, DoWorkEventArgs e)
@@ -154,58 +156,75 @@ namespace ApsimNG.Cloud
             CancellationToken ct;
 
             var outputHashLock = new object();
-            HashSet<string> downloadedOutputs = GetDownloadedOutputFiles();      
-
+            HashSet<string> downloadedOutputs = GetDownloadedOutputFiles();
+            int success = 0;
             while (true)
             {
                 try
                 {
                     if (downloader.CancellationPending || ct.IsCancellationRequested) return;
-
+                    // TODO : evaluate efficiency of this method
                     bool complete = IsJobComplete();
                     var outputs = ListJobOutputsFromStorage();
+                    
+                    try
+                    {
+                        if (Directory.Exists(tempPath)) Directory.Delete(tempPath, true);
+                        Directory.CreateDirectory(tempPath);
+                    } catch (Exception ex)
+                    {
+                        presenter.ShowError(ex.ToString());
+                        success = 3;
+                    }
+                    
                     Parallel.ForEach(outputs,
                                      new ParallelOptions { CancellationToken = ct, MaxDegreeOfParallelism = 8 },
                                      blob => 
                                      {
                                          bool skip = false;
                                          string extension = Path.GetExtension(blob.Name.ToLower());
+                                         string downloadPath = (extension == ".stdout" || extension == ".sum" || keepOutputs) ? Path.Combine(rawResultsPath, blob.Name) : Path.Combine(tempPath, blob.Name);
+                                         
                                          // if we don't want to download debugging files and this is a debugging file, skip it
                                          if (!includeDebugs && (extension == ".stdout" || extension == ".sum")) skip = true;
+
                                          if (!skip && !downloadedOutputs.Contains(blob.Name))
                                          {
-                                             blob.DownloadToFile(Path.Combine(rawResultsPath, blob.Name), FileMode.Create);
+                                             //blob.DownloadToFile(Path.Combine(rawResultsPath, blob.Name), FileMode.Create);
+                                             blob.DownloadToFile(downloadPath, FileMode.Create);
                                              lock (outputHashLock)
                                              {
                                                  downloadedOutputs.Add(blob.Name);
+                                                 downloader.ReportProgress(0, blob.Name);
                                              }
-                                         }
-                                         downloader.ReportProgress(0, blob.Name);
+                                         }                                         
                                      });                    
                     if (complete) break;
                 }
                 catch (AggregateException ae)
                 {
-                    Console.WriteLine(ae.InnerException.ToString());
+                    presenter.ShowError(ae.InnerException.ToString());
                 }
             }
             // todo : remember to set success appropriately after moving the results into the data store
-            int success = -1;
             if (exportCsv)
-            {
+            {                
                 success = SummariseResults(true);
             }
-            while (Directory.Exists(rawResultsPath))
+
+            while (Directory.Exists(tempPath))
             {
                 try
                 {
-                    Directory.Delete(rawResultsPath, true);
+                    Directory.Delete(tempPath, true);
                 }
                 catch
                 {
                     Thread.Sleep(100);
                 }
-            }            
+            }
+            
+            
             presenter.DownloadComplete(jobId);
             presenter.DisplayFinishedDownloadStatus(name, success, outputPath, DateTime.Now);
         }
@@ -236,19 +255,19 @@ namespace ApsimNG.Cloud
             try
             {
                 bool isClassic = false;
-                string fileSpec = ".out";
-                // do we need to test if we are summarising classic or X results?
-                foreach (string f in Directory.GetFiles(rawResultsPath))
+                string fileSpec = ".db";
+                string resultPath = keepOutputs ? rawResultsPath : tempPath;
+                foreach (string f in Directory.GetFiles(resultPath))
                 {
-                    if (Path.GetExtension(f) == ".db")
+                    if (Path.GetExtension(f) == ".out")
                     {
-                        isClassic = false;
-                        fileSpec = ".db";
+                        isClassic = true;
+                        fileSpec = ".out";
                         break;
                     }
                 }
 
-                string[] resultFiles = Directory.GetFiles(rawResultsPath, "*" + fileSpec);
+                string[] resultFiles = Directory.GetFiles(resultPath, "*" + fileSpec);
 
                 // if there are no results (possibly a bad simulation?), no need to create an empty csv file.
                 if (resultFiles.Count() == 0) return 1;
@@ -261,9 +280,9 @@ namespace ApsimNG.Cloud
                 string sep = "";
 
                 StringBuilder output = new StringBuilder();
-                string csvPath = outputPath + "\\" + name + ".csv";
+                string csvPath = outputPath + "\\" + name + "\\" + name + ".csv";
                 Regex rx_name = detectCommonChars(resultFiles);
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(csvPath, false))
+                using (StreamWriter file = new StreamWriter(csvPath, false))
                 {
                     foreach (string currentFile in resultFiles)
                     {
@@ -323,7 +342,7 @@ namespace ApsimNG.Cloud
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                return -1;
+                return 2;
             }
         }
 

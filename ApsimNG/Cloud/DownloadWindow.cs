@@ -77,8 +77,7 @@ namespace ApsimNG.Cloud
             vboxPrimary.PackStart(includeDebugFiles);
             vboxPrimary.PackStart(keepRawOutputs);
             vboxPrimary.PackStart(generateCsv);
-            vboxPrimary.PackStart(downloadDirectoryContainer);
-            vboxPrimary.PackStart(btnChangeOutputDir);
+            vboxPrimary.PackStart(downloadDirectoryContainer);            
             vboxPrimary.PackStart(new Label(""));
 
             vboxPrimary.PackEnd(new Label(""));
@@ -101,10 +100,10 @@ namespace ApsimNG.Cloud
         /// <param name="e"></param>
         private void Download(object sender, EventArgs e)
         {
-            presenter.DownloadResults(jobs, generateCsv.Active, includeDebugFiles.Active, keepRawOutputs.Active);
             btnDownload.Clicked -= Download;
             btnChangeOutputDir.Clicked -= ChangeOutputDir;
             Destroy();
+            presenter.DownloadResults(jobs, generateCsv.Active, includeDebugFiles.Active, keepRawOutputs.Active);
         }
 
         private void ChangeOutputDir(object sender, EventArgs e)

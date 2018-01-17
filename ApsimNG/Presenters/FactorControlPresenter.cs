@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using UserInterface.Views;
 using Models.Core;
 using Models.Factorial;
+using System.Collections;
+
 namespace UserInterface.Presenters
 {
     class FactorControlPresenter : IPresenter
@@ -20,15 +22,32 @@ namespace UserInterface.Presenters
             model = (Experiment)experiment;
             view = (FactorControlView)viewer;
             this.explorerPresenter = explorerPresenter;
+            var simNames = model.GetSimulationNames().ToArray();
 
-            //List<Factors> factors = ((IModel)model).Children[0]);
-            List<string> factorNames = model.GetSimulationNames().ToList();
-            List<string> experiments = new List<string> { model.Name };
 
-            view.Initialise(experiments, factorNames);
+            List<List<Tuple<string, string, string>>> allCombinations = new List<List<Tuple<string, string, string>>>();
+            int n = 0;
+            foreach (List<FactorValue> factors in model.AllCombinations())
+            {
+                List<Tuple<string, string, string>> data = new List<Tuple<string, string, string>>();
+                foreach (FactorValue factor in factors)
+                {
+                    object val = factor.Values[0];
+                    string value = val.GetType() == typeof(string) ? (string)val : ((Model)val).Name;
+                    string name = "";
+                    foreach (FactorValue fv in factors) name += fv.Name;
+                    Tuple<string, string, string> f = new Tuple<string, string, string>(factor.Factor.Name, value, name);
+                    data.Add(f);
+                    n++;
+                }
+                allCombinations.Add(data);
+            }
+
+            view.Initialise(allCombinations);
 
             
-            Factors f = (Factors)((IModel)experiment).Children[0];
+            
+            
         }
 
         public void Detach()

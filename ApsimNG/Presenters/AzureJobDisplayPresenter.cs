@@ -139,19 +139,19 @@ namespace UserInterface.Presenters
                     {                        
                         jobList = newJobs;
                         if (UpdateDisplay() == 1) return;
-                        
-                        
-                    }
-                    for (int i = 0; i < newJobs.Count(); i++)
+                    } else
                     {
-                        if (!IsEqual(newJobs[i], jobList[i]))
-                        {                            
-                            jobList = newJobs;
-                            if (UpdateDisplay() == 1) return;
-                            break;
+                        for (int i = 0; i < newJobs.Count(); i++)
+                        {
+                            if (!IsEqual(newJobs[i], jobList[i]))
+                            {
+                                jobList = newJobs;
+                                if (UpdateDisplay() == 1) return;
+                                break;
+                            }
                         }
+                        jobList = newJobs;
                     }
-                    jobList = newJobs;
                 } else
                 {                    
                     // ListJobs() will only return null if the thread is asked to cancel or if unable to talk to
@@ -277,8 +277,17 @@ namespace UserInterface.Presenters
 
                     if (cloudJob.ExecutionInformation.PoolId != null)
                     {
-                        var pool = pools.FirstOrDefault(p => string.Equals(cloudJob.ExecutionInformation.PoolId, p.Id));
-
+                        //var pool = pools.FirstOrDefault(p => string.Equals(cloudJob.ExecutionInformation.PoolId, p.Id));
+                        string poolId = cloudJob.ExecutionInformation.PoolId;
+                        CloudPool pool = null;
+                        foreach (CloudPool currentPool in pools)
+                        {
+                            if (currentPool.Id == poolId)
+                            {
+                                pool = currentPool;
+                                break;
+                            }
+                        }
                         if (pool != null)
                         {
                             job.PoolSettings = new PoolSettings
@@ -493,19 +502,42 @@ namespace UserInterface.Presenters
                 return;
             }
 
-            if (Directory.GetFiles((string)Settings.Default["OutputDir"]).Length > 0 && !view.ShowWarning("Files detected in output directory. Results will be generated from ALL files in this directory. Are you certain you wish to continue?"))
+            if (jobsToDownload.Count < 1)
+            {
+                MainPresenter.ShowMessage("Unable to download jobs - no jobs are selected.", Simulation.ErrorLevel.Information);
                 return;
-            view.ShowDownloadProgressBar();            
+            }
+
+
+            view.ShowDownloadProgressBar();
+            MainPresenter.ShowMessage("", Simulation.ErrorLevel.Information);
             string path = (string)Settings.Default["OutputDir"];
             AzureResultsDownloader dl;
             Guid jobId;
+
+            // If a results directory (outputPath\jobName) already exists, the user will receive a warning asking them if they want to continue.
+            // This message should only be displayed once. Once it's been displayed this boolean is set to true so they won't be asked again.
+            bool ignoreWarning = false;
+
             foreach (string id in jobsToDownload)
             {                
                 // if the job id is invalid, skip downloading this job                
                 if (!Guid.TryParse(id, out jobId)) continue;
-                view.UpdateDownloadProgress(0, GetJob(jobId).DisplayName);                
+                string jobName = GetJob(jobId).DisplayName;
+
+                view.UpdateDownloadProgress(0, jobName);
+                if (Directory.Exists((string)Settings.Default["OutputDir"] + "\\" + jobName) && !ignoreWarning)
+                {
+                    if (!view.ShowWarning("Files detected in output directory. Results will be generated from ALL files in this directory. Are you certain you wish to continue?"))
+                    {
+                        view.HideDownloadProgressBar();
+                        return;
+                    }
+                    else ignoreWarning = true;
+                }
+
                 dl = new AzureResultsDownloader(jobId, GetJob(jobId).DisplayName, path, this, saveToCsv, includeDebugFiles, keepOutputFiles);                
-                dl.DownloadResults();
+                dl.DownloadResults(false);
             }            
         }
 
@@ -538,12 +570,22 @@ namespace UserInterface.Presenters
         public void DisplayFinishedDownloadStatus(string name, int code, string path, DateTime timeStamp)
         {
             view.HideDownloadProgressBar();
-            if (code == 0) return;
+            if (code == 0)
+            {
+                MainPresenter.ShowMessage("Download successful.", Simulation.ErrorLevel.Information);
+                return;
+            }
             string msg = timeStamp.ToLongTimeString().Split(' ')[0] + ": " +  name + ": ";
             switch (code)
             {
                 case 1:
-                    msg += "Unable to generate a .csv file.";
+                    msg += "Unable to generate a .csv file: no result files were found.";
+                    break;
+                case 2:
+                    msg += "Unable to generate a .csv file: one or more result files may be empty";
+                    break;
+                case 3:
+                    msg += "Unable to generate a temporary directory.";
                     break;
                 default:
                     msg += "Download unsuccessful.";
@@ -559,6 +601,7 @@ namespace UserInterface.Presenters
                     using (StreamWriter sw = File.AppendText(logFile))
                     {
                         sw.WriteLine(msg);
+                        sw.Close();
                     }
                 } catch
                 {
@@ -588,13 +631,13 @@ namespace UserInterface.Presenters
         /// <param name="id">ID of the job.</param>
         public void DeleteJob(string id)
         {
-            // cancel the fetch jobs worker
-            FetchJobs.CancelAsync();
-            view.HideLoadingProgressBar();
-
             // try to parse the id. if it is not a valid Guid, return
             Guid jobId;
             if (!Guid.TryParse(id, out jobId)) return;
+
+            // cancel the fetch jobs worker
+            FetchJobs.CancelAsync();
+            view.HideLoadingProgressBar();
 
             // delete the job from Azure
             CloudBlobContainer containerRef;
@@ -602,7 +645,7 @@ namespace UserInterface.Presenters
             containerRef = blobClient.GetContainerReference(StorageConstants.GetJobOutputContainer(jobId));
             if (containerRef.Exists()) containerRef.Delete();
             
-            containerRef = blobClient.GetContainerReference(StorageConstants.GetJobOutputContainer(jobId));
+            containerRef = blobClient.GetContainerReference(StorageConstants.GetJobContainer(jobId));
             if (containerRef.Exists()) containerRef.Delete();
 
             containerRef = blobClient.GetContainerReference(jobId.ToString());
