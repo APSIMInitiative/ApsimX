@@ -414,7 +414,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
     <ExpressionFunction>
       <Name>InitialCarbon</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Expression>[SoilOrganicMatter].RootWt * 0.1 * 0.4</Expression>
+      <Expression>[Soil].InitialRootWt * 0.1 * 0.4</Expression>
     </ExpressionFunction>
     <Constant>
       <Name>InitialNitrogen</Name>
@@ -469,7 +469,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
     <ExpressionFunction>
       <Name>InitialCarbon</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Expression>[SoilOrganicMatter].RootWt * 0.7 * 0.4</Expression>
+      <Expression>[Soil].InitialRootWt * 0.7 * 0.4</Expression>
     </ExpressionFunction>
     <Constant>
       <Name>InitialNitrogen</Name>
@@ -524,7 +524,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
     <ExpressionFunction>
       <Name>InitialCarbon</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Expression>[SoilOrganicMatter].RootWt * 0.2 * 0.4</Expression>
+      <Expression>[Soil].InitialRootWt * 0.2 * 0.4</Expression>
     </ExpressionFunction>
     <Constant>
       <Name>InitialNitrogen</Name>

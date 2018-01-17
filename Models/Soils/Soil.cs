@@ -939,6 +939,18 @@ namespace Models.Soils
                            MapType.Concentration, LastValue(SoilOrganicMatter.FInert));
             }
         }
+        /// <summary>Initial Root Wt</summary>
+        /// <value>Initial Root Wt</value>
+        [Units("kg/ha")]
+        public double[] InitialRootWt
+        {
+            get
+            {
+                if (SoilOrganicMatter.RootWt == null) return null;
+                return Map(SoilOrganicMatter.RootWt, SoilOrganicMatter.Thickness, Thickness,
+                           MapType.Mass, LastValue(SoilOrganicMatter.RootWt));
+            }
+        }
         #endregion
 
         #region Analysis
