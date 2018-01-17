@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="24">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="18">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -936,6 +936,42 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
               </KLAT>
               <residueinterception>0</residueinterception>
             </SoilWater>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
+                <double>0.06</double>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+            </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1112,15 +1148,6 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
               <Name>CERESSoilTemperature</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </CERESSoilTemperature>
-            <Nutrient>
-              <Name>Nutrient</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ResourceName>Nutrient</ResourceName>
-              <DirectedGraphInfo>
-                <Nodes />
-                <Arcs />
-              </DirectedGraphInfo>
-            </Nutrient>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <SoilType>Higaturu Series </SoilType>
@@ -1426,7 +1453,6 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
-using Models.Soils.Nutrients;
 using Models.SurfaceOM;
 using APSIM.Shared.Utilities;
 
@@ -1540,10 +1566,10 @@ namespace Models
        private void OnDoManagement(object sender, EventArgs e)
 		{
             AnnualRain += Weather.Rain;
-			SoilCtpha = MathUtilities.Sum(Soil.Nutrient.TotalC) / 1000;
+			SoilCtpha = MathUtilities.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = MathUtilities.Sum(Soil.NO3N);
-			NitTot = MathUtilities.Sum(Soil.Nutrient.TotalN);
+			NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
 			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
@@ -1561,8 +1587,8 @@ namespace Models
 
             AnnualTotalNInput += OilPalm.UnderstoryNFixation + Fertiliser.NitrogenApplied;
             AnnualFertiliserNAdded +=Fertiliser.NitrogenApplied;
-            AnnualDenitrification += MathUtilities.Sum(Soil.Nutrient.Natm);
-            AnnualN2O += MathUtilities.Sum(Soil.Nutrient.N2Oatm);
+            AnnualDenitrification += MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AnnualN2O += MathUtilities.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
             
 		}
@@ -2559,6 +2585,42 @@ namespace Models
               </KLAT>
               <residueinterception>0</residueinterception>
             </SoilWater>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
+                <double>0.06</double>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+            </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2665,15 +2727,6 @@ namespace Models
               <Name>CERESSoilTemperature</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </CERESSoilTemperature>
-            <Nutrient>
-              <Name>Nutrient</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ResourceName>Nutrient</ResourceName>
-              <DirectedGraphInfo>
-                <Nodes />
-                <Arcs />
-              </DirectedGraphInfo>
-            </Nutrient>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <SoilType>Volcanic Ash</SoilType>
@@ -2966,7 +3019,6 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
-using Models.Soils.Nutrients;
 using Models.SurfaceOM;
 using APSIM.Shared.Utilities;
 
@@ -3080,10 +3132,10 @@ namespace Models
        private void OnDoManagement(object sender, EventArgs e)
 		{
             AnnualRain += Weather.Rain;
-			SoilCtpha = MathUtilities.Sum(Soil.Nutrient.TotalC) / 1000;
+			SoilCtpha = MathUtilities.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = MathUtilities.Sum(Soil.NO3N);
-			NitTot = MathUtilities.Sum(Soil.Nutrient.TotalN);
+			NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
 			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
@@ -3101,8 +3153,8 @@ namespace Models
 
             AnnualTotalNInput += OilPalm.UnderstoryNFixation + Fertiliser.NitrogenApplied;
             AnnualFertiliserNAdded +=Fertiliser.NitrogenApplied;
-            AnnualDenitrification += MathUtilities.Sum(Soil.Nutrient.Natm);
-            AnnualN2O += MathUtilities.Sum(Soil.Nutrient.N2Oatm);
+            AnnualDenitrification += MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AnnualN2O += MathUtilities.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
             
 		}
@@ -4223,6 +4275,42 @@ namespace Models
               </KLAT>
               <residueinterception>0</residueinterception>
             </SoilWater>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
+                <double>0.06</double>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+            </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4374,15 +4462,6 @@ namespace Models
               <Name>CERESSoilTemperature</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </CERESSoilTemperature>
-            <Nutrient>
-              <Name>Nutrient</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ResourceName>Nutrient</ResourceName>
-              <DirectedGraphInfo>
-                <Nodes />
-                <Arcs />
-              </DirectedGraphInfo>
-            </Nutrient>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <SoilType>Alluvial Clay</SoilType>
@@ -4651,7 +4730,6 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
-using Models.Soils.Nutrients;
 using Models.SurfaceOM;
 using APSIM.Shared.Utilities;
 
@@ -4765,10 +4843,10 @@ namespace Models
        private void OnDoManagement(object sender, EventArgs e)
 		{
             AnnualRain += Weather.Rain;
-			SoilCtpha = MathUtilities.Sum(Soil.Nutrient.TotalC) / 1000;
+			SoilCtpha = MathUtilities.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = MathUtilities.Sum(Soil.NO3N);
-			NitTot = MathUtilities.Sum(Soil.Nutrient.TotalN);
+			NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
 			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
@@ -4786,8 +4864,8 @@ namespace Models
 
             AnnualTotalNInput += OilPalm.UnderstoryNFixation + Fertiliser.NitrogenApplied;
             AnnualFertiliserNAdded +=Fertiliser.NitrogenApplied;
-            AnnualDenitrification += MathUtilities.Sum(Soil.Nutrient.Natm);
-            AnnualN2O += MathUtilities.Sum(Soil.Nutrient.N2Oatm);
+            AnnualDenitrification += MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AnnualN2O += MathUtilities.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
             
 		}
