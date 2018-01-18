@@ -45,3 +45,5 @@ Prototypes/Grapevine/Observations/PhenoDataObservation - Copy.xlsx
 lib/
 .Rproj.user
 .vs/ApsimX/v15/Server/sqlite3/storage.ide
+Docs/.Rhistory
+Documentation/errors.txt

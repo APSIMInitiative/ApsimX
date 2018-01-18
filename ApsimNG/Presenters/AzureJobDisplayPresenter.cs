@@ -521,14 +521,24 @@ namespace UserInterface.Presenters
                 string jobName = GetJob(jobId).DisplayName;
 
                 view.UpdateDownloadProgress(0, jobName);
+
+                // if output directory already exists and warning has not already been given, display a warning
                 if (Directory.Exists((string)Settings.Default["OutputDir"] + "\\" + jobName) && !ignoreWarning)
                 {
                     if (!view.ShowWarning("Files detected in output directory. Results will be generated from ALL files in this directory. Are you certain you wish to continue?"))
                     {
+                        // if user has chosen to cancel the download
                         view.HideDownloadProgressBar();
                         return;
                     }
                     else ignoreWarning = true;
+                }
+
+                // if job has not finished, skip to the next job in the list
+                if (GetJob(jobId).State.ToString().ToLower() != "completed")
+                {
+                    ShowError("Unable to download " + GetJob(jobId).DisplayName.ToString() + ": Job has not finished running");
+                    continue;
                 }
 
                 dl = new AzureResultsDownloader(jobId, GetJob(jobId).DisplayName, path, this, saveToCsv, includeDebugFiles, keepOutputFiles);                

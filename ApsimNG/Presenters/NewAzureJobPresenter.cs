@@ -235,7 +235,7 @@
                 CloudTask completeTask = new CloudTask("jobcomplete-" + jp.JobId.ToString(), "cmd.exe /c echo JobDone");
                 completeTask.DependsOn = TaskDependencies.OnIds(taskList);
 
-                batchClient.JobOperations.AddTask(jp.JobId.ToString(), completeTask);
+                //batchClient.JobOperations.AddTask(jp.JobId.ToString(), completeTask);
             } catch (Exception ex)
             {
                 ShowError(ex.ToString());
