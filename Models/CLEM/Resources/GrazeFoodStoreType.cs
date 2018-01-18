@@ -221,7 +221,10 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            Pools.Clear();
+            if (Pools != null)
+            {
+                Pools.Clear();
+            }
             Pools = null;
         }
 

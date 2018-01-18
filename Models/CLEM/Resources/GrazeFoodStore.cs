@@ -59,7 +59,10 @@ namespace Models.CLEM.Resources
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
                 childModel.EcologicalIndicatorsCalculated -= Resource_EcologicalIndicatorsCalculated;
             }
-            Items.Clear();
+            if (Items != null)
+            {
+                Items.Clear();
+            }
             Items = null;
         }
 

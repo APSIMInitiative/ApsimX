@@ -70,7 +70,10 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            UncollectedStores.Clear();
+            if (UncollectedStores != null)
+            {
+                UncollectedStores.Clear();
+            }
             UncollectedStores = null;
         }
 
