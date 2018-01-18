@@ -28,6 +28,10 @@
         [EventSubscribe("BeginRun")]
         private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
+            allCombinations = AllCombinations();
+            parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
+            serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
         }
 
         /// <summary>Gets the next job to run</summary>
@@ -35,14 +39,6 @@
         {
             if (allCombinations == null || allCombinations.Count == 0)
                 return null;
-
-            if (serialisedBase == null)
-            {
-                allCombinations = AllCombinations();
-                parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
-                serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
-            }
 
             var combination = allCombinations[0];
             allCombinations.RemoveAt(0);
