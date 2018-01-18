@@ -51,7 +51,9 @@
 
             // Set fraction of the layer undertaking this flow to 1 - default unless changed by parent model
             LayerFraction = new double[soil.Thickness.Length];
-            MathUtilities.AddValue(LayerFraction, 1.0);
+            for (int i = 0; i < LayerFraction.Length; i++)
+                LayerFraction[i] = 1.0;
+
         }
         /// <summary>
         /// Add C and N into nutrient pool

@@ -49,7 +49,7 @@ The model consists of:
       <FixedValue>0</FixedValue>
     </Constant>
     <CarbonFlow>
-      <Name>ResidueDecomposition</Name>
+      <Name>Decomposition</Name>
       <Constant>
         <Name>Rate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -705,15 +705,8 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </MinimumFunction>
-  <MinimumFunction>
-    <Name>WaterFactorForMineralisation</Name>
-    <Constant>
-      <Name>One</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-    </Constant>
     <LinearInterpolationFunction>
-      <Name>WF</Name>
+      <Name>WaterFactorForMineralisation</Name>
       <SoilWaterScale>
         <Name>SoilWaterScale</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -737,8 +730,6 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[SoilWaterScale]</XProperty>
     </LinearInterpolationFunction>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </MinimumFunction>
   <MinimumFunction>
     <Name>CNRatioFactorForMineralisation</Name>
     <Constant>

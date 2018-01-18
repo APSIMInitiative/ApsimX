@@ -330,7 +330,7 @@
 
             SurfaceResidue.C[0] = 0;
             SurfaceResidue.N[0] = 0;
-            SurfaceResidue.LayerFraction[0] = Math.Max(1.0, 100 / Soil.Thickness[0]);
+            SurfaceResidue.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / Soil.Thickness[0]),0.0);
             for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
             {
                 SurfaceResidue.C[0] += PotentialSOMDecomp.Pool[i].FOM.C;

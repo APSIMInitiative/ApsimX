@@ -93,11 +93,13 @@ namespace Models.Soils.Nutrients
                 }
 
                 double TotalNitrogenFlowToDestinations = MathUtilities.Sum(nitrogenFlowToDestination);
-                double NSupply = nitrogenFlowFromSource + NO3[i] + NH4[i];
+                // some pools do not fully occupy a layer (e.g. residue decomposition) and so need to incorporate fraction of layer
+                double MineralNSupply = (NO3[i] + NH4[i])* source.LayerFraction[i];
+                double NSupply = nitrogenFlowFromSource + MineralNSupply;
 
                 if (MathUtilities.Sum(nitrogenFlowToDestination) > NSupply)
                 {
-                    double NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(NO3[i] + NH4[i], TotalNitrogenFlowToDestinations - nitrogenFlowFromSource, 1.0), 0.0, 1.0);
+                    double NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(MineralNSupply, TotalNitrogenFlowToDestinations - nitrogenFlowFromSource, 1.0), 0.0, 1.0);
 
                     for (int j = 0; j < destinations.Count; j++)
                     {

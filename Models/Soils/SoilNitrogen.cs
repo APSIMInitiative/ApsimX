@@ -329,9 +329,9 @@ namespace Models.Soils
 
                 // distribute C over fom pools
                 double[] fomPool = new double[3];
-                fomPool[0] = Soil.SoilOrganicMatter.RootWt[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
-                fomPool[1] = Soil.SoilOrganicMatter.RootWt[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
-                fomPool[2] = Soil.SoilOrganicMatter.RootWt[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[0] = Soil.InitialRootWt[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[1] = Soil.InitialRootWt[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[2] = Soil.InitialRootWt[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
 
                 // set the initial values across patches
                 for (int k = 0; k < Patch.Count; k++)
