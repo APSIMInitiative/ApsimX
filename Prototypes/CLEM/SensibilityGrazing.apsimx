@@ -911,7 +911,7 @@
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <Age>8</Age>
-                <Number>5</Number>
+                <Number>6</Number>
                 <Weight>180</Weight>
                 <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
