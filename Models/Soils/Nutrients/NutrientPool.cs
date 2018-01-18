@@ -30,6 +30,11 @@
         /// <summary>Amount of nitrogen (kg/ha)</summary>
         public double[] N { get; set; }
 
+        /// <summary>
+        /// Fraction of each layer occupied by this pool.
+        /// /// </summary>
+        public double[] LayerFraction { get; set; }
+
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -43,6 +48,10 @@
             N = new double[soil.Thickness.Length];
             for (int i = 0; i < N.Length; i++)
                 N[i] = InitialNitrogen.Value(i);
+
+            // Set fraction of the layer undertaking this flow to 1 - default unless changed by parent model
+            LayerFraction = new double[soil.Thickness.Length];
+            MathUtilities.AddValue(LayerFraction, 1.0);
         }
         /// <summary>
         /// Add C and N into nutrient pool

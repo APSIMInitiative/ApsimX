@@ -114,7 +114,6 @@ namespace Models.Soils
             FBiom = Soil.FBiom;
             FInert = Soil.FInert;
             HumusCNr = Soil.SoilOrganicMatter.SoilCN;
-            InitialFOMWt = MathUtilities.Sum(Soil.SoilOrganicMatter.RootWt);
             InitialFOMCNr = Soil.SoilOrganicMatter.RootCN;
             enr_a_coeff = Soil.SoilOrganicMatter.EnrACoeff;
             enr_b_coeff = Soil.SoilOrganicMatter.EnrBCoeff;
@@ -330,9 +329,9 @@ namespace Models.Soils
 
                 // distribute C over fom pools
                 double[] fomPool = new double[3];
-                fomPool[0] = InitialFOMWt * FOMiniFraction[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
-                fomPool[1] = InitialFOMWt * FOMiniFraction[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
-                fomPool[2] = InitialFOMWt * FOMiniFraction[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[0] = Soil.SoilOrganicMatter.RootWt[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[1] = Soil.SoilOrganicMatter.RootWt[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[2] = Soil.SoilOrganicMatter.RootWt[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
 
                 // set the initial values across patches
                 for (int k = 0; k < Patch.Count; k++)

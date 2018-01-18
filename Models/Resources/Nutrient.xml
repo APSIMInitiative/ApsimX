@@ -416,11 +416,11 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Expression>[Soil].InitialRootWt * 0.1 * 0.4</Expression>
     </ExpressionFunction>
-    <Constant>
+    <ExpressionFunction>
       <Name>InitialNitrogen</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0</FixedValue>
-    </Constant>
+      <Expression>[FOMLignin].C / [Soil].SoilOrganicMatter.RootCN</Expression>
+    </ExpressionFunction>
     <CarbonFlow>
       <Name>Decomposition</Name>
       <MultiplyFunction>
@@ -471,11 +471,11 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Expression>[Soil].InitialRootWt * 0.7 * 0.4</Expression>
     </ExpressionFunction>
-    <Constant>
+    <ExpressionFunction>
       <Name>InitialNitrogen</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0</FixedValue>
-    </Constant>
+      <Expression>[FOMCellulose].C / [Soil].SoilOrganicMatter.RootCN</Expression>
+    </ExpressionFunction>
     <CarbonFlow>
       <Name>Decomposition</Name>
       <MultiplyFunction>
@@ -526,11 +526,11 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Expression>[Soil].InitialRootWt * 0.2 * 0.4</Expression>
     </ExpressionFunction>
-    <Constant>
+    <ExpressionFunction>
       <Name>InitialNitrogen</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0</FixedValue>
-    </Constant>
+      <Expression>[FOMCarbohydrate].C / [Soil].SoilOrganicMatter.RootCN</Expression>
+    </ExpressionFunction>
     <CarbonFlow>
       <Name>Decomposition</Name>
       <MultiplyFunction>

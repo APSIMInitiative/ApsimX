@@ -45,6 +45,10 @@
         [Link]
         private SurfaceOrganicMatter SurfaceOrganicMatter = null;
 
+        /// <summary>The surface organic matter</summary>
+        [Link]
+        private Soil Soil = null;
+
         [ChildLinkByName]
         NutrientPool FOMCellulose = null;
         [ChildLinkByName]
@@ -326,6 +330,7 @@
 
             SurfaceResidue.C[0] = 0;
             SurfaceResidue.N[0] = 0;
+            SurfaceResidue.LayerFraction[0] = Math.Max(1.0, 100 / Soil.Thickness[0]);
             for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
             {
                 SurfaceResidue.C[0] += PotentialSOMDecomp.Pool[i].FOM.C;
