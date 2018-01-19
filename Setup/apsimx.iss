@@ -43,7 +43,8 @@ type
     DotNet_v35,       // .NET Framework 3.5
     DotNet_v4_Client, // .NET Framework 4.0 Client Profile
     DotNet_v4_Full,   // .NET Framework 4.0 Full Installation
-    DotNet_v45);      // .NET Framework 4.5
+    DotNet_v45,       // .NET Framework 4.5
+    DotNet_v452);     // .NET Framework 4.5.2
 
 //
 // Checks whether the specified .NET Framework version and service pack
@@ -72,6 +73,7 @@ function IsDotNetInstalled(Version: TDotNetFramework; ServicePack: cardinal): bo
       DotNet_v4_Client: KeyName := KeyName + 'v4\Client';
       DotNet_v4_Full:   KeyName := KeyName + 'v4\Full';
       DotNet_v45:       KeyName := KeyName + 'v4\Full';
+	  DotNet_v452:      KeyName := KeyName + 'v4\Full';
     end;
 
     // .NET 3.0 uses "InstallSuccess" key in subkey Setup
@@ -92,6 +94,13 @@ function IsDotNetInstalled(Version: TDotNetFramework; ServicePack: cardinal): bo
         Success := Success and RegQueryDWordValue(HKLM, KeyName, 'Release', ReleaseVer);
         Success := Success and (ReleaseVer >= 378389);
       end;
+	  
+    // .NET 4.5.2 is distinguished from .NET 4.0 by the Release key
+    if (Version = DotNet_v452) then
+      begin
+        Success := Success and RegQueryDWordValue(HKLM, KeyName, 'Release', ReleaseVer);
+        Success := Success and (ReleaseVer >= 379893);
+      end;	  
 
     Result := Success and (InstallFlag = 1) and (ServiceCount >= ServicePack);
   end;
@@ -110,7 +119,7 @@ begin
     //check for the .net runtime. If it is not found then show a message.
     if not IsRequiredDotNetDetected() then 
     begin
-        answer := MsgBox('The Microsoft .NET Framework 4.5 is required.' + #13#10 + #13#10 +
+        answer := MsgBox('The Microsoft .NET Framework 4.5.2 is required.' + #13#10 + #13#10 +
         'Click OK to go to the web site or Cancel to quit', mbInformation, MB_OKCANCEL);        
         result := false;
         if (answer = MROK) then
