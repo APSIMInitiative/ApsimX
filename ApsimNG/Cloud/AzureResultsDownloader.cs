@@ -241,7 +241,7 @@ namespace ApsimNG.Cloud
             {
                 numBlobsComplete++;
                 double progress = 1.0 * numBlobsComplete / numBlobs;
-                presenter.UpdateDownloadProgress(progress, jobName);
+                presenter.UpdateDownloadProgress(progress);
             }
         }
 

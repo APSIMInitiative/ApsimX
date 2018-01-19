@@ -19,6 +19,14 @@ namespace UserInterface.Views
         public Button btnOK;
         public Label lblStatus;
 
+        public string Status { get { return lblStatus.Text; }
+                               set {
+                                    Application.Invoke(delegate
+                                    {
+                                        lblStatus.Text = value;
+                                    });
+                               }
+                             }
         private Entry entryName;
         private RadioButton radioApsimDir;
         //private RadioButton radioBob;
@@ -285,7 +293,7 @@ namespace UserInterface.Views
             Application.Invoke(delegate
             {
                 lblStatus.Text = status;
-            });            
+            });
         }
 
         /// <summary>
@@ -299,69 +307,29 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Validates the user's input (to an extent) and submits the job.
+        /// Bundles up the user's settings and sends the data to the presenter to submit the job.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (entryName.Text.Length < 1)
-            {
-                Presenter.ShowError("A description is required");
-                return;
-            }
-            
-            if (!Directory.Exists(entryApsimDir.Text) && radioApsimDir.Active)
-            {
-                Presenter.ShowError("Directory not found: " + entryApsimDir.Text);
-                return;
-            }
-
-            if (!File.Exists(entryApsimZip.Text) && radioApsimZip.Active)
-            {
-                Presenter.ShowError("File not found: " + entryApsimZip.Text);
-                return;
-            }
-
-            if (comboCoreCount.ActiveText == null)
-            {
-                Presenter.ShowError("Number of cores per CPU is a required field");
-                return;
-            }
-
-            if (chkSaveModels.Active && entryModelPath.Text.Length < 1)
-            {
-
-            }
-            // save user's choices to ApsimNG.Properties.Settings            
-            ApsimNG.Properties.Settings.Default["ApsimFromDir"] = radioApsimDir.Active;
-            ApsimNG.Properties.Settings.Default["OutputDir"] = entryOutputDir.Text;
-            if (entryApsimDir.Text.Length > 0) ApsimNG.Properties.Settings.Default["ApsimDirPath"] = entryApsimDir.Text;
-            if (entryApsimZip.Text.Length > 0) ApsimNG.Properties.Settings.Default["ApsimZipPath"] = entryApsimZip.Text;
-            if (entryModelPath.Text.Length > 0) ApsimNG.Properties.Settings.Default["ModelPath"] = entryModelPath.Text;
-            ApsimNG.Properties.Settings.Default.Save();
-
-            jobParams = new JobParameters();
-            jobParams.PoolVMCount = Int32.Parse(comboCoreCount.ActiveText) / 16;
-            jobParams.JobDisplayName = entryName.Text;
-            jobParams.Recipient = chkEmail.Active ? entryEmail.Text : "";
-            jobParams.ModelPath = chkSaveModels.Active ? entryModelPath.Text : Path.GetTempPath() + Guid.NewGuid();
-            jobParams.SaveModelFiles = chkSaveModels.Active;
-            
             string apsimPath = radioApsimDir.Active ? entryApsimDir.Text : entryApsimZip.Text;
 
-            jobParams.ApplicationPackageVersion = Path.GetFileName(apsimPath).Substring(Path.GetFileName(apsimPath).IndexOf('-') + 1);
-            jobParams.ApplicationPackagePath = apsimPath;
-
-            jobParams.OutputDir = entryOutputDir.Text;
-            jobParams.Summarise = chkSummarise.Active;
+            jobParams = new JobParameters
+            {
+                PoolVMCount = Int32.Parse(comboCoreCount.ActiveText) / 16,
+                JobDisplayName = entryName.Text,
+                Recipient = chkEmail.Active ? entryEmail.Text : "",
+                ModelPath = chkSaveModels.Active ? entryModelPath.Text : Path.GetTempPath() + Guid.NewGuid(),
+                SaveModelFiles = chkSaveModels.Active,
+                ApsimFromDir = radioApsimDir.Active,
+                OutputDir = entryOutputDir.Text,
+                Summarise = chkSummarise.Active,
+                ApplicationPackageVersion = Path.GetFileName(apsimPath).Substring(Path.GetFileName(apsimPath).IndexOf('-') + 1),
+                ApplicationPackagePath = apsimPath
+            };
 
             Presenter.SubmitJob(jobParams);
-        }
-
-        private void backgroundWorkerNewJob_DoWork(object o, DoWorkEventArgs e)
-        {
-
         }
 
         /// <summary>
@@ -383,7 +351,7 @@ namespace UserInterface.Views
         public string GetFile(List<string> extensions, string extName = "")
         {
             string path = "";
-            string indefiniteArticle = StartsWithVowel(extName) ? "an" : "a";
+            string indefiniteArticle = StartsWithVowel(extName) ? "an" : "a"; // get that grammar correct
             FileChooserDialog f = new FileChooserDialog("Choose " + indefiniteArticle + " " + extName + " file",
                                                          null,
                                                          FileChooserAction.Open,
@@ -417,9 +385,6 @@ namespace UserInterface.Views
         /// <return>The path of the chosen zip file</return>
         public string GetZipFile()
         {
-            // this could easily be modified to accomodate for other file types - just pass them in as arguments		
-            // and zipFilter.AddPattern("*." + extension); for each extension. 
-            
             string path = "";
 
             FileChooserDialog f = new FileChooserDialog("Choose a zip file to open",
@@ -431,8 +396,6 @@ namespace UserInterface.Views
             zipFilter.Name = "ZIP File";
             zipFilter.AddPattern("*.zip");
             f.AddFilter(zipFilter);
-
-
 
             try
             {
@@ -563,7 +526,7 @@ namespace UserInterface.Views
 
         private void btnBob_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("Bob stuff");
+            // just leaving this here in case we ever end up implementing the online source functionality
         }
 
         private void btnApsimDir_Click(object sender, EventArgs e)

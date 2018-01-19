@@ -122,6 +122,11 @@ namespace UserInterface.Presenters
             if (!FetchJobs.IsBusy) FetchJobs.RunWorkerAsync();
         }
 
+        public void UpdateDownloadProgress(double progress)
+        {
+            view.DownloadProgress = progress;
+        }
+
         private void FetchJobs_DoWork(object sender, DoWorkEventArgs args)
         {
             while (!FetchJobs.CancellationPending) // this check is performed regularly inside the ListJobs() function as well.
@@ -206,7 +211,7 @@ namespace UserInterface.Presenters
             try
             {
                 view.ShowLoadingProgressBar();
-                view.UpdateJobLoadStatus(0);
+                view.JobLoadProgress = 0;
             } catch (NullReferenceException)
             {
                 return null;
@@ -217,10 +222,10 @@ namespace UserInterface.Presenters
             
             List<JobDetails> jobs = new List<JobDetails>();
             var pools = batchClient.PoolOperations.ListPools();
-            var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };            
-            var cloudJobs = batchClient.JobOperations.ListJobs(jobDetailLevel);            
+            var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
+            var cloudJobs = batchClient.JobOperations.ListJobs(jobDetailLevel);
             var length = cloudJobs.Count();
-            int i = 0;                        
+            int i = 0;
 
             foreach (var cloudJob in cloudJobs)
             {
@@ -231,7 +236,7 @@ namespace UserInterface.Presenters
 
                 try
                 {                        
-                    view.UpdateJobLoadStatus(Math.Min(100.0 * i / length, 100));
+                    view.JobLoadProgress = 100.0 * i / length;
                 } catch (NullReferenceException)
                 {
                     return null;
@@ -289,7 +294,7 @@ namespace UserInterface.Presenters
                             {
                                 MaxTasksPerVM = pool.MaxTasksPerComputeNode.GetValueOrDefault(1),
                                 State = pool.AllocationState.GetValueOrDefault(AllocationState.Resizing).ToString(),
-                                VMCount = pool.CurrentDedicated.GetValueOrDefault(0),
+                                VMCount = pool.CurrentDedicatedComputeNodes.GetValueOrDefault(0),
                                 VMSize = pool.VirtualMachineSize
                             };
                         }
@@ -471,16 +476,11 @@ namespace UserInterface.Presenters
             return jobList.FirstOrDefault(x => x.Id == id);
         }
 
-        public void UpdateDownloadProgress(double progress, string jobName)
-        {
-            view.UpdateDownloadProgress(progress, jobName);
-        }
-
         public bool OngoingDownload()
         {
             return currentlyDownloading.Count() > 0;
         }
-
+        
         /// <summary>
         /// Downloads the results of a list of jobs.
         /// </summary>
@@ -520,7 +520,7 @@ namespace UserInterface.Presenters
                 if (!Guid.TryParse(id, out jobId)) continue;
                 string jobName = GetJob(jobId).DisplayName;
 
-                view.UpdateDownloadProgress(0, jobName);
+                view.DownloadProgress = 0;
 
                 // if output directory already exists and warning has not already been given, display a warning
                 if (Directory.Exists((string)Settings.Default["OutputDir"] + "\\" + jobName) && !ignoreWarning)
@@ -565,7 +565,88 @@ namespace UserInterface.Presenters
         /// <param name="msg"></param>
         public void ShowError(string msg)
         {
-            MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);            
+            MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);             
+        }
+
+        /// <summary>
+        /// Sets the default downlaod directory.
+        /// </summary>
+        /// <param name="dir">Path to the directory.</param>
+        public void SetDownloadDirectory(string dir)
+        {            
+            if (dir == "") return;
+
+            if (Directory.Exists(dir))
+            {
+                Settings.Default["OutputDir"] = dir;
+                Settings.Default.Save();
+            }
+            else
+            {
+                ShowError("Directory " + dir + " does not exist.");
+            }
+        }
+
+        /// <summary>
+        /// Parses and compares two DateTime objects stored as strings.
+        /// </summary>
+        /// <param name="str1">First DateTime.</param>
+        /// <param name="str2">Second DateTime.</param>
+        /// <returns></returns>
+        public int CompareDateTimeStrings(string str1, string str2)
+        {
+            // if either of these strings is empty, the job is still running
+            if (str1 == "")
+            {
+                if (str2 == "") // neither job has finished
+                {
+                    return 0;
+                }
+                else // first job is still running, second is finished
+                {
+                    return 1;
+                }
+            }
+            else if (str2 == "")
+            {
+                // first job is finished, second job still running
+                return -1;
+            }
+            // otherwise, both jobs are still running
+            DateTime t1 = GetDateTimeFromString(str1);
+            DateTime t2 = GetDateTimeFromString(str2);
+            
+            return DateTime.Compare(t1, t2);
+        }
+
+        /// <summary>
+        /// Generates a DateTime object from a string.
+        /// </summary>
+        /// <param name="st">Date time string. MUST be in the format dd/mm/yyyy hh:mm:ss</param>
+        /// <returns>A DateTime object representing this string.</returns>
+        public DateTime GetDateTimeFromString(string st)
+        {
+            try
+            {
+                string[] separated = st.Split(' ');
+                string[] date = separated[0].Split('/');
+                string[] time = separated[1].Split(':');
+                int year, month, day, hour, minute, second;
+                day = Int32.Parse(date[0]);
+                month = Int32.Parse(date[1]);
+                year = Int32.Parse(date[2]);
+
+                hour = Int32.Parse(time[0]);
+                minute = Int32.Parse(time[1]);
+                second = Int32.Parse(time[2]);
+
+                return new DateTime(year, month, day, hour, minute, second);
+            }
+            catch (Exception e)
+            {
+                ShowError(e.ToString());
+            }
+            return new DateTime();
         }
 
         /// <summary>
@@ -597,7 +678,7 @@ namespace UserInterface.Presenters
                     break;
             }
             string logFile = path + "\\download.log";
-            view.UpdateDownloadStatus("One or more downloads encountered an error. See " + logFile + " for more details.");
+            view.DownloadStatus = "One or more downloads encountered an error. See " + logFile + " for more details.";
             lock (logFileMutex)
             {
                 try
@@ -616,22 +697,48 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Halts the execution of a job. 
+        /// Asks the user for confirmation and then halts execution of a list of jobs.
         /// </summary>
         /// <param name="id">ID of the job.</param>
-        public void StopJob(Guid id)
+        public void StopJobs(List<string> jobIds)
+        {
+            // ask user once for confirmation
+
+            // get the grammar right when asking for confirmation
+            bool stopMultiple = jobIds.Count > 1;
+            string msg = "Are you sure you want to stop " + (stopMultiple ? "these " + jobIds.Count + " jobs?" : "this job?") + " There is no way to resume their execution!";
+            string label = stopMultiple ? "Stop these jobs?" : "Stop this job?";
+            if (!view.ShowWarning(msg)) return;
+                        
+            foreach (string id in jobIds)
+            {
+                // no need to stop a job that is already finished
+                if (GetLocalJob(id).State.ToLower() != "completed")
+                {
+                    StopJob(id);
+                }                
+            }
+            
+        }
+
+        /// <summary>
+        /// Halts the execution of a job.
+        /// </summary>
+        /// <param name="id"></param>
+        public void StopJob(string id)
         {
             try
             {
-                batchClient.JobOperations.TerminateJob(id.ToString());
-            } catch (Exception e)
+                batchClient.JobOperations.TerminateJob(id);
+            }
+            catch (Exception e)
             {
                 MainPresenter.ShowMessage(e.Message, Simulation.ErrorLevel.Error);
             }
         }
 
         /// <summary>
-        /// Deletes a job (and all associated files (I think)) from Azure cloud storage.
+        /// Deletes a job (and all associated files) from Azure cloud storage.
         /// </summary>
         /// <param name="id">ID of the job.</param>
         public void DeleteJob(string id)

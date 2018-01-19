@@ -60,11 +60,79 @@
         }
 
         /// <summary>
-        /// Starts the job submission in a separate thread.
+        /// Validates user input, saves their choices and starts the job submission in a separate thread.
         /// </summary>
         /// <param name="jp">Job Parameters.</param>
         public void SubmitJob(JobParameters jp)
         {
+            if (jp.JobDisplayName.Length < 1)
+            {
+                ShowError("A description is required");
+                return;
+            }
+
+            if (jp.ApplicationPackagePath.Length < 1)
+            {
+                string msg = jp.ApsimFromDir ? "Invalid Apsim Directory" : "Invalid Apsim zip file";
+                return;
+            }
+
+            if (! (Directory.Exists(jp.ApplicationPackagePath) || File.Exists(jp.ApplicationPackagePath)) )
+            {
+                ShowError("File or Directory not found: " + jp.ApplicationPackagePath);
+                return;
+            }
+
+            if (jp.CoresPerProcess.ToString().Length < 1)
+            {
+                ShowError("Number of cores per CPU is a required field");
+                return;
+            }
+
+            if (jp.SaveModelFiles && jp.ModelPath.Length < 0)
+            {
+                ShowError("Invalid model output directory: " + jp.ModelPath);
+                return;
+            }
+            if (!Directory.Exists(jp.ModelPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(jp.ModelPath);
+                } catch (Exception e)
+                {
+                    ShowError(e.ToString());
+                    return;
+                }                
+            }
+
+            if (jp.OutputDir.Length < 1)
+            {
+                ShowError("Invalid output directory.");
+                return;
+            }
+
+            if (!Directory.Exists(jp.OutputDir))
+            {
+                try
+                {
+                    Directory.CreateDirectory(jp.OutputDir);
+                }
+                catch (Exception e)
+                {
+                    ShowError(e.ToString());
+                    return;
+                }
+            }
+
+            // save user's choices to ApsimNG.Properties.Settings            
+            
+            Settings.Default["OutputDir"] = jp.OutputDir;
+            if (jp.ApsimFromDir) Settings.Default["ApsimDirPath"] = jp.ApplicationPackagePath;
+            else Settings.Default["ApsimZipPath"] = jp.ApplicationPackagePath;
+            Settings.Default["ModelPath"] = jp.ModelPath;
+            Settings.Default.Save();
+            
             submissionWorker.RunWorkerAsync(jp);
         }
 
@@ -88,7 +156,7 @@
             // if jp.ApplicationPackagePath is a directory it will need to be zipped up
             if (Directory.Exists(jp.ApplicationPackagePath))
             {                
-                UpdateStatus(ref jp, "Zipping APSIM");
+                view.Status = "Zipping APSIM";
                 
                 tmpZip = Path.Combine(Path.GetTempPath(), "Apsim-tmp-X-" + Environment.UserName.ToLower() + ".zip");
                 if (File.Exists(tmpZip)) File.Delete(tmpZip);
@@ -109,7 +177,7 @@
 
             // upload tools such as 7zip, AzCopy, CMail, etc.
 
-            UpdateStatus(ref jp, "Checking tools");
+            view.Status = "Checking tools";
 
             string executableDirectory = GetExecutableDirectory();
             string toolsDir = Path.Combine(executableDirectory, "tools");
@@ -131,7 +199,7 @@
 
 
             // upload apsim
-            UpdateStatus(ref jp, "Uploading APSIM Next Generation");
+            view.Status = "Uploading APSIM Next Generation";
 
             UploadFileIfNeeded("apsim", jp.ApplicationPackagePath);
 
@@ -147,7 +215,7 @@
 
             // generate model files
 
-            UpdateStatus(ref jp, "Generating model files");
+            view.Status = "Generating model files";
             if (!Directory.Exists(jp.ModelPath)) Directory.CreateDirectory(jp.ModelPath);
 
             // generate xml
@@ -164,7 +232,7 @@
                         if (Path.GetDirectoryName(childPath) != "")
                         {
                             ShowError(childPath + " must be in the same directory as the .apsimx file" + sim.FileName != null ? " (" + Path.GetDirectoryName(sim.FileName) + ")" : "");
-                            UpdateStatus(ref jp, "Cancelled");
+                            view.Status = "Cancelled";
                             return;
                         }
                     }
@@ -195,7 +263,7 @@
 
             // upload models
 
-            UpdateStatus(ref jp, "Uploading models");
+            view.Status = "Uploading models";
             job.ModelZipFileSas = uploader.UploadFile(jp.ModelPath, jp.JobId.ToString(), Path.GetFileName(jp.ModelPath));
 
             // clean up temporary model files
@@ -205,7 +273,7 @@
                 if (Directory.Exists(jp.ModelPath)) Directory.Delete(jp.ModelPath);
             }
             
-            UpdateStatus(ref jp, "Submitting Job");
+            view.Status = "Submitting Job";
 
 
 
@@ -241,13 +309,7 @@
                 ShowError(ex.ToString());
             }
 
-            UpdateStatus(ref jp, "Job Successfully submitted");            
-        }
-
-        private void UpdateStatus(ref JobParameters jobParams, string st)
-        {
-            jobParams.Status = "Job Successfully submitted";
-            view.DisplayStatus(st);
+            view.Status = "Job Successfully submitted";
         }
 
         /// <summary>
@@ -305,7 +367,7 @@
                             MaxTasksPerComputeNode = settings.MaxTasksPerVM,
                             CloudServiceConfiguration = new CloudServiceConfiguration("4"),
                             ResizeTimeout = TimeSpan.FromMinutes(15),
-                            TargetDedicated = settings.VMCount,
+                            TargetDedicatedComputeNodes = settings.VMCount,
                             VirtualMachineSize = settings.VMSize,
                             TaskSchedulingPolicy = new TaskSchedulingPolicy(ComputeNodeFillType.Spread)
                         }
@@ -587,7 +649,7 @@
                             {
                                 MaxTasksPerVM = pool.MaxTasksPerComputeNode.GetValueOrDefault(1),
                                 State = pool.AllocationState.GetValueOrDefault(AllocationState.Resizing).ToString(),
-                                VMCount = pool.CurrentDedicated.GetValueOrDefault(0),
+                                VMCount = pool.CurrentDedicatedComputeNodes.GetValueOrDefault(0),
                                 VMSize = pool.VirtualMachineSize
                             };
                         }
