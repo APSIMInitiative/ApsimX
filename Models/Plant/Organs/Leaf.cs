@@ -880,11 +880,7 @@ namespace Models.PMF.Organs
 
                 foreach (LeafCohort L in Leaves)
                 {
-                    
-                    if (L.Age < L.GrowthDuration + L.LagDuration + L.SenescenceDuration / 2)
-                    {
-                        sn = Math.Max(sn, L.CohortPopulation);
-                    }
+                    sn = Math.Max(sn, L.LiveStemNumber(CohortParameters));
                 }
                 return sn;
 
