@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APSIMFileReaderTests.cs" />
+    <Compile Include="TrackerFunctionTests.cs" />
     <Compile Include="RunnerTests.cs" />
     <Compile Include="FertiliserTests.cs" />
     <Compile Include="MockEvents.cs" />
