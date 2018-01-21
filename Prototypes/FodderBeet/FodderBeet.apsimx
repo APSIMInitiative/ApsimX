@@ -656,6 +656,29 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Weather].MinT</XProperty>
         </LinearInterpolationFunction>
+        <MinimumFunction>
+          <Name>FRGRFunction</Name>
+          <VariableReference>
+            <Name>RUE_FT</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
+          </VariableReference>
+          <MinimumFunction>
+            <Name>Others</Name>
+            <VariableReference>
+              <Name>RUE_FN</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>RUE_FVPD</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MinimumFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </MinimumFunction>
         <MultiplyFunction>
           <Name>ExtinctionCoeff</Name>
           <Constant>
@@ -883,22 +906,123 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>16000</FixedValue>
           </Constant>
-          <LinearInterpolationFunction>
+          <MinimumFunction>
+            <Name>CellDivisionStress</Name>
+            <LinearInterpolationFunction>
+              <Name>WaterStressEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0.5</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[FodderBeet].Leaf.Fw</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>NitrogenStressEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0.5</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0.5</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[FodderBeet].Leaf.Fn</XProperty>
+            </LinearInterpolationFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MinimumFunction>
+          <MinimumFunction>
             <Name>ExpansionStress</Name>
+            <LinearInterpolationFunction>
+              <Name>WaterStressEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0.5</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Root].WaterTensionFactor</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>NitrogenStressEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>0.5</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[FodderBeet].Leaf.Fn</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>TemperatureEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>12</double>
+                  <double>15</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Phenology].MeanTemp.Value()</XProperty>
+            </LinearInterpolationFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MinimumFunction>
+          <LinearInterpolationFunction>
+            <Name>ShadeInducedSenescenceRate</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
+                <double>0</double>
                 <double>0.5</double>
+                <double>0.95</double>
                 <double>1</double>
               </X>
               <Y>
                 <double>0</double>
-                <double>1</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0.1</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>MinimumNConc</Name>
@@ -940,27 +1064,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.2</FixedValue>
           </Constant>
-          <LinearInterpolationFunction>
-            <Name>ShadeInducedSenescenceRate</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>0</double>
-                <double>0.5</double>
-                <double>0.95</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0.1</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
-          </LinearInterpolationFunction>
           <Constant>
             <Name>InitialNConc</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -980,12 +1083,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <Name>DroughtInducedSenAcceleration</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>CellDivisionStress</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1</FixedValue>
-            <Units>0-1</Units>
           </Constant>
           <Constant>
             <Name>DroughtInducedLagAcceleration</Name>
@@ -1020,29 +1117,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExpansionStressValue>0</ExpansionStressValue>
         </LeafCohortParameters>
-        <MinimumFunction>
-          <Name>FRGRFunction</Name>
-          <VariableReference>
-            <Name>RUE_FT</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
-          </VariableReference>
-          <MinimumFunction>
-            <Name>Others</Name>
-            <VariableReference>
-              <Name>RUE_FN</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>RUE_FVPD</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </MinimumFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </MinimumFunction>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
@@ -4344,7 +4418,7 @@ namespace Models
               <Title>Petiole (g/m2)</Title>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
-              <Maximum>6</Maximum>
+              <Maximum>NaN</Maximum>
               <Interval>2</Interval>
             </Axis>
             <Axis>
