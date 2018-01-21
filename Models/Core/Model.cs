@@ -197,6 +197,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.SplineInterpolationFunction))]
         [XmlElement(typeof(Models.PMF.Functions.StageBasedInterpolation))]
         [XmlElement(typeof(Models.PMF.Functions.SubtractFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.TrackerFunction))]
         [XmlElement(typeof(Models.PMF.Functions.VariableReference))]
         [XmlElement(typeof(Models.PMF.Functions.WeightedTemperatureFunction))]
         [XmlElement(typeof(Models.PMF.Functions.WangEngelTempFunction))]
