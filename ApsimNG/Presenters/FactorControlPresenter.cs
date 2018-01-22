@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UserInterface.Views;
 using Models.Core;
 using Models.Factorial;
-using System.Collections;
+using System.IO;
 
 namespace UserInterface.Presenters
 {
@@ -15,7 +15,7 @@ namespace UserInterface.Presenters
 
         private Experiment model;
         private FactorControlView view;
-        private ExplorerPresenter explorerPresenter;
+        public ExplorerPresenter explorerPresenter;
         private List<string> headers;
         private List<Tuple<string, List<string>, bool>> simulations;
 
@@ -28,12 +28,14 @@ namespace UserInterface.Presenters
             this.explorerPresenter = explorerPresenter;
             var simNames = model.GetSimulationNames().ToArray();
 
-
-            headers = GetHeaderNames(model.AllCombinations());
-            simulations = GetTableData(model.AllCombinations());
-
-            view.Initialise(headers, simulations);
-
+            var allCombinations = model.AllCombinations();
+            headers = GetHeaderNames(allCombinations);
+            simulations = GetTableData(allCombinations);
+            var eView = explorerPresenter.GetView() as ExplorerView;
+            
+            
+            view.Initialise(headers);
+            view.Populate(simulations);            
             
             
             
@@ -54,8 +56,8 @@ namespace UserInterface.Presenters
                     List<string> data = simulations[index].Item2;
                     simulations[index] = new Tuple<string, List<string>, bool>(name, data, flag);
                 }
-            }
-            view.Initialise(headers, simulations);
+            }            
+            view.Populate(simulations);
         }
 
         public void Detach()
@@ -118,6 +120,83 @@ namespace UserInterface.Presenters
                 }
             }
             return -1;
+        }
+
+        /// <summary>
+        /// Generates a CSV file containing the factor information displayed in the TreeView.
+        /// The user can edit this file to more efficiently enable or disable factors in bulk.
+        /// </summary>
+        /// <param name="path">Directory for the csv file to be saved to.</param>
+        public void GenerateCsv(string path = "")
+        {
+            StringBuilder csv = new StringBuilder();
+            string newLine = headers[0];
+            for (int i = 1; i < headers.Count; i++)
+            {
+                newLine += "," + headers[i];
+            }
+
+            csv.AppendLine(newLine);
+
+            foreach (Tuple<string, List<string>, bool> sim in simulations)
+            {
+                newLine = sim.Item1;
+                foreach (string value in sim.Item2)
+                {
+                    newLine += "," + value;
+                }
+                newLine += "," + sim.Item3.ToString();
+                csv.AppendLine(newLine);
+            }
+            if (path == "") path = ApsimNG.Properties.Settings.Default["OutputDir"] + "\\" + model.Name + ".csv";
+            File.WriteAllText(path, csv.ToString());
+            explorerPresenter.MainPresenter.ShowMessage("Successfully generated CSV file.", Simulation.ErrorLevel.Information);            
+        }
+
+        /// <summary>
+        /// Imports factor information from a csv file, saves the data to this.simulations, then updates the TreeView.
+        /// </summary>
+        /// <param name="path">Path to the csv file.</param>
+        public void ImportCsv(string path = "")
+        {
+            explorerPresenter.MainPresenter.ShowMessage("", Simulation.ErrorLevel.Error);
+            
+            if (path == "") path = ApsimNG.Properties.Settings.Default["OutputDir"] + "\\factors.csv";
+            try
+            {
+                using (StreamReader file = new StreamReader(path))
+                {
+                    string line = file.ReadLine();
+                    List<string> data = line.Split(',').ToList();
+                    if (!data.SequenceEqual(headers))
+                    {
+                        throw new Exception("Column Headers in " + path + " do not match current headers. Are you sure you selected the correct .csv file?");
+                    }
+
+                    simulations = new List<Tuple<string, List<string>, bool>>();
+
+                    int i = 2;
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        data = line.Split(',').ToList();
+
+                        string name = data[0];
+                        if (data.Count == headers.Count)
+                        {
+                            if (!bool.TryParse(data[data.Count - 1], out bool enabled)) throw new Exception("Unable to parse " + data[data.Count - 1] + " to bool on line " + i + ".");
+                            simulations.Add(new Tuple<string, List<string>, bool>(data[0], data.Skip(1).Take(data.Count - 2).ToList(), enabled));
+                        }
+                        else if (data.Count > headers.Count) throw new Exception("Too many elements in row " + i + ".");
+                        else throw new Exception("Too few elements in row " + i + ".");
+                    }
+                }
+                view.Populate(simulations);
+                explorerPresenter.MainPresenter.ShowMessage("Successfully imported data from " + path, Simulation.ErrorLevel.Information);
+            }
+            catch (Exception e)
+            {
+                explorerPresenter.MainPresenter.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+            }
         }
     }
 }

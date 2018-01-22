@@ -12,8 +12,8 @@
     /// Encapsulates a factorial experiment.f
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.MemoView")]
-    [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
+    [ViewName("UserInterface.Views.FactorControlView")]
+    [PresenterName("UserInterface.Presenters.FactorControlPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class Experiment : Model, ISimulationGenerator
     {
