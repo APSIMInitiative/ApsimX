@@ -61,8 +61,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Proportion Nitrogen loss each month from pools
         /// </summary>
-        [Description("Proportion Nitrogen loss each month from pools")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        [Description("%Nitrogen loss each month from pools (note: amount not proportion)")]
+        [Required, Range(0, 1, ErrorMessage = "Value must be greater than 0")]
         public double DecayNitrogen { get; set; }
 
         /// <summary>

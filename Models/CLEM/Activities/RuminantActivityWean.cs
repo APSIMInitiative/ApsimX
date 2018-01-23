@@ -81,7 +81,7 @@ namespace Models.CLEM.Activities
                     }
                 }
                 // report that this activity was performed as it does not use base GetResourcesRequired
-                this.TriggerOnActivityPerformed();
+                //this.TriggerOnActivityPerformed();
             }
         }
 

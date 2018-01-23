@@ -139,6 +139,7 @@ namespace Models.CLEM.Activities
                     if (labourLimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
                     {
                         manureStore.Collect(manureStore.Name, labourLimit, this.Name);
+                        SetStatusSuccess();
                     }
                 }
             }

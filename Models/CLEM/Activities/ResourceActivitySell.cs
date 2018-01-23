@@ -253,6 +253,7 @@ namespace Models.CLEM.Activities
 
                     // transfer money earned
                     bankAccount.Add(units * UnitPrice, this.Name, "Sales");
+                    SetStatusSuccess();
                 }
             }
         }

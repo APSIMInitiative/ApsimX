@@ -210,7 +210,7 @@ namespace Models.CLEM.Activities
                         Resources.RuminantHerd().PurchaseIndividuals.Add(ruminantBase as Ruminant);
                     }
                 }
-                this.TriggerOnActivityPerformed();
+                //this.TriggerOnActivityPerformed();
             }
             // sale details any timestep when conditions are met.
             foreach (Ruminant ind in this.CurrentHerd(true))

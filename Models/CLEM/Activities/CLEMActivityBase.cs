@@ -67,6 +67,46 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
+        /// </summary>
+        /// <returns>T/F</returns>
+        public void SetStatusSuccess()
+        {
+            if(Status== ActivityStatus.NotNeeded)
+            {
+                Status = ActivityStatus.Success;
+            }
+        }
+
+        /// <summary>
+        /// Method to cascade calls for calling activites performed for all activities in the UI tree. 
+        /// </summary>
+        public virtual void ReportAllAllActivitiesPerformed()
+        {
+            ReportActivitiesPerformed();
+        }
+
+        /// <summary>
+        /// Protected method to cascade calls for activities performed for all activities in the UI tree. 
+        /// </summary>
+        protected void ReportActivitiesPerformed()
+        {
+            // get resources required for all dynamically created CLEMActivityBase activities
+            if (ActivityList != null)
+            {
+                foreach (CLEMActivityBase activity in ActivityList)
+                {
+                    activity.TriggerOnActivityPerformed();
+                }
+            }
+            // get resources required for all children of type CLEMActivityBase
+            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+            {
+                activity.TriggerOnActivityPerformed();
+            }
+        }
+
+        /// <summary>
         /// Method to cascade calls for resources for all activities in the UI tree. 
         /// Responds to CLEMInitialiseActivity in the Activity model holing top level list of activities
         /// </summary>
@@ -178,13 +218,18 @@ namespace Models.CLEM.Activities
             // determine what resources are needed
             ResourceRequestList = GetResourcesNeededForActivity();
 
-            bool tookRequestedResources = TakeResources(ResourceRequestList, true);
+            bool tookRequestedResources = TakeResources(ResourceRequestList, false);
 
             // if no resources required perform Activity if code is present.
             // if resources are returned (all available or UseResourcesAvailable action) perform Activity
             // if reportErrorAndStop or SkipActivity do not perform Activity
             if (tookRequestedResources || (ResourceRequestList == null))
+            {
                 DoActivity();
+            }
+            // report activity occurred
+            //this.TriggerOnActivityPerformed();
+
         }
 
         /// <summary>
@@ -196,7 +241,7 @@ namespace Models.CLEM.Activities
         /// <param name="TriggerActivityPerformed"></param>
         public bool TakeResources(List<ResourceRequest> ResourceRequestList, bool TriggerActivityPerformed)
         {
-            this.Status = ActivityStatus.Success;
+            this.Status = ActivityStatus.NotNeeded;
             bool resourceAvailable = false;
 
             // no resources required or this is an Activity folder.
@@ -308,11 +353,11 @@ namespace Models.CLEM.Activities
                 //return false;  //could not take all the resources it needed.
             }
 
-            // report activity occurred
-            if(TriggerActivityPerformed)
-            {
-                this.TriggerOnActivityPerformed();
-            }
+            //// report activity occurred
+            //if (TriggerActivityPerformed)
+            //{
+            //    this.TriggerOnActivityPerformed();
+            //}
             return Status != ActivityStatus.Ignored;
         }
 
@@ -423,7 +468,11 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Indicates a calculation event occurred
         /// </summary>
-        Calculation
+        Calculation,
+        /// <summary>
+        /// Indicated activity occurred but was not needed
+        /// </summary>
+        NotNeeded
     }
 
 }

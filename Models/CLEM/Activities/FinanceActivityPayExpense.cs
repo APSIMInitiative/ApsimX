@@ -101,6 +101,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
+            SetStatusSuccess();
         }
 
         /// <summary>

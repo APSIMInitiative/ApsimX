@@ -359,7 +359,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // report that this activity was performed as it does not use base GetResourcesRequired
-                this.TriggerOnActivityPerformed();
+                //this.TriggerOnActivityPerformed();
 
                 // Breeders themselves don't get sold. Trading is with Heifers
                 // Breeders can be sold in seasonal and ENSO destocking.

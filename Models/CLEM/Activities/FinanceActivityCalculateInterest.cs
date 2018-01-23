@@ -66,6 +66,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("EndOfMonth")]
         private void OnEndOfMonth(object sender, EventArgs e)
         {
+            Status = ActivityStatus.NotNeeded;
             if (financesExist)
             {
                 // make interest payments on bank accounts
@@ -74,6 +75,10 @@ namespace Models.CLEM.Activities
                     if (accnt.Balance > 0)
                     {
                         accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this.Name, "Interest earned");
+                        if(Status != ActivityStatus.Ignored & Status != ActivityStatus.Partial)
+                        {
+                            Status = ActivityStatus.Success;
+                        }
                     }
                     else
                     {
@@ -85,6 +90,28 @@ namespace Models.CLEM.Activities
                             interestRequest.AllowTransmutation = false;
                             interestRequest.Reason = "Pay interest charged";
                             accnt.Remove(interestRequest);
+    
+                            // report status
+                            if(interestRequest.Required > interestRequest.Provided)
+                            {
+                                switch (OnPartialResourcesAvailableAction)
+                                {
+                                    case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
+                                        throw new ApsimXException(this, "Insufficient finances to pay interest charged");
+                                    case OnPartialResourcesAvailableActionTypes.SkipActivity:
+                                        Status = ActivityStatus.Ignored;
+                                        break;
+                                    case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
+                                        Status = ActivityStatus.Partial;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                Status = ActivityStatus.Success;
+                            }
                         }
                     }
                 }

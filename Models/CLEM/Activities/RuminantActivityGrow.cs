@@ -249,6 +249,7 @@ namespace Models.CLEM.Activities
                 double totalMethane = 0;
                 foreach (Ruminant ind in herd.Where(a => a.BreedParams.Name == breed).OrderByDescending(a => a.Age))
                 {
+                    this.Status = ActivityStatus.Success;
                     if (ind.Weaned)
                     {
                         // calculate protein concentration
@@ -314,9 +315,6 @@ namespace Models.CLEM.Activities
                     methaneEmissions.Add(totalMethane * 30.4 / 1000, this.Name, breed);
                 }
             }
-
-            // report that this activity was performed as it does not use base GetResourcesRequired
-            this.TriggerOnActivityPerformed();
         }
 
         /// <summary>

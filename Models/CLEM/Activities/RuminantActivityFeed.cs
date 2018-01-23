@@ -221,6 +221,7 @@ namespace Models.CLEM.Activities
 
                 // feed animals
                 int month = Clock.Today.Month - 1;
+                SetStatusSuccess();
 
                 // get list from filters
                 foreach (RuminantFeedGroup child in Apsim.Children(this, typeof(RuminantFeedGroup)))

@@ -142,15 +142,6 @@ namespace Models.CLEM.Activities
             return results;
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
-        {
-
-        }
-
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -288,7 +279,9 @@ namespace Models.CLEM.Activities
             // decay N and DMD of pools and age by 1 month
             foreach (var pool in LinkedNativeFoodType.Pools)
             {
-                pool.Nitrogen = Math.Max(pool.Nitrogen * (1 - LinkedNativeFoodType.DecayNitrogen), LinkedNativeFoodType.MinimumNitrogen);
+                // N is a loss of N% (x = x -loss)
+                pool.Nitrogen = Math.Max(pool.Nitrogen - LinkedNativeFoodType.DecayNitrogen, LinkedNativeFoodType.MinimumNitrogen);
+                // DMD is a proportional loss (x = x*(1-proploss))
                 pool.DMD = Math.Max(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
 
                 double detach = LinkedNativeFoodType.CarryoverDetachRate;
