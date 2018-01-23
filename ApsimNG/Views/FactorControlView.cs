@@ -4,12 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Gtk;
+using Pango;
 
 namespace UserInterface.Views
 {
     public class FactorControlView : ViewBase
     {
         public Presenters.FactorControlPresenter Presenter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value displayed in the number of simulations label.
+        /// </summary>
+        public string NumSims
+        {
+            get
+            {
+                return lblNumSims.Text;
+            }
+            set
+            {
+                lblNumSims.Text = value + " simulations total.";
+            }
+        }
 
         /// <summary>
         /// Primary container holding the TreeView and controls vbox.
@@ -57,6 +73,21 @@ namespace UserInterface.Views
         private Button btnImportCsv;
 
         /// <summary>
+        /// Button to start a Sobol analysis.
+        /// </summary>
+        private Button btnSobol;
+        
+        /// <summary>
+        /// Button to start a Morris method analysis.
+        /// </summary>
+        private Button btnMorris;
+
+        /// <summary>
+        /// Label to display the total number of simulations
+        /// </summary>
+        private Label lblNumSims;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="owner"></param>
@@ -91,12 +122,13 @@ namespace UserInterface.Views
             {
                 types[i] = typeof(string);
                 cells.Add(new CellRendererText());
-                columns.Add(new TreeViewColumn { Title = columnNames[i] });
+                columns.Add(new TreeViewColumn { Title = columnNames[i], Resizable = true, Sizing = TreeViewColumnSizing.GrowOnly });
                 columns[i].PackStart(cells[i], false);
                 columns[i].AddAttribute(cells[i], "text", i);
-
+                columns[i].AddNotification("width", ColWidthChange);
                 tree.AppendColumn(columns[i]);
             }
+
             store = new ListStore(types);
             tree.Model = store;
             tree.Selection.Mode = SelectionMode.Multiple;
@@ -105,34 +137,53 @@ namespace UserInterface.Views
             tree.RulesHint = true;
             string style = "style \"custom-treestyle\"{ GtkTreeView::odd-row-color = \"#ECF2FD\" GtkTreeView::even-row-color = \"#FFFFFF\" GtkTreeView::allow-rules = 1 } widget \"*custom_treeview*\" style \"custom-treestyle\"";
             tree.Name = "custom_treeview";
-            Rc.ParseString(style);            
+            Rc.ParseString(style);
 
-            btnEnable = new Button("Enable");            
+            btnEnable = new Button("Enable");
             btnEnable.Clicked += (sender, e) => { BtnToggle(true); };
             HBox enableButtonContainer = new HBox();
-            enableButtonContainer.PackStart(btnEnable, false, false, 0);
+            enableButtonContainer.PackStart(btnEnable, true, true, 0);
 
             btnDisable = new Button("Disable");
             btnDisable.Clicked += (sender, e) => { BtnToggle(false); };
             HBox disableButtonContainer = new HBox();
-            disableButtonContainer.PackStart(btnDisable, false, false, 0);
+            disableButtonContainer.PackStart(btnDisable, true, true, 0);
 
             btnExportCsv = new Button("Generate CSV");
             btnExportCsv.Clicked += (sender, e) => { Presenter.GenerateCsv(); };
             HBox csvExportButtonContainer = new HBox();
-            csvExportButtonContainer.PackStart(btnExportCsv, false, false, 0);
+            csvExportButtonContainer.PackStart(btnExportCsv, true, true, 0);
 
             btnImportCsv = new Button("Import factor information from CSV file");
             btnImportCsv.Clicked += (sender, e) => { Presenter.ImportCsv(AskUserForFileName("Choose a .csv file", "CSV file | *.csv")); };
             HBox csvImportButtonCOntainer = new HBox();
-            csvImportButtonCOntainer.PackStart(btnImportCsv, false, false, 0);
+            csvImportButtonCOntainer.PackStart(btnImportCsv, true, true, 0);
+
+            btnSobol = new Button("Sobol Analysis");
+            btnSobol.Clicked += (sender, e) => { Presenter.Sobol(); };
+            btnSobol.Sensitive = false;
+
+            btnMorris = new Button("Morris method analysis");
+            btnMorris.Clicked += (sender, e) => { Presenter.Morris(); };
+            btnMorris.Sensitive = false;
+
+            VBox sensitivityContainer = new VBox();
+            sensitivityContainer.PackStart(btnSobol, false, false, 0);
+            sensitivityContainer.PackStart(btnMorris, false, false, 0);
+
+            Frame analysis = new Frame("Sensitivity Analysis");
+            analysis.Add(sensitivityContainer);
+
+            lblNumSims = new Label { Xalign = 0f };
 
             VBox controlsContainer = new VBox();
             controlsContainer.PackStart(enableButtonContainer, false, false, 0);
             controlsContainer.PackStart(disableButtonContainer, false, false, 0);
             controlsContainer.PackStart(csvExportButtonContainer, false, false, 0);
             controlsContainer.PackStart(csvImportButtonCOntainer, false, false, 0);
-
+            controlsContainer.PackStart(new Label(""), false, false, 0);
+            controlsContainer.PackStart(analysis, false, false, 0);
+            controlsContainer.PackEnd(lblNumSims, false, false, 0);
 
             //(((Presenter.explorerPresenter.GetView().MainWidget as VBox).Children[1] as HPaned).Child2 as ScrolledWindow).HscrollbarPolicy = PolicyType.Always;            
             ScrolledWindow sw = new ScrolledWindow();
@@ -160,7 +211,7 @@ namespace UserInterface.Views
         {
             Application.Invoke(delegate
             {
-                store.Clear();
+                store.Clear();                
                 foreach (Tuple<string, List<string>, bool> sim in simulations)
                 {
                     // First cell in the row needs to hold the simulation name
@@ -170,14 +221,21 @@ namespace UserInterface.Views
                         data.Add(level);
                     }
                     data.Add(sim.Item3.ToString());
-                    store.AppendValues(data.ToArray());
+                    store.AppendValues(data.ToArray());                                        
                 }
+                NumSims = simulations.Count.ToString();
             });            
+        }
+
+        public void Detach()
+        {
+            MainWidget.Destroy();
+            // TODO : change button event handlers to not be anonymous so they may be detached?
         }
 
         /// <summary>
         /// Event handler for Enable button's click event. 
-        /// Passes the names of the currently selected rows and asks it to change their status to enabled.
+        /// Passes the names of the currently selected rows to the presenter, and asks it to change their status to enabled.
         /// </summary>
         /// <param name="flag">If true, the selected items will be enabled. If false they will be disabled.</param>
         private void BtnToggle(bool flag)
@@ -193,6 +251,18 @@ namespace UserInterface.Views
                     simNames.Add((string)tree.Model.GetValue(iter, 0));
                 }
                 Presenter.ToggleSims(simNames, flag);
+            });
+        }
+
+        private void ColWidthChange(object sender, EventArgs e)
+        {
+            TreeViewColumn col = sender as TreeViewColumn;
+            int index = columns.IndexOf(col);
+            Application.Invoke(delegate
+            {
+                // if something is going wrong with column width, this is probably causing it                
+                cells[index].Width = col.Width - 4;
+                cells[index].Ellipsize = EllipsizeMode.End;
             });
         }
     }

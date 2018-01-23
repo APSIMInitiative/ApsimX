@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// Encapsulates a factorial experiment.f
@@ -24,6 +25,11 @@
         private Stream serialisedBase;
         private Simulations parentSimulations;
 
+        /// <summary>
+        /// List of names of the disabled simulations. Any simulation name not in this list is assumed to be enabled.
+        /// </summary>
+        public List<string> DisabledSimNames { get; set; }
+
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
         private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
@@ -31,14 +37,14 @@
         }
 
         /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun()
+        public Simulation NextSimulationToRun(bool fullFactorial = true)
         {
             if (allCombinations == null || allCombinations.Count == 0)
                 return null;
 
             if (serialisedBase == null)
             {
-                allCombinations = AllCombinations();
+                allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
                 parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
                 serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
@@ -73,10 +79,10 @@
         }
 
         /// <summary>Gets a list of simulation names</summary>
-        public IEnumerable<string> GetSimulationNames()
+        public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
             List<string> names = new List<string>();
-            allCombinations = AllCombinations();
+            allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
             foreach (List<FactorValue> combination in allCombinations)
             {
                 string newSimulationName = Name;
@@ -245,6 +251,34 @@
                     return allValues;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Generates a partial factorial list of lists of factor values, based on the list of enabled factor names.
+        /// If this list is empty, this function will return a full factorial list of simulations.
+        /// </summary>
+        /// <returns></returns>
+        public List<List<FactorValue>> EnabledCombinations()
+        {
+            if (DisabledSimNames == null || DisabledSimNames.Count < 1) return AllCombinations();
+
+            // easy but inefficient method (for testing purposes)
+            return AllCombinations().Where(x => (DisabledSimNames.IndexOf(GetName(x)) < 0)).ToList();
+        }
+
+        /// <summary>
+        /// Generates the name for a combination of FactorValues.
+        /// </summary>
+        /// <param name="factors"></param>
+        /// <returns></returns>
+        private string GetName(List<FactorValue> factors)
+        {
+            string str = "";
+            foreach (FactorValue factor in factors)
+            {
+                str += factor.Name;
+            }
+            return str;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

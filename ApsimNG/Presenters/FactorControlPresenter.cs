@@ -35,10 +35,7 @@ namespace UserInterface.Presenters
             
             
             view.Initialise(headers);
-            view.Populate(simulations);            
-            
-            
-            
+            view.Populate(simulations);
         }
 
         /// <summary>
@@ -56,15 +53,34 @@ namespace UserInterface.Presenters
                     List<string> data = simulations[index].Item2;
                     simulations[index] = new Tuple<string, List<string>, bool>(name, data, flag);
                 }
-            }            
+            }
             view.Populate(simulations);
+            model.DisabledSimNames = GetDisabledSimNames();
         }
 
         public void Detach()
         {
-
+            headers = null;
+            simulations = null;
+            view.Detach();
+            view = null;            
         }
 
+        private string GetName(List<FactorValue> factors)
+        {
+            string str = "";
+            for (int i = 0; i < factors.Count; i++)
+            {
+                str += factors[i].Name;
+            }
+            return str;
+        }
+
+        /// <summary>
+        /// Generates a list of column headers to be displayed.
+        /// </summary>
+        /// <param name="allSims">List of 'simulations', where each simulation is a list of factor values.</param>
+        /// <returns></returns>
         private List<string> GetHeaderNames(List<List<FactorValue>> allSims)
         {
             List<string> headers = new List<string> { "Simulation Name" };
@@ -75,9 +91,9 @@ namespace UserInterface.Presenters
         }
         
         /// <summary>
-        /// Formats a 2 dimensional list of FactorValue into a list that may be passed into the view.
+        /// Formats a 2 dimensional list of FactorValue into a list of tuples (containing only the data relevant to the view) that may be passed into the view.
         /// </summary>
-        /// <param name="allSims"></param>
+        /// <param name="allSims">List of 'simulations', where each simulation is a list of factor values.</param>
         /// <returns></returns>
         private List<Tuple<string, List<string>, bool>> GetTableData(List<List<FactorValue>> allSims)
         {
@@ -98,11 +114,35 @@ namespace UserInterface.Presenters
                     string value = val.GetType() == typeof(string) ? (string)val : ((Model)val).Name;
                     levels.Add(value);
                 }
-
-                // enable all simulations by default
-                sims.Add(new Tuple<string, List<string>, bool>(name, levels, true));
+                bool flag = model.DisabledSimNames.IndexOf(name) < 0;                
+                sims.Add(new Tuple<string, List<string>, bool>(name, levels, flag));
             }
             return sims;
+        }
+
+
+        /// <summary>
+        /// Generates a list of 'simulations', where each simulation is a list of factor values.
+        /// This function is currently unused, but may be useful in the future.
+        /// </summary>
+        /// <returns></returns>
+        private List<List<FactorValue>> GetEnabledSimulations()
+        {
+            // names of the enabled simulations
+            List<string> disabledSimNames = GetDisabledSimNames();
+
+            // to generate this list, a full factorial experiment is generated, and the results filtered based on the name of the simulation
+            List<List<FactorValue>> enabledSims = model.AllCombinations().Where(x => (disabledSimNames.IndexOf(GetName(x)) < 0)).ToList();
+            return enabledSims;
+        }
+
+        /// <summary>
+        /// Gets a list of the names of all disabled simulations.
+        /// </summary>
+        /// <returns></returns>
+        private List<string> GetDisabledSimNames()
+        {
+            return simulations.Where(x => !x.Item3).Select(x => x.Item1).ToList();
         }
 
         /// <summary>
@@ -130,27 +170,41 @@ namespace UserInterface.Presenters
         public void GenerateCsv(string path = "")
         {
             StringBuilder csv = new StringBuilder();
+            if (headers == null || headers.Count < 1)
+            {
+                explorerPresenter.MainPresenter.ShowMessage("Nothing to Export", Simulation.ErrorLevel.Error);
+                return;
+            }
+            
+            // column headers
             string newLine = headers[0];
             for (int i = 1; i < headers.Count; i++)
             {
                 newLine += "," + headers[i];
             }
-
             csv.AppendLine(newLine);
 
+            // factor information
             foreach (Tuple<string, List<string>, bool> sim in simulations)
             {
-                newLine = sim.Item1;
-                foreach (string value in sim.Item2)
+                newLine = sim.Item1; // simulation name
+                foreach (string value in sim.Item2)  // factor values
                 {
                     newLine += "," + value;
                 }
-                newLine += "," + sim.Item3.ToString();
+                newLine += "," + sim.Item3.ToString(); // boolean - is the simulation active/enabled
                 csv.AppendLine(newLine);
             }
+
             if (path == "") path = ApsimNG.Properties.Settings.Default["OutputDir"] + "\\" + model.Name + ".csv";
-            File.WriteAllText(path, csv.ToString());
-            explorerPresenter.MainPresenter.ShowMessage("Successfully generated CSV file.", Simulation.ErrorLevel.Information);            
+            try
+            {
+                File.WriteAllText(path, csv.ToString());
+                explorerPresenter.MainPresenter.ShowMessage("Successfully generated " + path + ".", Simulation.ErrorLevel.Information);
+            } catch (Exception e)
+            {
+                explorerPresenter.MainPresenter.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+            }
         }
 
         /// <summary>
@@ -191,12 +245,24 @@ namespace UserInterface.Presenters
                     }
                 }
                 view.Populate(simulations);
+                model.DisabledSimNames = GetDisabledSimNames();
                 explorerPresenter.MainPresenter.ShowMessage("Successfully imported data from " + path, Simulation.ErrorLevel.Information);
             }
             catch (Exception e)
             {
                 explorerPresenter.MainPresenter.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
             }
+        }
+
+        public void Sobol()
+        {
+            explorerPresenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.ErrorLevel.Information);
+        }
+
+
+        public void Morris()
+        {
+            explorerPresenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.ErrorLevel.Information);
         }
     }
 }
