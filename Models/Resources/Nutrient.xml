@@ -307,109 +307,6 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Solute>
   <NutrientPool>
-    <Name>Microbial</Name>
-    <ExpressionFunction>
-      <Name>InitialCarbon</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Expression>(([Soil].OC * 100 * [Soil].BD * [Soil].Thickness -[Inert].C) * [Soil].FBiom) / (1 + [Soil].FBiom)</Expression>
-    </ExpressionFunction>
-    <ExpressionFunction>
-      <Name>InitialNitrogen</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Expression>[Microbial].C /  [CNRatio]</Expression>
-    </ExpressionFunction>
-    <Constant>
-      <Name>CNRatio</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>8</FixedValue>
-    </Constant>
-    <CarbonFlow>
-      <Name>Decomposition</Name>
-      <MultiplyFunction>
-        <Name>Rate</Name>
-        <Constant>
-          <Name>PotentialRate</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.0081</FixedValue>
-        </Constant>
-        <VariableReference>
-          <Name>TF</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>WF</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[WaterFactorForMineralisation]</VariableName>
-        </VariableReference>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </MultiplyFunction>
-      <Constant>
-        <Name>CO2Efficiency</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FixedValue>0.4</FixedValue>
-      </Constant>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <destinationNames>
-        <string>Microbial</string>
-        <string>Humic</string>
-      </destinationNames>
-      <destinationFraction>
-        <double>0.6</double>
-        <double>0.4</double>
-      </destinationFraction>
-    </CarbonFlow>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </NutrientPool>
-  <NutrientPool>
-    <Name>Humic</Name>
-    <ExpressionFunction>
-      <Name>InitialCarbon</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Expression>(1-[Soil].FInert)*[Soil].OC * 100 * [Soil].BD * [Soil].Thickness - [Microbial].C</Expression>
-    </ExpressionFunction>
-    <ExpressionFunction>
-      <Name>InitialNitrogen</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Expression>[Humic].C / [Soil].SoilOrganicMatter.SoilCN</Expression>
-    </ExpressionFunction>
-    <CarbonFlow>
-      <Name>Decomposition</Name>
-      <MultiplyFunction>
-        <Name>Rate</Name>
-        <Constant>
-          <Name>PotentialRate</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.00015</FixedValue>
-        </Constant>
-        <VariableReference>
-          <Name>TF</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>WF</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[WaterFactorForMineralisation]</VariableName>
-        </VariableReference>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </MultiplyFunction>
-      <Constant>
-        <Name>CO2Efficiency</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FixedValue>0.4</FixedValue>
-      </Constant>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <destinationNames>
-        <string>Microbial</string>
-      </destinationNames>
-      <destinationFraction>
-        <double>1</double>
-      </destinationFraction>
-    </CarbonFlow>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </NutrientPool>
-  <NutrientPool>
     <Name>FOMLignin</Name>
     <ExpressionFunction>
       <Name>InitialCarbon</Name>
@@ -570,6 +467,109 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       <destinationFraction>
         <double>0.9</double>
         <double>0.1</double>
+      </destinationFraction>
+    </CarbonFlow>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </NutrientPool>
+  <NutrientPool>
+    <Name>Microbial</Name>
+    <ExpressionFunction>
+      <Name>InitialCarbon</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Expression>(([Soil].OC * 100 * [Soil].BD * [Soil].Thickness -[Inert].C) * [Soil].FBiom) / (1 + [Soil].FBiom)</Expression>
+    </ExpressionFunction>
+    <ExpressionFunction>
+      <Name>InitialNitrogen</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Expression>[Microbial].C /  [CNRatio]</Expression>
+    </ExpressionFunction>
+    <Constant>
+      <Name>CNRatio</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>8</FixedValue>
+    </Constant>
+    <CarbonFlow>
+      <Name>Decomposition</Name>
+      <MultiplyFunction>
+        <Name>Rate</Name>
+        <Constant>
+          <Name>PotentialRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.0081</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>TF</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>WF</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[WaterFactorForMineralisation]</VariableName>
+        </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </MultiplyFunction>
+      <Constant>
+        <Name>CO2Efficiency</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>0.4</FixedValue>
+      </Constant>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <destinationNames>
+        <string>Microbial</string>
+        <string>Humic</string>
+      </destinationNames>
+      <destinationFraction>
+        <double>0.6</double>
+        <double>0.4</double>
+      </destinationFraction>
+    </CarbonFlow>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </NutrientPool>
+  <NutrientPool>
+    <Name>Humic</Name>
+    <ExpressionFunction>
+      <Name>InitialCarbon</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Expression>(1-[Soil].FInert)*[Soil].OC * 100 * [Soil].BD * [Soil].Thickness - [Microbial].C</Expression>
+    </ExpressionFunction>
+    <ExpressionFunction>
+      <Name>InitialNitrogen</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Expression>[Humic].C / [Soil].SoilOrganicMatter.SoilCN</Expression>
+    </ExpressionFunction>
+    <CarbonFlow>
+      <Name>Decomposition</Name>
+      <MultiplyFunction>
+        <Name>Rate</Name>
+        <Constant>
+          <Name>PotentialRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.00015</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>TF</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>WF</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[WaterFactorForMineralisation]</VariableName>
+        </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </MultiplyFunction>
+      <Constant>
+        <Name>CO2Efficiency</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>0.4</FixedValue>
+      </Constant>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <destinationNames>
+        <string>Microbial</string>
+      </destinationNames>
+      <destinationFraction>
+        <double>1</double>
       </destinationFraction>
     </CarbonFlow>
     <IncludeInDocumentation>true</IncludeInDocumentation>
