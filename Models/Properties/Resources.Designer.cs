@@ -19,7 +19,7 @@ namespace Models.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -249,7 +249,7 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;Plant&gt;
+        ///   Looks up a localized string similar to &lt;Plant&gt; 
         ///  &lt;Name&gt;Wheat&lt;/Name&gt;
         ///  &lt;Memo&gt;
         ///    &lt;Name&gt;TitlePage&lt;/Name&gt;
@@ -260,7 +260,7 @@ namespace Models.Properties {
         ///
         ///_Brown, H.E., Huth, N.I. and Holzworth, D.P._
         ///
-        ///The APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be  [rest of string was truncated]&quot;;.
+        ///The APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Wheat {
             get {
