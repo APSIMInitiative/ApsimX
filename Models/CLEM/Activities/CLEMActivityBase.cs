@@ -81,6 +81,34 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to cascade calls for calling activites performed for all activities in the UI tree. 
         /// </summary>
+        public virtual void ClearAllAllActivitiesPerformedStatus()
+        {
+            ClearActivitiesPerformedStatus();
+        }
+
+        /// <summary>
+        /// Protected method to cascade calls for activities performed for all activities in the UI tree. 
+        /// </summary>
+        protected void ClearActivitiesPerformedStatus()
+        {
+            // get resources required for all dynamically created CLEMActivityBase activities
+            if (ActivityList != null)
+            {
+                foreach (CLEMActivityBase activity in ActivityList)
+                {
+                    activity.Status = ActivityStatus.NotNeeded;
+                }
+            }
+            // get resources required for all children of type CLEMActivityBase
+            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+            {
+                activity.Status = ActivityStatus.NotNeeded;
+            }
+        }
+
+        /// <summary>
+        /// Method to cascade calls for calling activites performed for all activities in the UI tree. 
+        /// </summary>
         public virtual void ReportAllAllActivitiesPerformed()
         {
             ReportActivitiesPerformed();
@@ -227,9 +255,6 @@ namespace Models.CLEM.Activities
             {
                 DoActivity();
             }
-            // report activity occurred
-            //this.TriggerOnActivityPerformed();
-
         }
 
         /// <summary>
@@ -241,7 +266,6 @@ namespace Models.CLEM.Activities
         /// <param name="TriggerActivityPerformed"></param>
         public bool TakeResources(List<ResourceRequest> ResourceRequestList, bool TriggerActivityPerformed)
         {
-            this.Status = ActivityStatus.NotNeeded;
             bool resourceAvailable = false;
 
             // no resources required or this is an Activity folder.
@@ -353,11 +377,6 @@ namespace Models.CLEM.Activities
                 //return false;  //could not take all the resources it needed.
             }
 
-            //// report activity occurred
-            //if (TriggerActivityPerformed)
-            //{
-            //    this.TriggerOnActivityPerformed();
-            //}
             return Status != ActivityStatus.Ignored;
         }
 

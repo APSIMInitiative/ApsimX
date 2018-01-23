@@ -32,9 +32,6 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Items = new List<AnimalFoodStoreType>();
-
-            List<IModel> childNodes = Apsim.Children(this, typeof(AnimalFoodStore));
-
             foreach (AnimalFoodStoreType childModel in Apsim.Children(this, typeof(AnimalFoodStoreType)))
             {
                 childModel.TransactionOccurred += Resource_TransactionOccurred;
