@@ -503,9 +503,9 @@
                 <Name>WeanerF</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <Age>8</Age>
+                <Age>36</Age>
                 <Number>1</Number>
-                <Weight>180</Weight>
+                <Weight>520</Weight>
                 <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
                 <Sire>false</Sire>
@@ -1313,9 +1313,9 @@
             <NToDMDIntercept>41.4</NToDMDIntercept>
             <NToDMDCrudeProteinDenominator>0</NToDMDCrudeProteinDenominator>
             <GreenNitrogen>2</GreenNitrogen>
-            <DecayNitrogen>0.1</DecayNitrogen>
+            <DecayNitrogen>0.35</DecayNitrogen>
             <MinimumNitrogen>0.4</MinimumNitrogen>
-            <DecayDMD>0.35</DecayDMD>
+            <DecayDMD>0.1</DecayDMD>
             <MinimumDMD>43</MinimumDMD>
             <DetachRate>0.03</DetachRate>
             <CarryoverDetachRate>0.12</CarryoverDetachRate>
