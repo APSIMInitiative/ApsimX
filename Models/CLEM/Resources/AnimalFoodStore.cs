@@ -35,12 +35,10 @@ namespace Models.CLEM.Resources
 
             List<IModel> childNodes = Apsim.Children(this, typeof(AnimalFoodStore));
 
-            foreach (IModel childModel in childNodes)
+            foreach (AnimalFoodStoreType childModel in Apsim.Children(this, typeof(AnimalFoodStoreType)))
             {
-                //cast the generic IModel to a specfic model.
-                AnimalFoodStoreType fodder = childModel as AnimalFoodStoreType;
-                fodder.TransactionOccurred += Resource_TransactionOccurred;
-                Items.Add(fodder);
+                childModel.TransactionOccurred += Resource_TransactionOccurred;
+                Items.Add(childModel);
             }
         }
 
@@ -50,7 +48,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (AnimalFoodStore childModel in Apsim.Children(this, typeof(AnimalFoodStore)))
+            foreach (AnimalFoodStoreType childModel in Apsim.Children(this, typeof(AnimalFoodStoreType)))
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }

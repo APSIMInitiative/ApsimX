@@ -218,7 +218,7 @@ namespace Models.CLEM.Activities
                         if (totalamount > 0)
                         {
                             //if Npct column was not in the file 
-                            if (NextHarvest.Npct == double.NaN)
+                            if (double.IsNaN(NextHarvest.Npct))
                             {
                                 //Add without adding any new nitrogen.
                                 //The nitrogen value for this feed item in the store remains the same.
@@ -234,7 +234,7 @@ namespace Models.CLEM.Activities
                                 LinkedResourceItem.Add(packet, this.Name, "Harvest");
                             }
                         }
-                        this.TriggerOnActivityPerformed(ActivityStatus.Success);
+                        SetStatusSuccess();
                     }
                     HarvestData.RemoveAt(0);
                 }
