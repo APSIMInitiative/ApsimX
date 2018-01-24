@@ -174,10 +174,11 @@ namespace Models.PMF.Organs
         /// <summary>Dry matter efficiency function</summary>
         [ChildLinkByName]
         private IFunction dmConversionEfficiency = null;
+        
         /// <summary>Carbon concentration</summary>
-        /// [Units("-")]
+        [Units("-")]
         [ChildLinkByName]
-        IFunction CarbonConcentration = null;
+        private IFunction carbonConcentration = null;
 
         /// <summary>The cost for remobilisation</summary>
         [ChildLinkByName]
@@ -298,6 +299,8 @@ namespace Models.PMF.Organs
         {
             get
             {
+                if (PlantZone == null)    // Can be null in autodoc
+                    return new double[0]; 
                 double[] value;
                 value = new double[PlantZone.soil.Thickness.Length];
                 for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
@@ -592,7 +595,7 @@ namespace Models.PMF.Organs
             // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
             // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
             // CO2 (44/12).
-            double growthRespFactor = ((1.0 / dmConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
+            double growthRespFactor = ((1.0 / dmConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = (Allocated.StructuralWt + Allocated.StorageWt + Allocated.MetabolicWt) * growthRespFactor;
             if (TotalRAw == 0 && Allocated.Wt > 0)
                 throw new Exception("Error trying to partition root biomass");
