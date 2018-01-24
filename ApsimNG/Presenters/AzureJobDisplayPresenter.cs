@@ -106,20 +106,25 @@ namespace UserInterface.Presenters
             blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);
             
             // start downloading the list of jobs immediately
-            FetchJobs.RunWorkerAsync();
+            // in theory fetch jobs should never already be busy at this point, but it doesn't hurt to double check
+            if (!FetchJobs.IsBusy) FetchJobs.RunWorkerAsync();
         }
 
-
+        /// <summary>
+        /// Asks the user a question, allowing them to choose yes or no. Returns true if they clicked yes, returns false if they clicked no.
+        /// </summary>
+        /// <param name="msg">Message/question to be displayed.</param>
+        /// <returns></returns>
+        private bool AskQuestion(string msg)
+        {
+            return MainPresenter.AskQuestion(msg) == QuestionResponseEnum.Yes;
+        }
+        
         public void Detach()
         {
             FetchJobs.CancelAsync();
             view.RemoveEventHandlers();
             view.MainWidget.Destroy();
-        }
-
-        private void TimerElapsed(object sender, EventArgs e)
-        {
-            if (!FetchJobs.IsBusy) FetchJobs.RunWorkerAsync();
         }
 
         public void UpdateDownloadProgress(double progress)
@@ -137,11 +142,13 @@ namespace UserInterface.Presenters
                 var newJobs = ListJobs();
                 
                 if (FetchJobs.CancellationPending) return;
-                if (newJobs != null)
+                if (newJobs == null) return;
+
+                if (newJobs.Count > 0)
                 {
                     // if the new job list is different, update the tree view
                     if (newJobs.Count() != jobList.Count())
-                    {                        
+                    {
                         jobList = newJobs;
                         if (UpdateDisplay() == 1) return;
                     } else
@@ -157,15 +164,20 @@ namespace UserInterface.Presenters
                         }
                         jobList = newJobs;
                     }
-                } else
-                {                    
-                    // ListJobs() will only return null if the thread is asked to cancel or if unable to talk to
-                    // the view (due to a null ref.)
-                    return;
                 }
                 // refresh every 10 seconds
                 System.Threading.Thread.Sleep(10000);
             }            
+        }
+
+        /// <summary>
+        /// Checks if the current user owns a job. 
+        /// </summary>
+        /// <param name="id">ID of the job.</param>
+        /// <returns></returns>
+        public bool UserOwnsJob(string id)
+        {
+            return GetJob(id).Owner.ToLower() == Environment.UserName.ToLower();
         }
 
         /// <summary>
@@ -176,7 +188,7 @@ namespace UserInterface.Presenters
         /// <returns></returns>
         public string GetJobName(string id, bool withOwner)
         {
-            JobDetails job = GetLocalJob(id);
+            JobDetails job = GetJob(id);
             return withOwner ? job.DisplayName + " (" + job.Owner + ")" : job.DisplayName;
         }
 
@@ -223,19 +235,36 @@ namespace UserInterface.Presenters
             List<JobDetails> jobs = new List<JobDetails>();
             var pools = batchClient.PoolOperations.ListPools();
             var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
-            var cloudJobs = batchClient.JobOperations.ListJobs(jobDetailLevel);
+
+            IPagedEnumerable<CloudJob> cloudJobs = null;
+
+
+            int numTries = 0;
+            while (numTries < 4 && cloudJobs == null)
+            {
+                try
+                {
+                    cloudJobs = batchClient.JobOperations.ListJobs(jobDetailLevel);
+                }
+                catch (Exception e)
+                {
+                    if (numTries >= 3)
+                    {
+                        ShowError("Unable to retrieve job list: " + e.ToString());
+                        return new List<JobDetails>();
+                    }
+                }
+            }
+            
+            
             var length = cloudJobs.Count();
             int i = 0;
 
             foreach (var cloudJob in cloudJobs)
             {
-                if (FetchJobs.CancellationPending)
-                {
-                    return null;
-                }
-
+                if (FetchJobs.CancellationPending) return null;
                 try
-                {                        
+                {
                     view.JobLoadProgress = 100.0 * i / length;
                 } catch (NullReferenceException)
                 {
@@ -245,18 +274,33 @@ namespace UserInterface.Presenters
                     ShowError(e.ToString());
                 }
 
-                          
                 string owner = GetAzureMetaData("job-" + cloudJob.Id, "Owner");
 
                 //var tasks = ListTasks(Guid.Parse(cloudJob.Id));
                 // for some reason the succeeded task count is always exactly double the actual number of tasks
                 // and the number of tasks is the number of sims + 1 (the job manager?)
-                
-                var tasks = batchClient.JobOperations.GetJobTaskCounts(cloudJob.Id);                                
-                long numTasks = tasks.Active + tasks.Running + tasks.Completed;
+                TaskCounts tasks;
+                long numTasks;
+                double jobProgress;
+                try
+                {
+                    tasks = batchClient.JobOperations.GetJobTaskCounts(cloudJob.Id);
+                    numTasks = tasks.Active + tasks.Running + tasks.Completed;
+                    // if there are no tasks, set progress to 100%
+                    jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
+                } catch (Exception e)
+                {
+                    // sometimes an exception is thrown when retrieving the task counts
+                    // could be due to the job not being submitted correctly
+                    ShowError(e.ToString());
 
-                // if there are no tasks, set progress to 100%
-                double jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
+                    numTasks = -1;
+                    jobProgress = 100;
+                }
+                
+                
+
+                
                 // if cpu time is unavailable, set this field to 0
                 TimeSpan cpu = cloudJob.Statistics == null ? TimeSpan.Zero : cloudJob.Statistics.KernelCpuTime + cloudJob.Statistics.UserCpuTime;
                 var job = new JobDetails
@@ -330,7 +374,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception e)
             {                
-                MainPresenter.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+                ShowError(e.ToString());
             }
             return "";
         }
@@ -370,37 +414,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Gets the job progress as a percentage.
-        /// </summary>
-        /// <param name="jobId">ID of the job.</param>
-        /// <returns>Double between 0 and 100.</returns>
-        private double GetProgress(Guid jobId)
-        {
-            int tasksComplete = 0;            
-            var tasks = ListTasks(jobId);
-            foreach (var task in tasks)
-            {
-                if (task.State == "Completed")
-                {
-                    tasksComplete++;
-                }
-            }            
-            return 100.0 * tasksComplete / tasks.Length;            
-        }
-
-        private long CountCompleteTasks(Guid jobId)
-        {
-            ODATADetailLevel detailLevel = new ODATADetailLevel { SelectClause = "state" };
-            var taskList = batchClient.JobOperations.ListTasks(jobId.ToString(), detailLevel).ToArray();
-            int completeTasks = 0;
-            for (int i = 0; i < taskList.Length; i++)
-            {
-                if (taskList[i].State.ToString() == "Complete") completeTasks++;
-            }
-            return completeTasks;
-        }
-
-        /// <summary>
         /// Tests if two jobs are equal.
         /// </summary>
         /// <param name="a">The first job.</param>
@@ -412,73 +425,13 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Gets the Azure tasks in a job.
-        /// </summary>
-        /// <param name="jobId">ID of the job.</param>
-        /// <returns>List of TaskDetail objects.</returns>
-        private TaskDetails[] ListTasks(Guid jobId)
-        {
-            ODATADetailLevel detailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo" };
-            var taskList = batchClient.JobOperations.ListTasks(jobId.ToString(), detailLevel).ToArray();
-
-            /*
-            foreach (var cloudTask in )
-            {
-                tasks.Add(new TaskDetails
-                {
-                    Id = cloudTask.Id,
-                    DisplayName = cloudTask.DisplayName,
-                    State = cloudTask.State.ToString(),
-                    StartTime = cloudTask.ExecutionInformation == null ? null : cloudTask.ExecutionInformation.StartTime,
-                    EndTime = cloudTask.ExecutionInformation == null ? null : cloudTask.ExecutionInformation.EndTime
-                });
-            }
-            */
-
-            int n = taskList.Count();
-            TaskDetails[] tasks = new TaskDetails[n];
-            for (int i = 0; i < n; i++) {
-                CloudTask task = taskList[i];                
-                TaskDetails test = new TaskDetails
-                {
-                    Id = task.Id,
-                    DisplayName = task.DisplayName,
-                    State = task.State.ToString(),
-                    StartTime = task.ExecutionInformation == null ? null : taskList.ElementAt(i).ExecutionInformation.StartTime,
-                    EndTime = task.ExecutionInformation == null ? null : taskList.ElementAt(i).ExecutionInformation.EndTime
-                };
-                tasks[i] = test;
-            }
-
-            return tasks;
-        }
-
-        /// <summary>
-        /// Gets a job stored on Azure with a given ID.
-        /// </summary>
-        /// <param name="jobId">ID of the job.</param>
-        /// <returns>Azure CloudJob object representing the Apsim Job.</returns>
-        private CloudJob GetJob(Guid jobId)
-        {
-            ODATADetailLevel detailLevel = new ODATADetailLevel { SelectClause = "id" };
-            CloudJob job = batchClient.JobOperations.ListJobs(detailLevel).FirstOrDefault(j => string.Equals(jobId.ToString(), j.Id));
-            if (job == null) return null;
-            return batchClient.JobOperations.GetJob(jobId.ToString());
-        }
-
-        /// <summary>
-        /// Gets a job with a given ID.
+        /// Gets a job with a given ID from the local job list.
         /// </summary>
         /// <param name="id">ID of the job.</param>
-        /// <returns>A job from the local job list. The job is not live but should have been recently updated.</returns>
-        public JobDetails GetLocalJob(string id)
+        /// <returns>JobDetails object.</returns>
+        public JobDetails GetJob(string id)
         {
             return jobList.FirstOrDefault(x => x.Id == id);
-        }
-
-        public bool OngoingDownload()
-        {
-            return currentlyDownloading.Count() > 0;
         }
         
         /// <summary>
@@ -491,7 +444,7 @@ namespace UserInterface.Presenters
         public void DownloadResults(List<string> jobsToDownload, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles)
         {
             // TODO : make jobs download serially
-            if (OngoingDownload())
+            if (currentlyDownloading.Count() > 0)
             {
                 ShowError("Unable to start a new batch of downloads - one or more downloads are already ongoing.");
                 return;
@@ -499,16 +452,17 @@ namespace UserInterface.Presenters
 
             if (jobsToDownload.Count < 1)
             {
-                MainPresenter.ShowMessage("Unable to download jobs - no jobs are selected.", Simulation.ErrorLevel.Information);
+                ShowMessage("Unable to download jobs - no jobs are selected.");
                 return;
             }
+            FetchJobs.CancelAsync();
+            while (FetchJobs.IsBusy) ;
 
-
+            view.HideLoadingProgressBar();
             view.ShowDownloadProgressBar();
-            MainPresenter.ShowMessage("", Simulation.ErrorLevel.Information);
+            ShowMessage("");
             string path = (string)Settings.Default["OutputDir"];
             AzureResultsDownloader dl;
-            Guid jobId;
 
             // If a results directory (outputPath\jobName) already exists, the user will receive a warning asking them if they want to continue.
             // This message should only be displayed once. Once it's been displayed this boolean is set to true so they won't be asked again.
@@ -517,8 +471,9 @@ namespace UserInterface.Presenters
             foreach (string id in jobsToDownload)
             {                
                 // if the job id is invalid, skip downloading this job                
-                if (!Guid.TryParse(id, out jobId)) continue;
-                string jobName = GetJob(jobId).DisplayName;
+                if (!Guid.TryParse(id, out Guid jobId)) continue;
+                currentlyDownloading.Add(jobId);
+                string jobName = GetJob(id).DisplayName;
 
                 view.DownloadProgress = 0;
 
@@ -535,21 +490,26 @@ namespace UserInterface.Presenters
                 }
 
                 // if job has not finished, skip to the next job in the list
-                if (GetJob(jobId).State.ToString().ToLower() != "completed")
+                if (GetJob(id).State.ToString().ToLower() != "completed")
                 {
-                    ShowError("Unable to download " + GetJob(jobId).DisplayName.ToString() + ": Job has not finished running");
+                    ShowError("Unable to download " + GetJob(id).DisplayName.ToString() + ": Job has not finished running");
                     continue;
                 }
 
-                dl = new AzureResultsDownloader(jobId, GetJob(jobId).DisplayName, path, this, saveToCsv, includeDebugFiles, keepOutputFiles);                
+                dl = new AzureResultsDownloader(jobId, GetJob(id).DisplayName, path, this, saveToCsv, includeDebugFiles, keepOutputFiles);                
                 dl.DownloadResults(false);
-            }            
+            }
+            FetchJobs.RunWorkerAsync();
         }
 
+        /// <summary>
+        /// Opens a dialog box which asks the user for credentials.
+        /// </summary>
         public void SetupCredentials()
         {
             AzureCredentialsSetup setup = new AzureCredentialsSetup();
         }
+
         /// <summary>
         /// Removes a job from the list of currently downloading jobs.
         /// </summary>
@@ -566,6 +526,11 @@ namespace UserInterface.Presenters
         public void ShowError(string msg)
         {
             MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);             
+        }
+
+        public void ShowMessage(string msg)
+        {
+            MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Information);
         }
 
         /// <summary>
@@ -596,9 +561,9 @@ namespace UserInterface.Presenters
         public int CompareDateTimeStrings(string str1, string str2)
         {
             // if either of these strings is empty, the job is still running
-            if (str1 == "")
+            if (str1 == "" || str1 == null)
             {
-                if (str2 == "") // neither job has finished
+                if (str2 == "" || str2 == null) // neither job has finished
                 {
                     return 0;
                 }
@@ -607,9 +572,8 @@ namespace UserInterface.Presenters
                     return 1;
                 }
             }
-            else if (str2 == "")
-            {
-                // first job is finished, second job still running
+            else if (str2 == "" || str2 == null) // first job is finished, second job still running
+            {                
                 return -1;
             }
             // otherwise, both jobs are still running
@@ -622,7 +586,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Generates a DateTime object from a string.
         /// </summary>
-        /// <param name="st">Date time string. MUST be in the format dd/mm/yyyy hh:mm:ss</param>
+        /// <param name="st">Date time string. MUST be in the format dd/mm/yyyy hh:mm:ss (A|P)M</param>
         /// <returns>A DateTime object representing this string.</returns>
         public DateTime GetDateTimeFromString(string st)
         {
@@ -637,6 +601,7 @@ namespace UserInterface.Presenters
                 year = Int32.Parse(date[2]);
 
                 hour = Int32.Parse(time[0]);
+                if (separated[separated.Length - 1].ToLower() == "pm" && hour < 12) hour += 12;
                 minute = Int32.Parse(time[1]);
                 second = Int32.Parse(time[2]);
 
@@ -658,7 +623,7 @@ namespace UserInterface.Presenters
             view.HideDownloadProgressBar();
             if (code == 0)
             {
-                MainPresenter.ShowMessage("Download successful.", Simulation.ErrorLevel.Information);
+                ShowMessage("Download successful.");
                 return;
             }
             string msg = timeStamp.ToLongTimeString().Split(' ')[0] + ": " +  name + ": ";
@@ -709,16 +674,15 @@ namespace UserInterface.Presenters
             string msg = "Are you sure you want to stop " + (stopMultiple ? "these " + jobIds.Count + " jobs?" : "this job?") + " There is no way to resume their execution!";
             string label = stopMultiple ? "Stop these jobs?" : "Stop this job?";
             if (!view.ShowWarning(msg)) return;
-                        
+            
             foreach (string id in jobIds)
             {
                 // no need to stop a job that is already finished
-                if (GetLocalJob(id).State.ToLower() != "completed")
+                if (GetJob(id).State.ToLower() != "completed")
                 {
                     StopJob(id);
-                }                
-            }
-            
+                }
+            }            
         }
 
         /// <summary>
@@ -733,42 +697,48 @@ namespace UserInterface.Presenters
             }
             catch (Exception e)
             {
-                MainPresenter.ShowMessage(e.Message, Simulation.ErrorLevel.Error);
+                ShowError(e.Message);
             }
         }
 
         /// <summary>
-        /// Deletes a job (and all associated files) from Azure cloud storage.
+        /// Asks the user for confirmation and then deletes a list of jobs.
         /// </summary>
-        /// <param name="id">ID of the job.</param>
-        public void DeleteJob(string id)
+        /// <param name="jobIds">ID of the job.</param>
+        public void DeleteJobs(List<string> jobIds)
         {
-            // try to parse the id. if it is not a valid Guid, return
-            Guid jobId;
-            if (!Guid.TryParse(id, out jobId)) return;
-
             // cancel the fetch jobs worker
             FetchJobs.CancelAsync();
+            while (FetchJobs.IsBusy);
             view.HideLoadingProgressBar();
 
-            // delete the job from Azure
-            CloudBlobContainer containerRef;
+            foreach (string id in jobIds)
+            {
+                try
+                {
+                    if (!Guid.TryParse(id, out Guid parsedId)) continue;
+                    // delete the job from Azure
+                    CloudBlobContainer containerRef;
 
-            containerRef = blobClient.GetContainerReference(StorageConstants.GetJobOutputContainer(jobId));
-            if (containerRef.Exists()) containerRef.Delete();
-            
-            containerRef = blobClient.GetContainerReference(StorageConstants.GetJobContainer(jobId));
-            if (containerRef.Exists()) containerRef.Delete();
+                    containerRef = blobClient.GetContainerReference(StorageConstants.GetJobOutputContainer(parsedId));
+                    if (containerRef.Exists()) containerRef.Delete();
 
-            containerRef = blobClient.GetContainerReference(jobId.ToString());
-            if (containerRef.Exists()) containerRef.Delete();
+                    containerRef = blobClient.GetContainerReference(StorageConstants.GetJobContainer(parsedId));
+                    if (containerRef.Exists()) containerRef.Delete();
 
-            var job = GetJob(jobId);
-            if (job != null) batchClient.JobOperations.DeleteJob(id);
+                    containerRef = blobClient.GetContainerReference(parsedId.ToString());
+                    if (containerRef.Exists()) containerRef.Delete();
 
-            // remove the job from the locally stored list of jobs
-            jobList.RemoveAt(jobList.IndexOf(GetLocalJob(id)));            
-            
+                    var job = GetJob(id);
+                    if (job != null) batchClient.JobOperations.DeleteJob(id);
+
+                    // remove the job from the locally stored list of jobs
+                    jobList.RemoveAt(jobList.IndexOf(GetJob(id)));
+                } catch (Exception e)
+                {
+                    ShowError(e.ToString());
+                }                
+            }
             // refresh the tree view
             view.UpdateTreeView(jobList);
 

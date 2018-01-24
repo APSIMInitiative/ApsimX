@@ -172,7 +172,6 @@
     <Compile Include="Forms\UpgradeForm.cs" />
     <Compile Include="Classes\GridColumn.cs" />
     <Compile Include="Interfaces\IAxisView.cs" />
-    <Compile Include="Interfaces\IAzureJobDisplayView.cs" />
     <Compile Include="Interfaces\IButtonView.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\ICultivarView.cs" />

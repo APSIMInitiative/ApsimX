@@ -13,7 +13,7 @@ namespace UserInterface.Views
 {
     public class AzureJobDisplayView : ViewBase
     {
-        public Presenters.AzureJobDisplayPresenter Presenter { get; set; }
+        public Interfaces.ICloudJobPresenter Presenter { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the job download status.
@@ -29,7 +29,7 @@ namespace UserInterface.Views
                 });
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the value of the job load progress bar.
         /// </summary>
@@ -45,6 +45,9 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Gets or sets the value of the download progress bar.
+        /// </summary>
         public double DownloadProgress
         {
             get { return downloadProgress.Adjustment.Value; }
@@ -52,7 +55,7 @@ namespace UserInterface.Views
             {
                 Application.Invoke(delegate
                 {
-                    downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper);
+                    downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper);                    
                 });
             }
         }
@@ -82,26 +85,6 @@ namespace UserInterface.Views
         /// </summary>
         private TreeModelSort sort;
 
-        /** columns **/
-        private TreeViewColumn columnName;
-        private TreeViewColumn columnId;
-        private TreeViewColumn columnState;
-        private TreeViewColumn columnNumSims;
-        private TreeViewColumn columnProgress;
-        private TreeViewColumn columnStartTime;
-        private TreeViewColumn columnEndTime;
-        private TreeViewColumn columnCpuTime;
-
-        /** cells **/
-        private CellRendererText cellName;
-        private CellRendererText cellId;
-        private CellRendererText cellState;
-        private CellRendererText cellNumSims;
-        private CellRendererText cellProgress;
-        private CellRendererText cellStartTime;
-        private CellRendererText cellEndTime;
-        private CellRendererText cellCpuTime;
-
         /** containers **/
         private VBox vboxPrimary;
         private VBox vboxDownloadStatuses;
@@ -114,6 +97,9 @@ namespace UserInterface.Views
         /// </summary>
         private HBox progress;
 
+        /// <summary>
+        /// Container for the download progress bar.
+        /// </summary>
         private HBox downloadProgressContainer;
 
 
@@ -123,7 +109,7 @@ namespace UserInterface.Views
         /// Allows user to choose whether or not display other people's jobs.
         /// </summary>
         private CheckButton chkFilterOwner;
-        
+
         /// <summary>
         /// Shows the status of downloading a job.
         /// This will probably need to be reworked when the download controls 
@@ -145,7 +131,7 @@ namespace UserInterface.Views
         /// Label to display info about download in progress.
         /// </summary>
         private Label lblDownloadProgress;
-        
+
         /// <summary>
         /// Allows the user to change the download directory.        
         /// </summary>
@@ -177,12 +163,12 @@ namespace UserInterface.Views
         /// Button to modify the cloud credentials.
         /// </summary>
         private Button btnSetup;
-        
+
         /// <summary>
         /// Indices of the column headers. If columns are added or removed, change this.
         /// Name, ID, State, NumSims, Progress, StartTime, EndTime
         /// </summary>
-        private readonly string[] columnIndices = { "Name", "ID", "State", "NumSims", "Progress", "StartTime", "EndTime", "CpuTime" };
+        private readonly string[] columnTitles = { "Name/Description", "Azure ID", "State", "#Sims", "Progress", "Start Time", "End Time", "CPU Time" };
         private enum columns { Name, ID, State, NumSims, Progress, StartTime, EndTime, CpuTime };
 
         private const string TIMESPAN_FORMAT = @"dddd\d\ hh\h\ mm\m\ ss\s";
@@ -190,101 +176,26 @@ namespace UserInterface.Views
         {
             store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
 
-            // perhaps these should be stored as a list? then just iterate over them            
-
-            // initialise colummns
-            columnName = new TreeViewColumn
-            {
-                Title = "Name/Description",
-                SortColumnId = (int)columns.Name
-            };
-
-            columnId = new TreeViewColumn
-            {
-                Title = "Azure ID",
-                SortColumnId = (int)columns.ID
-            };
-
-            columnState = new TreeViewColumn
-            {
-                Title = "Status",
-                SortColumnId = (int)columns.State
-            };
-
-            columnNumSims = new TreeViewColumn
-            {
-                Title = "#Sims",
-                SortColumnId = (int)columns.NumSims
-            };
-
-            columnProgress = new TreeViewColumn
-            {
-                Title = "Progress",
-                SortColumnId = (int)columns.Progress
-            };
-
-            columnStartTime = new TreeViewColumn
-            {
-                Title = "Start Time",
-                SortColumnId = (int)columns.StartTime
-            };
-
-            columnEndTime = new TreeViewColumn
-            {
-                Title = "End Time",
-                SortColumnId = (int)columns.EndTime
-            };
-
-            columnCpuTime = new TreeViewColumn
-            {
-                Title = "CPU Time",
-                SortColumnId = (int)columns.CpuTime
-            };
-
-            
-            // create cells for each column
-            cellName = new CellRendererText();
-            cellId = new CellRendererText();
-            cellState = new CellRendererText();
-            cellNumSims = new CellRendererText();
-            cellProgress = new CellRendererText();
-            cellStartTime = new CellRendererText();
-            cellEndTime = new CellRendererText();
-            cellCpuTime = new CellRendererText();
-
-            // bind cells to column
-            columnName.PackStart(cellName, false);
-            columnId.PackStart(cellId, false);
-            columnState.PackStart(cellState, false);
-            columnNumSims.PackStart(cellNumSims, false);
-            columnProgress.PackStart(cellProgress, false);
-            columnStartTime.PackStart(cellStartTime, false);
-            columnEndTime.PackStart(cellEndTime, false);
-            columnCpuTime.PackStart(cellCpuTime, false);
-            
-            columnName.AddAttribute(cellName, "text", (int)columns.Name);
-            columnId.AddAttribute(cellId, "text", (int)columns.ID);
-            columnState.AddAttribute(cellState, "text", (int)columns.State);
-            columnNumSims.AddAttribute(cellNumSims, "text", (int)columns.NumSims);
-            columnProgress.AddAttribute(cellProgress, "text", (int)columns.Progress);
-            columnStartTime.AddAttribute(cellStartTime, "text", (int)columns.StartTime);
-            columnEndTime.AddAttribute(cellEndTime, "text", (int)columns.EndTime);
-            columnCpuTime.AddAttribute(cellCpuTime, "text", (int)columns.CpuTime);
-
-            // bind columns to tree view
-            tree = new TreeView();            
-            tree.AppendColumn(columnName);
-            tree.AppendColumn(columnId);
-            tree.AppendColumn(columnState);
-            tree.AppendColumn(columnNumSims);
-            tree.AppendColumn(columnProgress);
-            tree.AppendColumn(columnStartTime);
-            tree.AppendColumn(columnEndTime);
-            tree.AppendColumn(columnCpuTime);
-            // allow user to select multiple jobs simultaneously
+            Type[] types = new Type[columnTitles.Length];
+            tree = new TreeView();
             tree.Selection.Mode = SelectionMode.Multiple;
             tree.CanFocus = true;
             tree.RubberBanding = true;
+
+            for (int i = 0; i < columnTitles.Length; i++)
+            {
+                types[i] = typeof(string);
+                TreeViewColumn col = new TreeViewColumn
+                {
+                    Title = columnTitles[i],
+                    SortColumnId = i
+                };
+                CellRendererText cell = new CellRendererText();
+                col.PackStart(cell, false);
+                col.AddAttribute(cell, "text", i);
+                tree.AppendColumn(col);
+            }
+            store = new ListStore(types);
 
             // this filter holds the model (data) and is used to filter jobs based on whether 
             // they were submitted by the user
@@ -294,15 +205,12 @@ namespace UserInterface.Views
 
             // the filter then goes into this TreeModelSort, which is used to sort results when
             // the user clicks on a column header
-            sort = new TreeModelSort(filterOwner);                        
-            sort.SetSortFunc(Array.IndexOf(columnIndices, "Name"), SortName);
-            sort.SetSortFunc(Array.IndexOf(columnIndices, "ID"), SortId);
-            sort.SetSortFunc(Array.IndexOf(columnIndices, "State"), SortState);            
-            sort.SetSortFunc(Array.IndexOf(columnIndices, "NumSims"), SortNumSims);
-            sort.SetSortFunc(Array.IndexOf(columnIndices, "Progress"), SortProgress);
-            sort.SetSortFunc(Array.IndexOf(columnIndices, "StartTime"), SortStartDate);
-            sort.SetSortFunc(Array.IndexOf(columnIndices, "EndTime"), SortEndDate);
-            sort.SetSortFunc((int)columns.CpuTime, SortCpuTime);
+            sort = new TreeModelSort(filterOwner);
+            for (int i = 0; i < columnTitles.Length; i++)
+            {
+                int count = i;
+                sort.SetSortFunc(i, (model, a, b) => SortData(model, a, b, count));
+            }
 
             // the tree holds the sorted, filtered data
             tree.Model = sort;
@@ -312,7 +220,7 @@ namespace UserInterface.Views
             ScrolledWindow scroll = new ScrolledWindow();
             scroll.Add(tree);
             // never allow horizontal scrolling, and only allow vertical scrolling when needed
-            scroll.HscrollbarPolicy = PolicyType.Never;
+            scroll.HscrollbarPolicy = PolicyType.Automatic;
             scroll.VscrollbarPolicy = PolicyType.Automatic;
 
             // the scrolled window goes into this frame to distinguish the job view 
@@ -334,11 +242,11 @@ namespace UserInterface.Views
             downloadProgressContainer.PackStart(lblDownloadProgress, false, false, 0);
             downloadProgressContainer.PackStart(downloadProgress, false, false, 0);
 
-            loadingProgress = new ProgressBar(new Adjustment(0, 0, 100, 0.01, 0.01, 100));            
+            loadingProgress = new ProgressBar(new Adjustment(0, 0, 100, 0.01, 0.01, 100));
             loadingProgress.Adjustment.Lower = 0;
             loadingProgress.Adjustment.Upper = 100;
 
-            
+
 
             lblDownloadStatus = new Label("");
             lblDownloadStatus.Xalign = 0;
@@ -364,7 +272,7 @@ namespace UserInterface.Views
             HBox stopButtonContainer = new HBox();
             stopButtonContainer.PackStart(btnStop, false, true, 0);
 
-            btnSetup = new Button("Setup");
+            btnSetup = new Button("Credentials");
             btnSetup.Clicked += BtnSetup_Click;
             HBox setupButtonContainer = new HBox();
             setupButtonContainer.PackStart(btnSetup, false, true, 0);
@@ -374,10 +282,7 @@ namespace UserInterface.Views
             progress.PackStart(loadingProgress, false, false, 0);
 
             vboxDownloadStatuses = new VBox();
-
-            // to force a button to not horizontally fill a container, the button is placed in its own container
-            HBox tempHBox = new HBox();
-
+            
             controlsContainer = new VBox();
             controlsContainer.PackStart(chkFilterOwner, false, false, 0);
             controlsContainer.PackStart(downloadButtonContainer, false, false, 0);
@@ -393,7 +298,7 @@ namespace UserInterface.Views
 
             vboxPrimary = new VBox();
             vboxPrimary.PackStart(hboxPrimary);
-            vboxPrimary.PackStart(lblDownloadStatus, false, false, 0);            
+            vboxPrimary.PackStart(lblDownloadStatus, false, false, 0);
             vboxPrimary.PackEnd(progress, false, false, 0);
             vboxPrimary.PackEnd(downloadProgressContainer, false, false, 0);
 
@@ -410,33 +315,44 @@ namespace UserInterface.Views
         /// <returns>True if the user wants to continue, false otherwise.</returns>
         public bool ShowWarning(string msg)
         {
-            // if the return value is -5, the user clicked OK. 
-            int x = Presenter.MainPresenter.ShowMsgDialog(msg, "Sanity Check Failed - High-Grade Insanity Detected!", MessageType.Warning, ButtonsType.OkCancel);            
-            return x == -5;
+            return (Owner as MainView).AskQuestion(msg) == QuestionResponseEnum.Yes;
         }
-
-        // TODO : combine functionality in these sorting methods - this is a horrible solution
-        private int SortName(TreeModel model, TreeIter a, TreeIter b)
-        {
-            return SortStrings(model, a, b, (int)columns.Name);
-        }
-
-        private int SortId(TreeModel model, TreeIter a, TreeIter b)
-        {
-            return SortStrings(model, a, b, (int)columns.ID);
-        }
-
-
-        private int SortState(TreeModel model, TreeIter a, TreeIter b)
-        {
-            return SortStrings(model, a, b, (int)columns.State);
-        }
-
 
         /// <summary>
-        /// Sorts strings from two successive rows in the ListStore. 
+        /// Comapres 2 elements from the ListStore and returns an indication of their relative values. 
         /// </summary>
-        /// <param name="model">The ListStore containing the data.</param>
+        /// <param name="model">Model of the ListStore.</param>
+        /// <param name="a">Path to the first row.</param>
+        /// <param name="b">Path to the second row.</param>
+        /// <param name="i">Column to take values from.</param>
+        /// <returns></returns>
+        private int SortData(TreeModel model, TreeIter a, TreeIter b, int i)
+        {                        
+            if (i == (int)columns.Name || i == (int)columns.ID || i == (int)columns.State)
+            {
+                return SortStrings(model, a, b, i);
+            } else if (i == (int)columns.StartTime || i == (int)columns.EndTime)
+            {
+                return SortDateStrings(model, a, b, i);
+            } else if (i == (int)columns.NumSims)
+            {
+                return SortInts(model, a, b, i);
+            } else if (i == (int)columns.Progress)
+            {
+                return SortProgress(model, a, b);
+            } else if (i == (int)columns.CpuTime)
+            {
+                return SortCpuTime(model, a, b);
+            } else
+            {
+                return SortData(model, a, b, Math.Abs(i % columnTitles.Length));
+            }
+        }
+
+        /// <summary>
+        /// Sorts strings from two successive rows in the ListStore.
+        /// </summary>
+        /// <param name="model">Model of the ListStore.</param>
         /// <param name="a">First row</param>
         /// <param name="b">Second row</param>
         /// <param name="x">Column number (0-indexed)</param>
@@ -448,57 +364,42 @@ namespace UserInterface.Views
             return String.Compare(s1, s2);
         }
 
-        private int SortNumSims(TreeModel model, TreeIter a, TreeIter b)
+        /// <summary>
+        /// Sorts 2 integers and returns an indication of their relative values.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        private int SortInts(TreeModel model, TreeIter a, TreeIter b, int n)
         {
-            long x, y;
-            int columnIndex = (int)columns.NumSims;
-            Int64.TryParse((string)model.GetValue(a, columnIndex), out x);
-            Int64.TryParse((string)model.GetValue(b, columnIndex), out y);
+            if (!Int32.TryParse((string)model.GetValue(a, n), out int x) || !Int32.TryParse((string)model.GetValue(b, n), out int y)) return -1;
+            return x.CompareTo(y);
+        }
+        
+        /// <summary>
+        /// Sorts 2 progress strings (an integer followed by a % sign).
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        private int SortProgress(TreeModel model, TreeIter a, TreeIter b)
+        {
+            int x, y;
+            int columnIndex = (int)columns.Progress;
+            // TODO : fix NullRefEx - model.GetValue is returning null sometimes
+            Int32.TryParse(((string)model.GetValue(a, columnIndex)).Replace("%", ""), out x);
+            Int32.TryParse(((string)model.GetValue(b, columnIndex)).Replace("%", ""), out y);
 
             if (x < y) return -1;
             if (x == y) return 0;
             return 1;
         }
 
-
-        private int SortProgress(TreeModel model, TreeIter a, TreeIter b)
-        {
-            int x, y;
-            int columnIndex = (int)columns.Progress;
-            Int32.TryParse(((string)model.GetValue(a, columnIndex)).Replace("%", ""), out x);
-            Int32.TryParse(((string)model.GetValue(b, columnIndex)).Replace("%", ""), out y);
-
-            if (x < y) return -1;
-            if (x == y) return 0;
-            return 1;            
-        }
-
         /// <summary>
-        /// Sorts two date strings in the ListStore.
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns>-1 if the first date is before the second. 1 otherwise.</returns>
-        private int SortStartDate(TreeModel model, TreeIter a, TreeIter b)
-        {
-            return SortDateStrings(model, a, b, (int)columns.StartTime);
-        }
-
-        /// <summary>
-        /// Sorts two date strings in the ListStore.
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns>-1 if the first date is before the second. 1 otherwise.</returns>
-        private int SortEndDate(TreeModel model, TreeIter a, TreeIter b)
-        {
-            return SortDateStrings(model, a, b, (int)columns.EndTime);
-        }
-
-        /// <summary>
-        /// Sorts two date/time strings in the ListStore.
+        /// Sorts two date/time strings in the ListStore. Unused.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="a"></param>
@@ -514,7 +415,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Sorts two CPU time TimeSpans in the ListStore.
+        /// Sorts two CPU time TimeSpans in the ListStore. Unused.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="a"></param>
@@ -540,18 +441,18 @@ namespace UserInterface.Views
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ApplyFilter(object sender, EventArgs e)
-        {            
+        {
             myJobsOnly = !myJobsOnly;
             //filterOwner.Refilter();
-            TreeIter iter;            
+            TreeIter iter;
             store.GetIterFirst(out iter);
             for (int i = 0; i < store.IterNChildren(); i++)
-            {                
+            {
                 string id = (string)store.GetValue(iter, 1);
-                string name = Presenter.GetJobName(id, !myJobsOnly);                
+                string name = Presenter.GetJobName(id, !myJobsOnly);
                 store.SetValue(iter, 0, name);
                 store.IterNext(ref iter);
-            }            
+            }
         }
 
         /// <summary>
@@ -561,9 +462,13 @@ namespace UserInterface.Views
         /// <param name="iter"></param>
         /// <returns>True if the display my jobs only checkbox is inactive, or if the job's owner is the same as the user's username. False otherwise.</returns>
         private bool FilterOwnerFunc(TreeModel model, TreeIter iter)
-        {            
-            string owner = Presenter.GetLocalJob((string)model.GetValue(iter, 1)).Owner;
-            return !myJobsOnly || owner.ToLower() == Environment.UserName.ToLower();            
+        {
+            object rawId = model.GetValue(iter, 1);
+            if (rawId is string)
+            {                
+                return !myJobsOnly || Presenter.UserOwnsJob((string)rawId);
+            }
+            return true;
         }
 
         /// <summary>
@@ -606,19 +511,18 @@ namespace UserInterface.Views
         {
             // This entire function is run on the Gtk main loop thread.
             // This may cause problems if another thread wants to modify a view at the same time,
-            // but is probably better than the alternative, which is concurrent modification of Gtk elements.
+            // but is probably better than the alternative, which is concurrent modification of live Gtk elements.
             Application.Invoke(delegate
             {
                 // remember which column is being sorted. If the results are not sorted at all, order by start time ascending
-                int sortIndex;
-                SortType order;
-                if (!sort.GetSortColumnId(out sortIndex, out order))
+
+                if (!sort.GetSortColumnId(out int sortIndex, out SortType order))
                 {
-                    sortIndex = Array.IndexOf(columnIndices, "StartTime");
+                    sortIndex = Array.IndexOf(columnTitles, "Start Time");
                     order = SortType.Ascending;
                 }
 
-                store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
+                store.Clear();
                 foreach (JobDetails job in jobs)
                 {
                     string startTimeString = job.StartTime == null ? DateTime.UtcNow.ToLocalTime().ToString() : ((DateTime)job.StartTime).ToLocalTime().ToString();
@@ -629,26 +533,36 @@ namespace UserInterface.Views
                     store.AppendValues(dispName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, timeStr);
                 }
 
+                // TODO : figure out a way to empty/reset these without re-initialising them
+
                 filterOwner = new TreeModelFilter(store, null);
                 filterOwner.VisibleFunc = FilterOwnerFunc;
                 filterOwner.Refilter();
 
+                // TODO : figure out a better way to assign these sort handlers
                 sort = new TreeModelSort(filterOwner);
-                sort.SetSortFunc((int)columns.Name, SortName);
-                sort.SetSortFunc((int)columns.ID, SortId);
-                sort.SetSortFunc((int)columns.State, SortState);
-                sort.SetSortFunc((int)columns.NumSims, SortNumSims);
-                sort.SetSortFunc((int)columns.Progress, SortProgress);
-                sort.SetSortFunc((int)columns.StartTime, SortStartDate);
-                sort.SetSortFunc((int)columns.EndTime, SortEndDate);
-                sort.SetSortFunc((int)columns.CpuTime, SortCpuTime);
+                for (int i = 0; i < columnTitles.Length; i++)
+                {
+                    int j = i; // ¯\_(ツ)_/¯
+                    sort.SetSortFunc(i, (model, a, b) => SortData(model, a, b, j));
+                }
+
+
+
+
+                sort.DefaultSortFunc = (model, a, b) => SortData(model, a, b, Array.IndexOf(columnTitles, "Start Time"));
                 sort.SetSortColumnId(sortIndex, order);
 
                 tree.Model = sort;
+
             });
-                 
+
         }
 
+        private void ClickEvent(int i)
+        {
+            Console.WriteLine(i);
+        }
         /// <summary>
         /// Tests if a string starts with a vowel.
         /// </summary>
@@ -675,7 +589,7 @@ namespace UserInterface.Views
             for (int i = 0; i < selectedRows.Count(); i++)
             {
                 tree.Model.GetIter(out iter, selectedRows[i]);
-                jobIds.Add((string)tree.Model.GetValue(iter, 1));                
+                jobIds.Add((string)tree.Model.GetValue(iter, 1));
             }
             Presenter.StopJobs(jobIds);
         }
@@ -696,15 +610,16 @@ namespace UserInterface.Views
             string label = deletingMultiple ? "Delete these jobs?" : "Delete this job?";
 
             // if user says no to the popup, no further action required
-            int response = Presenter.MainPresenter.ShowMsgDialog(msg, label, MessageType.Question, ButtonsType.YesNo);
-            if (response != -8) return;
-            
-            TreeIter iter;            
+            //int response = Presenter.MainPresenter.ShowMsgDialog(msg, label, MessageType.Question, ButtonsType.YesNo);
+            //if (response != -8) return;
+            if (!ShowWarning(msg)) return;
+            List<string> jobIds = new List<string>();
             for (int i = 0; i < selectedRows.Count(); i++)
             {
-                tree.Model.GetIter(out iter, selectedRows[i]);                               
-                Presenter.DeleteJob((string)tree.Model.GetValue(iter, 1));
+                tree.Model.GetIter(out TreeIter iter, selectedRows[i]);
+                jobIds.Add((string)tree.Model.GetValue(iter, 1));
             }
+            Presenter.DeleteJobs(jobIds);
         }
 
         /// <summary>
@@ -715,7 +630,7 @@ namespace UserInterface.Views
         private void BtnSetup_Click(object sender, EventArgs e)
         {
             Presenter.SetupCredentials();
-        }        
+        }
 
         /// <summary>
         /// Event handler for the click event on the download job button. 
@@ -724,17 +639,17 @@ namespace UserInterface.Views
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnDownload_Click(object sender, EventArgs e)
-        {            
+        {
             lblDownloadStatus.Text = "";
-            vboxDownloadStatuses = new VBox();
-            Presenter.MainPresenter.ShowMessage("", Models.Core.Simulation.ErrorLevel.Information);
+            vboxDownloadStatuses = new VBox();            
+            (Owner as MainView).ShowMessage("", Models.Core.Simulation.ErrorLevel.Information);
             TreePath[] selectedRows = tree.Selection.GetSelectedRows();
             List<string> jobIds = new List<string>();
             foreach (TreePath row in selectedRows)
             {
                 jobIds.Add(GetId(row));
             }
-            DownloadWindow dl = new DownloadWindow(Presenter, jobIds);
+            DownloadWindow dl = new DownloadWindow(Presenter, jobIds);            
         }
 
         /// <summary>
@@ -771,7 +686,7 @@ namespace UserInterface.Views
         private void btnChangeDownloadDir_Click(object sender, EventArgs e)
         {
             string dir = GetDirectory();
-            Presenter.SetDownloadDirectory(dir);            
+            Presenter.SetDownloadDirectory(dir);
         }
 
         /// <summary>
@@ -806,7 +721,7 @@ namespace UserInterface.Views
             }
             catch (Exception e)
             {
-                Presenter.ShowError(e.ToString());
+                (Owner as MainView).ShowMessage(e.ToString(), Models.Core.Simulation.ErrorLevel.Error);
             }
             f.Destroy();
             return path;

@@ -37,6 +37,7 @@ namespace ApsimNG.Cloud
         /// This directory and its contents are deleted once the download is complete.
         /// </summary>
         private string tempPath;
+
         /// <summary>
         /// Job ID.
         /// </summary>
@@ -50,17 +51,17 @@ namespace ApsimNG.Cloud
         /// <summary>
         /// Whether or not results should be combined and exported to a .csv file.
         /// </summary>
-        private bool exportCsv;
+        private bool exportToCsv;
 
         /// <summary>
         /// Whether or not the debugging files should also be downloaded.
         /// </summary>
-        private bool includeDebugs;
+        private bool saveDebugFiles;
 
         /// <summary>
         /// Whether or not the raw output files should be saved.
         /// </summary>
-        private bool keepOutputs;
+        private bool saveRawOutputFiles;
 
         /// <summary>
         /// Azure cloud storage account.
@@ -106,25 +107,25 @@ namespace ApsimNG.Cloud
         {
             numBlobsComplete = 0;
             jobId = id;
-            exportCsv = export;
-            includeDebugs = includeDebugFiles;
-            keepOutputs = keepOutputFiles;
+            exportToCsv = export;
+            saveDebugFiles = includeDebugFiles;
+            saveRawOutputFiles = keepOutputFiles;
             outputPath = path;
             rawResultsPath = outputPath + "\\" + jobName.ToString();
             tempPath = Path.GetTempPath() + "\\" + jobId;
             progressMutex = new object();
+            presenter = explorer;
             try
             {
                 // if we need to save files, create a directory under the output directory
-                if ((includeDebugs|| keepOutputs || exportCsv) && !Directory.Exists(rawResultsPath)) Directory.CreateDirectory(rawResultsPath);
+                if ((saveDebugFiles|| saveRawOutputFiles || exportToCsv) && !Directory.Exists(rawResultsPath)) Directory.CreateDirectory(rawResultsPath);
             }
             catch (Exception ex)
             {
                 presenter.ShowError(ex.ToString());
                 return;
             }
-
-            presenter = explorer;
+            
             name = jobName;
             StorageCredentials storageCredentials = StorageCredentials.FromConfiguration();
             BatchCredentials batchCredentials = BatchCredentials.FromConfiguration();
@@ -176,17 +177,18 @@ namespace ApsimNG.Cloud
                         presenter.ShowError(ex.ToString());
                         success = 3;
                     }
-                    
+                    var zips = outputs.Where(blob => Path.GetExtension(blob.Name.ToLower()) == ".zip");
+
                     Parallel.ForEach(outputs,
                                      new ParallelOptions { CancellationToken = ct, MaxDegreeOfParallelism = 8 },
                                      blob => 
                                      {
                                          bool skip = false;
                                          string extension = Path.GetExtension(blob.Name.ToLower());
-                                         string downloadPath = (extension == ".stdout" || extension == ".sum" || keepOutputs) ? Path.Combine(rawResultsPath, blob.Name) : Path.Combine(tempPath, blob.Name);
+                                         string downloadPath = (extension == ".stdout" || extension == ".sum" || saveRawOutputFiles) ? Path.Combine(rawResultsPath, blob.Name) : Path.Combine(tempPath, blob.Name);
                                          
                                          // if we don't want to download debugging files and this is a debugging file, skip it
-                                         if (!includeDebugs && (extension == ".stdout" || extension == ".sum")) skip = true;
+                                         if (!saveDebugFiles && (extension == ".stdout" || extension == ".sum")) skip = true;
 
                                          if (!skip && !downloadedOutputs.Contains(blob.Name))
                                          {
@@ -198,7 +200,8 @@ namespace ApsimNG.Cloud
                                                  downloader.ReportProgress(0, blob.Name);
                                              }
                                          }                                         
-                                     });                    
+                                     });
+                    var test2 = outputs.First(x => Path.GetExtension(x.Name.ToLower()) == ".zip");
                     if (complete) break;
                 }
                 catch (AggregateException ae)
@@ -207,7 +210,7 @@ namespace ApsimNG.Cloud
                 }
             }
             // todo : remember to set success appropriately after moving the results into the data store
-            if (exportCsv)
+            if (exportToCsv)
             {                
                 success = SummariseResults(true);
             }
@@ -256,7 +259,7 @@ namespace ApsimNG.Cloud
             {
                 bool isClassic = false;
                 string fileSpec = ".db";
-                string resultPath = keepOutputs ? rawResultsPath : tempPath;
+                string resultPath = saveRawOutputFiles ? rawResultsPath : tempPath;
                 foreach (string f in Directory.GetFiles(resultPath))
                 {
                     if (Path.GetExtension(f) == ".out")
@@ -331,7 +334,8 @@ namespace ApsimNG.Cloud
                         } else // results are from apsim X
                         {
                             count++;
-                            file.Write(ReadSqliteDB(currentFile, printHeader, delim));
+                            var x = ReadSqliteDB(currentFile, printHeader, delim);
+                            file.Write(x);
                         }
                         printHeader = false;
                     }
@@ -512,7 +516,7 @@ namespace ApsimNG.Cloud
                 foreach (var blob in blobs)
                 {
                     string extension = Path.GetExtension(blob.Uri.LocalPath.ToLower());
-                    if (includeDebugs || !(extension == ".stdout" || extension == ".sum")) count++;
+                    if (saveDebugFiles || !(extension == ".stdout" || extension == ".sum")) count++;
                 }
                 return count;
             }

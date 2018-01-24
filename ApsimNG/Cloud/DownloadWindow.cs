@@ -25,7 +25,7 @@ namespace ApsimNG.Cloud
 
         private List<string> jobs;
 
-        private ICloudJobPresenter presenter;
+        private UserInterface.Interfaces.ICloudJobPresenter presenter;
         /// <summary>
         /// Default constructor. Unused.
         /// </summary>
@@ -38,7 +38,7 @@ namespace ApsimNG.Cloud
         /// The only constructor used (at present).
         /// </summary>
         /// <param name="jobIds">Ids of the jobs to be downloaded.</param>
-        public DownloadWindow(ICloudJobPresenter parent, List<string> jobIds) : base("Download cloud jobs")
+        public DownloadWindow(UserInterface.Interfaces.ICloudJobPresenter parent, List<string> jobIds) : base("Download cloud jobs")
         {
             presenter = parent;
             jobs = jobIds;
