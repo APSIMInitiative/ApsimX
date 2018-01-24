@@ -371,6 +371,9 @@ namespace Models.PMF.Organs
         {
             get
             {
+                if (PlantZone == null)
+                    return 0;
+
                 double MeanWTF = 0;
 
                 double liveWt = Live.Wt;
