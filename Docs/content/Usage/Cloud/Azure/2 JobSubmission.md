@@ -1,5 +1,5 @@
 ---
-title: "2. Azure Job Submission"
+title: "User's Guide"
 draft: false
 ---
 
@@ -13,8 +13,8 @@ This is a name or description of the job. It does not need to be unique. The def
 **2. Number of CPU Cores**
 
 This option specifies the maximum number of CPU cores (and, therefore, Azure VMs) that your job should use. The increments are equal to the number of cores per VM. 
-For example, if, under your licence, each VM has 16 cores, then the options available in this option will be 16, 32, 48, etc.
-For smaller jobs it may be faster to use less cores, as there is an overhead associated with each VM starting and finishing. 
+For example, if, under your licence, each VM has 16 cores, then the options available here will be 16, 32, 48, etc. Selecting 48 cores means the job would (in this case) use 3 VMs.
+For smaller jobs it may be faster and cheaper to use less cores, as there is an overhead associated with each VM starting and finishing. 
 
 
 **3. Save model files**
@@ -22,12 +22,12 @@ For smaller jobs it may be faster to use less cores, as there is an overhead ass
 Before your job is uploaded to Azure, some model files are generated. Normally these model files are temporary, and are deleted after they are uploaded. If this option is selected however, the model files will be saved to the specified directory.
 
 
-**4. Use APSIM NG from a directory**
+**4. Use APSIM Next Generation from a directory**
 
 This is one of the two ways to specify the version of APSIM to be run on Azure. It allows you to specify a directory containing APSIM to be uploaded (e.g. C:\Hobbies\ApsimX).
 
 
-**5. Use a zipped version of APSIM NG**
+**5. Use a zipped version of APSIM Next Generation**
 
 This is the second way to specify the version of APSIM to be run on Azure. It allows you to specify a zip file containing APSIM to be uploaded (e.g. C:\Hobbies\ApsimX.zip).
 

@@ -12,30 +12,39 @@ namespace UserInterface.Presenters
 {
     public class FactorControlPresenter : IPresenter
     {
+        public ExplorerPresenter explorerPresenter { get; set; }
+        public static int DEFAULT_MAX_SIMS = 50;
 
         private Experiment model;
         private FactorControlView view;
-        public ExplorerPresenter explorerPresenter;
         private List<string> headers;
         private List<Tuple<string, List<string>, bool>> simulations;
+        private int maxSimsToDisplay;
 
         public void Attach(object experiment, object viewer, ExplorerPresenter explorerPresenter)
         {
             model = (Experiment)experiment;
             view = (FactorControlView)viewer;
             view.Presenter = this;
+            this.explorerPresenter = explorerPresenter;            
+            maxSimsToDisplay = DEFAULT_MAX_SIMS;
 
-            this.explorerPresenter = explorerPresenter;
             var simNames = model.GetSimulationNames().ToArray();
-
             var allCombinations = model.AllCombinations();
             headers = GetHeaderNames(allCombinations);
-            simulations = GetTableData(allCombinations);
-            var eView = explorerPresenter.GetView() as ExplorerView;
-            
+            simulations = GetTableData(allCombinations);               
             
             view.Initialise(headers);
-            view.Populate(simulations);
+            UpdateView();
+        }
+
+
+        public void Detach()
+        {
+            headers = null;
+            simulations = null;
+            view.Detach();
+            view = null;
         }
 
         /// <summary>
@@ -54,18 +63,55 @@ namespace UserInterface.Presenters
                     simulations[index] = new Tuple<string, List<string>, bool>(name, data, flag);
                 }
             }
-            view.Populate(simulations);
+            UpdateView();
             model.DisabledSimNames = GetDisabledSimNames();
         }
 
-        public void Detach()
+        /// <summary>
+        /// Sets the maximum number of simulations (rows in the view's table) allowed to be displayed at once, then updates the view.
+        /// </summary>
+        /// <param name="str">Max number of simulations allowed to be displayed.</param>
+        public void SetMaxNumSims(string str)
         {
-            headers = null;
-            simulations = null;
-            view.Detach();
-            view = null;            
+            if (str == null || str == "")
+            {
+                maxSimsToDisplay = DEFAULT_MAX_SIMS;
+                UpdateView();
+            }
+            else if (Int32.TryParse(str, out int n))
+            {
+                if (n > 1000 && explorerPresenter.MainPresenter.AskQuestion("Displaying more than 1000 rows of data is not recommended! Are you sure you wish to do this?") != QuestionResponseEnum.Yes)
+                {                    
+                    return; // if user has changed their mind (because of the warning) then do nothing
+                } else if (n < 0)
+                {
+                    explorerPresenter.MainPresenter.ShowMessage("Max number of simulations must be a positive number.", Simulation.ErrorLevel.Error); // don't allow users to specify a negative number (0 is acceptable)                
+                    return;
+                }
+                maxSimsToDisplay = n;
+                simulations = GetTableData(model.AllCombinations());
+                UpdateView();
+            } else
+            {
+                explorerPresenter.MainPresenter.ShowMessage("Unable to parse max number of simulations " + str + " to int", Simulation.ErrorLevel.Error);
+            }
         }
 
+        /// <summary>
+        /// Updates the view's table of simulations.
+        /// </summary>
+        public void UpdateView()
+        {
+            if (maxSimsToDisplay < 0) maxSimsToDisplay = DEFAULT_MAX_SIMS; // doesn't hurt to double check
+            view.Populate(simulations.GetRange(0, Math.Min(simulations.Count, maxSimsToDisplay)));
+            view.NumSims = model.AllCombinations().Count.ToString();
+        }
+        
+        /// <summary>
+        /// Gets the name of a simulation (list of factors levels).
+        /// </summary>
+        /// <param name="factors"></param>
+        /// <returns></returns>
         private string GetName(List<FactorValue> factors)
         {
             string str = "";
@@ -98,8 +144,10 @@ namespace UserInterface.Presenters
         private List<Tuple<string, List<string>, bool>> GetTableData(List<List<FactorValue>> allSims)
         {
             List<Tuple<string, List<string>, bool>> sims = new List<Tuple<string, List<string>, bool>>();
+            int i = 0;
             foreach (List<FactorValue> factors in model.AllCombinations())
             {
+                if (i > maxSimsToDisplay) break;
                 string name = "";
 
                 // pack all factor levels for the simulation into a list
@@ -116,6 +164,7 @@ namespace UserInterface.Presenters
                 }
                 bool flag = model.DisabledSimNames.IndexOf(name) < 0;                
                 sims.Add(new Tuple<string, List<string>, bool>(name, levels, flag));
+                i++;
             }
             return sims;
         }
@@ -214,8 +263,8 @@ namespace UserInterface.Presenters
         public void ImportCsv(string path = "")
         {
             explorerPresenter.MainPresenter.ShowMessage("", Simulation.ErrorLevel.Error);
-            
-            if (path == "") path = ApsimNG.Properties.Settings.Default["OutputDir"] + "\\factors.csv";
+
+            if (path == null || path == "") return;
             try
             {
                 using (StreamReader file = new StreamReader(path))
@@ -244,7 +293,7 @@ namespace UserInterface.Presenters
                         else throw new Exception("Too few elements in row " + i + ".");
                     }
                 }
-                view.Populate(simulations);
+                UpdateView();
                 model.DisabledSimNames = GetDisabledSimNames();
                 explorerPresenter.MainPresenter.ShowMessage("Successfully imported data from " + path, Simulation.ErrorLevel.Information);
             }

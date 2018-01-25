@@ -168,7 +168,7 @@ namespace UserInterface.Views
         /// Indices of the column headers. If columns are added or removed, change this.
         /// Name, ID, State, NumSims, Progress, StartTime, EndTime
         /// </summary>
-        private readonly string[] columnTitles = { "Name/Description", "Azure ID", "State", "#Sims", "Progress", "Start Time", "End Time", "CPU Time" };
+        private readonly string[] columnTitles = { "Name/Description", "Job ID", "State", "#Sims", "Progress", "Start Time", "End Time", "CPU Time" };
         private enum columns { Name, ID, State, NumSims, Progress, StartTime, EndTime, CpuTime };
 
         private const string TIMESPAN_FORMAT = @"dddd\d\ hh\h\ mm\m\ ss\s";
@@ -225,7 +225,7 @@ namespace UserInterface.Views
 
             // the scrolled window goes into this frame to distinguish the job view 
             // from the controls beside it
-            Frame treeContainer = new Frame("Azure Jobs");
+            Frame treeContainer = new Frame("Cloud Jobs");
             treeContainer.Add(scroll);
 
             chkFilterOwner = new CheckButton("Display my jobs only");
@@ -313,7 +313,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="msg"></param>
         /// <returns>True if the user wants to continue, false otherwise.</returns>
-        public bool ShowWarning(string msg)
+        public bool AskQuestion(string msg)
         {
             return (Owner as MainView).AskQuestion(msg) == QuestionResponseEnum.Yes;
         }
@@ -612,7 +612,7 @@ namespace UserInterface.Views
             // if user says no to the popup, no further action required
             //int response = Presenter.MainPresenter.ShowMsgDialog(msg, label, MessageType.Question, ButtonsType.YesNo);
             //if (response != -8) return;
-            if (!ShowWarning(msg)) return;
+            if (!AskQuestion(msg)) return;
             List<string> jobIds = new List<string>();
             for (int i = 0; i < selectedRows.Count(); i++)
             {

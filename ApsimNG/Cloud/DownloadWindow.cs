@@ -53,9 +53,11 @@ namespace ApsimNG.Cloud
             vboxPrimary = new VBox();
             HBox downloadDirectoryContainer = new HBox();
 
-            includeDebugFiles = new CheckButton("Include Debugging Files");
+            includeDebugFiles = new CheckButton("Include Debugging Files");            
             keepRawOutputs = new CheckButton("Keep raw output files");
-            generateCsv = new CheckButton("Export results to .csv");
+            keepRawOutputs.Active = true;
+            generateCsv = new CheckButton("Collate Results");
+            generateCsv.Active = true;
 
             btnDownload = new Button("Download");
             btnDownload.Clicked += Download;

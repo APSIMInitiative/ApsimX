@@ -133,6 +133,9 @@ namespace ApsimNG.Cloud
                             case "BatchKey":
                                 batchKeyInput.Text = value;
                                 break;
+                            default:
+                                 // TODO : show error message, because if flow reaches here, the file is not a valid Azure Licence file
+                                break;                                
                         }
                     }
                 }

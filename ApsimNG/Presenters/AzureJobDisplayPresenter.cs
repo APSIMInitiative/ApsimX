@@ -444,7 +444,7 @@ namespace UserInterface.Presenters
         public void DownloadResults(List<string> jobsToDownload, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles)
         {
             // TODO : make jobs download serially
-            if (currentlyDownloading.Count() > 0)
+            if (currentlyDownloading.Count > 0)
             {
                 ShowError("Unable to start a new batch of downloads - one or more downloads are already ongoing.");
                 return;
@@ -478,12 +478,13 @@ namespace UserInterface.Presenters
                 view.DownloadProgress = 0;
 
                 // if output directory already exists and warning has not already been given, display a warning
-                if (Directory.Exists((string)Settings.Default["OutputDir"] + "\\" + jobName) && !ignoreWarning)
+                if (Directory.Exists((string)Settings.Default["OutputDir"] + "\\" + jobName) && !ignoreWarning && saveToCsv)
                 {
-                    if (!view.ShowWarning("Files detected in output directory. Results will be generated from ALL files in this directory. Are you certain you wish to continue?"))
+                    if (!view.AskQuestion("Files detected in output directory. Results will be collated from ALL files in this directory. Are you certain you wish to continue?"))
                     {
                         // if user has chosen to cancel the download
                         view.HideDownloadProgressBar();
+                        currentlyDownloading.Remove(jobId);
                         return;
                     }
                     else ignoreWarning = true;
@@ -531,6 +532,11 @@ namespace UserInterface.Presenters
         public void ShowMessage(string msg)
         {
             MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Information);
+        }
+
+        public void ShowWarning(string msg)
+        {
+            MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Warning);
         }
 
         /// <summary>
@@ -638,6 +644,9 @@ namespace UserInterface.Presenters
                 case 3:
                     msg += "Unable to generate a temporary directory.";
                     break;
+                case 4:
+                    msg += "Error getting report.";
+                    break;
                 default:
                     msg += "Download unsuccessful.";
                     break;
@@ -673,7 +682,7 @@ namespace UserInterface.Presenters
             bool stopMultiple = jobIds.Count > 1;
             string msg = "Are you sure you want to stop " + (stopMultiple ? "these " + jobIds.Count + " jobs?" : "this job?") + " There is no way to resume their execution!";
             string label = stopMultiple ? "Stop these jobs?" : "Stop this job?";
-            if (!view.ShowWarning(msg)) return;
+            if (!view.AskQuestion(msg)) return;
             
             foreach (string id in jobIds)
             {
@@ -709,7 +718,7 @@ namespace UserInterface.Presenters
         {
             // cancel the fetch jobs worker
             FetchJobs.CancelAsync();
-            while (FetchJobs.IsBusy);
+            //while (FetchJobs.IsBusy);
             view.HideLoadingProgressBar();
 
             foreach (string id in jobIds)

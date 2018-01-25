@@ -88,6 +88,16 @@ namespace UserInterface.Views
         private Label lblNumSims;
 
         /// <summary>
+        /// Textbox to allow the user to input a maximum number of simulations to display.
+        /// </summary>
+        private Entry entryMaxSims;
+
+        /// <summary>
+        /// Button to allow the user to select a maximum number of simulations to display.
+        /// </summary>
+        private Button btnMaxSims;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="owner"></param>
@@ -173,10 +183,21 @@ namespace UserInterface.Views
 
             Frame analysis = new Frame("Sensitivity Analysis");
             analysis.Add(sensitivityContainer);
-
+            
+            entryMaxSims = new Entry(Presenters.FactorControlPresenter.DEFAULT_MAX_SIMS.ToString());
+            btnMaxSims = new Button("Apply");
+            btnMaxSims.Clicked += BtnMaxSims_Click;
+            
+            HBox maxSimsContainer = new HBox();
+            maxSimsContainer.PackStart(entryMaxSims, true, true, 0);
+            maxSimsContainer.PackStart(btnMaxSims, false, false, 0);
+            
             lblNumSims = new Label { Xalign = 0f };
 
             VBox controlsContainer = new VBox();
+            controlsContainer.PackStart(new Label("Max number of simulations to display:"), false, false, 0);
+            controlsContainer.PackStart(maxSimsContainer, false, false, 0);
+            controlsContainer.PackStart(new Label(""), false, false, 0);
             controlsContainer.PackStart(enableButtonContainer, false, false, 0);
             controlsContainer.PackStart(disableButtonContainer, false, false, 0);
             controlsContainer.PackStart(csvExportButtonContainer, false, false, 0);
@@ -193,6 +214,9 @@ namespace UserInterface.Views
             //Frame test = new Frame("Factor Control");
             //test.Add(sw);
 
+            AccelGroup agr = new AccelGroup();
+            entryMaxSims.AddAccelerator("activate", agr, new AccelKey(Gdk.Key.Return, Gdk.ModifierType.ControlMask, AccelFlags.Visible));
+            entryMaxSims.Activated += BtnMaxSims_Click;
             Application.Invoke(delegate
             {                
                 primaryContainer.PackStart(sw, true, true, 0);
@@ -222,8 +246,7 @@ namespace UserInterface.Views
                     }
                     data.Add(sim.Item3.ToString());
                     store.AppendValues(data.ToArray());                                        
-                }
-                NumSims = simulations.Count.ToString();
+                }                
             });            
         }
 
@@ -264,6 +287,11 @@ namespace UserInterface.Views
                 cells[index].Width = col.Width - 4;
                 cells[index].Ellipsize = EllipsizeMode.End;
             });
+        }
+
+        private void BtnMaxSims_Click(object sender, EventArgs e)
+        {
+            Presenter.SetMaxNumSims(entryMaxSims.Text);
         }
     }
 }

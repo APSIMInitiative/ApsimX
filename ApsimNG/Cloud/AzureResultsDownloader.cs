@@ -9,6 +9,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.Azure.Batch;
 using Microsoft.Azure.Batch.Common;
 using System.IO;
+using System.IO.Compression;
 using System.ComponentModel;
 using UserInterface.Presenters;
 using System.Text.RegularExpressions;
@@ -103,6 +104,31 @@ namespace ApsimNG.Cloud
         /// </summary>
         private object progressMutex;
 
+        /// <summary>
+        /// Array of all valid result file formats.
+        /// </summary>
+        private readonly string[] resultFileFormats = { ".db", ".out" };
+
+        /// <summary>
+        /// Array of all valid debug file formats.
+        /// </summary>
+        private readonly string[] debugFileFormats = { ".stdout", ".sum" };
+
+        /// <summary>
+        /// Array of all valid zip file formats.
+        /// </summary>
+        private readonly string[] zipFileFormats = { ".zip" };
+
+        /// <summary>
+        /// Constructor. Requires Azure credentials to already be set in ApsimNG.Properties.Settings. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="jobName"></param>
+        /// <param name="path"></param>
+        /// <param name="explorer"></param>
+        /// <param name="export"></param>
+        /// <param name="includeDebugFiles"></param>
+        /// <param name="keepOutputFiles"></param>
         public AzureResultsDownloader(Guid id, string jobName, string path, AzureJobDisplayPresenter explorer, bool export, bool includeDebugFiles, bool keepOutputFiles)
         {
             numBlobsComplete = 0;
@@ -111,7 +137,7 @@ namespace ApsimNG.Cloud
             saveDebugFiles = includeDebugFiles;
             saveRawOutputFiles = keepOutputFiles;
             outputPath = path;
-            rawResultsPath = outputPath + "\\" + jobName.ToString();
+            rawResultsPath = outputPath + "\\" + jobName.ToString() + "_Results";
             tempPath = Path.GetTempPath() + "\\" + jobId;
             progressMutex = new object();
             presenter = explorer;
@@ -148,8 +174,16 @@ namespace ApsimNG.Cloud
             downloader.WorkerReportsProgress = true;
             downloader.DoWork += Downloader_DoWork;
             downloader.ProgressChanged += DownloadProgressChanged;
-            if (async) downloader.RunWorkerAsync();
-            else Downloader_DoWork(null, null);
+
+            // if the job is not complete, the worker will spinlock until the worker must run asynchronously - it spinlocks until the job is complete
+            if (async || !IsJobComplete())
+            {                
+                downloader.RunWorkerAsync();
+            } else
+            {                
+                Downloader_DoWork(null, null);
+            }
+            
         }
 
         private void Downloader_DoWork(object sender, DoWorkEventArgs e)
@@ -159,77 +193,119 @@ namespace ApsimNG.Cloud
             var outputHashLock = new object();
             HashSet<string> downloadedOutputs = GetDownloadedOutputFiles();
             int success = 0;
-            while (true)
+            while (!IsJobComplete())
             {
+                Thread.Sleep(10000);
+            }
+
+            try
+            {
+                if (downloader.CancellationPending || ct.IsCancellationRequested) return;
+
                 try
                 {
-                    if (downloader.CancellationPending || ct.IsCancellationRequested) return;
-                    // TODO : evaluate efficiency of this method
-                    bool complete = IsJobComplete();
-                    var outputs = ListJobOutputsFromStorage();
-                    
-                    try
+                    if (Directory.Exists(tempPath)) Directory.Delete(tempPath, true);
+                    Directory.CreateDirectory(tempPath);
+                }
+                catch (Exception ex)
+                {
+                    presenter.ShowError(ex.ToString());
+                    success = 3;
+                }
+
+                // might be worth including a 'download all' flag (for testing purposes?), where everything in outputs gets downloaded
+                List<CloudBlockBlob> outputs = ListJobOutputsFromStorage().ToList();
+                if (outputs == null || outputs.Count < 1)
+                {
+                    presenter.ShowError("No files in output container.");
+                    return;
+                }
+                if (saveRawOutputFiles || exportToCsv)
+                {
+                    List<CloudBlockBlob> zipBlobs = outputs.Where(blob => zipFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
+                    if (zipBlobs != null && zipBlobs.Count > 0) // if the result file are nicely zipped up for us
                     {
-                        if (Directory.Exists(tempPath)) Directory.Delete(tempPath, true);
-                        Directory.CreateDirectory(tempPath);
-                    } catch (Exception ex)
+                        List<string> localZipFiles = Download(zipBlobs, rawResultsPath, ref ct);
+                        foreach (string archive in localZipFiles)
+                        {                            
+                            ExtractZipArchive(archive, rawResultsPath);
+                            while (File.Exists(archive))
+                            {
+                                try
+                                {
+                                    File.Delete(archive);
+                                } catch
+                                {
+
+                                }
+                            }
+                            
+                        }
+                    } else
                     {
-                        presenter.ShowError(ex.ToString());
-                        success = 3;
+                        // download each individual result file
+                        List<CloudBlockBlob> resultBlobs = outputs.Where(blob => resultFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
+                        Download(resultBlobs, rawResultsPath, ref ct);
                     }
-                    var zips = outputs.Where(blob => Path.GetExtension(blob.Name.ToLower()) == ".zip");
 
-                    Parallel.ForEach(outputs,
-                                     new ParallelOptions { CancellationToken = ct, MaxDegreeOfParallelism = 8 },
-                                     blob => 
-                                     {
-                                         bool skip = false;
-                                         string extension = Path.GetExtension(blob.Name.ToLower());
-                                         string downloadPath = (extension == ".stdout" || extension == ".sum" || saveRawOutputFiles) ? Path.Combine(rawResultsPath, blob.Name) : Path.Combine(tempPath, blob.Name);
-                                         
-                                         // if we don't want to download debugging files and this is a debugging file, skip it
-                                         if (!saveDebugFiles && (extension == ".stdout" || extension == ".sum")) skip = true;
+                    if (exportToCsv)
+                    {
+                        success = SummariseResults(true);
+                    }
 
-                                         if (!skip && !downloadedOutputs.Contains(blob.Name))
-                                         {
-                                             //blob.DownloadToFile(Path.Combine(rawResultsPath, blob.Name), FileMode.Create);
-                                             blob.DownloadToFile(downloadPath, FileMode.Create);
-                                             lock (outputHashLock)
-                                             {
-                                                 downloadedOutputs.Add(blob.Name);
-                                                 downloader.ReportProgress(0, blob.Name);
-                                             }
-                                         }                                         
-                                     });
-                    var test2 = outputs.First(x => Path.GetExtension(x.Name.ToLower()) == ".zip");
-                    if (complete) break;
+                    if (!saveRawOutputFiles)
+                    {
+                        foreach (string resultFile in Directory.EnumerateFiles(rawResultsPath).Where(file => resultFileFormats.Contains(Path.GetExtension(file))))
+                        {
+                            try
+                            {
+                                File.Delete(resultFile);
+                            } catch (Exception ex)
+                            {
+                                presenter.ShowError("Unable to delete " + resultFile + ": " + ex.ToString());
+                            }
+                        }
+                    }
                 }
-                catch (AggregateException ae)
+
+                if (saveDebugFiles)
                 {
-                    presenter.ShowError(ae.InnerException.ToString());
+                    List<CloudBlockBlob> debugBlobs = outputs.Where(blob => debugFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
+                    Download(debugBlobs, rawResultsPath, ref ct);
                 }
             }
-            // todo : remember to set success appropriately after moving the results into the data store
-            if (exportToCsv)
-            {                
-                success = SummariseResults(true);
-            }
-
-            while (Directory.Exists(tempPath))
+            catch (AggregateException ae)
             {
-                try
-                {
-                    Directory.Delete(tempPath, true);
-                }
-                catch
-                {
-                    Thread.Sleep(100);
-                }
+                presenter.ShowError(ae.InnerException.ToString());
             }
             
             
             presenter.DownloadComplete(jobId);
             presenter.DisplayFinishedDownloadStatus(name, success, outputPath, DateTime.Now);
+        }
+
+        /// <summary>
+        /// Downloads each given blob from Azure.
+        /// </summary>
+        /// <param name="blobs">List of Azure blobs to download.</param>
+        /// <param name="downloadPath">Path to download the blobs to.</param>
+        private List<string> Download(List<CloudBlockBlob> blobs, string downloadPath, ref CancellationToken ct)
+        {
+            object outputHashLock = new object();
+            List<string> zipFiles = new List<string>();
+            Parallel.ForEach(blobs,
+                             new ParallelOptions { CancellationToken = ct, MaxDegreeOfParallelism = 8 },
+                             blob =>
+                             {
+                                 string filename = Path.Combine(downloadPath, blob.Name);
+                                 blob.DownloadToFile(filename, FileMode.Create);
+                                 lock (outputHashLock)
+                                 {
+                                     downloader.ReportProgress(0, blob.Name);
+                                     zipFiles.Add(filename);
+                                 }
+                             });
+            return zipFiles;
         }
 
         /// <summary>
@@ -258,9 +334,8 @@ namespace ApsimNG.Cloud
             try
             {
                 bool isClassic = false;
-                string fileSpec = ".db";
-                string resultPath = saveRawOutputFiles ? rawResultsPath : tempPath;
-                foreach (string f in Directory.GetFiles(resultPath))
+                string fileSpec = ".db";                
+                foreach (string f in Directory.GetFiles(rawResultsPath))
                 {
                     if (Path.GetExtension(f) == ".out")
                     {
@@ -270,7 +345,7 @@ namespace ApsimNG.Cloud
                     }
                 }
 
-                string[] resultFiles = Directory.GetFiles(resultPath, "*" + fileSpec);
+                string[] resultFiles = Directory.GetFiles(rawResultsPath, "*" + fileSpec);
 
                 // if there are no results (possibly a bad simulation?), no need to create an empty csv file.
                 if (resultFiles.Count() == 0) return 1;
@@ -283,7 +358,7 @@ namespace ApsimNG.Cloud
                 string sep = "";
 
                 StringBuilder output = new StringBuilder();
-                string csvPath = outputPath + "\\" + name + "\\" + name + ".csv";
+                string csvPath = rawResultsPath + "\\" + name + ".csv";
                 Regex rx_name = detectCommonChars(resultFiles);
                 using (StreamWriter file = new StreamWriter(csvPath, false))
                 {
@@ -335,6 +410,7 @@ namespace ApsimNG.Cloud
                         {
                             count++;
                             var x = ReadSqliteDB(currentFile, printHeader, delim);
+                            if (x == "") return 4;
                             file.Write(x);
                         }
                         printHeader = false;
@@ -410,7 +486,7 @@ namespace ApsimNG.Cloud
                 return output.ToString();
             } catch (Exception e)
             {
-                Console.WriteLine("Error getting report: " + e.ToString());
+                presenter.ShowError("Error getting report: " + e.ToString());
             }
             return "";   
         }
@@ -564,6 +640,35 @@ namespace ApsimNG.Cloud
         private void ReportFinished(bool successful)
         {
 
+        }
+
+        /// <summary>
+        /// By default, ZipFile.ExtractToDirectory will throw an exception if one of its files already exist in the output directory.
+        /// This function acts as a replacement - it extracts a zip file to a directory, but silently overwrites any conflicting files.
+        /// </summary>
+        /// <param name="archive">Zip archive to be extracted.</param>
+        /// <param name="path">Directory to extract the files to.</param>
+        private void ExtractZipArchive(string archive, string path)
+        {            
+            foreach (ZipArchiveEntry file in ZipFile.OpenRead(archive).Entries)
+            {                
+                try
+                {
+                    string filePath = Path.Combine(path, file.FullName);
+                    string dir = Path.GetDirectoryName(filePath);
+
+                    if (!Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
+
+                    if (file.Name != "")
+                        file.ExtractToFile(filePath, true);
+
+                    file.ExtractToFile(filePath, true);
+                } catch (Exception e)
+                {
+                    presenter.ShowError(e.ToString());
+                }
+            }
         }
     }
 }

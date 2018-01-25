@@ -811,7 +811,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">Event Arguments</param>
-        private void OnViewCloudJobs(object sender, EventArgs e)
+        public void OnViewCloudJobs(object sender, EventArgs e)
         {
             bool onLeftTabControl = view.IsControlOnLeft(sender);            
             // Clear the message window

@@ -294,22 +294,14 @@
             {
                 ShowError(ex.ToString());
             }
-            
-            try
-            {
-                var taskList = batchClient.JobOperations.ListTasks(jp.JobId.ToString()).ToArray().Select(task => task.Id);
-
-                // this task will run after the job manager finishes (ie after everything else finishes)
-                CloudTask completeTask = new CloudTask("jobcomplete-" + jp.JobId.ToString(), "cmd.exe /c echo JobDone");
-                completeTask.DependsOn = TaskDependencies.OnIds(taskList);
-
-                //batchClient.JobOperations.AddTask(jp.JobId.ToString(), completeTask);
-            } catch (Exception ex)
-            {
-                ShowError(ex.ToString());
-            }
 
             view.Status = "Job Successfully submitted";
+
+            // in theory, instantiating an AzureResultsDownloader here and passing in this job's ID and name, then calling its DownloadResults() method would allow 
+            // for automatic job downloading as soon as the job is finished. The trouble is it needs an AzureJobDisplayPresenter (for progress bar updating, etc).
+
+            // explorerPresenter.MainPresenter.ShowMessage("Job Successfully submitted", Simulation.ErrorLevel.Information);            
+            // AzureResultsDownloader dl = new AzureResultsDownloader(jp.JobId, jp.JobDisplayName, jp.OutputDir, this.explorerPresenter, true, false, false);
         }
 
         /// <summary>
@@ -501,10 +493,9 @@
             var blobClient = storageAccount.CreateCloudBlobClient();
             var containerRef = blobClient.GetContainerReference(containerName);
             containerRef.CreateIfNotExists();
-
-            var md5 = GetFileMd5(filePath);
             var blobRef = containerRef.GetBlockBlobReference(Path.GetFileName(filePath));
 
+            var md5 = GetFileMd5(filePath);
             // if blob exists and md5 matches, there is no need to upload the file
             if (blobRef.Exists() && string.Equals(md5, blobRef.Properties.ContentMD5, StringComparison.InvariantCultureIgnoreCase)) return;
             blobRef.Properties.ContentMD5 = md5;
