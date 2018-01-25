@@ -7,7 +7,7 @@ namespace UnitTests
 {
     using APSIM.Shared.Utilities;
     using Models;
-    using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Graph;
     using Models.Soils;
     using NUnit.Framework;
@@ -40,9 +40,9 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
+            Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, null));
 
-            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"" + Converter.LastestVersion + "\">" +
                              "<Graph>" +
                                "<Series>" +
                                  "<TableName>HarvestReport</TableName>" +
@@ -67,9 +67,9 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
+            Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, null));
 
-            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"" + Converter.LastestVersion + "\">" +
                              "<Cultivar>" +
                                  "<Alias>" +
                                    "<Name>Cultivar1</Name>" +
@@ -124,9 +124,9 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
+            Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, null));
 
-            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"" + Converter.LastestVersion + "\">" +
                              "<Manager>" +
                              "<Code>"+
                              "<![CDATA[using System;\r\n" +
@@ -178,7 +178,7 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToVersion(doc.DocumentElement, null, 10));
+            Assert.IsTrue(Converter.ConvertToVersion(doc.DocumentElement, null, 10));
 
             string toXML = "<Simulation Version=\"10\">" +
                              "<GenericOrgan>" +
@@ -263,9 +263,9 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
+            Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, null));
 
-            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"" + Converter.LastestVersion + "\">" +
                              "<Manager>" +
                                "<Code><![CDATA[using System;\r\n" +
                                "using Models.Core;\r\n" +
@@ -335,7 +335,7 @@ namespace UnitTests
 
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(fromXML);
-                Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, fileName));
+                Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, fileName));
                 DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
                 string[] tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name");
                 Assert.AreEqual(tableNames, new string[] { "_Simulations", "_Messages", "_Units", "Report" } );

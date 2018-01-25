@@ -135,10 +135,10 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
-    <Compile Include="Core\APSIMFileConverterUtilities.cs" />
-    <Compile Include="Core\APSIMFileConverter.cs" />
-    <Compile Include="Core\APSIMFileReader.cs" />
-    <Compile Include="Core\APSIMFileWriter.cs" />
+    <Compile Include="Core\ApsimFile\ConverterUtilities.cs" />
+    <Compile Include="Core\ApsimFile\Converter.cs" />
+    <Compile Include="Core\ApsimFile\Reader.cs" />
+    <Compile Include="Core\ApsimFile\Writer.cs" />
     <Compile Include="Core\Attributes\BriefLabelAttribute.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Core\Attributes\ScopedModelAttribute.cs" />
@@ -147,7 +147,7 @@
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\EventArgs\LoadedEventArgs.cs" />
     <Compile Include="Core\Events.cs" />
-    <Compile Include="Core\FileFormat.cs" />
+    <Compile Include="Core\ApsimFile\Format.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Core\IStorageWriter.cs" />
