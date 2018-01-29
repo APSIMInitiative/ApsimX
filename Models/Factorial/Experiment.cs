@@ -116,7 +116,7 @@
         /// <param name="factorValues">The factor value instances</param>
         /// <param name="names">The return list of factor names</param>
         /// <param name="values">The return list of factor values</param>
-        private static void GetFactorNamesAndValues(List<FactorValue> factorValues, List<string> names, List<string> values)
+        public static void GetFactorNamesAndValues(List<FactorValue> factorValues, List<string> names, List<string> values)
         {
             foreach (FactorValue factorValue in factorValues)
             {

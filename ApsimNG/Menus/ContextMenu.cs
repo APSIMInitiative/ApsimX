@@ -435,11 +435,18 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         public void RunOnCloud(object sender, EventArgs e)
         {
-            object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
-            explorerPresenter.HideRightHandPanel();
-            explorerPresenter.ShowInRightHandPanel(model,
-                                                   "UserInterface.Views.NewAzureJobView",
-                                                   "UserInterface.Presenters.NewAzureJobPresenter");
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowInRightHandPanel(model,
+                                                       "UserInterface.Views.NewAzureJobView",
+                                                       "UserInterface.Presenters.NewAzureJobPresenter");
+            } else
+            {
+                explorerPresenter.MainPresenter.ShowMessage("Microsoft Azure functionality is currently only available under Windows.", Simulation.ErrorLevel.Error);
+            }
+            
         }
         
         /// <summary>

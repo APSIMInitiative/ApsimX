@@ -123,8 +123,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             FetchJobs.CancelAsync();
-            view.RemoveEventHandlers();
-            view.MainWidget.Destroy();
+            view.Detach();
         }
 
         public void UpdateDownloadProgress(double progress)
@@ -200,7 +199,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                view.UpdateTreeView(jobList);
+                view.UpdateJobTable(jobList);
             }
             catch (NullReferenceException)
             {                
@@ -523,7 +522,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Displays an error message.
         /// </summary>
-        /// <param name="msg"></param>
+        /// <param name="msg">Message to be displayed.</param>
         public void ShowError(string msg)
         {
             MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);             
@@ -749,7 +748,7 @@ namespace UserInterface.Presenters
                 }                
             }
             // refresh the tree view
-            view.UpdateTreeView(jobList);
+            view.UpdateJobTable(jobList);
 
             // restart the fetch jobs worker
             FetchJobs.RunWorkerAsync();

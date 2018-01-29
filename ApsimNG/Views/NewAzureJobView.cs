@@ -13,7 +13,7 @@ namespace UserInterface.Views
 {   
     public class NewAzureJobView : ViewBase
     {
-        public Presenters.NewAzureJobPresenter Presenter { get; set; }
+        public Presenters.INewCloudJobPresenter Presenter { get; set; }
         public BackgroundWorker SubmitJob { get; set; }
         public JobParameters jobParams { get; set; }             
         public Button btnOK;

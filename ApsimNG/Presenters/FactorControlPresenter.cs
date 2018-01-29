@@ -12,15 +12,42 @@ namespace UserInterface.Presenters
 {
     public class FactorControlPresenter : IPresenter
     {
+        /// <summary>
+        /// The explorer presenter controlling the tab's contents.
+        /// </summary>
         public ExplorerPresenter explorerPresenter { get; set; }
+
+        /// <summary>
+        /// By default, only display this many simulations are displayed (for performance reasons).
+        /// </summary>
         public static int DEFAULT_MAX_SIMS = 50;
 
+        /// <summary>
+        /// The Experiment node that was clicked on.
+        /// </summary>
         private Experiment model;
+
+        /// <summary>
+        /// The view responsible for displaying the factor information in a table.
+        /// </summary>
         private FactorControlView view;
+
+        /// <summary>
+        /// List of the view's column headers. The first one is 'Simulation Name', then the rest are the factor names. The final header is 'Enabled'.
+        /// </summary>
         private List<string> headers;
+
+        /// <summary>
+        /// List of tuples, where each tuple contains the name of the simulations, the factor levels/values, and a boolean indicating whether it should be run or not.
+        /// </summary>
         private List<Tuple<string, List<string>, bool>> simulations;
+
+        /// <summary>
+        /// Maximum number of simulations to display. Defaults to this.DEFAULT_MAX_SIMS, but the user can modify this.
+        /// </summary>
         private int maxSimsToDisplay;
 
+        private readonly string[] MONTH_NAMES = { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" };
         public void Attach(object experiment, object viewer, ExplorerPresenter explorerPresenter)
         {
             model = (Experiment)experiment;
@@ -130,7 +157,14 @@ namespace UserInterface.Presenters
         private List<string> GetHeaderNames(List<List<FactorValue>> allSims)
         {
             List<string> headers = new List<string> { "Simulation Name" };
-            foreach (Factor factor in allSims[0].Select(x => x.Factor)) headers.Add(factor.Name);
+            foreach (Factor factor in allSims[0].Select(x => x.Factor))
+            {
+                string name = factor.Parent.Name;
+                if (factor.Parent is Factors) headers.Add(factor.Name);
+                else headers.Add(factor.Parent.Name);
+                //if (name.ToLower() == "factors") name = factor.Name;
+                //headers.Add(factor.Name);
+            }
             headers.Add("Enabled");
 
             return headers;
@@ -139,34 +173,36 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Formats a 2 dimensional list of FactorValue into a list of tuples (containing only the data relevant to the view) that may be passed into the view.
         /// </summary>
-        /// <param name="allSims">List of 'simulations', where each simulation is a list of factor values.</param>
-        /// <returns></returns>
-        private List<Tuple<string, List<string>, bool>> GetTableData(List<List<FactorValue>> allSims)
+        /// <param name="allSims">List of 'simulations', where each simulation is a list of factor values. Typically, this.model.AllCombinations() is passed in here.</param>
+        /// <returns>List of tuples, where each tuple contains the name of the simulations, the factor levels/values, and a boolean indicating whether it should be run or not.</returns>
+        private List<Tuple<string, List<string>, bool>> GetTableData(List<List<FactorValue>> allSims, bool getAllData = false)
         {
             List<Tuple<string, List<string>, bool>> sims = new List<Tuple<string, List<string>, bool>>();
             int i = 0;
-            foreach (List<FactorValue> factors in model.AllCombinations())
+            try
             {
-                if (i > maxSimsToDisplay) break;
-                string name = "";
-
-                // pack all factor levels for the simulation into a list
-                List<string> levels = new List<string>();
-                foreach (FactorValue factor in factors)
+                foreach (List<FactorValue> factors in model.AllCombinations())
                 {
-                    // generate simulation name
-                    // TODO : figure out if there's a method somewhere else in Apsim which does this for me
-                    name += factor.Name;
-
-                    object val = factor.Values[0];
-                    string value = val.GetType() == typeof(string) ? (string)val : ((Model)val).Name;
-                    levels.Add(value);
+                    if (!getAllData && i > maxSimsToDisplay) break;
+                    string name = "";
+                    List<string> values = new List<string>();
+                    List<string> names = new List<string>();
+                    Experiment.GetFactorNamesAndValues(factors, names, values);
+                    // pack all factor levels for the current simulation into a list
+                    foreach (FactorValue factor in factors)
+                    {
+                        name += factor.Name;
+                    }
+                    bool flag = !model.DisabledSimNames.Contains(name);
+                    sims.Add(new Tuple<string, List<string>, bool>(name, values, flag));
+                    i++;
                 }
-                bool flag = model.DisabledSimNames.IndexOf(name) < 0;                
-                sims.Add(new Tuple<string, List<string>, bool>(name, levels, flag));
-                i++;
+                return sims;
+            } catch (Exception e)
+            {
+                explorerPresenter.MainPresenter.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+                return new List<Tuple<string, List<string>, bool>>();
             }
-            return sims;
         }
 
 
@@ -216,8 +252,9 @@ namespace UserInterface.Presenters
         /// The user can edit this file to more efficiently enable or disable factors in bulk.
         /// </summary>
         /// <param name="path">Directory for the csv file to be saved to.</param>
-        public void GenerateCsv(string path = "")
+        public void GenerateCsv(string path)
         {
+            if (path == null || path == "") return;
             StringBuilder csv = new StringBuilder();
             if (headers == null || headers.Count < 1)
             {
@@ -234,7 +271,7 @@ namespace UserInterface.Presenters
             csv.AppendLine(newLine);
 
             // factor information
-            foreach (Tuple<string, List<string>, bool> sim in simulations)
+            foreach (Tuple<string, List<string>, bool> sim in GetTableData(model.AllCombinations(), true))
             {
                 newLine = sim.Item1; // simulation name
                 foreach (string value in sim.Item2)  // factor values
@@ -245,7 +282,7 @@ namespace UserInterface.Presenters
                 csv.AppendLine(newLine);
             }
 
-            if (path == "") path = ApsimNG.Properties.Settings.Default["OutputDir"] + "\\" + model.Name + ".csv";
+            
             try
             {
                 File.WriteAllText(path, csv.ToString());

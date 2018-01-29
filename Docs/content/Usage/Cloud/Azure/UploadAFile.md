@@ -8,21 +8,21 @@ Several types of files need to be uploaded in order for a job to run on Azure - 
 **1. Generate/Obtain storage credentials**
 
 For your Batch account you will require a name, a URL and a key. For your storage account you will need a name and a key.
-These details will be saved to ApsimNG.Properties.Settings.Default each time they are updated, but for the first time, they may be loaded from a .lic plain text file:
+These details will be saved to `ApsimNG.Properties.Settings.Default` each time they are updated, but for the first time, they may be loaded from a .lic plain text file:
 
 ![Azure licence file format](/images/Usage.AzureLicenceFileFormat.png)
 
 **2. Generate a reference to the storage account**
 
-Instantiate an object of type WindowsAzure.Storage.Auth.CloudStorageAccount, passing in a WindowsAzure.Storage.Auth.StorageCredentials object initialised with credentials obtained in the previous step.
+Instantiate an object of type `WindowsAzure.Storage.Auth.CloudStorageAccount`, passing in a `WindowsAzure.Storage.Auth.StorageCredentials` object initialised with credentials obtained in the previous step.
 
-**3. Create a WindowsAzure.Storage.Blob.CloudBlobClient.**
+**3. Create a cloud blob client.**
 
-This is a logical representation of the Azure blob storage associated with an account. It is created via the CloudStorageAccount.CreateCloudBlobClient() method.
+This is a logical representation of the Azure blob storage associated with an account. It is created via the `CloudStorageAccount.CreateCloudBlobClient()` method.
 
 **4. Generate a reference to the correct cloud storage container**
 
-The Azure cloud storage is divided into logical containers (application, input, output, etc.). Each file must be uploaded into the appropriate container. To generate this reference, use the CloudBlobClient.GetContainerReference() method, passing in the appropriate container name.
+The Azure cloud storage is divided into logical containers (application, input, output, etc.). Each file must be uploaded into the appropriate container. To generate this reference, use the `CloudBlobClient.GetContainerReference()` method, passing in the appropriate container name.
 
 An example of these steps is given below:
 
@@ -36,10 +36,10 @@ If this is successful, then a file of the same name already exists in the contai
 
 **6. Generate and compare MD5 hashes for the file to be uploaded and the blob found in the previous step**
 
-If these hashes are equal, then the files are identical, and there is no need to upload the file.
+The blob's MD5 is accessible through its `ContentMD5` property. If these hashes are equal, then the files are identical, and there is no need to upload the file.
 
 **7. Upload the file**
 
-This can be done via the CloudBlockBlob.UploadFromFile() or CloudBlockBlob.UploadFromFileAsync() methods.
+This can be done via the `CloudBlockBlob.UploadFromFile()` or `CloudBlockBlob.UploadFromFileAsync()` methods.
 
 [Click here](https://docs.microsoft.com/en-us/azure/batch/batch-dotnet-get-started) for more details about the file upload process.

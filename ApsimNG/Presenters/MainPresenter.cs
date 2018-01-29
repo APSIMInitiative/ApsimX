@@ -815,8 +815,16 @@ namespace UserInterface.Presenters
         {
             bool onLeftTabControl = view.IsControlOnLeft(sender);            
             // Clear the message window
-            view.ShowMessage(" ", Simulation.ErrorLevel.Information);             
-            CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "UserInterface.Views.AzureJobDisplayView", "UserInterface.Presenters.AzureJobDisplayPresenter");
+            view.ShowMessage(" ", Simulation.ErrorLevel.Information);
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "UserInterface.Views.AzureJobDisplayView", "UserInterface.Presenters.AzureJobDisplayPresenter");
+            } else
+            {
+                ShowMessage("Microsoft Azure functionality is currently only available under Windows.", Simulation.ErrorLevel.Error);
+                Console.WriteLine("You aren't on Windows!");
+            }
+            
         }
 
         /// <summary>

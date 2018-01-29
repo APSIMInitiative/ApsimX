@@ -45,6 +45,11 @@ namespace ApsimNG.Cloud
         private Button btnSave;
 
         /// <summary>
+        /// Button to provide some information to first-time users.
+        /// </summary>
+        private Button btnHelp;
+
+        /// <summary>
         /// Default constructor.
         /// </summary>
         public AzureCredentialsSetup() : base("Azure Batch and Storage Account Information")
@@ -62,8 +67,12 @@ namespace ApsimNG.Cloud
             btnSave = new Button("Save");
             btnSave.Clicked += SaveCredentials;
 
+            btnHelp = new Button("Help");
+            btnHelp.Clicked += ProvideHelp;
+
             HBox buttonContainer = new HBox();
             buttonContainer.PackStart(btnLoad, false, false, 0);
+            buttonContainer.PackStart(btnHelp, false, false, 0);
             buttonContainer.PackEnd(btnSave, false, false, 0);
 
             Table primaryContainer = new Table(7, 2, false);
@@ -159,6 +168,14 @@ namespace ApsimNG.Cloud
             Properties.Settings.Default.Save();
 
             this.Destroy();
+        }
+
+        private void ProvideHelp(object sender, EventArgs e)
+        {
+            // System.Diagnostics.Process.Start("http://apsimnextgeneration.netlify.com/usage/cloud/azure/gettingstarted/"); // this page will not exist until this branch is merged
+            System.Diagnostics.Process.Start("https://azure.microsoft.com/free/");
+            System.Diagnostics.Process.Start("https://docs.microsoft.com/en-us/azure/batch/batch-account-create-portal");
+            System.Diagnostics.Process.Start("https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account");
         }
     }
 }

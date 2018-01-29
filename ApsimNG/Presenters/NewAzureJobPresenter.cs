@@ -22,7 +22,7 @@
     using Models.Core;
     using APSIM.Shared.Utilities;
 
-    public class NewAzureJobPresenter : IPresenter
+    public class NewAzureJobPresenter : IPresenter, INewCloudJobPresenter
     {        
         /// <summary>The new azure job view</summary>
         private NewAzureJobView view;
@@ -51,7 +51,7 @@
             
             GetCredentials(null, null);
 
-            this.view.SetDefaultJobName( ((Models.Factorial.Experiment)model).Name );
+            this.view.SetDefaultJobName( (model as IModel).Name );
             this.model = (IModel)model;
 
             submissionWorker = new BackgroundWorker();
@@ -696,6 +696,9 @@
             return true;
         }
         
+        /// <summary>
+        /// Cancels submission of a job and hides the right hand panel (which holds the new job view).
+        /// </summary>
         public void CancelJobSubmission()
         {
             submissionWorker.CancelAsync();

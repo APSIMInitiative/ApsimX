@@ -168,13 +168,13 @@ namespace UserInterface.Views
         /// Indices of the column headers. If columns are added or removed, change this.
         /// Name, ID, State, NumSims, Progress, StartTime, EndTime
         /// </summary>
-        private readonly string[] columnTitles = { "Name/Description", "Job ID", "State", "#Sims", "Progress", "Start Time", "End Time", "CPU Time" };
-        private enum columns { Name, ID, State, NumSims, Progress, StartTime, EndTime, CpuTime };
+        private readonly string[] columnTitles = { "Name/Description", "Job ID", "State", "#Sims", "Progress", "Start Time", "End Time", "Duration", "CPU Time" };
+        private enum columns { Name, ID, State, NumSims, Progress, StartTime, EndTime, Duration, CpuTime };
 
         private const string TIMESPAN_FORMAT = @"dddd\d\ hh\h\ mm\m\ ss\s";
         public AzureJobDisplayView(ViewBase owner) : base(owner)
         {
-            store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
+            store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
 
             Type[] types = new Type[columnTitles.Length];
             tree = new TreeView();
@@ -211,6 +211,15 @@ namespace UserInterface.Views
                 int count = i;
                 sort.SetSortFunc(i, (model, a, b) => SortData(model, a, b, count));
             }
+
+
+            // change the colour of every other row - makes it easier to read
+            string style = "style \"custom-treestyle\"{ GtkTreeView::odd-row-color = \"#ECF2FD\" GtkTreeView::even-row-color = \"#FFFFFF\" GtkTreeView::allow-rules = 1 } widget \"*custom_treeview*\" style \"custom-treestyle\"";
+            tree.Name = "custom_treeview";
+            //tree.CanFocus = true;
+            tree.RulesHint = true;
+            Rc.ParseString(style);
+
 
             // the tree holds the sorted, filtered data
             tree.Model = sort;
@@ -340,7 +349,7 @@ namespace UserInterface.Views
             } else if (i == (int)columns.Progress)
             {
                 return SortProgress(model, a, b);
-            } else if (i == (int)columns.CpuTime)
+            } else if (i == (int)columns.CpuTime || i == (int)columns.Duration)
             {
                 return SortCpuTime(model, a, b);
             } else
@@ -507,7 +516,7 @@ namespace UserInterface.Views
         /// Empties the TreeView and refills it with the contents of jobList.
         /// Current sorting/filtering remains unchanged.
         /// </summary>
-        public void UpdateTreeView(List<JobDetails> jobs)
+        public void UpdateJobTable(List<JobDetails> jobs)
         {
             // This entire function is run on the Gtk main loop thread.
             // This may cause problems if another thread wants to modify a view at the same time,
@@ -530,7 +539,8 @@ namespace UserInterface.Views
                     string dispName = myJobsOnly ? job.DisplayName : job.DisplayName + " (" + job.Owner + ")";
                     string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";
                     string timeStr = job.CpuTime == TimeSpan.Zero ? "" : job.CpuTime.ToString(TIMESPAN_FORMAT);
-                    store.AppendValues(dispName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, timeStr);
+                    string durationStr = job.Duration() == TimeSpan.Zero ? "" : job.Duration().ToString(TIMESPAN_FORMAT);
+                    store.AppendValues(dispName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, durationStr, timeStr);
                 }
 
                 // TODO : figure out a way to empty/reset these without re-initialising them
@@ -655,7 +665,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Detaches all event handlers from view controls.
         /// </summary>
-        public void RemoveEventHandlers()
+        private void RemoveEventHandlers()
         {
             chkFilterOwner.Toggled -= ApplyFilter;
             btnChangeDownloadDir.Clicked -= btnChangeDownloadDir_Click;
@@ -764,6 +774,12 @@ namespace UserInterface.Views
             fc.Destroy();
             return path;            
             */
+        }
+
+        public void Detach()
+        {
+            RemoveEventHandlers();
+            MainWidget.Destroy();
         }
     }
 }

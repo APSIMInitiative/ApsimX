@@ -51,15 +51,12 @@ namespace ApsimNG.Cloud
         /// <summary>
         /// Duration of the job.
         /// </summary>
-        public TimeSpan? Duration
+        public TimeSpan Duration()
         {
-            get
-            {
-                if (StartTime == null) return null;
-                return (EndTime != null ? EndTime.Value : DateTime.UtcNow) - StartTime.Value;
-            }
+            if (StartTime == null || EndTime == null) return TimeSpan.Zero;
+            return EndTime.Value - StartTime.Value;
         }
-
+        
         /// <summary>
         /// Pool settings of the job.
         /// </summary>

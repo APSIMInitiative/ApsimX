@@ -1,9 +1,13 @@
 ---
-title: "User's Guide"
+title: "Job Submission"
 draft: false
 ---
 
-There are several options available when submitting a job to Azure. This document gives a brief description of each.
+There are several options available when submitting a job to the cloud. This document gives a brief description of each.
+
+**1. Set/obtain credentials**
+
+If this is your first time submitting a job to the cloud, you will need to provide credentials. For details
 
 **1. Job Description/Name**
 
@@ -12,24 +16,24 @@ This is a name or description of the job. It does not need to be unique. The def
 
 **2. Number of CPU Cores**
 
-This option specifies the maximum number of CPU cores (and, therefore, Azure VMs) that your job should use. The increments are equal to the number of cores per VM. 
+This option specifies the maximum number of CPU cores (and, therefore, VMs) that your job should use. The increments are equal to the number of cores per VM. 
 For example, if, under your licence, each VM has 16 cores, then the options available here will be 16, 32, 48, etc. Selecting 48 cores means the job would (in this case) use 3 VMs.
 For smaller jobs it may be faster and cheaper to use less cores, as there is an overhead associated with each VM starting and finishing. 
 
 
 **3. Save model files**
 
-Before your job is uploaded to Azure, some model files are generated. Normally these model files are temporary, and are deleted after they are uploaded. If this option is selected however, the model files will be saved to the specified directory.
+Before your job is uploaded to the cloud, some model files are generated. Normally these model files are temporary, and are deleted after they are uploaded. If this option is selected however, the model files will be saved to the specified directory.
 
 
 **4. Use APSIM Next Generation from a directory**
 
-This is one of the two ways to specify the version of APSIM to be run on Azure. It allows you to specify a directory containing APSIM to be uploaded (e.g. C:\Hobbies\ApsimX).
+This is one of the two ways to specify the version of APSIM to be run on the cloud. It allows you to specify a directory containing APSIM to be uploaded (e.g. C:\Hobbies\ApsimX).
 
 
 **5. Use a zipped version of APSIM Next Generation**
 
-This is the second way to specify the version of APSIM to be run on Azure. It allows you to specify a zip file containing APSIM to be uploaded (e.g. C:\Hobbies\ApsimX.zip).
+This is the second way to specify the version of APSIM to be run on the cloud. It allows you to specify a zip file containing APSIM to be uploaded (e.g. C:\Hobbies\ApsimX.zip).
 
 
 **6. Send email upon completion**
