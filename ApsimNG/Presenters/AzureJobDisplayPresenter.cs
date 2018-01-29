@@ -97,7 +97,6 @@ namespace UserInterface.Presenters
         {
             this.view = (AzureJobDisplayView)view;
             this.view.Presenter = this;
-            Settings.Default["BatchAccount"] = "";
             GetCredentials();
         }
 
