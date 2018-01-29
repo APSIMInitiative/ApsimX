@@ -492,11 +492,22 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       <Name>Decomposition</Name>
       <MultiplyFunction>
         <Name>Rate</Name>
-        <Constant>
+        <StringComparisonFunction>
           <Name>PotentialRate</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.0081</FixedValue>
+          <PropertyName>[Soil].SoilType</PropertyName>
+          <StringValue>Sand</StringValue>
+        <Constant>
+          <Name>TrueValue</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.0324</FixedValue>
         </Constant>
+        <Constant>
+          <Name>FalseValue</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.0081</FixedValue>
+        </Constant>        
+        </StringComparisonFunction>
         <VariableReference>
           <Name>TF</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
