@@ -75,10 +75,7 @@ namespace Models.CLEM.Activities
                     if (accnt.Balance > 0)
                     {
                         accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this.Name, "Interest earned");
-                        if(Status != ActivityStatus.Ignored & Status != ActivityStatus.Partial)
-                        {
-                            Status = ActivityStatus.Success;
-                        }
+                        SetStatusSuccess();
                     }
                     else
                     {
