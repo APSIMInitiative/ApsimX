@@ -34,6 +34,7 @@
         [EventSubscribe("BeginRun")]
         private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
+            Initialise();
         }
 
         /// <summary>Gets the next job to run</summary>
@@ -43,12 +44,7 @@
                 return null;
 
             if (serialisedBase == null)
-            {
-                allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
-                parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
-                serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
-            }
+                Initialise();
 
             var combination = allCombinations[0];
             allCombinations.RemoveAt(0);
@@ -94,7 +90,18 @@
             }
             return names;
         }
-        
+
+        /// <summary>
+        /// Initialise the experiment ready for creating simulations.
+        /// </summary>
+        private void Initialise()
+        {
+            allCombinations = AllCombinations();
+            parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
+            serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
+        }
+
         /// <summary>Find all report models and give them the factor values.</summary>
         /// <param name="factorValues">The factor values to send to each report model.</param>
         /// <param name="simulation">The simulation to search for report models.</param>

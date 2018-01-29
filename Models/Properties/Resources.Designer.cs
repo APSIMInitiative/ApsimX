@@ -229,7 +229,7 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;Plant&gt;
+        ///   Looks up a localized string similar to &lt;Plant&gt; 
         ///  &lt;Name&gt;Wheat&lt;/Name&gt;
         ///  &lt;Memo&gt;
         ///    &lt;Name&gt;TitlePage&lt;/Name&gt;
@@ -240,7 +240,7 @@ namespace Models.Properties {
         ///
         ///_Brown, H.E., Huth, N.I. and Holzworth, D.P._
         ///
-        ///The APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be  [rest of string was truncated]&quot;;.
+        ///The APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Wheat {
             get {
