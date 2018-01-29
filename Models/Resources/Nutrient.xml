@@ -716,8 +716,40 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </MinimumFunction>
+  
+  <StringComparisonFunction>
+          <Name>WaterFactorForMineralisation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <PropertyName>[Soil].SoilType</PropertyName>
+          <StringValue>Sand</StringValue>
     <LinearInterpolationFunction>
-      <Name>WaterFactorForMineralisation</Name>
+      <Name>TrueValue</Name>
+      <SoilWaterScale>
+        <Name>SoilWaterScale</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </SoilWaterScale>
+      <XYPairs>
+        <Name>XYPairs</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <X>
+          <double>0</double>
+          <double>0.5</double>
+          <double>1</double>
+          <double>2</double>
+        </X>
+        <Y>
+          <double>0.05</double>
+          <double>1</double>
+          <double>1</double>
+          <double>0.5</double>
+        </Y>
+      </XYPairs>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <XProperty>[SoilWaterScale]</XProperty>
+    </LinearInterpolationFunction>
+
+      <LinearInterpolationFunction>
+      <Name>FalseValue</Name>
       <SoilWaterScale>
         <Name>SoilWaterScale</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -741,6 +773,10 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[SoilWaterScale]</XProperty>
     </LinearInterpolationFunction>
+
+        </StringComparisonFunction>
+ 
+    
   <MinimumFunction>
     <Name>CNRatioFactorForMineralisation</Name>
     <Constant>
