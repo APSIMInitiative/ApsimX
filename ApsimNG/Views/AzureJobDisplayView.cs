@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UserInterface.Interfaces;
 using ApsimNG.Cloud;
 using Gtk;
-using GLib;
 using System.IO;
 
 namespace UserInterface.Views
@@ -55,6 +51,7 @@ namespace UserInterface.Views
             {
                 Application.Invoke(delegate
                 {
+                    if (!downloadProgressContainer.Visible) downloadProgressContainer.ShowAll();
                     downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper);                    
                 });
             }
@@ -171,7 +168,15 @@ namespace UserInterface.Views
         private readonly string[] columnTitles = { "Name/Description", "Job ID", "State", "#Sims", "Progress", "Start Time", "End Time", "Duration", "CPU Time" };
         private enum columns { Name, ID, State, NumSims, Progress, StartTime, EndTime, Duration, CpuTime };
 
+        /// <summary>
+        /// Defines the format that the two TimeSpan fields (duration and CPU time) are to be displayed in.
+        /// </summary>
         private const string TIMESPAN_FORMAT = @"dddd\d\ hh\h\ mm\m\ ss\s";
+
+        /// <summary>
+        /// Constructor. Initialises the jobs TreeView and the controls associated with it.
+        /// </summary>
+        /// <param name="owner"></param>
         public AzureJobDisplayView(ViewBase owner) : base(owner)
         {
             store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
@@ -315,6 +320,7 @@ namespace UserInterface.Views
             vboxPrimary.ShowAll();
 
             downloadProgressContainer.HideAll();
+            HideLoadingProgressBar();
         }
 
         /// <summary>
@@ -398,7 +404,6 @@ namespace UserInterface.Views
         {
             int x, y;
             int columnIndex = (int)columns.Progress;
-            // TODO : fix NullRefEx - model.GetValue is returning null sometimes
             Int32.TryParse(((string)model.GetValue(a, columnIndex)).Replace("%", ""), out x);
             Int32.TryParse(((string)model.GetValue(b, columnIndex)).Replace("%", ""), out y);
 
@@ -543,13 +548,10 @@ namespace UserInterface.Views
                     store.AppendValues(dispName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, durationStr, timeStr);
                 }
 
-                // TODO : figure out a way to empty/reset these without re-initialising them
-
                 filterOwner = new TreeModelFilter(store, null);
                 filterOwner.VisibleFunc = FilterOwnerFunc;
                 filterOwner.Refilter();
 
-                // TODO : figure out a better way to assign these sort handlers
                 sort = new TreeModelSort(filterOwner);
                 for (int i = 0; i < columnTitles.Length; i++)
                 {
@@ -557,22 +559,13 @@ namespace UserInterface.Views
                     sort.SetSortFunc(i, (model, a, b) => SortData(model, a, b, j));
                 }
 
-
-
-
                 sort.DefaultSortFunc = (model, a, b) => SortData(model, a, b, Array.IndexOf(columnTitles, "Start Time"));
                 sort.SetSortColumnId(sortIndex, order);
 
                 tree.Model = sort;
-
             });
-
         }
 
-        private void ClickEvent(int i)
-        {
-            Console.WriteLine(i);
-        }
         /// <summary>
         /// Tests if a string starts with a vowel.
         /// </summary>
@@ -583,15 +576,11 @@ namespace UserInterface.Views
             return "aeiou".IndexOf(st[0]) >= 0;
         }
 
-
         /// <summary>
-        /// Event handler for the stop job button.
-        /// Asks the user for confirmation and halts the execution of any 
-        /// selected jobs which have not already finished.
+        /// Gets the IDs of all currently selected jobs.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnStop_Click(object sender, EventArgs e)
+        /// <returns></returns>
+        private List<string> GetSelectedJobIds()
         {
             TreePath[] selectedRows = tree.Selection.GetSelectedRows();
             List<string> jobIds = new List<string>();
@@ -601,7 +590,19 @@ namespace UserInterface.Views
                 tree.Model.GetIter(out iter, selectedRows[i]);
                 jobIds.Add((string)tree.Model.GetValue(iter, 1));
             }
-            Presenter.StopJobs(jobIds);
+            return jobIds;
+        }
+
+        /// <summary>
+        /// Event handler for the stop job button.
+        /// Asks the user for confirmation and halts the execution of any 
+        /// selected jobs which have not already finished.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnStop_Click(object sender, EventArgs e)
+        {            
+            Presenter.StopJobs(GetSelectedJobIds());
         }
 
         /// <summary>
@@ -612,24 +613,7 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-            TreePath[] selectedRows = tree.Selection.GetSelectedRows();
-
-            // get the grammar right when asking for confirmation
-            bool deletingMultiple = selectedRows.Count() > 1;
-            string msg = "Are you sure you want to delete " + (deletingMultiple ? "these " + selectedRows.Count() + " jobs?" : "this job?");
-            string label = deletingMultiple ? "Delete these jobs?" : "Delete this job?";
-
-            // if user says no to the popup, no further action required
-            //int response = Presenter.MainPresenter.ShowMsgDialog(msg, label, MessageType.Question, ButtonsType.YesNo);
-            //if (response != -8) return;
-            if (!AskQuestion(msg)) return;
-            List<string> jobIds = new List<string>();
-            for (int i = 0; i < selectedRows.Count(); i++)
-            {
-                tree.Model.GetIter(out TreeIter iter, selectedRows[i]);
-                jobIds.Add((string)tree.Model.GetValue(iter, 1));
-            }
-            Presenter.DeleteJobs(jobIds);
+            Presenter.DeleteJobs(GetSelectedJobIds());
         }
 
         /// <summary>
@@ -650,14 +634,11 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void BtnDownload_Click(object sender, EventArgs e)
         {
-            lblDownloadStatus.Text = "";
-            vboxDownloadStatuses = new VBox();            
-            (Owner as MainView).ShowMessage("", Models.Core.Simulation.ErrorLevel.Information);
-            TreePath[] selectedRows = tree.Selection.GetSelectedRows();
-            List<string> jobIds = new List<string>();
-            foreach (TreePath row in selectedRows)
+            List<string> jobIds = GetSelectedJobIds();
+            if (jobIds.Count < 1)
             {
-                jobIds.Add(GetId(row));
+                (Owner as MainView).ShowMessage("Unable to download jobs: no jobs are selected", Models.Core.Simulation.ErrorLevel.Information);
+                return;
             }
             DownloadWindow dl = new DownloadWindow(Presenter, jobIds);            
         }
@@ -744,36 +725,35 @@ namespace UserInterface.Views
         /// </return>
         private string GetDirectory()
         {
-            var dc = new System.Windows.Forms.FolderBrowserDialog
-            {
-                Description = "Choose the file to open"
-            };
-            dc.ShowDialog();
-            return (Directory.Exists(dc.SelectedPath)) ? dc.SelectedPath : "";
-            /*
-            FileChooserDialog fc = new FileChooserDialog(
-                                        "Choose the file to open",
-                                        null,
-                                        FileChooserAction.SelectFolder,
-                                        "Cancel", ResponseType.Cancel,
-                                        "Select Folder", ResponseType.Accept);
             string path = "";
-            
+            Application.Invoke(delegate
+            {
+                FileChooserDialog fc = new FileChooserDialog(
+                                                        "Choose the file to open",
+                                                        null,
+                                                        FileChooserAction.SelectFolder,
+                                                        "Cancel", ResponseType.Cancel,
+                                                        "Select Folder", ResponseType.Accept);
 
-            try
-            {
-                if (fc.Run() == (int)ResponseType.Accept)
+
+
+                try
                 {
-                    path = fc.Filename;
+                    if (fc.Run() == (int)ResponseType.Accept)
+                    {
+                        path = fc.Filename;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-            fc.Destroy();
-            return path;            
-            */
+                catch (Exception ex)
+                {
+                    (Owner as MainView).ShowMessage(ex.ToString(), Models.Core.Simulation.ErrorLevel.Error);
+                } finally
+                {
+                    fc.Destroy();
+                }
+            });
+            
+            return path;
         }
 
         public void Detach()

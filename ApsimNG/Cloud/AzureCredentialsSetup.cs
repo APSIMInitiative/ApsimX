@@ -49,6 +49,8 @@ namespace ApsimNG.Cloud
         /// </summary>
         private Button btnHelp;
 
+        public EventHandler Finished { get; set; }
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -166,7 +168,7 @@ namespace ApsimNG.Cloud
             Properties.Settings.Default["BatchAccount"] = batchAccountInput.Text;
             Properties.Settings.Default["BatchKey"] = batchKeyInput.Text;            
             Properties.Settings.Default.Save();
-
+            Finished?.Invoke(this, e);
             this.Destroy();
         }
 

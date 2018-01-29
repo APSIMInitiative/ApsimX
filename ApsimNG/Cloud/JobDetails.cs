@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ApsimNG.Cloud
 {
+    /// <summary>
+    /// This class holds the details about a cloud job which are displayed in the job viewer.
+    /// </summary>
     public class JobDetails
     {
         /// <summary>
@@ -62,6 +65,9 @@ namespace ApsimNG.Cloud
         /// </summary>
         public PoolSettings PoolSettings { get; set; }
 
+        /// <summary>
+        /// Total CPU time of the job.
+        /// </summary>
         public TimeSpan CpuTime { get; set; }
     }
 }

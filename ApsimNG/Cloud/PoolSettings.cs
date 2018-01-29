@@ -17,14 +17,19 @@ namespace ApsimNG.Cloud
         public string State { get; set; }
 
         public static PoolSettings FromConfiguration()
-        {            
+        {
+            object maxTasks = Properties.Settings.Default["PoolMaxTasksPerVM"];
+            object name = Properties.Settings.Default["PoolName"];
+            object vmCount = Properties.Settings.Default["PoolVMCount"];
+            object size = Properties.Settings.Default["PoolVMSize"];
+
             return new PoolSettings
             {
                 
-                MaxTasksPerVM = int.Parse(ConfigurationManager.AppSettings["PoolMaxTasksPerVM"]),
-                PoolName = ConfigurationManager.AppSettings["PoolName"],
-                VMCount = int.Parse(ConfigurationManager.AppSettings["PoolVMCount"]),
-                VMSize = ConfigurationManager.AppSettings["PoolVMSize"]
+                MaxTasksPerVM = (maxTasks is string && (maxTasks as string).Length > 0) ? int.Parse((string)maxTasks) : 1,
+                PoolName = (name is string && (name as string).Length > 0) ? (string)name : "",
+                VMCount = (vmCount is string && (vmCount as string).Length > 0) ? int.Parse((string)vmCount) : 8,
+                VMSize = (size is string && (size as string).Length > 0) ? (string)size : "standard_d5_v2"
             };
         }
     }

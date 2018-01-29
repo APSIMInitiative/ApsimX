@@ -26,36 +26,36 @@ namespace ApsimNG.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string BatchAccount {
+        public string OutputDir {
             get {
-                return ((string)(this["BatchAccount"]));
+                return ((string)(this["OutputDir"]));
             }
             set {
-                this["BatchAccount"] = value;
+                this["OutputDir"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string BatchUrl {
+        public string AzureLicenceFilepath {
             get {
-                return ((string)(this["BatchUrl"]));
+                return ((string)(this["AzureLicenceFilepath"]));
             }
             set {
-                this["BatchUrl"] = value;
+                this["AzureLicenceFilepath"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string BatchKey {
+        public string StorageKey {
             get {
-                return ((string)(this["BatchKey"]));
+                return ((string)(this["StorageKey"]));
             }
             set {
-                this["BatchKey"] = value;
+                this["StorageKey"] = value;
             }
         }
         
@@ -74,96 +74,84 @@ namespace ApsimNG.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string StorageKey {
+        public string BatchKey {
             get {
-                return ((string)(this["StorageKey"]));
+                return ((string)(this["BatchKey"]));
             }
             set {
-                this["StorageKey"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool SimsFromDir {
-            get {
-                return ((bool)(this["SimsFromDir"]));
-            }
-            set {
-                this["SimsFromDir"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ApsimFromDir {
-            get {
-                return ((bool)(this["ApsimFromDir"]));
-            }
-            set {
-                this["ApsimFromDir"] = value;
+                this["BatchKey"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string OutputDir {
+        public string BatchUrl {
             get {
-                return ((string)(this["OutputDir"]));
+                return ((string)(this["BatchUrl"]));
             }
             set {
-                this["OutputDir"] = value;
+                this["BatchUrl"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ApsimDirPath {
+        public string BatchAccount {
             get {
-                return ((string)(this["ApsimDirPath"]));
+                return ((string)(this["BatchAccount"]));
             }
             set {
-                this["ApsimDirPath"] = value;
+                this["BatchAccount"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ApsimZipPath {
+        public string PoolMaxTasksPerVM {
             get {
-                return ((string)(this["ApsimZipPath"]));
+                return ((string)(this["PoolMaxTasksPerVM"]));
             }
             set {
-                this["ApsimZipPath"] = value;
+                this["PoolMaxTasksPerVM"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ModelPath {
+        public string PoolName {
             get {
-                return ((string)(this["ModelPath"]));
+                return ((string)(this["PoolName"]));
             }
             set {
-                this["ModelPath"] = value;
+                this["PoolName"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string AzureLicenceFilepath {
+        public string PoolVMCount {
             get {
-                return ((string)(this["AzureLicenceFilepath"]));
+                return ((string)(this["PoolVMCount"]));
             }
             set {
-                this["AzureLicenceFilepath"] = value;
+                this["PoolVMCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PoolVMSize {
+            get {
+                return ((string)(this["PoolVMSize"]));
+            }
+            set {
+                this["PoolVMSize"] = value;
             }
         }
     }

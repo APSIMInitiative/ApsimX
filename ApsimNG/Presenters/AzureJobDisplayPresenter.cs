@@ -1,23 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ApsimNG.Cloud;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.Azure.Batch;
-using Microsoft.Azure.Batch.Common;
 using UserInterface.Interfaces;
 using System.IO;
 using ApsimNG.Properties;
 using System.ComponentModel;
-using System.Timers;
-using Models.Core.Runners;
 using Models.Core;
-using APSIM.Shared.Utilities;
 using Microsoft.WindowsAzure.Storage.Blob;
 using UserInterface.Views;
-using System.Net;
 
 namespace UserInterface.Presenters
 {
@@ -28,29 +21,60 @@ namespace UserInterface.Presenters
         /// </summary>
         private List<Guid> currentlyDownloading;
         
+        /// <summary>
+        /// The view displaying the information.
+        /// </summary>
         private AzureJobDisplayView view;
+
+        /// <summary>
+        /// The parent presenter.
+        /// </summary>
         public MainPresenter MainPresenter { get; set; }
 
+        /// <summary>
+        /// ADT to hold Azure storage credentials.
+        /// </summary>
         private StorageCredentials storageCredentials;
+
+        /// <summary>
+        /// ADT to hold Azure batch credentials.
+        /// </summary>
         private BatchCredentials batchCredentials;
+
+        /// <summary>
+        /// Interface to the Azure storage account.
+        /// </summary>
         private CloudStorageAccount storageAccount;
-        private PoolSettings poolSettings;
+
+        /// <summary>
+        /// Interface to the Azure batch client.
+        /// </summary>
         private BatchClient batchClient;
+
+        /// <summary>
+        /// Interface to the Azure blob client.
+        /// </summary>
         private CloudBlobClient blobClient;
 
+        /// <summary>
+        /// This worker repeatedly fetches information about all Azure jobs on the batch account.
+        /// </summary>
         private BackgroundWorker FetchJobs;
-        //private Timer updateJobsTimer;
 
         /// <summary>
         /// Mutual exclusion semaphore controlling access to the section of code relating to the log file.        
         /// </summary>
-        private Object logFileMutex;
+        private object logFileMutex;
 
         /// <summary>
         /// List of all Azure jobs.
         /// </summary>
         private List<JobDetails> jobList;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="mainPresenter"></param>
         public AzureJobDisplayPresenter(MainPresenter mainPresenter)
         {
             MainPresenter = mainPresenter;
@@ -73,45 +97,12 @@ namespace UserInterface.Presenters
         {
             this.view = (AzureJobDisplayView)view;
             this.view.Presenter = this;
-
-            // read Azure credentials from a file. If credentials file doesn't exist, abort.
-            string credentialsFileName = (string)Settings.Default["AzureLicenceFilePath"];
-
-            // if the file name in Properties.Settings doesn't exist then prompt user for a new one
-            if (credentialsFileName == "" || !File.Exists(credentialsFileName))
-            {
-                credentialsFileName = this.view.GetFile(new List<string> { "lic" }, "Azure Licence file");
-            }
-            if (SetCredentials(credentialsFileName))
-            {
-                // licence file is valid, remember this file for next time
-                Settings.Default["AzureLicenceFilePath"] = credentialsFileName;
-                Settings.Default.Save();
-            }
-            else
-            {
-                // licence file is invalid or non-existent. Show an error and remove the job submission form from the right hand panel.
-                ShowError("Missing or invalid Azure Licence file: " + credentialsFileName);                
-                return;
-            }
-
-            storageCredentials = StorageCredentials.FromConfiguration();
-            batchCredentials = BatchCredentials.FromConfiguration();
-            poolSettings = PoolSettings.FromConfiguration();
-
-            storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
-            var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
-            batchClient = BatchClient.Open(sharedCredentials);
-            blobClient = storageAccount.CreateCloudBlobClient();
-            blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);
-            
-            // start downloading the list of jobs immediately
-            // in theory fetch jobs should never already be busy at this point, but it doesn't hurt to double check
-            if (!FetchJobs.IsBusy) FetchJobs.RunWorkerAsync();
+            Settings.Default["BatchAccount"] = "";
+            GetCredentials();
         }
 
         /// <summary>
-        /// Asks the user a question, allowing them to choose yes or no. Returns true if they clicked yes, returns false if they clicked no.
+        /// Asks the user a question, allowing them to choose yes or no. Returns true if they clicked yes, returns false otherwise.
         /// </summary>
         /// <param name="msg">Message/question to be displayed.</param>
         /// <returns></returns>
@@ -126,6 +117,10 @@ namespace UserInterface.Presenters
             view.Detach();
         }
 
+        /// <summary>
+        /// Updates the download progress bar.
+        /// </summary>
+        /// <param name="progress"></param>
         public void UpdateDownloadProgress(double progress)
         {
             view.DownloadProgress = progress;
@@ -135,8 +130,6 @@ namespace UserInterface.Presenters
         {
             while (!FetchJobs.CancellationPending) // this check is performed regularly inside the ListJobs() function as well.
             {
-                // TODO : find a way to detect when this tab has been closed. If this occurs, this thread needs to stop                
-
                 // update the list of jobs. this will take a bit of time                
                 var newJobs = ListJobs();
                 
@@ -252,6 +245,9 @@ namespace UserInterface.Presenters
                         ShowError("Unable to retrieve job list: " + e.ToString());
                         return new List<JobDetails>();
                     }
+                } finally
+                {
+                    numTries++;
                 }
             }
             
@@ -275,12 +271,9 @@ namespace UserInterface.Presenters
 
                 string owner = GetAzureMetaData("job-" + cloudJob.Id, "Owner");
 
-                //var tasks = ListTasks(Guid.Parse(cloudJob.Id));
-                // for some reason the succeeded task count is always exactly double the actual number of tasks
-                // and the number of tasks is the number of sims + 1 (the job manager?)
                 TaskCounts tasks;
-                long numTasks;
-                double jobProgress;
+                long numTasks = 1;
+                double jobProgress = 0;
                 try
                 {
                     tasks = batchClient.JobOperations.GetJobTaskCounts(cloudJob.Id);
@@ -296,9 +289,6 @@ namespace UserInterface.Presenters
                     numTasks = -1;
                     jobProgress = 100;
                 }
-                
-                
-
                 
                 // if cpu time is unavailable, set this field to 0
                 TimeSpan cpu = cloudJob.Statistics == null ? TimeSpan.Zero : cloudJob.Statistics.KernelCpuTime + cloudJob.Statistics.UserCpuTime;
@@ -317,31 +307,6 @@ namespace UserInterface.Presenters
                 {
                     job.StartTime = cloudJob.ExecutionInformation.StartTime;
                     job.EndTime = cloudJob.ExecutionInformation.EndTime;
-
-                    if (cloudJob.ExecutionInformation.PoolId != null)
-                    {
-                        //var pool = pools.FirstOrDefault(p => string.Equals(cloudJob.ExecutionInformation.PoolId, p.Id));
-                        string poolId = cloudJob.ExecutionInformation.PoolId;
-                        CloudPool pool = null;
-                        foreach (CloudPool currentPool in pools)
-                        {
-                            if (currentPool.Id == poolId)
-                            {
-                                pool = currentPool;
-                                break;
-                            }
-                        }
-                        if (pool != null)
-                        {
-                            job.PoolSettings = new PoolSettings
-                            {
-                                MaxTasksPerVM = pool.MaxTasksPerComputeNode.GetValueOrDefault(1),
-                                State = pool.AllocationState.GetValueOrDefault(AllocationState.Resizing).ToString(),
-                                VMCount = pool.CurrentDedicatedComputeNodes.GetValueOrDefault(0),
-                                VMSize = pool.VirtualMachineSize
-                            };
-                        }
-                    }
                 }                
                 jobs.Add(job);
                 i++;
@@ -379,37 +344,50 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Read Azure credentials from the file ApsimX\AzureAgR.lic
-        /// This is a temporary measure - will probably need to allow user to specify a file.
+        /// Initialises the Azure credentials, batch client and blob client. Asks user for an Azure 
+        /// licence file and saves the credentials if the credentials have not previously been set.
+        /// Once credentials are saved, it starts the job load worker.
         /// </summary>
-        /// <returns>True if the credentials file exists, false otherwise.</returns>
-        private bool SetCredentials(string path)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GetCredentials()
         {
-            if (File.Exists(path))
+            if (CredentialsExist())
             {
-                string line;
-                StreamReader file = new StreamReader(path);
-                while ((line = file.ReadLine()) != null)
-                {
-                    int separatorIndex = line.IndexOf("=");
-                    if (separatorIndex > -1)
-                    {
-                        string key = line.Substring(0, separatorIndex);
-                        string val = line.Substring(separatorIndex + 1);
+                // store credentials
+                storageCredentials = StorageCredentials.FromConfiguration();
+                batchCredentials = BatchCredentials.FromConfiguration();
 
-                        Settings.Default[key] = val;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                return true;
+                storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
+                var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
+                batchClient = BatchClient.Open(sharedCredentials);
+
+                blobClient = storageAccount.CreateCloudBlobClient();
+                blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);
+
+                if (!FetchJobs.IsBusy) FetchJobs.RunWorkerAsync();
             }
             else
             {
-                return false;
+                // ask user for a credentials file
+                AzureCredentialsSetup cred = new AzureCredentialsSetup();
+                cred.Finished += (sender, e) => GetCredentials();
             }
+        }
+
+        /// <summary>
+        /// Checks if Azure credentials exist in Settings.Default. This method does not check their validity.
+        /// </summary>
+        /// <returns>True if credentials exist, false otherwise.</returns>
+        private bool CredentialsExist()
+        {
+            string[] credentials = new string[] { "BatchAccount", "BatchUrl", "BatchKey", "StorageAccount", "StorageKey" };
+            foreach (string key in credentials)
+            {
+                string value = (string)Settings.Default[key];
+                if (value == null || value == "") return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -442,7 +420,7 @@ namespace UserInterface.Presenters
         /// <param name="keepOutputFiles">If true, the raw .db output files will be saved.</param>
         public void DownloadResults(List<string> jobsToDownload, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles)
         {
-            // TODO : make jobs download serially
+            MainPresenter.ShowMessage("", Simulation.ErrorLevel.Information);
             if (currentlyDownloading.Count > 0)
             {
                 ShowError("Unable to start a new batch of downloads - one or more downloads are already ongoing.");
@@ -457,7 +435,7 @@ namespace UserInterface.Presenters
             FetchJobs.CancelAsync();
             while (FetchJobs.IsBusy) ;
 
-            view.HideLoadingProgressBar();
+            //view.HideLoadingProgressBar();
             view.ShowDownloadProgressBar();
             ShowMessage("");
             string path = (string)Settings.Default["OutputDir"];
@@ -479,7 +457,7 @@ namespace UserInterface.Presenters
                 // if output directory already exists and warning has not already been given, display a warning
                 if (Directory.Exists((string)Settings.Default["OutputDir"] + "\\" + jobName) && !ignoreWarning && saveToCsv)
                 {
-                    if (!view.AskQuestion("Files detected in output directory. Results will be collated from ALL files in this directory. Are you certain you wish to continue?"))
+                    if (!view.AskQuestion("Files detected in output directory (" + (string)Settings.Default["OutputDir"] + "\\" + jobName + "). Results will be collated from ALL files in this directory. Are you certain you wish to continue?"))
                     {
                         // if user has chosen to cancel the download
                         view.HideDownloadProgressBar();
@@ -528,6 +506,10 @@ namespace UserInterface.Presenters
             MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);             
         }
 
+        /// <summary>
+        /// Displays a message to the user.
+        /// </summary>
+        /// <param name="msg"></param>
         public void ShowMessage(string msg)
         {
             MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Information);
@@ -678,6 +660,11 @@ namespace UserInterface.Presenters
             // ask user once for confirmation
 
             // get the grammar right when asking for confirmation
+            if (jobIds.Count < 1)
+            {
+                MainPresenter.ShowMessage("Unable to stop jobs: no jobs are selected", Simulation.ErrorLevel.Information);
+                return;
+            }
             bool stopMultiple = jobIds.Count > 1;
             string msg = "Are you sure you want to stop " + (stopMultiple ? "these " + jobIds.Count + " jobs?" : "this job?") + " There is no way to resume their execution!";
             string label = stopMultiple ? "Stop these jobs?" : "Stop this job?";
@@ -715,10 +702,26 @@ namespace UserInterface.Presenters
         /// <param name="jobIds">ID of the job.</param>
         public void DeleteJobs(List<string> jobIds)
         {
+            if (jobIds.Count < 1)
+            {
+                MainPresenter.ShowMessage("Unable to delete jobs: no jobs are selected.", Simulation.ErrorLevel.Information);
+                return;
+            }
+
+            bool restart = FetchJobs.IsBusy;
             // cancel the fetch jobs worker
-            FetchJobs.CancelAsync();
+            if (restart) FetchJobs.CancelAsync();
             //while (FetchJobs.IsBusy);
             view.HideLoadingProgressBar();
+
+
+            // get the grammar right when asking for confirmation
+            bool deletingMultiple = jobIds.Count > 1;
+            string msg = "Are you sure you want to delete " + (deletingMultiple ? "these " + jobIds.Count + " jobs?" : "this job?");
+            string label = deletingMultiple ? "Delete these jobs?" : "Delete this job?";
+
+            // if user says no to the popup, no further action required
+            if (!AskQuestion(msg)) return;
 
             foreach (string id in jobIds)
             {
@@ -751,7 +754,7 @@ namespace UserInterface.Presenters
             view.UpdateJobTable(jobList);
 
             // restart the fetch jobs worker
-            FetchJobs.RunWorkerAsync();
+            if (restart) FetchJobs.RunWorkerAsync();
         }
     }
 }

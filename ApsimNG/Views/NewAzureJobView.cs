@@ -113,7 +113,7 @@ namespace UserInterface.Views
 
             chkSaveModels = new CheckButton("Save model files");
             chkSaveModels.Toggled += chkSaveModels_Toggled;
-            entryModelPath = new Entry((string)ApsimNG.Properties.Settings.Default["ModelPath"]);
+            entryModelPath = new Entry();
             btnModelPath = new Button("...");
             btnModelPath.Clicked += btnModelPath_Click;
             
@@ -177,7 +177,7 @@ namespace UserInterface.Views
 
             radioApsimZip = new RadioButton(radioApsimDir, "Use a zipped version of APSIM Next Generation");
             radioApsimZip.Toggled += new EventHandler(radioApsimZip_Changed);
-            entryApsimZip = new Entry((string)ApsimNG.Properties.Settings.Default["ApsimZipPath"]);
+            entryApsimZip = new Entry();
             btnApsimZip = new Button("...");
             btnApsimZip.Clicked += new EventHandler(btnApsimZip_Click);
 
@@ -198,7 +198,7 @@ namespace UserInterface.Views
             // toggle the default radio button to ensure appropriate entries/buttons are greyed out by default
             radioApsimDir.Active = true;
             radioApsimZip.Active = true;
-            radioApsimDir.Active = (bool)ApsimNG.Properties.Settings.Default["ApsimFromDir"];
+            radioApsimDir.Active = true;
 
             // add azure job table to azure alignment, and add that to the azure job frame
             alignTblAzure.Add(tblAzure);

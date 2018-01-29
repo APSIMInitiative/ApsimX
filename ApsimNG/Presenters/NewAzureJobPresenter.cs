@@ -1,26 +1,18 @@
 ﻿namespace UserInterface.Presenters
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
     using Views;
-    using Interfaces;    
     using System.ComponentModel;
     using System.IO;
     using System.IO.Compression;
     using Microsoft.Azure.Batch;
-    using Microsoft.Azure.Common;
-    using Microsoft.Azure.KeyVault.Core;
     using Microsoft.WindowsAzure.Storage;
     using System.Security.Cryptography;
-    using System.Configuration;
     using ApsimNG.Cloud;
     using Microsoft.Azure.Batch.Common;
     using ApsimNG.Properties;
     using Models.Core;
-    using APSIM.Shared.Utilities;
 
     public class NewAzureJobPresenter : IPresenter, INewCloudJobPresenter
     {        
@@ -65,6 +57,7 @@
         /// <param name="jp">Job Parameters.</param>
         public void SubmitJob(JobParameters jp)
         {
+            if (!CredentialsExist()) return;
             if (jp.JobDisplayName.Length < 1)
             {
                 ShowError("A description is required");
@@ -128,9 +121,6 @@
             // save user's choices to ApsimNG.Properties.Settings            
             
             Settings.Default["OutputDir"] = jp.OutputDir;
-            if (jp.ApsimFromDir) Settings.Default["ApsimDirPath"] = jp.ApplicationPackagePath;
-            else Settings.Default["ApsimZipPath"] = jp.ApplicationPackagePath;
-            Settings.Default["ModelPath"] = jp.ModelPath;
             Settings.Default.Save();
             
             submissionWorker.RunWorkerAsync(jp);
@@ -610,45 +600,7 @@
             {
                 ShowError(e.ToString());
             }
-        }
-
-        private IEnumerable<JobDetails> ListJobs()
-        {
-            var pools = batchClient.PoolOperations.ListPools();
-            var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
-
-            foreach (var cloudJob in batchClient.JobOperations.ListJobs(jobDetailLevel))
-            {
-                var job = new JobDetails {
-                    Id = cloudJob.Id,
-                    DisplayName = cloudJob.DisplayName,
-                    State = cloudJob.State.ToString()
-                };
-
-                if (cloudJob.ExecutionInformation != null)
-                {
-                    job.StartTime = cloudJob.ExecutionInformation.StartTime;
-                    job.EndTime = cloudJob.ExecutionInformation.EndTime;
-
-                    if (cloudJob.ExecutionInformation.PoolId != null)
-                    {
-                        var pool = pools.FirstOrDefault(p => string.Equals(cloudJob.ExecutionInformation.PoolId, p.Id));
-
-                        if (pool != null)
-                        {
-                            job.PoolSettings = new PoolSettings
-                            {
-                                MaxTasksPerVM = pool.MaxTasksPerComputeNode.GetValueOrDefault(1),
-                                State = pool.AllocationState.GetValueOrDefault(AllocationState.Resizing).ToString(),
-                                VMCount = pool.CurrentDedicatedComputeNodes.GetValueOrDefault(0),
-                                VMSize = pool.VirtualMachineSize
-                            };
-                        }
-                    }
-                }
-                yield return job;
-            }
-        }
+        } 
 
         public void Detach()
         {
@@ -677,7 +629,7 @@
             {
                 // ask user for a credentials file
                 AzureCredentialsSetup cred = new AzureCredentialsSetup();
-                cred.Destroyed += GetCredentials;
+                cred.Finished += GetCredentials;
             }
         }
 
@@ -691,7 +643,7 @@
             foreach (string key in credentials)
             {
                 string value = (string)Settings.Default[key];
-                if (key == "" || key == null) return false;
+                if (value == null || value == "") return false;
             }
             return true;
         }
