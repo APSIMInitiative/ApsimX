@@ -728,9 +728,20 @@ namespace Models.Core.ApsimFile
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion24(XmlNode node, string fileName)
         {
-            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            foreach (XmlNode managerNode in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
-                
+                ManagerConverter manager = new ManagerConverter();
+                manager.Read(managerNode);
+                List<MethodCall> methods = manager.FindMethodCalls("SoluteManager", "Add");
+                foreach (MethodCall method in methods)
+                {
+                    if (method.Arguments.Count == 2)
+                    {
+                        method.Arguments.Insert(1, "SoluteManager.SoluteSetterType.Fertiliser");
+                        manager.SetMethodCall(method);
+                    }
+                }
+                manager.Write(managerNode);
             }
                 
         }
