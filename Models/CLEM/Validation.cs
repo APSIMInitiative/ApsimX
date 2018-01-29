@@ -13,8 +13,7 @@ namespace Models.CLEM
     [AttributeUsage(AttributeTargets.Property)]
     public class DateGreaterThanAttribute : ValidationAttribute
     {
-        private const string DefaultErrorMessage =
-            "Date is less than the specified date";
+        private string DefaultErrorMessage;
 
         /// <summary>
         /// 
@@ -45,6 +44,49 @@ namespace Models.CLEM
             }
             else
             {
+                DefaultErrorMessage = "Date (" + laterDate.ToString() + ") must be greater than " + DateToCompareToFieldName.ToString() +"(" + earlierDate.ToString() +")";
+                return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Tests if double/int greater than specified value
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    public class GreaterThanValueAttribute : ValidationAttribute
+    {
+        private string DefaultErrorMessage;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        public GreaterThanValueAttribute(object value)
+        {
+            CompareValue = Convert.ToDouble(value);
+        }
+
+        private double CompareValue { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            double maxvalue = Convert.ToDouble(value);
+            string[] memberNames = new string[] { validationContext.MemberName };
+
+            if (maxvalue > CompareValue)
+            {
+                return ValidationResult.Success;
+            }
+            else
+            {
+                DefaultErrorMessage = "Value (" + maxvalue.ToString() + ") must be greater than " + CompareValue.ToString();
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -56,8 +98,7 @@ namespace Models.CLEM
     [AttributeUsage(AttributeTargets.Property)]
     public class GreaterThanAttribute : ValidationAttribute
     {
-        private const string DefaultErrorMessage =
-            "Value is less than the specified number";
+        private string DefaultErrorMessage;
 
         /// <summary>
         /// 
@@ -89,6 +130,7 @@ namespace Models.CLEM
             }
             else
             {
+                DefaultErrorMessage = "Value (" + maxvalue.ToString() + ") must be greater than " + CompareToFieldName + "(" + minvalue.ToString() +")";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -100,8 +142,7 @@ namespace Models.CLEM
     [AttributeUsage(AttributeTargets.Property)]
     public class GreaterThanEqualAttribute : ValidationAttribute
     {
-        private const string DefaultErrorMessage =
-            "Value is less than the specified number";
+        private string DefaultErrorMessage;
 
         /// <summary>
         /// 
@@ -133,6 +174,7 @@ namespace Models.CLEM
             }
             else
             {
+                DefaultErrorMessage = "Value (" + maxvalue.ToString() + ") must be greater than or equal to " + CompareToFieldName + "(" + minvalue.ToString() + ")";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
