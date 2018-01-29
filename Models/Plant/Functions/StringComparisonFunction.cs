@@ -36,11 +36,11 @@ namespace Models.PMF.Functions
         public double Value(int arrayIndex = -1)
         {
             object s = locator.Get(PropertyName);
-            if (s == null)
-                throw new Exception("Cannot find value for " + Name + " PropertyName: " + PropertyName);
 
             string PropertyString;
-            if (s is Array)
+            if (s == null)
+                PropertyString = "";
+            else if (s is Array)
                 PropertyString = (string)(s as Array).GetValue(arrayIndex);
             else if (s is IFunction)
                 PropertyString = (s as IFunction).Value(arrayIndex).ToString();
