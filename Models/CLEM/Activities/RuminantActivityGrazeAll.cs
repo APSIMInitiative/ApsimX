@@ -93,11 +93,14 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (RuminantActivityGrazePasture pastureGraze in ActivityList)
+            if (ActivityList != null)
             {
-                foreach (RuminantActivityGrazePastureHerd pastureHerd in pastureGraze.ActivityList)
+                foreach (RuminantActivityGrazePasture pastureGraze in ActivityList)
                 {
-                    pastureHerd.ResourceShortfallOccurred -= GrazeAll_ResourceShortfallOccurred;
+                    foreach (RuminantActivityGrazePastureHerd pastureHerd in pastureGraze.ActivityList)
+                    {
+                        pastureHerd.ResourceShortfallOccurred -= GrazeAll_ResourceShortfallOccurred;
+                    }
                 }
             }
         }

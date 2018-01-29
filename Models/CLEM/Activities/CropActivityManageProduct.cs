@@ -129,6 +129,7 @@ namespace Models.CLEM.Activities
                 case StoresForCrops.HumanFoodStore:
                 case StoresForCrops.AnimalFoodStore:
                 case StoresForCrops.ProductStore:
+                case StoresForCrops.GrazeFoodStore:
                     break;
                 default:
                     string[] memberNames = new string[] { "Store" };
@@ -157,6 +158,9 @@ namespace Models.CLEM.Activities
                     break;
                 case StoresForCrops.AnimalFoodStore:
                     LinkedResourceItem = Resources.GetResourceItem(this, typeof(AnimalFoodStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+                    break;
+                case StoresForCrops.GrazeFoodStore:
+                    LinkedResourceItem = Resources.GetResourceItem(this, typeof(GrazeFoodStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
                     break;
                 case StoresForCrops.ProductStore:
                     LinkedResourceItem = Resources.GetResourceItem(this, typeof(ProductStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;

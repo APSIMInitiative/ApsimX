@@ -125,7 +125,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double kgPerHa { get { return Amount / Area; } }
 
-        private double biomassAvailable;
+        private double biomassAddedThisYear;
         private double biomassConsumed;
 
         /// <summary>
@@ -135,9 +135,15 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (biomassAvailable == 0) return -1;
+                if (biomassAddedThisYear == 0)
+                {
+                    if (biomassConsumed > 0)
+                    {
+                        return 100;
+                    }
+                }
                 if (biomassConsumed == 0) return 0;
-                return biomassConsumed / biomassAvailable * 100;
+                return biomassConsumed / biomassAddedThisYear * 100;
             }
         }
 
@@ -246,7 +252,8 @@ namespace Models.CLEM.Resources
             if (ZoneCLEM.IsEcologicalIndicatorsCalculationMonth())
             {
                 OnEcologicalIndicatorsCalculated(new EcolIndicatorsEventArgs() { Indicators = CurrentEcologicalIndicators });
-                biomassAvailable = this.Amount;
+                // reset so available is sum of years growth
+                biomassAddedThisYear = 0;
                 biomassConsumed = 0;
             }
         }
@@ -269,11 +276,25 @@ namespace Models.CLEM.Resources
         /// <param name="Reason"></param>
         public void Add(object ResourceAmount, string ActivityName, string Reason)
         {
-            if (ResourceAmount.GetType() != typeof(GrazeFoodStorePool))
+            // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage)
+            if (!(ResourceAmount.GetType() == typeof(GrazeFoodStorePool) | ResourceAmount.GetType() != typeof(FoodResourcePacket)))
             {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
             }
-            GrazeFoodStorePool pool = ResourceAmount as GrazeFoodStorePool;
+
+            GrazeFoodStorePool pool;
+            if (ResourceAmount.GetType() == typeof(GrazeFoodStorePool))
+            {
+                pool = ResourceAmount as GrazeFoodStorePool;
+            }
+            else
+            {
+                pool = new GrazeFoodStorePool();
+                FoodResourcePacket packet = ResourceAmount as FoodResourcePacket;
+                pool.Set(packet.Amount);
+                pool.Nitrogen = packet.PercentN;
+                pool.DMD = packet.DMD;
+            }
 
             if (pool.Amount > 0)
             {
@@ -287,7 +308,7 @@ namespace Models.CLEM.Resources
                     Pools[0].Add(pool);
                 }
                 // update biomass available
-                biomassAvailable += pool.Amount;
+                biomassAddedThisYear += pool.Amount;
 
                 ResourceTransaction details = new ResourceTransaction();
                 details.Credit = pool.Amount;

@@ -225,7 +225,9 @@ namespace Models.CLEM.Activities
 
             double green = GrazeFoodStoreModel.Pools.Where(a => (a.Age <= greenage)).Sum(b => b.Amount);
             double propgreen = green / GrazeFoodStoreModel.Amount;
-            double greenlimit = this.RuminantTypeModel.GreenDietMax * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen * 100.0) - this.RuminantTypeModel.GreenDietZero)));
+            // propgreen is proportion so do not multiply by 100
+            double greenlimit = this.RuminantTypeModel.GreenDietMax * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * (propgreen - this.RuminantTypeModel.GreenDietZero)));
+//            double greenlimit = this.RuminantTypeModel.GreenDietMax * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen * 100.0) - this.RuminantTypeModel.GreenDietZero)));
             greenlimit = Math.Max(0.0, greenlimit);
             if (propgreen > 90)
             {
