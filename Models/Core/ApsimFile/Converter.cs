@@ -1,10 +1,9 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="Converter.cs" company="CSIRO">
-// TODO: Update copyright text.
+// <copyright file="Converter.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
-
-namespace Models.Core
+namespace Models.Core.ApsimFile
 {
     using System;
     using System.Collections.Generic;
@@ -19,12 +18,12 @@ namespace Models.Core
     using System.Data;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Converts the .apsim file from one version to the next
     /// </summary>
-    public class APSIMFileConverter
+    public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 23; } }
+        public static int LastestVersion { get { return 24; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -80,7 +79,7 @@ namespace Models.Core
 
                 // Find the method to call to upgrade the file by one version.
                 int versionFunction = fileVersion + 1;
-                MethodInfo method = typeof(APSIMFileConverter).GetMethod("UpgradeToVersion" + versionFunction, BindingFlags.NonPublic | BindingFlags.Static);
+                MethodInfo method = typeof(Converter).GetMethod("UpgradeToVersion" + versionFunction, BindingFlags.NonPublic | BindingFlags.Static);
                 if (method == null)
                     throw new Exception("Cannot find converter to go to version " + versionFunction);
 
@@ -250,9 +249,9 @@ namespace Models.Core
         private static void UpgradeToVersion7(XmlNode node, string fileName)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
-                APSIMFileConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"([\[\]\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"([\[\]\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
-                APSIMFileConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
         }
 
         /// <summary>
@@ -290,7 +289,7 @@ namespace Models.Core
         {
             foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "Root"))
             {
-                XmlNode partitionFraction = APSIMFileConverterUtilities.FindModelNode(root, "PartitionFraction");
+                XmlNode partitionFraction = ConverterUtilities.FindModelNode(root, "PartitionFraction");
                 if (partitionFraction != null)
                 {
                     root.RemoveChild(partitionFraction);
@@ -314,11 +313,11 @@ namespace Models.Core
 
             foreach (XmlNode organ in organs)
             {
-                APSIMFileConverterUtilities.AddConstantFuntionIfNotExists(organ, "NRetranslocationFactor", "0.0");
-                APSIMFileConverterUtilities.AddConstantFuntionIfNotExists(organ, "NitrogenDemandSwitch", "1.0");
-                APSIMFileConverterUtilities.AddConstantFuntionIfNotExists(organ, "DMReallocationFactor", "0.0");
-                APSIMFileConverterUtilities.AddConstantFuntionIfNotExists(organ, "DMRetranslocationFactor", "0.0");
-                APSIMFileConverterUtilities.AddVariableReferenceFuntionIfNotExists(organ, "CriticalNConc", "[" + organ.FirstChild.InnerText + "].MinimumNConc.Value()");
+                ConverterUtilities.AddConstantFuntionIfNotExists(organ, "NRetranslocationFactor", "0.0");
+                ConverterUtilities.AddConstantFuntionIfNotExists(organ, "NitrogenDemandSwitch", "1.0");
+                ConverterUtilities.AddConstantFuntionIfNotExists(organ, "DMReallocationFactor", "0.0");
+                ConverterUtilities.AddConstantFuntionIfNotExists(organ, "DMRetranslocationFactor", "0.0");
+                ConverterUtilities.AddVariableReferenceFuntionIfNotExists(organ, "CriticalNConc", "[" + organ.FirstChild.InnerText + "].MinimumNConc.Value()");
             }
         }
 
@@ -329,26 +328,26 @@ namespace Models.Core
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion11(XmlNode node, string fileName)
         {
-            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructural", ".Storage");
-            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralDemand", ".StorageDemand");
-            APSIMFileConverterUtilities.RenameVariable(node, ".TotalNonStructuralDemand", ".TotalStorageDemand");
-            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralAllocation", ".StorageAllocation");
-            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralFraction", ".StorageFraction");
-            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralWt", ".StorageWt");
-            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralN", ".StorageN");
-            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralNConc", ".StorageNConc");
-            APSIMFileConverterUtilities.RenameVariable(node, "NonStructuralFraction", "StorageFraction");
-            APSIMFileConverterUtilities.RenameVariable(node, "LeafStartNonStructuralNReallocationSupply", "LeafStartStorageFractionNReallocationSupply");
-            APSIMFileConverterUtilities.RenameVariable(node, "LeafStartNonStructuralNRetranslocationSupply", "LeafStartStorageNRetranslocationSupply");
-            APSIMFileConverterUtilities.RenameVariable(node, "LeafStartNonStructuralDMReallocationSupply", "LeafStartStorageDMReallocationSupply");
-            APSIMFileConverterUtilities.RenameVariable(node, "NonStructuralDMDemand", "StorageDMDemand");
-            APSIMFileConverterUtilities.RenameVariable(node, "NonStructuralNDemand", "StorageNDemand");
+            ConverterUtilities.RenameVariable(node, ".NonStructural", ".Storage");
+            ConverterUtilities.RenameVariable(node, ".NonStructuralDemand", ".StorageDemand");
+            ConverterUtilities.RenameVariable(node, ".TotalNonStructuralDemand", ".TotalStorageDemand");
+            ConverterUtilities.RenameVariable(node, ".NonStructuralAllocation", ".StorageAllocation");
+            ConverterUtilities.RenameVariable(node, ".NonStructuralFraction", ".StorageFraction");
+            ConverterUtilities.RenameVariable(node, ".NonStructuralWt", ".StorageWt");
+            ConverterUtilities.RenameVariable(node, ".NonStructuralN", ".StorageN");
+            ConverterUtilities.RenameVariable(node, ".NonStructuralNConc", ".StorageNConc");
+            ConverterUtilities.RenameVariable(node, "NonStructuralFraction", "StorageFraction");
+            ConverterUtilities.RenameVariable(node, "LeafStartNonStructuralNReallocationSupply", "LeafStartStorageFractionNReallocationSupply");
+            ConverterUtilities.RenameVariable(node, "LeafStartNonStructuralNRetranslocationSupply", "LeafStartStorageNRetranslocationSupply");
+            ConverterUtilities.RenameVariable(node, "LeafStartNonStructuralDMReallocationSupply", "LeafStartStorageDMReallocationSupply");
+            ConverterUtilities.RenameVariable(node, "NonStructuralDMDemand", "StorageDMDemand");
+            ConverterUtilities.RenameVariable(node, "NonStructuralNDemand", "StorageNDemand");
 
             // renames
-            APSIMFileConverterUtilities.RenamePMFFunction(node, "LeafCohortParameters", "NonStructuralFraction", "StorageFraction");
-            APSIMFileConverterUtilities.RenameNode(node, "NonStructuralNReallocated", "StorageNReallocated");
-            APSIMFileConverterUtilities.RenameNode(node, "NonStructuralWtReallocated", "StorageWtReallocated");
-            APSIMFileConverterUtilities.RenameNode(node, "NonStructuralNRetrasnlocated", "StorageNRetrasnlocated");
+            ConverterUtilities.RenamePMFFunction(node, "LeafCohortParameters", "NonStructuralFraction", "StorageFraction");
+            ConverterUtilities.RenameNode(node, "NonStructuralNReallocated", "StorageNReallocated");
+            ConverterUtilities.RenameNode(node, "NonStructuralWtReallocated", "StorageWtReallocated");
+            ConverterUtilities.RenameNode(node, "NonStructuralNRetrasnlocated", "StorageNRetrasnlocated");
         }
 
         /// <summary>
@@ -359,11 +358,11 @@ namespace Models.Core
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion12(XmlNode node, string fileName)
         {
-            APSIMFileConverterUtilities.RenamePMFFunction(node, "Structure", "MainStemNodeAppearanceRate", "Phyllochron");
-            APSIMFileConverterUtilities.RenameVariable(node, ".MainStemNodeAppearanceRate", ".Phyllochron");
+            ConverterUtilities.RenamePMFFunction(node, "Structure", "MainStemNodeAppearanceRate", "Phyllochron");
+            ConverterUtilities.RenameVariable(node, ".MainStemNodeAppearanceRate", ".Phyllochron");
 
-            APSIMFileConverterUtilities.RenamePMFFunction(node, "Structure", "MainStemFinalNodeNumber", "FinalLeafNumber");
-            APSIMFileConverterUtilities.RenameVariable(node, ".MainStemFinalNodeNumber", ".FinalLeafNumber");
+            ConverterUtilities.RenamePMFFunction(node, "Structure", "MainStemFinalNodeNumber", "FinalLeafNumber");
+            ConverterUtilities.RenameVariable(node, ".MainStemFinalNodeNumber", ".FinalLeafNumber");
         }
 
         /// <summary>
@@ -373,12 +372,12 @@ namespace Models.Core
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion13(XmlNode node, string fileName)
         {
-            APSIMFileConverterUtilities.RenameNode(node, "Plant15", "Plant");
-            APSIMFileConverterUtilities.RenameVariable(node, "using Models.PMF.OldPlant;", "using Models.PMF;");
-            APSIMFileConverterUtilities.RenameVariable(node, "Plant15", "Plant");
+            ConverterUtilities.RenameNode(node, "Plant15", "Plant");
+            ConverterUtilities.RenameVariable(node, "using Models.PMF.OldPlant;", "using Models.PMF;");
+            ConverterUtilities.RenameVariable(node, "Plant15", "Plant");
 
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
-                APSIMFileConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"(\w+).plant.status *== *\042out\042", @"!$1.IsAlive", null);  // /042 is a "
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"(\w+).plant.status *== *\042out\042", @"!$1.IsAlive", null);  // /042 is a "
 
             foreach (XmlNode simulationNode in XmlUtilities.FindAllRecursivelyByType(node, "Simulation"))
             {
@@ -429,7 +428,7 @@ namespace Models.Core
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion15(XmlNode node, string fileName)
         {
-            List<string> modelNames = APSIMFileConverterUtilities.GetAllModelNames(node);
+            List<string> modelNames = ConverterUtilities.GetAllModelNames(node);
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
             {
                 List<string> variables = XmlUtilities.Values(report, "VariableNames/string");
@@ -485,11 +484,11 @@ namespace Models.Core
                 LeafSizeAgeMultiplier.AppendChild(name);
                 LeafSizeAgeMultiplier.AppendChild(element);
 
-                if (APSIMFileConverterUtilities.FindModelNode(n, "LagDurationAgeMultiplier") == null)
+                if (ConverterUtilities.FindModelNode(n, "LagDurationAgeMultiplier") == null)
                     n.AppendChild(LagDurationAgeMultiplier);
-                if (APSIMFileConverterUtilities.FindModelNode(n, "SenescenceDurationAgeMultiplier") == null)
+                if (ConverterUtilities.FindModelNode(n, "SenescenceDurationAgeMultiplier") == null)
                     n.AppendChild(SenescenceDurationAgeMultiplier);
-                if (APSIMFileConverterUtilities.FindModelNode(n, "LeafSizeAgeMultiplier") == null)
+                if (ConverterUtilities.FindModelNode(n, "LeafSizeAgeMultiplier") == null)
                     n.AppendChild(LeafSizeAgeMultiplier);
             }
         }
@@ -524,14 +523,14 @@ namespace Models.Core
             }
 
             // remove all live and dead nodes.
-            foreach (XmlNode childToDelete in APSIMFileConverterUtilities.FindModelNodes(node, "CompositeBiomass", "Live"))
+            foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "CompositeBiomass", "Live"))
                 childToDelete.ParentNode.RemoveChild(childToDelete);
-            foreach (XmlNode childToDelete in APSIMFileConverterUtilities.FindModelNodes(node, "CompositeBiomass", "Dead"))
+            foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "CompositeBiomass", "Dead"))
                 childToDelete.ParentNode.RemoveChild(childToDelete);
 
-            foreach (XmlNode childToDelete in APSIMFileConverterUtilities.FindModelNodes(node, "Biomass", "Live"))
+            foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "Biomass", "Live"))
                 childToDelete.ParentNode.RemoveChild(childToDelete);
-            foreach (XmlNode childToDelete in APSIMFileConverterUtilities.FindModelNodes(node, "Biomass", "Dead"))
+            foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "Biomass", "Dead"))
                 childToDelete.ParentNode.RemoveChild(childToDelete);
 
         }
@@ -545,26 +544,26 @@ namespace Models.Core
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.dlayer", ".Thickness");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.Thickness", ".Thickness");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15", ".LL15");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15mm", ".LL15mm");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.DUL", ".DUL");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.DULmm", ".DULmm");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.SAT", ".SAT");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.SATmm", ".SATmm");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.dlayer", ".Thickness");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.Thickness", ".Thickness");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15", ".LL15");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.LL15mm", ".LL15mm");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.DUL", ".DUL");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.DULmm", ".DULmm");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.SAT", ".SAT");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilWater.SATmm", ".SATmm");
             }
 
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
             {
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.dlayer", ".Thickness");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.Thickness", ".Thickness");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.LL15", ".LL15");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.LL15mm", ".LL15mm");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.DUL", ".DUL");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.DULmm", ".DULmm");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SAT", ".SAT");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SATmm", ".SATmm");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.dlayer", ".Thickness");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.Thickness", ".Thickness");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.LL15", ".LL15");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.LL15mm", ".LL15mm");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.DUL", ".DUL");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.DULmm", ".DULmm");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SAT", ".SAT");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilWater.SATmm", ".SATmm");
             }
         }
 
@@ -578,7 +577,7 @@ namespace Models.Core
             //Rename existing DMConversionEfficiencyFunction nodes
             foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "Leaf"))
             {
-                XmlNode dmFunction = APSIMFileConverterUtilities.FindModelNode(n, "DMConversionEfficiencyFunction");
+                XmlNode dmFunction = ConverterUtilities.FindModelNode(n, "DMConversionEfficiencyFunction");
                 if (dmFunction != null)
                 {
                     XmlUtilities.SetValue(dmFunction, "Name", "DMConversionEfficiency");
@@ -589,7 +588,7 @@ namespace Models.Core
 
             XmlUtilities.FindAllRecursively(node, "DMConversionEfficiencyFunction", ref nodeList);
             foreach (XmlNode n in nodeList)
-                APSIMFileConverterUtilities.RenameNode(n, "DMConversionEfficiencyFunction", "DMConversionEfficiency");
+                ConverterUtilities.RenameNode(n, "DMConversionEfficiencyFunction", "DMConversionEfficiency");
 
             nodeList.Clear();
             nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Root"));
@@ -608,7 +607,7 @@ namespace Models.Core
                 DMnode.AppendChild(name);
                 DMnode.AppendChild(element);
 
-                if (APSIMFileConverterUtilities.FindModelNode(n, "DMConversionEfficiency") == null)
+                if (ConverterUtilities.FindModelNode(n, "DMConversionEfficiency") == null)
                     n.AppendChild(DMnode);
             }
         }
@@ -628,7 +627,7 @@ namespace Models.Core
                 MRFnode.AppendChild(name);
                 MRFnode.AppendChild(element);
 
-                if (APSIMFileConverterUtilities.FindModelNode(n, "MaintenanceRespirationFunction") == null)
+                if (ConverterUtilities.FindModelNode(n, "MaintenanceRespirationFunction") == null)
                     n.AppendChild(MRFnode);
             }
         }
@@ -661,7 +660,7 @@ namespace Models.Core
                 DMnode.AppendChild(name);
                 DMnode.AppendChild(element);
 
-                if (APSIMFileConverterUtilities.FindModelNode(n, "RemobilisationCost") == null)
+                if (ConverterUtilities.FindModelNode(n, "RemobilisationCost") == null)
                     n.AppendChild(DMnode);
             }
 
@@ -679,7 +678,7 @@ namespace Models.Core
             {
                 StartStage = XmlUtilities.Value(EmergePhase, "End");
             }
-            APSIMFileConverterUtilities.RenameVariable(node, "InitialValue", "StageToStartMovingAverage");
+            ConverterUtilities.RenameVariable(node, "InitialValue", "StageToStartMovingAverage");
             foreach (XmlNode MovingAverageFunction in XmlUtilities.FindAllRecursivelyByType(node, "MovingAverageFunction"))
             {
                 XmlUtilities.SetValue(MovingAverageFunction, "StageToStartMovingAverage", StartStage);
@@ -716,10 +715,35 @@ namespace Models.Core
                 DMnode.AppendChild(name);
                 DMnode.AppendChild(element);
 
-                if (APSIMFileConverterUtilities.FindModelNode(n, "CarbonConcentration") == null)
+                if (ConverterUtilities.FindModelNode(n, "CarbonConcentration") == null)
                     n.AppendChild(DMnode);
             }
 
+        }
+
+        /// <summary>
+        /// Upgrades to version 24. Add second argument to SoluteManager.Add method
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion24(XmlNode node, string fileName)
+        {
+            foreach (XmlNode managerNode in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ManagerConverter manager = new ManagerConverter();
+                manager.Read(managerNode);
+                List<MethodCall> methods = manager.FindMethodCalls("SoluteManager", "Add");
+                foreach (MethodCall method in methods)
+                {
+                    if (method.Arguments.Count == 2)
+                    {
+                        method.Arguments.Insert(1, "SoluteManager.SoluteSetterType.Fertiliser");
+                        manager.SetMethodCall(method);
+                    }
+                }
+                manager.Write(managerNode);
+            }
+                
         }
     }
 }

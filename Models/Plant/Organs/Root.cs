@@ -470,8 +470,8 @@ namespace Models.PMF.Organs
                 ZoneState zone = Zones.Find(z => z.Name == thisZone.Zone.Name);
                 if (zone != null)
                 {
-                    zone.solutes.Subtract("NO3", thisZone.NO3N);
-                    zone.solutes.Subtract("NH4", thisZone.NH4N);
+                    zone.solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, thisZone.NO3N);
+                    zone.solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, thisZone.NH4N);
 
                     zone.NitUptake = MathUtilities.Multiply_Value(MathUtilities.Add(thisZone.NO3N, thisZone.NH4N), -1);
                 }

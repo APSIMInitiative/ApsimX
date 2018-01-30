@@ -101,34 +101,6 @@ namespace Models.WaterModel
         [XmlIgnore]
         public double[] Water { get; set; }
 
-        /// <summary>Nitrate in the soil (kg/ha).</summary>
-        [XmlIgnore]
-        public double[] NO3
-        {
-            get
-            {
-                return soilNitrogen.NO3;
-            }
-            set
-            {
-                soilNitrogen.NO3 = value;
-            }
-        }
-
-        /// <summary>Ammonia in the soil (kg/ha).</summary>
-        [XmlIgnore]
-        public double[] NH4
-        {
-            get
-            {
-                return soilNitrogen.NH4;
-            }
-            set
-            {
-                soilNitrogen.NH4 = value;
-            }
-        }
-
         /// <summary>Runon (mm).</summary>
         [XmlIgnore]
         public double Runon { get; set; }
@@ -289,8 +261,8 @@ namespace Models.WaterModel
             MoveUp(NH4, NH4Up);
 
             // Set deltas
-            solutes.Add("NO3", MathUtilities.Subtract(soilNitrogen.NO3, NO3));
-            solutes.Add("NH4", MathUtilities.Subtract(soilNitrogen.NH4, NH4));
+            solutes.Add("NO3", SoluteManager.SoluteSetterType.Soil, MathUtilities.Subtract(soilNitrogen.NO3, NO3));
+            solutes.Add("NH4", SoluteManager.SoluteSetterType.Soil, MathUtilities.Subtract(soilNitrogen.NH4, NH4));
 
             ResidueInterception = 0;
             CanopyInterception = 0;
