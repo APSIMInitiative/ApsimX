@@ -416,47 +416,10 @@
           </KLAT>
           <residueinterception>0</residueinterception>
         </SoilWater>
-        <SoilNitrogen>
-          <Name>SoilNitrogen</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <fom_type>
-            <string>default</string>
-            <string>manure</string>
-            <string>mucuna</string>
-            <string>lablab</string>
-            <string>shemp</string>
-            <string>stable</string>
-          </fom_type>
-          <fract_carb>
-            <double>0.2</double>
-            <double>0.3</double>
-            <double>0.54</double>
-            <double>0.57</double>
-            <double>0.45</double>
-            <double>0</double>
-          </fract_carb>
-          <fract_cell>
-            <double>0.7</double>
-            <double>0.3</double>
-            <double>0.37</double>
-            <double>0.37</double>
-            <double>0.47</double>
-            <double>0.1</double>
-          </fract_cell>
-          <fract_lign>
-            <double>0.1</double>
-            <double>0.4</double>
-            <double>0.09</double>
-            <double>0.06</double>
-            <double>0.08</double>
-            <double>0.9</double>
-          </fract_lign>
-        </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <RootCN>30</RootCN>
-          <RootWt>3000</RootWt>
           <SoilCN>11.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -500,6 +463,14 @@
             <double>0.96</double>
             <double>0.96</double>
           </FInert>
+          <RootWt>
+            <double>1243.93105413469</double>
+            <double>833.831921472727</double>
+            <double>457.616661050873</double>
+            <double>251.145348455215</double>
+            <double>137.831489583111</double>
+            <double>75.6435253033839</double>
+          </RootWt>
           <OCUnits>Total</OCUnits>
         </SoilOrganicMatter>
         <Sample>
@@ -560,6 +531,15 @@
           <Name>CERESSoilTemperature</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </CERESSoilTemperature>
+        <Nutrient>
+          <Name>Nutrient</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ResourceName>Nutrient</ResourceName>
+          <DirectedGraphInfo>
+            <Nodes />
+            <Arcs />
+          </DirectedGraphInfo>
+        </Nutrient>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <RecordNumber>0</RecordNumber>
         <SoilType />
@@ -703,6 +683,7 @@ using Models.Core;
 using System.Collections.Generic;
 using System.Text;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.PMF;
 using Models;
 using System.Xml.Serialization;
@@ -713,6 +694,10 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
+        [ScopedLinkByName] Solute Urea;
+        [LinkByPath(Path="[Nutrient].SurfaceResidue.Decomposition")] CarbonFlow SurfaceResidueDecomposition;
+        [ScopedLinkByName] NutrientPool Microbial;
+        [ScopedLinkByName] NutrientPool Humic;
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
@@ -775,16 +760,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Humic.N);
+			BiomN = MathUtilities.Sum(Microbial.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(SurfaceResidueDecomposition.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
 			int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -795,8 +780,8 @@ namespace Models
 			}
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.Nutrient.Natm);
 			AccumPlantN -= (double)zone.Get("SCRUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -816,9 +801,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Humic.N);
+			BiomN = MathUtilities.Sum(Microbial.N);
 			AccumFert += Fert.NitrogenApplied;
 			AccumIrrigation += Irrig.IrrigationApplied;
 			
@@ -852,6 +837,7 @@ namespace Models
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using System.Xml.Serialization;
 using Models.PMF;
 using APSIM.Shared.Utilities;
@@ -1031,6 +1017,7 @@ namespace Models
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using System.Xml.Serialization;
 using Models.PMF;
 using APSIM.Shared.Utilities;
@@ -2961,47 +2948,10 @@ This model has been built to simulate a range of different crops in simulations 
           </KLAT>
           <residueinterception>0</residueinterception>
         </SoilWater>
-        <SoilNitrogen>
-          <Name>SoilNitrogen</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <fom_type>
-            <string>default</string>
-            <string>manure</string>
-            <string>mucuna</string>
-            <string>lablab</string>
-            <string>shemp</string>
-            <string>stable</string>
-          </fom_type>
-          <fract_carb>
-            <double>0.2</double>
-            <double>0.3</double>
-            <double>0.54</double>
-            <double>0.57</double>
-            <double>0.45</double>
-            <double>0</double>
-          </fract_carb>
-          <fract_cell>
-            <double>0.7</double>
-            <double>0.3</double>
-            <double>0.37</double>
-            <double>0.37</double>
-            <double>0.47</double>
-            <double>0.1</double>
-          </fract_cell>
-          <fract_lign>
-            <double>0.1</double>
-            <double>0.4</double>
-            <double>0.09</double>
-            <double>0.06</double>
-            <double>0.08</double>
-            <double>0.9</double>
-          </fract_lign>
-        </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <RootCN>30</RootCN>
-          <RootWt>3000</RootWt>
           <SoilCN>11.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -3045,6 +2995,14 @@ This model has been built to simulate a range of different crops in simulations 
             <double>0.96</double>
             <double>0.96</double>
           </FInert>
+          <RootWt>
+            <double>1243.93105413469</double>
+            <double>833.831921472727</double>
+            <double>457.616661050873</double>
+            <double>251.145348455215</double>
+            <double>137.831489583111</double>
+            <double>75.6435253033839</double>
+          </RootWt>
           <OCUnits>Total</OCUnits>
         </SoilOrganicMatter>
         <Sample>
@@ -3084,6 +3042,15 @@ This model has been built to simulate a range of different crops in simulations 
           <Name>CERESSoilTemperature</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </CERESSoilTemperature>
+        <Nutrient>
+          <Name>Nutrient</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ResourceName>Nutrient</ResourceName>
+          <DirectedGraphInfo>
+            <Nodes />
+            <Arcs />
+          </DirectedGraphInfo>
+        </Nutrient>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <RecordNumber>0</RecordNumber>
         <SoilType />
@@ -3293,6 +3260,7 @@ using Models.Core;
 using System.Collections.Generic;
 using System.Text;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.PMF;
 using Models;
 using System.Xml.Serialization;
@@ -3304,6 +3272,10 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
+        [ScopedLinkByName] Solute Urea;
+        [LinkByPath(Path="[Nutrient].SurfaceResidue.Decomposition")] CarbonFlow SurfaceResidueDecomposition;
+        [ScopedLinkByName] NutrientPool Microbial;
+        [ScopedLinkByName] NutrientPool Humic;
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
@@ -3366,16 +3338,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Humic.N);
+			BiomN = MathUtilities.Sum(Microbial.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(SurfaceResidueDecomposition.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
 			int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -3386,8 +3358,8 @@ namespace Models
 			}
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.Nutrient.Natm);
 			AccumPlantN -= (double)zone.Get("SCRUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -3407,9 +3379,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Humic.N);
+			BiomN = MathUtilities.Sum(Microbial.N);
 			AccumFert += Fert.NitrogenApplied;
 			AccumIrrigation += Irrig.IrrigationApplied;
 			
@@ -3521,7 +3493,7 @@ namespace Models
           <string>[AutomaticIrrigation].Script.TodayYear</string>
           <string>[SCRUM].Arbitrator.FN</string>
           <string>[SurfaceOrganicMatter].wt</string>
-          <string>sum([Soil].SoilNitrogen.FOMN)</string>
+          <string>sum([Soil].Nutrient.FOMN)</string>
           <string>[SCRUM].Phenology.AccumulatedEmergedTT</string>
           <string>[SCRUM].Stover.CoverGreen</string>
         </VariableNames>
@@ -5077,47 +5049,10 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
             </KLAT>
             <residueinterception>0</residueinterception>
           </SoilWater>
-          <SoilNitrogen>
-            <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <fom_type>
-              <string>default</string>
-              <string>manure</string>
-              <string>mucuna</string>
-              <string>lablab</string>
-              <string>shemp</string>
-              <string>stable</string>
-            </fom_type>
-            <fract_carb>
-              <double>0.2</double>
-              <double>0.3</double>
-              <double>0.54</double>
-              <double>0.57</double>
-              <double>0.45</double>
-              <double>0</double>
-            </fract_carb>
-            <fract_cell>
-              <double>0.7</double>
-              <double>0.3</double>
-              <double>0.37</double>
-              <double>0.37</double>
-              <double>0.47</double>
-              <double>0.1</double>
-            </fract_cell>
-            <fract_lign>
-              <double>0.1</double>
-              <double>0.4</double>
-              <double>0.09</double>
-              <double>0.06</double>
-              <double>0.08</double>
-              <double>0.9</double>
-            </fract_lign>
-          </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>30</RootCN>
-            <RootWt>3000</RootWt>
             <SoilCN>11.5</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
@@ -5161,6 +5096,14 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
               <double>0.96</double>
               <double>0.96</double>
             </FInert>
+            <RootWt>
+              <double>1243.93105413469</double>
+              <double>833.831921472727</double>
+              <double>457.616661050873</double>
+              <double>251.145348455215</double>
+              <double>137.831489583111</double>
+              <double>75.6435253033839</double>
+            </RootWt>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
           <Sample>
@@ -5200,6 +5143,15 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
             <Name>CERESSoilTemperature</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </CERESSoilTemperature>
+          <Nutrient>
+            <Name>Nutrient</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ResourceName>Nutrient</ResourceName>
+            <DirectedGraphInfo>
+              <Nodes />
+              <Arcs />
+            </DirectedGraphInfo>
+          </Nutrient>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <RecordNumber>0</RecordNumber>
           <SoilType />
@@ -5240,8 +5192,8 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <CultivarName>Barley_Spring</CultivarName>
-            <InitialRootDepth>10</InitialRootDepth>
             <SowingDate>1998-10-14</SowingDate>
+            <InitialRootDepth>10</InitialRootDepth>
           </Script>
           <Code><![CDATA[
 using System;
@@ -5291,6 +5243,7 @@ using Models.Core;
 using System.Collections.Generic;
 using System.Text;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.PMF;
 using Models;
 using System.Xml.Serialization;
@@ -5300,7 +5253,11 @@ namespace Models
 {
 	[Serializable] 
 	public class Script : Model
-	{      
+	{
+        [ScopedLinkByName] Solute Urea;
+        [LinkByPath(Path="[Nutrient].SurfaceResidue.Decomposition")] CarbonFlow SurfaceResidueDecomposition;
+        [ScopedLinkByName] NutrientPool Microbial;
+        [ScopedLinkByName] NutrientPool Humic;     
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
@@ -5363,16 +5320,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Humic.N);
+		    BiomN = MathUtilities.Sum(Microbial.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(SurfaceResidueDecomposition.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -5383,8 +5340,8 @@ namespace Models
 			}
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.Nutrient.Natm);
 			AccumPlantN -= (double)zone.Get("SCRUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -5404,9 +5361,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Humic.N);
+		    BiomN = MathUtilities.Sum(Microbial.N);
 			AccumFert += Fert.NitrogenApplied;
 			AccumIrrigation += Irrig.IrrigationApplied;
 			
@@ -5696,6 +5653,7 @@ namespace Models
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using System.Xml.Serialization;
 using Models.PMF;
 using APSIM.Shared.Utilities;
@@ -5875,6 +5833,7 @@ namespace Models
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using System.Xml.Serialization;
 using Models.PMF;
 using APSIM.Shared.Utilities;
@@ -7831,42 +7790,6 @@ namespace Models
             </SWCON>
             <residueinterception>0</residueinterception>
           </SoilWater>
-          <SoilNitrogen>
-            <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <fom_type>
-              <string>default</string>
-              <string>manure</string>
-              <string>mucuna</string>
-              <string>lablab</string>
-              <string>shemp</string>
-              <string>stable</string>
-            </fom_type>
-            <fract_carb>
-              <double>0.2</double>
-              <double>0.3</double>
-              <double>0.54</double>
-              <double>0.57</double>
-              <double>0.45</double>
-              <double>0</double>
-            </fract_carb>
-            <fract_cell>
-              <double>0.7</double>
-              <double>0.3</double>
-              <double>0.37</double>
-              <double>0.37</double>
-              <double>0.47</double>
-              <double>0.1</double>
-            </fract_cell>
-            <fract_lign>
-              <double>0.1</double>
-              <double>0.4</double>
-              <double>0.09</double>
-              <double>0.06</double>
-              <double>0.08</double>
-              <double>0.9</double>
-            </fract_lign>
-          </SoilNitrogen>
           <Analysis>
             <Name>Analysis</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -8032,7 +7955,6 @@ namespace Models
             <Name>SoilOrganicMatter</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>16</RootCN>
-            <RootWt>6000</RootWt>
             <SoilCN>11</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
@@ -8076,12 +7998,29 @@ namespace Models
               <double>0.9</double>
               <double>0.9</double>
             </FInert>
+            <RootWt>
+              <double>2329.32381017875</double>
+              <double>1561.39244367093</double>
+              <double>1046.6326547212</double>
+              <double>574.404179626975</double>
+              <double>315.239697600327</double>
+              <double>173.007214201822</double>
+            </RootWt>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
           <CERESSoilTemperature>
             <Name>CERESSoilTemperature</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </CERESSoilTemperature>
+          <Nutrient>
+            <Name>Nutrient</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ResourceName>Nutrient</ResourceName>
+            <DirectedGraphInfo>
+              <Nodes />
+              <Arcs />
+            </DirectedGraphInfo>
+          </Nutrient>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <RecordNumber>0</RecordNumber>
           <SoilType>lignin_FOM</SoilType>
@@ -8303,6 +8242,7 @@ using Models.Core;
 using System.Collections.Generic;
 using System.Text;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.PMF;
 using Models;
 using System.Xml.Serialization;
@@ -8313,6 +8253,10 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
+        [ScopedLinkByName] Solute Urea;
+        [LinkByPath(Path="[Nutrient].SurfaceResidue.Decomposition")] CarbonFlow SurfaceResidueDecomposition;
+        [ScopedLinkByName] NutrientPool Microbial;
+        [ScopedLinkByName] NutrientPool Humic;
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
@@ -8388,16 +8332,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Humic.N);
+			BiomN = MathUtilities.Sum(Microbial.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(SurfaceResidueDecomposition.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
 			int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -8409,8 +8353,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.Nutrient.Natm);
 			AccumPlantN -= (double)zone.Get("SCRUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -8432,9 +8376,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Humic.N);
+			BiomN = MathUtilities.Sum(Microbial.N);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -8460,6 +8404,7 @@ using Models.Core;
 using System.Collections.Generic;
 using System.Text;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.PMF;
 using Models;
 using System.Xml.Serialization;
@@ -12398,47 +12343,10 @@ namespace Models
             </SWCON>
             <residueinterception>0</residueinterception>
           </SoilWater>
-          <SoilNitrogen>
-            <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <fom_type>
-              <string>default</string>
-              <string>manure</string>
-              <string>mucuna</string>
-              <string>lablab</string>
-              <string>shemp</string>
-              <string>stable</string>
-            </fom_type>
-            <fract_carb>
-              <double>0.2</double>
-              <double>0.3</double>
-              <double>0.54</double>
-              <double>0.57</double>
-              <double>0.45</double>
-              <double>0</double>
-            </fract_carb>
-            <fract_cell>
-              <double>0.7</double>
-              <double>0.3</double>
-              <double>0.37</double>
-              <double>0.37</double>
-              <double>0.47</double>
-              <double>0.1</double>
-            </fract_cell>
-            <fract_lign>
-              <double>0.1</double>
-              <double>0.4</double>
-              <double>0.09</double>
-              <double>0.06</double>
-              <double>0.08</double>
-              <double>0.9</double>
-            </fract_lign>
-          </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>31.5</RootCN>
-            <RootWt>1500</RootWt>
             <SoilCN>11</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
@@ -12492,6 +12400,16 @@ namespace Models
               <double>0.96</double>
               <double>0.96</double>
             </FInert>
+            <RootWt>
+              <double>536.933609520005</double>
+              <double>359.917361851531</double>
+              <double>197.526836216385</double>
+              <double>132.406197945841</double>
+              <double>108.405026156391</double>
+              <double>72.6660621236466</double>
+              <double>59.4939397657046</double>
+              <double>32.6509664204958</double>
+            </RootWt>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
           <Sample>
@@ -12544,6 +12462,15 @@ namespace Models
             <Name>CERESSoilTemperature</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </CERESSoilTemperature>
+          <Nutrient>
+            <Name>Nutrient</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ResourceName>Nutrient</ResourceName>
+            <DirectedGraphInfo>
+              <Nodes />
+              <Arcs />
+            </DirectedGraphInfo>
+          </Nutrient>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <RecordNumber>0</RecordNumber>
           <Site>-</Site>
@@ -12636,7 +12563,8 @@ using Models.Core;
 using System.Collections.Generic;
 using System.Text;
 using Models.Soils;
-using Models.PMF;
+using Models.Soils.Nutrients;
+using Models.PMF.Functions;
 using Models;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
@@ -12674,17 +12602,17 @@ namespace Models
             <Name>Sowing_Yield</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <Crop2>Dried_Peas</Crop2>
+              <SowingDate2>2005-09-28</SowingDate2>
+              <HarvestDate2>2006-02-24</HarvestDate2>
+              <CropNConc>0</CropNConc>
               <YieldFile>%root%\Tests\Validation\SCRUM\YieldsToSet.csv</YieldFile>
               <InitialRootDepth>10</InitialRootDepth>
               <Crop1>Potatoes_Short</Crop1>
               <SowingDate1>2004-10-15</SowingDate1>
               <HarvestDate1>2005-03-14</HarvestDate1>
               <Yield1>5500</Yield1>
-              <Crop2>Dried_Peas</Crop2>
-              <SowingDate2>2005-09-28</SowingDate2>
-              <HarvestDate2>2006-02-24</HarvestDate2>
               <Yield2>958</Yield2>
-              <CropNConc>0</CropNConc>
               <Crop3>Potatoes_Short</Crop3>
               <SowingDate3>2006-10-11</SowingDate3>
               <HarvestDate3>2007-03-12</HarvestDate3>
@@ -12981,22 +12909,22 @@ namespace Models
             <Name>InF</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <NFert>0</NFert>
+              <Irr1>0</Irr1>
+              <Irr2>0</Irr2>
+              <Irr3>0</Irr3>
+              <Irr4>0</Irr4>
+              <IrrFact1>0</IrrFact1>
+              <IrrFact2>0</IrrFact2>
+              <IrrFact3>0</IrrFact3>
+              <IrrFact4>0</IrrFact4>
+              <TreatFact>0</TreatFact>
               <FertDate1>2005-10-26</FertDate1>
               <FertDate2>2005-11-25</FertDate2>
-              <NFert>0</NFert>
-              <TreatFact>0</TreatFact>
               <IrrDate1>2005-11-18</IrrDate1>
-              <Irr1>0</Irr1>
-              <IrrFact1>0</IrrFact1>
               <IrrDate2>2005-11-23</IrrDate2>
-              <Irr2>0</Irr2>
-              <IrrFact2>0</IrrFact2>
               <IrrDate3>2005-12-07</IrrDate3>
-              <Irr3>0</Irr3>
-              <IrrFact3>0</IrrFact3>
               <IrrDate4>2005-12-29</IrrDate4>
-              <Irr4>0</Irr4>
-              <IrrFact4>0</IrrFact4>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -13234,6 +13162,7 @@ using Models.Core;
 using System.Collections.Generic;
 using System.Text;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.PMF;
 using Models;
 using System.Xml.Serialization;
@@ -13244,6 +13173,10 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
+        [ScopedLinkByName] Solute Urea;
+        [LinkByPath(Path="[Nutrient].SurfaceResidue.Decomposition")] CarbonFlow SurfaceResidueDecomposition;
+        [ScopedLinkByName] NutrientPool Microbial;
+        [ScopedLinkByName] NutrientPool Humic;
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
@@ -13311,16 +13244,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Humic.N);
+			BiomN = MathUtilities.Sum(Microbial.N);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			UreaN = MathUtilities.Sum(Urea.kgha);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(SurfaceResidueDecomposition.MineralisedN);
+			DltNMinTot = MathUtilities.Sum(Soil.Nutrient.MineralisedN);
 		
 			//Residue components//
 			ResidueWt = SOM.Wt;
@@ -13337,8 +13270,8 @@ namespace Models
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			//AccumLeach = AccumLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea; //Fails
 			AccumLeach = AccumLeach + Soil.SoilWater.LeachNO3;
-			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumMineralisation += MathUtilities.Sum(Soil.Nutrient.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.Nutrient.Natm);
 			AccumPlantN += (double)zone.Get("SCRUM.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -13360,9 +13293,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.Nutrient.FOMN);
+			HumN = MathUtilities.Sum(Humic.N);
+			BiomN = MathUtilities.Sum(Microbial.N);
 			AccumFert += Fert.NitrogenApplied;
 			AccumIrrigation += Irrig.IrrigationApplied;
 			
@@ -13435,6 +13368,7 @@ using Models.Core;
 using System.Collections.Generic;
 using System.Text;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.PMF;
 using Models;
 using System.Xml.Serialization;

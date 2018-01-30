@@ -1016,10 +1016,10 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
         <Name>Age</Name>
         <Constant>
           <Name>day</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.0027397260273972603</FixedValue>
         </Constant>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <StartStageName>Emergence</StartStageName>
         <EndStageName>Old</EndStageName>
         <FractionRemovedOnCut>0</FractionRemovedOnCut>
@@ -1029,7 +1029,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </AccumulateFunction>
       <PhotoperiodFunction>
         <Name>Photoperiod</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Twilight>-6</Twilight>
         <DayLength>0</DayLength>
       </PhotoperiodFunction>
@@ -1037,7 +1037,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
         <Name>Phenology</Name>
         <StageBasedInterpolation>
           <Name>StageCode</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Stages>
             <string>Emergence</string>
             <string>EndJuvenile</string>
@@ -1054,12 +1054,12 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
         </StageBasedInterpolation>
         <Constant>
           <Name>ThermalTime</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <GerminatingPhase>
           <Name>Germinating</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Sowing</Start>
           <End>Germination</End>
         </GerminatingPhase>
@@ -1067,10 +1067,10 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Germination</Start>
           <End>Emergence</End>
           <ShootLag>7</ShootLag>
@@ -1080,15 +1080,15 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Name>Juvenile</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>365</FixedValue>
           </Constant>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>EndJuvenile</End>
         </GenericPhase>
@@ -1096,15 +1096,15 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Name>Mature</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1825</FixedValue>
           </Constant>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>EndJuvenile</Start>
           <End>Maturity</End>
         </GenericPhase>
@@ -1112,15 +1112,15 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Name>Declining</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>27010</FixedValue>
           </Constant>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Maturity</Start>
           <End>Old</End>
         </GenericPhase>
@@ -1128,31 +1128,31 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           <Name>Old</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Old</Start>
           <End>Unused</End>
         </EndPhase>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
         <RelativeAllocation>
           <Name>NArbitrator</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RelativeAllocation>
         <RelativeAllocation>
           <Name>DMArbitrator</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RelativeAllocation>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </OrganArbitrator>
       <CompositeBiomass>
         <Name>AboveGround</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -1162,7 +1162,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>AboveGroundLive</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Stem].Live</string>
@@ -1170,7 +1170,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>AboveGroundDead</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Dead</string>
           <string>[Stem].Dead</string>
@@ -1178,7 +1178,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>BelowGround</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Root].Live</string>
           <string>[Root].Dead</string>
@@ -1186,7 +1186,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>Total</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -1198,7 +1198,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>TotalLive</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Stem].Live</string>
@@ -1207,7 +1207,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>TotalDead</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Dead</string>
           <string>[Stem].Dead</string>
@@ -1218,31 +1218,37 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
         <Name>Leaf</Name>
         <Memo>
           <Name>Description</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[]]></MemoText>
         </Memo>
         <MultiplyFunction>
           <Name>InitialWtFunction</Name>
           <Constant>
             <Name>InitialPlantWt</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.01</FixedValue>
             <Units>g/plant</Units>
           </Constant>
           <VariableReference>
             <Name>Population</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Plant].Population</VariableName>
           </VariableReference>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
           <AirTemperatureFunction>
             <Name>FRGRFunctionTemp</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>5</double>
                 <double>20</double>
@@ -1256,9 +1262,9 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
                 <double>0</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AirTemperatureFunction>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MinimumFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -1268,7 +1274,7 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
               <Name>PotentialFraction</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>0.5</double>
@@ -1282,14 +1288,14 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
                   <double>0.52</double>
                 </Y>
               </XYPairs>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <XProperty>[Bambatsi].Age.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>PhotoperiodEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>10</double>
                   <double>12</double>
@@ -1303,18 +1309,18 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <XProperty>[Bambatsi].Photoperiod.Value()</XProperty>
             </LinearInterpolationFunction>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>ExtinctionCoefficient</Name>
           <Memo>
             <Name>Memo</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[Value of 0.57 from 
 Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees
 Author(s): Robin A. Harrington and James H. Fownes
@@ -1322,14 +1328,14 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.57</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>100</double>
@@ -1341,35 +1347,35 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>1200</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[AboveGround].Wt</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MaximumNConc</Name>
           <Memo>
             <Name>Memo</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[0.043 gN/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
 (GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
           </Memo>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.025</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.015</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.9</FractionLiveToRemove>
             <FractionDeadToRemove>0.9</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1377,7 +1383,7 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1385,7 +1391,7 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1393,51 +1399,51 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>LeafResidenceTime</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>130</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafDetachmentTime</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>365</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>2</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>8</double>
                 <double>20</double>
@@ -1451,7 +1457,7 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>0</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
           </WeightedTemperatureFunction>
           <LinearInterpolationFunction>
@@ -1462,7 +1468,7 @@ But their data suggests a value of 0.3]]></MemoText>
                 <Name>Graph</Name>
                 <Series>
                   <Name>FVPD</Name>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1501,7 +1507,7 @@ But their data suggests a value of 0.3]]></MemoText>
                 <LegendPosition>BottomRight</LegendPosition>
                 <DisabledSeries />
               </Graph>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>10</double>
@@ -1513,7 +1519,7 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>1</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
@@ -1524,7 +1530,7 @@ But their data suggests a value of 0.3]]></MemoText>
                 <Name>Graph</Name>
                 <Series>
                   <Name>FN</Name>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1563,7 +1569,7 @@ But their data suggests a value of 0.3]]></MemoText>
                 <LegendPosition>BottomRight</LegendPosition>
                 <DisabledSeries />
               </Graph>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -1575,7 +1581,7 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>1</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Fn</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
@@ -1586,7 +1592,7 @@ But their data suggests a value of 0.3]]></MemoText>
                 <Name>Graph</Name>
                 <Series>
                   <Name>FW</Name>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Type>Scatter</Type>
                   <XAxis>Bottom</XAxis>
                   <YAxis>Left</YAxis>
@@ -1625,7 +1631,7 @@ But their data suggests a value of 0.3]]></MemoText>
                 <LegendPosition>BottomRight</LegendPosition>
                 <DisabledSeries />
               </Graph>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -1637,33 +1643,33 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>1</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
           <RUECO2Function>
             <Name>FCO2</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           </RUECO2Function>
           <Memo>
             <Name>Memo</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature conditions for field pea.  Halving this to make it total radiation gives 0.8 g/MJ and adding 20% to account for root and  nodule production and N fixiation costs gives 1.0 g/MJ
 ]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>RadnInt</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].RadIntTot</VariableName>
           </VariableReference>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RUEModel>
         <LinearInterpolationFunction>
           <Name>LeafKillFraction</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>3</double>
@@ -1673,12 +1679,12 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <double>0</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Weather].MinT</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumLAI</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.1</FixedValue>
           <Units>m2/m2</Units>
         </Constant>
@@ -1686,14 +1692,14 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>LAIDeadFunction</Name>
           <VariableReference>
             <Name>DeadLeafWt</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].Dead.Wt</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>SLA</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -1703,16 +1709,16 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
                 <double>0.015</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Bambatsi].Age.Value()</XProperty>
           </LinearInterpolationFunction>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <Constant>
           <Name>ExtinctionCoefficientDead</Name>
           <Memo>
             <Name>Memo</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[Value of 0.57 from 
 Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees
 Author(s): Robin A. Harrington and James H. Fownes
@@ -1720,14 +1726,14 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.57</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>SpecificLeafAreaFunction</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>1</double>
@@ -1737,11 +1743,15 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>0.0125</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Bambatsi].Age.Value()</XProperty>
         </LinearInterpolationFunction>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <CarbonConcentration>0</CarbonConcentration>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
         <CohortsInitialised>false</CohortsInitialised>
@@ -1762,45 +1772,45 @@ But their data suggests a value of 0.3]]></MemoText>
         <Name>Root</Name>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>Old</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>RootFrontVelocity</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>20</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>6</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.008</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1000000</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>3</double>
@@ -1810,14 +1820,14 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>1</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Leaf].LAI</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.003</double>
@@ -1827,14 +1837,14 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>0.03</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNH4</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.003</double>
@@ -1844,14 +1854,14 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>0</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NUptakeSWFactor</Name>
           <XYPairs>
             <Name>XYPairs</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.5</double>
@@ -1863,18 +1873,18 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>1</double>
             </Y>
           </XYPairs>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].RWC</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.02</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>100</FixedValue>
           <Units>m/g</Units>
         </Constant>
@@ -1882,7 +1892,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1890,7 +1900,7 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.3</FractionLiveToResidue>
@@ -1898,7 +1908,7 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1906,7 +1916,7 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
@@ -1914,13 +1924,13 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Thin</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -1928,7 +1938,7 @@ But their data suggests a value of 0.3]]></MemoText>
             <Name>PartitionFraction</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -1942,24 +1952,24 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>0.2</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Bambatsi].Age.Value()</XProperty>
           </LinearInterpolationFunction>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>RemobilisationCost</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
@@ -1967,35 +1977,31 @@ But their data suggests a value of 0.3]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.4</FixedValue>
         </Constant>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
-        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <ZoneNamesToGrowRootsIn />
-        <ZoneRootDepths />
-        <ZoneInitialDM />
       </Root>
       <GenericOrgan>
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>Old</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <PartitionFractionDemandFunction>
@@ -2004,7 +2010,7 @@ But their data suggests a value of 0.3]]></MemoText>
             <Name>PartitionFraction</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -2018,42 +2024,42 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>0.27</double>
               </Y>
             </XYPairs>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Bambatsi].Age.Value()</XProperty>
           </LinearInterpolationFunction>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>SenescenceRate</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.0015</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.0014</FixedValue>
         </Constant>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
@@ -2061,7 +2067,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.9</FractionLiveToRemove>
             <FractionDeadToRemove>0.9</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -2069,7 +2075,7 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -2077,7 +2083,7 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.9</FractionLiveToRemove>
             <FractionDeadToRemove>0.9</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -2085,7 +2091,7 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
@@ -2093,39 +2099,39 @@ But their data suggests a value of 0.3]]></MemoText>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Thin</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMReallocationFactor</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <VariableReference>
           <Name>CriticalNConc</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Stem].MinimumNConc.Value()</VariableName>
         </VariableReference>
         <Constant>
           <Name>RemobilisationCost</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
@@ -2133,15 +2139,14 @@ But their data suggests a value of 0.3]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.4</FixedValue>
         </Constant>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <CarbonConcentration>0</CarbonConcentration>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <Cultivar>
         <Name>Bambatsi</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Command />
       </Cultivar>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Bambatsi</CropType>
     </Plant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3024,7 +3029,6 @@ namespace Models
                   <Name>SoilOrganicMatter</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <RootCN>40</RootCN>
-                  <RootWt>5000</RootWt>
                   <SoilCN>12</SoilCN>
                   <EnrACoeff>7.4</EnrACoeff>
                   <EnrBCoeff>0.2</EnrBCoeff>
@@ -3063,6 +3067,7 @@ namespace Models
                     <double>0.99</double>
                     <double>0.99</double>
                   </FInert>
+                  <RootWt />
                   <OCUnits>Total</OCUnits>
                 </SoilOrganicMatter>
                 <Analysis>
@@ -4094,7 +4099,6 @@ namespace Models
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <RootCN>40</RootCN>
-                <RootWt>10</RootWt>
                 <SoilCN>14.5</SoilCN>
                 <EnrACoeff>7.4</EnrACoeff>
                 <EnrBCoeff>0.2</EnrBCoeff>
@@ -4188,6 +4192,7 @@ namespace Models
                   <double>0.99</double>
                   <double>0.99</double>
                 </FInert>
+                <RootWt />
                 <OCUnits>Total</OCUnits>
               </SoilOrganicMatter>
               <Analysis>
@@ -5063,7 +5068,6 @@ namespace Models
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <RootCN>40</RootCN>
-                <RootWt>10</RootWt>
                 <SoilCN>14.5</SoilCN>
                 <EnrACoeff>7.4</EnrACoeff>
                 <EnrBCoeff>0.2</EnrBCoeff>
@@ -5157,6 +5161,7 @@ namespace Models
                   <double>0.99</double>
                   <double>0.99</double>
                 </FInert>
+                <RootWt />
                 <OCUnits>Total</OCUnits>
               </SoilOrganicMatter>
               <Analysis>
@@ -7027,7 +7032,6 @@ endif
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <RootCN>40</RootCN>
-                <RootWt>200</RootWt>
                 <SoilCN>17.6</SoilCN>
                 <EnrACoeff>7.4</EnrACoeff>
                 <EnrBCoeff>0.2</EnrBCoeff>
@@ -7101,6 +7105,7 @@ endif
                   <double>0.95</double>
                   <double>0.95</double>
                 </FInert>
+                <RootWt />
                 <OCUnits>Total</OCUnits>
               </SoilOrganicMatter>
               <Analysis>
@@ -10815,7 +10820,6 @@ namespace Models
                   <Name>SoilOrganicMatter</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <RootCN>57</RootCN>
-                  <RootWt>1109</RootWt>
                   <SoilCN>13</SoilCN>
                   <EnrACoeff>7.4</EnrACoeff>
                   <EnrBCoeff>0.2</EnrBCoeff>
@@ -10864,6 +10868,7 @@ namespace Models
                     <double>0.99</double>
                     <double>0.99</double>
                   </FInert>
+                  <RootWt />
                   <OCUnits>Total</OCUnits>
                 </SoilOrganicMatter>
                 <Analysis>

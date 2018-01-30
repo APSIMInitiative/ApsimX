@@ -846,7 +846,6 @@
             <Name>On</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>40</RootCN>
-            <RootWt>0</RootWt>
             <SoilCN>12</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
@@ -895,13 +894,21 @@
               <double>1</double>
               <double>1</double>
             </FInert>
+            <RootWt>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </RootWt>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
           <SoilOrganicMatter>
             <Name>Off</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>40</RootCN>
-            <RootWt>0</RootWt>
             <SoilCN>12</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
@@ -950,6 +957,15 @@
               <double>1</double>
               <double>1</double>
             </FInert>
+            <RootWt>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </RootWt>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1543,7 +1559,6 @@ namespace Models
               <Name>SoilOrganicMatter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
-              <RootWt>0</RootWt>
               <SoilCN>12</SoilCN>
               <EnrACoeff>7.4</EnrACoeff>
               <EnrBCoeff>0.2</EnrBCoeff>
@@ -1592,6 +1607,15 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
               </FInert>
+              <RootWt>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+              </RootWt>
               <OCUnits>Total</OCUnits>
             </SoilOrganicMatter>
             <Analysis>
@@ -2782,7 +2806,6 @@ namespace Models
               <Name>SoilOrganicMatter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
-              <RootWt>0</RootWt>
               <SoilCN>12</SoilCN>
               <EnrACoeff>7.4</EnrACoeff>
               <EnrBCoeff>0.2</EnrBCoeff>
@@ -2831,6 +2854,15 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
               </FInert>
+              <RootWt>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+              </RootWt>
               <OCUnits>Total</OCUnits>
             </SoilOrganicMatter>
             <Analysis>
