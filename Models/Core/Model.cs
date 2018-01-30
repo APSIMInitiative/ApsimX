@@ -213,6 +213,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.RelativeGrowthRateDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.FillingRateFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.BerryFillingRateFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.Photosynthesis))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUECO2Function))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUEModel))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
