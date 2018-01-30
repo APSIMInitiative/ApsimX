@@ -108,6 +108,8 @@
     <EmbeddedResource Include="Resources\Glade\TreeProxyView.glade" />
     <EmbeddedResource Include="Resources\Glade\ModelDetailsWrapperView.glade" />
     <EmbeddedResource Include="Resources\Glade\ReportActivityLedgerView.glade" />
+    <EmbeddedResource Include="Resources\Glade\InputNextBackView.glade" />
+    <None Include="Resources\InputNextBackView.glade" />
     <None Include="Resources\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Test.xshd" />
@@ -171,6 +173,7 @@
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
     <Compile Include="Presenters\CLEMFileGRASPPresenter.cs" />
+    <Compile Include="Presenters\CLEMFileSQLiteGRASPPresenter.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\ActivityLedgerGridPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
@@ -222,6 +225,7 @@
     <Compile Include="Views\AxisView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
+    <Compile Include="Views\CLEMFileSQLiteGRASPView.cs" />
     <Compile Include="Views\CLEMFileGRASPView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
     <Compile Include="Views\ActivityLedgerGridView.cs" />

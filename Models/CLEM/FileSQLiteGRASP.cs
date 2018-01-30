@@ -23,8 +23,8 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.CLEMFileSQLiteGRASPView")]
+    [PresenterName("UserInterface.Presenters.CLEMFileSQLiteGRASPPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
     [Description("This component reads a SQLite database with GRASP data for native pasture production used in the CLEM simulation.")]
     public class FileSQLiteGRASP : CLEMModel, IFileGRASP, IValidatableObject
@@ -35,6 +35,18 @@ namespace Models.CLEM
         [Link]
         private Clock clock = null;
 
+
+
+        /// <summary>
+        /// Gets or sets the file name. Should be relative filename where possible.
+        /// </summary>
+        [Summary]
+        [Description("Pasture file name")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture file name must be supplied.")]
+        public string FileName { get; set; }
+
+
+
         /// <summary>
         /// APSIMx SQLite class
         /// </summary>
@@ -42,17 +54,74 @@ namespace Models.CLEM
         SQLite SQLiteReader = null;
 
         /// <summary>
-        /// All the distinct Stocking Rates that were found in the database
+        /// Provides an error message to display if something is wrong.
+        /// The message is displayed in the warning label of the View.
         /// </summary>
-        private double[] distinctStkRates;
+        [XmlIgnore]
+        public string ErrorMessage = string.Empty;
+
 
         /// <summary>
-        /// Gets or sets the file name. Should be relative filename where possible.
+        /// All the distinct Stocking Rates that were found in the database
         /// </summary>
-        [Summary]
-        [Description("Pasture file name")]
-        [Required(AllowEmptyStrings = false, ErrorMessage ="Pasture file name must be supplied.")]
-        public string FileName { get; set; }
+        [XmlIgnore]
+        private double[] distinctStkRates;
+
+
+
+
+
+
+
+        /// <summary>
+        /// Opens the SQLite database if necessary
+        /// </summary>
+        /// <returns>true if open suceeded, false if the opening failed </returns>
+        private bool OpenSQLiteDB()
+        {
+            if (SQLiteReader == null)
+            {
+                if (this.FullFileName == null || this.FullFileName == "")
+                {
+                    ErrorMessage = "File Name for the SQLite database is missing";
+                    return false;
+                }
+                    
+                if (System.IO.File.Exists(this.FullFileName))
+                {
+                    // check SQL file
+                    SQLiteReader = new SQLite();
+                    try
+                    {
+                        SQLiteReader.OpenDatabase(FullFileName, true);
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorMessage = "There was a problem opening the SQLite database (" + FullFileName + ")\n" + ex.Message;
+                        return false;
+                    }
+                }
+                else
+                {
+                    ErrorMessage = "This SQLite database (" + FullFileName + ") cound not be found";
+                    return false;
+                }
+
+            }
+            else
+            {
+                //it's already open
+                return true;  
+            } 
+                
+        }
+
+
+
+
+
+
 
         /// <summary>
         /// Validate model
@@ -110,8 +179,25 @@ namespace Models.CLEM
             return results;
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #region Properties and Methods for populating the User Interface with data
+
+
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
+        /// Must be a property so that the Prsenter can use a  Commands.ChangeProperty() on it.
         /// </summary>
         [XmlIgnore]
         public string FullFileName
@@ -134,16 +220,103 @@ namespace Models.CLEM
             }
         }
 
+
+        /// <summary>
+        /// Gets or sets Starting Year for the grid.
+        /// For speed purposes the grid will only display a few years worth of 
+        /// GRASP data at a time instead of all of it.
+        /// Must be a property so that the Prsenter can use a  Commands.ChangeProperty() on it.
+        /// </summary>
+        [XmlIgnore]
+        public int StartYearForGrid { get; set; }
+
+        /// <summary>
+        /// Number or years to display in the grid.
+        /// Does not have to have a get and set because it is not modified by a command in the presenter.
+        /// </summary>
+        [XmlIgnore]
+        public int NumberOfYearsToDisplayInGrid = 4;
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetTable()
+        {
+
+            if (StartYearForGrid == 0)
+            {
+                //Find the clock model. nb. Linking does not work until you hit the run button.
+                //So we need to find it ourselves. Clock should be a child of the same parent as this model.
+                IModel model = Apsim.Child(this.Parent, typeof(IClock));
+                Clock clockModel = model as Clock;
+
+                StartYearForGrid = clockModel.StartDate.Year;
+            }
+
+
+
+            if (OpenSQLiteDB() == false)
+            {
+                return null;
+            }
+
+
+            int startYear = StartYearForGrid;
+            int endYear = startYear + NumberOfYearsToDisplayInGrid;
+
+            string SQLquery = "SELECT  Region,Soil,GrassBA,LandCon,StkRate,Year,CutNum,Month,Growth,BP1,BP2 FROM Native_Inputs";
+            SQLquery += " WHERE Year BETWEEN " + startYear + " AND " + endYear;
+
+            try
+            {
+                DataTable results = SQLiteReader.ExecuteQuery(SQLquery);
+                results.DefaultView.Sort = "Year, Month";
+                return results;
+            }
+            catch (Exception err)
+            {
+                SQLiteReader.CloseDatabase();
+                ErrorMessage = err.Message;
+                return null;
+            }
+            
+
+        }
+
+
+        #endregion
+
+
+
+
+
+
+
+        #region Event Handlers for Running Simulation
+
+
+
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            //if the SQLite Database can't be opened throw an exception.
+            if (OpenSQLiteDB() == false)
+            { 
+                throw new Exception(ErrorMessage);
+            }
+
             // get list of distinct stocking rates available in database
             // database has already been opened and checked in Validate()
             this.distinctStkRates = GetStkRateCategories();
         }
+
+
 
         /// <summary>
         /// Overrides the base class method to allow for clean up
@@ -158,14 +331,13 @@ namespace Models.CLEM
             }
         }
 
-        /// <summary>
-        /// Provides an error message to display if something is wrong.
-        /// Used by the UserInterface to give a warning of what is wrong
-        /// 
-        /// When the user selects a file using the browse button in the UserInterface 
-        /// and the file can not be displayed for some reason in the UserInterface.
-        /// </summary>
-        public string ErrorMessage = string.Empty;
+
+
+
+
+
+
+
 
         /// <summary>
         /// Searches the DataTable created from the GRASP File for all the distinct StkRate values.
@@ -173,6 +345,7 @@ namespace Models.CLEM
         /// <returns></returns>
         private double[] GetStkRateCategories()
         {
+
             DataTable res = SQLiteReader.ExecuteQuery("SELECT DISTINCT StkRate FROM Native_Inputs ORDER BY StkRate ASC");
 
             double[] results = new double[res.Rows.Count];
@@ -331,6 +504,11 @@ namespace Models.CLEM
             };
             return pasturedata;
         }
+
+
+
+
+        #endregion
 
     }
 
