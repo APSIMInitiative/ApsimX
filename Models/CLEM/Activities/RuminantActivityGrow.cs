@@ -82,33 +82,54 @@ namespace Models.CLEM.Activities
                 }
             }
 
+
+            //            foreach (var ind in herd.GroupBy(a => a.Weaned).OrderByDescending(a => a.Age))
+
             // Calculate potential intake and reset stores
             // Order age descending so breeder females calculate milkproduction before suckings grow
-            foreach (var ind in herd.OrderByDescending(a => a.Age))
+
+            DateTime start = DateTime.Now;
+
+            foreach (var ind in herd.GroupBy(a => a.Weaned).OrderByDescending(a => a.Key))
             {
-                // reset tallies at start of the month
-                ind.DietDryMatterDigestibility = 0;
-                ind.PercentNOfIntake = 0;
-                ind.Intake = 0;
-                ind.MilkIntake = 0;
-                CalculatePotentialIntake(ind);
+                foreach (var indi in ind)
+                {
+                    // reset tallies at start of the month
+                    indi.DietDryMatterDigestibility = 0;
+                    indi.PercentNOfIntake = 0;
+                    indi.Intake = 0;
+                    indi.MilkIntake = 0;
+                    CalculatePotentialIntake(indi);
+                }
             }
 
-            // TODO: Future cohort based run may speed up simulation
+            var diff = DateTime.Now - start;
+
+            //TODO: Future cohort based run may speed up simulation
             // Calculate by cohort method and assign values to individuals.
             // Need work out what grouping should be based on Name, Breed, Gender, Weight, Parity...
             // This approach will not currently work as individual may have individual weights and females may be in various states of breeding.
-            //
-            //var cohorts = herd.GroupBy(a => new { a.BreedParams.Breed, a.Gender, a.Age, lactating = (a.DryBreeder | a.Milk) });
-            //foreach (var cohort in cohorts)
+
+            // do weaned first so milk production ok
+            //foreach (var ind in herd.GroupBy(a => a.Weaned).OrderByDescending(a => a.Key))
             //{
-            //    CalculatePotentialIntake(cohort.FirstOrDefault());
-            //    double potintake = cohort.FirstOrDefault().PotentialIntake;
-            //    foreach (var ind in cohort)
+
+
+            //    var cohorts = herd.GroupBy(a => new { a.BreedParams.Breed, a.Gender, a.Age, lactating = (a.DryBreeder | a.Milk) });
+            //    foreach (var cohort in cohorts)
             //    {
-            //        ind.PotentialIntake = potintake;
+            //        CalculatePotentialIntake(cohort.FirstOrDefault());
+            //        double potintake = cohort.FirstOrDefault().PotentialIntake;
+            //        foreach (var ind in cohort)
+            //        {
+            //            ind.PotentialIntake = potintake;
+            //        }
             //    }
+
+
             //}
+
+
         }
 
         private void CalculatePotentialIntake(Ruminant ind)
