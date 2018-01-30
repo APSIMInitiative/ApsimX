@@ -1227,13 +1227,6 @@ namespace Models
       <ObservedTableName>MaxLeafSize</ObservedTableName>
       <FieldNameUsedForMatch>MaxLeafSize.Script.LeafPosition</FieldNameUsedForMatch>
     </PredictedObserved>
-    <PredictedObserved>
-      <Name>PredictedObservedSoil</Name>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <PredictedTableName>SoilHarvestReport</PredictedTableName>
-      <ObservedTableName>ObsSoil</ObservedTableName>
-      <FieldNameUsedForMatch>Clock.Today.Year</FieldNameUsedForMatch>
-    </PredictedObserved>
     <IncludeInDocumentation>false</IncludeInDocumentation>
   </DataStore>
   <Folder>
