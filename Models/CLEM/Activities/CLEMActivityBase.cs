@@ -91,18 +91,20 @@ namespace Models.CLEM.Activities
         /// </summary>
         protected void ClearActivitiesPerformedStatus()
         {
-            // get resources required for all dynamically created CLEMActivityBase activities
+            // clear status of all dynamically created CLEMActivityBase activities
             if (ActivityList != null)
             {
                 foreach (CLEMActivityBase activity in ActivityList)
                 {
                     activity.Status = ActivityStatus.NotNeeded;
+                    activity.ClearAllAllActivitiesPerformedStatus();
                 }
             }
-            // get resources required for all children of type CLEMActivityBase
+            // clear status for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
             {
                 activity.Status = ActivityStatus.NotNeeded;
+                activity.ClearAllAllActivitiesPerformedStatus();
             }
         }
 
@@ -119,18 +121,20 @@ namespace Models.CLEM.Activities
         /// </summary>
         protected void ReportActivitiesPerformed()
         {
-            // get resources required for all dynamically created CLEMActivityBase activities
+            // call activity performed for all dynamically created CLEMActivityBase activities
             if (ActivityList != null)
             {
                 foreach (CLEMActivityBase activity in ActivityList)
                 {
                     activity.TriggerOnActivityPerformed();
+                    activity.ReportAllAllActivitiesPerformed();
                 }
             }
-            // get resources required for all children of type CLEMActivityBase
+            // call acticity performed  for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
             {
                 activity.TriggerOnActivityPerformed();
+                activity.ReportAllAllActivitiesPerformed();
             }
         }
 

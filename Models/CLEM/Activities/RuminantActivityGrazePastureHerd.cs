@@ -225,8 +225,11 @@ namespace Models.CLEM.Activities
 
             double green = GrazeFoodStoreModel.Pools.Where(a => (a.Age <= greenage)).Sum(b => b.Amount);
             double propgreen = green / GrazeFoodStoreModel.Amount;
-            // propgreen is proportion so do not multiply by 100
-            double greenlimit = this.RuminantTypeModel.GreenDietMax * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * (propgreen - this.RuminantTypeModel.GreenDietZero)));
+            
+            // All valuesa re now proportions.
+            // Convert to percentage before calculation
+            
+            double greenlimit = (this.RuminantTypeModel.GreenDietMax*100) * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen*100) - (this.RuminantTypeModel.GreenDietZero*100))));
 //            double greenlimit = this.RuminantTypeModel.GreenDietMax * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen * 100.0) - this.RuminantTypeModel.GreenDietZero)));
             greenlimit = Math.Max(0.0, greenlimit);
             if (propgreen > 90)
@@ -279,6 +282,7 @@ namespace Models.CLEM.Activities
                         food.Amount = eaten * GrazingCompetitionLimiter * shortfall;
                         ind.AddIntake(food);
                     }
+                    SetStatusSuccess();
 
                     // if insufficent provided or no pasture (nothing eaten) use totalNeededifPasturePresent
                     if (GrazingCompetitionLimiter < 1)
@@ -294,6 +298,7 @@ namespace Models.CLEM.Activities
                         {
                             throw new ApsimXException(this, "Insufficient pasture available for grazing in paddock ("+GrazeFoodStoreModel.Name+") in "+Clock.Today.Month.ToString()+"\\"+Clock.Today.Year.ToString());
                         }
+                        this.Status = ActivityStatus.Partial;
                     }
                 }
             }
