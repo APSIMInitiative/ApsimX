@@ -44,7 +44,7 @@
                 return null;
 
             if (serialisedBase == null)
-                Initialise();
+                Initialise(fullFactorial);
 
             var combination = allCombinations[0];
             allCombinations.RemoveAt(0);
@@ -94,10 +94,10 @@
         /// <summary>
         /// Initialise the experiment ready for creating simulations.
         /// </summary>
-        private void Initialise()
-        {
-            allCombinations = AllCombinations();
+        private void Initialise(bool fullFactorial = false)
+        {            
             parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
             Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
             serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
         }
