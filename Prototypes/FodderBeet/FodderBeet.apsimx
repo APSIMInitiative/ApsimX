@@ -1179,7 +1179,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
-        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <Leaves />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -1447,11 +1446,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
-        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <ZoneNamesToGrowRootsIn />
-        <ZoneRootDepths />
-        <ZoneInitialDM />
       </Root>
       <GenericOrgan>
         <Name>StorageRoot</Name>
@@ -1615,7 +1610,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <FixedValue>0.4</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Petiole</Name>
@@ -1773,7 +1767,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <FixedValue>0.4</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -12627,8 +12620,8 @@ namespace Models
                 <Name>StateFactors</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <NitFactor>0</NitFactor>
                   <IrrFactor>False</IrrFactor>
+                  <NitFactor>0</NitFactor>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -14676,5 +14669,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>426</ExplorerWidth>
+  <ExplorerWidth>475</ExplorerWidth>
 </Simulations>
