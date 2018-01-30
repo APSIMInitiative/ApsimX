@@ -1,5 +1,9 @@
-﻿
-namespace Models.Core
+﻿// -----------------------------------------------------------------------
+// <copyright file="Format.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace Models.Core.ApsimFile
 {
     using System;
     using System.Collections.Generic;
@@ -17,10 +21,10 @@ namespace Models.Core
     /// <summary>
     /// A class for reading and writing the .apsimx file format.
     /// </summary>
-    public class FileFormat
+    public class Format
     {
         /// <summary>Constructor</summary>
-        public FileFormat()
+        public Format()
         {
         }
 
@@ -30,7 +34,7 @@ namespace Models.Core
         public string WriteXML(ModelWrapper rootNode)
         {
             StringWriter s = new StringWriter();
-            APSIMFileWriter writer = new APSIMFileWriter(s);
+            Writer writer = new Writer(s);
             writer.Formatting = Formatting.Indented;
             XmlUtilities.SerialiseWithOptions(rootNode, false, null, null, writer);
             return s.ToString();
@@ -77,7 +81,7 @@ namespace Models.Core
         /// <param name="s">The stream to read from.</param>
         public ModelWrapper Read(Stream s)
         {
-            XmlReader reader = new APSIMFileReader(s);
+            XmlReader reader = new Reader(s);
             reader.Read();
 
             Assembly modelsAssembly = null;
@@ -92,9 +96,9 @@ namespace Models.Core
         /// <param name="node">XML node to read from.</param>
         public ModelWrapper Read(XmlNode node)
         {
-            APSIMFileConverter.ConvertToLatestVersion(node, null);
+            Converter.ConvertToLatestVersion(node, null);
             
-            XmlReader reader = new APSIMFileReader(node);
+            XmlReader reader = new Reader(node);
             reader.Read();
 
             Assembly modelsAssembly = null;

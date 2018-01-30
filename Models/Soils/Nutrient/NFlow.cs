@@ -77,9 +77,9 @@ namespace Models.Soils.Nutrient
                 if (destination != null)
                     destination[i] += nitrogenFlowToDestination;
             }
-            solutes.SetSolute(sourceName, source);
+            solutes.SetSolute(sourceName, SoluteManager.SoluteSetterType.Soil, source);
             if (destination != null)
-                solutes.SetSolute(destinationName, destination);
+                solutes.SetSolute(destinationName, SoluteManager.SoluteSetterType.Soil, destination);
         }
 
 

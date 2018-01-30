@@ -2444,16 +2444,19 @@ namespace Models.Soils
 
                 return null;
             }
-            set  // should this be private?
-            {
-                //double sumOld = MathUtilities.Sum(urea);
+        }
+        /// <summary>Setter for urea</summary>
+        /// <param name="callingModelType">Type of calling model</param>
+        /// <param name="value">Values</param>
+        public void Seturea(SoluteManager.SoluteSetterType callingModelType, double[] value)
+        {
+            //double sumOld = MathUtilities.Sum(urea);
 
-                for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].urea[layer] = value[layer];
+            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
+                for (int k = 0; k < Patch.Count; k++)
+                    Patch[k].urea[layer] = value[layer];
 
-                // SendExternalMassFlowN(MathUtilities.Sum(urea) - sumOld); //TODO:is this still needed?
-            }
+            // SendExternalMassFlowN(MathUtilities.Sum(urea) - sumOld); //TODO:is this still needed?
         }
 
         /// <summary>
@@ -2473,16 +2476,19 @@ namespace Models.Soils
 
                 return result;
             }
-            set  // should this be private?
-            {
-                //double sumOld = MathUtilities.Sum(NH4);
+        }
+        /// <summary>Setter for urea</summary>
+        /// <param name="callingModelType">Type of calling model</param>
+        /// <param name="value">Values</param>
+        public void SetNH4(SoluteManager.SoluteSetterType callingModelType, double[] value)
+        {
+            //double sumOld = MathUtilities.Sum(NH4);
 
-                for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].nh4[layer] = value[layer];
+            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
+                for (int k = 0; k < Patch.Count; k++)
+                    Patch[k].nh4[layer] = value[layer];
 
-                // SendExternalMassFlowN(MathUtilities.Sum(NH4) - sumOld); //TODO:is this still needed?
-            }
+            // SendExternalMassFlowN(MathUtilities.Sum(NH4) - sumOld); //TODO:is this still needed?
         }
 
         /// <summary>
@@ -2507,16 +2513,19 @@ namespace Models.Soils
 
                 return null;
             }
-            set  // should this be private?
-            {
-                //double sumOld = MathUtilities.Sum(NO3);
+        }
+        /// <summary>Setter for urea</summary>
+        /// <param name="callingModelType">Type of calling model</param>
+        /// <param name="value">Values</param>
+        public void SetNO3(SoluteManager.SoluteSetterType callingModelType, double[] value)
+        {
+            //double sumOld = MathUtilities.Sum(NO3);
 
-                for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].no3[layer] = value[layer];
+            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
+                for (int k = 0; k < Patch.Count; k++)
+                    Patch[k].no3[layer] = value[layer];
 
-                // SendExternalMassFlowN(MathUtilities.Sum(NO3) - sumOld); //TODO:is this still needed?
-            }
+            // SendExternalMassFlowN(MathUtilities.Sum(NO3) - sumOld); //TODO:is this still needed?
         }
 
         /// <summary>
