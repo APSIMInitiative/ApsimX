@@ -709,7 +709,8 @@ namespace UserInterface.Presenters
 
             bool restart = FetchJobs.IsBusy;
             // cancel the fetch jobs worker
-            if (restart) FetchJobs.CancelAsync();
+            FetchJobs.CancelAsync();
+            
             //while (FetchJobs.IsBusy);
             view.HideLoadingProgressBar();
 
@@ -752,6 +753,9 @@ namespace UserInterface.Presenters
             // refresh the tree view
             view.UpdateJobTable(jobList);
 
+            // Sometimes we get here before the worker has actually cancelled.
+            // We don't want to ask it to run while it is already running.
+            while (FetchJobs.IsBusy) ;  
             // restart the fetch jobs worker
             if (restart) FetchJobs.RunWorkerAsync();
         }

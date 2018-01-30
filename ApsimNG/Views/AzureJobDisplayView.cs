@@ -193,7 +193,9 @@ namespace UserInterface.Views
                 TreeViewColumn col = new TreeViewColumn
                 {
                     Title = columnTitles[i],
-                    SortColumnId = i
+                    SortColumnId = i,
+                    Resizable = true,
+                    Sizing = TreeViewColumnSizing.GrowOnly
                 };
                 CellRendererText cell = new CellRendererText();
                 col.PackStart(cell, false);
@@ -555,7 +557,7 @@ namespace UserInterface.Views
                 sort = new TreeModelSort(filterOwner);
                 for (int i = 0; i < columnTitles.Length; i++)
                 {
-                    int j = i; // ¯\_(ツ)_/¯
+                    int j = i;
                     sort.SetSortFunc(i, (model, a, b) => SortData(model, a, b, j));
                 }
 
