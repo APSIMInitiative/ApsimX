@@ -1,10 +1,9 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="APSIMFileConverterUtilities.cs" company="CSIRO">
-// TODO: Update copyright text.
+// <copyright file="ConverterUtilities.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
-
-namespace Models.Core
+namespace Models.Core.ApsimFile
 {
     using System;
     using System.Collections.Generic;
@@ -18,7 +17,7 @@ namespace Models.Core
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class APSIMFileConverterUtilities
+    public class ConverterUtilities
     {
         /// <summary>
         /// Perform a search and replace in manager script. Also optionally insert a using statement.

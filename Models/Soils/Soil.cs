@@ -1054,7 +1054,7 @@ namespace Models.Soils
             }
             set
             {
-                SoluteManager.SetSolute("NO3",value);
+                SoluteManager.SetSolute("NO3", SoluteManager.SoluteSetterType.Soil, value);
             }
         }
 
@@ -1072,7 +1072,7 @@ namespace Models.Soils
             }
             set
             {
-                SoluteManager.SetSolute("NH4", value);
+                SoluteManager.SetSolute("NH4", SoluteManager.SoluteSetterType.Soil, value);
             }
         }
 

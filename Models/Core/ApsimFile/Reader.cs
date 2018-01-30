@@ -1,13 +1,14 @@
-﻿
-
-namespace Models.Core
+﻿// -----------------------------------------------------------------------
+// <copyright file="Reader.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Text;
     using System.Xml;
 
     /// <summary>
@@ -45,7 +46,7 @@ namespace Models.Core
     ///       </Child>
     ///    </ModelWrapper>
     /// </remarks>
-    public class APSIMFileReader : XmlReaderCustom
+    public class Reader : XmlReaderCustom
     {
         /// <summary>The possible parsing states</summary>
         private enum States { Initial, ExpectingChildOrModel, ExpectingModelProperties, ParsingArrayParameter, End }
@@ -73,7 +74,7 @@ namespace Models.Core
 
         /// <summary>Constructor.</summary>
         /// <param name="node">Node to parse</param>
-        public APSIMFileReader(XmlNode node)
+        public Reader(XmlNode node)
         { 
             reader = new ReadWithLookAhead(new XmlNodeReader(node));
             validModelTypes = ModelTypes.GetModelTypes();
@@ -82,7 +83,7 @@ namespace Models.Core
 
         /// <summary>Constructor.</summary>
         /// <param name="s">Stream to parse</param>
-        public APSIMFileReader(Stream s)
+        public Reader(Stream s)
         {
             validModelTypes = ModelTypes.GetModelTypes();
             XmlDocument doc = new XmlDocument();

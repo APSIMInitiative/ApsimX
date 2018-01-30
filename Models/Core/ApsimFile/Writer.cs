@@ -1,18 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml;
-
-namespace Models.Core
+﻿// -----------------------------------------------------------------------
+// <copyright file="Writer.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace Models.Core.ApsimFile
 {
-    class APSIMFileWriter : XmlTextWriter
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Xml;
+
+    class Writer : XmlTextWriter
     {
-        public APSIMFileWriter(TextWriter w) 
+        public Writer(TextWriter w) 
             : base(w)
         {
-            version = APSIMFileConverter.LastestVersion;
+            version = Converter.LastestVersion;
         }
        
 

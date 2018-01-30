@@ -145,8 +145,8 @@ namespace Models.Soils.Nutrients
                 }
 
             }
-            solutes.SetSolute("NH4", NH4);
-            solutes.SetSolute("NO3", NO3);
+            solutes.SetSolute("NH4", SoluteManager.SoluteSetterType.Soil, NH4);
+            solutes.SetSolute("NO3", SoluteManager.SoluteSetterType.Soil, NO3);
         }
 
 
