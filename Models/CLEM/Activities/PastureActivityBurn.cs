@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0.5)]
         [Description("Minimum proportion green for fire to carry")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        [Required, Proportion]
         public double MinimumProportionGreen { get; set; }
 
         /// <summary>

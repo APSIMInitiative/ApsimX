@@ -38,21 +38,21 @@ namespace Models.CLEM.Activities
         /// Month for assessing dry season feed requirements
         /// </summary>
         [Description("Month for assessing dry season feed requirements (1-12)")]
-        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        [Required, Month)]
         public int AssessmentMonth { get; set; }
 
         /// <summary>
         /// Number of months to assess
         /// </summary>
         [Description("Number of months to assess")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public int DrySeasonLength { get; set; }
 
         /// <summary>
         /// Minimum estimated feed (kg/ha) allowed at end of period
         /// </summary>
         [Description("Minimum estimated feed (kg/ha) allowed at end of period")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double FeedLowLimit { get; set; }
 
         // minimum no that can be sold off... now controlled by sale and transport activity 

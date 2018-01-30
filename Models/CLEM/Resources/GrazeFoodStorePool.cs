@@ -18,21 +18,21 @@ namespace Models.CLEM.Resources
         /// Dry Matter (%)
         /// </summary>
         [Description("Dry Matter (%)")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double DryMatter { get; set; }
 
         /// <summary>
         /// Dry Matter Digestibility (%)
         /// </summary>
         [Description("Dry Matter Digestibility (%)")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double DMD { get; set; }
 
         /// <summary>
         /// Nitrogen (%)
         /// </summary>
         [Description("Nitrogen (%)")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double Nitrogen { get; set; }
 
         /// <summary>

@@ -33,14 +33,14 @@ namespace Models.CLEM.Groupings
         /// Days labour required per unit or fixed (days)
         /// </summary>
         [Description("Days labour required [per unit or fixed] (days)")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double LabourPerUnit { get; set; }
 
         /// <summary>
         /// Size of unit
         /// </summary>
         [Description("Size of unit")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double UnitSize { get; set; }
 
         /// <summary>

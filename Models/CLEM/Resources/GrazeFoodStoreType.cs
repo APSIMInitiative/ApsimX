@@ -55,49 +55,49 @@ namespace Models.CLEM.Resources
         /// Nitrogen of new growth (%)
         /// </summary>
         [Description("Nitrogen of new growth (%)")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double GreenNitrogen { get; set; }
 
         /// <summary>
         /// Proportion Nitrogen loss each month from pools
         /// </summary>
         [Description("%Nitrogen loss each month from pools (note: amount not proportion)")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be greater than 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double DecayNitrogen { get; set; }
 
         /// <summary>
         /// Minimum Nitrogen %
         /// </summary>
-        [Description("Minimum Nitrogen")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Description("Minimum Nitrogen %")]
+        [Required, Percentage]
         public double MinimumNitrogen { get; set; }
 
         /// <summary>
         /// Proportion Dry Matter Digestibility loss each month from pools
         /// </summary>
         [Description("Proportion DMD loss each month from pools")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        [Required, Proportion]
         public double DecayDMD { get; set; }
 
         /// <summary>
         /// Minimum Dry Matter Digestibility
         /// </summary>
         [Description("Minimum Dry Matter Digestibility")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double MinimumDMD { get; set; }
 
         /// <summary>
         /// Monthly detachment rate
         /// </summary>
         [Description("Detachment rate")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        [Required, Proportion]
         public double DetachRate { get; set; }
 
         /// <summary>
         /// Detachment rate of 12 month or older plants
         /// </summary>
         [Description("Carryover detachment rate")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        [Required, Proportion]
         public double CarryoverDetachRate { get; set; }
 
         /// <summary>

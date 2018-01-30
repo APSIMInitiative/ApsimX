@@ -33,21 +33,21 @@ namespace Models.CLEM.Activities
         /// Offspring per female breeder
         /// </summary>
         [Description("Offspring per female breeder")]
-        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
+        [Required, GreaterThanValue(0)]
         public double OffspringPerBreeder { get; set; }
 
         /// <summary>
         /// Cost per female breeder
         /// </summary>
         [Description("Cost per female breeder")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public int CostPerBreeder { get; set; }
 
         /// <summary>
         /// Breeding female age
         /// </summary>
         [Description("Breeding age (months)")]
-        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
+        [Required, GreaterThanEqualValue(1)]
         public int BreedingAge { get; set; }
 
         /// <summary>

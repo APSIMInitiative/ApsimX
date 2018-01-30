@@ -40,14 +40,14 @@ namespace Models.CLEM.Activities
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(5)]
         [Description("Month for assessing dry season feed requirements (1-12)")]
-        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        [Required, Month]
         public int AssessmentMonth { get; set; }
 
         /// <summary>
         /// Minimum estimated feed (kg/ha) before restocking
         /// </summary>
         [Description("Minimum estimated feed (kg/ha) before restocking")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double MinimumFeedBeforeRestock { get; set; }
 
         // restock proportion. I don't understand this.
@@ -97,14 +97,14 @@ namespace Models.CLEM.Activities
         /// Minimum mean SOI for La Nina
         /// </summary>
         [Description("Minimum mean SOI for La Nina")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double MeanSOIForLaNina { get; set; }
 
         /// <summary>
         /// Minimum mean SOI (absolute) for El Nino
         /// </summary>
         [Description("Minimum mean SOI (absolute) for El Nino")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double MeanSOIForElNino { get; set; }
 
         /// <summary>

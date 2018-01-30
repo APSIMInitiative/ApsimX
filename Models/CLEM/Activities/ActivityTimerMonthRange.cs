@@ -36,13 +36,13 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Start month of annual period to perform activities (1-12)")]
         [System.ComponentModel.DefaultValueAttribute(1)]
-        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        [Required, Month]
         public int StartMonth { get; set; }
         /// <summary>
         /// End month of annual period to perform activities
         /// </summary>
         [Description("End month of annual period to perform activities (1-12)")]
-        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        [Required, Month]
         [System.ComponentModel.DefaultValueAttribute(12)]
         public int EndMonth { get; set; }
 

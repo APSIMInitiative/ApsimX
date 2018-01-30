@@ -340,7 +340,7 @@ namespace Models.CLEM.Resources
         /// Maximum green in diet
         /// </summary>
         [Description("Maximum green in diet")]
-        [Required, Range(0, 1, ErrorMessage = "Proportion must be between 0 and 1")]
+        [Required, Proportion]
         public double GreenDietMax { get; set; }
         /// <summary>
         /// Shape of curve for diet vs pasture
@@ -353,7 +353,7 @@ namespace Models.CLEM.Resources
         /// was %
         /// </summary>
         [Description("Proportion green in pasture at zero in diet")]
-        [Required, Range(0, 1, ErrorMessage = "Proportion must be between 0 and 1")]
+        [Required, Proportion]
         public double GreenDietZero { get; set; }
         /// <summary>
         /// Coefficient to adjust intake for herbage quality
@@ -401,7 +401,7 @@ namespace Models.CLEM.Resources
         /// Milk as proportion of LWT for fodder substitution
         /// </summary>
         [Description("Milk as proportion of LWT for fodder substitution")]
-        [Required, Range(0, 1, ErrorMessage = "Proportion must be between 0 and 1")]
+        [Required, Proportion]
         public double MilkLWTFodderSubstitutionProportion { get; set; }
         /// <summary>
         /// Max juvenile (suckling) intake as proportion of LWT
@@ -413,13 +413,13 @@ namespace Models.CLEM.Resources
         /// Proportional discount to intake due to milk intake
         /// </summary>
         [Description("Proportional discount to intake due to milk intake")]
-        [Required, Range(0, 1, ErrorMessage = "Proportion must be between 0 and 1")]
+        [Required, Proportion]
         public double ProportionalDiscountDueToMilk { get; set; }
         /// <summary>
         /// Proportion of max body weight needed for survival
         /// </summary>
         [Description("Proportion of max body weight needed for survival")]
-        [Required, Range(0, 1, ErrorMessage = "Proportion must be between 0 and 1")]
+        [Required, Proportion]
         public double ProportionOfMaxWeightToSurvive { get; set; }
         /// <summary>
         /// Lactating Potential intake modifier Coefficient A
@@ -449,7 +449,7 @@ namespace Models.CLEM.Resources
         /// Mortality rate base
         /// </summary>
         [Description("Mortality rate base")]
-        [Required, Range(0, 1, ErrorMessage = "Proportion must be between 0 and 1")]
+        [Required, Proportion]
         public double MortalityBase { get; set; }
         /// <summary>
         /// Mortality rate coefficient
@@ -479,7 +479,7 @@ namespace Models.CLEM.Resources
         /// Juvenile mortality rate maximum
         /// </summary>
         [Description("Juvenile mortality rate maximum")]
-        [Required, Range(0, 1, ErrorMessage = "Proportion must be between 0 and 1")]
+        [Required, Proportion]
         public double JuvenileMortalityMaximum { get; set; }
         /// <summary>
         /// Juvenile mortality rate exponent
@@ -525,7 +525,7 @@ namespace Models.CLEM.Resources
         /// Number of days for milking
         /// </summary>
         [Description("Number of days for milking")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greater than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double MilkingDays { get; set; }
         /// <summary>
         /// Peak milk yield(kg/day)
@@ -573,7 +573,7 @@ namespace Models.CLEM.Resources
         /// Minimum size for 1st mating, proportion of SRW
         /// </summary>
         [Description("Minimum size for 1st mating, proportion of SRW")]
-        [Required, Range(0, 1, ErrorMessage = "Proportion must be between 0 and 1")]
+        [Required, Proportion]
         public double MinimumSize1stMating { get; set; }
         /// <summary>
         /// Minimum number of days between last birth and conception
@@ -591,7 +591,7 @@ namespace Models.CLEM.Resources
         /// Proportion of SRW for zero calving/lambing rate
         /// </summary>
         [Description("Proportion of SRW for zero Calving/lambing rate")]
-        [Required, Range(0, 1, ErrorMessage = "Proportion must be between 0 and 1")]
+        [Required, Proportion]
         public double CriticalCowWeight { get; set; }
         /// <summary>
         /// Conception rate coefficient of breeder PW
@@ -621,13 +621,13 @@ namespace Models.CLEM.Resources
         /// Prenatal mortality rate
         /// </summary>
         [Description("Mortality rate from conception to birth (proportion)")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a rate between 0 and 1")]
+        [Required, Proportion]
         public double PrenatalMortality { get; set; }
         /// <summary>
         /// Maximum conception rate from uncontrolled breeding 
         /// </summary>
         [Description("Maximum conception rate from uncontrolled breeding")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a rate between 0 and 1")]
+        [Required, Proportion]
         public double MaximumConceptionUncontrolledBreeding { get; set; }
 
         #endregion

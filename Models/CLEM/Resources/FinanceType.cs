@@ -36,21 +36,21 @@ namespace Models.CLEM.Resources
         /// The amount this account can be withdrawn to (-ve)
         /// </summary>
         [Description("The amount this account can be withdrawn to (<0 credit, 0 no credit)")]
-        [Required, Range(double.MinValue, double.MaxValue, ErrorMessage = "Value must be in double range")]
+        [Required ]
         public double WithdrawalLimit { get; set; }
 
         /// <summary>
         /// Interest rate (%) charged on negative balance
         /// </summary>
         [Description("Interest rate (%) charged on negative balance")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double InterestRateCharged { get; set; }
 
         /// <summary>
         /// Interest rate (%) paid on positive balance
         /// </summary>
         [Description("Interest rate (%) paid on positive balance")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double InterestRatePaid { get; set; }
 
         /// <summary>

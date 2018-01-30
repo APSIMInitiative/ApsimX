@@ -54,21 +54,21 @@ namespace Models.CLEM.Activities
         /// Amount reserved from sale
         /// </summary>
          [Description("Amount reserved from sale")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double AmountReserved { get; set; }
 
         /// <summary>
         /// Unit size (amount of the resource per sale unit)
         /// </summary>
          [Description("Unit size (amount of the resource per sale unit)")]
-        [Required, Range(1, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
+        [Required, GreaterThanEqualValue(1)]
         public double UnitSize { get; set; }
 
         /// <summary>
         /// Unit price (value of each sale unit)
         /// </summary>
          [Description("Unit price (value of each sale unit)")]
-        [Required, Range(1, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
+        [Required, GreaterThanEqualValue(1)]
         public double UnitPrice { get; set; }
 
         /// <summary>

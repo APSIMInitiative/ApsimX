@@ -57,14 +57,14 @@ namespace Models.CLEM.Activities
         /// Months kept before sale
         /// </summary>
         [Description("Months kept before sale")]
-        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
+        [Required, GreaterThanEqualValue(1)]
         public int MinMonthsKept { get; set; }
 
         /// <summary>
         /// Weight to achieve before sale
         /// </summary>
         [Description("Weight to achieve before sale")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double TradeWeight { get; set; }
 
         ///// <summary>

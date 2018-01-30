@@ -25,56 +25,56 @@ namespace Models.CLEM.Activities
         /// Distance to market
         /// </summary>
         [Description("Distance to market (km)")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double DistanceToMarket { get; set; }
 
         /// <summary>
         /// Cost of trucking ($/km/truck)
         /// </summary>
         [Description("Cost of trucking ($/km/truck)")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double CostPerKmTrucking { get; set; }
 
         /// <summary>
         /// Number of 450kg animals per truck load
         /// </summary>
         [Description("Number of 450kg animals per truck load")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double Number450kgPerTruck { get; set; }
 
         /// <summary>
         /// Minimum number of truck loads before selling (0 continuous sales)
         /// </summary>
         [Description("Minimum number of truck loads before selling (0 continuous sales)")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double MinimumTrucksBeforeSelling { get; set; }
 
         /// <summary>
         /// Minimum proportion of truck load before selling (0 continuous sales)
         /// </summary>
         [Description("Minimum proportion of truck load before selling (0 continuous sales)")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double MinimumLoadBeforeSelling { get; set; }
 
         /// <summary>
         /// Truck CO2 emissions per km
         /// </summary>
         [Description("Truck CO2 emissions per km")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double TruckCO2Emissions { get; set; }
 
         /// <summary>
         /// Truck methane emissions per km
         /// </summary>
         [Description("Truck Methane emissions per km")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double TruckMethaneEmissions { get; set; }
 
         /// <summary>
         /// Truck NOx emissions per km
         /// </summary>
         [Description("Truck NOx emissions per km")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double TruckNOxEmissions { get; set; }
 
         private GreenhouseGasesType CO2Store;

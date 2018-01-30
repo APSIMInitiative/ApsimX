@@ -24,21 +24,21 @@ namespace Models.CLEM.Resources
         /// Dry Matter (%)
         /// </summary>
         [Description("Dry Matter (%)")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double DryMatter { get; set; }
 
         /// <summary>
         /// Dry Matter Digestibility (%)
         /// </summary>
         [Description("Dry Matter Digestibility (%)")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double DMD { get; set; }
 
         /// <summary>
         /// Nitrogen (%)
         /// </summary>
         [Description("Nitrogen (%)")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double Nitrogen { get; set; }
 
         /// <summary>
@@ -46,21 +46,21 @@ namespace Models.CLEM.Resources
         /// </summary>
         [XmlIgnore]
         [Description("Current store nitrogen (%)")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double CurrentStoreNitrogen { get; set; }
 
         /// <summary>
         /// Starting Age of the Fodder (Months)
         /// </summary>
         [Description("Starting Age of Human Food (Months)")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double StartingAge { get; set; }
 
         /// <summary>
         /// Starting Amount (kg)
         /// </summary>
         [Description("Starting Amount (kg)")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double StartingAmount { get; set; }
 
         /// <summary>

@@ -48,14 +48,14 @@ namespace Models.CLEM.Activities
         /// Starting amount (kg)
         /// </summary>
         [Description("Starting Amount (kg/ha)")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double StartingAmount { get; set; }
 
         /// <summary>
         /// Starting stocking rate (Adult Equivalents/square km)
         /// </summary>
         [Description("Starting stocking rate (Adult Equivalents/sqkm)")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double StartingStockingRate { get; set; }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Models.CLEM.Activities
         /// Area requested
         /// </summary>
         [Description("Area requested")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double AreaRequested { get; set; }
 
         /// <summary>

@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
         /// Amount
         /// </summary>
         [Description("Amount")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double Amount { get; set; }
 
         /// <summary>

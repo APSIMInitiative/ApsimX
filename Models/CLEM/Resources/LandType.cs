@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
         /// Total Area
         /// </summary>
         [Description("Land area")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double LandArea { get; set; }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0.0)]
         [Description("Buildings - proportion taken up with bldgs, paths (%)")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double UnusablePortion { get; set; }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1.0)]
         [Description("Proportion of Total Area to assign")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion in the range 0 to 1")]
+        [Required, Proportion]
         public double ProportionOfTotalArea { get; set; }
 
         /// <summary>

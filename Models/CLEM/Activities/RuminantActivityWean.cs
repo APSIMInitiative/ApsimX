@@ -24,14 +24,14 @@ namespace Models.CLEM.Activities
         /// Weaning age (months)
         /// </summary>
         [Description("Weaning age (months)")]
-        [Required, Range(1, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
+        [Required, GreaterThanEqualValue(1)]
         public double WeaningAge { get; set; }
 
         /// <summary>
         /// Weaning weight (kg)
         /// </summary>
         [Description("Weaning weight (kg)")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double WeaningWeight { get; set; }
 
         /// <summary>

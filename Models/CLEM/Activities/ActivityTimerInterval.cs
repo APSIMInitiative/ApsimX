@@ -36,7 +36,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(12)]
         [Description("The interval (in months, 1 monthly, 12 annual)")]
-        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
+        [Required, GreaterThanValue(1)]
         public int Interval { get; set; }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Description("First month to start interval (1-12)")]
-        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        [Required, Month]
         public int MonthDue { get; set; }
 
         /// <summary>
