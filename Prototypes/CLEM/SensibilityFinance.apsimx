@@ -230,12 +230,18 @@
           <VariableNames>
             <string>[Clock].Today as Date</string>
             <string>[Activities].LastActivityPerformed.Name as Name</string>
-            <string>[Activities].LastActivityPerformed.Status.ToString() as Status</string>
+            <string>[Activities].LastActivityPerformed.Status as Status</string>
           </VariableNames>
           <EventNames>
             <string>[Activities].ActivityPerformed</string>
           </EventNames>
         </Report>
+        <ReportActivitiesPerformed>
+          <Name>ReportActivitiesPerformed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+        </ReportActivitiesPerformed>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>

@@ -55,49 +55,49 @@ namespace Models.CLEM.Resources
         /// Nitrogen of new growth (%)
         /// </summary>
         [Description("Nitrogen of new growth (%)")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double GreenNitrogen { get; set; }
 
         /// <summary>
         /// Proportion Nitrogen loss each month from pools
         /// </summary>
-        [Description("Proportion Nitrogen loss each month from pools")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        [Description("%Nitrogen loss each month from pools (note: amount not proportion)")]
+        [Required, GreaterThanEqualValue(0)]
         public double DecayNitrogen { get; set; }
 
         /// <summary>
         /// Minimum Nitrogen %
         /// </summary>
-        [Description("Minimum Nitrogen")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Description("Minimum Nitrogen %")]
+        [Required, Percentage]
         public double MinimumNitrogen { get; set; }
 
         /// <summary>
         /// Proportion Dry Matter Digestibility loss each month from pools
         /// </summary>
         [Description("Proportion DMD loss each month from pools")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        [Required, Proportion]
         public double DecayDMD { get; set; }
 
         /// <summary>
         /// Minimum Dry Matter Digestibility
         /// </summary>
         [Description("Minimum Dry Matter Digestibility")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double MinimumDMD { get; set; }
 
         /// <summary>
         /// Monthly detachment rate
         /// </summary>
         [Description("Detachment rate")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        [Required, Proportion]
         public double DetachRate { get; set; }
 
         /// <summary>
         /// Detachment rate of 12 month or older plants
         /// </summary>
         [Description("Carryover detachment rate")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        [Required, Proportion]
         public double CarryoverDetachRate { get; set; }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double kgPerHa { get { return Amount / Area; } }
 
-        private double biomassAvailable;
+        private double biomassAddedThisYear;
         private double biomassConsumed;
 
         /// <summary>
@@ -135,9 +135,15 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (biomassAvailable == 0) return -1;
+                if (biomassAddedThisYear == 0)
+                {
+                    if (biomassConsumed > 0)
+                    {
+                        return 100;
+                    }
+                }
                 if (biomassConsumed == 0) return 0;
-                return biomassConsumed / biomassAvailable * 100;
+                return biomassConsumed / biomassAddedThisYear * 100;
             }
         }
 
@@ -221,7 +227,10 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            Pools.Clear();
+            if (Pools != null)
+            {
+                Pools.Clear();
+            }
             Pools = null;
         }
 
@@ -243,7 +252,8 @@ namespace Models.CLEM.Resources
             if (ZoneCLEM.IsEcologicalIndicatorsCalculationMonth())
             {
                 OnEcologicalIndicatorsCalculated(new EcolIndicatorsEventArgs() { Indicators = CurrentEcologicalIndicators });
-                biomassAvailable = this.Amount;
+                // reset so available is sum of years growth
+                biomassAddedThisYear = 0;
                 biomassConsumed = 0;
             }
         }
@@ -266,11 +276,25 @@ namespace Models.CLEM.Resources
         /// <param name="Reason"></param>
         public void Add(object ResourceAmount, string ActivityName, string Reason)
         {
-            if (ResourceAmount.GetType() != typeof(GrazeFoodStorePool))
+            // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage)
+            if (!(ResourceAmount.GetType() == typeof(GrazeFoodStorePool) | ResourceAmount.GetType() != typeof(FoodResourcePacket)))
             {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
             }
-            GrazeFoodStorePool pool = ResourceAmount as GrazeFoodStorePool;
+
+            GrazeFoodStorePool pool;
+            if (ResourceAmount.GetType() == typeof(GrazeFoodStorePool))
+            {
+                pool = ResourceAmount as GrazeFoodStorePool;
+            }
+            else
+            {
+                pool = new GrazeFoodStorePool();
+                FoodResourcePacket packet = ResourceAmount as FoodResourcePacket;
+                pool.Set(packet.Amount);
+                pool.Nitrogen = packet.PercentN;
+                pool.DMD = packet.DMD;
+            }
 
             if (pool.Amount > 0)
             {
@@ -284,7 +308,7 @@ namespace Models.CLEM.Resources
                     Pools[0].Add(pool);
                 }
                 // update biomass available
-                biomassAvailable += pool.Amount;
+                biomassAddedThisYear += pool.Amount;
 
                 ResourceTransaction details = new ResourceTransaction();
                 details.Credit = pool.Amount;

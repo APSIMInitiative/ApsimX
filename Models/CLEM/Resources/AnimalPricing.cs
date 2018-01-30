@@ -30,7 +30,7 @@ namespace Models.CLEM.Resources
         /// Price of individual breeding sire
         /// </summary>
         [Description("Price of individual breeding sire")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double BreedingSirePrice { get; set; }
     }
 
@@ -55,21 +55,21 @@ namespace Models.CLEM.Resources
         /// Age in months
         /// </summary>
         [Description("Age in months")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double Age { get; set; }
 
         /// <summary>
         /// Purchase value of individual
         /// </summary>
         [Description("Purchase value of individual")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double PurchaseValue { get; set; }
 
         /// <summary>
         /// Sell value of individual
         /// </summary>
         [Description("Sell value of individual")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double SellValue { get; set; }
     }
 

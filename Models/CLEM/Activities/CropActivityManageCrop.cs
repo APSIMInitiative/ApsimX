@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         /// Area of land requested
         /// </summary>
         [Description("Area of crop")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanValue(0)]
         public double AreaRequested { get; set; }
 
         /// <summary>

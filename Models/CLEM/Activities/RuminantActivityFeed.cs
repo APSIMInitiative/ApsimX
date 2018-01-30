@@ -37,7 +37,7 @@ namespace Models.CLEM.Activities
         /// Proportion wastage through trampling (feed trough = 0)
         /// </summary>
         [Description("Proportion wastage through trampling (feed trough = 0)")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        [Required, Proportion]
         public double ProportionTramplingWastage { get; set; }
 
         private IResourceType FoodSource { get; set; }
@@ -221,6 +221,7 @@ namespace Models.CLEM.Activities
 
                 // feed animals
                 int month = Clock.Today.Month - 1;
+                SetStatusSuccess();
 
                 // get list from filters
                 foreach (RuminantFeedGroup child in Apsim.Children(this, typeof(RuminantFeedGroup)))

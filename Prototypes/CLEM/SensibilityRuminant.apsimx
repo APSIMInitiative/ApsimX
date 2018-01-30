@@ -237,7 +237,7 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Activities].ReportHerd.ReportDetails.Individual.ID as ID</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.ID as UID</string>
             <string>[Activities].ReportHerd.ReportDetails.Individual.Weight as Weight</string>
           </VariableNames>
           <EventNames>

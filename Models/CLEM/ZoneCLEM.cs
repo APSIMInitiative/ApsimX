@@ -33,7 +33,7 @@ namespace Models.CLEM
         /// Seed for random number generator (0 uses clock)
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be in range of an integer") ]
+        [Required, GreaterThanEqualValue(0) ]
         [Description("Random number generator seed (0 to use clock)")]
         public int RandomSeed { get; set; }
 
@@ -57,7 +57,7 @@ namespace Models.CLEM
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(12)]
         [Description("Ecological indicators calculation interval (in months, 1 monthly, 12 annual)")]
-        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must an integer greater or equal to 1")]
+        [XmlIgnore]
         public int EcologicalIndicatorsCalculationInterval { get; set; }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Models.CLEM
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(7)]
         [Description("End of month to calculate ecological indicators")]
-        [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
+        [Required, Month]
         public int EcologicalIndicatorsCalculationMonth { get; set; }
 
         /// <summary>
@@ -183,6 +183,7 @@ namespace Models.CLEM
             {
                 randomGenerator = new Random(RandomSeed);
             }
+            EcologicalIndicatorsCalculationInterval = 12;
         }
 
         /// <summary>

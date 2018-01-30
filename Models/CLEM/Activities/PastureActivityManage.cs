@@ -48,14 +48,14 @@ namespace Models.CLEM.Activities
         /// Starting amount (kg)
         /// </summary>
         [Description("Starting Amount (kg/ha)")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double StartingAmount { get; set; }
 
         /// <summary>
         /// Starting stocking rate (Adult Equivalents/square km)
         /// </summary>
         [Description("Starting stocking rate (Adult Equivalents/sqkm)")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double StartingStockingRate { get; set; }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Models.CLEM.Activities
         /// Area requested
         /// </summary>
         [Description("Area requested")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double AreaRequested { get; set; }
 
         /// <summary>
@@ -140,15 +140,6 @@ namespace Models.CLEM.Activities
                 results.Add(new ValidationResult("Unable to locate GRASP file. Add a FileGRASP model component to the user interface tree.", memberNames));
             }
             return results;
-        }
-
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
-        {
-
         }
 
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
@@ -288,7 +279,9 @@ namespace Models.CLEM.Activities
             // decay N and DMD of pools and age by 1 month
             foreach (var pool in LinkedNativeFoodType.Pools)
             {
-                pool.Nitrogen = Math.Max(pool.Nitrogen * (1 - LinkedNativeFoodType.DecayNitrogen), LinkedNativeFoodType.MinimumNitrogen);
+                // N is a loss of N% (x = x -loss)
+                pool.Nitrogen = Math.Max(pool.Nitrogen - LinkedNativeFoodType.DecayNitrogen, LinkedNativeFoodType.MinimumNitrogen);
+                // DMD is a proportional loss (x = x*(1-proploss))
                 pool.DMD = Math.Max(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
 
                 double detach = LinkedNativeFoodType.CarryoverDetachRate;

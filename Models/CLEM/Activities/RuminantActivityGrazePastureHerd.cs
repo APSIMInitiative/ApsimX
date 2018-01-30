@@ -165,10 +165,10 @@ namespace Models.CLEM.Activities
                     // get list of all Ruminants of specified breed in this paddock
                     foreach (Ruminant ind in herd)
                     {
-                        // Reduce potential intake based on pasture quality for the proportion consumed calculated in GrazePasture.
+                        // Reduce potential intake (monthly) based on pasture quality for the proportion consumed calculated in GrazePasture.
                         // calculate intake from potential modified by pasture availability and hours grazed
                         indAmount = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8);
-                        amount += indAmount *  30.4;
+                        amount += indAmount;
                     }
                     // report even if zero so shortfalls can be reported.
                     //if (amount > 0)
@@ -225,7 +225,12 @@ namespace Models.CLEM.Activities
 
             double green = GrazeFoodStoreModel.Pools.Where(a => (a.Age <= greenage)).Sum(b => b.Amount);
             double propgreen = green / GrazeFoodStoreModel.Amount;
-            double greenlimit = this.RuminantTypeModel.GreenDietMax * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen * 100.0) - this.RuminantTypeModel.GreenDietZero)));
+            
+            // All valuesa re now proportions.
+            // Convert to percentage before calculation
+            
+            double greenlimit = (this.RuminantTypeModel.GreenDietMax*100) * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen*100) - (this.RuminantTypeModel.GreenDietZero*100))));
+//            double greenlimit = this.RuminantTypeModel.GreenDietMax * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen * 100.0) - this.RuminantTypeModel.GreenDietZero)));
             greenlimit = Math.Max(0.0, greenlimit);
             if (propgreen > 90)
             {
@@ -248,9 +253,8 @@ namespace Models.CLEM.Activities
                 {
                     //Get total amount
                     double totalDesired = herd.Sum(a => a.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8));
-                    totalDesired *= 30.4;
                     double totalEaten = herd.Sum(a => a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
-                    totalEaten *= 30.4 * GrazingCompetitionLimiter;
+                    totalEaten *= GrazingCompetitionLimiter;
 
                     // take resource
                     ResourceRequest request = new ResourceRequest()
@@ -275,9 +279,10 @@ namespace Models.CLEM.Activities
                     foreach (Ruminant ind in herd)
                     {
                         double eaten = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8);
-                        food.Amount = eaten * GrazingCompetitionLimiter * 30.4 * shortfall;
+                        food.Amount = eaten * GrazingCompetitionLimiter * shortfall;
                         ind.AddIntake(food);
                     }
+                    SetStatusSuccess();
 
                     // if insufficent provided or no pasture (nothing eaten) use totalNeededifPasturePresent
                     if (GrazingCompetitionLimiter < 1)
@@ -293,6 +298,7 @@ namespace Models.CLEM.Activities
                         {
                             throw new ApsimXException(this, "Insufficient pasture available for grazing in paddock ("+GrazeFoodStoreModel.Name+") in "+Clock.Today.Month.ToString()+"\\"+Clock.Today.Year.ToString());
                         }
+                        this.Status = ActivityStatus.Partial;
                     }
                 }
             }

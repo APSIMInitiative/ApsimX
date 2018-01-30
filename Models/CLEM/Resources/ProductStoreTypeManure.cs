@@ -30,21 +30,21 @@ namespace Models.CLEM.Resources
         /// Biomass decay rate each time step
         /// </summary>
         [Description("Biomass decay rate each time step")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a proportion in the range 0 to 1")]
+        [Required, Proportion]
         public double DecayRate { get; set; }
 
         /// <summary>
         /// Moisture decay rate each time step
         /// </summary>
         [Description("Moisture decay rate each time step")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a proportion in the range 0 to 1")]
+        [Required, Proportion]
         public double MoistureDecayRate { get; set; }
 
         /// <summary>
         /// Proportion moisture of fresh manure
         /// </summary>
         [Description("Proportion moisture of fresh manure")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a proportion in the range 0 to 1")]
+        [Required, Proportion]
         public double ProportionMoistureFresh { get; set; }
 
         /// <summary>
@@ -70,7 +70,10 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            UncollectedStores.Clear();
+            if (UncollectedStores != null)
+            {
+                UncollectedStores.Clear();
+            }
             UncollectedStores = null;
         }
 

@@ -24,7 +24,7 @@ namespace Models.CLEM.Resources
         /// Age in years.
         /// </summary>
         [Description("Initial Age")]
-        [Required, Range(0, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double InitialAge { get; set; }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(new double[] { 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4 })]
         [Description("Max Labour Supply (in days) for each month of the year")]
-        [Required]
+        [Required, ArrayItemCount(12)]
         public double[] MaxLabourSupply { get; set; }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Models.CLEM.Resources
         /// Number of individuals
         /// </summary>
         [Description("Number of individuals")]
-        [Required, Range(1, int.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
+        [Required, GreaterThanEqualValue(1)]
         public int Individuals { get; set; }
 
         /// <summary>

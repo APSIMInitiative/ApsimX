@@ -36,14 +36,14 @@ namespace Models.CLEM.Resources
         /// Global warming potential
         /// </summary>
         [Description("Global warming potential")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double GlobalWarmingPotential { get; set; }
 
         /// <summary>
         /// CO2 equivalents
         /// </summary>
         [Description("CO2 equivalents")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double CO2Equivalents { get { return Amount * GlobalWarmingPotential; } }
 
 

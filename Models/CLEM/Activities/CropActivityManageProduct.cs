@@ -56,7 +56,7 @@ namespace Models.CLEM.Activities
         /// Percentage of the crop growth that is kept
         /// </summary>
         [Description("Proportion of crop growth kept (%)")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double PercentKept { get; set; }
 
         /// <summary>
@@ -129,6 +129,7 @@ namespace Models.CLEM.Activities
                 case StoresForCrops.HumanFoodStore:
                 case StoresForCrops.AnimalFoodStore:
                 case StoresForCrops.ProductStore:
+                case StoresForCrops.GrazeFoodStore:
                     break;
                 default:
                     string[] memberNames = new string[] { "Store" };
@@ -157,6 +158,9 @@ namespace Models.CLEM.Activities
                     break;
                 case StoresForCrops.AnimalFoodStore:
                     LinkedResourceItem = Resources.GetResourceItem(this, typeof(AnimalFoodStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+                    break;
+                case StoresForCrops.GrazeFoodStore:
+                    LinkedResourceItem = Resources.GetResourceItem(this, typeof(GrazeFoodStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
                     break;
                 case StoresForCrops.ProductStore:
                     LinkedResourceItem = Resources.GetResourceItem(this, typeof(ProductStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
@@ -218,7 +222,7 @@ namespace Models.CLEM.Activities
                         if (totalamount > 0)
                         {
                             //if Npct column was not in the file 
-                            if (NextHarvest.Npct == double.NaN)
+                            if (double.IsNaN(NextHarvest.Npct))
                             {
                                 //Add without adding any new nitrogen.
                                 //The nitrogen value for this feed item in the store remains the same.
@@ -234,7 +238,7 @@ namespace Models.CLEM.Activities
                                 LinkedResourceItem.Add(packet, this.Name, "Harvest");
                             }
                         }
-                        this.TriggerOnActivityPerformed(ActivityStatus.Success);
+                        SetStatusSuccess();
                     }
                     HarvestData.RemoveAt(0);
                 }

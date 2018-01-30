@@ -103,6 +103,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCollectManure")]
         private void OnCLEMCollectManure(object sender, EventArgs e)
         {
+            Status = ActivityStatus.Critical;
             // is manure in resources
             if (manureStore != null)
             {
@@ -125,6 +126,7 @@ namespace Models.CLEM.Activities
                         foreach (ManureStoreUncollected msu in manureStore.UncollectedStores)
                         {
                             manureStore.Collect(msu.Name, labourLimit, this.Name);
+                            SetStatusSuccess();
                         }
                     }
                 }

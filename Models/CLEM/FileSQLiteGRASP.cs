@@ -425,6 +425,21 @@ namespace Models.CLEM
                 + " OR  ( Year = " + endYear + " AND Month < " + endMonth + ")"
                 + ")"; 
             }
+            //SQLquery += " ORDER BY Year,Month";
+
+            //DateTime now = DateTime.Now;
+            //DataView results;
+            //string ConnectionString = $"Data Source=C:\\Data\\Source\\Repos\\ApsimX\\Prototypes\\CLEM\\NABSA_GRASP_NthQld_WdThck_Base.db;Version=3;";
+            //using (var connection = new SQLiteConnection(ConnectionString))
+            //{
+            //    using (var dataAdapter = new SQLiteDataAdapter(SQLquery, connection))
+            //    {
+            //        DataSet dataSet = new DataSet();
+            //        dataAdapter.Fill(dataSet);
+            //        results = dataSet.Tables[0].DefaultView;
+            //        dataSet.Dispose();
+            //    }
+            //}
 
             DataTable results = SQLiteReader.ExecuteQuery(SQLquery);
             results.DefaultView.Sort = "Year, Month";

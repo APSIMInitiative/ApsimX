@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Description("Unit of area conversion to hectares")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double UnitsOfAreaToHaConversion { get; set; }
 
         /// <summary>
@@ -75,8 +75,6 @@ namespace Models.CLEM.Resources
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
-//            Items.Clear();
-//            Items = null;
         }
 
 

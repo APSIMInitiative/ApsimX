@@ -97,6 +97,29 @@ namespace Models.CLEM.Resources
         public double HighWeight { get; set; }
 
         /// <summary>
+        /// The current weight as a proportion of High weight achieved
+        /// </summary>
+        public double ProportionOfHighWeight
+        {
+            get
+            {
+                if (HighWeight == 0) return 1;
+                return Weight / HighWeight;
+            }
+        }
+
+        /// <summary>
+        /// The current weight as a proportion of Standard Reference Weight
+        /// </summary>
+        public double ProportionOfSRW
+        {
+            get
+            {
+                return Weight / StandardReferenceWeight;
+            }
+        }
+
+        /// <summary>
         /// Current monthly intake store
         /// </summary>
         /// <units>kg/month</units>

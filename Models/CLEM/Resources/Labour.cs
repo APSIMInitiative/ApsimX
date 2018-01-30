@@ -87,7 +87,10 @@ namespace Models.CLEM.Resources
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
-            Items.Clear();
+            if (Items != null)
+            {
+                Items.Clear();
+            }
             Items = null;
         }
 

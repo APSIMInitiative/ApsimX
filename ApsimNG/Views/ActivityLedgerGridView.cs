@@ -370,6 +370,7 @@ namespace UserInterface.Views
                     case "Ignore":
                     case "Critical":
                     case "Calculation":
+                    case "NotNeeded":
                     case "Timer":
                         (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages."+dataVal.ToString()+".png");
                         break;

@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0.5)]
         [Description("Minimum proportion green for fire to carry")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        [Required, Proportion]
         public double MinimumProportionGreen { get; set; }
 
         /// <summary>
@@ -120,6 +120,10 @@ namespace Models.CLEM.Activities
 //                labourLimit = labourProvided / labourNeeded;
 //            }
 
+            if(Status != ActivityStatus.Partial)
+            {
+                Status = ActivityStatus.NotNeeded;
+            }
             // proportion green
             double green = pasture.Pools.Where(a => a.Age < 2).Sum(a => a.Amount);
             double total = pasture.Amount;
@@ -157,6 +161,7 @@ namespace Models.CLEM.Activities
 
                     // TODO: add fertilisation to pasture for given period.
 
+                    Status = ActivityStatus.Success;
                 }
             }
         }

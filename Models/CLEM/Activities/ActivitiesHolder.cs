@@ -204,6 +204,13 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMEndOfTimeStep")]
         private void OnCLEMEndOfTimeStep(object sender, EventArgs e)
         {
+            // fire all activity performed triggers at end of time step
+            foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
+            {
+                child.ReportAllAllActivitiesPerformed();
+            }
+
+            // add timestep activity for reporting
             ActivityPerformedEventArgs ea = new ActivityPerformedEventArgs()
             {
                 Activity = TimeStep
@@ -211,5 +218,19 @@ namespace Models.CLEM.Activities
             LastActivityPerformed = TimeStep;
             OnActivityPerformed(ea);
         }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        {
+            // fire all activity performed triggers at end of time step
+            foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
+            {
+                child.ClearAllAllActivitiesPerformedStatus();
+            }
+        }
+
     }
 }

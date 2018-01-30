@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
         /// Amount payable
         /// </summary>
         [Description("Amount payable")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanValue(0)]
         public double Amount { get; set; }
 
         /// <summary>
@@ -101,6 +101,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
+            SetStatusSuccess();
         }
 
         /// <summary>

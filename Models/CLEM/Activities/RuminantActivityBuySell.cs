@@ -144,6 +144,8 @@ namespace Models.CLEM.Activities
                                 saleValue += ind.BreedParams.ValueofIndividual(ind, false);
                                 saleWeight += ind.Weight;
                                 ruminantHerd.RemoveRuminant(ind);
+
+                                //TODO: work out what to do with suckling calves still with mothers if mother sold.
                             }
                         }
                         if (nonloaded)

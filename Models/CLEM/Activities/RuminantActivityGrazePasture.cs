@@ -88,6 +88,8 @@ namespace Models.CLEM.Activities
                     ActivityList = new List<CLEMActivityBase>();
                 }
                 ActivityList.Add(ragpb);
+                ragpb.ResourceShortfallOccurred += Paddock_ResourceShortfallOccurred;
+                ragpb.ActivityPerformed += BubbleHerd_ActivityPerformed;
             }
         }
 
@@ -140,6 +142,34 @@ namespace Models.CLEM.Activities
                 item.SetupPoolsAndLimits(limit);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            if (ActivityList != null)
+            {
+                foreach (RuminantActivityGrazePastureHerd pastureHerd in ActivityList)
+                {
+                    pastureHerd.ResourceShortfallOccurred -= Paddock_ResourceShortfallOccurred;
+                    pastureHerd.ActivityPerformed -= BubbleHerd_ActivityPerformed;
+                }
+            }
+        }
+
+        private void Paddock_ResourceShortfallOccurred(object sender, EventArgs e)
+        {
+            // bubble shortfall to Activity base for reporting
+            OnShortfallOccurred(e);
+        }
+
+        private void BubbleHerd_ActivityPerformed(object sender, EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(sender, e);
         }
 
         /// <summary>

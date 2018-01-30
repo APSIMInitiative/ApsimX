@@ -154,16 +154,10 @@ namespace Models.CLEM.Resources
                 }
             }
 
-
-
-
-
-
-
             //List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
 
-            //         foreach (IModel childModel in childNodes)
-            //         {
+            //foreach (IModel childModel in childNodes)
+            //{
             //    //cast the generic IModel to a specfic model.
             //    RuminantType ruminantType = childModel as RuminantType;
             //    foreach (var ind in ruminantType.CreateIndividuals())
@@ -238,9 +232,15 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            Herd.Clear();
+            if (Herd != null)
+            {
+                Herd.Clear();
+            }
             Herd = null;
-            PurchaseIndividuals.Clear();
+            if (PurchaseIndividuals != null)
+            {
+                PurchaseIndividuals.Clear();
+            }
             PurchaseIndividuals = null;
         }
 

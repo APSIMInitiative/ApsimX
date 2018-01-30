@@ -138,8 +138,11 @@
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
     <Compile Include="CLEM\FileSQLiteGRASP.cs" />
+    <Compile Include="CLEM\Groupings\RuminantDestockGroup.cs" />
     <Compile Include="CLEM\IActivityPerformedNotifier.cs" />
     <Compile Include="CLEM\IFileGRASP.cs" />
+    <Compile Include="CLEM\Old\RuminantActivityPredictiveStockingOrig.cs" />
+    <Compile Include="CLEM\Old\RuminantActivityPredictiveStockingENSOOrig.cs" />
     <Compile Include="CLEM\Reporting\ReportActivitiesPerformed.cs" />
     <Compile Include="CLEM\Reporting\ReportResourceShortfalls.cs" />
     <Compile Include="CLEM\Reporting\ReportResourceBalances.cs" />

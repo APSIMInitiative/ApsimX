@@ -50,6 +50,7 @@ namespace Models.CLEM.Activities
                 ragp.Parent = this;
                 ragp.Name = "Graze_" + pastureType.Name;
                 ragp.OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction;
+                ragp.ActivityPerformed += BubblePaddock_ActivityPerformed;
 
                 foreach (RuminantType herdType in Resources.RuminantHerd().Children)
                 {
@@ -77,6 +78,7 @@ namespace Models.CLEM.Activities
                     }
                     ragp.ActivityList.Add(ragpb);
                     ragpb.ResourceShortfallOccurred += GrazeAll_ResourceShortfallOccurred;
+                    ragpb.ActivityPerformed += BubblePaddock_ActivityPerformed;
                 }
                 if (ActivityList == null)
                 {
@@ -93,11 +95,15 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (RuminantActivityGrazePasture pastureGraze in ActivityList)
+            if (ActivityList != null)
             {
-                foreach (RuminantActivityGrazePastureHerd pastureHerd in pastureGraze.ActivityList)
+                foreach (RuminantActivityGrazePasture pastureGraze in ActivityList)
                 {
-                    pastureHerd.ResourceShortfallOccurred -= GrazeAll_ResourceShortfallOccurred;
+                    foreach (RuminantActivityGrazePastureHerd pastureHerd in pastureGraze.ActivityList)
+                    {
+                        pastureHerd.ResourceShortfallOccurred -= GrazeAll_ResourceShortfallOccurred;
+                        pastureHerd.ActivityPerformed -= BubblePaddock_ActivityPerformed;
+                    }
                 }
             }
         }
@@ -106,6 +112,12 @@ namespace Models.CLEM.Activities
         {
             // bubble shortfall to Activity base for reporting
             OnShortfallOccurred(e);
+        }
+
+        private void BubblePaddock_ActivityPerformed(object sender, EventArgs e)
+        {
+            if (ActivityPerformed != null)
+                ActivityPerformed(sender, e);
         }
 
         /// <summary>

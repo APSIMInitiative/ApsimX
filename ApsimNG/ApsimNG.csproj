@@ -341,6 +341,9 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazeAll.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazePasture.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazePastureHerd.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLiteGRASP.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Equipment.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\EquipmentType.png" />
@@ -493,6 +496,7 @@
     <EmbeddedResource Include="Resources\MenuImages\Timer.png" />
     <EmbeddedResource Include="Resources\MenuImages\blank.png" />
     <EmbeddedResource Include="Resources\MenuImages\Calculation.png" />
+    <EmbeddedResource Include="Resources\MenuImages\NotNeeded.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

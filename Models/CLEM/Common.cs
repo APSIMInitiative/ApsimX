@@ -21,6 +21,10 @@ namespace Models.CLEM
         /// </summary>
         AnimalFoodStore,
         /// <summary>
+        /// Store for forage/pasture crops
+        /// </summary>
+        GrazeFoodStore,
+        /// <summary>
         /// Store for inedible crop products
         /// </summary>
         ProductStore,

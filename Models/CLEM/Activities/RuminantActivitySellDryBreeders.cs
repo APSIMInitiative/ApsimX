@@ -27,21 +27,21 @@ namespace Models.CLEM.Activities
         /// Minimum conception rate before any selling
         /// </summary>
         [Description("Minimum conception rate before any selling")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be greater than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double MinimumConceptionBeforeSell { get; set; }
 
         /// <summary>
         /// Number of months since last birth to be considered dry
         /// </summary>
         [Description("Number of months since last birth to be considered dry")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be greater than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double MonthsSinceBirth { get; set; }
 
         /// <summary>
         /// Proportion of dry breeder to sell
         /// </summary>
         [Description("Proportion of dry breeders to sell")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a proportion between 0 and 1")]
+        [Required, Proportion]
         public double ProportionToRemove { get; set; }
 
         private List<LabourFilterGroupSpecified> labour { get; set; }

@@ -69,7 +69,7 @@ namespace Models.CLEM.Activities
         /// Percentage of the crop growth that is kept
         /// </summary>
         [Description("Proportion of crop growth kept (%)")]
-        [Required, Range(0, 100, ErrorMessage = "Value must be a percentage in the range 0 to 100")]
+        [Required, Percentage]
         public double PercentKept { get; set; }
 
 

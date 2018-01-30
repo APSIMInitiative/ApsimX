@@ -194,19 +194,19 @@ namespace Models.CLEM.Resources
         /// Energy maintenance efficiency coefficient
         /// </summary>
         [Description("Energy maintenance efficiency coefficient")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double EMaintEfficiencyCoefficient { get; set; }
         /// <summary>
         /// Energy maintenance efficiency intercept
         /// </summary>
         [Description("Energy maintenance efficiency intercept")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double EMaintEfficiencyIntercept { get; set; }
         /// <summary>
         /// Energy growth efficiency coefficient
         /// </summary>
         [Description("Energy growth efficiency coefficient")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double EGrowthEfficiencyCoefficient { get; set; }
         /// <summary>
         /// Energy growth efficiency intercept
@@ -218,159 +218,160 @@ namespace Models.CLEM.Resources
         /// Energy lactation efficiency coefficient
         /// </summary>
         [Description("Energy lactation efficiency coefficient")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double ELactationEfficiencyCoefficient { get; set; }
         /// <summary>
         /// Energy lactation efficiency intercept
         /// </summary>
         [Description("Energy lactation efficiency intercept")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double ELactationEfficiencyIntercept { get; set; }
         /// <summary>
         /// Energy maintenance exponent
         /// </summary>
         [Description("Energy maintenance exponent")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double EMaintExponent { get; set; }
         /// <summary>
         /// Energy maintenance intercept
         /// </summary>
         [Description("Energy maintenance intercept")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double EMaintIntercept { get; set; }
         /// <summary>
         /// Energy maintenance coefficient
         /// </summary>
         [Description("Energy maintenance coefficient")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double EMaintCoefficient { get; set; }
         /// <summary>
         /// Maximum age for energy maintenance calculation (yrs)
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(6)]
         [Description("Maximum age for energy maintenance calculation (yrs)")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double EnergyMaintenanceMaximumAge { get; set; }
         /// <summary>
         /// Breed factor for maintenence energy
         /// </summary>
         [Description("Breed factor for maintenence energy")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double Kme { get; set; }
         /// <summary>
         /// Parameter for energy for growth #1
         /// </summary>
         [Description("Parameter for energy for growth #1")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double GrowthEnergyIntercept1 { get; set; }
         /// <summary>
         /// Parameter for energy for growth #2
         /// </summary>
         [Description("Parameter for energy for growth #2")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double GrowthEnergyIntercept2 { get; set; }
         /// <summary>
         /// Growth efficiency
         /// </summary>
         [Description("Growth efficiency")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double GrowthEfficiency { get; set; }
 
         /// <summary>
         /// Standard Reference Weight of female
         /// </summary>
         [Description("Standard Ref. Weight (kg) for a female")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double SRWFemale { get; set; }
         /// <summary>
         /// Standard Reference Weight for male from female multiplier
         /// </summary>
         [Description("Male Standard Ref. Weight multiplier from female")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double SRWMaleMultiplier { get; set; }
         /// <summary>
         /// Standard Reference Weight at birth
         /// </summary>
         [Description("Birth mass (proportion of female SRW)")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double SRWBirth { get; set; }
         /// <summary>
         /// Age growth rate coefficient
         /// </summary>
         [Description("Age growth rate coefficient")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double AgeGrowthRateCoefficient { get; set; }
         /// <summary>
         /// SWR growth scalar
         /// </summary>
         [Description("SWR growth scalar")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar { get; set; }
         /// <summary>
         /// Intake coefficient in relation to Live Weight
         /// </summary>
         [Description("Intake coefficient in relation to Live Weight")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double IntakeCoefficient { get; set; }
         /// <summary>
         /// Intake intercept In relation to SRW
         /// </summary>
-        [Description("Intake intercept In relation to SRW")]
-        [Required]
+        [Description("Intake intercept in relation to SRW")]
+        [Required, GreaterThanValue(0)]
         public double IntakeIntercept { get; set; }
         /// <summary>
         /// Protein requirement coeff (g/kg feed)
         /// </summary>
         [Description("Protein requirement coeff (g/kg feed)")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double ProteinCoefficient { get; set; }
         /// <summary>
         /// Protein degradability
         /// </summary>
         [Description("Protein degradability")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double ProteinDegradability { get; set; }
         /// <summary>
         /// Weight(kg) of 1 animal equivalent(steer)
         /// </summary>
         [Description("Weight(kg) of 1 animal equivalent(steer)")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double BaseAnimalEquivalent { get; set; }
         /// <summary>
         /// Maximum green in diet
         /// </summary>
         [Description("Maximum green in diet")]
-        [Required]
+        [Required, Proportion]
         public double GreenDietMax { get; set; }
         /// <summary>
         /// Shape of curve for diet vs pasture
         /// </summary>
         [Description("Shape of curve for diet vs pasture")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double GreenDietCoefficient { get; set; }
         /// <summary>
         /// Proportion green in pasture at zero in diet
         /// was %
         /// </summary>
         [Description("Proportion green in pasture at zero in diet")]
+        [Required, Proportion]
         public double GreenDietZero { get; set; }
         /// <summary>
         /// Coefficient to adjust intake for herbage quality
         /// </summary>
         [Description("Coefficient to adjust intake for herbage quality")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double IntakeTropicalQuality { get; set; }
         /// <summary>
         /// Coefficient to adjust intake for tropical herbage quality
         /// </summary>
         [Description("Coefficient to adjust intake for tropical herbage quality")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double IntakeCoefficientQuality { get; set; }
         /// <summary>
         /// Coefficient to adjust intake for herbage biomass
         /// </summary>
         [Description("Coefficient to adjust intake for herbage biomass")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double IntakeCoefficientBiomass { get; set; }
         /// <summary>
         /// Enforce strict feeding limits
@@ -382,103 +383,103 @@ namespace Models.CLEM.Resources
         /// Coefficient of juvenile milk intake
         /// </summary>
         [Description("Coefficient of juvenile milk intake")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double MilkIntakeCoefficient { get; set; }
         /// <summary>
         /// Intercept of juvenile milk intake
         /// </summary>
         [Description("Intercept of juvenile milk intake")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double MilkIntakeIntercept { get; set; }
         /// <summary>
         /// Maximum juvenile milk intake
         /// </summary>
         [Description("Maximum juvenile milk intake")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double MilkIntakeMaximum { get; set; }
         /// <summary>
         /// Milk as proportion of LWT for fodder substitution
         /// </summary>
         [Description("Milk as proportion of LWT for fodder substitution")]
-        [Required]
+        [Required, Proportion]
         public double MilkLWTFodderSubstitutionProportion { get; set; }
         /// <summary>
         /// Max juvenile (suckling) intake as proportion of LWT
         /// </summary>
         [Description("Max juvenile (suckling) intake as proportion of LWT")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double MaxJuvenileIntake { get; set; }
         /// <summary>
         /// Proportional discount to intake due to milk intake
         /// </summary>
         [Description("Proportional discount to intake due to milk intake")]
-        [Required]
+        [Required, Proportion]
         public double ProportionalDiscountDueToMilk { get; set; }
         /// <summary>
         /// Proportion of max body weight needed for survival
         /// </summary>
         [Description("Proportion of max body weight needed for survival")]
-        [Required]
+        [Required, Proportion]
         public double ProportionOfMaxWeightToSurvive { get; set; }
         /// <summary>
         /// Lactating Potential intake modifier Coefficient A
         /// </summary>
         [Description("Lactating Potential intake modifier Coefficient A")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantA { get; set; }
         /// <summary>
         /// Lactating Potential intake modifier Coefficient B
         /// </summary>
         [Description("Lactating Potential intake modifier Coefficient B")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantB { get; set; }
         /// <summary>
         /// Lactating Potential intake modifier Coefficient C
         /// </summary>
         [Description("Lactating Potential intake modifier Coefficient C")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantC { get; set; }
         /// <summary>
         /// Maximum size of individual relative to SRW
         /// </summary>
         [Description("Maximum size of individual relative to SRW")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double MaximumSizeOfIndividual { get; set; }
         /// <summary>
         /// Mortality rate base
         /// </summary>
         [Description("Mortality rate base")]
-        [Required]
+        [Required, Proportion]
         public double MortalityBase { get; set; }
         /// <summary>
         /// Mortality rate coefficient
         /// </summary>
         [Description("Mortality rate coefficient")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double MortalityCoefficient { get; set; }
         /// <summary>
         /// Mortality rate intercept
         /// </summary>
         [Description("Mortality rate intercept")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double MortalityIntercept { get; set; }
         /// <summary>
         /// Mortality rate exponent
         /// </summary>
         [Description("Mortality rate exponent")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double MortalityExponent { get; set; }
         /// <summary>
         /// Juvenile mortality rate coefficient
         /// </summary>
         [Description("Juvenile mortality rate coefficient")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double JuvenileMortalityCoefficient { get; set; }
         /// <summary>
         /// Juvenile mortality rate maximum
         /// </summary>
         [Description("Juvenile mortality rate maximum")]
-        [Required]
+        [Required, Proportion]
         public double JuvenileMortalityMaximum { get; set; }
         /// <summary>
         /// Juvenile mortality rate exponent
@@ -512,43 +513,43 @@ namespace Models.CLEM.Resources
         /// Milk curve shape suckling
         /// </summary>
         [Description("Milk curve shape suckling")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double MilkCurveSuckling { get; set; }
         /// <summary>
         /// Milk curve shape non suckling
         /// </summary>
         [Description("Milk curve shape non suckling")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double MilkCurveNonSuckling { get; set; }
         /// <summary>
         /// Number of days for milking
         /// </summary>
         [Description("Number of days for milking")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double MilkingDays { get; set; }
         /// <summary>
         /// Peak milk yield(kg/day)
         /// </summary>
         [Description("Peak milk yield (kg/day)")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanValue(0)]
         public double MilkPeakYield { get; set; }
         /// <summary>
         /// Milk offset day
         /// </summary>
         [Description("Milk offset day")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanValue(0)]
         public double MilkOffsetDay { get; set; }
         /// <summary>
         /// Milk peak day
         /// </summary>
         [Description("Milk peak day")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanValue(0)]
         public double MilkPeakDay { get; set; }
         /// <summary>
         /// Inter-parturition interval intercept of PW (months)
         /// </summary>
         [Description("Inter-parturition interval intercept of PW (months)")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double InterParturitionIntervalIntercept { get; set; }
         /// <summary>
         /// Inter-parturition interval coefficient of PW (months)
@@ -560,37 +561,37 @@ namespace Models.CLEM.Resources
         /// Months between conception and parturition
         /// </summary>
         [Description("Months between conception and parturition")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanValue(0)]
         public double GestationLength { get; set; }
         /// <summary>
         /// Minimum age for 1st mating (months)
         /// </summary>
         [Description("Minimum age for 1st mating (months)")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanValue(0)]
         public double MinimumAge1stMating { get; set; }
         /// <summary>
         /// Minimum size for 1st mating, proportion of SRW
         /// </summary>
         [Description("Minimum size for 1st mating, proportion of SRW")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, Proportion]
         public double MinimumSize1stMating { get; set; }
         /// <summary>
         /// Minimum number of days between last birth and conception
         /// </summary>
         [Description("Minimum number of days between last birth and conception")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanValue(0)]
         public double MinimumDaysBirthToConception { get; set; }
         /// <summary>
         /// Rate at which twins are concieved
         /// </summary>
         [Description("Rate at which twins are concieved")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required]
         public double TwinRate { get; set; }
         /// <summary>
         /// Proportion of SRW for zero calving/lambing rate
         /// </summary>
         [Description("Proportion of SRW for zero Calving/lambing rate")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, Proportion]
         public double CriticalCowWeight { get; set; }
         /// <summary>
         /// Conception rate coefficient of breeder PW
@@ -602,31 +603,31 @@ namespace Models.CLEM.Resources
         /// Conception rate intercept of breeder PW
         /// </summary>
         [Description("Conception rate intercept of breeder")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double ConceptionRateIntercept { get; set; }
         /// <summary>
         /// Conception rate assymtote
         /// </summary>
         [Description("Conception rate assymtote")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double ConceptionRateAsymptote { get; set; }
         /// <summary>
         /// Maximum number of matings per male per day
         /// </summary>
         [Description("Maximum number of matings per male per day")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanValue(0)]
         public double MaximumMaleMatingsPerDay { get; set; }
         /// <summary>
         /// Prenatal mortality rate
         /// </summary>
         [Description("Mortality rate from conception to birth (proportion)")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a rate between 0 and 1")]
+        [Required, Proportion]
         public double PrenatalMortality { get; set; }
         /// <summary>
         /// Maximum conception rate from uncontrolled breeding 
         /// </summary>
         [Description("Maximum conception rate from uncontrolled breeding")]
-        [Required, Range(0, 1, ErrorMessage = "Value must be a rate between 0 and 1")]
+        [Required, Proportion]
         public double MaximumConceptionUncontrolledBreeding { get; set; }
 
         #endregion
@@ -644,7 +645,7 @@ namespace Models.CLEM.Resources
         /// Methane production from intake coefficient
         /// </summary>
         [Description("Methane production from intake coefficient")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double MethaneProductionCoefficient { get; set; }
 
         #endregion

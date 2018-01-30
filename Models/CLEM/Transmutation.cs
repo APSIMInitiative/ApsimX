@@ -26,7 +26,7 @@ namespace Models.CLEM
         /// Amount of this resource per unit purchased
         /// </summary>
         [Description("Amount of this resource per unit purchased")]
-        [Required, Range(1, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 1")]
+        [Required, GreaterThanEqualValue(1)]
         public double AmountPerUnitPurchase { get; set; }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Models.CLEM
         /// Cost of transmutation
         /// </summary>
         [Description("Cost per unit")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, GreaterThanEqualValue(0)]
         public double CostPerUnit { get; set; }
 
         /// <summary>

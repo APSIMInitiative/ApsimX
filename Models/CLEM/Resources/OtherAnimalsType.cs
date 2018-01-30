@@ -46,7 +46,10 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            Cohorts.Clear();
+            if (Cohorts != null)
+            {
+                Cohorts.Clear();
+            }
             Cohorts = null;
         }
 
