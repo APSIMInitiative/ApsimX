@@ -114,6 +114,14 @@ namespace Models.CLEM.Groupings
         /// </summary>
         Weight,
         /// <summary>
+        /// Weight as proportion of High weight achieved
+        /// </summary>
+        ProportionOfHighWeight,
+        /// <summary>
+        /// Weight as proportion of Standard Reference Weight
+        /// </summary>
+        ProportionOfSRW,
+        /// <summary>
         /// Current grazing location
         /// </summary>
         Location,
