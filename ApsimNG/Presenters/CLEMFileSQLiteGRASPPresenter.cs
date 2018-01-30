@@ -31,6 +31,64 @@ namespace UserInterface.Presenters
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
+
+        /// <summary>
+        /// Starting Year for the grid.
+        /// For speed purposes the grid will only display a few years worth of 
+        /// GRASP data at a time instead of all of it.
+        /// </summary>
+        private int StartYearForGrid;
+        private int EndYearForGrid;
+
+        /// <summary>
+        /// Number or years to display in the grid.
+        /// </summary
+        private int NumberOfYearsToDisplayInGrid = 4;
+
+
+
+
+        /// <summary>
+        /// First year in the SQLite database file
+        /// Needed for setting bounds on StartYearForGrid
+        /// </summary>
+        private int FirstYearInFile;
+
+        /// <summary>
+        /// Last year in the SQLite database file
+        /// Needed for setting bounds on EndYearForGrid
+        /// </summary>
+        private int LastYearInFile;
+
+
+        private void InitialiseStartYear()
+        {
+            //set the start year using SQLite file's data
+            double[] yearsInFile = this.model.GetYearsInFile();
+            FirstYearInFile = (int)yearsInFile[0];
+            LastYearInFile = (int)yearsInFile[yearsInFile.Length - 1];
+
+            SetStartYear(FirstYearInFile);
+        }
+
+
+
+        private void SetStartYear(int Year)
+        {
+            StartYearForGrid = Year;
+            if (StartYearForGrid >= LastYearInFile)
+                StartYearForGrid = LastYearInFile - NumberOfYearsToDisplayInGrid;
+
+            if (StartYearForGrid < FirstYearInFile)
+                StartYearForGrid = FirstYearInFile;
+
+            EndYearForGrid = StartYearForGrid + NumberOfYearsToDisplayInGrid;
+
+            if (EndYearForGrid > LastYearInFile)
+                EndYearForGrid = LastYearInFile;
+        }
+
+
         /// <summary>
         /// Attaches an Input model to an Input View.
         /// </summary>
@@ -46,10 +104,14 @@ namespace UserInterface.Presenters
             this.view.BackButtonClicked += this.OnBackButtonClicked;
             this.view.NextButtonClicked += this.OnNextButtonClicked;
 
+            InitialiseStartYear();
+
             this.OnModelChanged(model);  // Updates the view
 
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
+
+
 
         /// <summary>
         /// Detaches an Input model from an Input View.
@@ -72,6 +134,9 @@ namespace UserInterface.Presenters
             try
             {
                 this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.model, "FullFileName", e.FileName));
+
+                //reset the start year using new SQLite file's data.
+                InitialiseStartYear();
             }
             catch (Exception err)
             {
@@ -88,8 +153,8 @@ namespace UserInterface.Presenters
         {
             try
             {
-                int newvalue = this.model.StartYearForGrid + this.model.NumberOfYearsToDisplayInGrid;
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.model, "StartYearForGrid", newvalue));
+                SetStartYear(StartYearForGrid + NumberOfYearsToDisplayInGrid);
+                this.OnModelChanged(model);
             }
             catch (Exception err)
             {
@@ -106,8 +171,8 @@ namespace UserInterface.Presenters
         {
             try
             {
-                int newvalue = this.model.StartYearForGrid - this.model.NumberOfYearsToDisplayInGrid;
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.model, "StartYearForGrid", newvalue));
+                SetStartYear(StartYearForGrid - NumberOfYearsToDisplayInGrid);
+                this.OnModelChanged(model);
             }
             catch (Exception err)
             {
@@ -124,7 +189,7 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             this.view.FileName = this.model.FullFileName;
-            this.view.GridView.DataSource = this.model.GetTable();
+            this.view.GridView.DataSource = this.model.GetTable(StartYearForGrid, EndYearForGrid);
             if (this.view.GridView.DataSource == null)
             {
                 this.view.WarningText = this.model.ErrorMessage;

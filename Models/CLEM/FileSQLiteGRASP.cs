@@ -119,6 +119,30 @@ namespace Models.CLEM
 
 
 
+        /// <summary>
+        /// Searches the DataTable created from the GRASP File for all the distinct values for the specified ColumnName.
+        /// </summary>
+        /// <returns>Sorted array of unique values for the column</returns>
+        private double[] GetCategories(string ColumnName)
+        {
+            //if the SQLite Database can't be opened throw an exception.
+            if (OpenSQLiteDB() == false)
+            {
+                throw new Exception(ErrorMessage);
+            }
+
+            DataTable res = SQLiteReader.ExecuteQuery("SELECT DISTINCT " + ColumnName + " FROM Native_Inputs ORDER BY " + ColumnName + " ASC");
+
+            double[] results = new double[res.Rows.Count];
+            int i = 0;
+            foreach (DataRow row in res.Rows)
+            {
+                results[i] = Convert.ToDouble(row[0]);
+                i++;
+            }
+            return results;
+        }
+
 
 
 
@@ -198,6 +222,7 @@ namespace Models.CLEM
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
         /// Must be a property so that the Prsenter can use a  Commands.ChangeProperty() on it.
+        /// ChangeProperty does not work on fields.
         /// </summary>
         [XmlIgnore]
         public string FullFileName
@@ -221,54 +246,32 @@ namespace Models.CLEM
         }
 
 
-        /// <summary>
-        /// Gets or sets Starting Year for the grid.
-        /// For speed purposes the grid will only display a few years worth of 
-        /// GRASP data at a time instead of all of it.
-        /// Must be a property so that the Prsenter can use a  Commands.ChangeProperty() on it.
-        /// </summary>
-        [XmlIgnore]
-        public int StartYearForGrid { get; set; }
+
+
 
         /// <summary>
-        /// Number or years to display in the grid.
-        /// Does not have to have a get and set because it is not modified by a command in the presenter.
+        /// Gets the first year in the SQLite File
         /// </summary>
-        [XmlIgnore]
-        public int NumberOfYearsToDisplayInGrid = 4;
-
+        /// <returns></returns>
+        public double[] GetYearsInFile()
+        {
+            return GetCategories("Year");
+        }
 
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public DataTable GetTable()
+        public DataTable GetTable(int StartYear, int EndYear)
         {
-
-            if (StartYearForGrid == 0)
-            {
-                //Find the clock model. nb. Linking does not work until you hit the run button.
-                //So we need to find it ourselves. Clock should be a child of the same parent as this model.
-                IModel model = Apsim.Child(this.Parent, typeof(IClock));
-                Clock clockModel = model as Clock;
-
-                StartYearForGrid = clockModel.StartDate.Year;
-            }
-
-
-
             if (OpenSQLiteDB() == false)
             {
                 return null;
             }
 
-
-            int startYear = StartYearForGrid;
-            int endYear = startYear + NumberOfYearsToDisplayInGrid;
-
             string SQLquery = "SELECT  Region,Soil,GrassBA,LandCon,StkRate,Year,CutNum,Month,Growth,BP1,BP2 FROM Native_Inputs";
-            SQLquery += " WHERE Year BETWEEN " + startYear + " AND " + endYear;
+            SQLquery += " WHERE Year BETWEEN " + StartYear + " AND " + EndYear;
 
             try
             {
@@ -313,7 +316,7 @@ namespace Models.CLEM
 
             // get list of distinct stocking rates available in database
             // database has already been opened and checked in Validate()
-            this.distinctStkRates = GetStkRateCategories();
+            this.distinctStkRates = GetCategories("StkRate");
         }
 
 
@@ -339,24 +342,7 @@ namespace Models.CLEM
 
 
 
-        /// <summary>
-        /// Searches the DataTable created from the GRASP File for all the distinct StkRate values.
-        /// </summary>
-        /// <returns></returns>
-        private double[] GetStkRateCategories()
-        {
 
-            DataTable res = SQLiteReader.ExecuteQuery("SELECT DISTINCT StkRate FROM Native_Inputs ORDER BY StkRate ASC");
-
-            double[] results = new double[res.Rows.Count];
-            int i = 0;
-            foreach (DataRow row in res.Rows)
-            {
-                results[i] = Convert.ToDouble(row[0]);
-                i++;
-            }
-            return results;
-        }
 
         /// <summary>
         /// Finds the closest Stocking Rate Category in the GRASP file for a given Stocking Rate.
