@@ -86,7 +86,7 @@ namespace Models.Core
         /// <summary>Constructor</summary>
         private Simulations()
         {
-            Version = APSIMFileConverter.LastestVersion;
+            Version = ApsimFile.Converter.LastestVersion;
             LoadErrors = new List<Exception>();
         }
 
@@ -126,7 +126,7 @@ namespace Models.Core
         public static Simulations Read(string FileName)
         {
             // Run the converter.
-            APSIMFileConverter.ConvertToLatestVersion(FileName);
+            ApsimFile.Converter.ConvertToLatestVersion(FileName);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(FileName, Assembly.GetExecutingAssembly()) as Simulations;
@@ -166,7 +166,7 @@ namespace Models.Core
         public static Simulations Read(XmlNode node)
         {
             // Run the converter.
-            APSIMFileConverter.ConvertToLatestVersion(node, null);
+            ApsimFile.Converter.ConvertToLatestVersion(node, null);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;

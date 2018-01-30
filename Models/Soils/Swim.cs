@@ -2288,9 +2288,9 @@ namespace Models.Soils
             }
 
             // Send a NitrogenChanged event to the system
-            solutes.Add("NO3", DeltaNO3);
-            solutes.Add("NH4", DeltaNH4);
-            solutes.Add("Urea", DeltaUrea);
+            solutes.Add("NO3", SoluteManager.SoluteSetterType.Soil, DeltaNO3);
+            solutes.Add("NH4", SoluteManager.SoluteSetterType.Soil, DeltaNH4);
+            solutes.Add("Urea", SoluteManager.SoluteSetterType.Soil, DeltaUrea);
         }
 
         /// <summary>
