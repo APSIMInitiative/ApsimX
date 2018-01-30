@@ -36,10 +36,10 @@
             string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             while (directory != null)
             {
-                string[] directories = Directory.GetDirectories(directory, "Bin");
-                if (directories.Length == 1)
+                string[] directories = Directory.GetDirectories(directory, "Bin", SearchOption.AllDirectories);
+                foreach (string dir in directories)
                 {
-                    string[] files = Directory.GetFiles(directories[0], "sqlite3.dll");
+                    string[] files = Directory.GetFiles(dir, "sqlite3.dll");
                     if (files.Length == 1)
                     {
                         return files[0];
@@ -49,7 +49,7 @@
                 directory = Path.GetDirectoryName(directory); // parent directory
             }
 
-            throw new Exception("Cannot find apsimx bin directory");
+            throw new Exception("Cannot find sqlite3 dll directory");
         }
 
         /// <summary>Initialisation code for all unit tests in this class</summary>
