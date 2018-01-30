@@ -227,6 +227,7 @@
                         }
                     }
                 }
+                
                 path = jp.ModelPath + "\\" + sim.Name + ".apsimx";                
                 xml = Apsim.Serialise(sim);
                 // delete model file if it already exists

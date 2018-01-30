@@ -434,7 +434,7 @@ namespace ApsimNG.Cloud
         /// <param name="delim">Field delimiter</param>
         /// <returns></returns>
         private string ReadSqliteDB(string path, bool printHeader, string delim)
-        {            
+        {
             StringBuilder output = new StringBuilder();
             SQLiteConnection m_dbConnection;
             Dictionary<string, string> simNames = new Dictionary<string, string>();
@@ -488,42 +488,7 @@ namespace ApsimNG.Cloud
             {
                 presenter.ShowError("Error getting report: " + e.ToString());
             }
-            try
-            {
-                ReadSqliteDB2(path, printHeader, delim);
-            } catch (Exception e)
-            {
-
-            }
             return "";   
-        }
-
-        private void ReadSqliteDB2(string path, bool printHeader, string delim)
-        {
-            APSIM.Shared.Utilities.SQLite reader = new APSIM.Shared.Utilities.SQLite();
-            reader.OpenDatabase(path, true);
-            Dictionary<string, string> simNames = new Dictionary<string, string>();
-
-            string sql = "SELECT * FROM simulations";
-            try
-            {
-                DataTable result = reader.ExecuteQuery(sql);
-                for (int i = 0; i < result.Rows.Count; i++)
-                {
-                    DataRow row = result.Rows[i];
-                    Console.WriteLine("");
-                }
-                /*
-                while (result.Read())
-                {
-                    //Console.WriteLine("SimName: " + reader["Name"] + ", ID: " + reader["ID"]);
-                    simNames.Add(reader["ID"].ToString(), reader["Name"].ToString());
-                }*/
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error enumerating simulation names: " + e.ToString());
-            }
         }
         
         /// <summary>

@@ -369,12 +369,12 @@ namespace Models.Core
         /// <param name="model">The parent model</param>
         /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursively(IModel model)
-        {            
+        {
             List<IModel> models = new List<IModel>();
+
             foreach (Model child in model.Children)
             {
                 models.Add(child);
-                Console.WriteLine(child.Name);
                 models.AddRange(ChildrenRecursively(child));
             }
             return models;
