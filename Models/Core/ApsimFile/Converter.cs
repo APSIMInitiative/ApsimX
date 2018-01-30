@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 24; } }
+        public static int LastestVersion { get { return 25; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -721,105 +721,6 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Upgrades to version 24. Replace SoilNitrogen model with Nutrient.
-        /// </summary>
-        /// <param name="node">The node to upgrade.</param>
-        /// <param name="fileName">The name of the .apsimx file</param>
-        private static void UpgradeToVersion24(XmlNode node, string fileName)
-        {
-            APSIMFileConverterUtilities.RenameVariable(node, "using Models.Soils;", "using Models.Soils;\r\nusing Models.Soils.Nutrients;");
-
-            // Delete all alias children.
-            foreach (XmlNode soilNitrogen in XmlUtilities.FindAllRecursivelyByType(node, "SoilNitrogen"))
-            {
-                XmlUtilities.SetValue(soilNitrogen.ParentNode, "Nutrient/ResourceName", "Nutrient");
-                soilNitrogen.ParentNode.RemoveChild(soilNitrogen);
-            }
-
-            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
-            {
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.FOMN", ".Nutrient.FOMN");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.FOMC", ".Nutrient.FOMC");
-
-                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.HumicN", "Humic.N"))
-                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Humic;");
-                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.HumicC", "Humic.C"))
-                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Humic;");
-
-                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.MicrobialN", "Microbial.N"))
-                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Microbial;");
-                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.MicrobialC", "Microbial.C"))
-                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Microbial;");
-
-                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.dlt_n_min_res", "SurfaceResidueDecomposition.MineralisedN"))
-                    APSIMFileConverterUtilities.InsertLink(manager, "[LinkByPath(Path=\"[Nutrient].SurfaceResidue.Decomposition\")] CarbonFlow SurfaceResidueDecomposition;");
-
-                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.urea", "Urea.kgha"))
-                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute Urea;");
-                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.NO3", "NO3.kgha"))
-                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute NO3;");
-                if (APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.NH4", "NH4.kgha"))
-                    APSIMFileConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute NH4;");
-
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.TotalC", ".Nutrient.TotalC");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.Denitrification", ".Nutrient.Natm");
-                APSIMFileConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
-            }
-
-            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
-            {
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.FOMN", ".Nutrient.FOMN");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.FOMC", ".Nutrient.FOMC");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.HumicN", ".Nutrient.Humic.N");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.HumicC", ".Nutrient.Humic.C");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MicrobialN", ".Nutrient.Microbial.N");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MicrobialC", ".Nutrient.Microbial.C");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.urea", ".Nutrient.Urea.kgha");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.dlt_n_min_res", ".Nutrient.SurfaceResidue.Decomposition.MineralisedN");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.Denitrification", ".Nutrient.Natm");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.TotalC", ".Nutrient.TotalC");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.NO3", ".Nutrient.NO3.kgha");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.NH4", ".Nutrient.NH4.kgha");
-                APSIMFileConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
-
-            }
-
-            foreach (XmlNode SOM in XmlUtilities.FindAllRecursivelyByType(node, "SoilOrganicMatter"))
-            {
-                double rootWt = Convert.ToDouble(XmlUtilities.Value(SOM, "RootWt"));
-                XmlUtilities.DeleteValue(SOM, "RootWt");
-                double[] thickness = MathUtilities.StringsToDoubles(XmlUtilities.Values(SOM, "Thickness/double"));
-                
-                double profileDepth = MathUtilities.Sum(thickness);
-                double cumDepth = 0;
-                double[] rootWtFraction = new double[thickness.Length];
-
-                for (int layer = 0; layer < thickness.Length; layer++)
-                {
-                    double fracLayer = Math.Min(1.0, MathUtilities.Divide(profileDepth - cumDepth, thickness[layer], 0.0));
-                    cumDepth += thickness[layer];
-                    rootWtFraction[layer] = fracLayer * Math.Exp(-3.0 * Math.Min(1.0, MathUtilities.Divide(cumDepth, profileDepth, 0.0)));
-                }
-                // get the actuall FOM distribution through layers (adds up to one)
-                double totFOMfraction = MathUtilities.Sum(rootWtFraction);
-                for (int layer = 0; layer < thickness.Length; layer++)
-                    rootWtFraction[layer] /= totFOMfraction;
-                double[] rootWtVector = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
-                    
-
-                XmlUtilities.EnsureNodeExists(SOM, "RootWt");
-                XmlUtilities.SetValues(SOM, "RootWt/double", MathUtilities.DoublesToStrings(rootWtVector));
-            }
-
-        }
-
-        /// <summary>
         /// Upgrades to version 24. Add second argument to SoluteManager.Add method
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
@@ -843,5 +744,104 @@ namespace Models.Core.ApsimFile
             }
                 
         }
+        /// <summary>
+        /// Upgrades to version 24. Replace SoilNitrogen model with Nutrient.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion25(XmlNode node, string fileName)
+        {
+            ConverterUtilities.RenameVariable(node, "using Models.Soils;", "using Models.Soils;\r\nusing Models.Soils.Nutrients;");
+
+            // Delete all alias children.
+            foreach (XmlNode soilNitrogen in XmlUtilities.FindAllRecursivelyByType(node, "SoilNitrogen"))
+            {
+                XmlUtilities.SetValue(soilNitrogen.ParentNode, "Nutrient/ResourceName", "Nutrient");
+                soilNitrogen.ParentNode.RemoveChild(soilNitrogen);
+            }
+
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.FOMN", ".Nutrient.FOMN");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.FOMC", ".Nutrient.FOMC");
+
+                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.HumicN", "Humic.N"))
+                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Humic;");
+                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.HumicC", "Humic.C"))
+                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Humic;");
+
+                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.MicrobialN", "Microbial.N"))
+                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Microbial;");
+                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.MicrobialC", "Microbial.C"))
+                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Microbial;");
+
+                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.dlt_n_min_res", "SurfaceResidueDecomposition.MineralisedN"))
+                    ConverterUtilities.InsertLink(manager, "[LinkByPath(Path=\"[Nutrient].SurfaceResidue.Decomposition\")] CarbonFlow SurfaceResidueDecomposition;");
+
+                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.urea", "Urea.kgha"))
+                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute Urea;");
+                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.NO3", "NO3.kgha"))
+                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute NO3;");
+                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.NH4", "NH4.kgha"))
+                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute NH4;");
+
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.TotalC", ".Nutrient.TotalC");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.Denitrification", ".Nutrient.Natm");
+                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
+            }
+
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+            {
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.FOMN", ".Nutrient.FOMN");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.FOMC", ".Nutrient.FOMC");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.HumicN", ".Nutrient.Humic.N");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.HumicC", ".Nutrient.Humic.C");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MicrobialN", ".Nutrient.Microbial.N");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MicrobialC", ".Nutrient.Microbial.C");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.urea", ".Nutrient.Urea.kgha");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.dlt_n_min_res", ".Nutrient.SurfaceResidue.Decomposition.MineralisedN");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.Denitrification", ".Nutrient.Natm");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.TotalC", ".Nutrient.TotalC");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.NO3", ".Nutrient.NO3.kgha");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.NH4", ".Nutrient.NH4.kgha");
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
+
+            }
+
+            foreach (XmlNode SOM in XmlUtilities.FindAllRecursivelyByType(node, "SoilOrganicMatter"))
+            {
+                double rootWt = Convert.ToDouble(XmlUtilities.Value(SOM, "RootWt"));
+                XmlUtilities.DeleteValue(SOM, "RootWt");
+                double[] thickness = MathUtilities.StringsToDoubles(XmlUtilities.Values(SOM, "Thickness/double"));
+
+                double profileDepth = MathUtilities.Sum(thickness);
+                double cumDepth = 0;
+                double[] rootWtFraction = new double[thickness.Length];
+
+                for (int layer = 0; layer < thickness.Length; layer++)
+                {
+                    double fracLayer = Math.Min(1.0, MathUtilities.Divide(profileDepth - cumDepth, thickness[layer], 0.0));
+                    cumDepth += thickness[layer];
+                    rootWtFraction[layer] = fracLayer * Math.Exp(-3.0 * Math.Min(1.0, MathUtilities.Divide(cumDepth, profileDepth, 0.0)));
+                }
+                // get the actuall FOM distribution through layers (adds up to one)
+                double totFOMfraction = MathUtilities.Sum(rootWtFraction);
+                for (int layer = 0; layer < thickness.Length; layer++)
+                    rootWtFraction[layer] /= totFOMfraction;
+                double[] rootWtVector = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
+
+
+                XmlUtilities.EnsureNodeExists(SOM, "RootWt");
+                XmlUtilities.SetValues(SOM, "RootWt/double", MathUtilities.DoublesToStrings(rootWtVector));
+            }
+
+        }
+
     }
 }
