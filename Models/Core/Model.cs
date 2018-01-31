@@ -291,6 +291,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.CLEM.Reporting.ReportRuminantHerd))]
         [XmlElement(typeof(Models.CLEM.Activities.ResourceActivitySell))]
         [XmlElement(typeof(Models.CLEM.Reporting.ReportActivitiesPerformed))]
+        [XmlElement(typeof(Models.CLEM.Reporting.ReportPasturePoolDetails))]
         [XmlElement(typeof(Models.CLEM.Reporting.ReportResourceBalances))]
         [XmlElement(typeof(Models.CLEM.Reporting.ReportResourceShortfalls))]
         [XmlElement(typeof(Models.CLEM.Resources.ResourcesHolder))]

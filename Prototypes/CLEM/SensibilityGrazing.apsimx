@@ -167,6 +167,18 @@
           <ExperimentFactorNames />
           <ExperimentFactorValues />
         </ReportResourceShortfalls>
+        <ReportPasturePoolDetails>
+          <Name>ReportPasturePoolDetails</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>NativePasture.Amount</string>
+            <string>NativePasture.DMD</string>
+            <string>NativePasture.Nitrogen</string>
+          </VariableNames>
+        </ReportPasturePoolDetails>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -388,6 +400,16 @@
           <ExperimentFactorNames />
           <ExperimentFactorValues />
         </ReportResourceShortfalls>
+        <ReportPasturePoolDetails>
+          <Name>ReportPasturePoolDetails</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>NativePasture.Amount</string>
+          </VariableNames>
+        </ReportPasturePoolDetails>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -537,9 +559,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
@@ -2404,7 +2426,6 @@
       <Slope>0</Slope>
       <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
-      <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
     <FileSQLiteGRASP>

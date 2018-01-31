@@ -60,6 +60,31 @@ namespace Models.CLEM.Resources
         public double StartingAmount { get; set; }
 
         /// <summary>
+        /// Amount detached in this time step (kg)
+        /// </summary>
+        public double Detached { get; set; }
+
+        /// <summary>
+        /// Amount consumed in this time step (kg)
+        /// </summary>
+        public double Consumed { get; set; }
+
+        /// <summary>
+        /// Amount detached in this time step (kg)
+        /// </summary>
+        public double Growth { get; set; }
+
+        /// <summary>
+        /// Reset timestep stores
+        /// </summary>
+        public void Reset()
+        {
+            Detached = 0;
+            Consumed = 0;
+            Growth = 0;
+        }
+
+        /// <summary>
         /// Add to Resource method.
         /// This style is not supported in GrazeFoodStoreType
         /// </summary>
@@ -101,6 +126,7 @@ namespace Models.CLEM.Resources
         public double Remove(double RemoveAmount, string ActivityName, string Reason)
         {
             RemoveAmount = Math.Min(this.amount, RemoveAmount);
+            this.Consumed += RemoveAmount;
             this.amount = this.amount - RemoveAmount;
 
             return RemoveAmount;
