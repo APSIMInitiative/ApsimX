@@ -8,6 +8,7 @@ using UserInterface.Presenters;
 using Models;
 using Models.Core;
 using System.Windows.Forms;
+using System.Linq;
 
 /// <summary>
 /// This script creates model documentation for a single model.
@@ -30,7 +31,7 @@ public class Script
             mainPresenter.OpenApsimXFileInTab(fileName, true);
         
             // Get the presenter for this tab.
-            ExplorerPresenter presenter = mainPresenter.presenters1[0];
+            ExplorerPresenter presenter = mainPresenter.presenters1.OfType<ExplorerPresenter>().ToList()[0];
             presenter.SelectNode(".Simulations");
 
             // Export the model to HTML

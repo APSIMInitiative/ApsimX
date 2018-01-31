@@ -5,6 +5,7 @@ using UserInterface.Commands;
 using UserInterface.Presenters;
 using Models;
 using Models.Core;
+using System.Linq;
 
 /// <summary>
 /// This script selects all nodes in the standard toolbox, testing to 
@@ -18,7 +19,7 @@ public class Script
         tabbedExplorerPresenter.OpenApsimXFileInTab(@"..\Tests\Test.apsimx");
     
         // Get the presenter for this tab.
-        ExplorerPresenter presenter = tabbedExplorerPresenter.Presenters[0];
+        ExplorerPresenter presenter = tabbedExplorerPresenter.Presenters.OfType<ExplorerPresenter>().ToList()[0];
 
         // Select the field model.
         presenter.SelectNode(".Simulations.Test");
