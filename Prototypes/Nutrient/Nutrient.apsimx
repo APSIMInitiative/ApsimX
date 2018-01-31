@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="25">
   <Name>Simulations</Name>
+  <Memo>
+    <Name>TitlePage</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <MemoText><![CDATA[# The APSIM Soil Nutrient Model
+ ]]></MemoText>
+  </Memo>
+  <Memo>
+    <Name>Introduction</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <MemoText><![CDATA[The APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
+
+The wheat model consists of:
+
+* a phenology model to simulate development through sequential developmental phases  
+* a structure model to simulate plant morphology 
+* a collection of organs to simulate the various plant parts  
+* an arbitrator to allocate resources (N, biomass) to the various plant organs  
+
+This work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225], [KeatingNWheat]), NWheatS ([Asseng1998163]), Cropmod-Wheat ([Wang2002GenericCropModel]), and the earlier versions developed in Plant (<a href=\"http://www.apsim.info/Documentation/Model,CropandSoil/CropModuleDocumentation/Wheat.aspx">APSIM Wheat 7.5</a>") and then within the Plant Modelling Framework ([brown_plant_2014]).]]></MemoText>
+  </Memo>
   <Replacements>
     <Name>Replacements</Name>
     <Plant>
@@ -1335,7 +1355,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4635,7 +4655,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -4699,7 +4719,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -6469,7 +6489,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -6533,7 +6553,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -6597,7 +6617,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -6661,7 +6681,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -10099,7 +10119,7 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
@@ -10163,7 +10183,7 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
@@ -10227,7 +10247,7 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
@@ -10291,7 +10311,7 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
@@ -10355,7 +10375,7 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
@@ -10419,7 +10439,7 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
@@ -10466,7 +10486,7 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
@@ -10513,7 +10533,7 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
@@ -10560,7 +10580,7 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
@@ -10607,7 +10627,7 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
@@ -10676,7 +10696,7 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
@@ -10723,7 +10743,7 @@ namespace Models
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
@@ -10787,7 +10807,7 @@ namespace Models
                 <Cumulative>true</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Axis>
                 <Type>Bottom</Type>
                 <Inverted>false</Inverted>
