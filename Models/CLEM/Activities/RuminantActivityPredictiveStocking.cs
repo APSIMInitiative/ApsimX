@@ -38,7 +38,7 @@ namespace Models.CLEM.Activities
         /// Month for assessing dry season feed requirements
         /// </summary>
         [Description("Month for assessing dry season feed requirements (1-12)")]
-        [Required, Month)]
+        [Required, Month]
         public int AssessmentMonth { get; set; }
 
         /// <summary>
