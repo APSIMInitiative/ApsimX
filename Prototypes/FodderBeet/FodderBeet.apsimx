@@ -1179,6 +1179,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
+        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <Leaves />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -1446,7 +1447,11 @@ date of Experiment 4 is assumed here.]]></MemoText>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
+        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
       <GenericOrgan>
         <Name>StorageRoot</Name>
@@ -1610,6 +1615,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <FixedValue>0.4</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Petiole</Name>
@@ -1767,6 +1773,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <FixedValue>0.4</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -9960,9 +9967,9 @@ namespace Models
                 <Name>SowDateCv</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>5</InitialRootDepth>
                   <CropToSow>Rivage</CropToSow>
                   <SowingDate>0001-01-01</SowingDate>
+                  <InitialRootDepth>5</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -12620,8 +12627,8 @@ namespace Models
                 <Name>StateFactors</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <IrrFactor>False</IrrFactor>
                   <NitFactor>0</NitFactor>
+                  <IrrFactor>False</IrrFactor>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -12888,9 +12895,9 @@ namespace Models
                 <Name>SowDateCv</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>5</InitialRootDepth>
                   <CropToSow>Rivage</CropToSow>
                   <SowingDate>2016-10-18</SowingDate>
+                  <InitialRootDepth>5</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -13588,7 +13595,10 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
+            <DisabledSeries>
+              <string>50Full</string>
+              <string>50Nil</string>
+            </DisabledSeries>
           </Graph>
           <Graph>
             <Name>LAI</Name>
@@ -14669,5 +14679,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>475</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
