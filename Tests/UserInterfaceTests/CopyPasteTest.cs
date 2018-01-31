@@ -5,7 +5,6 @@ using UserInterface.Commands;
 using UserInterface.Presenters;
 using Models;
 using Models.Core;
-using System.Linq;
 
 /// <summary>
 /// This script selects all nodes in the standard toolbox, testing to 
@@ -19,28 +18,30 @@ public class Script
         tabbedExplorerPresenter.OpenApsimXFileInTab(@"..\Tests\Test.apsimx");
     
         // Get the presenter for this tab.
-        ExplorerPresenter presenter = tabbedExplorerPresenter.Presenters.OfType<ExplorerPresenter>().ToList()[0];
+        ExplorerPresenter presenter = tabbedExplorerPresenter.Presenters[0] as ExplorerPresenter;
+		if (presenter != null)
+		{
+			// Select the field model.
+			presenter.SelectNode(".Simulations.Test");
 
-        // Select the field model.
-        presenter.SelectNode(".Simulations.Test");
+			// Copy the simulation model.
+			ContextMenu menu = new ContextMenu(presenter);
+			menu.OnCopyClick(null, null);
+			
+			// Select the top model
+			presenter.SelectNode(".Simulations");
 
-        // Copy the simulation model.
-        ContextMenu menu = new ContextMenu(presenter);
-        menu.OnCopyClick(null, null);
-        
-        // Select the top model
-        presenter.SelectNode(".Simulations");
-
-        // Paste the model.
-        menu.OnPasteClick(null, null);
-        
-        // Make sure the paste has worked by clicking on a child. 
-        presenter.SelectNode(".Simulations.Test1.Clock");
-        
-        // Make sure the parenting of children has worked correctly.
-        Clock clock = Apsim.Get(presenter.ApsimXFile, ".Simulations.Test1.Clock") as Clock;
-        if (clock.Parent == null)
-            throw new Exception("Parenting of models after copy/paste hasn't worked");
+			// Paste the model.
+			menu.OnPasteClick(null, null);
+			
+			// Make sure the paste has worked by clicking on a child. 
+			presenter.SelectNode(".Simulations.Test1.Clock");
+			
+			// Make sure the parenting of children has worked correctly.
+			Clock clock = Apsim.Get(presenter.ApsimXFile, ".Simulations.Test1.Clock") as Clock;
+			if (clock.Parent == null)
+				throw new Exception("Parenting of models after copy/paste hasn't worked");
+		}
         
         // Close the user interface.
         tabbedExplorerPresenter.Close(false);
