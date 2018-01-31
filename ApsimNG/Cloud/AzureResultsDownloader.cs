@@ -322,12 +322,9 @@ namespace ApsimNG.Cloud
         private void DownloadProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             string jobName = e.UserState.ToString();
-            lock (progressMutex)
-            {
-                numBlobsComplete++;
-                double progress = 1.0 * numBlobsComplete / numBlobs;
-                presenter.UpdateDownloadProgress(progress);
-            }
+            numBlobsComplete++;
+            double progress = 1.0 * numBlobsComplete / numBlobs;
+            presenter.UpdateDownloadProgress(progress);
         }
 
         /// <summary>
@@ -448,11 +445,24 @@ namespace ApsimNG.Cloud
                 Dictionary<string, string> simNames = new Dictionary<string, string>();
 
                 DataTable table = new DataTable();
-                m_dbConnection = new SQLiteConnection("Data Source=" + path + ";Version=3;");
-                m_dbConnection.Open();
+                m_dbConnection = new SQLiteConnection("Data Source=" + path + ";Version=3;", true);
+                bool opened = false;
+                while (!opened)
+                {
+                    try
+                    {
+                        m_dbConnection.Open();
+                        opened = true;
+                    } catch (Exception e)
+                    {
+                        Console.WriteLine("Failed to open db at " + path);
+                    }
+                    
+                }
+                
 
                 // Enumerate the simulation names
-                string sql = "SELECT * FROM simulations";
+                string sql = "SELECT * FROM _Simulations";
                 try
                 {
                     SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
@@ -467,7 +477,9 @@ namespace ApsimNG.Cloud
                     presenter.ShowError("Error enumerating simulation names: " + e.ToString());
                 }
 
-                sql = "SELECT * FROM Report";
+                sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
+
+                sql = "SELECT * FROM Report2";
                 try
                 {
                     SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
@@ -497,42 +509,8 @@ namespace ApsimNG.Cloud
                 {
                     presenter.ShowError("Error getting report: " + e.ToString());
                 }
-                try
-                {
-                    ReadSqliteDB2(path, printHeader, delim);
-                }
-                catch (Exception e)
-                {
-
-                }
                 return "";
             }            
-        }
-
-        private void ReadSqliteDB2(string path, bool printHeader, string delim)
-        {
-            APSIM.Shared.Utilities.SQLite reader = new APSIM.Shared.Utilities.SQLite();
-            reader.OpenDatabase(path, true);
-            Dictionary<string, string> simNames = new Dictionary<string, string>();
-
-            string sql = "SELECT * FROM simulations";
-            try
-            {
-                DataTable result = reader.ExecuteQuery(sql);
-                for (int i = 0; i < result.Rows.Count; i++)
-                {
-                    DataRow row = result.Rows[i];
-                }
-                /*
-                while (result.Read())
-                {
-                    simNames.Add(reader["ID"].ToString(), reader["Name"].ToString());
-                }*/
-            }
-            catch (Exception e)
-            {
-                presenter.ShowError("Error enumerating simulation names: " + e.ToString());
-            }
         }
         
         /// <summary>

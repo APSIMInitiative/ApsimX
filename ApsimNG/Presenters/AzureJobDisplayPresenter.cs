@@ -494,6 +494,7 @@ namespace UserInterface.Presenters
         public void DownloadComplete(Guid jobId)
         {
             currentlyDownloading.Remove(jobId);
+            view.HideDownloadProgressBar();
         }
 
         /// <summary>

@@ -50,8 +50,7 @@ namespace UserInterface.Views
             set
             {
                 Application.Invoke(delegate
-                {
-                    if (!downloadProgressContainer.Visible) downloadProgressContainer.ShowAll();
+                {                    
                     downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper);                    
                 });
             }
@@ -251,7 +250,7 @@ namespace UserInterface.Views
             chkFilterOwner.Toggled += ApplyFilter;
             chkFilterOwner.Yalign = 0;
 
-            downloadProgress = new ProgressBar(new Adjustment(0, 0, 1, 0.01, 0.01, 1));
+            downloadProgress = new ProgressBar(new Adjustment(0, 0, 100, 0.01, 0.01, 100));
             lblDownloadProgress = new Label("Downloading: ");
 
             downloadProgressContainer = new HBox();
@@ -500,7 +499,7 @@ namespace UserInterface.Views
         /// </summary>
         public void ShowDownloadProgressBar()
         {
-            Application.Invoke(delegate { downloadProgressContainer.ShowAll(); });
+            Application.Invoke(delegate { downloadProgressContainer.ShowAll(); });            
         }
 
         /// <summary>
