@@ -233,8 +233,7 @@
     <FileSQLiteGRASP>
       <Name>FileGRASP</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage />
-      <FileName>C:\Data\Source\Repos\ApsimX\Prototypes\CLEM\NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
+      <FileName>NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
     </FileSQLiteGRASP>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
@@ -871,7 +870,6 @@
     <FileSQLiteGRASP>
       <Name>FileGRASP</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage />
       <FileName>C:\Data\Source\Repos\ApsimX\Prototypes\CLEM\NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
     </FileSQLiteGRASP>
     <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1296,7 +1294,6 @@
     <FileSQLiteGRASP>
       <Name>FileGRASP</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage />
       <FileName>C:\Data\Source\Repos\ApsimX\Prototypes\CLEM\NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
     </FileSQLiteGRASP>
     <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1795,7 +1792,6 @@
     <FileSQLiteGRASP>
       <Name>FileGRASP</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage />
       <FileName>C:\Data\Source\Repos\ApsimX\Prototypes\CLEM\NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
     </FileSQLiteGRASP>
     <IncludeInDocumentation>true</IncludeInDocumentation>
