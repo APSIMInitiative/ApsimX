@@ -20,6 +20,8 @@ namespace Models.AgPasture
     [Serializable]
     public class PastureAboveGroundOrgan
     {
+
+        
         /// <summary>Constructor, initialise tissues.</summary>
         /// <param name="numTissues">The number of tissues in the organ</param>
         public PastureAboveGroundOrgan(int numTissues)
@@ -412,9 +414,6 @@ namespace Models.AgPasture
         /// <summary>Flag which method for computing available soil nitrogen will be used.</summary>
         private PastureSpecies.PlantAvailableNitrogenMethod myNitrogenAvailableMethod = PastureSpecies.PlantAvailableNitrogenMethod.BasicAgPasture;
 
-        /// <summary>Soil nitrogen model.</summary>
-        private SoilNitrogen SoilNitrogen;
-
         /// <summary>The solute manager in this zone</summary>
         public SoluteManager solutes = null;
 
@@ -514,10 +513,6 @@ namespace Models.AgPasture
             solutes = Apsim.Find(soil, typeof(SoluteManager)) as SoluteManager;
             if (solutes == null)
                 throw new Exception("Cannot find solute manager in zone");
-
-            SoilNitrogen = Apsim.Find(soil, typeof(SoilNitrogen)) as SoilNitrogen;
-            if (SoilNitrogen == null)
-                throw new Exception("Cannot find SoilNitrogen in zone");
 
             // Initialise root DM, N, depth, and distribution
             this.Depth = initialRootDepth;
@@ -1120,7 +1115,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Adds root material (DM and N) to the soil's FOM pool.</summary>
-        public void DoEndOrgan(double CarbonFractionInDM)
+        public void DoEndOrgan(double CarbonFractionInDM, AgPasture.PastureSpecies parent)
         {
             FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
 
@@ -1146,7 +1141,8 @@ namespace Models.AgPasture
             FOMLayerType FOMData = new FOMLayerType();
             FOMData.Type = pastureName;
             FOMData.Layer = FOMdataLayer;
-            SoilNitrogen.DoIncorpFOM(FOMData);
+            parent.InvokeIncorpFOM(FOMData);
+            
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
