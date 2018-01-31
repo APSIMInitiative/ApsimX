@@ -210,9 +210,9 @@
 
             // generate xml
             string xml = "";
-            
             foreach (Simulation sim in Runner.AllSimulations(model))
             {
+                path = jp.ModelPath + "\\" + sim.Name + ".apsimx";
                 // if weather file is not in the same directory as the .apsimx file, display an error then abort
                 foreach (var child in sim.Children)
                 {
@@ -225,13 +225,18 @@
                             view.Status = "Cancelled";
                             return;
                         }
+                        string sourcePath = ((Models.Weather)sim.Children[0]).FullFileName;
+                        string destPath = Path.Combine(jp.ModelPath, ((Models.Weather)sim.Children[0]).FileName);
+                        if (!File.Exists(destPath)) File.Copy(sourcePath, destPath);
                     }
-                }
-                path = jp.ModelPath + "\\" + sim.Name + ".apsimx";                
+                }                
                 xml = Apsim.Serialise(sim);
                 // delete model file if it already exists
                 if (File.Exists(path)) File.Delete(path);
-
+                string pattern = @"<\?xml[^<>]+>";
+                System.Text.RegularExpressions.Regex rx = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                var matches = rx.Matches(xml);
+                xml = "<Simulations xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Version=\"23\">\r\n<Name>" + sim.Name + "</Name>\r\n" + xml.Replace(matches[0].ToString(), "") + "<DataStore><Name>DataStore</Name><AutoExport>false</AutoExport><MaximumResultsPerPage>0</MaximumResultsPerPage></DataStore><ExplorerWidth>296</ExplorerWidth></Simulations>";
                 // write xml to file
                 using (FileStream fs = File.Create(path))
                 {

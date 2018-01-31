@@ -120,6 +120,11 @@ namespace ApsimNG.Cloud
         private readonly string[] zipFileFormats = { ".zip" };
 
         /// <summary>
+        /// Mutual exclusion sempahore for reading the .db files.
+        /// </summary>
+        private object dbMutex;
+
+        /// <summary>
         /// Constructor. Requires Azure credentials to already be set in ApsimNG.Properties.Settings. 
         /// </summary>
         /// <param name="id"></param>
@@ -140,6 +145,7 @@ namespace ApsimNG.Cloud
             rawResultsPath = outputPath + "\\" + jobName.ToString() + "_Results";
             tempPath = Path.GetTempPath() + "\\" + jobId;
             progressMutex = new object();
+            dbMutex = new object();
             presenter = explorer;
             try
             {
@@ -421,7 +427,7 @@ namespace ApsimNG.Cloud
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                presenter.ShowError(e.ToString());
                 return 2;
             }
         }
@@ -434,68 +440,73 @@ namespace ApsimNG.Cloud
         /// <param name="delim">Field delimiter</param>
         /// <returns></returns>
         private string ReadSqliteDB(string path, bool printHeader, string delim)
-        {            
-            StringBuilder output = new StringBuilder();
-            SQLiteConnection m_dbConnection;
-            Dictionary<string, string> simNames = new Dictionary<string, string>();
-
-            DataTable table = new DataTable();
-            m_dbConnection = new SQLiteConnection("Data Source=" + path + ";Version=3;");
-            m_dbConnection.Open();
-
-            // Enumerate the simulation names
-            string sql = "SELECT * FROM simulations";
-            try
+        {
+            lock(dbMutex)
             {
-                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-                SQLiteDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                StringBuilder output = new StringBuilder();
+                SQLiteConnection m_dbConnection;
+                Dictionary<string, string> simNames = new Dictionary<string, string>();
+
+                DataTable table = new DataTable();
+                m_dbConnection = new SQLiteConnection("Data Source=" + path + ";Version=3;");
+                m_dbConnection.Open();
+
+                // Enumerate the simulation names
+                string sql = "SELECT * FROM simulations";
+                try
                 {
-                    //Console.WriteLine("SimName: " + reader["Name"] + ", ID: " + reader["ID"]);
-                    simNames.Add(reader["ID"].ToString(), reader["Name"].ToString());
-                }
-            } catch (Exception e)
-            {
-                Console.WriteLine("Error enumerating simulation names: " + e.ToString());
-            }
-
-            sql = "SELECT * FROM Report";
-            try
-            {
-                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-                SQLiteDataReader reader = command.ExecuteReader();
-                table.Load(reader); // faster to load the result into a DataTable for some reason
-                printHeader = true;
-                foreach (DataRow row in table.Rows)
-                {
-                    if (printHeader)
+                    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
                     {
-                        output.Append("FileName" + delim + "SimName" + delim);
-                        foreach (DataColumn column in table.Columns)
-                        {
-                            output.Append(column.ColumnName + delim);
-                        }
-                        output.Append("\n");
-                        printHeader = false;
+                        simNames.Add(reader["ID"].ToString(), reader["Name"].ToString());
                     }
-
-                    output.Append(Path.GetFileNameWithoutExtension(path) + delim + simNames[row.ItemArray[0].ToString()] + delim);
-                    output.Append(String.Join(delim, row.ItemArray));
-                    output.Append("\n");
                 }
-                return output.ToString();
-            } catch (Exception e)
-            {
-                presenter.ShowError("Error getting report: " + e.ToString());
-            }
-            try
-            {
-                ReadSqliteDB2(path, printHeader, delim);
-            } catch (Exception e)
-            {
+                catch (Exception e)
+                {
+                    presenter.ShowError("Error enumerating simulation names: " + e.ToString());
+                }
 
-            }
-            return "";   
+                sql = "SELECT * FROM Report";
+                try
+                {
+                    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    table.Load(reader); // faster to load the result into a DataTable for some reason
+                    printHeader = true;
+                    foreach (DataRow row in table.Rows)
+                    {
+                        if (printHeader)
+                        {
+                            output.Append("FileName" + delim + "SimName" + delim);
+                            foreach (DataColumn column in table.Columns)
+                            {
+                                output.Append(column.ColumnName + delim);
+                            }
+                            output.Append("\n");
+                            printHeader = false;
+                        }
+
+                        output.Append(Path.GetFileNameWithoutExtension(path) + delim + simNames[row.ItemArray[0].ToString()] + delim);
+                        output.Append(String.Join(delim, row.ItemArray));
+                        output.Append("\n");
+                    }
+                    return output.ToString();
+                }
+                catch (Exception e)
+                {
+                    presenter.ShowError("Error getting report: " + e.ToString());
+                }
+                try
+                {
+                    ReadSqliteDB2(path, printHeader, delim);
+                }
+                catch (Exception e)
+                {
+
+                }
+                return "";
+            }            
         }
 
         private void ReadSqliteDB2(string path, bool printHeader, string delim)
@@ -511,18 +522,16 @@ namespace ApsimNG.Cloud
                 for (int i = 0; i < result.Rows.Count; i++)
                 {
                     DataRow row = result.Rows[i];
-                    Console.WriteLine("");
                 }
                 /*
                 while (result.Read())
                 {
-                    //Console.WriteLine("SimName: " + reader["Name"] + ", ID: " + reader["ID"]);
                     simNames.Add(reader["ID"].ToString(), reader["Name"].ToString());
                 }*/
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error enumerating simulation names: " + e.ToString());
+                presenter.ShowError("Error enumerating simulation names: " + e.ToString());
             }
         }
         
