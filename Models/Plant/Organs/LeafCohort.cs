@@ -1068,6 +1068,35 @@ namespace Models.PMF.Organs
             return scaledLeafSize;
         }
 
+        /// <summary>Live leaf number</summary>
+        /// 
+
+        public double LiveStemNumber (Leaf.LeafCohortParameters leafCohortParameters)
+        {
+            double _lagDuration;
+            double _senescenceDuration;
+            double lsn = 0;
+            for (int i = 0; i < ApexGroupAge.Count; i++)
+            {
+                if (i == 0)
+                {
+                    _lagDuration = LagDuration;
+                    _senescenceDuration = SenescenceDuration;
+                }
+                else
+                {
+                    _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                    _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                }
+
+                if (Age >= 0 & Age < _lagDuration + GrowthDuration + _senescenceDuration / 2) 
+                {
+                    lsn += ApexGroupSize[i];
+                }
+            }
+            return lsn * CohortPopulation / MathUtilities.Sum(ApexGroupSize);           
+        }
+
         /// <summary>Fractions the senescing.</summary>
         /// <param name="tt">The tt.</param>
         /// <param name="stemMortality">The stem mortality.</param>

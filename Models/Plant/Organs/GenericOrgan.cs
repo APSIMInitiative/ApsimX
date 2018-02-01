@@ -108,8 +108,11 @@ namespace Models.PMF.Organs
         [Units("")]
         private IFunction remobilisationCost = null;
 
-        /// <summary>Tolerance for biomass comparisons</summary>
-        private double biomassToleranceValue = 0.0000000001;   // 10E-10
+        /// <summary>Carbon concentration</summary>
+        /// [Units("-")]
+        [Link]
+        IFunction CarbonConcentration = null;
+
 
         /// <summary>The live biomass state at start of the computation round</summary>
         private Biomass startLive = null;
@@ -154,10 +157,7 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Total { get { return Live + Dead; } }
 
-        /// <summary>Carbon concentration</summary>
-        /// [Units("-")]
-        public double CarbonConcentration { get; set; }
-
+        
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [XmlIgnore]
         public Biomass Allocated { get; private set; }
@@ -273,7 +273,7 @@ namespace Models.PMF.Organs
         public double AvailableDMRetranslocation()
         {
             double availableDM = Math.Max(0.0, startLive.StorageWt - dryMatterSupply.Reallocation) * dmRetranslocationFactor.Value();
-            if (availableDM < -biomassToleranceValue)
+            if (availableDM < -Util.BiomassToleranceValue)
                 throw new Exception("Negative DM retranslocation value computed for " + Name);
 
             return availableDM;
@@ -283,7 +283,7 @@ namespace Models.PMF.Organs
         public double AvailableDMReallocation()
         {
             double availableDM = startLive.StorageWt * senescenceRate.Value() * dmReallocationFactor.Value();
-            if (availableDM < -biomassToleranceValue)
+            if (availableDM < -Util.BiomassToleranceValue)
                 throw new Exception("Negative DM reallocation value computed for " + Name);
 
             return availableDM;
@@ -303,11 +303,11 @@ namespace Models.PMF.Organs
         public virtual BiomassSupplyType CalculateNitrogenSupply()
         {
             nitrogenSupply.Reallocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
-            if (nitrogenSupply.Reallocation < -biomassToleranceValue)
+            if (nitrogenSupply.Reallocation < -Util.BiomassToleranceValue)
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
             nitrogenSupply.Retranslocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
-            if (nitrogenSupply.Retranslocation < -biomassToleranceValue)
+            if (nitrogenSupply.Retranslocation < -Util.BiomassToleranceValue)
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
             nitrogenSupply.Fixation = 0;
@@ -350,7 +350,7 @@ namespace Models.PMF.Organs
         public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
             // Check retranslocation
-            if (dryMatter.Retranslocation - startLive.StorageWt > biomassToleranceValue)
+            if (dryMatter.Retranslocation - startLive.StorageWt > Util.BiomassToleranceValue)
                 throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
 
             // get DM lost by respiration (growth respiration)
@@ -359,7 +359,7 @@ namespace Models.PMF.Organs
             // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
             // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
             // CO2 (44/12).
-            double growthRespFactor = ((1 / dmConversionEfficiency.Value()) * (12 / 30) - 1 * CarbonConcentration) * 44 / 12;
+            double growthRespFactor = ((1.0 / dmConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
 
             GrowthRespiration = 0.0;
             // allocate structural DM
@@ -368,18 +368,17 @@ namespace Models.PMF.Organs
             GrowthRespiration += Allocated.StructuralWt * growthRespFactor;
 
             // allocate non structural DM
-            if ((dryMatter.Storage * dmConversionEfficiency.Value() - DMDemand.Storage) > biomassToleranceValue)
+            if ((dryMatter.Storage * dmConversionEfficiency.Value() - DMDemand.Storage) > Util.BiomassToleranceValue)
                 throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
             // Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
             double diffWt = dryMatter.Storage - dryMatter.Retranslocation;
             if (diffWt > 0)
             {
                 diffWt *= dmConversionEfficiency.Value();
-                
+                GrowthRespiration += diffWt * growthRespFactor;
             }
             Allocated.StorageWt = diffWt;
             Live.StorageWt += diffWt;
-            GrowthRespiration += Allocated.StorageWt * growthRespFactor;
             // allocate metabolic DM
             Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
             GrowthRespiration += Allocated.MetabolicWt * growthRespFactor;
@@ -668,7 +667,7 @@ namespace Models.PMF.Organs
             {
                 // Do senescence
                 double senescedFrac = senescenceRate.Value();
-                if (Live.Wt * (1.0 - senescedFrac) < biomassToleranceValue)
+                if (Live.Wt * (1.0 - senescedFrac) < Util.BiomassToleranceValue)
                     senescedFrac = 1.0;  // remaining amount too small, senesce all
                 Biomass Loss = Live * senescedFrac;
                 Live.Subtract(Loss);
@@ -677,7 +676,7 @@ namespace Models.PMF.Organs
 
                 // Do detachment
                 double detachedFrac = detachmentRateFunction.Value();
-                if (Dead.Wt * (1.0 - detachedFrac) < biomassToleranceValue)
+                if (Dead.Wt * (1.0 - detachedFrac) < Util.BiomassToleranceValue)
                     detachedFrac = 1.0;  // remaining amount too small, detach all
                 Biomass detaching = Dead * detachedFrac;
                 Dead.Multiply(1.0 - detachedFrac);

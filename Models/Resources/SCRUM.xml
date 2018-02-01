@@ -1507,11 +1507,7 @@ This is the proportion of total biomass that is paritioned into the roots and is
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Root].RWC</XProperty>
     </LinearInterpolationFunction>
-    <Constant>
-      <Name>CarbonConcentration</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.4</FixedValue>
-    </Constant>
+    
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <Constant>
@@ -1519,6 +1515,11 @@ This is the proportion of total biomass that is paritioned into the roots and is
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0</FixedValue>
     </Constant>
+    <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />
@@ -1667,6 +1668,11 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Nodule].MinimumNConc.Value()</VariableName>
     </VariableReference>
+    <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Nodule>
   <CompositeBiomass>

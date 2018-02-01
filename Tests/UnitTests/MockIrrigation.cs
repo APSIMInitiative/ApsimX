@@ -3,11 +3,12 @@
 namespace UnitTests
 {
     using Models;
+    using Models.Core;
     using Models.Soils;
     using System;
 
     [Serializable]
-    class MockIrrigation : IIrrigation
+    class MockIrrigation : Model, IIrrigation
     {
         public double IrrigationApplied { get; set; }
 
