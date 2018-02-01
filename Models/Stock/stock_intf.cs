@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using StdUnits;
+﻿
 
 namespace Models.GrazPlan
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using StdUnits;
 
     /// <summary>
     /// Used to bundle animal genotype information so it can be passed to            
@@ -869,129 +870,15 @@ namespace Models.GrazPlan
         //management events described by the livestock dialog
 
         /// <summary>
-        /// If the stock are to be managed by this component then there are tasks to
-        /// do such as ageing animals and re-tagging them if required.
         /// </summary>
         /// <param name="currentDay"></param>
         /// <param name="curEnt"></param>
         protected void manageDailyTasks(int currentDay, TEnterpriseInfo curEnt)
         {
-            int g;
-            int mob;
-
-            if (curEnt.TagUpdateDay == currentDay)      //if this is a re-tagging day
-            {
-                //only work on the groups in this enterprise
-                g = 1;
-                while (g <= Count())                       //for each group
-                {
-                    if (curEnt.ContainsTag(getTag(g)))        //if this group belongs to this ent
-                    {
-                        //modify the tag value for this age group
-                        for (mob = 0; mob <= MOBS - 1; mob++)
-                        {
-                            if (ENTMOBS[(int)curEnt.EntTypeFromName(curEnt.EntClass), mob].MobName != "")  //for each mob in this enterprise type
-                                TagGroup(curEnt, g, mob);        //tag the group
-                        }
-                    }
-                    g++;
-                }
-            }
+ 
         }
 
-        /// <summary>
-        /// Execute on any of the shearing dates
-        /// Shears all on a single date OR each specified tagged group on it's day of year.
-        /// </summary>
-        /// <param name="currentDay"></param>
-        /// <param name="curEnt"></param>
-        protected void manageShearing(int currentDay, TEnterpriseInfo curEnt)
-        {
-            int idx, g;
-            TShearByTag shearInfo = new TShearByTag();
-
-            if (curEnt.ShearingTagCount == 0)
-            {
-                if (curEnt.ShearingDate == currentDay)          //if shear all
-                {
-                    //only shear the groups in this enterprise
-                    g = 1;
-                    while (g <= Count())                       //for each group
-                    {
-                        if (curEnt.ContainsTag(getTag(g)))       //if this group belongs to this ent
-                        {
-                            Shear(g, true, true);                  //shear this group
-                        }
-                        g++;
-                    }
-                }
-            }
-            else //shear each group on it's specified day
-            {
-                for (idx = 1; idx <= curEnt.ShearingTagCount; idx++)
-                {
-                    curEnt.getShearingTag(idx, ref shearInfo);
-                    if (shearInfo.doy == currentDay)
-                    {
-                        if (curEnt.ContainsTag(shearInfo.tagNo))         //if this tag belongs to this ent
-                        {
-                            g = 1;
-                            while (g <= Count())                       //for each group
-                            {
-                                if (getTag(g) == shearInfo.tagNo)         //if this group matches the tag
-                                {
-                                    Shear(g, true, true);                  //shear this group
-                                }
-                                g++;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Execute for CFA selling dates
-        /// </summary>
-        /// <param name="currentDay"></param>
-        /// <param name="curEnt"></param>
-        protected void manageCFA(int currentDay, TEnterpriseInfo curEnt)
-        {
-            int g;
-            int number;
-            int groups;
-
-            if (curEnt.getFirstSaleDay(1) == currentDay)
-            {
-                //only sell from the groups in this enterprise
-                g = 1;
-                groups = Count();                     //store this count because it changes
-                while (g <= groups)                       //for each group
-                {
-                    if (curEnt.ContainsTag(getTag(g)))        //if this group belongs to this ent
-                    {
-                        SplitAge(g, 365 * curEnt.getFirstSaleYears(1)); //split this group based on age
-                    }
-                    g++;
-                }
-                //loop through the groups again to pick up the new groups of aged animals
-                g = 1;
-                while (g <= Count())                      //for each group
-                {
-                    if (curEnt.ContainsTag(getTag(g)))        //if this group belongs to this ent
-                    {
-                        //remove animals that match the age criteria
-                        if (At(g).AgeDays >= 365 * curEnt.getFirstSaleYears(1))
-                        {
-                            number = At(g).NoAnimals;
-                            Sell(g, number); //sell the aged animals
-                        }
-                    }
-                    g++;
-                }
-            }
-        }
-
+ 
         /// <summary>
         /// Process the reproduction logic specified by the dialog.
         /// Mating, Castrating, Weaning.
@@ -1101,338 +988,6 @@ namespace Models.GrazPlan
             }
         }
 
-        /// <summary>
-        /// Manage the initialisation of the animal groups for the enterprise.
-        /// Called at the end of evtINITSTEP
-        /// </summary>
-        /// <param name="currentDay"></param>
-        /// <param name="curEnt"></param>
-        /// <param name="latitude"></param>
-        protected void manageInitialiseStock(int currentDay, TEnterpriseInfo curEnt, double latitude)
-        {
-            double area;
-            int numToBuy;
-            TCohortsInfo CohortsInfo = new TCohortsInfo();
-            int birthDay;
-            int replaceAge;
-            int ageOffset;
-            int yngYrs = 0, oldYrs = 0;
-            int i;
-            TAnimalParamSet genoprms;
-            int iBuyYears;
-            int dtBuy;
-            List<int> newGroups;
-            int groupIdx;
-            TEnterpriseInfo.TStockEnterprise stockEnt;
-            double survivalRate;
-
-            area = calcStockArea(curEnt);
-            if (area > 0)
-            {
-                newGroups = new List<int>();
-                numToBuy = Convert.ToInt32(Math.Truncate(curEnt.StockRateFemale * area));
-                stockEnt = curEnt.EntTypeFromName(curEnt.EntClass);
-
-                //calc the birth date based on age at replacement
-                replaceAge = Convert.ToInt32(Math.Truncate(MONTH2DAY * curEnt.ReplaceAge + 0.5));
-                ageOffset = (replaceAge + DaysFromDOY(curEnt.ReplacementDay, currentDay)) % 366;
-
-                //get age range - from calc'd birth to CFA age
-                GetAgeRange(curEnt.ReplacementDay, replaceAge, curEnt.getFirstSaleYears(1), curEnt.getFirstSaleDay(1), currentDay, ref yngYrs, ref oldYrs);
-                genoprms = getGenotype(curEnt.BaseGenoType);
-                if (curEnt.getPurchase(1))
-                {
-                    iBuyYears = curEnt.ReplaceAge / 12;
-                    dtBuy = StdDate.DateVal(StdDate.DayOf(curEnt.ReplacementDay), StdDate.MonthOf(curEnt.ReplacementDay), 1900 + (iBuyYears + 1));
-                    birthDay = StdDate.DateShift(dtBuy, 0, -curEnt.ReplaceAge, 0) & 0xFFFF;
-                }
-                else
-                    birthDay = 1 + (curEnt.MateDay + 12 + genoprms.Gestation) % 365;
-
-                survivalRate = Math.Min(1.0 - genoprms.AnnualDeaths(false), 0.999999);
-
-                CohortsInfo.sGenotype = curEnt.BaseGenoType;
-                CohortsInfo.iNumber = Convert.ToInt32(Math.Truncate(numToBuy * Math.Pow(survivalRate, ((currentDay - curEnt.ReplacementDay + 365) % 365) / 365)));
-                CohortsInfo.iMinYears = yngYrs;
-                CohortsInfo.iMaxYears = oldYrs;
-                CohortsInfo.iAgeOffsetDays = StdDate.Interval(birthDay, currentDay);
-                CohortsInfo.fMeanLiveWt = curEnt.ReplaceWeight;
-                CohortsInfo.fCondScore = curEnt.ReplaceCond;
-
-                switch (stockEnt)
-                {
-                    case TEnterpriseInfo.TStockEnterprise.entEweWether:
-
-                        //setup cohorts for the females
-                        CohortsInfo.ReproClass = GrazType.ReproType.Empty;   // or preg
-                        CohortsInfo.fMeanGFW = genoprms.PotentialGFW * DaysFromDOY(curEnt.ShearingDate, currentDay) / 365.0;
-                        CohortsInfo.iFleeceDays = DaysFromDOY365(curEnt.ShearingDate, currentDay);
-                        if (curEnt.ManageReproduction)
-                            CohortsInfo.sMatedTo = curEnt.MateWith;
-                        else
-                            CohortsInfo.sMatedTo = curEnt.BaseGenoType;
-                        //        CohortsInfo.iDaysPreg =
-                        /*          CohortsInfo.fFoetuses = eventData.member("foetuses").asDouble();
-                                  CohortsInfo.iDaysLact = eventData.member("lactating").asInteger();
-                                  CohortsInfo.fOffspring = eventData.member("offspring").asDouble();
-                                  CohortsInfo.fOffspringWt = eventData.member("young_wt").asDouble();
-                                  CohortsInfo.fOffspringCS = eventData.member("young_cond_score").asDouble();
-                                  CohortsInfo.fLambGFW = eventData.member("young_fleece_wt").asDouble();
-                          */
-                        if (CohortsInfo.iNumber > 0)
-                            AddCohorts(CohortsInfo, 1 + DaysFromDOY365(1, currentDay), latitude, null);
-
-                        //tag the groups
-                        for (i = 0; i <= newGroups.Count - 1; i++)
-                        {
-                            groupIdx = newGroups[i];
-                            TagGroup(curEnt, groupIdx, 1);          //tag the group
-                        }
-                        DraftToOpenPaddocks(curEnt, area);        //move the groups to paddocks
-
-                        //setup wether cohorts
-                        break;
-                    case TEnterpriseInfo.TStockEnterprise.entLamb:
-                    case TEnterpriseInfo.TStockEnterprise.entWether:
-                    case TEnterpriseInfo.TStockEnterprise.entSteer:
-                        CohortsInfo.ReproClass = GrazType.ReproType.Castrated;
-                        //birthday offset from the current date
-                        CohortsInfo.fMeanGFW = 0;
-                        CohortsInfo.iFleeceDays = 0;
-                        CohortsInfo.sMatedTo = "";
-                        CohortsInfo.iDaysPreg = 0;
-                        CohortsInfo.fFoetuses = 0;
-                        CohortsInfo.iDaysLact = 0;
-                        CohortsInfo.fOffspring = 0;
-                        CohortsInfo.fOffspringWt = 0;
-                        CohortsInfo.fOffspringCS = 0;
-                        CohortsInfo.fLambGFW = 0;
-                        if ((stockEnt == TEnterpriseInfo.TStockEnterprise.entWether) || (stockEnt == TEnterpriseInfo.TStockEnterprise.entLamb))
-                        {
-                            CohortsInfo.fMeanGFW = genoprms.PotentialGFW * DaysFromDOY(curEnt.ShearingDate, currentDay) / 365.0;
-                        }
-                        if (CohortsInfo.iNumber > 0)
-                            AddCohorts(CohortsInfo, currentDay, latitude, newGroups);
-                        //tag the groups
-                        for (i = 0; i <= newGroups.Count - 1; i++)
-                        {
-                            groupIdx = newGroups[i];
-                            TagGroup(curEnt, groupIdx, 1);          //tag the group
-                        }
-                        DraftToOpenPaddocks(curEnt, area);        //move the groups to paddocks
-                        break;
-                    case TEnterpriseInfo.TStockEnterprise.entBeefCow:
-                        break;
-                    default:
-                        break;
-                }
-                newGroups = null;
-            }
-        }
-
-        /// <summary>
-        /// Manage the replacement of adults by purchasing or ageing the existing stock.
-        /// </summary>
-        /// <param name="currentDay"></param>
-        /// <param name="curEnt"></param>
-        protected void manageReplacement(int currentDay, TEnterpriseInfo curEnt)
-        {
-            double area;
-            int numToBuy;
-            int totalStock;
-            int g, groups;
-            int groupIdx;
-            TPurchaseInfo AnimalInfo = new TPurchaseInfo();
-            int yrs;
-            TAnimalParamSet genoprms;
-            TEnterpriseInfo.TStockEnterprise stockEnt;
-
-            if (curEnt.ReplacementDay == currentDay)
-            {
-                area = calcStockArea(curEnt);
-                if (area > 0)
-                {
-                    totalStock = 0;
-                    g = 1;
-                    groups = Count();
-                    while (g <= groups)                       //for each group
-                    {
-                        if (curEnt.ContainsTag(getTag(g)))        //if this group belongs to this ent
-                            totalStock = totalStock + At(g).NoAnimals;
-                        g++;
-                    }
-                    numToBuy = Convert.ToInt32(Math.Truncate(curEnt.StockRateFemale * area) - totalStock);  //calc how many to purchase to maintain stocking rate
-                    if (!curEnt.getPurchase(1))       //if self replacing
-                    {
-                        // tag enough young ewes as replacements
-                        // sell excess young ewes
-                    }
-                    else
-                    {
-                        stockEnt = curEnt.EntTypeFromName(curEnt.EntClass);
-                        genoprms = getGenotype(curEnt.BaseGenoType);
-                        switch (stockEnt)
-                        {
-                            case TEnterpriseInfo.TStockEnterprise.entLamb:
-                            case TEnterpriseInfo.TStockEnterprise.entWether:
-                            case TEnterpriseInfo.TStockEnterprise.entSteer:
-                                AnimalInfo.sGenotype = curEnt.BaseGenoType;
-                                AnimalInfo.Number = numToBuy;
-                                AnimalInfo.Repro = GrazType.ReproType.Castrated;
-                                AnimalInfo.AgeDays = Convert.ToInt32(Math.Truncate(MONTH2DAY * curEnt.ReplaceAge + 0.5));
-                                AnimalInfo.LiveWt = curEnt.ReplaceWeight;
-                                AnimalInfo.GFW = 0;
-                                AnimalInfo.fCondScore = TAnimalParamSet.Condition2CondScore(curEnt.ReplaceCond);
-                                AnimalInfo.sMatedTo = "";
-                                AnimalInfo.Preg = 0;
-                                AnimalInfo.Lact = 0;
-                                AnimalInfo.NYoung = 0;
-                                AnimalInfo.NYoung = 0;
-                                AnimalInfo.YoungWt = 0;
-                                AnimalInfo.YoungGFW = 0;
-                                if ((stockEnt == TEnterpriseInfo.TStockEnterprise.entWether) || (stockEnt == TEnterpriseInfo.TStockEnterprise.entLamb))
-                                {
-                                    AnimalInfo.GFW = genoprms.PotentialGFW * DaysFromDOY(curEnt.ShearingDate, currentDay) / 365.0;
-                                }
-                                if (AnimalInfo.Number > 0)
-                                {
-                                    groupIdx = Buy(AnimalInfo);
-                                    yrs = AnimalInfo.AgeDays / 365;
-                                    TagGroup(curEnt, groupIdx, 1);        //tag the group
-
-                                    // {TODO: before drafting, a request of forages should be done}
-
-                                    DraftToOpenPaddocks(curEnt, area);
-                                    /*
-                                    //find the first paddock to be stocked for this enterprise
-                                    p = 0;
-                                    while (p <= paddocks.Count - 1) do
-                                    begin
-                                      if curEnt.StockedPaddock[p+1]    //if paddock to be stocked
-                                      begin
-                                        InPadd[groupIdx] = paddocks.byIndex(p).sName;  //move into correct paddock
-                                        p = paddocks.Count; //terminate loop
-                                      end;
-                                      inc(p);
-                                    end;
-                                    //if none found default to the first paddock
-                                    if p = paddocks.Count
-                                      InPadd[groupIdx] = paddocks.byIndex(0).sName;
-                                      */
-                                }
-                                break;
-                        }
-                    }
-
-                }
-            }
-        }
-
-        /// <summary>
-        /// Selling of young stock
-        /// </summary>
-        /// <param name="currentDay"></param>
-        /// <param name="curEnt"></param>
-        protected void manageSelling(int currentDay, TEnterpriseInfo curEnt)
-        {
-            int g;
-            int groups;
-            int number;
-            bool saleDatesInRange;
-
-            if (curEnt.getYoungSaleWeight(1) <= 0.0)  //if sell on a fixed date
-            {
-                if (curEnt.getYoungSaleFirstDay(1) == currentDay)
-                {
-                    switch (curEnt.EntTypeFromName(curEnt.EntClass))
-                    {
-                        case TEnterpriseInfo.TStockEnterprise.entEweWether:
-                            //self replacing
-                            //not self replacing
-                            break;
-                        case TEnterpriseInfo.TStockEnterprise.entWether:
-                        case TEnterpriseInfo.TStockEnterprise.entSteer:
-                            g = 1;
-                            groups = Count();                     //store this count
-                            while (g <= groups)                       //for each group
-                            {
-                                if (curEnt.ContainsTag(getTag(g)))        //if this group belongs to this ent
-                                {
-                                    //if this group is old enough
-                                    if (At(g).AgeDays >= (365.25 * curEnt.getYoungSaleFirstYears(1)))
-                                    {
-                                        //SplitAge(g, 365 * curEnt.YoungSaleFirstYears[1]); //split this group based on age
-                                        number = At(g).NoAnimals;
-                                        Sell(g, number); //sell the animals
-                                    }
-                                }
-                                g++;
-                            }  //next group
-                            break;
-                    }
-                }
-            }
-            else
-            {
-                if (curEnt.getYoungSaleWtGain(1) > TEnterpriseInfo.INVALID_WTGAIN)
-                {
-                    //sell by weight gain
-                    //for each young animal (?)
-                    //calc d_wt
-                    //
-                    //calc ave weight change
-                    //At[g].WeightChange
-                    //for each animal group
-                    //if animal group is young
-                    //sell group
-                    //endif
-                    //next animal group
-                }
-                else
-                {
-                    //sell by weight within a period
-                    switch (curEnt.EntTypeFromName(curEnt.EntClass))
-                    {
-                        case TEnterpriseInfo.TStockEnterprise.entEweWether:
-                            //self replacing
-                            //not self replacing
-                            break;
-                        case TEnterpriseInfo.TStockEnterprise.entWether:
-                        case TEnterpriseInfo.TStockEnterprise.entSteer:
-
-                            //check if today is in the selling date range
-                            if ((curEnt.getYoungSaleFirstDay(1) <= curEnt.getYoungSaleLastDay(1)))
-                                saleDatesInRange = ((curEnt.getYoungSaleFirstDay(1) <= currentDay) && (currentDay <= curEnt.getYoungSaleLastDay(1)));
-                            else
-                                saleDatesInRange = ((curEnt.getYoungSaleFirstDay(1) <= currentDay) || (currentDay <= curEnt.getYoungSaleLastDay(1)));
-
-                            if (saleDatesInRange)
-                            {
-                                g = 1;
-                                groups = Count();
-                                while (g <= groups)                      //for each group
-                                {
-                                    if (curEnt.ContainsTag(getTag(g)))        //if this group belongs to this ent
-                                    {
-                                        //if this group is old enough
-                                        if (At(g).AgeDays >= (365.25 * curEnt.getYoungSaleFirstYears(1)))
-                                        {
-                                            //check for sale condition
-                                            if ((At(g).LiveWeight >= curEnt.getYoungSaleWeight(1)) || (currentDay == curEnt.getYoungSaleLastDay(1)))
-                                            {
-                                                number = At(g).NoAnimals;
-                                                Sell(g, number); //sell the animals
-                                            }
-                                        }
-                                    }
-                                    g++;
-                                }
-                            }  //in date range
-                            break;
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// There can be a number of grazing periods. Each of these can include the
@@ -1516,29 +1071,6 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Calculate the area that is permitted to be stocked for the given enterprise.
-        /// </summary>
-        /// <param name="curEnt"></param>
-        /// <returns></returns>
-        protected double calcStockArea(TEnterpriseInfo curEnt)
-        {
-            int Idx;
-            TPaddockInfo PaddInfo;
-
-            double result = 0;
-            for (Idx = 0; Idx <= Paddocks.Count() - 1; Idx++)
-            {
-                PaddInfo = Paddocks.byIndex(Idx);
-                if ((Idx < curEnt.StockedPaddocks) && (PaddInfo.iPaddID >= 0) && (curEnt.getStockedPad(Idx)))
-                    result = result + PaddInfo.fArea;
-            }
-            //if no area from chosen paddocks then assume it was given as a composite value
-            if (result == 0)
-                result = curEnt.GrazedArea;
-            return result;
-        }
-
-        /// <summary>
         ///   For a given day of year, obtains the ages (in years, rounded down) of   
         ///   the youngest and oldest animals in a flock/herd from the policy for     
         ///   additions to and sales from it.                                         
@@ -1602,29 +1134,6 @@ namespace Models.GrazPlan
                 age--;
             }
             return getTag(groupIdx);
-        }
-
-        /// <summary>
-        /// Draft the animals to the paddocks selected in the initialisation OR
-        /// draft them to any paddock.
-        /// </summary>
-        /// <param name="curEnt"></param>
-        /// <param name="area"></param>
-        protected void DraftToOpenPaddocks(TEnterpriseInfo curEnt, double area)
-        {
-            int p;
-            List<string> exclPaddocks;
-
-            exclPaddocks = new List<string>();
-            for (p = 1; p <= Paddocks.Count() - 1; p++)
-            {
-                if (!curEnt.getStockedPad(p))  //if paddock not stocked then
-                    exclPaddocks.Add(Paddocks.byIndex(p).sName);
-            }
-            //if no paddocks selected to be stocked then just draft anywhere
-            if ((area > 0) && ((Paddocks.Count() - 1) == exclPaddocks.Count()))
-                exclPaddocks.Clear();
-            Draft(exclPaddocks);                   //moves animals in stocked paddocks by animal priority
         }
 
         /// <summary>
@@ -3447,9 +2956,7 @@ namespace Models.GrazPlan
             for (i = 0; i <= Enterprises.Count - 1; i++)   //for each enterprise
             {
                 curEnt = Enterprises.byIndex(i);
-                if (curEnt.ManageInit)
-                    manageInitialiseStock(currentDay, curEnt, latitude);
-
+ 
                 if (curEnt.ManageGrazing)
                     manageGrazing(currentDay, currentDay, curEnt);
             }
@@ -3474,16 +2981,6 @@ namespace Models.GrazPlan
                 if (curEnt.ManageGrazing)
                     manageGrazing(currentDate, currentDay, curEnt);
 
-                //manage: supplementary feeding
-
-                if (curEnt.ManageShearing)
-                    manageShearing(currentDay, curEnt);
-                if (curEnt.ManageCFA)
-                    manageCFA(currentDay, curEnt);
-                if (curEnt.ManageSelling)
-                    manageSelling(currentDay, curEnt);
-                if (curEnt.ManageReplacement)
-                    manageReplacement(currentDay, curEnt);
                 if (curEnt.ManageReproduction)
                     manageReproduction(currentDay, curEnt);
             } //next enterprise

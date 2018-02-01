@@ -34,7 +34,7 @@ namespace Models.PMF.Functions
                 foreach (string s in split)
                     try
                     {
-                        str2dbl.Add(Convert.ToDouble(s));
+                        str2dbl.Add(Convert.ToDouble(s, System.Globalization.CultureInfo.InvariantCulture));
                     }
                     catch (Exception)
                     {

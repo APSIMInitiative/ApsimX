@@ -1197,10 +1197,10 @@ namespace Models.Soils
             {
             irrig.amount = IrrigationData.Amount;  
 
-            irrig.willRunoff = IrrigationData.will_runoff;
+            irrig.willRunoff = IrrigationData.WillRunoff;
 
             //check if will_runoff value conflicts with subsurface irrigation.
-            if ((IrrigationData.will_runoff) && (IrrigationData.Depth > 0.0))
+            if ((IrrigationData.WillRunoff) && (IrrigationData.Depth > 0.0))
                 {
                 irrig.willRunoff = false;
                 String warningText;
@@ -1838,9 +1838,9 @@ namespace Models.Soils
         /// </summary>
         private void SendNitrogenChangedEvent()
             {
-            solutes.Add("Urea", SoilObject.GetDeltaArrayForASolute("urea"));
-            solutes.Add("NH4", SoilObject.GetDeltaArrayForASolute("NH4"));
-            solutes.Add("NO3", SoilObject.GetDeltaArrayForASolute("NO3"));
+            solutes.Add("Urea",SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("urea"));
+            solutes.Add("NH4", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NH4"));
+            solutes.Add("NO3", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NO3"));
             }
 
         #endregion

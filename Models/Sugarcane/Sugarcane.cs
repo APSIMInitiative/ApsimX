@@ -12336,7 +12336,7 @@ namespace Models
 
             CheckAllNUptakeOptionalsReadIn();   //sugar_read_constants() - (this is what is left of sugar_read_constants() that can't be done using [Param])
 
-            g_current_stage = Convert.ToDouble(crop_end);
+            g_current_stage = Convert.ToDouble(crop_end, System.Globalization.CultureInfo.InvariantCulture);
             g_crop_status = crop_out;
 
             }
@@ -14205,8 +14205,8 @@ namespace Models
                     }
 
 
-                solutes.Add("NO3", l_dlt_NO3);
-                solutes.Add("NH4", l_dlt_NH4);
+                solutes.Add("NO3", SoluteManager.SoluteSetterType.Plant, l_dlt_NO3);
+                solutes.Add("NH4", SoluteManager.SoluteSetterType.Plant, l_dlt_NH4);
 
 
 
@@ -14232,8 +14232,8 @@ namespace Models
                     }
 
 
-                solutes.Add("NO3", l_dlt_NO3);
-                solutes.Add("NH4", l_dlt_NH4);
+                solutes.Add("NO3", SoluteManager.SoluteSetterType.Plant, l_dlt_NO3);
+                solutes.Add("NH4", SoluteManager.SoluteSetterType.Plant, l_dlt_NH4);
             }
             else
                 {

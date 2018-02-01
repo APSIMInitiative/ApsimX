@@ -1,6 +1,7 @@
 ﻿using Models.Soils;
 using Models.Core;
 using System;
+using Models.PMF.Functions;
 
 namespace Models.PMF.Organs
 {
@@ -19,6 +20,15 @@ namespace Models.PMF.Organs
 
         /// <summary>The root organ</summary>
         private  Root root = null;
+
+        /// <summary>The root front velocity function</summary>
+        private IFunction rootFrontVelocity;
+
+        /// <summary>The Maximum Root Depth</summary>
+        private IFunction maximumRootDepth = null;
+
+        /// <summary>The cost for remobilisation</summary>
+        private IFunction remobilisationCost = null;
 
         /// <summary>Zone name</summary>
         public string Name = null;
@@ -71,11 +81,20 @@ namespace Models.PMF.Organs
         /// <param name="initialDM">Initial dry matter</param>
         /// <param name="population">plant population</param>
         /// <param name="maxNConc">maximum n concentration</param>
-        public ZoneState(Plant Plant, Root Root, Soil soil, double depth, double initialDM, double population, double maxNConc)
+        /// <param name="rfv">Root front velocity</param>
+        /// <param name="mrd">Maximum root depth</param>
+        /// <param name="remobCost">Remobilisation cost</param>
+        public ZoneState(Plant Plant, Root Root, Soil soil, double depth, 
+                         double initialDM, double population, double maxNConc,
+                         IFunction rfv, IFunction mrd, IFunction remobCost)
         {
             this.soil = soil;
             this.plant = Plant;
             this.root = Root;
+            this.rootFrontVelocity = rfv;
+            this.maximumRootDepth = mrd;
+            this.remobilisationCost = remobCost;
+
             Clear();
             Zone zone = Apsim.Parent(soil, typeof(Zone)) as Zone;
             if (zone == null)
@@ -122,7 +141,6 @@ namespace Models.PMF.Organs
             DeltaNO3 = new double[soil.Thickness.Length];
             DeltaNH4 = new double[soil.Thickness.Length];
 
-            Length = 0.0;
             Depth = 0.0;
 
             if (LayerLive == null || LayerLive.Length == 0)
@@ -155,9 +173,9 @@ namespace Models.PMF.Organs
             //SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
             double[] xf = soil.XF(plant.Name);
             if (soil.Weirdo == null)
-                Depth = Depth + root.RootFrontVelocity.Value(RootLayer) * xf[RootLayer];
+                Depth = Depth + rootFrontVelocity.Value(RootLayer) * xf[RootLayer];
             else
-                Depth = Depth + root.RootFrontVelocity.Value(RootLayer);
+                Depth = Depth + rootFrontVelocity.Value(RootLayer);
 
 
             // Limit root depth for impeded layers
@@ -173,7 +191,7 @@ namespace Models.PMF.Organs
                     MaxDepth += soil.Thickness[i];
             }
             // Limit root depth for the crop specific maximum depth
-            MaxDepth = Math.Min(root.MaximumRootDepth.Value(), MaxDepth);
+            MaxDepth = Math.Min(maximumRootDepth.Value(), MaxDepth);
 
             Depth = Math.Min(Depth, MaxDepth);
 

@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="19">
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -50,178 +50,206 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
             <SEintercept>5.0939674215352913</SEintercept>
             <R2>0.20099526703219495</R2>
             <RMSE>7.6948756397430564</RMSE>
-            <NSE>-0.32889454128326</NSE>
+            <NSE>-0.32889454128325957</NSE>
             <ME>3.5444444444444447</ME>
             <MAE>6.0111111111111111</MAE>
-            <RSR>1.1463546773926963</RSR>
+            <RSR>1.146354677392696</RSR>
           </RegrStats>
           <RegrStats>
             <Name>LAImax</Name>
             <n>74</n>
-            <Slope>0.9481225610514622</Slope>
-            <Intercept>0.38013941781789784</Intercept>
-            <SEslope>0.045342089009830985</SEslope>
-            <SEintercept>0.1365094470230119</SEintercept>
-            <R2>0.85861451922269438</R2>
-            <RMSE>0.574877952786733</RMSE>
-            <NSE>0.81733903928147311</NSE>
-            <ME>0.24040917178488086</ME>
-            <MAE>0.43374414911565434</MAE>
-            <RSR>0.42449095321039021</RSR>
+            <Slope>1.0007497049374521</Slope>
+            <Intercept>0.43562425371302593</Intercept>
+            <SEslope>0.045778085119757256</SEslope>
+            <SEintercept>0.1378220814686219</SEintercept>
+            <R2>0.86906675365434372</R2>
+            <RMSE>0.68156220087435382</RMSE>
+            <NSE>0.74325297248570243</NSE>
+            <ME>0.43764356032271312</ME>
+            <MAE>0.53606378807474175</MAE>
+            <RSR>0.50326680109900823</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Maize.AboveGround.N</Name>
+            <n>6</n>
+            <Slope>1.11349644801129</Slope>
+            <Intercept>-2.6355415470370165</Intercept>
+            <SEslope>0.063226654750477729</SEslope>
+            <SEintercept>1.1120149221114302</SEintercept>
+            <R2>0.98726738758156141</R2>
+            <RMSE>1.5673465892420113</RMSE>
+            <NSE>0.9593077414372525</NSE>
+            <ME>-0.8447433460443754</ME>
+            <MAE>1.3768341727869751</MAE>
+            <RSR>0.18414726571132209</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.AboveGround.Wt</Name>
             <n>88</n>
-            <Slope>1.0317311810117666</Slope>
-            <Intercept>15.812795394149589</Intercept>
-            <SEslope>0.043522400604858132</SEslope>
-            <SEintercept>59.65191779581302</SEintercept>
-            <R2>0.86727629419493391</R2>
-            <RMSE>243.87735906163667</RMSE>
-            <NSE>0.82726963277250543</NSE>
-            <ME>55.1162164993427</ME>
-            <MAE>173.6778240166953</MAE>
-            <RSR>0.41324027168871613</RSR>
+            <Slope>1.0274087978411115</Slope>
+            <Intercept>21.338999130492994</Intercept>
+            <SEslope>0.03751176147153007</SEslope>
+            <SEintercept>51.413719844904023</SEintercept>
+            <R2>0.89714839113758649</R2>
+            <RMSE>212.09426515671592</RMSE>
+            <NSE>0.869357771209135</NSE>
+            <ME>55.288555660923677</ME>
+            <MAE>160.81440570277169</MAE>
+            <RSR>0.35938511100092974</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Maize.Grain.N</Name>
+            <n>6</n>
+            <Slope>1.0180925815105593</Slope>
+            <Intercept>0.26952855768724326</Intercept>
+            <SEslope>0.06197617036856231</SEslope>
+            <SEintercept>0.67506878495649325</SEintercept>
+            <R2>0.98539355139276419</R2>
+            <RMSE>0.80207048387520263</RMSE>
+            <NSE>0.97749958481644483</NSE>
+            <ME>0.44122027048747176</ME>
+            <MAE>0.72190702764608483</MAE>
+            <RSR>0.13693190273378933</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Grain.Number</Name>
             <n>84</n>
-            <Slope>0.938528786721164</Slope>
-            <Intercept>176.76509451350148</Intercept>
-            <SEslope>0.04247371417009678</SEslope>
-            <SEintercept>101.82075751394504</SEintercept>
-            <R2>0.85620695286925086</R2>
-            <RMSE>473.66012364384488</RMSE>
-            <NSE>0.84661473154891631</NSE>
-            <ME>49.530103291953722</ME>
-            <MAE>336.90980368242634</MAE>
-            <RSR>0.38930611779225288</RSR>
+            <Slope>0.91413284214816981</Slope>
+            <Intercept>291.7691074671859</Intercept>
+            <SEslope>0.045684781401877705</SEslope>
+            <SEintercept>109.518537290368</SEintercept>
+            <R2>0.83001055835658855</R2>
+            <RMSE>523.560873348773</RMSE>
+            <NSE>0.81259362089993514</NSE>
+            <ME>114.03864644733773</ME>
+            <MAE>375.5461098222242</MAE>
+            <RSR>0.43032005621100783</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Grain.Size</Name>
             <n>84</n>
-            <Slope>0.61014337448965839</Slope>
-            <Intercept>0.12923987041124463</Intercept>
-            <SEslope>0.12649064090445322</SEslope>
-            <SEintercept>0.035796880854386405</SEintercept>
-            <R2>0.22103105827389569</R2>
-            <RMSE>0.071483791370418881</RMSE>
-            <NSE>-0.60409268033255126</NSE>
-            <ME>0.0211268060801519</ME>
-            <MAE>0.053098152341753128</MAE>
-            <RSR>1.2589663771920283</RSR>
+            <Slope>0.56058039550140082</Slope>
+            <Intercept>0.1475872368308693</Intercept>
+            <SEslope>0.12053676049955307</SEslope>
+            <SEintercept>0.034111931312258079</SEintercept>
+            <R2>0.20871583626054946</R2>
+            <RMSE>0.07122040311880512</RMSE>
+            <NSE>-0.59229361956823912</NSE>
+            <ME>0.025729618258114838</ME>
+            <MAE>0.053380814846940676</MAE>
+            <RSR>1.2543276059884865</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Grain.Wt</Name>
             <n>103</n>
-            <Slope>0.89028705043323875</Slope>
-            <Intercept>99.619813770447536</Intercept>
-            <SEslope>0.040469113224185248</SEslope>
-            <SEintercept>28.180200439273147</SEintercept>
-            <R2>0.82733969659706241</R2>
-            <RMSE>148.43189476141109</RMSE>
-            <NSE>0.81322781567202784</NSE>
-            <ME>33.161903942571648</ME>
-            <MAE>113.47064398076829</MAE>
-            <RSR>0.43006843891412289</RSR>
+            <Slope>0.87849406856882628</Slope>
+            <Intercept>145.29163255246783</Intercept>
+            <SEslope>0.040392189438915233</SEslope>
+            <SEintercept>28.126635448228047</SEintercept>
+            <R2>0.824049069122905</R2>
+            <RMSE>162.23238425609341</RMSE>
+            <NSE>0.776882910010031</NSE>
+            <ME>71.690200210232575</ME>
+            <MAE>127.09386520165967</MAE>
+            <RSR>0.47005415076378232</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Maize.Husk.Live.Wt</Name>
+            <Name>Maize.Husk.Wt</Name>
             <n>6</n>
-            <Slope>0.41614347613863484</Slope>
-            <Intercept>22.835198975738166</Intercept>
-            <SEslope>0.10909194440348016</SEslope>
-            <SEintercept>10.038347065348489</SEintercept>
-            <R2>0.78438130656501448</R2>
-            <RMSE>35.365548149560773</RMSE>
-            <NSE>0.15865954569026541</NSE>
-            <ME>-25.9460135928789</ME>
-            <MAE>28.428336855413136</MAE>
-            <RSR>0.83732732265113152</RSR>
+            <Slope>1.30176989210172</Slope>
+            <Intercept>-3.3955734112594911</Intercept>
+            <SEslope>0.20992695973845552</SEslope>
+            <SEintercept>19.316913744190533</SEintercept>
+            <R2>0.90577850549138972</R2>
+            <RMSE>29.55369912484489</RMSE>
+            <NSE>0.41246373345451215</NSE>
+            <ME>21.817301073839197</ME>
+            <MAE>23.159489415530167</MAE>
+            <RSR>0.69972391373639153</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Leaf.Live.N</Name>
             <n>6</n>
-            <Slope>0.30917925736701368</Slope>
-            <Intercept>-0.062454233783493962</Intercept>
-            <SEslope>0.026734040085122354</SEslope>
-            <SEintercept>0.046546798901417545</SEintercept>
-            <R2>0.97096173938487873</R2>
-            <RMSE>1.2499706840539273</RMSE>
-            <NSE>-0.058090002203656566</NSE>
-            <ME>-0.92385037703838258</ME>
-            <MAE>0.92385037703838258</MAE>
-            <RSR>0.93901100552818173</RSR>
+            <Slope>0.99480413487498986</Slope>
+            <Intercept>0.00022065530551973467</Intercept>
+            <SEslope>0.13917264648231545</SEslope>
+            <SEintercept>0.2423143366196821</SEintercept>
+            <R2>0.927396423302203</R2>
+            <RMSE>0.33835480988048344</RMSE>
+            <NSE>0.92247037828107892</NSE>
+            <ME>-0.0062581573637375491</ME>
+            <MAE>0.28232192293336422</MAE>
+            <RSR>0.25418107344784913</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Leaf.Live.Wt</Name>
             <n>6</n>
-            <Slope>0.35969247925429182</Slope>
-            <Intercept>-1.5009291432960339</Intercept>
-            <SEslope>0.034276876659480114</SEslope>
-            <SEintercept>3.7978212177965993</SEintercept>
-            <R2>0.96494871124658355</R2>
-            <RMSE>72.232764229780344</RMSE>
-            <NSE>0.096452144721986932</NSE>
-            <ME>-53.131058899424971</ME>
-            <MAE>53.131058899424971</MAE>
-            <RSR>0.86773068752062155</RSR>
+            <Slope>0.95485873099945662</Slope>
+            <Intercept>-3.6484740628205685</Intercept>
+            <SEslope>0.095520600127683722</SEslope>
+            <SEintercept>10.583524441432699</SEintercept>
+            <R2>0.96151155742947958</R2>
+            <RMSE>16.6023819349925</RMSE>
+            <NSE>0.9522664768184802</NSE>
+            <ME>-7.2883650532310469</ME>
+            <MAE>13.694177896318053</MAE>
+            <RSR>0.19944406730860614</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Maize.Rachis.Live.Wt</Name>
+            <Name>Maize.Rachis.Wt</Name>
             <n>6</n>
-            <Slope>0.9917768759895752</Slope>
-            <Intercept>29.449687751214071</Intercept>
-            <SEslope>0.15077888853585367</SEslope>
-            <SEintercept>24.812589140657071</SEintercept>
-            <R2>0.91537259637036428</R2>
-            <RMSE>33.302572919692786</RMSE>
-            <NSE>0.67920335673232024</NSE>
-            <ME>28.185793590811826</ME>
-            <MAE>28.185793590811826</MAE>
-            <RSR>0.51704016870684211</RSR>
+            <Slope>1.1796088571317864</Slope>
+            <Intercept>2.6517546571887465</Intercept>
+            <SEslope>0.14868239195562949</SEslope>
+            <SEintercept>24.467583889689688</SEintercept>
+            <R2>0.94024890655245374</R2>
+            <RMSE>36.506964613881465</RMSE>
+            <NSE>0.61449884001284472</NSE>
+            <ME>30.257635998344334</ME>
+            <MAE>31.54396257348067</MAE>
+            <RSR>0.56679005518442427</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Maize.Stem.Live.N</Name>
+            <Name>Maize.Stem.N</Name>
             <n>6</n>
-            <Slope>1.5040894679978734</Slope>
-            <Intercept>-0.84536979927900568</Intercept>
-            <SEslope>0.31551651633924416</SEslope>
-            <SEintercept>0.62854028658358485</SEintercept>
-            <R2>0.85032718965084564</R2>
-            <RMSE>0.68284654717728044</RMSE>
-            <NSE>0.34176359403619339</NSE>
-            <ME>0.0647990886658446</ME>
-            <MAE>0.55951246597808524</MAE>
-            <RSR>0.74062834019714119</RSR>
+            <Slope>1.2321397395899922</Slope>
+            <Intercept>-0.35191060717294342</Intercept>
+            <SEslope>0.18839322511781922</SEslope>
+            <SEintercept>0.37529804486888479</SEintercept>
+            <R2>0.91448411593964007</R2>
+            <RMSE>0.37849819683556096</RMSE>
+            <NSE>0.79776175261297633</NSE>
+            <ME>0.067233973390524171</ME>
+            <MAE>0.27145579959202587</MAE>
+            <RSR>0.41052633633242058</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Maize.Stem.Live.Wt</Name>
+            <Name>Maize.Stem.Wt</Name>
             <n>6</n>
-            <Slope>0.83386405306529243</Slope>
-            <Intercept>279.95259282082873</Intercept>
-            <SEslope>0.10296199455753503</SEslope>
-            <SEintercept>43.4963355264474</SEintercept>
-            <R2>0.94252034979345189</R2>
-            <RMSE>222.31319064949562</RMSE>
-            <NSE>-0.44389889568190677</NSE>
-            <ME>216.85692910747565</ME>
-            <MAE>216.85692910747565</MAE>
-            <RSR>1.0969271077582694</RSR>
+            <Slope>0.945557948044225</Slope>
+            <Intercept>79.679564704553911</Intercept>
+            <SEslope>0.073122348262538869</SEslope>
+            <SEintercept>30.890565088381607</SEintercept>
+            <R2>0.97663760330369886</R2>
+            <RMSE>65.688078374474173</RMSE>
+            <NSE>0.87393938099057256</NSE>
+            <ME>59.003380739283159</ME>
+            <MAE>59.003380739283159</MAE>
+            <RSR>0.32411497318264937</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Maize.Structure.FinalLeafNumber</Name>
             <n>21</n>
-            <Slope>0.76428937803816133</Slope>
-            <Intercept>3.8472657555308825</Intercept>
-            <SEslope>0.11793813206221464</SEslope>
-            <SEintercept>2.2200222729520647</SEintercept>
-            <R2>0.68850378429306058</R2>
+            <Slope>0.76428937803835906</Slope>
+            <Intercept>3.8472657555271574</Intercept>
+            <SEslope>0.11793813206224937</SEslope>
+            <SEintercept>2.2200222729527184</SEintercept>
+            <R2>0.68850378429304526</R2>
             <RMSE>0.79080008424268489</RMSE>
-            <NSE>0.29621327770616379</NSE>
+            <NSE>0.296213277706164</NSE>
             <ME>-0.5840939373516858</ME>
             <MAE>0.70870206856099094</MAE>
-            <RSR>0.81870206354404207</RSR>
+            <RSR>0.81870206354404174</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
@@ -232,7 +260,7 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
             <SEintercept>5.697100852074108</SEintercept>
             <R2>0.74761707513935183</R2>
             <RMSE>8.8850686235078928</RMSE>
-            <NSE>0.6954345909526285</NSE>
+            <NSE>0.69543459095262838</NSE>
             <ME>3.5</ME>
             <MAE>7.1000000000000005</MAE>
             <RSR>0.54879991704340225</RSR>
@@ -265,15 +293,15 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
         <string>[Clock].Today</string>
         <string>[Maize].Phenology.CurrentStageName</string>
         <string>[Maize].Grain.Wt</string>
-        <string>[Maize].Stem.Live.Wt</string>
+        <string>[Maize].Stem.Wt</string>
         <string>[Maize].EarLive.Wt</string>
         <string>[Maize].Leaf.Live.Wt</string>
         <string>[Maize].Root.Live.Wt</string>
-        <string>[Maize].Husk.Live.Wt</string>
-        <string>[Maize].Rachis.Live.Wt</string>
+        <string>[Maize].Husk.Wt</string>
+        <string>[Maize].Rachis.Wt</string>
         <string>[Maize].EarLive.N</string>
-        <string>[Maize].Grain.Live.N</string>
-        <string>[Maize].Stem.Live.N</string>
+        <string>[Maize].Grain.N</string>
+        <string>[Maize].Stem.N</string>
         <string>[Maize].Leaf.Live.N</string>
         <string>[Maize].Root.Live.N</string>
         <string>[Maize].Root.Depth</string>
@@ -927,16 +955,16 @@ namespace Models
                 <string>[MicroClimate].net_radn</string>
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
-                <string>[Maize].Grain.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
                 <string>[Maize].Grain.YieldBuPerAcre</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.WaterSupply</string>
@@ -1348,16 +1376,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -2034,15 +2062,15 @@ namespace Models
                 <string>[MicroClimate].net_radn</string>
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.WaterSupply</string>
@@ -2476,16 +2504,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -12709,15 +12737,15 @@ namespace Models
                 <string>[MicroClimate].net_radn</string>
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.WaterSupply</string>
@@ -13123,16 +13151,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -14357,15 +14385,15 @@ namespace Models
                 <string>[MicroClimate].net_radn</string>
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.WaterSupply</string>
@@ -14785,16 +14813,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -15537,15 +15565,15 @@ namespace Models
                 <string>[MicroClimate].net_radn</string>
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.WaterSupply</string>
@@ -15965,16 +15993,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -16494,15 +16522,15 @@ namespace Models
                 <string>[Soil].SoilWater.Runoff</string>
                 <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
                 <string>[Soil].NO3N</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.WaterSupply</string>
@@ -16880,16 +16908,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -17471,15 +17499,15 @@ namespace Models
                 <string>[Soil].SoilWater.Runoff</string>
                 <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
                 <string>[Soil].NO3N</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.WaterSupply</string>
@@ -17856,16 +17884,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -18366,15 +18394,15 @@ namespace Models
                 <string>[Soil].SoilWater.Runoff</string>
                 <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
                 <string>[Soil].NO3N</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.WaterSupply</string>
@@ -18751,16 +18779,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -19353,16 +19381,16 @@ namespace Models
                 <string>[Soil].SoilWater.Runoff</string>
                 <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
                 <string>[Soil].NO3N</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Leaf.Dead.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Leaf.Dead.N</string>
                 <string>[Maize].Root.Live.N</string>
@@ -19391,8 +19419,8 @@ namespace Models
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
                 <string>[Maize].Phenology.Photoperiod.Value()</string>
                 <string>[Maize].Phenology.ThermalTime.Value()</string>
-                <string>[Maize].Rachis.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
+                <string>[Maize].Husk.Wt</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -19410,16 +19438,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -20028,7 +20056,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+            <YFieldName>Maize.Grain.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20138,7 +20166,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.N</YFieldName>
+            <YFieldName>Maize.Grain.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20512,7 +20540,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Stem.Live.Wt</YFieldName>
+            <YFieldName>Maize.Stem.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20578,7 +20606,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Stem.Live.N</YFieldName>
+            <YFieldName>Maize.Stem.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20644,7 +20672,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Rachis.Live.Wt</YFieldName>
+            <YFieldName>Maize.Rachis.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20688,7 +20716,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.N</YFieldName>
+            <YFieldName>Maize.Grain.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20881,8 +20909,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Operation>
-                <Date>1999-09-16T00:00:00</Date>
-                <Action> [Maize].Sow(population:6.7, cultivar:"Hycorn_53", depth:50, rowSpacing:750);</Action>
+                <Date>1999-09-16</Date>
+                <Action> [Maize].Sow(population:10, cultivar:"Hycorn_53", depth:50, rowSpacing:750);</Action>
               </Operation>
             </Operations>
             <Operations>
@@ -20900,16 +20928,16 @@ namespace Models
                 <string>[Soil].SoilWater.Runoff</string>
                 <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
                 <string>[Soil].NO3N</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Leaf.Dead.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Leaf.Dead.N</string>
                 <string>[Maize].Root.Live.N</string>
@@ -20954,16 +20982,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -21572,7 +21600,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+            <YFieldName>Maize.Grain.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -21682,7 +21710,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.N</YFieldName>
+            <YFieldName>Maize.Grain.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -22012,7 +22040,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Stem.Live.Wt</YFieldName>
+            <YFieldName>Maize.Stem.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -22078,7 +22106,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Stem.Live.N</YFieldName>
+            <YFieldName>Maize.Stem.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -22144,7 +22172,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.N</YFieldName>
+            <YFieldName>Maize.Grain.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -22344,16 +22372,16 @@ namespace Models
                 <string>[Soil].SoilWater.Runoff</string>
                 <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
                 <string>[Soil].NO3N</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Leaf.Dead.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Leaf.Dead.N</string>
                 <string>[Maize].Root.Live.N</string>
@@ -22398,16 +22426,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -22627,7 +22655,7 @@ namespace Models
                   <string>150-180</string>
                 </Depth>
                 <OC>
-                  <double>1.24</double>
+                  <double>1.64</double>
                   <double>1.24</double>
                   <double>0.8</double>
                   <double>0.75</double>
@@ -22692,8 +22720,8 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>9.99996493384113</double>
-                  <double>4.99998246692056</double>
+                  <double>15</double>
+                  <double>8</double>
                   <double>3.68997730750788</double>
                   <double>3.80997656954065</double>
                   <double>2.46598483477356</double>
@@ -23016,7 +23044,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+            <YFieldName>Maize.Grain.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -23126,7 +23154,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.N</YFieldName>
+            <YFieldName>Maize.Grain.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -23500,7 +23528,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Stem.Live.Wt</YFieldName>
+            <YFieldName>Maize.Stem.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -23566,7 +23594,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Stem.Live.N</YFieldName>
+            <YFieldName>Maize.Stem.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -23632,7 +23660,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.N</YFieldName>
+            <YFieldName>Maize.Grain.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -24062,15 +24090,15 @@ namespace Models
                 <string>[MicroClimate].net_radn</string>
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.WaterSupply</string>
@@ -24465,16 +24493,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -24875,15 +24903,15 @@ namespace Models
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
-              <string>[Maize].Grain.Live.Wt</string>
-              <string>[Maize].Stem.Live.Wt</string>
+              <string>[Maize].Grain.Wt</string>
+              <string>[Maize].Stem.Wt</string>
               <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
-              <string>[Maize].Husk.Live.Wt</string>
+              <string>[Maize].Husk.Wt</string>
               <string>[Maize].EarLive.N</string>
-              <string>[Maize].Grain.Live.N</string>
-              <string>[Maize].Stem.Live.N</string>
+              <string>[Maize].Grain.N</string>
+              <string>[Maize].Stem.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.WaterSupply</string>
@@ -25319,16 +25347,16 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
-              <string>[Maize].Grain.Live.Wt as GrainWt</string>
-              <string>[Maize].Stem.Live.Wt</string>
+              <string>[Maize].Grain.Wt as GrainWt</string>
+              <string>[Maize].Stem.Wt</string>
               <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
-              <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Rachis.Live.Wt</string>
+              <string>[Maize].Husk.Wt</string>
+              <string>[Maize].Rachis.Wt</string>
               <string>[Maize].EarLive.N</string>
-              <string>[Maize].Grain.Live.N</string>
-              <string>[Maize].Stem.Live.N</string>
+              <string>[Maize].Grain.N</string>
+              <string>[Maize].Stem.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
@@ -25528,7 +25556,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+            <YFieldName>Maize.Grain.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -25903,15 +25931,15 @@ namespace Models
               <string>[MicroClimate].net_radn</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
-              <string>[Maize].Grain.Live.Wt</string>
-              <string>[Maize].Stem.Live.Wt</string>
+              <string>[Maize].Grain.Wt</string>
+              <string>[Maize].Stem.Wt</string>
               <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
-              <string>[Maize].Husk.Live.Wt</string>
+              <string>[Maize].Husk.Wt</string>
               <string>[Maize].EarLive.N</string>
-              <string>[Maize].Grain.Live.N</string>
-              <string>[Maize].Stem.Live.N</string>
+              <string>[Maize].Grain.N</string>
+              <string>[Maize].Stem.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.WaterSupply</string>
@@ -26288,16 +26316,16 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
-              <string>[Maize].Grain.Live.Wt as GrainWt</string>
-              <string>[Maize].Stem.Live.Wt</string>
+              <string>[Maize].Grain.Wt as GrainWt</string>
+              <string>[Maize].Stem.Wt</string>
               <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
               <string>[Maize].Root.Live.Wt</string>
-              <string>[Maize].Husk.Live.Wt</string>
-              <string>[Maize].Rachis.Live.Wt</string>
+              <string>[Maize].Husk.Wt</string>
+              <string>[Maize].Rachis.Wt</string>
               <string>[Maize].EarLive.N</string>
-              <string>[Maize].Grain.Live.N</string>
-              <string>[Maize].Stem.Live.N</string>
+              <string>[Maize].Grain.N</string>
+              <string>[Maize].Stem.N</string>
               <string>[Maize].Leaf.Live.N</string>
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
@@ -26497,7 +26525,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+            <YFieldName>Maize.Grain.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -26788,7 +26816,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
             <FileName>lincoln.met</FileName>
           </Weather>
           <Clock>
-            <Name>clock</Name>
+            <Name>Clock</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <StartDate>2012-10-01T00:00:00</StartDate>
             <EndDate>2013-04-25T00:00:00</EndDate>
@@ -26853,14 +26881,14 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>200</double>
                 </Thickness>
                 <BD>
-                  <double>1.311</double>
-                  <double>1.474</double>
+                  <double>1</double>
+                  <double>1.3</double>
                   <double>1.601</double>
-                  <double>1.68</double>
-                  <double>1.68</double>
-                  <double>1.68</double>
-                  <double>1.68</double>
-                  <double>1.68</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
                 </BD>
                 <AirDry>
                   <double>0.06</double>
@@ -27006,7 +27034,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 </Depth>
                 <OC>
                   <double>3.6</double>
-                  <double>0.97</double>
+                  <double>2.2</double>
                   <double>0.42</double>
                   <double>0.23</double>
                   <double>0.23</double>
@@ -27021,8 +27049,8 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>0.01</double>
                 </FBiom>
                 <FInert>
-                  <double>0.3</double>
-                  <double>0.6</double>
+                  <double>0.2</double>
+                  <double>0.4</double>
                   <double>0.8</double>
                   <double>0.9</double>
                   <double>0.9</double>
@@ -27064,20 +27092,20 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>16.230000000000008</double>
-                  <double>10.759999999999987</double>
-                  <double>7.8300000000000045</double>
-                  <double>6.8499999999999792</double>
-                  <double>4.879999999999999</double>
-                  <double>1.7399999999999989</double>
+                  <double>2.86</double>
+                  <double>1.98</double>
+                  <double>0.3</double>
+                  <double>0.71</double>
+                  <double>1.56</double>
+                  <double>1.07</double>
                 </NO3>
                 <NH4>
-                  <double>0.89999999999999958</double>
-                  <double>2.9200000000000008</double>
-                  <double>0.57000000000000084</double>
-                  <double>0.97999999999999776</double>
-                  <double>0.84000000000000163</double>
-                  <double>0.53999999999999926</double>
+                  <double>0.89</double>
+                  <double>0.99</double>
+                  <double>0.59</double>
+                  <double>0.37</double>
+                  <double>0.21</double>
+                  <double>0</double>
                 </NH4>
                 <SW>
                   <double>0.06</double>
@@ -27087,8 +27115,8 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <double>0.2</double>
                   <double>0.2</double>
                 </SW>
-                <NO3Units>kgha</NO3Units>
-                <NH4Units>kgha</NH4Units>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
                 <SWUnits>Volumetric</SWUnits>
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
@@ -27206,7 +27234,13 @@ namespace Models
 		private void OnPreparingNewWeatherData(object sender, EventArgs e)
 		{
 			if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
-				Met.Rain = 0;		
+				{			    
+				//Rainshelter stops rain
+				Met.Rain = 0;	
+				//Rainshelter stops frost
+				if (Met.MinT < 2.0)
+					Met.MinT = 2.0;	
+				}
 		}
 	}
 }]]></Code>
@@ -27548,20 +27582,40 @@ namespace Models
 	{
 		[Link] Plant Maize;
 		[Link] Zone zone;
-					
-        
-		[EventSubscribe("Commencing")]
+		[Link] Simulation sim;
+
+		[XmlIgnore] private RemovalFractions Remove { get; set; }
+		[XmlIgnore] private bool Harvested {get; set;}
+				
+        [EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
+		Remove = new RemovalFractions();
+		Harvested = false;
 		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Maize.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			if ((Maize.Phenology.CurrentPhaseName == "ReadyForHarvesting") & (Harvested == false))
 			{
-				Maize.Harvest();
-				Maize.EndCrop();
+				Remove.SetFractionToRemove("Leaf", 0.0,"Live");
+				Remove.SetFractionToResidue("Leaf", 0.0,"Live");
+				Remove.SetFractionToRemove("Leaf", 0.0,"Dead");
+				Remove.SetFractionToResidue("Leaf", 0.0,"Dead");
+				Remove.SetFractionToRemove("Grain", 0.0);
+				Remove.SetFractionToResidue("Grain", 0.0);
+				Remove.SetFractionToRemove("Stem", 0.0);
+				Remove.SetFractionToResidue("Stem", 0.0);
+				Remove.SetFractionToRemove("Husk", 0.0);
+				Remove.SetFractionToResidue("Husk", 0.0);
+				Remove.SetFractionToRemove("Rachis", 0.0);
+				Remove.SetFractionToResidue("Rachis", 0.0);
+				Remove.SetFractionToRemove("Root", 0.0);
+				Remove.SetFractionToResidue("Root", 0.0);
+				Maize.Harvest(Remove);
+				//Maize.EndCrop();
+				Harvested = true;
 			}
 		}
 		
@@ -27581,126 +27635,137 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Clock].Today</string>
-                <string>[ExtraVariables].Script.AccumPlantN</string>
-                <string>[ExtraVariables].Script.AccumMineralisation</string>
                 <string>[ExtraVariables].Script.AccumDenit</string>
-                <string>[ExtraVariables].Script.AccumFert</string>
-                <string>[ExtraVariables].Script.AccumLeach</string>
                 <string>[ExtraVariables].Script.AccumDetach</string>
-                <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-                <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-                <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-                <string>[ExtraVariables].Script.SWC</string>
-                <string>[ExtraVariables].Script.DUL</string>
-                <string>[ExtraVariables].Script.OutFlowLat</string>
+                <string>[ExtraVariables].Script.AccumDrainage</string>
                 <string>[ExtraVariables].Script.AccumEO</string>
                 <string>[ExtraVariables].Script.AccumEP</string>
                 <string>[ExtraVariables].Script.AccumES</string>
-                <string>[ExtraVariables].Script.AccumDrainage</string>
-                <string>[ExtraVariables].Script.AccumRunoff</string>
-                <string>[ExtraVariables].Script.AccumRainfall</string>
+                <string>[ExtraVariables].Script.AccumFert</string>
                 <string>[ExtraVariables].Script.AccumIrrigation</string>
+                <string>[ExtraVariables].Script.AccumLeach</string>
+                <string>[ExtraVariables].Script.AccumMineralisation</string>
                 <string>[ExtraVariables].Script.AccumOutflowLat</string>
-                <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-                <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-                <string>[ExtraVariables].Script.FomN</string>
-                <string>[ExtraVariables].Script.HumN</string>
+                <string>[ExtraVariables].Script.AccumPlantN</string>
+                <string>[ExtraVariables].Script.AccumRainfall</string>
+                <string>[ExtraVariables].Script.AccumRunoff</string>
                 <string>[ExtraVariables].Script.BiomN</string>
+                <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
+                <string>[ExtraVariables].Script.DeltaSoilOMN</string>
+                <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
                 <string>[ExtraVariables].Script.DltNMinRes</string>
                 <string>[ExtraVariables].Script.DltNMinTot</string>
-                <string>[Soil].SoilWater.SW</string>
-                <string>[Soil].SoilWater.Eo</string>
-                <string>[Soil].SoilWater.Es</string>
-                <string>[Soil].SoilWater.Drainage</string>
-                <string>[Soil].SoilWater.Runoff</string>
-                <string>[Soil].SoilWater.pond</string>
-                <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
-                <string>[Soil].NO3N</string>
+                <string>[ExtraVariables].Script.DUL</string>
+                <string>[ExtraVariables].Script.FomN</string>
+                <string>[ExtraVariables].Script.HumN</string>
+                <string>[ExtraVariables].Script.LeafAppearedPosition</string>
+                <string>[ExtraVariables].Script.LeafExpandedPosition</string>
+                <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
+                <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
+                <string>[ExtraVariables].Script.OutFlowLat</string>
+                <string>[ExtraVariables].Script.SoilNitrogenContent</string>
+                <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+                <string>[ExtraVariables].Script.SWC</string>
+                <string>[Maize].AboveGround.N</string>
+                <string>[Maize].AboveGround.Wt</string>
+                <string>[Maize].AboveGroundLive.N</string>
+                <string>[Maize].AboveGroundLive.Wt</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
+                <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
+                <string>[Maize].Arbitrator.DM.SinkLimitation</string>
+                <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantSupply</string>
+                <string>[Maize].EarLive.N</string>
+                <string>[Maize].EarLive.Wt</string>
+                <string>[Maize].Grain.GrowthRateGrainDevelopment.Value()</string>
+                <string>[Maize].Grain.Size</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Grain.NConc</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Grain.NumberFunction.Value()</string>
+                <string>[Maize].Husk.N</string>
+                <string>[Maize].Husk.NConc</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Leaf.AppearedCohortNo</string>
+                <string>[Maize].Leaf.CohortArea[1:30]</string>
+                <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                <string>[Maize].Leaf.CohortSLA[1:30]</string>
+                <string>[Maize].Leaf.CoverDead</string>
+                <string>[Maize].Leaf.CoverTotal</string>
+                <string>[Maize].Leaf.Dead.NConc</string>
+                <string>[Maize].Leaf.Dead.Wt</string>
+                <string>[Maize].Leaf.Dead.N</string>
+                <string>[Maize].Leaf.DeadCohortNo</string>
+                <string>[Maize].Leaf.DeadCohortNo</string>
+                <string>[Maize].Leaf.ExpandedCohortNo</string>
+                <string>[Maize].Leaf.Fn</string>
+                <string>[Maize].Leaf.Fw</string>
+                <string>[Maize].Leaf.Height</string>
+                <string>[Maize].Leaf.InitialisedCohortNo</string>
+                <string>[Maize].Leaf.LAI</string>
+                <string>[Maize].Leaf.Live.N</string>
+                <string>[Maize].Leaf.Live.NConc</string>
+                <string>[Maize].Leaf.Live.Wt</string>
+                <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
+                <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+                <string>[Maize].Leaf.Photosynthesis.RueAct</string>
+                <string>[Maize].Leaf.SpecificArea</string>
+                <string>[Maize].Leaf.SpecificNitrogen</string>
+                <string>[Maize].Leaf.SenescingCohortNo + [Maize].Leaf.DeadCohortNo as NodesStartedSenescing</string>
+                <string>[Maize].Leaf.Transpiration</string>
+                <string>[Maize].Leaf.WaterDemand</string>
+                <string>[Maize].Phenology.CurrentPhaseName</string>
+                <string>[Maize].Phenology.CurrentStageName</string>
+                <string>[Maize].Phenology.Stage</string>
+                <string>[Maize].Phenology.Stage</string>
+                <string>[Maize].Rachis.N</string>
+                <string>[Maize].Rachis.NConc</string>
+                <string>[Maize].Rachis.Wt</string>
+                <string>[Maize].Root.Depth</string>
+                <string>[Maize].Root.Live.N</string>
+                <string>[Maize].Root.Live.Wt</string>
+                <string>[Maize].Root.WaterSupply</string>
+                <string>[Maize].Root.WaterUptake</string>
+                <string>[Maize].Spike.N</string>
+                <string>[Maize].Spike.NConc</string>
+                <string>[Maize].Spike.Wt</string>
+                <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                <string>[Maize].Stem.N</string>
+                <string>[Maize].Stem.NConc</string>
+                <string>[Maize].Stem.StructuralWt</string>
+                <string>[Maize].Stem.Wt</string>
+                <string>[Maize].Stem.MaximumNConc.Value()</string>
+                <string>[Maize].Stem.MinimumNConc.Value()</string>
+                <string>[Maize].Structure.Height</string>
+                <string>[Maize].Structure.LeafTipsAppeared</string>
+                <string>[Maize].Structure.MainStemFinalNodeNo</string>
+                <string>[Maize].Structure.MainStemPrimordiaNo</string>
+                <string>[Maize].Structure.MainStemPrimordiaNo</string>
+                <string>[Maize].Structure.Phyllochron.Value()</string>
+                <string>[Maize].Tastle.Live.Wt</string>
+                <string>[Maize].Total.N</string>
+                <string>[Maize].Total.Wt</string>
                 <string>[MicroClimate].net_radn</string>
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
-                <string>[Maize].EarLive.Wt</string>
-                <string>[Maize].Leaf.Live.Wt</string>
-                <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
-                <string>[Maize].Tastle.Live.Wt</string>
-                <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
-                <string>[Maize].Leaf.Live.N</string>
-                <string>[Maize].Root.Live.N</string>
-                <string>[Maize].Rachis.Live.N</string>
-                <string>[Maize].Husk.Live.N</string>
-                <string>[Maize].Root.WaterSupply</string>
-                <string>[Maize].Root.WaterUptake</string>
-                <string>[Maize].Leaf.Transpiration</string>
-                <string>[Maize].Leaf.WaterDemand</string>
-                <string>[Maize].Root.Depth</string>
-                <string>[Maize].Leaf.CoverTotal</string>
-                <string>[Maize].Leaf.CoverDead</string>
-                <string>[Maize].Leaf.LAI</string>
-                <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
-                <string>[Maize].Leaf.Fw</string>
-                <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
-                <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
-                <string>[Maize].Leaf.Fn</string>
-                <string>[Maize].Phenology.CurrentPhaseName</string>
-                <string>[Maize].Phenology.Stage</string>
-                <string>[Maize].AboveGroundLive.N</string>
-                <string>[Maize].AboveGroundLive.Wt</string>
-                <string>[Maize].Total.N</string>
-                <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
-                <string>[Maize].Phenology.Stage</string>
-                <string>[Maize].Leaf.ExpandedCohortNo</string>
-                <string>[Maize].Leaf.AppearedCohortNo</string>
-                <string>[Maize].Leaf.DeadCohortNo</string>
-                <string>[Maize].Leaf.InitialisedCohortNo</string>
-                <string>[Maize].Structure.MainStemFinalNodeNo</string>
-                <string>[Maize].Structure.LeafTipsAppeared</string>
-                <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Leaf.CohortArea[1:30]</string>
-                <string>[Maize].Leaf.CohortSLA[1:30]</string>
-                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
-                <string>[Maize].Arbitrator.N.TotalPlantSupply</string>
-                <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
-                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
-                <string>[Maize].Arbitrator.DM.Allocated</string>
-                <string>[Maize].Arbitrator.DM.SinkLimitation</string>
-                <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
-                <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
-                <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[Maize].Structure.Phyllochron.Value()</string>
-                <string>[Maize].Structure.Height</string>
-                <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Grain.NumberFunction.Value()</string>
-                <string>[ExtraVariables].Script.LeafAppearedPosition</string>
-                <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
-                <string>[ExtraVariables].Script.LeafExpandedPosition</string>
-                <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
-                <string>[Maize].Leaf.DeadCohortNo</string>
                 <string>[Phenology].ThermalTime.Value()</string>
-                <string>[Maize].Leaf.SenescingCohortNo</string>
-                <string>[Maize].Stem.MaximumNConc.Value()</string>
-                <string>[Maize].Stem.MinimumNConc.Value()</string>
-                <string>[Maize].Stem.Live.NConc</string>
-                <string>[Maize].Leaf.Live.NConc</string>
-                <string>[Maize].Grain.Live.NConc</string>
-                <string>[Maize].Husk.Live.NConc</string>
-                <string>[Maize].Rachis.Live.NConc</string>
-                <string>[Maize].Leaf.Dead.NConc</string>
-                <string>[Maize].Leaf.Photosynthesis.RueAct</string>
-                <string>[Maize].Stem.Live.StructuralWt</string>
-                <string>[Maize].Grain.GrowthRateGrainDevelopment.Value()</string>
+                <string>[Soil].NO3N</string>
+                <string>[Soil].SoilWater.Drainage</string>
+                <string>[Soil].SoilWater.Eo</string>
+                <string>[Soil].SoilWater.Es</string>
+                <string>[Soil].SoilWater.pond</string>
+                <string>[Soil].SoilWater.Runoff</string>
+                <string>[Soil].SoilWater.SW</string>
+                <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -27714,16 +27779,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -27748,7 +27813,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -27770,7 +27835,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-65281</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -27792,7 +27857,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -27814,7 +27879,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-32704</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -27836,7 +27901,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-65536</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -27858,7 +27923,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -27880,7 +27945,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -27902,7 +27967,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -28974,8 +29039,8 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
@@ -28984,7 +29049,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.Live.Wt</YFieldName>
+                <YFieldName>Maize.Stem.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -28996,7 +29061,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29018,7 +29083,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-32768</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29028,7 +29093,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+                <YFieldName>Maize.Grain.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -29062,7 +29127,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-256</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29094,7 +29159,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Husk.Live.Wt</YFieldName>
+                <YFieldName>Maize.Husk.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -29116,7 +29181,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Rachis.Live.Wt</YFieldName>
+                <YFieldName>Maize.Rachis.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -29171,7 +29236,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29193,7 +29258,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-256</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29215,7 +29280,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-32704</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29225,7 +29290,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Grain.Live.N</YFieldName>
+                <YFieldName>Maize.Grain.N</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -29259,7 +29324,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29269,7 +29334,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.Live.N</YFieldName>
+                <YFieldName>Maize.Stem.N</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -29281,7 +29346,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29291,7 +29356,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.Live.N</YFieldName>
+                <YFieldName>Maize.Stem.N</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -29892,7 +29957,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744193</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29914,7 +29979,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29957,7 +30022,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744193</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29979,7 +30044,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -30022,7 +30087,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744193</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -30044,7 +30109,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -30066,7 +30131,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16744448</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -30076,7 +30141,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.Live.NConc</YFieldName>
+                <YFieldName>Maize.Stem.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30131,7 +30196,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.AboveGroundLive.Wt</YFieldName>
+              <YFieldName>Maize.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -30198,7 +30263,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.AboveGroundLive.N</YFieldName>
+              <YFieldName>Maize.AboveGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -30220,7 +30285,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.AboveGroundLive.N</YFieldName>
+              <YFieldName>Maize.AboveGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -30328,7 +30393,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+              <YFieldName>Maize.Grain.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -30920,7 +30985,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.Live.NConc</YFieldName>
+                <YFieldName>Maize.Stem.NConc</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30942,7 +31007,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.Live.NConc</YFieldName>
+                <YFieldName>Maize.Stem.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31050,7 +31115,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Grain.Live.NConc</YFieldName>
+                <YFieldName>Maize.Grain.NConc</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31072,7 +31137,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Grain.Live.NConc</YFieldName>
+                <YFieldName>Maize.Grain.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31115,7 +31180,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Rachis.Live.NConc</YFieldName>
+                <YFieldName>Maize.Rachis.NConc</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31137,7 +31202,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Rackis.Live.NConc</YFieldName>
+                <YFieldName>Maize.Rachis.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31180,7 +31245,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Husk.Live.NConc</YFieldName>
+                <YFieldName>Maize.Husk.NConc</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31202,7 +31267,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Husk.Live.NConc</YFieldName>
+                <YFieldName>Maize.Husk.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31366,6 +31431,11 @@ namespace Models
               <Name>StemNitrogen</Name>
               <Series>
                 <Name>Predicted</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ColumnName>Maize.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -31380,7 +31450,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.Live.N</YFieldName>
+                <YFieldName>Maize.Stem.N</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31402,7 +31472,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.Live.N</YFieldName>
+                <YFieldName>Maize.Stem.N</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31445,7 +31515,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Rachis.Live.N</YFieldName>
+                <YFieldName>Maize.Rachis.N</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31467,7 +31537,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Rachis.Live.N</YFieldName>
+                <YFieldName>Maize.Rachis.N</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31510,7 +31580,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Husk.Live.N</YFieldName>
+                <YFieldName>Maize.Husk.N</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31532,7 +31602,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Husk.Live.N</YFieldName>
+                <YFieldName>Maize.Husk.N</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31575,7 +31645,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Grain.Live.N</YFieldName>
+                <YFieldName>Maize.Grain.N</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31598,6 +31668,71 @@ namespace Models
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Maize.Grain.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Leaf N (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>DeadLeafNitrogen</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Maize.Leaf.Dead.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Maize.Leaf.Dead.N</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31696,6 +31831,11 @@ namespace Models
               <Name>StemBiomass</Name>
               <Series>
                 <Name>Predicted</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ColumnName>Maize.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -31710,7 +31850,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.Live.Wt</YFieldName>
+                <YFieldName>Maize.Stem.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31732,7 +31872,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.Live.Wt</YFieldName>
+                <YFieldName>Maize.Stem.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31775,7 +31915,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+                <YFieldName>Maize.Grain.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31840,7 +31980,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Husk.Live.Wt</YFieldName>
+                <YFieldName>Maize.Husk.Wt</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31862,7 +32002,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Husk.Live.Wt</YFieldName>
+                <YFieldName>Maize.Husk.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31906,7 +32046,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Rachis.Live.Wt</YFieldName>
+                <YFieldName>Maize.Rachis.Wt</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31928,7 +32068,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Rachis.Live.Wt</YFieldName>
+                <YFieldName>Maize.Rachis.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31938,6 +32078,76 @@ namespace Models
               <Axis>
                 <Type>Left</Type>
                 <Title>Rachis N (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>DeadLeafBiomass</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ColumnName>Maize.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Maize.Leaf.Dead.Wt</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Maize.Leaf.Dead.Wt</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Leaf Biomass (g/m2)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>NaN</Minimum>
                 <Maximum>NaN</Maximum>
@@ -32427,7 +32637,7 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <Graph>
-              <Name>StartSenesced</Name>
+              <Name>StartedSenescing</Name>
               <Series>
                 <Name>Predicted</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -32444,7 +32654,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Leaf.SenescingCohortNo</YFieldName>
+                <YFieldName>NodesStartedSenescing</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -32466,7 +32676,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Leaf.DeadCohortNo</YFieldName>
+                <YFieldName>NodesStartedSenescing</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -32718,7 +32928,7 @@ namespace Models
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -32863,6 +33073,71 @@ namespace Models
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Maize.Grain.Number</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Grain number (grains/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>GrainSize</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Maize.Grain.Size</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Maize.Grain.Size</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -33294,8 +33569,8 @@ This trial was conducted to provide data for parametersising the Leaf Area model
                 <Name>Sow</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Operation>
-                  <Date>2010-10-26T00:00:00</Date>
-                  <Action>[Maize].Sow(population:12, cultivar:"Pioneer_39V43", depth:50, rowSpacing:760);</Action>
+                  <Date>2010-10-26</Date>
+                  <Action>[Maize].Sow(population:10, cultivar:"Pioneer_39V43", depth:50, rowSpacing:760);</Action>
                 </Operation>
               </Operations>
               <Operations>
@@ -33649,15 +33924,15 @@ namespace Models
                 <string>[MicroClimate].net_radn</string>
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.WaterSupply</string>
@@ -33700,16 +33975,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -33988,7 +34263,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33998,7 +34273,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+              <YFieldName>Maize.Grain.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -34010,7 +34285,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34020,7 +34295,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+              <YFieldName>Maize.Grain.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -34053,7 +34328,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34075,7 +34350,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34118,7 +34393,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34140,7 +34415,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34183,7 +34458,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34205,7 +34480,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34248,7 +34523,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34270,7 +34545,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34313,7 +34588,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34323,7 +34598,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Stem.Live.Wt</YFieldName>
+              <YFieldName>Maize.Stem.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -34335,7 +34610,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34345,7 +34620,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Stem.Live.Wt</YFieldName>
+              <YFieldName>Stem.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -34378,7 +34653,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -34673,6 +34948,18 @@ namespace Models
                 <Action>[Fertiliser].Apply(161, Fertiliser.Types.UreaN, 10);</Action>
               </Operation>
             </Operations>
+            <Operations>
+              <Name>Plastic</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Operation>
+                <Date>2008-09-16T00:00:00</Date>
+                <Action>[Fertiliser].Apply(140.5, Fertiliser.Types.UreaN, 10);</Action>
+              </Operation>
+              <Operation>
+                <Date>2008-12-17T00:00:00</Date>
+                <Action>[Fertiliser].Apply(161, Fertiliser.Types.UreaN, 10);</Action>
+              </Operation>
+            </Operations>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Specifications>
               <string>[Fert]</string>
@@ -34823,7 +35110,7 @@ namespace Models
               <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -34895,7 +35182,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+              <YFieldName>Maize.Grain.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -35220,7 +35507,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Stem.Live.Wt</YFieldName>
+              <YFieldName>Maize.Stem.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -36006,21 +36293,21 @@ namespace Models
                 <string>[MicroClimate].net_radn</string>
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].Tastle.Live.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
-                <string>[Maize].Rachis.Live.N</string>
-                <string>[Maize].Husk.Live.N</string>
+                <string>[Maize].Rachis.N</string>
+                <string>[Maize].Husk.N</string>
                 <string>[Maize].Root.WaterSupply</string>
                 <string>[Maize].Root.WaterUptake</string>
                 <string>[Maize].Leaf.Transpiration</string>
@@ -36078,11 +36365,11 @@ namespace Models
                 <string>[Maize].Leaf.SenescingCohortNo</string>
                 <string>[Maize].Stem.MaximumNConc.Value()</string>
                 <string>[Maize].Stem.MinimumNConc.Value()</string>
-                <string>[Maize].Stem.Live.NConc</string>
+                <string>[Maize].Stem.NConc</string>
                 <string>[Maize].Leaf.Live.NConc</string>
-                <string>[Maize].Grain.Live.NConc</string>
-                <string>[Maize].Husk.Live.NConc</string>
-                <string>[Maize].Rachis.Live.NConc</string>
+                <string>[Maize].Grain.NConc</string>
+                <string>[Maize].Husk.NConc</string>
+                <string>[Maize].Rachis.NConc</string>
                 <string>[Maize].Leaf.Dead.NConc</string>
                 <string>[Maize].Leaf.Photosynthesis.RueAct</string>
               </VariableNames>
@@ -36098,16 +36385,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -36456,9 +36743,9 @@ namespace Models
                     <double>0.154</double>
                     <double>0.152</double>
                     <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
+                    <double>0.14</double>
+                    <double>0.14</double>
+                    <double>0.14</double>
                   </LL>
                   <KL>
                     <double>0.075</double>
@@ -36498,33 +36785,33 @@ namespace Models
                   <double>0.077</double>
                   <double>0.152</double>
                   <double>0.162</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
                 </AirDry>
                 <LL15>
                   <double>0.154</double>
                   <double>0.152</double>
                   <double>0.162</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
                 </LL15>
                 <DUL>
                   <double>0.374</double>
                   <double>0.32</double>
                   <double>0.325</double>
-                  <double>0.15</double>
-                  <double>0.15</double>
-                  <double>0.15</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
                 </DUL>
                 <SAT>
                   <double>0.456</double>
                   <double>0.413</double>
                   <double>0.376</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
                 </SAT>
               </Water>
               <SoilWater>
@@ -36684,8 +36971,8 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>6.18993135011442</double>
-                  <double>3.64993215739484</double>
+                  <double>66.19</double>
+                  <double>3.65</double>
                   <double>2.44534665833854</double>
                   <double>1.35912698412698</double>
                   <double>0.968253968253968</double>
@@ -36902,21 +37189,21 @@ namespace Models
                 <string>[MicroClimate].net_radn</string>
                 <string>[MicroClimate].peta</string>
                 <string>[MicroClimate].petr</string>
-                <string>[Maize].Grain.Live.Wt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].Tastle.Live.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
-                <string>[Maize].Rachis.Live.N</string>
-                <string>[Maize].Husk.Live.N</string>
+                <string>[Maize].Rachis.N</string>
+                <string>[Maize].Husk.N</string>
                 <string>[Maize].Root.WaterSupply</string>
                 <string>[Maize].Root.WaterUptake</string>
                 <string>[Maize].Leaf.Transpiration</string>
@@ -36974,11 +37261,11 @@ namespace Models
                 <string>[Maize].Leaf.SenescingCohortNo</string>
                 <string>[Maize].Stem.MaximumNConc.Value()</string>
                 <string>[Maize].Stem.MinimumNConc.Value()</string>
-                <string>[Maize].Stem.Live.NConc</string>
+                <string>[Maize].Stem.NConc</string>
                 <string>[Maize].Leaf.Live.NConc</string>
-                <string>[Maize].Grain.Live.NConc</string>
-                <string>[Maize].Husk.Live.NConc</string>
-                <string>[Maize].Rachis.Live.NConc</string>
+                <string>[Maize].Grain.NConc</string>
+                <string>[Maize].Husk.NConc</string>
+                <string>[Maize].Rachis.NConc</string>
                 <string>[Maize].Leaf.Dead.NConc</string>
                 <string>[Maize].Leaf.Photosynthesis.RueAct</string>
               </VariableNames>
@@ -36994,16 +37281,16 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Maize].Phenology.CurrentStageName as Stage</string>
-                <string>[Maize].Grain.Live.Wt as GrainWt</string>
-                <string>[Maize].Stem.Live.Wt</string>
+                <string>[Maize].Grain.Wt as GrainWt</string>
+                <string>[Maize].Stem.Wt</string>
                 <string>[Maize].EarLive.Wt</string>
                 <string>[Maize].Leaf.Live.Wt</string>
                 <string>[Maize].Root.Live.Wt</string>
-                <string>[Maize].Husk.Live.Wt</string>
-                <string>[Maize].Rachis.Live.Wt</string>
+                <string>[Maize].Husk.Wt</string>
+                <string>[Maize].Rachis.Wt</string>
                 <string>[Maize].EarLive.N</string>
-                <string>[Maize].Grain.Live.N</string>
-                <string>[Maize].Stem.Live.N</string>
+                <string>[Maize].Grain.N</string>
+                <string>[Maize].Stem.N</string>
                 <string>[Maize].Leaf.Live.N</string>
                 <string>[Maize].Root.Live.N</string>
                 <string>[Maize].Root.Depth</string>
@@ -37708,7 +37995,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Grain.Live.Wt</YFieldName>
+              <YFieldName>Maize.Grain.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -37838,7 +38125,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Stem.Live.Wt</YFieldName>
+              <YFieldName>Maize.Stem.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -37860,7 +38147,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Maize.Stem.Live.Wt</YFieldName>
+              <YFieldName>Maize.Stem.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -39034,5 +39321,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>322</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

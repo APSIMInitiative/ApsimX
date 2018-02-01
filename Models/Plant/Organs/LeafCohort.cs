@@ -788,16 +788,14 @@ namespace Models.PMF.Organs
         {
             //Reduce leaf Population in Cohort due to plant mortality
             double startPopulation = CohortPopulation;
-            if (!(Apex is ApexTiller))
-            {
-                if (Structure.ProportionPlantMortality > 0)
-                    CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
 
-                //Reduce leaf Population in Cohort  due to branch mortality
-                if ((Structure.ProportionBranchMortality > 0) && (CohortPopulation > Structure.MainStemPopn))
-                    //Ensure we there are some branches.
-                    CohortPopulation -= CohortPopulation * Structure.ProportionBranchMortality;
-            }
+            if (Structure.ProportionPlantMortality > 0)
+                CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
+
+            //Reduce leaf Population in Cohort  due to branch mortality
+            if ((Structure.ProportionBranchMortality > 0) && (CohortPopulation > Structure.MainStemPopn))
+                //Ensure we there are some branches.
+                CohortPopulation -= Math.Min(Structure.ProportionBranchMortality * (CohortPopulation - Structure.MainStemPopn), CohortPopulation - Plant.Population);
 
             double propnStemMortality = (startPopulation - CohortPopulation) / startPopulation;
 
@@ -864,9 +862,9 @@ namespace Models.PMF.Organs
                 LeafStartStorageNReallocationSupply = SenescedFrac * liveBiomass.StorageN * NReallocationFactor;
                 //Retranslocated N is only that which occurs after N uptake. Both Non-structural and metabolic N are able to be retranslocated but metabolic N will only be moved if remobilisation of non-structural N does not meet demands
                 LeafStartMetabolicNRetranslocationSupply = Math.Max(0.0,
-                    liveBiomass.MetabolicN * NRetranslocationFactor - LeafStartMetabolicNReallocationSupply);
+                    liveBiomass.MetabolicN * (1 - SenescedFrac) * NRetranslocationFactor);
                 LeafStartStorageNRetranslocationSupply = Math.Max(0.0,
-                    liveBiomass.StorageN * NRetranslocationFactor - LeafStartStorageNReallocationSupply);
+                    liveBiomass.StorageN * (1 - SenescedFrac) * NRetranslocationFactor);
                 LeafStartNReallocationSupply = LeafStartStorageNReallocationSupply + LeafStartMetabolicNReallocationSupply;
                 LeafStartNRetranslocationSupply = LeafStartStorageNRetranslocationSupply + LeafStartMetabolicNRetranslocationSupply;
 
@@ -1068,6 +1066,35 @@ namespace Models.PMF.Organs
             double yDiffprop = y0/(MaxArea/2);
             double scaledLeafSize = (leafSize - y0)/(1 - yDiffprop);
             return scaledLeafSize;
+        }
+
+        /// <summary>Live leaf number</summary>
+        /// 
+
+        public double LiveStemNumber (Leaf.LeafCohortParameters leafCohortParameters)
+        {
+            double _lagDuration;
+            double _senescenceDuration;
+            double lsn = 0;
+            for (int i = 0; i < ApexGroupAge.Count; i++)
+            {
+                if (i == 0)
+                {
+                    _lagDuration = LagDuration;
+                    _senescenceDuration = SenescenceDuration;
+                }
+                else
+                {
+                    _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                    _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                }
+
+                if (Age >= 0 & Age < _lagDuration + GrowthDuration + _senescenceDuration / 2) 
+                {
+                    lsn += ApexGroupSize[i];
+                }
+            }
+            return lsn * CohortPopulation / MathUtilities.Sum(ApexGroupSize);           
         }
 
         /// <summary>Fractions the senescing.</summary>
