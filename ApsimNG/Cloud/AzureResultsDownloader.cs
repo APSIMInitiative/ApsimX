@@ -440,24 +440,19 @@ namespace ApsimNG.Cloud
         {
             lock(dbMutex)
             {
-                StringBuilder output = new StringBuilder();
                 SQLiteConnection m_dbConnection;
                 Dictionary<string, string> simNames = new Dictionary<string, string>();
 
-                DataTable table = new DataTable();
-                m_dbConnection = new SQLiteConnection("Data Source=" + path + ";Version=3;", true);
-                bool opened = false;
-                while (!opened)
+                m_dbConnection = new SQLiteConnection("Data Source=" + path + ";Version=3;", true);                
+
+                try
                 {
-                    try
-                    {
-                        m_dbConnection.Open();
-                        opened = true;
-                    } catch (Exception e)
-                    {
-                        Console.WriteLine("Failed to open db at " + path);
-                    }
-                    
+                    m_dbConnection.Open();                    
+                } catch (Exception e)
+                {
+                    presenter.ShowError("Failed to open db at " + path + ": " + e.ToString());
+                    // No point continuing if unable to open the database
+                    return "";
                 }
                 
 
@@ -477,39 +472,51 @@ namespace ApsimNG.Cloud
                     presenter.ShowError("Error enumerating simulation names: " + e.ToString());
                 }
 
-                sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
-
-                sql = "SELECT * FROM Report2";
+                // Enumerate the table names
+                sql = "SELECT name FROM sqlite_master WHERE type='table'";
+                List<string> tables = new List<string>();
                 try
                 {
                     SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
-                    table.Load(reader); // faster to load the result into a DataTable for some reason
-                    printHeader = true;
-                    foreach (DataRow row in table.Rows)
-                    {
-                        if (printHeader)
-                        {
-                            output.Append("FileName" + delim + "SimName" + delim);
-                            foreach (DataColumn column in table.Columns)
-                            {
-                                output.Append(column.ColumnName + delim);
-                            }
-                            output.Append("\n");
-                            printHeader = false;
-                        }
+                    while (reader.Read()) tables.Add(reader[0].ToString());
+                } catch (Exception e)
+                {
+                    presenter.ShowError("Error reading table names: " + e.ToString());
+                }
 
-                        output.Append(Path.GetFileNameWithoutExtension(path) + delim + simNames[row.ItemArray[0].ToString()] + delim);
-                        output.Append(String.Join(delim, row.ItemArray));
-                        output.Append("\n");
+                // Read data from each 'report' table (any table whose name doesn't start with an underscore)
+                // Hopefully the user doesn't rename their report to start with an underscore.
+                List<string> reportTables = tables.Where(name => name[0] != '_').ToList();                                
+                DataTable master = new DataTable(); // master data table, containing data merged from all report tables
+
+                try
+                {
+                    foreach (string tableName in reportTables)
+                    {
+                        DataTable reportTable = new DataTable();
+                        sql = "SELECT * FROM " + tableName;
+                        SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                        SQLiteDataReader reader = command.ExecuteReader();
+                        reportTable.Load(reader);
+                        reportTable.Merge(master);
+                        master = reportTable;
                     }
-                    return output.ToString();
                 }
                 catch (Exception e)
                 {
-                    presenter.ShowError("Error getting report: " + e.ToString());
+                    presenter.ShowError("Error reading or merging table: " + e.ToString());
                 }
-                return "";
+                
+                // Generate the CSV file data
+
+                // enumerate delimited column names
+                string csvData = "File Name" + delim + "Sim Name" + delim + master.Columns.Cast<DataColumn>().Select(x => x.ColumnName).Aggregate((a, b) => a + delim + b) + "\n";
+
+                // for each row, append the contents of that row to the data table, delimited by the given character
+                master.Rows.Cast<DataRow>().ToList().ForEach(row => csvData += Path.GetFileNameWithoutExtension(path) + delim + simNames[row.ItemArray[0].ToString()] + delim + row.ItemArray.ToList().Aggregate((a, b) => a + delim + b) + "\n");
+
+                return csvData;
             }            
         }
         

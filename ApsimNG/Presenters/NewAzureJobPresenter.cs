@@ -30,6 +30,8 @@
         private PoolSettings poolSettings;
         private BackgroundWorker submissionWorker;
 
+        private const string SETTINGS_FILENAME = "settings.txt";
+
         public NewAzureJobPresenter()
         {            
         }
@@ -173,7 +175,7 @@
             string toolsDir = Path.Combine(executableDirectory, "tools");
             if (!Directory.Exists(toolsDir))
             {
-                ShowError("Tools Directory not found: " + toolsDir);                
+                ShowError("Tools Directory not found: " + toolsDir);
             }
             
             foreach (string filePath in Directory.EnumerateFiles(toolsDir))
@@ -181,7 +183,30 @@
                 UploadFileIfNeeded("tools", filePath);
             }
 
+            if (jp.Recipient.Length > 0)
+            {
+                try
+                {
+                    // Store a config file into the job directory that has the e-mail config                    
+                    if (jp.Recipient.Length > 0)
+                    {
+                        string tmpConfig = Path.Combine(Path.GetTempPath(), SETTINGS_FILENAME);
+                        using (StreamWriter file = new StreamWriter(tmpConfig))
+                        {
+                            file.WriteLine("EmailRecipient=" + jp.Recipient);
+                            file.WriteLine("EmailSender=agresearch.azure@gmail.com");
+                            file.WriteLine("EmailPW=New-Tangent");
+                        }
 
+                        UploadFileIfNeeded("job-" + jp.JobId, tmpConfig);
+                        File.Delete(tmpConfig);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ShowError("Error writing to settings file; you may not receive an email upon job completion: " + ex.ToString());
+                }
+            }
 
             // upload job manager            
             UploadFileIfNeeded("jobmanager", Path.Combine(executableDirectory, "azure-apsim.exe"));

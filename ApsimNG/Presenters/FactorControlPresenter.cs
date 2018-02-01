@@ -50,19 +50,22 @@ namespace UserInterface.Presenters
         private readonly string[] MONTH_NAMES = { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" };
         public void Attach(object experiment, object viewer, ExplorerPresenter explorerPresenter)
         {
-            model = (Experiment)experiment;
+            model = experiment as Experiment;
             view = (FactorControlView)viewer;
             view.Presenter = this;
             this.explorerPresenter = explorerPresenter;            
             maxSimsToDisplay = DEFAULT_MAX_SIMS;
-
-            var simNames = model.GetSimulationNames().ToArray();
-            var allCombinations = model.AllCombinations();
-            headers = GetHeaderNames(allCombinations);
-            simulations = GetTableData(allCombinations);               
             
-            view.Initialise(headers);
-            UpdateView();
+            if (model != null)
+            {
+                var simNames = model.GetSimulationNames().ToArray();
+                var allCombinations = model.AllCombinations();
+                headers = GetHeaderNames(allCombinations);
+                simulations = GetTableData(allCombinations);
+
+                view.Initialise(headers);
+                UpdateView();
+            }            
         }
 
 
