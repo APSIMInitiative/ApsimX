@@ -121,6 +121,8 @@ namespace Models.CLEM
 
         /// <summary>
         /// Searches the DataTable created from the GRASP File for all the distinct values for the specified ColumnName.
+        /// Used during a run to find the StkRate catagories in the file but also used by the View for the Years in the file.
+        /// nb. has to be a double array not a List for some trickery to find the nearest StkRate category.
         /// </summary>
         /// <returns>Sorted array of unique values for the column</returns>
         private double[] GetCategories(string ColumnName)
@@ -250,7 +252,8 @@ namespace Models.CLEM
 
 
         /// <summary>
-        /// Gets the first year in the SQLite File
+        /// Gets the first year in the SQLite File.
+        /// nb. should convert this to a List but only using first and last values, so not worth it.
         /// </summary>
         /// <returns></returns>
         public double[] GetYearsInFile()
