@@ -741,8 +741,8 @@ date of Experiment 4 is assumed here.]]></MemoText>
                   <double>0.2</double>
                   <double>0.8</double>
                   <double>1</double>
-                  <double>0.8</double>
-                  <double>0.4</double>
+                  <double>1</double>
+                  <double>0.6</double>
                   <double>0.4</double>
                   <double>0.3</double>
                 </Y>
@@ -1226,7 +1226,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <Constant>
           <Name>MaximumRootDepth</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1000</FixedValue>
+          <FixedValue>1500</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
@@ -1940,6 +1940,8 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <string>[Weather].MeanT</string>
         <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilNitrogen</string>
         <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+        <string>sum([Soil].SoilNitrogen.mineral_n) as ProfileN</string>
+        <string>[Soil].SoilWater.LeachNO3</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -2959,6 +2961,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
                 <double>16</double>
                 <double>16</double>
                 <double>98</double>
+                <double>98</double>
               </KS>
             </Water>
             <SoilWater>
@@ -2989,12 +2992,12 @@ date of Experiment 4 is assumed here.]]></MemoText>
                 <double>300</double>
               </Thickness>
               <SWCON>
-                <double>0.55</double>
-                <double>0.55</double>
-                <double>0.55</double>
-                <double>0.55</double>
-                <double>0.55</double>
-                <double>0.55</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
               </SWCON>
               <residueinterception>0</residueinterception>
             </SoilWater>
@@ -4944,6 +4947,157 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
+        </Folder>
+        <Folder>
+          <Name>SoilN_LeachNo3</Name>
+          <Graph>
+            <Name>ProfileN</Name>
+            <Series>
+              <Name>Simulated</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>ProfileN</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Simulated1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Right</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>FodderBeet.AboveGround.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title>Date</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Right</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Leach</Name>
+            <Series>
+              <Name>Simulated</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Soil.SoilWater.LeachNO3</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Simulated1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Right</YAxis>
+              <ColourArgb>-16736653</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Soil.SoilWater.LeachNO3</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>true</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title>Date</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Right</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
@@ -14679,5 +14833,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>425</ExplorerWidth>
 </Simulations>
