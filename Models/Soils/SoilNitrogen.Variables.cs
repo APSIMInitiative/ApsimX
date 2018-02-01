@@ -2454,6 +2454,16 @@ namespace Models.Soils
         /// <param name="value">New values</param>
         public void Seturea(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
+            // get the sender module (this is for report/testing only)
+            if (callingModelType == SoluteManager.SoluteSetterType.Soil)
+                senderModule = "WaterModule";
+            else if (callingModelType == SoluteManager.SoluteSetterType.Plant)
+                senderModule = "Plant";
+            else if (callingModelType == SoluteManager.SoluteSetterType.Fertiliser)
+                senderModule = "Fertiliser";
+            else
+                senderModule = "Other";
+
             // get the delta N
             double[] deltaN = new double[value.Length];
             bool hasChanges = false;
@@ -2513,6 +2523,16 @@ namespace Models.Soils
         /// <param name="value">New values</param>
         public void SetNH4(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
+            // get the sender module (this is for report/testing only)
+            if (callingModelType == SoluteManager.SoluteSetterType.Soil)
+                senderModule = "WaterModule";
+            else if (callingModelType == SoluteManager.SoluteSetterType.Plant)
+                senderModule = "Plant";
+            else if (callingModelType == SoluteManager.SoluteSetterType.Fertiliser)
+                senderModule = "Fertiliser";
+            else
+                senderModule = "Other";
+
             // get the delta N
             double[] deltaN = new double[value.Length];
             bool hasChanges = false;
@@ -2577,6 +2597,16 @@ namespace Models.Soils
         /// <param name="value">New values</param>
         public void SetNO3(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
+            // get the sender module (this is for report/testing only)
+            if (callingModelType == SoluteManager.SoluteSetterType.Soil)
+                senderModule = "WaterModule";
+            else if (callingModelType == SoluteManager.SoluteSetterType.Plant)
+                senderModule = "Plant";
+            else if (callingModelType == SoluteManager.SoluteSetterType.Fertiliser)
+                senderModule = "Fertiliser";
+            else
+                senderModule = "Other";
+
             // get the delta N
             double[] deltaN = new double[value.Length];
             bool hasChanges = false;
