@@ -79,6 +79,11 @@ The model consists of:
   </NutrientPool>
   <Solute>
     <Name>Urea</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <MemoText><![CDATA[This pool simulates the urea content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize [jones_ceres-maize:_1986].]]></MemoText>
+    </Memo>	
     <NFlow>
       <Name>Hydrolysis</Name>
       <Constant>
@@ -108,7 +113,7 @@ The model consists of:
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BoundFunction>
         <MinimumFunction>
-          <Name>PNI</Name>
+          <Name>RateModifier</Name>
           <BoundFunction>
             <Name>WF</Name>
             <Constant>
@@ -164,17 +169,18 @@ The model consists of:
   </Solute>
   <Solute>
     <Name>NO3</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <MemoText><![CDATA[This pool simulates the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize [jones_ceres-maize:_1986].]]></MemoText>
+    </Memo>		
     <NFlow>
       <Name>Denitrification</Name>
       <Memo>
         <Name>Memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText>
-          <![CDATA[References: 
-
-Rolston DE, Rao PSC, Davidson JM, Jessup RE (1984). "Simulation of denitrification losses of Nitrate fertiliser applied to uncropped, cropped, and manure-amended field plots". Soil Science Vol 137, No 4, pp 270-278.
-             
-Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "Carbon transformations in land areas receiving organic wastes in relation to nonpoint source pollution: A conceptual model".  J.Environ. Qual. 9:434-442.]]>
+          <![CDATA[Denitrification is simulated using the approaches initially used in CERES Maize[jones_ceres-maize:_1986] as implemented in APSIM SoilN ([probert_apsims_1998]).  These were based upon the work of [Rolston1984].  Denitrification rate is calculated using this approach to account for the effect of soil carbon, temperature and water on the fraction of nitrate lost on a daily basis.  ]]>
         </MemoText>
       </Memo>
       <Constant>
@@ -191,6 +197,13 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
         </Constant>
         <ExpressionFunction>
           <Name>ActiveC</Name>
+      <Memo>
+        <Name>Memo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <MemoText>
+          <![CDATA[Denitrification rate is affected by soil carbon content using an approach originally described by [Reddy1980]. ]]>
+        </MemoText>
+      </Memo>		  
           <ExpressionFunction>
             <Name>TotalCppm</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -308,6 +321,11 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
   </Solute>
   <NutrientPool>
     <Name>FOMLignin</Name>
+	<Memo>
+      <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <MemoText><![CDATA[The FOMLignin pool captures "lignin-like" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize[jones_ceres-maize:_1986]. This pool has the slowest decomposition rate of the three FOM pools.]]></MemoText>
+    </Memo>
     <ExpressionFunction>
       <Name>InitialCarbon</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -363,6 +381,11 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
   </NutrientPool>
   <NutrientPool>
     <Name>FOMCellulose</Name>
+	<Memo>
+      <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <MemoText><![CDATA[The FOMCellulose pool captures "cellulose-like" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize[jones_ceres-maize:_1986]. ]]></MemoText>
+    </Memo>	
     <ExpressionFunction>
       <Name>InitialCarbon</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -418,6 +441,11 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
   </NutrientPool>
   <NutrientPool>
     <Name>FOMCarbohydrate</Name>
+	<Memo>
+      <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <MemoText><![CDATA[The FOMCarbohydrate pool captures "carbohydrate-like" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize[jones_ceres-maize:_1986]. This pool has the fastest decomposition rate of the three FOM pools.]]></MemoText>
+    </Memo>		
     <ExpressionFunction>
       <Name>InitialCarbon</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -669,20 +697,6 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
     </NFlow>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Solute>
-  <NutrientPool>
-    <Name>Biochar</Name>
-    <Constant>
-      <Name>InitialCarbon</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0</FixedValue>
-    </Constant>
-    <Constant>
-      <Name>InitialNitrogen</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0</FixedValue>
-    </Constant>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </NutrientPool>
   <MinimumFunction>
     <Name>TemperatureFactorForMineralisation</Name>
     <ExpressionFunction>
