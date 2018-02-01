@@ -417,9 +417,10 @@ namespace UserInterface.Presenters
         /// <param name="saveToCsv">If true, results will be combined into a csv file.</param>
         /// <param name="includeDebugFiles">If true, debug files will be downloaded.</param>
         /// <param name="keepOutputFiles">If true, the raw .db output files will be saved.</param>
-        public void DownloadResults(List<string> jobsToDownload, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles)
+        public void DownloadResults(List<string> jobsToDownload, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles, bool async = false)
         {
             MainPresenter.ShowMessage("", Simulation.ErrorLevel.Information);
+            view.DownloadStatus = "";            
             if (currentlyDownloading.Count > 0)
             {
                 ShowError("Unable to start a new batch of downloads - one or more downloads are already ongoing.");
@@ -432,9 +433,9 @@ namespace UserInterface.Presenters
                 return;
             }
             FetchJobs.CancelAsync();
-            while (FetchJobs.IsBusy) ;
 
             //view.HideLoadingProgressBar();
+            view.ShowDownloadProgressBar();
             view.ShowDownloadProgressBar();
             ShowMessage("");
             string path = (string)Settings.Default["OutputDir"];
@@ -474,8 +475,9 @@ namespace UserInterface.Presenters
                 }
 
                 dl = new AzureResultsDownloader(jobId, GetJob(id).DisplayName, path, this, saveToCsv, includeDebugFiles, keepOutputFiles);                
-                dl.DownloadResults(false);
+                dl.DownloadResults(async);
             }
+            while (FetchJobs.IsBusy) ;
             FetchJobs.RunWorkerAsync();
         }
 
@@ -495,6 +497,7 @@ namespace UserInterface.Presenters
         {
             currentlyDownloading.Remove(jobId);
             view.HideDownloadProgressBar();
+            view.DownloadProgress = 0;
         }
 
         /// <summary>

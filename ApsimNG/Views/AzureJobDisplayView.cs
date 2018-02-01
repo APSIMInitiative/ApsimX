@@ -19,7 +19,7 @@ namespace UserInterface.Views
             get { return lblDownloadStatus.Text; }
             set
             {
-                Application.Invoke(delegate
+                Invoke(delegate
                 {
                     lblDownloadStatus.Text = value;
                 });
@@ -34,6 +34,8 @@ namespace UserInterface.Views
             get { return loadingProgress.Adjustment.Value; }
             set
             {
+                // If the job load progress bar starts causing issues (e.g. not (dis)appearing correctly), 
+                // try using this class' Invoke() method rather than Gtk.Application.Invoke here.
                 Application.Invoke(delegate
                 {
                     loadingProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), loadingProgress.Adjustment.Upper);
@@ -49,10 +51,8 @@ namespace UserInterface.Views
             get { return downloadProgress.Adjustment.Value; }
             set
             {
-                Application.Invoke(delegate
-                {                    
-                    downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper);                    
-                });
+                // Set progresss bar to whichever is smaller - the value being passed in, or the maximum value the progress bar can take.
+                Invoke(delegate { downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper); });
             }
         }
 
@@ -250,7 +250,7 @@ namespace UserInterface.Views
             chkFilterOwner.Toggled += ApplyFilter;
             chkFilterOwner.Yalign = 0;
 
-            downloadProgress = new ProgressBar(new Adjustment(0, 0, 100, 0.01, 0.01, 100));
+            downloadProgress = new ProgressBar(new Adjustment(0, 0, 1, 0.01, 0.01, 1));
             lblDownloadProgress = new Label("Downloading: ");
 
             downloadProgressContainer = new HBox();
@@ -491,7 +491,7 @@ namespace UserInterface.Views
         /// </summary>
         public void HideDownloadProgressBar()
         {
-            Application.Invoke(delegate { downloadProgressContainer.HideAll(); });
+            Invoke(delegate {  downloadProgressContainer.HideAll(); });
         }
 
         /// <summary>
@@ -499,7 +499,9 @@ namespace UserInterface.Views
         /// </summary>
         public void ShowDownloadProgressBar()
         {
-            Application.Invoke(delegate { downloadProgressContainer.ShowAll(); });            
+            //Application.Invoke((_, __) => {  downloadProgressContainer.ShowAll(); });                        
+            Invoke(() => downloadProgressContainer.ShowAll());
+            
         }
 
         /// <summary>
@@ -761,6 +763,16 @@ namespace UserInterface.Views
         {
             RemoveEventHandlers();
             MainWidget.Destroy();
+        }
+
+        /// <summary>
+        /// Waits until all events in the main event queue are processed and then runs an action on the main UI thread.
+        /// </summary>
+        /// <param name="action"></param>
+        private void Invoke(System.Action action)
+        {
+            while (GLib.MainContext.Iteration()) ;
+            Application.Invoke(delegate { action(); });
         }
     }
 }

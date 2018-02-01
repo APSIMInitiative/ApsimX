@@ -235,16 +235,15 @@ namespace ApsimNG.Cloud
                         foreach (string archive in localZipFiles)
                         {                            
                             ExtractZipArchive(archive, rawResultsPath);
-                            while (File.Exists(archive))
-                            {
-                                try
-                                {
-                                    File.Delete(archive);
-                                } catch
-                                {
 
-                                }
+                            try
+                            {
+                                File.Delete(archive);
+                            } catch
+                            {
+
                             }
+                            
                             
                         }
                     } else
@@ -291,7 +290,7 @@ namespace ApsimNG.Cloud
         }
 
         /// <summary>
-        /// Downloads each given blob from Azure.
+        /// Downloads each given blob from Azure and returns a list of file names.
         /// </summary>
         /// <param name="blobs">List of Azure blobs to download.</param>
         /// <param name="downloadPath">Path to download the blobs to.</param>
@@ -304,7 +303,14 @@ namespace ApsimNG.Cloud
                              blob =>
                              {
                                  string filename = Path.Combine(downloadPath, blob.Name);
-                                 blob.DownloadToFile(filename, FileMode.Create);
+                                 try
+                                 {
+                                     blob.DownloadToFile(filename, FileMode.Create);
+                                 } catch
+                                 {
+
+                                 }
+                                 
                                  lock (outputHashLock)
                                  {
                                      downloader.ReportProgress(0, blob.Name);
@@ -466,6 +472,8 @@ namespace ApsimNG.Cloud
                     {
                         simNames.Add(reader["ID"].ToString(), reader["Name"].ToString());
                     }
+                    command.Dispose();
+                    reader.Close();
                 }
                 catch (Exception e)
                 {
@@ -480,6 +488,8 @@ namespace ApsimNG.Cloud
                     SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read()) tables.Add(reader[0].ToString());
+                    command.Dispose();
+                    reader.Close();
                 } catch (Exception e)
                 {
                     presenter.ShowError("Error reading table names: " + e.ToString());
@@ -501,15 +511,16 @@ namespace ApsimNG.Cloud
                         reportTable.Load(reader);
                         reportTable.Merge(master);
                         master = reportTable;
+                        command.Dispose();
+                        reader.Close();
                     }
                 }
                 catch (Exception e)
                 {
                     presenter.ShowError("Error reading or merging table: " + e.ToString());
                 }
-                
-                // Generate the CSV file data
-
+                m_dbConnection.Close();
+                // Generate the CSV file data                
                 // enumerate delimited column names
                 string csvData = "File Name" + delim + "Sim Name" + delim + master.Columns.Cast<DataColumn>().Select(x => x.ColumnName).Aggregate((a, b) => a + delim + b) + "\n";
 

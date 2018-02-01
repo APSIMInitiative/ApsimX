@@ -12,6 +12,7 @@ namespace ApsimNG.Cloud
         private CheckButton includeDebugFiles;
         private CheckButton keepRawOutputs;
         private CheckButton generateCsv;
+        private CheckButton runAsync;
 
         private Button btnDownload;
         private Button btnChangeOutputDir;
@@ -58,6 +59,11 @@ namespace ApsimNG.Cloud
             keepRawOutputs.Active = true;
             generateCsv = new CheckButton("Collate Results");
             generateCsv.Active = true;
+            runAsync = new CheckButton("Download results asynchronously")
+            {                
+                TooltipText = "If this is disabled, the UI will be unresponsive for the duration of the download. On the other hand, this functionality has not been thoroughly tested. Use at your own risk.",
+                Active = false
+            };
 
             btnDownload = new Button("Download");
             btnDownload.Clicked += Download;
@@ -79,6 +85,7 @@ namespace ApsimNG.Cloud
             vboxPrimary.PackStart(includeDebugFiles);
             vboxPrimary.PackStart(keepRawOutputs);
             vboxPrimary.PackStart(generateCsv);
+            vboxPrimary.PackStart(runAsync);
             vboxPrimary.PackStart(downloadDirectoryContainer);            
             vboxPrimary.PackStart(new Label(""));
 
@@ -105,7 +112,7 @@ namespace ApsimNG.Cloud
             btnDownload.Clicked -= Download;
             btnChangeOutputDir.Clicked -= ChangeOutputDir;
             Destroy();
-            presenter.DownloadResults(jobs, generateCsv.Active, includeDebugFiles.Active, keepRawOutputs.Active);
+            presenter.DownloadResults(jobs, generateCsv.Active, includeDebugFiles.Active, keepRawOutputs.Active, runAsync.Active);
         }
 
         private void ChangeOutputDir(object sender, EventArgs e)
