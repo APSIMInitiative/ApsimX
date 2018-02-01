@@ -216,7 +216,7 @@ namespace UnitTests
         public void ChildrenRecursivelyTest()
         {
             List<IModel> allChildren = Apsim.ChildrenRecursively(simulation);
-            Assert.AreEqual(allChildren.Count, 166);
+            Assert.AreEqual(allChildren.Count, 169);
 
             List<IModel> childZones = Apsim.ChildrenRecursively(simulation, typeof(Zone));
             Assert.AreEqual(childZones.Count, 3);
