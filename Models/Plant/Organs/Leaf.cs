@@ -1018,6 +1018,7 @@ namespace Models.PMF.Organs
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
+            Structure.TipToAppear = 0;
             apexGroupAge.Clear();
             dryMatterSupply.Clear();
             dryMatterDemand.Clear();
