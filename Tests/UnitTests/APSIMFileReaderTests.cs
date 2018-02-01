@@ -25,7 +25,7 @@ namespace UnitTests
                 ("UnitTests.Resources.APSIMFileReaderTests1.xml");
            
             // Create instance of reader.
-            XmlReader reader = new APSIMFileReader(s1);
+            XmlReader reader = new Models.Core.ApsimFile.Reader(s1);
             reader.Read();
 
             // Get new XML from our reader
@@ -66,12 +66,12 @@ namespace UnitTests
             toolboxdoc.Load(toolboxFileName);
 
             // Create 1st instance of reader which is an APSIMFileReader
-            XmlReader reader1 = new APSIMFileReader(toolboxdoc.DocumentElement);
+            XmlReader reader1 = new Models.Core.ApsimFile.Reader(toolboxdoc.DocumentElement);
 
             // Create 2nd instance of reader based on XmlNodeReader where an XmlDocument
             // has already done a complete read from APSIMFileReader.
             XmlDocument doc = new XmlDocument();
-            XmlReader tempReader = new APSIMFileReader(toolboxdoc.DocumentElement);
+            XmlReader tempReader = new Models.Core.ApsimFile.Reader(toolboxdoc.DocumentElement);
             tempReader.Read();
             doc.Load(tempReader);
             XmlReader reader2 = new XmlNodeReader(doc.DocumentElement);
@@ -106,7 +106,7 @@ namespace UnitTests
             toolboxdoc.Load(toolboxFileName);
 
             // Create instance of reader.
-            XmlReader reader1 = new APSIMFileReader(toolboxdoc.DocumentElement);
+            XmlReader reader1 = new Models.Core.ApsimFile.Reader(toolboxdoc.DocumentElement);
             reader1.Read();
 
             Assembly modelsAssembly = null;
