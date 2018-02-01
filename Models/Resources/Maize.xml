@@ -1266,6 +1266,12 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         <Units />
       </Constant>
       <Constant>
+        <Name>RemobilisationCost</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>0</FixedValue>
+        <Units />
+      </Constant>
+      <Constant>
         <Name>LeafSizeShapeParameter</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0.01</FixedValue>
@@ -2570,6 +2576,12 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </PhaseLookupValue>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PhaseLookup>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
     <Constant>
       <Name>RemobilisationCost</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>

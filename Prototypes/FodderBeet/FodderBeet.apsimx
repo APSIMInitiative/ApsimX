@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -446,7 +446,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <ShadeInducedSenRate>0</ShadeInducedSenRate>
           <SenescedFrac>0</SenescedFrac>
           <DeltaPotentialArea>0</DeltaPotentialArea>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaStressConstrainedArea>0</DeltaStressConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
@@ -463,27 +463,15 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Rank>1</Rank>
           <Area>50</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Leaf].CohortLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Leaf].CohortDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <CompositeBiomass>
           <Name>Total</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
-            <string>[Leaf].CohortLive</string>
-            <string>[Leaf].CohortDead</string>
+            <string>[Leaf].Live</string>
+            <string>[Leaf].Dead</string>
           </Propertys>
         </CompositeBiomass>
         <ArrayBiomass>
@@ -939,7 +927,28 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
+          <ArrayFunction>
+            <Name>LagDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>SenescenceDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>LeafSizeAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+          </ArrayFunction>
+          <Constant>
+            <Name>RemobilisationCost</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExpansionStressValue>0</ExpansionStressValue>
         </LeafCohortParameters>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
@@ -1006,7 +1015,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiencyFunction</Name>
+          <Name>DMConversionEfficiency</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
@@ -1014,6 +1023,11 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Name>ApexStandard</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </ApexStandard>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1031,7 +1045,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
-        <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -1113,20 +1126,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Leaf].FractionDied</XProperty>
         </LinearInterpolationFunction>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <Constant>
           <Name>StructuralFraction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1276,6 +1275,21 @@ date of Experiment 4 is assumed here.]]></MemoText>
           </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1327,14 +1341,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
         </Constant>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <Constant>
           <Name>DMSinkCapacity</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1442,6 +1448,11 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[StorageRoot].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1477,46 +1488,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
         </Constant>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <PartitionFractionDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <LinearInterpolationFunction>
-            <Name>PartitionFraction</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>1</double>
-                <double>6</double>
-                <double>15</double>
-                <double>30</double>
-                <double>51</double>
-              </X>
-              <Y>
-                <double>0.1</double>
-                <double>0.15</double>
-                <double>0.24</double>
-                <double>0.15</double>
-                <double>0.1</double>
-              </Y>
-            </XYPairs>
-            <Memo>
-              <Name>Memo</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[Allocation determined by node number - partitioning coefficients have been determined using the sowing date October data]]></MemoText>
-            </Memo>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
-          </LinearInterpolationFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </PartitionFractionDemandFunction>
         <VariableReference>
           <Name>SenescenceRate</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1597,6 +1568,43 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Petiole].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <MaximumFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>Constant1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <MultiplyFunction>
+            <Name>MultiplyFunction</Name>
+            <Constant>
+              <Name>Constant</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <SubtractFunction>
+              <Name>SubtractFunction</Name>
+              <VariableReference>
+                <Name>leafwt</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[FodderBeet].Leaf.Live.Wt</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>Petiolewt</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[FodderBeet].Petiole.Wt</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </SubtractFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </MaximumFunction>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <CompositeBiomass>
@@ -1968,8 +1976,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
     <Name>LincolnP21_Cv2011</Name>
@@ -2572,7 +2578,7 @@ namespace Models
 			AccumDrainage += Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 		
 		[EventSubscribe("PlantEnding")]
@@ -4707,7 +4713,7 @@ namespace Models
 			AccumDrainage += Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 		
 		[EventSubscribe("PlantEnding")]
@@ -6961,7 +6967,7 @@ namespace Models
 			AccumDrainage += Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 		
 		[EventSubscribe("PlantEnding")]
@@ -9199,7 +9205,7 @@ namespace Models
 			AccumDrainage += Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 		
 		[EventSubscribe("PlantEnding")]
@@ -11446,6 +11452,1324 @@ Stone PJ, Sorensen I, Jamieson PD 1998. Soil temperature affects growth and deve
 
 Teixeira EI, George M, Brown HE, Fletcher AL 2011. Quantifying maize leaf expansion and senescence, Agronomy New Zealand, pp. 59-65.]]></MemoText>
   </Memo>
+  <Experiment>
+    <Name>RS_Rotation</Name>
+    <Memo>
+      <Name>Experiment Description</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <MemoText><![CDATA[
+#Experiment description
+
+## Introduction
+ Co-limitation of water and nitrogen on fodder beet physiology  
+
+
+ - Nitrogen: 3 treatments, 0 kg N/ha, 50 kg N/ha & 300 kg N/Ha applied as dissolved urea with fertigator  
+  - 25kg N/ha applied ~5 days after emergence (both fodder beet and Oats)  
+  - 25kg N/ha applied when canopy reached full cover
+  
+
+Soil profile descripition
+Layer  SoilDepth (cm)  
+ 1	  0-15  
+ 2	 15-30  
+ 3	 30-60  
+ 4	 60-90  
+ 5	 90-120  
+ 6	120-150  
+ 7	150-180
+
+
+Pre-experiment actions:  
+  23/08/2016 - Oats harvested  
+  02/09/2016 - Site irrigated with 25mm  
+  05/09/2016 - Site ploughed  
+  06/09/2016 - Site cambridge rolled   
+  17/10/2016 - Site power harrowed  
+  18/10/2016 - Fertiliser application (200kg/ha of KCL, 250kg/ha of Triple Super, 200kg/ha of NaCL and 30kg/ha of Boronate 15%)  
+  18/10/2016 - Site cambridge rolled and harrowed  
+  
+Experiment:  
+ 1) Fodder beet:  
+     - Cultivar: Rivage  
+     - Sowing date: 18/10/2016  
+     - Sowing density: 11 plants/m2  
+          row spacing: 0.45m  
+  
+    General actions / issues:  
+        25/10/2016 - Irrigation of 5mm to all plots  
+        27/10/2016 - Plants started to emerge  
+        28/10/2016 - Irrigation of 5mm to all plots  
+        28/10/2016 - First fertiliser application, 25kgN/ha of urea_N to the 50kg/ha plots and 100kgN/ha o the 300kg/ha plots  
+        30/10/2016 - Irrigation treatments started  
+        18/01/2017 - Second fertiliser application, 25Nkg/ha of liquid urea_N to the 50kg/ha plots and 100kgN/ha to the 300kg/ha plots  
+        15/02/2017 - Final fertiliser application, 100Nkg/ha of liquid urea_N to the 300kg/ha plots  
+        17/05/2017 - Plots harvested  
+]]></MemoText>
+    </Memo>
+    <Factors>
+      <Name>Factors</Name>
+      <Factor>
+        <Name>Nit</Name>
+        <Factor>
+          <Name>0</Name>
+          <Operations>
+            <Name>0</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[Uniques fertigation event]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2016-10-29</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-01-18</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-02-25</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[Fert]</string>
+            <string>[StateFactors].Script.NitFactor = 0</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>50</Name>
+          <Operations>
+            <Name>50</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2016-10-29</Date>
+              <Action>[Fertiliser].Apply(25, Fertiliser.Types.NO3N, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-01-18</Date>
+              <Action>[Fertiliser].Apply(25, Fertiliser.Types.NO3N, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-02-25</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[Fert]</string>
+            <string>[StateFactors].Script.NitFactor = 50</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>300</Name>
+          <Operations>
+            <Name>300</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2016-10-29</Date>
+              <Action>[Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-01-18</Date>
+              <Action>[Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-02-25</Date>
+              <Action>[Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[Fert]</string>
+            <string>[StateFactors].Script.NitFactor = 300</string>
+          </Specifications>
+        </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Specifications />
+      </Factor>
+      <Factor>
+        <Name>Irr</Name>
+        <Factor>
+          <Name>Full</Name>
+          <Operations>
+            <Name>Full</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[Have added an extra irrigation, on 22 Oct, 
+
+Data indcates water applied but no notes of it RFZ
+
+In Statefactors have donethe irrigations for
+  17/12  21/1 19/11 14/1
+
+
+]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2016-09-02</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2016-10-25</Date>
+              <Action>[Irrigation].Apply(5);</Action>
+            </Operation>
+            <Operation>
+              <Date>2016-10-28</Date>
+              <Action>[Irrigation].Apply(5);</Action>
+            </Operation>
+            <Operation>
+              <Date>2016-11-17</Date>
+              <Action>[Irrigation].Apply(5);</Action>
+            </Operation>
+            <Operation>
+              <Date>2016-11-23</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2016-11-30</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2016-12-07</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2016-12-21</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2016-12-29</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-01-04</Date>
+              <Action>[Irrigation].Apply(40);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-01-11</Date>
+              <Action>[Irrigation].Apply(32.9);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-01-18</Date>
+              <Action>[Irrigation].Apply(25.4);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-01-25</Date>
+              <Action>[Irrigation].Apply(31.3);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-02-08</Date>
+              <Action>[Irrigation].Apply(33);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-02-15</Date>
+              <Action>[Irrigation].Apply(35);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-02-22</Date>
+              <Action>[Irrigation].Apply(29);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-02-15</Date>
+              <Action>[Irrigation].Apply(35);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-02-22</Date>
+              <Action>[Irrigation].Apply(29);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-03-01</Date>
+              <Action>[Irrigation].Apply(32.6);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-03-08</Date>
+              <Action>[Irrigation].Apply(34);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-03-15</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-03-22</Date>
+              <Action>[Irrigation].Apply(50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-03-29</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-04-05</Date>
+              <Action>[Irrigation].Apply(0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-04-12</Date>
+              <Action>[Irrigation].Apply(30.9);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-04-27</Date>
+              <Action>[Irrigation].Apply(18.9);</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[Irrig]</string>
+            <string>[StateFactors].Script.IrrFactor = true</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Nil</Name>
+          <Operations>
+            <Name>Nil</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[Have added an extra irrigation, on 3 Nov, 
+
+Data indcates water applied but no notes of it RFZ]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2016-09-02</Date>
+              <Action>[Irrigation].Apply(20)</Action>
+            </Operation>
+            <Operation>
+              <Date>2016-10-25</Date>
+              <Action>[Irrigation].Apply(5)</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-01-18</Date>
+              <Action>[Irrigation].Apply(5)</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-02-25</Date>
+              <Action>[Irrigation].Apply(5)</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-05-21</Date>
+              <Action>[Irrigation].Apply(50)</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[Irrig]</string>
+            <string>[StateFactors].Script.IrrFactor = false</string>
+          </Specifications>
+        </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Specifications />
+      </Factor>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Factors>
+    <Simulation>
+      <Name>Rainshelter</Name>
+      <Clock>
+        <Name>Clock</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <StartDate>2016-09-28T00:00:00</StartDate>
+        <EndDate>2017-05-01T00:00:00</EndDate>
+      </Clock>
+      <Summary>
+        <Name>summaryfile</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Summary>
+      <Weather>
+        <Name>Weather</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FileName>lincoln from 2014.met</FileName>
+        <ExcelWorkSheetName />
+      </Weather>
+      <SoilArbitrator>
+        <Name>Soil Arbitrator</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </SoilArbitrator>
+      <Zone>
+        <Name>paddock</Name>
+        <Folder>
+          <Name>Manager folder</Name>
+          <Operations>
+            <Name>GeneralIrrigation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2016-09-02</Date>
+              <Action>[Irrigation].Apply(25.0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2016-10-25</Date>
+              <Action>[Irrigation].Apply(5.0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2016-10-28</Date>
+              <Action>[Irrigation].Apply(5.0);</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>Irrig</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Operations>
+          <Operations>
+            <Name>Fert</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2016-10-29</Date>
+              <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-01-18</Date>
+              <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);</Action>
+            </Operation>
+            <Operation>
+              <Date>2017-02-25</Date>
+              <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>Testing</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Operations>
+          <Manager>
+            <Name>CropOperations</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <FodderBeetPlantingDate>2016-10-18</FodderBeetPlantingDate>
+              <FodderBeetHarvestingDate>2017-05-30</FodderBeetHarvestingDate>
+            </Script>
+            <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[ScopedLinkByName] Plant FodderBeet;
+		[Link] Clock Clock;
+		
+		[Description("FodderBeet Planting Date")]
+		public DateTime FodderBeetPlantingDate { get; set; }
+		[Description("FodderBeet Harvesting Date")]
+		public DateTime FodderBeetHarvestingDate { get; set; }
+
+		[XmlIgnore] public string CropSown { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			CropSown = "Fallow";
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == FodderBeetPlantingDate)
+			{
+				FodderBeet.Sow(population: 11, cultivar: "Rivage", depth: 15, rowSpacing: 450);
+				CropSown = "FodderBeet";
+			}
+			
+
+			if (Clock.Today.Date == FodderBeetHarvestingDate)
+			{
+				FodderBeet.Harvest();
+				FodderBeet.EndCrop();
+				CropSown = "Fallow";
+			}
+			
+
+		}
+		
+	}
+}
+				]]></Code>
+          </Manager>
+          <Manager>
+            <Name>ClimateControl</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <StartDate>2016-10-17</StartDate>
+              <EndDate>2017-05-20</EndDate>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+
+
+
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Weather Met;
+		[Link] Clock Clock;
+    
+		[Description("Start Date")]
+		public DateTime StartDate { get; set; }
+        
+		[Description("End Date")]
+		public DateTime EndDate { get; set; }
+ 
+    
+		[EventSubscribe("PreparingNewWeatherData")]
+		private void OnPreparingNewWeatherData(object sender, EventArgs e)
+		{
+			if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
+				Met.Rain = 0;		
+		}
+	}
+}]]></Code>
+          </Manager>
+          <Manager>
+            <Name>StateFactors</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <IrrFactor>False</IrrFactor>
+              <NitFactor>0</NitFactor>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Irrigation Irrigation;
+		[Link] Fertiliser Fert;
+		[Link] Soil ThisSoil;
+		[Description("Amount of Irrgation be applied 0/1")]
+		public bool IrrFactor { get; set; }
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double NitFactor { get; set; }
+		
+          
+		private void SetSoilLayers()
+		{
+			/*
+            Not used yrt use whenmore detailed info is known
+            */
+			int i = 0;
+			if ((IrrFactor == false) && (NitFactor == 0))
+			{
+				if (ThisSoil.Thickness.Length != 7)
+				{
+					throw new Exception("Soil layer exception");
+				}
+			 
+				ThisSoil.LL15[0] = 0.06;
+				ThisSoil.LL15[1] = 0.06;
+				ThisSoil.LL15[2] = 0.08;
+				ThisSoil.LL15[3] = 0.14;
+				ThisSoil.LL15[4] = 0.16;
+				ThisSoil.LL15[5] = 0.16;
+				ThisSoil.LL15[6] = 0.11;
+				ThisSoil.DUL[0] = 0.34;
+				ThisSoil.DUL[1] = 0.3;
+				ThisSoil.DUL[2] = 0.28;
+				ThisSoil.DUL[3] = 0.3;
+				ThisSoil.DUL[4] = 0.3;
+				ThisSoil.DUL[5] = 0.30;
+				ThisSoil.DUL[6] = 0.3;
+				ThisSoil.SAT[0] = 0.4;
+				ThisSoil.SAT[1] = 0.4;
+				ThisSoil.SAT[2] = 0.4;
+				ThisSoil.SAT[3] = 0.4;
+				ThisSoil.SAT[4] = 0.4;
+				ThisSoil.SAT[5] = 0.4;
+				ThisSoil.SAT[6] = 0.4;
+				ThisSoil.SoilWater.Reset();
+			}   
+			if ((IrrFactor == false) && (NitFactor == 50))
+			{
+				if (ThisSoil.Thickness.Length != 7)
+				{
+					throw new Exception("Soil layer exception");
+				}
+			 
+				ThisSoil.LL15[0] = 0.07;
+				ThisSoil.LL15[1] = 0.12;
+				ThisSoil.LL15[2] = 0.17;
+				ThisSoil.LL15[3] = 0.20;
+				ThisSoil.LL15[4] = 0.26;
+				ThisSoil.LL15[5] = 0.32;
+				ThisSoil.LL15[6] = 0.30;
+				ThisSoil.DUL[0] = 0.30;
+				ThisSoil.DUL[1] = 0.26;
+				ThisSoil.DUL[2] = 0.29;
+				ThisSoil.DUL[3] = 0.25;
+				ThisSoil.DUL[4] = 0.29;
+				ThisSoil.DUL[5] = 0.34;
+				ThisSoil.DUL[6] = 0.30;
+				ThisSoil.SAT[0] = 0.34;
+				ThisSoil.SAT[1] = 0.34;
+				ThisSoil.SAT[2] = 0.34;
+				ThisSoil.SAT[3] = 0.34;
+				ThisSoil.SAT[4] = 0.34;
+				ThisSoil.SAT[5] = 0.34;
+				ThisSoil.SAT[6] = 0.34;
+				ThisSoil.SoilWater.Reset();
+			}   
+			if ((IrrFactor == false) && (NitFactor == 50))
+			{
+				if (ThisSoil.Thickness.Length != 7)
+				{
+					throw new Exception("Soil layer exception");
+				}
+			 
+				ThisSoil.LL15[0] = 0.06;
+				ThisSoil.LL15[1] = 0.11;
+				ThisSoil.LL15[2] = 0.21;
+				ThisSoil.LL15[3] = 0.18;
+				ThisSoil.LL15[4] = 0.23;
+				ThisSoil.LL15[5] = 0.30;
+				ThisSoil.LL15[6] = 0.26;
+				ThisSoil.DUL[0] = 0.25;
+				ThisSoil.DUL[1] = 0.26;
+				ThisSoil.DUL[2] = 0.30;
+				ThisSoil.DUL[3] = 0.27;
+				ThisSoil.DUL[4] = 0.34;
+				ThisSoil.DUL[5] = 0.27;
+				ThisSoil.DUL[6] = 0.30;
+				ThisSoil.SAT[0] = 0.34;
+				ThisSoil.SAT[1] = 0.34;
+				ThisSoil.SAT[2] = 0.34;
+				ThisSoil.SAT[3] = 0.34;
+				ThisSoil.SAT[4] = 0.34;
+				ThisSoil.SAT[5] = 0.34;
+				ThisSoil.SAT[6] = 0.34;
+				ThisSoil.SoilWater.Reset();
+			}   
+			if ((IrrFactor == true) && (NitFactor == 0))
+			{
+				if (ThisSoil.Thickness.Length != 7)
+				{
+					throw new Exception("Soil layer exception");
+				}
+			 
+				ThisSoil.LL15[0] = 0.13;
+				ThisSoil.LL15[1] = 0.21;
+				ThisSoil.LL15[2] = 0.25;
+				ThisSoil.LL15[3] = 0.19;
+				ThisSoil.LL15[4] = 0.29;
+				ThisSoil.LL15[5] = 0.32;
+				ThisSoil.LL15[6] = 0.34;
+				ThisSoil.DUL[0] = 0.31;
+				ThisSoil.DUL[1] = 0.28;
+				ThisSoil.DUL[2] = 0.30;
+				ThisSoil.DUL[3] = 0.28;
+				ThisSoil.DUL[4] = 0.29;
+				ThisSoil.DUL[5] = 0.34;
+				ThisSoil.DUL[6] = 0.30;
+				ThisSoil.SAT[0] = 0.34;
+				ThisSoil.SAT[1] = 0.34;
+				ThisSoil.SAT[2] = 0.34;
+				ThisSoil.SAT[3] = 0.34;
+				ThisSoil.SAT[4] = 0.34;
+				ThisSoil.SAT[5] = 0.34;
+				ThisSoil.SAT[6] = 0.34;
+				ThisSoil.SoilWater.Reset();
+			}   
+			if ((IrrFactor == true) && (NitFactor == 50))
+			{
+				if (ThisSoil.Thickness.Length != 7)
+				{
+					throw new Exception("Soil layer exception");
+				}
+			 
+				ThisSoil.LL15[0] = 0.14;
+				ThisSoil.LL15[1] = 0.21;
+				ThisSoil.LL15[2] = 0.27;
+				ThisSoil.LL15[3] = 0.27;
+				ThisSoil.LL15[4] = 0.27;
+				ThisSoil.LL15[5] = 0.32;
+				ThisSoil.LL15[6] = 0.30;
+				ThisSoil.DUL[0] = 0.31;
+				ThisSoil.DUL[1] = 0.28;
+				ThisSoil.DUL[2] = 0.30;
+				ThisSoil.DUL[3] = 0.28;
+				ThisSoil.DUL[4] = 0.29;
+				ThisSoil.DUL[5] = 0.34;
+				ThisSoil.DUL[6] = 0.30;
+				ThisSoil.SAT[0] = 0.34;
+				ThisSoil.SAT[1] = 0.34;
+				ThisSoil.SAT[2] = 0.34;
+				ThisSoil.SAT[3] = 0.34;
+				ThisSoil.SAT[4] = 0.34;
+				ThisSoil.SAT[5] = 0.34;
+				ThisSoil.SAT[6] = 0.34;
+				ThisSoil.SoilWater.Reset();
+			}
+			if ((IrrFactor == true) && (NitFactor == 250))
+			{
+				if (ThisSoil.Thickness.Length != 7)
+				{
+					throw new Exception("Soil layer exception");
+				}
+			 
+				ThisSoil.LL15[0] = 0.12;
+				ThisSoil.LL15[1] = 0.18;
+				ThisSoil.LL15[2] = 0.17;
+				ThisSoil.LL15[3] = 0.20;
+				ThisSoil.LL15[4] = 0.27;
+				ThisSoil.LL15[5] = 0.27;
+				ThisSoil.LL15[6] = 0.21;
+				ThisSoil.DUL[0] = 0.31;
+				ThisSoil.DUL[1] = 0.28;
+				ThisSoil.DUL[2] = 0.30;
+				ThisSoil.DUL[3] = 0.28;
+				ThisSoil.DUL[4] = 0.29;
+				ThisSoil.DUL[5] = 0.34;
+				ThisSoil.DUL[6] = 0.30;
+				ThisSoil.SAT[0] = 0.34;
+				ThisSoil.SAT[1] = 0.34;
+				ThisSoil.SAT[2] = 0.34;
+				ThisSoil.SAT[3] = 0.34;
+				ThisSoil.SAT[4] = 0.34;
+				ThisSoil.SAT[5] = 0.34;
+				ThisSoil.SAT[6] = 0.34;
+				ThisSoil.SoilWater.Reset();
+			}
+		}
+
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			//	SetSoilLayers();
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			//Specific irrgations
+			
+			//Fodderbeet
+			
+			if ((IrrFactor == true) && (NitFactor == 300))
+			{
+				if ((DateUtilities.CompareDates("1-Feb", Clock.Today) == 0))
+					Irrigation.Apply(40);
+				if ((DateUtilities.CompareDates("1-Mar", Clock.Today) == 0))
+					Irrigation.Apply(36);
+			}
+	    
+			//Oats
+			if (Clock.Today.Year == 2017)
+			if ((DateUtilities.CompareDates("5-Jul", Clock.Today) == 0))
+			if (IrrFactor == true)
+			{
+				if (NitFactor == 0)
+					Fert.Apply(40, Models.Fertiliser.Types.NO3N, 10);
+				if (NitFactor == 50)
+					Fert.Apply(85, Models.Fertiliser.Types.NO3N, 10);
+				if (NitFactor == 300)
+					Fert.Apply(270, Models.Fertiliser.Types.NO3N, 10);
+			   
+			}
+			 
+			
+			
+		}
+	}
+		
+		
+}
+	
+
+
+	  
+]]></Code>
+          </Manager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
+        </Folder>
+        <MicroClimate>
+          <Name>MicroClimate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
+          <sun_angle>15</sun_angle>
+          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+          <night_interception_fraction>0.5</night_interception_fraction>
+          <refheight>2</refheight>
+          <albedo>0.29366217672824863</albedo>
+          <emissivity>0.96</emissivity>
+          <RadIntTotal>0</RadIntTotal>
+        </MicroClimate>
+        <Irrigation>
+          <Name>Irrigation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Irrigation>
+        <Fertiliser>
+          <Name>Fertiliser</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Fertiliser>
+        <SurfaceOrganicMatter>
+          <Name>Surface Organic Matter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>wheat_stubble</PoolName>
+              <ResidueType>wheat</ResidueType>
+              <Mass>1500</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>wheat_stubble</PoolName>
+          <type>wheat</type>
+          <mass>1500</mass>
+          <standing_fraction>0</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        </SurfaceOrganicMatter>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SoluteManager>
+        <Soil>
+          <Name>Soil</Name>
+          <Analysis>
+            <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <PH>
+              <double>6.6</double>
+              <double>6.2</double>
+              <double>5.7</double>
+              <double>5.5</double>
+              <double>5.5</double>
+              <double>5.5</double>
+            </PH>
+            <PHUnits>Water</PHUnits>
+            <BoronUnits>HotWater</BoronUnits>
+          </Analysis>
+          <Water>
+            <Name>Water</Name>
+            <SoilCrop>
+              <Name>OatsSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <LL>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.149</double>
+                <double>0.129</double>
+                <double>0.155</double>
+                <double>0.149</double>
+                <double>0.053</double>
+                <double>0.061</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.05</double>
+                <double>0.08</double>
+                <double>0.03</double>
+                <double>0.01</double>
+                <double>0</double>
+                <double>0</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <SoilCrop>
+              <Name>FodderBeetSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <LL>
+                <double>0.12</double>
+                <double>0.12</double>
+                <double>0.12</double>
+                <double>0.12</double>
+                <double>0.12</double>
+                <double>0.12</double>
+                <double>0.12</double>
+                <double>0.12</double>
+              </LL>
+              <KL>
+                <double>0.1</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>200</double>
+            </Thickness>
+            <BD>
+              <double>1</double>
+              <double>1.32</double>
+              <double>1.35</double>
+              <double>1.3</double>
+              <double>1.3</double>
+              <double>1.3</double>
+              <double>1.3</double>
+              <double>1.601</double>
+            </BD>
+            <AirDry>
+              <double>0.05</double>
+              <double>0.1</double>
+              <double>0.149</double>
+              <double>0.14</double>
+              <double>0.15</double>
+              <double>0.149</double>
+              <double>0.1</double>
+              <double>0.06</double>
+            </AirDry>
+            <LL15>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+            </LL15>
+            <DUL>
+              <double>0.32</double>
+              <double>0.32</double>
+              <double>0.32</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.22</double>
+            </DUL>
+            <SAT>
+              <double>0.35</double>
+              <double>0.35</double>
+              <double>0.342</double>
+              <double>0.322</double>
+              <double>0.348</double>
+              <double>0.342</double>
+              <double>0.307</double>
+              <double>0.309</double>
+            </SAT>
+            <KS>
+              <double>4832.039</double>
+              <double>389.229</double>
+              <double>16.362</double>
+              <double>97.995</double>
+              <double>97.995</double>
+              <double>97.995</double>
+              <double>97.995</double>
+              <double>97.995</double>
+            </KS>
+          </Water>
+          <SoilWater>
+            <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <SummerDate>1-Nov</SummerDate>
+            <SummerU>6</SummerU>
+            <SummerCona>2</SummerCona>
+            <WinterDate>1-Apr</WinterDate>
+            <WinterU>9</WinterU>
+            <WinterCona>4.4</WinterCona>
+            <DiffusConst>0</DiffusConst>
+            <DiffusSlope>0</DiffusSlope>
+            <Salb>0.18</Salb>
+            <CN2Bare>68</CN2Bare>
+            <CNRed>20</CNRed>
+            <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
+            <Thickness>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+            </Thickness>
+            <SWCON>
+              <double>0.7</double>
+              <double>0.7</double>
+              <double>0.95</double>
+              <double>0.95</double>
+              <double>0.95</double>
+              <double>0.95</double>
+              <double>0.95</double>
+              <double>0.95</double>
+            </SWCON>
+            <KLAT>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KLAT>
+            <residueinterception>0</residueinterception>
+          </SoilWater>
+          <SoilNitrogen>
+            <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <fom_type>
+              <string>default</string>
+              <string>manure</string>
+              <string>mucuna</string>
+              <string>lablab</string>
+              <string>shemp</string>
+              <string>stable</string>
+            </fom_type>
+            <fract_carb>
+              <double>0.2</double>
+              <double>0.3</double>
+              <double>0.54</double>
+              <double>0.57</double>
+              <double>0.45</double>
+              <double>0</double>
+            </fract_carb>
+            <fract_cell>
+              <double>0.7</double>
+              <double>0.3</double>
+              <double>0.37</double>
+              <double>0.37</double>
+              <double>0.47</double>
+              <double>0.1</double>
+            </fract_cell>
+            <fract_lign>
+              <double>0.1</double>
+              <double>0.4</double>
+              <double>0.09</double>
+              <double>0.06</double>
+              <double>0.08</double>
+              <double>0.9</double>
+            </fract_lign>
+          </SoilNitrogen>
+          <SoilOrganicMatter>
+            <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <RootCN>40</RootCN>
+            <RootWt>1000</RootWt>
+            <SoilCN>11</SoilCN>
+            <EnrACoeff>7.4</EnrACoeff>
+            <EnrBCoeff>0.2</EnrBCoeff>
+            <Thickness>
+              <double>180</double>
+              <double>150</double>
+              <double>400</double>
+              <double>270</double>
+              <double>500</double>
+            </Thickness>
+            <Depth>
+              <string>0-18</string>
+              <string>18-33</string>
+              <string>33-73</string>
+              <string>73-100</string>
+              <string>100-150</string>
+            </Depth>
+            <OC>
+              <double>3</double>
+              <double>1.247</double>
+              <double>0.316</double>
+              <double>0.208</double>
+              <double>0.2</double>
+            </OC>
+            <FBiom>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.012</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </FBiom>
+            <FInert>
+              <double>0.437</double>
+              <double>0.657</double>
+              <double>0.85</double>
+              <double>0.945</double>
+              <double>0.983</double>
+            </FInert>
+            <OCUnits>Total</OCUnits>
+          </SoilOrganicMatter>
+          <Sample>
+            <Name>Initial Soil Settings</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Thickness>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+            </Thickness>
+            <NO3>
+              <double>18</double>
+              <double>3</double>
+              <double>5</double>
+              <double>2</double>
+              <double>2</double>
+              <double>2</double>
+              <double>3</double>
+              <double>3</double>
+            </NO3>
+            <NH4>
+              <double>32</double>
+              <double>17</double>
+              <double>6</double>
+              <double>5</double>
+              <double>5</double>
+              <double>5</double>
+              <double>5</double>
+              <double>5</double>
+            </NH4>
+            <SW>
+              <double>0.3</double>
+              <double>0.28</double>
+              <double>0.24</double>
+              <double>0.24</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.22</double>
+            </SW>
+            <NO3Units>kgha</NO3Units>
+            <NH4Units>kgha</NH4Units>
+            <SWUnits>Volumetric</SWUnits>
+            <OCUnits>Total</OCUnits>
+            <PHUnits>Water</PHUnits>
+          </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <RecordNumber>0</RecordNumber>
+          <SoilType>NZ_sedementary</SoilType>
+          <LocalName />
+          <Site />
+          <NearestTown />
+          <Region>Plains</Region>
+          <State>Canterbury </State>
+          <Country>New Zealnd</Country>
+          <NaturalVegetation />
+          <Latitude>0</Latitude>
+          <Longitude>0</Longitude>
+        </Soil>
+        <Plant>
+          <Name>FodderBeet</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Plant>
+        <Report>
+          <Name>EnviroReport</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Weather].MeanT</string>
+            <string>[Weather].Radn</string>
+            <string>[Weather].Rain</string>
+            <string>[Irrigation].IrrigationApplied</string>
+            <string>[FodderBeet].WaterSupplyDemandRatio</string>
+            <string>[MicroClimate].interception as Interception</string>
+            <string>[Soil].SoilWater.Es as Evaporation</string>
+            <string>[Soil].SoilWater.Drainage as Drainage</string>
+            <string>[Soil].SoilWater.Runoff as Runoff</string>
+            <string>sum([Soil].SoilWater.SWmm) as TotalSoilWater</string>
+            <string />
+            <string>sum([Soil].SoilNitrogen.MineralisedN) as MineralisedN</string>
+            <string>[Fertiliser].NitrogenApplied as FertiliserN</string>
+            <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
+            <string>([Soil].SoilWater.LeachUrea+[Soil].SoilWater.LeachNH4+[Soil].SoilWater.LeachNO3) as NLeached</string>
+            <string>[SurfaceOrganicMatter].N as TotalSurfOMN</string>
+            <string>sum([Soil].SoilNitrogen.FOMN) as TotalFOMN</string>
+            <string>sum([Soil].SoilNitrogen.MicrobialN) as TotalMicrobialN</string>
+            <string>sum([Soil].SoilNitrogen.HumicN) as TotalHumicN</string>
+            <string>(sum([Soil].SoilNitrogen.NH4) + sum([Soil].SoilNitrogen.NO3)) as TotalSoilN</string>
+            <string>sum([Soil].SoilNitrogen.urea) as TotalUrea</string>
+            <string>sum([Soil].SoilNitrogen.NH4) as TotalNH4</string>
+            <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>DailyReport</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Weather].MeanT</string>
+            <string>[Soil].SoilWater.SW</string>
+            <string>[Soil].SoilWater.SWmm</string>
+            <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+            <string>[FodderBeet].AboveGround.N</string>
+            <string>[FodderBeet].AboveGround.Wt</string>
+            <string>[FodderBeet].AboveGroundLive.N</string>
+            <string>[FodderBeet].AboveGroundLive.Wt</string>
+            <string>[FodderBeet].AboveGroundDead.N</string>
+            <string>[FodderBeet].AboveGroundDead.Wt</string>
+            <string>[FodderBeet].Arbitrator.DMDemand</string>
+            <string>[FodderBeet].Arbitrator.DM.TotalFixationSupply</string>
+            <string>[FodderBeet].Leaf.AppearedCohortNo</string>
+            <string>[FodderBeet].Leaf.CoverDead</string>
+            <string>[FodderBeet].Leaf.CoverGreen</string>
+            <string>[FodderBeet].Leaf.CoverTotal</string>
+            <string>[FodderBeet].Leaf.Dead.N</string>
+            <string>[FodderBeet].Leaf.Dead.NConc</string>
+            <string>[FodderBeet].Leaf.Dead.Wt</string>
+            <string>[FodderBeet].Leaf.DeadCohortNo</string>
+            <string>[FodderBeet].Leaf.SenescingCohortNo</string>
+            <string>[FodderBeet].Leaf.ExpandedCohortNo</string>
+            <string>[FodderBeet].Leaf.Fn</string>
+            <string>[FodderBeet].Leaf.Fw</string>
+            <string>[FodderBeet].Leaf.Height</string>
+            <string>[FodderBeet].Leaf.InitialisedCohortNo</string>
+            <string>[FodderBeet].Leaf.LAI</string>
+            <string>[FodderBeet].Leaf.Live.N</string>
+            <string>[FodderBeet].Leaf.Live.NConc</string>
+            <string>[FodderBeet].Leaf.Live.Wt</string>
+            <string>[FodderBeet].Leaf.SpecificArea</string>
+            <string>[FodderBeet].Leaf.Transpiration</string>
+            <string>[FodderBeet].Phenology.CurrentPhaseName</string>
+            <string>[FodderBeet].Phenology.CurrentStageName</string>
+            <string>[FodderBeet].Phenology.DailyVernalisation.Value()</string>
+            <string>[FodderBeet].Phenology.MeanTemp.Value()</string>
+            <string>[FodderBeet].Phenology.Photoperiod.Value()</string>
+            <string>[FodderBeet].Phenology.Stage</string>
+            <string>[FodderBeet].Phenology.ThermalTime.Value()</string>
+            <string>[FodderBeet].Phenology.ThermalTime.Value()  </string>
+            <string>[FodderBeet].Phenology.Vrn1.Value()</string>
+            <string>[FodderBeet].Phenology.Vrn2.Value()</string>
+            <string>[FodderBeet].Phenology.Vrn4.Value()</string>
+            <string>[FodderBeet].Phenology.Zadok.Stage</string>
+            <string>[FodderBeet].Root.Depth</string>
+            <string>[FodderBeet].Root.N</string>
+            <string>[FodderBeet].Root.Wt</string>
+            <string>[FodderBeet].Root.Nconc</string>
+            <string>[FodderBeet].Root.WaterUptake</string>
+            <string>[FodderBeet].StorageRoot.N</string>
+            <string>[FodderBeet].StorageRoot.NConc</string>
+            <string>[FodderBeet].StorageRoot.Wt</string>
+            <string>[FodderBeet].StorageRoot.Live.StorageWt</string>
+            <string>[FodderBeet].Petiole.N</string>
+            <string>[FodderBeet].Petiole.NConc</string>
+            <string>[FodderBeet].Petiole.Wt</string>
+            <string>[FodderBeet].Petiole.PercentWSC</string>
+            <string>[FodderBeet].Petiole.Live.StorageWt</string>
+            <string>[FodderBeet].SowingData.Cultivar</string>
+            <string>[FodderBeet].Structure.Height</string>
+            <string>[FodderBeet].Structure.LeafTipsAppeared</string>
+            <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
+            <string>[FodderBeet].Structure.MainStemPopn</string>
+            <string>[FodderBeet].Structure.TotalStemPopn</string>
+            <string>[FodderBeet].Total.N</string>
+            <string>[FodderBeet].Total.Wt</string>
+            <string>[SurfaceOrganicMatter].Wt</string>
+            <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilNitrogen</string>
+            <string>[FodderBeet].Phenology.FlagLeafDAS</string>
+            <string>[FodderBeet].Phenology.FloweringDAS</string>
+            <string>[FodderBeet].Phenology.MaturityDAS</string>
+            <string>[FodderBeet].Phenology.PhotoPeriod</string>
+            <string>[FodderBeet].Phenology.PhotoPeriodDeltaFunction</string>
+            <string>[FodderBeet].Phenology.Stage</string>
+            <string>[FodderBeet].Phenology.SoilTemperatureFunction.Value()</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>1</Area>
+        <Slope>0</Slope>
+      </Zone>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Simulation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Experiment>
   <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>383</ExplorerWidth>
 </Simulations>
