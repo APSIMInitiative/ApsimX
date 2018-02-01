@@ -2446,17 +2446,44 @@ namespace Models.Soils
             }
         }
         /// <summary>Setter for urea</summary>
+        /// <remarks>
+        /// This is necessary to allow the use of the SoilCNPatch capability
+        /// The values passed, or in fact the deltas, need to be partitioned appropriately when there is more than one CNPatch
+        /// </remarks>
         /// <param name="callingModelType">Type of calling model</param>
-        /// <param name="value">Values</param>
+        /// <param name="value">New values</param>
         public void Seturea(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
-            //double sumOld = MathUtilities.Sum(urea);
-
+            // get the delta N
+            double[] deltaN = new double[value.Length];
+            bool hasChanges = false;
             for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].urea[layer] = value[layer];
+            {
+                deltaN[layer] = value[layer] - urea[layer];
+                if (Math.Abs(deltaN[layer]) > epsilon)
+                    hasChanges = true;
+            }
 
-            // SendExternalMassFlowN(MathUtilities.Sum(urea) - sumOld); //TODO:is this still needed?
+            // check partitioning and pass the appropriate values to patches
+            if (hasChanges)
+            {
+                if ((Patch.Count > 1) &&
+                ((callingModelType == SoluteManager.SoluteSetterType.Soil) ||
+                (callingModelType == SoluteManager.SoluteSetterType.Plant)))
+                {
+                    // the values come from a module that requires partition
+                    double[][] newDelta = partitionDelta(deltaN, "Urea", patchNPartitionApproach.ToLower());
+
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_urea = newDelta[k];
+                }
+                else
+                {
+                    // the values come from a module that do not require partition or there is only one patch
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_urea = deltaN;
+                }
+            }
         }
 
         /// <summary>
@@ -2477,18 +2504,45 @@ namespace Models.Soils
                 return result;
             }
         }
-        /// <summary>Setter for urea</summary>
+        /// <summary>Setter for NH4</summary>
+        /// <remarks>
+        /// This is necessary to allow the use of the SoilCNPatch capability
+        /// The values passed, or in fact the deltas, need to be partitioned appropriately when there is more than one CNPatch
+        /// </remarks>
         /// <param name="callingModelType">Type of calling model</param>
-        /// <param name="value">Values</param>
+        /// <param name="value">New values</param>
         public void SetNH4(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
-            //double sumOld = MathUtilities.Sum(NH4);
-
+            // get the delta N
+            double[] deltaN = new double[value.Length];
+            bool hasChanges = false;
             for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].nh4[layer] = value[layer];
+            {
+                deltaN[layer] = value[layer] - NH4[layer];
+                if (Math.Abs(deltaN[layer]) > epsilon)
+                    hasChanges = true;
+            }
 
-            // SendExternalMassFlowN(MathUtilities.Sum(NH4) - sumOld); //TODO:is this still needed?
+            // check partitioning and pass the appropriate values to patches
+            if (hasChanges)
+            {
+                if ((Patch.Count > 1) &&
+                ((callingModelType == SoluteManager.SoluteSetterType.Soil) ||
+                (callingModelType == SoluteManager.SoluteSetterType.Plant)))
+                {
+                    // the values come from a module that requires partition
+                    double[][] newDelta = partitionDelta(deltaN, "NH4", patchNPartitionApproach.ToLower());
+
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_nh4 = newDelta[k];
+                }
+                else
+                {
+                    // the values come from a module that do not require partition or there is only one patch
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_nh4 = deltaN;
+                }
+            }
         }
 
         /// <summary>
@@ -2514,18 +2568,45 @@ namespace Models.Soils
                 return null;
             }
         }
-        /// <summary>Setter for urea</summary>
+        /// <summary>Setter for NO3</summary>
+        /// <remarks>
+        /// This is necessary to allow the use of the SoilCNPatch capability
+        /// The values passed, or in fact the deltas, need to be partitioned appropriately when there is more than one CNPatch
+        /// </remarks>
         /// <param name="callingModelType">Type of calling model</param>
-        /// <param name="value">Values</param>
+        /// <param name="value">New values</param>
         public void SetNO3(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
-            //double sumOld = MathUtilities.Sum(NO3);
-
+            // get the delta N
+            double[] deltaN = new double[value.Length];
+            bool hasChanges = false;
             for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].no3[layer] = value[layer];
+            {
+                deltaN[layer] = value[layer] - NO3[layer];
+                if (Math.Abs(deltaN[layer]) > epsilon)
+                    hasChanges = true;
+            }
 
-            // SendExternalMassFlowN(MathUtilities.Sum(NO3) - sumOld); //TODO:is this still needed?
+            // check partitioning and pass the appropriate values to patches
+            if (hasChanges)
+            {
+                if ((Patch.Count > 1) &&
+                ((callingModelType == SoluteManager.SoluteSetterType.Soil) ||
+                (callingModelType == SoluteManager.SoluteSetterType.Plant)))
+                {
+                    // the values come from a module that requires partition
+                    double[][] newDelta = partitionDelta(deltaN, "NO3", patchNPartitionApproach.ToLower());
+
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_no3 = newDelta[k];
+                }
+                else
+                {
+                    // the values come from a module that do not require partition or there is only one patch
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_no3 = deltaN;
+                }
+            }
         }
 
         /// <summary>
