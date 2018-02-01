@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="23">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="24">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -1179,7 +1179,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
-        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <Leaves />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -1447,11 +1446,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
-        <CarbonConcentration>0</CarbonConcentration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <ZoneNamesToGrowRootsIn />
-        <ZoneRootDepths />
-        <ZoneInitialDM />
       </Root>
       <GenericOrgan>
         <Name>StorageRoot</Name>
@@ -1615,7 +1610,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <FixedValue>0.4</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Petiole</Name>
@@ -1773,7 +1767,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <FixedValue>0.4</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <CarbonConcentration>0</CarbonConcentration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -1954,7 +1947,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
     <Input>
       <Name>ObservedData</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\FodderBeet\Observations\MergedObsData.txt' because it is being used by another process.</ErrorMessage>
       <FileName>Observations\MergedobservedData.txt</FileName>
     </Input>
     <PredictedObserved>
@@ -3220,52 +3213,52 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Soils.Soil Soil;
-		[Link] Clock Clock;
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Soils.Soil Soil;
+        [Link] Clock Clock;
 
-		[EventSubscribe("DoInitialSummary")]
-		private void OnDoInitialSummary(object sender, EventArgs e)
-		{
-			//Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
-			//Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
-			//Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
-			//Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
-			//Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
-			//Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
-			//Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
-			//Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+        [EventSubscribe("DoInitialSummary")]
+        private void OnDoInitialSummary(object sender, EventArgs e)
+        {
+            //Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
+            //Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
+            //Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
+            //Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
+            //Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
+            //Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
+            //Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
+            //Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
 
-			Soil.SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };
-			Soil.SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };
-			Soil.SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };
-			Soil.SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };
-			Soil.SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };
-			Soil.SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };
-			Soil.SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };
-			Soil.SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };
-			//Soil.SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; 
-			//Soil.SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			
-			DateTime ChangeDate = new DateTime(2012, 10, 29);
-			if (Clock.Today.Date == ChangeDate)
-			{
-				//Soil.InitialNO3N = new double[] { 52, 26, 12, 16, 10, 0.5 };
-				//Soil.InitialNH4N = new double[] { 52, 26, 12, 16, 10, 0.5 };
-				
-			}
-						
-			
-		}
+            Soil.SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };
+            Soil.SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };
+            Soil.SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };
+            Soil.SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };
+            Soil.SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };
+            Soil.SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };
+            Soil.SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };
+            Soil.SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };
+            //Soil.SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; 
+            //Soil.SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+            DateTime ChangeDate = new DateTime(2012, 10, 29);
+            if (Clock.Today.Date == ChangeDate)
+            {
+                //Soil.InitialNO3N = new double[] { 52, 26, 12, 16, 10, 0.5 };
+                //Soil.InitialNH4N = new double[] { 52, 26, 12, 16, 10, 0.5 };
+                
+            }
+                        
+            
+        }
 
-	}
+    }
 }
 ]]></Code>
             </Manager>
@@ -3285,165 +3278,165 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;
-		[Link] Plant FodderBeet;
-		[Link] Zone zone;
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-		[XmlIgnore] public double DeltaSoilOMN { get; set; }
-		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
-		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
-		[XmlIgnore] public double SoilNitrogenContent { get; set; }
-		
-		
-		
-		[XmlIgnore] public double AccumEO { get; set; }
-		[XmlIgnore] public double AccumEP { get; set; }
-		[XmlIgnore] public double AccumES { get; set; }
-		[XmlIgnore] public double AccumDrainage { get; set; }
-		[XmlIgnore] public double AccumRunoff { get; set; }
-		[XmlIgnore] public double AccumOutflowLat { get; set; }
-		[XmlIgnore] public double AccumIrrigation { get; set; }
-		[XmlIgnore] public double AccumRainfall { get; set; }
-		[XmlIgnore] public double SoilWaterDeficit { get; set; }
-	
-		[XmlIgnore] public double  InitialSoilOMN { get; set; }
-		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
-		[XmlIgnore] public double  InitialMineralN { get; set; }
-		
-		
-		[XmlIgnore] public double SWC { get; set; }
-		[XmlIgnore] public double DUL { get; set; }
-		[XmlIgnore] public double OutFlowLat { get; set; }
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Soils.Soil Soil;
+        [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+        [Link] Weather Met;
+        [Link] Fertiliser Fert;
+        [Link] Irrigation Irrig;
+        [Link] Plant FodderBeet;
+        [Link] Zone zone;
+                    
+        [XmlIgnore] public bool InitialDay { get; set; }
+        
+        [XmlIgnore] public double AccumPlantN { get; set; }
+        [XmlIgnore] public double AccumMineralisation { get; set; }
+        [XmlIgnore] public double AccumDenit { get; set; }
+        [XmlIgnore] public double AccumFert { get; set; }
+        [XmlIgnore] public double AccumLeach { get; set; }
+        [XmlIgnore] public double AccumDetach { get; set; }
+        [XmlIgnore] public double DeltaSoilOMN { get; set; }
+        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }
+        [XmlIgnore] public double DeltaSoilMineralN { get; set; }
+        [XmlIgnore] public double SoilNitrogenContent { get; set; }
+        
+        
+        
+        [XmlIgnore] public double AccumEO { get; set; }
+        [XmlIgnore] public double AccumEP { get; set; }
+        [XmlIgnore] public double AccumES { get; set; }
+        [XmlIgnore] public double AccumDrainage { get; set; }
+        [XmlIgnore] public double AccumRunoff { get; set; }
+        [XmlIgnore] public double AccumOutflowLat { get; set; }
+        [XmlIgnore] public double AccumIrrigation { get; set; }
+        [XmlIgnore] public double AccumRainfall { get; set; }
+        [XmlIgnore] public double SoilWaterDeficit { get; set; }
+    
+        [XmlIgnore] public double  InitialSoilOMN { get; set; }
+        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }
+        [XmlIgnore] public double  InitialMineralN { get; set; }
+        
+        
+        [XmlIgnore] public double SWC { get; set; }
+        [XmlIgnore] public double DUL { get; set; }
+        [XmlIgnore] public double OutFlowLat { get; set; }
 
-		[XmlIgnore] public double FomN { get; set; }
-		[XmlIgnore] public double BiomN { get; set; }
-		[XmlIgnore] public double HumN { get; set; }
-		[XmlIgnore] public double OrganicN { get; set; }
-		[XmlIgnore] public double NO3N { get; set; }
-		[XmlIgnore] public double NH4N { get; set; }
-		[XmlIgnore] public double UreaN { get; set; }
-		[XmlIgnore] public double MineralN { get; set; }
-		[XmlIgnore] public double DltNMinRes { get; set; }
-		[XmlIgnore] public double DltNMinTot { get; set; }
-		[XmlIgnore] public double ResidueWt{ get; set; }
-		
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			InitialDay = true;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			//!!!!!! Nitrogen balance components !!!!!!
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			OrganicN = FomN + HumN + BiomN;
-			NO3N = MathUtilities.Sum(Soil.NO3N);
-			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
-			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-		
-			//Residue components//
-			ResidueWt = SOM.Wt;
-			//MathUtilities.Sum(SOM.dlt_SurfaceOM_wt);	Failed:)
-			
-			int layers = Soil.Thickness.Length;
-			if (InitialDay == true)
-			{
-				InitialSurfaceOMN = SOM.N;
-				InitialSoilOMN = OrganicN;
-				InitialMineralN = MineralN;
-				InitialDay = false;
-			}
-			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
-			//AccumLeach = AccumLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea; //Fails
-			AccumLeach = AccumLeach + Soil.SoilWater.LeachNO3;
-			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			//Root.Nuptake is now reported as Negative
-			AccumPlantN -= (double)zone.Get("FodderBeet.Root.NUptake");
-			DeltaSoilOMN = OrganicN - InitialSoilOMN;
-			DeltaSoilMineralN = MineralN - InitialMineralN;
-			SoilNitrogenContent = MineralN;
-	
-			
-			
-			//!!!!!! Water balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+        [XmlIgnore] public double FomN { get; set; }
+        [XmlIgnore] public double BiomN { get; set; }
+        [XmlIgnore] public double HumN { get; set; }
+        [XmlIgnore] public double OrganicN { get; set; }
+        [XmlIgnore] public double NO3N { get; set; }
+        [XmlIgnore] public double NH4N { get; set; }
+        [XmlIgnore] public double UreaN { get; set; }
+        [XmlIgnore] public double MineralN { get; set; }
+        [XmlIgnore] public double DltNMinRes { get; set; }
+        [XmlIgnore] public double DltNMinTot { get; set; }
+        [XmlIgnore] public double ResidueWt{ get; set; }
+        
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            InitialDay = true;
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            //!!!!!! Nitrogen balance components !!!!!!
+            FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+            HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+            BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+            OrganicN = FomN + HumN + BiomN;
+            NO3N = MathUtilities.Sum(Soil.NO3N);
+            NH4N = MathUtilities.Sum(Soil.NH4N);
+            UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+            MineralN = NO3N + NH4N + UreaN; 
+            DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+            DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+        
+            //Residue components//
+            ResidueWt = SOM.Wt;
+            //MathUtilities.Sum(SOM.dlt_SurfaceOM_wt);    Failed:)
+            
+            int layers = Soil.Thickness.Length;
+            if (InitialDay == true)
+            {
+                InitialSurfaceOMN = SOM.N;
+                InitialSoilOMN = OrganicN;
+                InitialMineralN = MineralN;
+                InitialDay = false;
+            }
+            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
+            //AccumLeach = AccumLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea; //Fails
+            AccumLeach = AccumLeach + Soil.SoilWater.LeachNO3;
+            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            //Root.Nuptake is now reported as Negative
+            AccumPlantN -= (double)zone.Get("FodderBeet.Root.NUptake");
+            DeltaSoilOMN = OrganicN - InitialSoilOMN;
+            DeltaSoilMineralN = MineralN - InitialMineralN;
+            SoilNitrogenContent = MineralN;
+    
+            
+            
+            //!!!!!! Water balance components !!!!!!
+            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 
-			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[FodderBeet].Stover.Transpiration");
-			AccumEP -= (double)zone.Get("FodderBeet.Root.WaterUptake");
-			SoilWaterDeficit = (SWC - DUL);
-			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
-			AccumOutflowLat -= OutFlowLat;
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			AccumFert += Fert.NitrogenApplied;
-			AccumIrrigation += Irrig.IrrigationApplied;
-			
-			
-			AccumEO -= Soil.SoilWater.Eo;
-			AccumES -= Soil.SoilWater.Es; 
-			AccumDrainage += Soil.SoilWater.Drainage;
-			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.DULmm);
-		}
-		
-		[EventSubscribe("PlantEnding")]
-		private void OnPlantEnding(object sender, EventArgs e)
-		{
-			AccumFert = 0;
-			AccumIrrigation = 0;
-			
-			
-			AccumEO = 0;
-			AccumES = 0;
-			AccumDrainage = 0;
-			AccumRunoff = 0;
-			
-			AccumLeach = 0;
-			AccumMineralisation = 0;
-			AccumDenit = 0;
-			AccumPlantN = 0;
-			
-			AccumRainfall = 0;
-			AccumEP = 0;
-			AccumOutflowLat = 0;
-			
-		}
-	}
+            AccumRainfall += Met.Rain;
+            //AccumEP -= (double)zone.Get("[FodderBeet].Stover.Transpiration");
+            AccumEP -= (double)zone.Get("FodderBeet.Root.WaterUptake");
+            SoilWaterDeficit = (SWC - DUL);
+            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
+            AccumOutflowLat -= OutFlowLat;
+        }
+        
+        [EventSubscribe("DoManagementCalculations")]
+        private void OnDoManagementCalculations(object sender, EventArgs e)
+        {
+            FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+            HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+            BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+            AccumFert += Fert.NitrogenApplied;
+            AccumIrrigation += Irrig.IrrigationApplied;
+            
+            
+            AccumEO -= Soil.SoilWater.Eo;
+            AccumES -= Soil.SoilWater.Es; 
+            AccumDrainage += Soil.SoilWater.Drainage;
+            AccumRunoff -= Soil.SoilWater.Runoff;
+            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
+            DUL = MathUtilities.Sum(Soil.DULmm);
+        }
+        
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            AccumFert = 0;
+            AccumIrrigation = 0;
+            
+            
+            AccumEO = 0;
+            AccumES = 0;
+            AccumDrainage = 0;
+            AccumRunoff = 0;
+            
+            AccumLeach = 0;
+            AccumMineralisation = 0;
+            AccumDenit = 0;
+            AccumPlantN = 0;
+            
+            AccumRainfall = 0;
+            AccumEP = 0;
+            AccumOutflowLat = 0;
+            
+        }
+    }
 }
-	  
+      
 ]]></Code>
             </Manager>
             <Manager>
@@ -3468,40 +3461,41 @@ using Models.SurfaceOM;
 
 namespace Models
 {
-	[Serializable] 
-	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant FodderBeet;
-		[Link] Clock Clock;
-		[Link] Zone zone;
-		[Link] Simulation Simulation;
-		[Link] SurfaceOrganicMatter SurfOM;
-		
-				
-		[Description("Initial Root Depth")]
-		public double InitialRootDepth { get; set; }
-		[Description("Sown Crop")]
-		public string CropToSow { get; set; }
-		[Description("Sowing Date")]
-		public DateTime SowingDate { get; set; }
-		
-		
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Clock.Today.Date == SowingDate)
-			{
-				FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
-				
-			}
-						
-			
-		}
-	}
+    [Serializable] 
+    //[System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Simulation Simulation;
+        [Link] SurfaceOrganicMatter SurfOM;
+        
+                
+        [Description("Initial Root Depth")]
+        public double InitialRootDepth { get; set; }
+        [Description("Sown Crop")]
+        public string CropToSow { get; set; }
+        [Description("Sowing Date")]
+        public DateTime SowingDate { get; set; }
+        
+        
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Clock.Today.Date == SowingDate)
+            {
+                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+                
+            }
+                        
+            
+        }
+    }
 }
-				]]></Code>
+                
+]]></Code>
             </Manager>
             <Operations>
               <Name>Irrigation_n_Fertiliser</Name>
@@ -5511,52 +5505,52 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Soils.Soil Soil;
-		[Link] Clock Clock;
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Soils.Soil Soil;
+        [Link] Clock Clock;
 
-		[EventSubscribe("DoInitialSummary")]
-		private void OnDoInitialSummary(object sender, EventArgs e)
-		{
-			//Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
-			//Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
-			//Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
-			//Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
-			//Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
-			//Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
-			//Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
-			//Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+        [EventSubscribe("DoInitialSummary")]
+        private void OnDoInitialSummary(object sender, EventArgs e)
+        {
+            //Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
+            //Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
+            //Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
+            //Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
+            //Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
+            //Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
+            //Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
+            //Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
 
-			Soil.SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };
-			Soil.SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };
-			Soil.SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };
-			Soil.SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };
-			Soil.SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };
-			Soil.SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };
-			Soil.SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };
-			Soil.SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };
-			//Soil.SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; 
-			//Soil.SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			
-			DateTime ChangeDate = new DateTime(2012, 10, 29);
-			if (Clock.Today.Date == ChangeDate)
-			{
-				//Soil.InitialNO3N = new double[] { 52, 26, 12, 16, 10, 0.5 };
-				//Soil.InitialNH4N = new double[] { 52, 26, 12, 16, 10, 0.5 };
-				
-			}
-						
-			
-		}
+            Soil.SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };
+            Soil.SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };
+            Soil.SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };
+            Soil.SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };
+            Soil.SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };
+            Soil.SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };
+            Soil.SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };
+            Soil.SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };
+            //Soil.SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; 
+            //Soil.SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+            DateTime ChangeDate = new DateTime(2012, 10, 29);
+            if (Clock.Today.Date == ChangeDate)
+            {
+                //Soil.InitialNO3N = new double[] { 52, 26, 12, 16, 10, 0.5 };
+                //Soil.InitialNH4N = new double[] { 52, 26, 12, 16, 10, 0.5 };
+                
+            }
+                        
+            
+        }
 
-	}
+    }
 }
 ]]></Code>
             </Manager>
@@ -5576,165 +5570,165 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;
-		[Link] Plant FodderBeet;
-		[Link] Zone zone;
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-		[XmlIgnore] public double DeltaSoilOMN { get; set; }
-		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
-		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
-		[XmlIgnore] public double SoilNitrogenContent { get; set; }
-		
-		
-		
-		[XmlIgnore] public double AccumEO { get; set; }
-		[XmlIgnore] public double AccumEP { get; set; }
-		[XmlIgnore] public double AccumES { get; set; }
-		[XmlIgnore] public double AccumDrainage { get; set; }
-		[XmlIgnore] public double AccumRunoff { get; set; }
-		[XmlIgnore] public double AccumOutflowLat { get; set; }
-		[XmlIgnore] public double AccumIrrigation { get; set; }
-		[XmlIgnore] public double AccumRainfall { get; set; }
-		[XmlIgnore] public double SoilWaterDeficit { get; set; }
-	
-		[XmlIgnore] public double  InitialSoilOMN { get; set; }
-		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
-		[XmlIgnore] public double  InitialMineralN { get; set; }
-		
-		
-		[XmlIgnore] public double SWC { get; set; }
-		[XmlIgnore] public double DUL { get; set; }
-		[XmlIgnore] public double OutFlowLat { get; set; }
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Soils.Soil Soil;
+        [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+        [Link] Weather Met;
+        [Link] Fertiliser Fert;
+        [Link] Irrigation Irrig;
+        [Link] Plant FodderBeet;
+        [Link] Zone zone;
+                    
+        [XmlIgnore] public bool InitialDay { get; set; }
+        
+        [XmlIgnore] public double AccumPlantN { get; set; }
+        [XmlIgnore] public double AccumMineralisation { get; set; }
+        [XmlIgnore] public double AccumDenit { get; set; }
+        [XmlIgnore] public double AccumFert { get; set; }
+        [XmlIgnore] public double AccumLeach { get; set; }
+        [XmlIgnore] public double AccumDetach { get; set; }
+        [XmlIgnore] public double DeltaSoilOMN { get; set; }
+        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }
+        [XmlIgnore] public double DeltaSoilMineralN { get; set; }
+        [XmlIgnore] public double SoilNitrogenContent { get; set; }
+        
+        
+        
+        [XmlIgnore] public double AccumEO { get; set; }
+        [XmlIgnore] public double AccumEP { get; set; }
+        [XmlIgnore] public double AccumES { get; set; }
+        [XmlIgnore] public double AccumDrainage { get; set; }
+        [XmlIgnore] public double AccumRunoff { get; set; }
+        [XmlIgnore] public double AccumOutflowLat { get; set; }
+        [XmlIgnore] public double AccumIrrigation { get; set; }
+        [XmlIgnore] public double AccumRainfall { get; set; }
+        [XmlIgnore] public double SoilWaterDeficit { get; set; }
+    
+        [XmlIgnore] public double  InitialSoilOMN { get; set; }
+        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }
+        [XmlIgnore] public double  InitialMineralN { get; set; }
+        
+        
+        [XmlIgnore] public double SWC { get; set; }
+        [XmlIgnore] public double DUL { get; set; }
+        [XmlIgnore] public double OutFlowLat { get; set; }
 
-		[XmlIgnore] public double FomN { get; set; }
-		[XmlIgnore] public double BiomN { get; set; }
-		[XmlIgnore] public double HumN { get; set; }
-		[XmlIgnore] public double OrganicN { get; set; }
-		[XmlIgnore] public double NO3N { get; set; }
-		[XmlIgnore] public double NH4N { get; set; }
-		[XmlIgnore] public double UreaN { get; set; }
-		[XmlIgnore] public double MineralN { get; set; }
-		[XmlIgnore] public double DltNMinRes { get; set; }
-		[XmlIgnore] public double DltNMinTot { get; set; }
-		[XmlIgnore] public double ResidueWt{ get; set; }
-		
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			InitialDay = true;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			//!!!!!! Nitrogen balance components !!!!!!
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			OrganicN = FomN + HumN + BiomN;
-			NO3N = MathUtilities.Sum(Soil.NO3N);
-			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
-			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-		
-			//Residue components//
-			ResidueWt = SOM.Wt;
-			//MathUtilities.Sum(SOM.dlt_SurfaceOM_wt);	Failed:)
-			
-			int layers = Soil.Thickness.Length;
-			if (InitialDay == true)
-			{
-				InitialSurfaceOMN = SOM.N;
-				InitialSoilOMN = OrganicN;
-				InitialMineralN = MineralN;
-				InitialDay = false;
-			}
-			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
-			//AccumLeach = AccumLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea; //Fails
-			AccumLeach = AccumLeach + Soil.SoilWater.LeachNO3;
-			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			//Root.Nuptake is now reported as Negative
-			AccumPlantN -= (double)zone.Get("FodderBeet.Root.NUptake");
-			DeltaSoilOMN = OrganicN - InitialSoilOMN;
-			DeltaSoilMineralN = MineralN - InitialMineralN;
-			SoilNitrogenContent = MineralN;
-	
-			
-			
-			//!!!!!! Water balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+        [XmlIgnore] public double FomN { get; set; }
+        [XmlIgnore] public double BiomN { get; set; }
+        [XmlIgnore] public double HumN { get; set; }
+        [XmlIgnore] public double OrganicN { get; set; }
+        [XmlIgnore] public double NO3N { get; set; }
+        [XmlIgnore] public double NH4N { get; set; }
+        [XmlIgnore] public double UreaN { get; set; }
+        [XmlIgnore] public double MineralN { get; set; }
+        [XmlIgnore] public double DltNMinRes { get; set; }
+        [XmlIgnore] public double DltNMinTot { get; set; }
+        [XmlIgnore] public double ResidueWt{ get; set; }
+        
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            InitialDay = true;
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            //!!!!!! Nitrogen balance components !!!!!!
+            FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+            HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+            BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+            OrganicN = FomN + HumN + BiomN;
+            NO3N = MathUtilities.Sum(Soil.NO3N);
+            NH4N = MathUtilities.Sum(Soil.NH4N);
+            UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+            MineralN = NO3N + NH4N + UreaN; 
+            DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+            DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+        
+            //Residue components//
+            ResidueWt = SOM.Wt;
+            //MathUtilities.Sum(SOM.dlt_SurfaceOM_wt);    Failed:)
+            
+            int layers = Soil.Thickness.Length;
+            if (InitialDay == true)
+            {
+                InitialSurfaceOMN = SOM.N;
+                InitialSoilOMN = OrganicN;
+                InitialMineralN = MineralN;
+                InitialDay = false;
+            }
+            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
+            //AccumLeach = AccumLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea; //Fails
+            AccumLeach = AccumLeach + Soil.SoilWater.LeachNO3;
+            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            //Root.Nuptake is now reported as Negative
+            AccumPlantN -= (double)zone.Get("FodderBeet.Root.NUptake");
+            DeltaSoilOMN = OrganicN - InitialSoilOMN;
+            DeltaSoilMineralN = MineralN - InitialMineralN;
+            SoilNitrogenContent = MineralN;
+    
+            
+            
+            //!!!!!! Water balance components !!!!!!
+            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 
-			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[FodderBeet].Stover.Transpiration");
-			AccumEP -= (double)zone.Get("FodderBeet.Root.WaterUptake");
-			SoilWaterDeficit = (SWC - DUL);
-			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
-			AccumOutflowLat -= OutFlowLat;
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			AccumFert += Fert.NitrogenApplied;
-			AccumIrrigation += Irrig.IrrigationApplied;
-			
-			
-			AccumEO -= Soil.SoilWater.Eo;
-			AccumES -= Soil.SoilWater.Es; 
-			AccumDrainage += Soil.SoilWater.Drainage;
-			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.DULmm);
-		}
-		
-		[EventSubscribe("PlantEnding")]
-		private void OnPlantEnding(object sender, EventArgs e)
-		{
-			AccumFert = 0;
-			AccumIrrigation = 0;
-			
-			
-			AccumEO = 0;
-			AccumES = 0;
-			AccumDrainage = 0;
-			AccumRunoff = 0;
-			
-			AccumLeach = 0;
-			AccumMineralisation = 0;
-			AccumDenit = 0;
-			AccumPlantN = 0;
-			
-			AccumRainfall = 0;
-			AccumEP = 0;
-			AccumOutflowLat = 0;
-			
-		}
-	}
+            AccumRainfall += Met.Rain;
+            //AccumEP -= (double)zone.Get("[FodderBeet].Stover.Transpiration");
+            AccumEP -= (double)zone.Get("FodderBeet.Root.WaterUptake");
+            SoilWaterDeficit = (SWC - DUL);
+            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
+            AccumOutflowLat -= OutFlowLat;
+        }
+        
+        [EventSubscribe("DoManagementCalculations")]
+        private void OnDoManagementCalculations(object sender, EventArgs e)
+        {
+            FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+            HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+            BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+            AccumFert += Fert.NitrogenApplied;
+            AccumIrrigation += Irrig.IrrigationApplied;
+            
+            
+            AccumEO -= Soil.SoilWater.Eo;
+            AccumES -= Soil.SoilWater.Es; 
+            AccumDrainage += Soil.SoilWater.Drainage;
+            AccumRunoff -= Soil.SoilWater.Runoff;
+            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
+            DUL = MathUtilities.Sum(Soil.DULmm);
+        }
+        
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            AccumFert = 0;
+            AccumIrrigation = 0;
+            
+            
+            AccumEO = 0;
+            AccumES = 0;
+            AccumDrainage = 0;
+            AccumRunoff = 0;
+            
+            AccumLeach = 0;
+            AccumMineralisation = 0;
+            AccumDenit = 0;
+            AccumPlantN = 0;
+            
+            AccumRainfall = 0;
+            AccumEP = 0;
+            AccumOutflowLat = 0;
+            
+        }
+    }
 }
-	  
+      
 ]]></Code>
             </Manager>
             <Manager>
@@ -5759,40 +5753,41 @@ using Models.SurfaceOM;
 
 namespace Models
 {
-	[Serializable] 
-	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant FodderBeet;
-		[Link] Clock Clock;
-		[Link] Zone zone;
-		[Link] Simulation Simulation;
-		[Link] SurfaceOrganicMatter SurfOM;
-		
-				
-		[Description("Initial Root Depth")]
-		public double InitialRootDepth { get; set; }
-		[Description("Sown Crop")]
-		public string CropToSow { get; set; }
-		[Description("Sowing Date")]
-		public DateTime SowingDate { get; set; }
-		
-		
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Clock.Today.Date == SowingDate)
-			{
-				FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
-				
-			}
-						
-			
-		}
-	}
+    [Serializable] 
+    //[System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Simulation Simulation;
+        [Link] SurfaceOrganicMatter SurfOM;
+        
+                
+        [Description("Initial Root Depth")]
+        public double InitialRootDepth { get; set; }
+        [Description("Sown Crop")]
+        public string CropToSow { get; set; }
+        [Description("Sowing Date")]
+        public DateTime SowingDate { get; set; }
+        
+        
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Clock.Today.Date == SowingDate)
+            {
+                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+                
+            }
+                        
+            
+        }
+    }
 }
-				]]></Code>
+                
+]]></Code>
             </Manager>
             <Operations>
               <Name>Irrigation_n_Fertiliser</Name>
@@ -7648,52 +7643,52 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Soils.Soil Soil;
-		[Link] Clock Clock;
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Soils.Soil Soil;
+        [Link] Clock Clock;
 
-		[EventSubscribe("DoInitialSummary")]
-		private void OnDoInitialSummary(object sender, EventArgs e)
-		{
-			//Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
-			//Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
-			//Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
-			//Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
-			//Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
-			//Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
-			//Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
-			//Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+        [EventSubscribe("DoInitialSummary")]
+        private void OnDoInitialSummary(object sender, EventArgs e)
+        {
+            //Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
+            //Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
+            //Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
+            //Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
+            //Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
+            //Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
+            //Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
+            //Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
 
-			Soil.SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };
-			Soil.SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };
-			Soil.SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };
-			Soil.SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };
-			Soil.SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };
-			Soil.SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };
-			Soil.SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };
-			Soil.SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };
-			//Soil.SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; 
-			//Soil.SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			
-			DateTime ChangeDate = new DateTime(2012, 10, 29);
-			if (Clock.Today.Date == ChangeDate)
-			{
-				//Soil.InitialNO3N = new double[] { 52, 26, 12, 16, 10, 0.5 };
-				//Soil.InitialNH4N = new double[] { 52, 26, 12, 16, 10, 0.5 };
-				
-			}
-						
-			
-		}
+            Soil.SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };
+            Soil.SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };
+            Soil.SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };
+            Soil.SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };
+            Soil.SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };
+            Soil.SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };
+            Soil.SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };
+            Soil.SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };
+            //Soil.SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; 
+            //Soil.SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+            DateTime ChangeDate = new DateTime(2012, 10, 29);
+            if (Clock.Today.Date == ChangeDate)
+            {
+                //Soil.InitialNO3N = new double[] { 52, 26, 12, 16, 10, 0.5 };
+                //Soil.InitialNH4N = new double[] { 52, 26, 12, 16, 10, 0.5 };
+                
+            }
+                        
+            
+        }
 
-	}
+    }
 }
 ]]></Code>
             </Manager>
@@ -7713,165 +7708,165 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;
-		[Link] Plant FodderBeet;
-		[Link] Zone zone;
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-		[XmlIgnore] public double DeltaSoilOMN { get; set; }
-		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
-		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
-		[XmlIgnore] public double SoilNitrogenContent { get; set; }
-		
-		
-		
-		[XmlIgnore] public double AccumEO { get; set; }
-		[XmlIgnore] public double AccumEP { get; set; }
-		[XmlIgnore] public double AccumES { get; set; }
-		[XmlIgnore] public double AccumDrainage { get; set; }
-		[XmlIgnore] public double AccumRunoff { get; set; }
-		[XmlIgnore] public double AccumOutflowLat { get; set; }
-		[XmlIgnore] public double AccumIrrigation { get; set; }
-		[XmlIgnore] public double AccumRainfall { get; set; }
-		[XmlIgnore] public double SoilWaterDeficit { get; set; }
-	
-		[XmlIgnore] public double  InitialSoilOMN { get; set; }
-		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
-		[XmlIgnore] public double  InitialMineralN { get; set; }
-		
-		
-		[XmlIgnore] public double SWC { get; set; }
-		[XmlIgnore] public double DUL { get; set; }
-		[XmlIgnore] public double OutFlowLat { get; set; }
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Soils.Soil Soil;
+        [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+        [Link] Weather Met;
+        [Link] Fertiliser Fert;
+        [Link] Irrigation Irrig;
+        [Link] Plant FodderBeet;
+        [Link] Zone zone;
+                    
+        [XmlIgnore] public bool InitialDay { get; set; }
+        
+        [XmlIgnore] public double AccumPlantN { get; set; }
+        [XmlIgnore] public double AccumMineralisation { get; set; }
+        [XmlIgnore] public double AccumDenit { get; set; }
+        [XmlIgnore] public double AccumFert { get; set; }
+        [XmlIgnore] public double AccumLeach { get; set; }
+        [XmlIgnore] public double AccumDetach { get; set; }
+        [XmlIgnore] public double DeltaSoilOMN { get; set; }
+        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }
+        [XmlIgnore] public double DeltaSoilMineralN { get; set; }
+        [XmlIgnore] public double SoilNitrogenContent { get; set; }
+        
+        
+        
+        [XmlIgnore] public double AccumEO { get; set; }
+        [XmlIgnore] public double AccumEP { get; set; }
+        [XmlIgnore] public double AccumES { get; set; }
+        [XmlIgnore] public double AccumDrainage { get; set; }
+        [XmlIgnore] public double AccumRunoff { get; set; }
+        [XmlIgnore] public double AccumOutflowLat { get; set; }
+        [XmlIgnore] public double AccumIrrigation { get; set; }
+        [XmlIgnore] public double AccumRainfall { get; set; }
+        [XmlIgnore] public double SoilWaterDeficit { get; set; }
+    
+        [XmlIgnore] public double  InitialSoilOMN { get; set; }
+        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }
+        [XmlIgnore] public double  InitialMineralN { get; set; }
+        
+        
+        [XmlIgnore] public double SWC { get; set; }
+        [XmlIgnore] public double DUL { get; set; }
+        [XmlIgnore] public double OutFlowLat { get; set; }
 
-		[XmlIgnore] public double FomN { get; set; }
-		[XmlIgnore] public double BiomN { get; set; }
-		[XmlIgnore] public double HumN { get; set; }
-		[XmlIgnore] public double OrganicN { get; set; }
-		[XmlIgnore] public double NO3N { get; set; }
-		[XmlIgnore] public double NH4N { get; set; }
-		[XmlIgnore] public double UreaN { get; set; }
-		[XmlIgnore] public double MineralN { get; set; }
-		[XmlIgnore] public double DltNMinRes { get; set; }
-		[XmlIgnore] public double DltNMinTot { get; set; }
-		[XmlIgnore] public double ResidueWt{ get; set; }
-		
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			InitialDay = true;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			//!!!!!! Nitrogen balance components !!!!!!
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			OrganicN = FomN + HumN + BiomN;
-			NO3N = MathUtilities.Sum(Soil.NO3N);
-			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
-			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-		
-			//Residue components//
-			ResidueWt = SOM.Wt;
-			//MathUtilities.Sum(SOM.dlt_SurfaceOM_wt);	Failed:)
-			
-			int layers = Soil.Thickness.Length;
-			if (InitialDay == true)
-			{
-				InitialSurfaceOMN = SOM.N;
-				InitialSoilOMN = OrganicN;
-				InitialMineralN = MineralN;
-				InitialDay = false;
-			}
-			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
-			//AccumLeach = AccumLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea; //Fails
-			AccumLeach = AccumLeach + Soil.SoilWater.LeachNO3;
-			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			//Root.Nuptake is now reported as Negative
-			AccumPlantN -= (double)zone.Get("FodderBeet.Root.NUptake");
-			DeltaSoilOMN = OrganicN - InitialSoilOMN;
-			DeltaSoilMineralN = MineralN - InitialMineralN;
-			SoilNitrogenContent = MineralN;
-	
-			
-			
-			//!!!!!! Water balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+        [XmlIgnore] public double FomN { get; set; }
+        [XmlIgnore] public double BiomN { get; set; }
+        [XmlIgnore] public double HumN { get; set; }
+        [XmlIgnore] public double OrganicN { get; set; }
+        [XmlIgnore] public double NO3N { get; set; }
+        [XmlIgnore] public double NH4N { get; set; }
+        [XmlIgnore] public double UreaN { get; set; }
+        [XmlIgnore] public double MineralN { get; set; }
+        [XmlIgnore] public double DltNMinRes { get; set; }
+        [XmlIgnore] public double DltNMinTot { get; set; }
+        [XmlIgnore] public double ResidueWt{ get; set; }
+        
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            InitialDay = true;
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            //!!!!!! Nitrogen balance components !!!!!!
+            FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+            HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+            BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+            OrganicN = FomN + HumN + BiomN;
+            NO3N = MathUtilities.Sum(Soil.NO3N);
+            NH4N = MathUtilities.Sum(Soil.NH4N);
+            UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+            MineralN = NO3N + NH4N + UreaN; 
+            DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+            DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+        
+            //Residue components//
+            ResidueWt = SOM.Wt;
+            //MathUtilities.Sum(SOM.dlt_SurfaceOM_wt);    Failed:)
+            
+            int layers = Soil.Thickness.Length;
+            if (InitialDay == true)
+            {
+                InitialSurfaceOMN = SOM.N;
+                InitialSoilOMN = OrganicN;
+                InitialMineralN = MineralN;
+                InitialDay = false;
+            }
+            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
+            //AccumLeach = AccumLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea; //Fails
+            AccumLeach = AccumLeach + Soil.SoilWater.LeachNO3;
+            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            //Root.Nuptake is now reported as Negative
+            AccumPlantN -= (double)zone.Get("FodderBeet.Root.NUptake");
+            DeltaSoilOMN = OrganicN - InitialSoilOMN;
+            DeltaSoilMineralN = MineralN - InitialMineralN;
+            SoilNitrogenContent = MineralN;
+    
+            
+            
+            //!!!!!! Water balance components !!!!!!
+            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 
-			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[FodderBeet].Stover.Transpiration");
-			AccumEP -= (double)zone.Get("FodderBeet.Root.WaterUptake");
-			SoilWaterDeficit = (SWC - DUL);
-			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
-			AccumOutflowLat -= OutFlowLat;
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			AccumFert += Fert.NitrogenApplied;
-			AccumIrrigation += Irrig.IrrigationApplied;
-			
-			
-			AccumEO -= Soil.SoilWater.Eo;
-			AccumES -= Soil.SoilWater.Es; 
-			AccumDrainage += Soil.SoilWater.Drainage;
-			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.DULmm);
-		}
-		
-		[EventSubscribe("PlantEnding")]
-		private void OnPlantEnding(object sender, EventArgs e)
-		{
-			AccumFert = 0;
-			AccumIrrigation = 0;
-			
-			
-			AccumEO = 0;
-			AccumES = 0;
-			AccumDrainage = 0;
-			AccumRunoff = 0;
-			
-			AccumLeach = 0;
-			AccumMineralisation = 0;
-			AccumDenit = 0;
-			AccumPlantN = 0;
-			
-			AccumRainfall = 0;
-			AccumEP = 0;
-			AccumOutflowLat = 0;
-			
-		}
-	}
+            AccumRainfall += Met.Rain;
+            //AccumEP -= (double)zone.Get("[FodderBeet].Stover.Transpiration");
+            AccumEP -= (double)zone.Get("FodderBeet.Root.WaterUptake");
+            SoilWaterDeficit = (SWC - DUL);
+            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
+            AccumOutflowLat -= OutFlowLat;
+        }
+        
+        [EventSubscribe("DoManagementCalculations")]
+        private void OnDoManagementCalculations(object sender, EventArgs e)
+        {
+            FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+            HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+            BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+            AccumFert += Fert.NitrogenApplied;
+            AccumIrrigation += Irrig.IrrigationApplied;
+            
+            
+            AccumEO -= Soil.SoilWater.Eo;
+            AccumES -= Soil.SoilWater.Es; 
+            AccumDrainage += Soil.SoilWater.Drainage;
+            AccumRunoff -= Soil.SoilWater.Runoff;
+            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
+            DUL = MathUtilities.Sum(Soil.DULmm);
+        }
+        
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            AccumFert = 0;
+            AccumIrrigation = 0;
+            
+            
+            AccumEO = 0;
+            AccumES = 0;
+            AccumDrainage = 0;
+            AccumRunoff = 0;
+            
+            AccumLeach = 0;
+            AccumMineralisation = 0;
+            AccumDenit = 0;
+            AccumPlantN = 0;
+            
+            AccumRainfall = 0;
+            AccumEP = 0;
+            AccumOutflowLat = 0;
+            
+        }
+    }
 }
-	  
+      
 ]]></Code>
             </Manager>
             <Manager>
@@ -7896,40 +7891,41 @@ using Models.SurfaceOM;
 
 namespace Models
 {
-	[Serializable] 
-	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant FodderBeet;
-		[Link] Clock Clock;
-		[Link] Zone zone;
-		[Link] Simulation Simulation;
-		[Link] SurfaceOrganicMatter SurfOM;
-		
-				
-		[Description("Initial Root Depth")]
-		public double InitialRootDepth { get; set; }
-		[Description("Sown Crop")]
-		public string CropToSow { get; set; }
-		[Description("Sowing Date")]
-		public DateTime SowingDate { get; set; }
-		
-		
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Clock.Today.Date == SowingDate)
-			{
-				FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
-				
-			}
-						
-			
-		}
-	}
+    [Serializable] 
+    //[System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Simulation Simulation;
+        [Link] SurfaceOrganicMatter SurfOM;
+        
+                
+        [Description("Initial Root Depth")]
+        public double InitialRootDepth { get; set; }
+        [Description("Sown Crop")]
+        public string CropToSow { get; set; }
+        [Description("Sowing Date")]
+        public DateTime SowingDate { get; set; }
+        
+        
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Clock.Today.Date == SowingDate)
+            {
+                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+                
+            }
+                        
+            
+        }
+    }
 }
-				]]></Code>
+                
+]]></Code>
             </Manager>
             <Operations>
               <Name>Irrigation_n_Fertiliser</Name>
@@ -9907,36 +9903,36 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Soils.Soil Soil;
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Soils.Soil Soil;
 
-		[EventSubscribe("DoInitialSummary")]
-		private void OnDoInitialSummary(object sender, EventArgs e)
-		{
-			//Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
-			//Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
-			//Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
-			//Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
-			//Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
-			//Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
-			//Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
-			//Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+        [EventSubscribe("DoInitialSummary")]
+        private void OnDoInitialSummary(object sender, EventArgs e)
+        {
+            //Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
+            //Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
+            //Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
+            //Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
+            //Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
+            //Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
+            //Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
+            //Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
 
-			Soil.SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };
-			Soil.SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };
-			Soil.SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };
-			Soil.SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };
-			Soil.SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };
-			Soil.SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };
-			Soil.SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };
-			Soil.SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };
-			//Soil.SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; 
-			//Soil.SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
-		}
+            Soil.SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };
+            Soil.SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };
+            Soil.SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };
+            Soil.SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };
+            Soil.SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };
+            Soil.SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };
+            Soil.SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };
+            Soil.SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };
+            //Soil.SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; 
+            //Soil.SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
+        }
 
-	}
+    }
 }
 ]]></Code>
               </Manager>
@@ -9956,165 +9952,165 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;
-		[Link] Plant FodderBeet;
-		[Link] Zone zone;
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-		[XmlIgnore] public double DeltaSoilOMN { get; set; }
-		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
-		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
-		[XmlIgnore] public double SoilNitrogenContent { get; set; }
-		
-		
-		
-		[XmlIgnore] public double AccumEO { get; set; }
-		[XmlIgnore] public double AccumEP { get; set; }
-		[XmlIgnore] public double AccumES { get; set; }
-		[XmlIgnore] public double AccumDrainage { get; set; }
-		[XmlIgnore] public double AccumRunoff { get; set; }
-		[XmlIgnore] public double AccumOutflowLat { get; set; }
-		[XmlIgnore] public double AccumIrrigation { get; set; }
-		[XmlIgnore] public double AccumRainfall { get; set; }
-		[XmlIgnore] public double SoilWaterDeficit { get; set; }
-	
-		[XmlIgnore] public double  InitialSoilOMN { get; set; }
-		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
-		[XmlIgnore] public double  InitialMineralN { get; set; }
-		
-		
-		[XmlIgnore] public double SWC { get; set; }
-		[XmlIgnore] public double DUL { get; set; }
-		[XmlIgnore] public double OutFlowLat { get; set; }
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Soils.Soil Soil;
+        [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+        [Link] Weather Met;
+        [Link] Fertiliser Fert;
+        [Link] Irrigation Irrig;
+        [Link] Plant FodderBeet;
+        [Link] Zone zone;
+                    
+        [XmlIgnore] public bool InitialDay { get; set; }
+        
+        [XmlIgnore] public double AccumPlantN { get; set; }
+        [XmlIgnore] public double AccumMineralisation { get; set; }
+        [XmlIgnore] public double AccumDenit { get; set; }
+        [XmlIgnore] public double AccumFert { get; set; }
+        [XmlIgnore] public double AccumLeach { get; set; }
+        [XmlIgnore] public double AccumDetach { get; set; }
+        [XmlIgnore] public double DeltaSoilOMN { get; set; }
+        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }
+        [XmlIgnore] public double DeltaSoilMineralN { get; set; }
+        [XmlIgnore] public double SoilNitrogenContent { get; set; }
+        
+        
+        
+        [XmlIgnore] public double AccumEO { get; set; }
+        [XmlIgnore] public double AccumEP { get; set; }
+        [XmlIgnore] public double AccumES { get; set; }
+        [XmlIgnore] public double AccumDrainage { get; set; }
+        [XmlIgnore] public double AccumRunoff { get; set; }
+        [XmlIgnore] public double AccumOutflowLat { get; set; }
+        [XmlIgnore] public double AccumIrrigation { get; set; }
+        [XmlIgnore] public double AccumRainfall { get; set; }
+        [XmlIgnore] public double SoilWaterDeficit { get; set; }
+    
+        [XmlIgnore] public double  InitialSoilOMN { get; set; }
+        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }
+        [XmlIgnore] public double  InitialMineralN { get; set; }
+        
+        
+        [XmlIgnore] public double SWC { get; set; }
+        [XmlIgnore] public double DUL { get; set; }
+        [XmlIgnore] public double OutFlowLat { get; set; }
 
-		[XmlIgnore] public double FomN { get; set; }
-		[XmlIgnore] public double BiomN { get; set; }
-		[XmlIgnore] public double HumN { get; set; }
-		[XmlIgnore] public double OrganicN { get; set; }
-		[XmlIgnore] public double NO3N { get; set; }
-		[XmlIgnore] public double NH4N { get; set; }
-		[XmlIgnore] public double UreaN { get; set; }
-		[XmlIgnore] public double MineralN { get; set; }
-		[XmlIgnore] public double DltNMinRes { get; set; }
-		[XmlIgnore] public double DltNMinTot { get; set; }
-		[XmlIgnore] public double ResidueWt{ get; set; }
-		
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			InitialDay = true;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			//!!!!!! Nitrogen balance components !!!!!!
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			OrganicN = FomN + HumN + BiomN;
-			NO3N = MathUtilities.Sum(Soil.NO3N);
-			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
-			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-		
-			//Residue components//
-			ResidueWt = SOM.Wt;
-			//MathUtilities.Sum(SOM.dlt_SurfaceOM_wt);	Failed:)
-			
-			int layers = Soil.Thickness.Length;
-			if (InitialDay == true)
-			{
-				InitialSurfaceOMN = SOM.N;
-				InitialSoilOMN = OrganicN;
-				InitialMineralN = MineralN;
-				InitialDay = false;
-			}
-			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
-			//AccumLeach = AccumLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea; //Fails
-			AccumLeach = AccumLeach + Soil.SoilWater.LeachNO3;
-			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			//Root.Nuptake is now reported as Negative
-			AccumPlantN -= (double)zone.Get("FodderBeet.Root.NUptake");
-			DeltaSoilOMN = OrganicN - InitialSoilOMN;
-			DeltaSoilMineralN = MineralN - InitialMineralN;
-			SoilNitrogenContent = MineralN;
-	
-			
-			
-			//!!!!!! Water balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+        [XmlIgnore] public double FomN { get; set; }
+        [XmlIgnore] public double BiomN { get; set; }
+        [XmlIgnore] public double HumN { get; set; }
+        [XmlIgnore] public double OrganicN { get; set; }
+        [XmlIgnore] public double NO3N { get; set; }
+        [XmlIgnore] public double NH4N { get; set; }
+        [XmlIgnore] public double UreaN { get; set; }
+        [XmlIgnore] public double MineralN { get; set; }
+        [XmlIgnore] public double DltNMinRes { get; set; }
+        [XmlIgnore] public double DltNMinTot { get; set; }
+        [XmlIgnore] public double ResidueWt{ get; set; }
+        
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            InitialDay = true;
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            //!!!!!! Nitrogen balance components !!!!!!
+            FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+            HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+            BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+            OrganicN = FomN + HumN + BiomN;
+            NO3N = MathUtilities.Sum(Soil.NO3N);
+            NH4N = MathUtilities.Sum(Soil.NH4N);
+            UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+            MineralN = NO3N + NH4N + UreaN; 
+            DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+            DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+        
+            //Residue components//
+            ResidueWt = SOM.Wt;
+            //MathUtilities.Sum(SOM.dlt_SurfaceOM_wt);    Failed:)
+            
+            int layers = Soil.Thickness.Length;
+            if (InitialDay == true)
+            {
+                InitialSurfaceOMN = SOM.N;
+                InitialSoilOMN = OrganicN;
+                InitialMineralN = MineralN;
+                InitialDay = false;
+            }
+            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
+            //AccumLeach = AccumLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea; //Fails
+            AccumLeach = AccumLeach + Soil.SoilWater.LeachNO3;
+            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            //Root.Nuptake is now reported as Negative
+            AccumPlantN -= (double)zone.Get("FodderBeet.Root.NUptake");
+            DeltaSoilOMN = OrganicN - InitialSoilOMN;
+            DeltaSoilMineralN = MineralN - InitialMineralN;
+            SoilNitrogenContent = MineralN;
+    
+            
+            
+            //!!!!!! Water balance components !!!!!!
+            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 
-			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[FodderBeet].Stover.Transpiration");
-			AccumEP -= (double)zone.Get("FodderBeet.Root.WaterUptake");
-			SoilWaterDeficit = (SWC - DUL);
-			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
-			AccumOutflowLat -= OutFlowLat;
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			AccumFert += Fert.NitrogenApplied;
-			AccumIrrigation += Irrig.IrrigationApplied;
-			
-			
-			AccumEO -= Soil.SoilWater.Eo;
-			AccumES -= Soil.SoilWater.Es; 
-			AccumDrainage += Soil.SoilWater.Drainage;
-			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.DULmm);
-		}
-		
-		[EventSubscribe("PlantEnding")]
-		private void OnPlantEnding(object sender, EventArgs e)
-		{
-			AccumFert = 0;
-			AccumIrrigation = 0;
-			
-			
-			AccumEO = 0;
-			AccumES = 0;
-			AccumDrainage = 0;
-			AccumRunoff = 0;
-			
-			AccumLeach = 0;
-			AccumMineralisation = 0;
-			AccumDenit = 0;
-			AccumPlantN = 0;
-			
-			AccumRainfall = 0;
-			AccumEP = 0;
-			AccumOutflowLat = 0;
-			
-		}
-	}
+            AccumRainfall += Met.Rain;
+            //AccumEP -= (double)zone.Get("[FodderBeet].Stover.Transpiration");
+            AccumEP -= (double)zone.Get("FodderBeet.Root.WaterUptake");
+            SoilWaterDeficit = (SWC - DUL);
+            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
+            AccumOutflowLat -= OutFlowLat;
+        }
+        
+        [EventSubscribe("DoManagementCalculations")]
+        private void OnDoManagementCalculations(object sender, EventArgs e)
+        {
+            FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+            HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+            BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+            AccumFert += Fert.NitrogenApplied;
+            AccumIrrigation += Irrig.IrrigationApplied;
+            
+            
+            AccumEO -= Soil.SoilWater.Eo;
+            AccumES -= Soil.SoilWater.Es; 
+            AccumDrainage += Soil.SoilWater.Drainage;
+            AccumRunoff -= Soil.SoilWater.Runoff;
+            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
+            DUL = MathUtilities.Sum(Soil.DULmm);
+        }
+        
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            AccumFert = 0;
+            AccumIrrigation = 0;
+            
+            
+            AccumEO = 0;
+            AccumES = 0;
+            AccumDrainage = 0;
+            AccumRunoff = 0;
+            
+            AccumLeach = 0;
+            AccumMineralisation = 0;
+            AccumDenit = 0;
+            AccumPlantN = 0;
+            
+            AccumRainfall = 0;
+            AccumEP = 0;
+            AccumOutflowLat = 0;
+            
+        }
+    }
 }
-	  
+      
 ]]></Code>
               </Manager>
               <Manager>
@@ -10139,58 +10135,59 @@ using Models.SurfaceOM;
 
 namespace Models
 {
-	[Serializable] 
-	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant FodderBeet;
-		[Link] Clock Clock;
-		[Link] Zone zone;
-		[Link] Simulation Simulation;
-		[Link] SurfaceOrganicMatter SurfOM;
-		
-				
-		[Description("Initial Root Depth")]
-		public double InitialRootDepth { get; set; }
-		[Description("Sown Crop")]
-		public string CropToSow { get; set; }
-		[Description("Sowing Date")]
-		public DateTime SowingDate { get; set; }
-		//[Description("Sowing Date2")]
-		//public DateTime SowingDate2 { get; set; }
-		//[Description("Sowing Date3")]
-		//public DateTime SowingDate3 { get; set; }
-		//[Description("Sowing Date4")]
-		//public DateTime SowingDate4 { get; set; }
-		
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Clock.Today.Date == SowingDate)
-			{
-				FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
-				
-			}
-			//else if (Clock.Today.Date == SowingDate2)
-			{
-				//	FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
-			}
-			//else if (Clock.Today.Date == SowingDate3)
-			{
-				//	FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
-			}
-			//else if (Clock.Today.Date == SowingDate4)
-			{
-				//	FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
-		
-			}
-			
-			
-		}
-	}
+    [Serializable] 
+    //[System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Simulation Simulation;
+        [Link] SurfaceOrganicMatter SurfOM;
+        
+                
+        [Description("Initial Root Depth")]
+        public double InitialRootDepth { get; set; }
+        [Description("Sown Crop")]
+        public string CropToSow { get; set; }
+        [Description("Sowing Date")]
+        public DateTime SowingDate { get; set; }
+        //[Description("Sowing Date2")]
+        //public DateTime SowingDate2 { get; set; }
+        //[Description("Sowing Date3")]
+        //public DateTime SowingDate3 { get; set; }
+        //[Description("Sowing Date4")]
+        //public DateTime SowingDate4 { get; set; }
+        
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Clock.Today.Date == SowingDate)
+            {
+                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+                
+            }
+            //else if (Clock.Today.Date == SowingDate2)
+            {
+                //    FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+            }
+            //else if (Clock.Today.Date == SowingDate3)
+            {
+                //    FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+            }
+            //else if (Clock.Today.Date == SowingDate4)
+            {
+                //    FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+        
+            }
+            
+            
+        }
+    }
 }
-				]]></Code>
+                
+]]></Code>
               </Manager>
               <Operations>
                 <Name>Irrig_Schedule</Name>
@@ -12754,28 +12751,29 @@ using System.Xml.Serialization;
 
 namespace Models
 {
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Weather Met;
-		[Link] Clock Clock;
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Weather Met;
+        [Link] Clock Clock;
     
-		[Description("Start Date")]
-		public DateTime StartDate { get; set; }
+        [Description("Start Date")]
+        public DateTime StartDate { get; set; }
         
-		[Description("End Date")]
-		public DateTime EndDate { get; set; }
+        [Description("End Date")]
+        public DateTime EndDate { get; set; }
  
     
-		[EventSubscribe("PreparingNewWeatherData")]
-		private void OnPreparingNewWeatherData(object sender, EventArgs e)
-		{
-			if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
-				Met.Rain = 0;		
-		}
-	}
-}]]></Code>
+        [EventSubscribe("PreparingNewWeatherData")]
+        private void OnPreparingNewWeatherData(object sender, EventArgs e)
+        {
+            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
+                Met.Rain = 0;        
+        }
+    }
+}
+]]></Code>
               </Manager>
               <Manager>
                 <Name>StateFactors</Name>
@@ -12796,253 +12794,253 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Irrigation Irrigation;
-		[Link] Fertiliser Fert;
-		[Link] Soil ThisSoil;
-		[Description("Amount of Irrgation be applied 0/1")]
-		public bool IrrFactor { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double NitFactor { get; set; }
-		
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Irrigation Irrigation;
+        [Link] Fertiliser Fert;
+        [Link] Soil ThisSoil;
+        [Description("Amount of Irrgation be applied 0/1")]
+        public bool IrrFactor { get; set; }
+        [Description("Amount of fertiliser to be applied (kg/ha)")]
+        public double NitFactor { get; set; }
+        
           
-		private void SetSoilLayers()
-		{
-			/*
+        private void SetSoilLayers()
+        {
+            /*
             Not used yrt use whenmore detailed info is known
             */
-			int i = 0;
-			if ((IrrFactor == false) && (NitFactor == 0))
-			{
-				if (ThisSoil.Thickness.Length != 7)
-				{
-					throw new Exception("Soil layer exception");
-				}
-			 
-				ThisSoil.LL15[0] = 0.06;
-				ThisSoil.LL15[1] = 0.06;
-				ThisSoil.LL15[2] = 0.08;
-				ThisSoil.LL15[3] = 0.14;
-				ThisSoil.LL15[4] = 0.16;
-				ThisSoil.LL15[5] = 0.16;
-				ThisSoil.LL15[6] = 0.11;
-				ThisSoil.DUL[0] = 0.34;
-				ThisSoil.DUL[1] = 0.3;
-				ThisSoil.DUL[2] = 0.28;
-				ThisSoil.DUL[3] = 0.3;
-				ThisSoil.DUL[4] = 0.3;
-				ThisSoil.DUL[5] = 0.30;
-				ThisSoil.DUL[6] = 0.3;
-				ThisSoil.SAT[0] = 0.4;
-				ThisSoil.SAT[1] = 0.4;
-				ThisSoil.SAT[2] = 0.4;
-				ThisSoil.SAT[3] = 0.4;
-				ThisSoil.SAT[4] = 0.4;
-				ThisSoil.SAT[5] = 0.4;
-				ThisSoil.SAT[6] = 0.4;
-				ThisSoil.SoilWater.Reset();
-			}   
-			if ((IrrFactor == false) && (NitFactor == 50))
-			{
-				if (ThisSoil.Thickness.Length != 7)
-				{
-					throw new Exception("Soil layer exception");
-				}
-			 
-				ThisSoil.LL15[0] = 0.07;
-				ThisSoil.LL15[1] = 0.12;
-				ThisSoil.LL15[2] = 0.17;
-				ThisSoil.LL15[3] = 0.20;
-				ThisSoil.LL15[4] = 0.26;
-				ThisSoil.LL15[5] = 0.32;
-				ThisSoil.LL15[6] = 0.30;
-				ThisSoil.DUL[0] = 0.30;
-				ThisSoil.DUL[1] = 0.26;
-				ThisSoil.DUL[2] = 0.29;
-				ThisSoil.DUL[3] = 0.25;
-				ThisSoil.DUL[4] = 0.29;
-				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.30;
-				ThisSoil.SAT[0] = 0.34;
-				ThisSoil.SAT[1] = 0.34;
-				ThisSoil.SAT[2] = 0.34;
-				ThisSoil.SAT[3] = 0.34;
-				ThisSoil.SAT[4] = 0.34;
-				ThisSoil.SAT[5] = 0.34;
-				ThisSoil.SAT[6] = 0.34;
-				ThisSoil.SoilWater.Reset();
-			}   
-			if ((IrrFactor == false) && (NitFactor == 50))
-			{
-				if (ThisSoil.Thickness.Length != 7)
-				{
-					throw new Exception("Soil layer exception");
-				}
-			 
-				ThisSoil.LL15[0] = 0.06;
-				ThisSoil.LL15[1] = 0.11;
-				ThisSoil.LL15[2] = 0.21;
-				ThisSoil.LL15[3] = 0.18;
-				ThisSoil.LL15[4] = 0.23;
-				ThisSoil.LL15[5] = 0.30;
-				ThisSoil.LL15[6] = 0.26;
-				ThisSoil.DUL[0] = 0.25;
-				ThisSoil.DUL[1] = 0.26;
-				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.27;
-				ThisSoil.DUL[4] = 0.34;
-				ThisSoil.DUL[5] = 0.27;
-				ThisSoil.DUL[6] = 0.30;
-				ThisSoil.SAT[0] = 0.34;
-				ThisSoil.SAT[1] = 0.34;
-				ThisSoil.SAT[2] = 0.34;
-				ThisSoil.SAT[3] = 0.34;
-				ThisSoil.SAT[4] = 0.34;
-				ThisSoil.SAT[5] = 0.34;
-				ThisSoil.SAT[6] = 0.34;
-				ThisSoil.SoilWater.Reset();
-			}   
-			if ((IrrFactor == true) && (NitFactor == 0))
-			{
-				if (ThisSoil.Thickness.Length != 7)
-				{
-					throw new Exception("Soil layer exception");
-				}
-			 
-				ThisSoil.LL15[0] = 0.13;
-				ThisSoil.LL15[1] = 0.21;
-				ThisSoil.LL15[2] = 0.25;
-				ThisSoil.LL15[3] = 0.19;
-				ThisSoil.LL15[4] = 0.29;
-				ThisSoil.LL15[5] = 0.32;
-				ThisSoil.LL15[6] = 0.34;
-				ThisSoil.DUL[0] = 0.31;
-				ThisSoil.DUL[1] = 0.28;
-				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.28;
-				ThisSoil.DUL[4] = 0.29;
-				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.30;
-				ThisSoil.SAT[0] = 0.34;
-				ThisSoil.SAT[1] = 0.34;
-				ThisSoil.SAT[2] = 0.34;
-				ThisSoil.SAT[3] = 0.34;
-				ThisSoil.SAT[4] = 0.34;
-				ThisSoil.SAT[5] = 0.34;
-				ThisSoil.SAT[6] = 0.34;
-				ThisSoil.SoilWater.Reset();
-			}   
-			if ((IrrFactor == true) && (NitFactor == 50))
-			{
-				if (ThisSoil.Thickness.Length != 7)
-				{
-					throw new Exception("Soil layer exception");
-				}
-			 
-				ThisSoil.LL15[0] = 0.14;
-				ThisSoil.LL15[1] = 0.21;
-				ThisSoil.LL15[2] = 0.27;
-				ThisSoil.LL15[3] = 0.27;
-				ThisSoil.LL15[4] = 0.27;
-				ThisSoil.LL15[5] = 0.32;
-				ThisSoil.LL15[6] = 0.30;
-				ThisSoil.DUL[0] = 0.31;
-				ThisSoil.DUL[1] = 0.28;
-				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.28;
-				ThisSoil.DUL[4] = 0.29;
-				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.30;
-				ThisSoil.SAT[0] = 0.34;
-				ThisSoil.SAT[1] = 0.34;
-				ThisSoil.SAT[2] = 0.34;
-				ThisSoil.SAT[3] = 0.34;
-				ThisSoil.SAT[4] = 0.34;
-				ThisSoil.SAT[5] = 0.34;
-				ThisSoil.SAT[6] = 0.34;
-				ThisSoil.SoilWater.Reset();
-			}
-			if ((IrrFactor == true) && (NitFactor == 250))
-			{
-				if (ThisSoil.Thickness.Length != 7)
-				{
-					throw new Exception("Soil layer exception");
-				}
-			 
-				ThisSoil.LL15[0] = 0.12;
-				ThisSoil.LL15[1] = 0.18;
-				ThisSoil.LL15[2] = 0.17;
-				ThisSoil.LL15[3] = 0.20;
-				ThisSoil.LL15[4] = 0.27;
-				ThisSoil.LL15[5] = 0.27;
-				ThisSoil.LL15[6] = 0.21;
-				ThisSoil.DUL[0] = 0.31;
-				ThisSoil.DUL[1] = 0.28;
-				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.28;
-				ThisSoil.DUL[4] = 0.29;
-				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.30;
-				ThisSoil.SAT[0] = 0.34;
-				ThisSoil.SAT[1] = 0.34;
-				ThisSoil.SAT[2] = 0.34;
-				ThisSoil.SAT[3] = 0.34;
-				ThisSoil.SAT[4] = 0.34;
-				ThisSoil.SAT[5] = 0.34;
-				ThisSoil.SAT[6] = 0.34;
-				ThisSoil.SoilWater.Reset();
-			}
-		}
+            int i = 0;
+            if ((IrrFactor == false) && (NitFactor == 0))
+            {
+                if (ThisSoil.Thickness.Length != 7)
+                {
+                    throw new Exception("Soil layer exception");
+                }
+             
+                ThisSoil.LL15[0] = 0.06;
+                ThisSoil.LL15[1] = 0.06;
+                ThisSoil.LL15[2] = 0.08;
+                ThisSoil.LL15[3] = 0.14;
+                ThisSoil.LL15[4] = 0.16;
+                ThisSoil.LL15[5] = 0.16;
+                ThisSoil.LL15[6] = 0.11;
+                ThisSoil.DUL[0] = 0.34;
+                ThisSoil.DUL[1] = 0.3;
+                ThisSoil.DUL[2] = 0.28;
+                ThisSoil.DUL[3] = 0.3;
+                ThisSoil.DUL[4] = 0.3;
+                ThisSoil.DUL[5] = 0.30;
+                ThisSoil.DUL[6] = 0.3;
+                ThisSoil.SAT[0] = 0.4;
+                ThisSoil.SAT[1] = 0.4;
+                ThisSoil.SAT[2] = 0.4;
+                ThisSoil.SAT[3] = 0.4;
+                ThisSoil.SAT[4] = 0.4;
+                ThisSoil.SAT[5] = 0.4;
+                ThisSoil.SAT[6] = 0.4;
+                ThisSoil.SoilWater.Reset();
+            }   
+            if ((IrrFactor == false) && (NitFactor == 50))
+            {
+                if (ThisSoil.Thickness.Length != 7)
+                {
+                    throw new Exception("Soil layer exception");
+                }
+             
+                ThisSoil.LL15[0] = 0.07;
+                ThisSoil.LL15[1] = 0.12;
+                ThisSoil.LL15[2] = 0.17;
+                ThisSoil.LL15[3] = 0.20;
+                ThisSoil.LL15[4] = 0.26;
+                ThisSoil.LL15[5] = 0.32;
+                ThisSoil.LL15[6] = 0.30;
+                ThisSoil.DUL[0] = 0.30;
+                ThisSoil.DUL[1] = 0.26;
+                ThisSoil.DUL[2] = 0.29;
+                ThisSoil.DUL[3] = 0.25;
+                ThisSoil.DUL[4] = 0.29;
+                ThisSoil.DUL[5] = 0.34;
+                ThisSoil.DUL[6] = 0.30;
+                ThisSoil.SAT[0] = 0.34;
+                ThisSoil.SAT[1] = 0.34;
+                ThisSoil.SAT[2] = 0.34;
+                ThisSoil.SAT[3] = 0.34;
+                ThisSoil.SAT[4] = 0.34;
+                ThisSoil.SAT[5] = 0.34;
+                ThisSoil.SAT[6] = 0.34;
+                ThisSoil.SoilWater.Reset();
+            }   
+            if ((IrrFactor == false) && (NitFactor == 50))
+            {
+                if (ThisSoil.Thickness.Length != 7)
+                {
+                    throw new Exception("Soil layer exception");
+                }
+             
+                ThisSoil.LL15[0] = 0.06;
+                ThisSoil.LL15[1] = 0.11;
+                ThisSoil.LL15[2] = 0.21;
+                ThisSoil.LL15[3] = 0.18;
+                ThisSoil.LL15[4] = 0.23;
+                ThisSoil.LL15[5] = 0.30;
+                ThisSoil.LL15[6] = 0.26;
+                ThisSoil.DUL[0] = 0.25;
+                ThisSoil.DUL[1] = 0.26;
+                ThisSoil.DUL[2] = 0.30;
+                ThisSoil.DUL[3] = 0.27;
+                ThisSoil.DUL[4] = 0.34;
+                ThisSoil.DUL[5] = 0.27;
+                ThisSoil.DUL[6] = 0.30;
+                ThisSoil.SAT[0] = 0.34;
+                ThisSoil.SAT[1] = 0.34;
+                ThisSoil.SAT[2] = 0.34;
+                ThisSoil.SAT[3] = 0.34;
+                ThisSoil.SAT[4] = 0.34;
+                ThisSoil.SAT[5] = 0.34;
+                ThisSoil.SAT[6] = 0.34;
+                ThisSoil.SoilWater.Reset();
+            }   
+            if ((IrrFactor == true) && (NitFactor == 0))
+            {
+                if (ThisSoil.Thickness.Length != 7)
+                {
+                    throw new Exception("Soil layer exception");
+                }
+             
+                ThisSoil.LL15[0] = 0.13;
+                ThisSoil.LL15[1] = 0.21;
+                ThisSoil.LL15[2] = 0.25;
+                ThisSoil.LL15[3] = 0.19;
+                ThisSoil.LL15[4] = 0.29;
+                ThisSoil.LL15[5] = 0.32;
+                ThisSoil.LL15[6] = 0.34;
+                ThisSoil.DUL[0] = 0.31;
+                ThisSoil.DUL[1] = 0.28;
+                ThisSoil.DUL[2] = 0.30;
+                ThisSoil.DUL[3] = 0.28;
+                ThisSoil.DUL[4] = 0.29;
+                ThisSoil.DUL[5] = 0.34;
+                ThisSoil.DUL[6] = 0.30;
+                ThisSoil.SAT[0] = 0.34;
+                ThisSoil.SAT[1] = 0.34;
+                ThisSoil.SAT[2] = 0.34;
+                ThisSoil.SAT[3] = 0.34;
+                ThisSoil.SAT[4] = 0.34;
+                ThisSoil.SAT[5] = 0.34;
+                ThisSoil.SAT[6] = 0.34;
+                ThisSoil.SoilWater.Reset();
+            }   
+            if ((IrrFactor == true) && (NitFactor == 50))
+            {
+                if (ThisSoil.Thickness.Length != 7)
+                {
+                    throw new Exception("Soil layer exception");
+                }
+             
+                ThisSoil.LL15[0] = 0.14;
+                ThisSoil.LL15[1] = 0.21;
+                ThisSoil.LL15[2] = 0.27;
+                ThisSoil.LL15[3] = 0.27;
+                ThisSoil.LL15[4] = 0.27;
+                ThisSoil.LL15[5] = 0.32;
+                ThisSoil.LL15[6] = 0.30;
+                ThisSoil.DUL[0] = 0.31;
+                ThisSoil.DUL[1] = 0.28;
+                ThisSoil.DUL[2] = 0.30;
+                ThisSoil.DUL[3] = 0.28;
+                ThisSoil.DUL[4] = 0.29;
+                ThisSoil.DUL[5] = 0.34;
+                ThisSoil.DUL[6] = 0.30;
+                ThisSoil.SAT[0] = 0.34;
+                ThisSoil.SAT[1] = 0.34;
+                ThisSoil.SAT[2] = 0.34;
+                ThisSoil.SAT[3] = 0.34;
+                ThisSoil.SAT[4] = 0.34;
+                ThisSoil.SAT[5] = 0.34;
+                ThisSoil.SAT[6] = 0.34;
+                ThisSoil.SoilWater.Reset();
+            }
+            if ((IrrFactor == true) && (NitFactor == 250))
+            {
+                if (ThisSoil.Thickness.Length != 7)
+                {
+                    throw new Exception("Soil layer exception");
+                }
+             
+                ThisSoil.LL15[0] = 0.12;
+                ThisSoil.LL15[1] = 0.18;
+                ThisSoil.LL15[2] = 0.17;
+                ThisSoil.LL15[3] = 0.20;
+                ThisSoil.LL15[4] = 0.27;
+                ThisSoil.LL15[5] = 0.27;
+                ThisSoil.LL15[6] = 0.21;
+                ThisSoil.DUL[0] = 0.31;
+                ThisSoil.DUL[1] = 0.28;
+                ThisSoil.DUL[2] = 0.30;
+                ThisSoil.DUL[3] = 0.28;
+                ThisSoil.DUL[4] = 0.29;
+                ThisSoil.DUL[5] = 0.34;
+                ThisSoil.DUL[6] = 0.30;
+                ThisSoil.SAT[0] = 0.34;
+                ThisSoil.SAT[1] = 0.34;
+                ThisSoil.SAT[2] = 0.34;
+                ThisSoil.SAT[3] = 0.34;
+                ThisSoil.SAT[4] = 0.34;
+                ThisSoil.SAT[5] = 0.34;
+                ThisSoil.SAT[6] = 0.34;
+                ThisSoil.SoilWater.Reset();
+            }
+        }
 
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			//	SetSoilLayers();
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			//Specific irrgations
-			
-			//Fodderbeet
-			
-			if ((IrrFactor == true) && (NitFactor == 300))
-			{
-				if ((DateUtilities.CompareDates("1-Feb", Clock.Today) == 0))
-					Irrigation.Apply(40);
-				if ((DateUtilities.CompareDates("1-Mar", Clock.Today) == 0))
-					Irrigation.Apply(36);
-			}
-	    
-			//Oats
-			if (Clock.Today.Year == 2017)
-			if ((DateUtilities.CompareDates("5-Jul", Clock.Today) == 0))
-			if (IrrFactor == true)
-			{
-				if (NitFactor == 0)
-					Fert.Apply(40, Models.Fertiliser.Types.NO3N, 10);
-				if (NitFactor == 50)
-					Fert.Apply(85, Models.Fertiliser.Types.NO3N, 10);
-				if (NitFactor == 300)
-					Fert.Apply(270, Models.Fertiliser.Types.NO3N, 10);
-			   
-			}
-			 
-			
-			
-		}
-	}
-		
-		
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            //    SetSoilLayers();
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            //Specific irrgations
+            
+            //Fodderbeet
+            
+            if ((IrrFactor == true) && (NitFactor == 300))
+            {
+                if ((DateUtilities.CompareDates("1-Feb", Clock.Today) == 0))
+                    Irrigation.Apply(40);
+                if ((DateUtilities.CompareDates("1-Mar", Clock.Today) == 0))
+                    Irrigation.Apply(36);
+            }
+        
+            //Oats
+            if (Clock.Today.Year == 2017)
+            if ((DateUtilities.CompareDates("5-Jul", Clock.Today) == 0))
+            if (IrrFactor == true)
+            {
+                if (NitFactor == 0)
+                    Fert.Apply(40, Models.Fertiliser.Types.NO3N, 10);
+                if (NitFactor == 50)
+                    Fert.Apply(85, Models.Fertiliser.Types.NO3N, 10);
+                if (NitFactor == 300)
+                    Fert.Apply(270, Models.Fertiliser.Types.NO3N, 10);
+               
+            }
+             
+            
+            
+        }
+    }
+        
+        
 }
-	
+    
 
 
-	  
+      
 ]]></Code>
               </Manager>
               <Manager>
@@ -13067,58 +13065,59 @@ using Models.SurfaceOM;
 
 namespace Models
 {
-	[Serializable] 
-	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant FodderBeet;
-		[Link] Clock Clock;
-		[Link] Zone zone;
-		[Link] Simulation Simulation;
-		[Link] SurfaceOrganicMatter SurfOM;
-		
-				
-		[Description("Initial Root Depth")]
-		public double InitialRootDepth { get; set; }
-		[Description("Sown Crop")]
-		public string CropToSow { get; set; }
-		[Description("Sowing Date")]
-		public DateTime SowingDate { get; set; }
-		//[Description("Sowing Date2")]
-		//public DateTime SowingDate2 { get; set; }
-		//[Description("Sowing Date3")]
-		//public DateTime SowingDate3 { get; set; }
-		//[Description("Sowing Date4")]
-		//public DateTime SowingDate4 { get; set; }
-		
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Clock.Today.Date == SowingDate)
-			{
-				FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
-				
-			}
-			//else if (Clock.Today.Date == SowingDate2)
-			{
-				//	FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
-			}
-			//else if (Clock.Today.Date == SowingDate3)
-			{
-				//	FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
-			}
-			//else if (Clock.Today.Date == SowingDate4)
-			{
-				//	FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
-		
-			}
-			
-			
-		}
-	}
+    [Serializable] 
+    //[System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Simulation Simulation;
+        [Link] SurfaceOrganicMatter SurfOM;
+        
+                
+        [Description("Initial Root Depth")]
+        public double InitialRootDepth { get; set; }
+        [Description("Sown Crop")]
+        public string CropToSow { get; set; }
+        [Description("Sowing Date")]
+        public DateTime SowingDate { get; set; }
+        //[Description("Sowing Date2")]
+        //public DateTime SowingDate2 { get; set; }
+        //[Description("Sowing Date3")]
+        //public DateTime SowingDate3 { get; set; }
+        //[Description("Sowing Date4")]
+        //public DateTime SowingDate4 { get; set; }
+        
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Clock.Today.Date == SowingDate)
+            {
+                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+                
+            }
+            //else if (Clock.Today.Date == SowingDate2)
+            {
+                //    FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+            }
+            //else if (Clock.Today.Date == SowingDate3)
+            {
+                //    FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+            }
+            //else if (Clock.Today.Date == SowingDate4)
+            {
+                //    FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+        
+            }
+            
+            
+        }
+    }
 }
-				]]></Code>
+                
+]]></Code>
               </Manager>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -13704,7 +13703,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+              <YFieldName>FodderBeet.Structure.LeafTipsAppeared</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -13726,7 +13725,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>ObservedData</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+              <YFieldName>FodderBeet.Structure.LeafTipsAppeared</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -14416,6 +14415,56 @@ namespace Models
               <LegendPosition>BottomRight</LegendPosition>
               <DisabledSeries />
             </Graph>
+            <Graph>
+              <Name>GreenLeaves</Name>
+              <Series>
+                <Name>Series1</Name>
+                <Regression>
+                  <Name>Regression</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <ForEachSeries>false</ForEachSeries>
+                </Regression>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16747854</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>Circle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>PredictedObserved</TableName>
+                <XFieldName>Observed.FodderBeet.Leaf.PlantAppearedGreenLeafNo</XFieldName>
+                <YFieldName>Predicted.FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>BottomRight</LegendPosition>
+              <DisabledSeries />
+            </Graph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
@@ -14833,5 +14882,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>425</ExplorerWidth>
+  <ExplorerWidth>278</ExplorerWidth>
 </Simulations>
