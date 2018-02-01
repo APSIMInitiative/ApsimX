@@ -268,6 +268,19 @@ namespace Models.CLEM.Activities
             CalculateEcologicalIndicators();
         }
 
+        /// <summary>An event handler to allow us to clear pools.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        {
+            // decay N and DMD of pools and age by 1 month
+            foreach (var pool in LinkedNativeFoodType.Pools)
+            {
+                pool.Reset();
+            }
+        }
+
         /// <summary>
         /// Function to age resource pools
         /// </summary>
@@ -290,12 +303,13 @@ namespace Models.CLEM.Activities
                     detach = LinkedNativeFoodType.DetachRate;
                     pool.Age++;
                 }
-                pool.Set(pool.Amount * (1 - detach));
+                double detachedAmount = pool.Amount * (1 - detach);
+                pool.Set(detachedAmount);
+                pool.Detached = detachedAmount;
             }
             // remove all pools with less than 10g of food
             LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
         }
-
 
         private void SetupStartingPasturePools(double StartingGrowth)
         {
@@ -348,6 +362,7 @@ namespace Models.CLEM.Activities
             foreach (var pool in newPools)
             {
                 pool.Set(amountToAdd * (pool.StartingAmount / total));
+                pool.Growth = amountToAdd * (pool.StartingAmount / total);
             }
 
             // Previously: remove this months growth from pool age 0 to keep biomass at approximately setup.

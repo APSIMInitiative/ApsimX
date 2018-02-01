@@ -314,15 +314,15 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// A funtion to add intake and track changes in %N and DietDryMatterDigestibility
         /// </summary>
-        /// <param name="intake">Feed request containing intake information kg, %n, DMD</param>
+        /// <param name="intake">Feed request containing intake information kg, %N, DMD</param>
         public void AddIntake(FoodResourcePacket intake)
         {
             if (intake.Amount > 0)
             {
                 // determine the adjusted DMD of all intake
-                this.DietDryMatterDigestibility = ((this.Intake * this.DietDryMatterDigestibility / 100.0) + (intake.DMD / 100.0 * intake.Amount)) / (this.Intake + intake.Amount) * 100.0;
+                this.DietDryMatterDigestibility = ((this.Intake * this.DietDryMatterDigestibility) + (intake.DMD * intake.Amount)) / (this.Intake + intake.Amount);
                 // determine the adjusted percentage N of all intake
-                this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake / 100.0) + (intake.PercentN / 100.0 * intake.Amount)) / (this.Intake + intake.Amount) * 100.0; ;
+                this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake) + (intake.PercentN * intake.Amount)) / (this.Intake + intake.Amount); ;
                 this.Intake += intake.Amount;
             }
         }

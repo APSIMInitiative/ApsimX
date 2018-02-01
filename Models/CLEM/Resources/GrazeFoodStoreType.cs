@@ -199,6 +199,32 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Get a property of pools by pool age
+        /// </summary>
+        public double GetValueByPoolAge(int age, string property)
+        {
+            var pools = Pools.Where(a => a.Age == age);
+            switch (property)
+            {
+                case "Detached":
+                    return pools.Sum(a => a.Detached);
+                case "Growth":
+                    return pools.Sum(a => a.Growth);
+                case "Consumed":
+                    return pools.Sum(a => a.Consumed);
+                case "Amount":
+                    return pools.Sum(a => a.Amount);
+                case "DMD":
+                    return pools.Sum(a => a.Amount* a.DMD)/ pools.Sum(a => a.Amount);
+                case "Nitrogen":
+                    return pools.Sum(a => a.Amount * a.Nitrogen) / pools.Sum(a => a.Amount);
+                default:
+                    throw new ApsimXException(this, "Property [" + property + "] not available for reporting pools");
+            }
+        }
+
+
+        /// <summary>
         /// Amount (tonnes per ha)
         /// </summary>
         [XmlIgnore]

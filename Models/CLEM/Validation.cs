@@ -95,7 +95,7 @@ namespace Models.CLEM
     [AttributeUsage(AttributeTargets.Property)]
     public class ProportionAttribute : ValidationAttribute
     {
-        private string DefaultErrorMessage = "Value must be a percentage (0-100)";
+        private string DefaultErrorMessage = "Value must be a proportion (0-1)";
 
         /// <summary>
         /// 
