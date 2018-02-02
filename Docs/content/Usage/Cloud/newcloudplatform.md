@@ -31,14 +31,14 @@ Things to note about the new job presenter:
 
 ### Job Display
 
-`CloudJobDisplayView` is the view controlling the job diaplay UI. The presenter must inherit from `ICloudJobPresenter`. The presenter interacts with the view in several ways, such as updating the progress bars, updating the table of jobs, etc.
+`CloudJobDisplayView` is the view controlling the job viewer UI. The presenter must inherit from `ICloudJobPresenter`. The presenter interacts with the view in several ways, such as updating the progress bars, updating the table of jobs, etc.
 
 `DownloadWindow` is a small window that pops up when the user clicks the download button, allowing them to select a few options such as the output directory, whether or not to download debugging files, etc.
 It requires a reference to an `ICloudJobPresenter` object, so that it may call the presenter's `DownloadResults()` method when the user clicks to initiate the download.
 
 Things to note about the job display presenter:
 
-- Loading the list of jobs should occur in a separate thread so as not to make the UI unresponsive.
+- Loading the list of jobs should occur in a separate thread so that the UI remains responsive.
 - To update the job table, the presenter must call the `CloudJobDisplayView.UpdateJobTable()` method, passing in a list of JobDetails objects. 
 - To update the progress bars, the presenter can simply assign the progress (a double in the range [0, 1]) to the view's `JobLoadProgress` or `DownloadProgress` properties. 
 - When detaching the presenter, the view's `Detach()` method should be called. 
