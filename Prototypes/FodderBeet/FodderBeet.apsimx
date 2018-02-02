@@ -14713,8 +14713,8 @@ namespace Models
                 <Name>StateFactors</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <IrrFactor>False</IrrFactor>
                   <NitFactor>0</NitFactor>
+                  <IrrFactor>False</IrrFactor>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
