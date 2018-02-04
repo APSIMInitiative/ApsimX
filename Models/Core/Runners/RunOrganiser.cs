@@ -23,7 +23,7 @@
             {
                 List<string> AllSimulationNames = new List<string>();
                 List<ISimulationGenerator> allModels = Apsim.ChildrenRecursively(simulations, typeof(ISimulationGenerator)).Cast<ISimulationGenerator>().ToList();
-                allModels.ForEach(model => AllSimulationNames.AddRange(model.GetSimulationNames()));
+                allModels.ForEach(model => AllSimulationNames.AddRange(model.GetSimulationNames(false)));
                 return AllSimulationNames;
             }
         }

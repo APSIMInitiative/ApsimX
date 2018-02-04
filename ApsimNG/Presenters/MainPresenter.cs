@@ -16,6 +16,8 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Views;
+    using System.Linq;
+    using System.Text;    
 
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
@@ -26,7 +28,7 @@ namespace UserInterface.Presenters
     public class MainPresenter
     {
         /// <summary>A list of presenters for tabs on the left.</summary>
-        public List<ExplorerPresenter> presenters1 = new List<ExplorerPresenter>();
+        public List<IPresenter> presenters1 = new List<IPresenter>();
 
         /// <summary>A private reference to the view this presenter will talk to.</summary>
         private IMainView view;
@@ -35,7 +37,7 @@ namespace UserInterface.Presenters
         private string lastExamplesPath;
 
         /// <summary>A list of presenters for tabs on the right.</summary>
-        private List<ExplorerPresenter> presenters2 = new List<ExplorerPresenter>();
+        private List<IPresenter> presenters2 = new List<IPresenter>();
 
         /// <summary>Attach this presenter with a view. Can throw if there are errors during startup.</summary>
         /// <param name="view">The view to attach</param>
@@ -94,12 +96,12 @@ namespace UserInterface.Presenters
         {
             bool ok = true;
 
-            foreach (ExplorerPresenter presenter in this.presenters1)
+            foreach (ExplorerPresenter presenter in this.presenters1.OfType<ExplorerPresenter>())
             {
                 ok = presenter.SaveIfChanged() && ok;
             }
 
-            foreach (ExplorerPresenter presenter in this.presenters2)
+            foreach (ExplorerPresenter presenter in this.presenters2.OfType<ExplorerPresenter>())
             {
                 ok = presenter.SaveIfChanged() && ok;
             }
@@ -270,7 +272,7 @@ namespace UserInterface.Presenters
                 try
                 {
                     Simulations simulations = Simulations.Read(fileName);
-                    presenter = this.CreateNewTab(fileName, simulations, onLeftTabControl);
+                    presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
                     if (simulations.LoadErrors.Count > 0)
                     {
                         foreach (Exception error in simulations.LoadErrors)
@@ -368,6 +370,10 @@ namespace UserInterface.Presenters
                                 "Upgrade",
                                         new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
                                         this.OnUpgrade);
+            startPage.AddButton(
+                                "View Cloud Jobs",
+                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
+                                        this.OnViewCloudJobs);
             
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
@@ -583,8 +589,8 @@ namespace UserInterface.Presenters
         /// <param name="onLeftTabControl">If true, search the left screen, else search the right</param>
         /// <returns>The explorer presenter</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
-        {
-            List<ExplorerPresenter> presenters = onLeftTabControl ? this.presenters1 : this.presenters2;
+        {            
+            List<ExplorerPresenter> presenters = onLeftTabControl ? this.presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
             foreach (ExplorerPresenter presenter in presenters)
             {
                 if (presenter.ApsimXFile.FileName == fileName)
@@ -605,44 +611,61 @@ namespace UserInterface.Presenters
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(contents);
             Simulations simulations = Simulations.Read(doc.DocumentElement);
-            this.CreateNewTab(name, simulations, onLeftTabControl);
+            this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
         /// <summary>Create a new tab.</summary>
         /// <param name="name">Name of the simulation</param>
         /// <param name="simulations">The simulations object to add to tab.</param>
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
+        /// <param name="viewName">Name of the view to create.</param>
+        /// <param name="presenterName">Name of the presenter to create.</param>
         /// <returns>The explorer presenter</returns>
-        private ExplorerPresenter CreateNewTab(string name, Simulations simulations, bool onLeftTabControl)
+        private IPresenter CreateNewTab(string name, Simulations simulations, bool onLeftTabControl, string viewName, string presenterName)
         {
             this.view.ShowMessage(" ", Simulation.ErrorLevel.Information); // Clear the message window
-            ExplorerView explorerView = new ExplorerView(null);
-            ExplorerPresenter presenter = new ExplorerPresenter(this);
+            ViewBase newView;
+            IPresenter newPresenter;
+            try
+            {
+                newView = (ViewBase)Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
+                newPresenter = (IPresenter)Assembly.GetExecutingAssembly().CreateInstance(presenterName, false, BindingFlags.Default, null, new object[] { this }, null, null);
+            } catch (InvalidCastException e)
+            {
+                // viewName or presenterName does not define a class derived from ViewBase or IPresenter, respectively.
+                view.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+                return null;
+            }
+            
+            //ExplorerView explorerView = new ExplorerView(null);
+            //ExplorerPresenter presenter = new ExplorerPresenter(this);
             if (onLeftTabControl)
             {
-                this.presenters1.Add(presenter);
+                this.presenters1.Add(newPresenter);
             }
             else
             {
-                this.presenters2.Add(presenter);
+                this.presenters2.Add(newPresenter);
             }
 
             XmlDocument doc = new XmlDocument();
-            presenter.Attach(simulations, explorerView, null);
+            newPresenter.Attach(simulations, newView, null);
 
-            this.view.AddTab(name, null, explorerView.MainWidget, onLeftTabControl);
+            this.view.AddTab(name, null, newView.MainWidget, onLeftTabControl);
 
             // restore the simulation tree width on the form
-            if (simulations.ExplorerWidth == 0)
+            if (newPresenter.GetType() == typeof(ExplorerPresenter))
             {
-                presenter.TreeWidth = 250;
+                if (simulations.ExplorerWidth == 0)
+                {
+                    ((ExplorerPresenter)newPresenter).TreeWidth = 250;
+                }
+                else
+                {
+                    ((ExplorerPresenter)newPresenter).TreeWidth = simulations.ExplorerWidth;
+                }
             }
-            else
-            {
-                presenter.TreeWidth = simulations.ExplorerWidth;
-            }
-
-            return presenter;
+            return newPresenter;
         }
 
         /// <summary>
@@ -686,19 +709,23 @@ namespace UserInterface.Presenters
         {
             if (e.LeftTabControl)
             {
-                e.AllowClose = this.presenters1[e.Index - 1].SaveIfChanged();
+                IPresenter presenter = presenters1[e.Index - 1];
+                e.AllowClose = true;
+                if (presenter.GetType() == typeof(ExplorerPresenter)) e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();
                 if (e.AllowClose)
                 {
-                    this.presenters1[e.Index - 1].Detach();
+                    presenter.Detach();
                     this.presenters1.RemoveAt(e.Index - 1);
                 }
             }
             else
             {
-                e.AllowClose = this.presenters2[e.Index - 1].SaveIfChanged();
+                IPresenter presenter = presenters2[e.Index - 1];
+                e.AllowClose = true;
+                if (presenter.GetType() == typeof(ExplorerPresenter)) e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();                
                 if (e.AllowClose)
                 {
-                    this.presenters2[e.Index - 1].Detach();
+                    presenter.Detach();
                     this.presenters2.RemoveAt(e.Index - 1);
                 }
             }
@@ -777,6 +804,27 @@ namespace UserInterface.Presenters
             {
                 throw new Exception("Failed import: " + exp.Message);
             }
+        }
+
+        /// <summary>
+        /// Open a tab which shows a list of jobs submitted to the cloud.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event Arguments</param>
+        public void OnViewCloudJobs(object sender, EventArgs e)
+        {
+            bool onLeftTabControl = view.IsControlOnLeft(sender);            
+            // Clear the message window
+            view.ShowMessage(" ", Simulation.ErrorLevel.Information);
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "UserInterface.Views.AzureJobDisplayView", "UserInterface.Presenters.AzureJobDisplayPresenter");
+            } else
+            {
+                ShowMessage("Microsoft Azure functionality is currently only available under Windows.", Simulation.ErrorLevel.Error);
+                Console.WriteLine("You aren't on Windows!");
+            }
+            
         }
 
         /// <summary>
