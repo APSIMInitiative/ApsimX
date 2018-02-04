@@ -187,20 +187,19 @@
             {
                 try
                 {
-                    // Store a config file into the job directory that has the e-mail config                    
-                    if (jp.Recipient.Length > 0)
-                    {
-                        string tmpConfig = Path.Combine(Path.GetTempPath(), SETTINGS_FILENAME);
-                        using (StreamWriter file = new StreamWriter(tmpConfig))
-                        {
-                            file.WriteLine("EmailRecipient=" + jp.Recipient);
-                            file.WriteLine("EmailSender=agresearch.azure@gmail.com");
-                            file.WriteLine("EmailPW=New-Tangent");
-                        }
+                    // Store a config file into the job directory that has the e-mail config
 
-                        UploadFileIfNeeded("job-" + jp.JobId, tmpConfig);
-                        File.Delete(tmpConfig);
+                    string tmpConfig = Path.Combine(Path.GetTempPath(), SETTINGS_FILENAME);
+                    using (StreamWriter file = new StreamWriter(tmpConfig))
+                    {
+                        file.WriteLine("EmailRecipient=" + jp.Recipient);
+                        file.WriteLine("EmailSender=agresearch.azure@gmail.com");
+                        file.WriteLine("EmailPW=New-Tangent");
                     }
+
+                    UploadFileIfNeeded("job-" + jp.JobId, tmpConfig);
+                    File.Delete(tmpConfig);
+                    
                 }
                 catch (Exception ex)
                 {

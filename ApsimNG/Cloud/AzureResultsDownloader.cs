@@ -221,6 +221,7 @@ namespace ApsimNG.Cloud
 
                 // might be worth including a 'download all' flag (for testing purposes?), where everything in outputs gets downloaded
                 List<CloudBlockBlob> outputs = ListJobOutputsFromStorage().ToList();
+                foreach (var blob in outputs) Console.WriteLine(blob.Name);
                 if (outputs == null || outputs.Count < 1)
                 {
                     presenter.ShowError("No files in output container.");
