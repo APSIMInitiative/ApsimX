@@ -307,6 +307,19 @@ namespace Models.CLEM.Activities
                 pool.Set(detachedAmount);
                 pool.Detached = detachedAmount;
             }
+
+            //// combine all pools >= 12 months old.
+            //var pools12 = LinkedNativeFoodType.Pools.Where(a => a.Age >= 12);
+            //if(pools12.Count() > 1)
+            //{
+            //    while(pools12.Count() > 1)
+            //    {
+
+
+            //    }
+
+            //}
+
             // remove all pools with less than 10g of food
             LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
         }
@@ -349,7 +362,7 @@ namespace Models.CLEM.Activities
                     includedMonthCount++;
                 }
                 propBiomass *= 1 - LinkedNativeFoodType.DetachRate;
-                currentN *= 1 - LinkedNativeFoodType.DecayNitrogen;
+                currentN -= LinkedNativeFoodType.DecayNitrogen;
                 currentN = Math.Max(currentN, LinkedNativeFoodType.MinimumNitrogen);
                 currentDMD *= 1 - LinkedNativeFoodType.DecayDMD;
                 currentDMD = Math.Max(currentDMD, LinkedNativeFoodType.MinimumDMD);

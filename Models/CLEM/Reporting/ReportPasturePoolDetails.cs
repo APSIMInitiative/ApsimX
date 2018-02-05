@@ -90,15 +90,15 @@ namespace Models.CLEM.Reporting
                                 grazeStore = Resources.GetResourceItem(this, typeof(GrazeFoodStore), splitName[0], OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 
                                 // make each pool entry
-                                for (int j = 1; j < 11; j++)
+                                for (int j = 0; j <= 12; j++)
                                 {
                                     variableNames.Add(splitName[0]+"-"+j.ToString()+"-"+splitName[1]);
                                 }
                                 if (splitName[1] == "Amount")
                                 {
                                     // add amounts
-                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Amount as Total-Amount");
-                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".KgPerHa as Total-kgPerHa");
+                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Amount as Total amount");
+                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".KgPerHa as Total kgPerHa");
                                 }
                             }
                             else
@@ -115,7 +115,7 @@ namespace Models.CLEM.Reporting
             // Subscribe to events.
             if (EventNames == null)
             {
-                events.Subscribe("[Clock].CLEMEndOfTimeStep", DoOutputEvent);
+                events.Subscribe("[Clock].CLEMHerdSummary", DoOutputEvent);
             }
             else
             {
@@ -140,7 +140,7 @@ namespace Models.CLEM.Reporting
                     double value = grazeStore.GetValueByPoolAge(Convert.ToInt32(values[1]), values[2]);
                     if (value != 0)
                     {
-                        valuesToWrite[i] = value;
+                        valuesToWrite[i] = Math.Round(value, 2);
                     }
                 }
                 else
