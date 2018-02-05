@@ -24,7 +24,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view displaying the information.
         /// </summary>
-        private AzureJobDisplayView view;
+        private CloudJobDisplayView view;
 
         /// <summary>
         /// The parent presenter.
@@ -95,8 +95,9 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter"></param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.view = (AzureJobDisplayView)view;
+            this.view = (CloudJobDisplayView)view;
             this.view.Presenter = this;
+            Settings.Default["BatchAccount"] = "";
             GetCredentials();
         }
 
@@ -117,7 +118,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Updates the download progress bar.
+        /// Asks the view to update the progress bar of an ongoing download.
         /// </summary>
         /// <param name="progress"></param>
         public void UpdateDownloadProgress(double progress)
@@ -156,7 +157,7 @@ namespace UserInterface.Presenters
                         jobList = newJobs;
                     }
                 }
-                // refresh every 10 seconds
+                // Refresh job list every 10 seconds
                 System.Threading.Thread.Sleep(10000);
             }            
         }
@@ -177,7 +178,7 @@ namespace UserInterface.Presenters
         /// <param name="id">ID of the job.</param>
         /// <param name="withOwner">If true, the return value will include the job owner's name in brackets.</param>
         /// <returns></returns>
-        public string GetJobName(string id, bool withOwner)
+        public string GetFormattedJobName(string id, bool withOwner)
         {
             JobDetails job = GetJob(id);
             return withOwner ? job.DisplayName + " (" + job.Owner + ")" : job.DisplayName;
@@ -228,8 +229,8 @@ namespace UserInterface.Presenters
             var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
 
             IPagedEnumerable<CloudJob> cloudJobs = null;
-
-
+            
+            // Attempt to download raw job list. If this fails more than 3 times, return.
             int numTries = 0;
             while (numTries < 4 && cloudJobs == null)
             {
@@ -250,7 +251,8 @@ namespace UserInterface.Presenters
                 }
             }
             
-            
+            // Parse jobs into a list of JobDetails objects.            
+
             var length = cloudJobs.Count();
             int i = 0;
 
@@ -269,13 +271,12 @@ namespace UserInterface.Presenters
                 }
 
                 string owner = GetAzureMetaData("job-" + cloudJob.Id, "Owner");
-
-                TaskCounts tasks;
+                                
                 long numTasks = 1;
                 double jobProgress = 0;
                 try
                 {
-                    tasks = batchClient.JobOperations.GetJobTaskCounts(cloudJob.Id);
+                    TaskCounts tasks = batchClient.JobOperations.GetJobTaskCounts(cloudJob.Id);
                     numTasks = tasks.Active + tasks.Running + tasks.Completed;
                     // if there are no tasks, set progress to 100%
                     jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
@@ -297,7 +298,7 @@ namespace UserInterface.Presenters
                     DisplayName = cloudJob.DisplayName,
                     State = cloudJob.State.ToString(),
                     Owner = owner,
-                    NumSims = numTasks,
+                    NumSims = numTasks - 1, // subtract one because one of these is the job manager
                     Progress = jobProgress,
                     CpuTime = cpu
                 };
@@ -306,12 +307,12 @@ namespace UserInterface.Presenters
                 {
                     job.StartTime = cloudJob.ExecutionInformation.StartTime;
                     job.EndTime = cloudJob.ExecutionInformation.EndTime;
-                }                
+                }
                 jobs.Add(job);
                 i++;
             }
             view.HideLoadingProgressBar();
-            if (jobs == null) return new List<JobDetails>();            
+            if (jobs == null) return new List<JobDetails>();
             return jobs;
         }
 
@@ -349,7 +350,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GetCredentials()
+        public void GetCredentials()
         {
             if (CredentialsExist())
             {
@@ -376,6 +377,7 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Checks if Azure credentials exist in Settings.Default. This method does not check their validity.
+        /// It also does not check to see if the path to the Azure licence file exists there.
         /// </summary>
         /// <returns>True if credentials exist, false otherwise.</returns>
         private bool CredentialsExist()
@@ -436,7 +438,6 @@ namespace UserInterface.Presenters
 
             //view.HideLoadingProgressBar();
             view.ShowDownloadProgressBar();
-            view.ShowDownloadProgressBar();
             ShowMessage("");
             string path = (string)Settings.Default["OutputDir"];
             AzureResultsDownloader dl;
@@ -479,15 +480,7 @@ namespace UserInterface.Presenters
             }
             while (FetchJobs.IsBusy) ;
             FetchJobs.RunWorkerAsync();
-        }
-
-        /// <summary>
-        /// Opens a dialog box which asks the user for credentials.
-        /// </summary>
-        public void SetupCredentials()
-        {
-            AzureCredentialsSetup setup = new AzureCredentialsSetup();
-        }
+        }        
 
         /// <summary>
         /// Removes a job from the list of currently downloading jobs.
@@ -518,18 +511,13 @@ namespace UserInterface.Presenters
             MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Information);
         }
 
-        public void ShowWarning(string msg)
-        {
-            MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Warning);
-        }
-
         /// <summary>
         /// Sets the default downlaod directory.
         /// </summary>
         /// <param name="dir">Path to the directory.</param>
         public void SetDownloadDirectory(string dir)
-        {            
-            if (dir == "") return;
+        {
+            if (dir == null || dir == "") return;
 
             if (Directory.Exists(dir))
             {
@@ -661,16 +649,14 @@ namespace UserInterface.Presenters
         public void StopJobs(List<string> jobIds)
         {
             // ask user once for confirmation
-
-            // get the grammar right when asking for confirmation
             if (jobIds.Count < 1)
             {
                 MainPresenter.ShowMessage("Unable to stop jobs: no jobs are selected", Simulation.ErrorLevel.Information);
                 return;
             }
+            // get the grammar right when asking for confirmation
             bool stopMultiple = jobIds.Count > 1;
-            string msg = "Are you sure you want to stop " + (stopMultiple ? "these " + jobIds.Count + " jobs?" : "this job?") + " There is no way to resume their execution!";
-            string label = stopMultiple ? "Stop these jobs?" : "Stop this job?";
+            string msg = "Are you sure you want to stop " + (stopMultiple ? "these " + jobIds.Count + " jobs?" : "this job?") + " There is no way to resume " + (stopMultiple ? "their" : "its" ) + " execution!";
             if (!view.AskQuestion(msg)) return;
             
             foreach (string id in jobIds)
@@ -695,7 +681,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception e)
             {
-                ShowError(e.Message);
+                ShowError(e.ToString());
             }
         }
 

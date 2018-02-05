@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Gtk;
 
 namespace ApsimNG.Cloud
@@ -56,6 +52,7 @@ namespace ApsimNG.Cloud
         /// </summary>
         public AzureCredentialsSetup() : base("Azure Batch and Storage Account Information")
         {
+            WidthRequest = 500;
             // initialise input fields with the last values used
             batchAccountInput = new Entry((string)Properties.Settings.Default["BatchAccount"]);
             batchUrlInput = new Entry((string)Properties.Settings.Default["BatchUrl"]);

@@ -25,7 +25,7 @@ namespace UserInterface.Interfaces
         /// <param name="id">ID of the job.</param>
         /// <param name="withOwner">If true, the return value will include the job owner's name in parentheses.</param>
         /// <returns></returns>
-        string GetJobName(string id, bool withOwner);
+        string GetFormattedJobName(string id, bool withOwner);
 
         /// <summary>
         /// Checks if the current user owns a job. 
@@ -58,7 +58,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Opens a dialog box which asks the user for credentials.
         /// </summary>
-        void SetupCredentials();
+        void GetCredentials();
 
         /// <summary>
         /// Sets the default downlaod directory.

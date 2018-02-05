@@ -246,9 +246,9 @@
     <Compile Include="Utility\Graph.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
     <Compile Include="Views\AxisView.cs" />
-    <Compile Include="Views\AzureJobDisplayView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
+    <Compile Include="Views\CloudJobDisplayView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
     <Compile Include="Views\DataStoreView.cs" />
     <Compile Include="Views\DropDownView.cs" />

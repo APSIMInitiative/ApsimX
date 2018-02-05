@@ -207,7 +207,8 @@ namespace ApsimNG.Cloud
             try
             {
                 if (downloader.CancellationPending || ct.IsCancellationRequested) return;
-
+                
+                // delete temp directory if it already exists and create a new one in its place
                 try
                 {
                     if (Directory.Exists(tempPath)) Directory.Delete(tempPath, true);
@@ -227,8 +228,10 @@ namespace ApsimNG.Cloud
                     presenter.ShowError("No files in output container.");
                     return;
                 }
+                
+                // Only download the results if the user wants a CSV or the result files themselves
                 if (saveRawOutputFiles || exportToCsv)
-                {
+                {                    
                     List<CloudBlockBlob> zipBlobs = outputs.Where(blob => zipFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
                     if (zipBlobs != null && zipBlobs.Count > 0) // if the result file are nicely zipped up for us
                     {
@@ -249,7 +252,7 @@ namespace ApsimNG.Cloud
                         }
                     } else
                     {
-                        // download each individual result file
+                        // Results are not zipped up (probably because the job was run on the old Azure job manager), so download each individual result file
                         List<CloudBlockBlob> resultBlobs = outputs.Where(blob => resultFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
                         Download(resultBlobs, rawResultsPath, ref ct);
                     }
@@ -259,6 +262,7 @@ namespace ApsimNG.Cloud
                         success = SummariseResults(true);
                     }
 
+                    // Delete the output files if the user doesn't want to keep them
                     if (!saveRawOutputFiles)
                     {
                         foreach (string resultFile in Directory.EnumerateFiles(rawResultsPath).Where(file => resultFileFormats.Contains(Path.GetExtension(file))))
@@ -328,6 +332,8 @@ namespace ApsimNG.Cloud
         /// <param name="e"></param>
         private void DownloadProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            // job name is currently unused, but maybe in the future the view could display the name of the currently downloading file 
+            // as well as the progress
             string jobName = e.UserState.ToString();
             numBlobsComplete++;
             double progress = 1.0 * numBlobsComplete / numBlobs;
