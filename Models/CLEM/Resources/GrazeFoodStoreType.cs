@@ -203,7 +203,16 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double GetValueByPoolAge(int age, string property)
         {
-            var pools = Pools.Where(a => a.Age == age);
+            IEnumerable<GrazeFoodStorePool> pools;
+            // group all pools >12 months old.
+            if (age < 12)
+            {
+                pools = Pools.Where(a => a.Age == age);
+            }
+            else
+            {
+                pools = Pools.Where(a => a.Age >= 12);
+            }
             switch (property)
             {
                 case "Detached":

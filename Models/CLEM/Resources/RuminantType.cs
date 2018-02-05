@@ -634,12 +634,12 @@ namespace Models.CLEM.Resources
 
         #region other
 
-        /// <summary>
-        /// Methane production from intake intercept
-        /// </summary>
-        [Description("Methane production from intake intercept")]
-        [Required]
-        public double MethaneProductionIntercept { get; set; }
+        ///// <summary>
+        ///// Methane production from intake intercept
+        ///// </summary>
+        //[Description("Methane production from intake intercept")]
+        //[Required]
+        //public double MethaneProductionIntercept { get; set; }
 
         /// <summary>
         /// Methane production from intake coefficient

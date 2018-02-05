@@ -40,9 +40,9 @@
             <NToDMDIntercept>41.4</NToDMDIntercept>
             <NToDMDCrudeProteinDenominator>0</NToDMDCrudeProteinDenominator>
             <GreenNitrogen>2</GreenNitrogen>
-            <DecayNitrogen>0.1</DecayNitrogen>
+            <DecayNitrogen>0.35</DecayNitrogen>
             <MinimumNitrogen>0.4</MinimumNitrogen>
-            <DecayDMD>0.35</DecayDMD>
+            <DecayDMD>0.1</DecayDMD>
             <MinimumDMD>43</MinimumDMD>
             <DetachRate>0.03</DetachRate>
             <CarryoverDetachRate>0.12</CarryoverDetachRate>
@@ -272,9 +272,9 @@
             <NToDMDIntercept>41.4</NToDMDIntercept>
             <NToDMDCrudeProteinDenominator>0</NToDMDCrudeProteinDenominator>
             <GreenNitrogen>2</GreenNitrogen>
-            <DecayNitrogen>0.1</DecayNitrogen>
+            <DecayNitrogen>0.35</DecayNitrogen>
             <MinimumNitrogen>0.4</MinimumNitrogen>
-            <DecayDMD>0.35</DecayDMD>
+            <DecayDMD>0.1</DecayDMD>
             <MinimumDMD>43</MinimumDMD>
             <DetachRate>0.03</DetachRate>
             <CarryoverDetachRate>0.12</CarryoverDetachRate>
@@ -503,9 +503,9 @@
             <NToDMDIntercept>41.4</NToDMDIntercept>
             <NToDMDCrudeProteinDenominator>0</NToDMDCrudeProteinDenominator>
             <GreenNitrogen>2</GreenNitrogen>
-            <DecayNitrogen>0.1</DecayNitrogen>
+            <DecayNitrogen>0.35</DecayNitrogen>
             <MinimumNitrogen>0.4</MinimumNitrogen>
-            <DecayDMD>0.35</DecayDMD>
+            <DecayDMD>0.1</DecayDMD>
             <MinimumDMD>43</MinimumDMD>
             <DetachRate>0.03</DetachRate>
             <CarryoverDetachRate>0.12</CarryoverDetachRate>
@@ -605,8 +605,7 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
-            <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
+            <MethaneProductionCoefficient>20.7</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </RuminantHerd>
@@ -931,7 +930,7 @@
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <Age>8</Age>
-                <Number>3000</Number>
+                <Number>10</Number>
                 <Weight>180</Weight>
                 <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
@@ -964,9 +963,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
@@ -1011,8 +1010,7 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
-            <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
+            <MethaneProductionCoefficient>20.7</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </RuminantHerd>
@@ -1435,8 +1433,7 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
-            <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
+            <MethaneProductionCoefficient>20.7</MethaneProductionCoefficient>
           </RuminantType>
           <RuminantType>
             <Name>Bos indicus1</Name>
@@ -1527,8 +1524,7 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
-            <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
+            <MethaneProductionCoefficient>20.7</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </RuminantHerd>
@@ -2179,8 +2175,7 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
-            <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
+            <MethaneProductionCoefficient>20.7</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </RuminantHerd>
@@ -2427,7 +2422,6 @@
     <FileSQLiteGRASP>
       <Name>FileGRASP</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage />
       <FileName>C:\Data\Source\Repos\ApsimX\Prototypes\CLEM\NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
     </FileSQLiteGRASP>
     <IncludeInDocumentation>true</IncludeInDocumentation>

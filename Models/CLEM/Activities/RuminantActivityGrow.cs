@@ -518,7 +518,10 @@ namespace Models.CLEM.Activities
             //methaneProduced = methaneProduced / 55.28 * 1000; // grams per day
 
             // grams per day, Hunter 2007 (35.16 & -34.8)
-            methaneProduced = (ind.BreedParams.MethaneProductionCoefficient * intakeDaily + ind.BreedParams.MethaneProductionIntercept) / 47.62; 
+            //methaneProduced = (ind.BreedParams.MethaneProductionCoefficient * intakeDaily + ind.BreedParams.MethaneProductionIntercept) / 47.62;
+            
+            // Charmely et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
+            methaneProduced = ind.BreedParams.MethaneProductionCoefficient * intakeDaily;
         }
 
         /// <summary>
