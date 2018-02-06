@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="18">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="24">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1188,18 +1188,8 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
               <string>[Calculations].Script.AnnualDenitrification</string>
               <string>[Calculations].Script.AnnualN2O</string>
               <string>[Calculations].Script.AnnualLeaching</string>
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
+              <string>[Calculations].Script.AnnualET</string>
+              <string>[Calculations].Script.AnnualNPP</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].EndOfYear</string>
@@ -1363,55 +1353,55 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock; 
-		[Link] OilPalm oilPalm;
-		[Link] Summary Summary;
-		
-		[Description("Sowing date")]
-		public DateTime sowing_date {get; set;}
-		
-		[Description("Plant population /ha")]
-		public double population {get; set;}
+    [Serializable]
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Clock Clock; 
+        [Link] OilPalm oilPalm;
+        [Link] Summary Summary;
+        
+        [Description("Sowing date")]
+        public DateTime sowing_date {get; set;}
+        
+        [Description("Plant population /ha")]
+        public double population {get; set;}
 
 
-		[Description("Cultivar")]
-		[Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
+        [Description("Cultivar")]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
         public string cultivar {get; set;}
 
-		[Description("Sowing depth (mm)")]
-		public double sowing_depth {get; set;}
-		
-		public double Plant_population {get;set;}
-		
-		private byte HarvestCounter = 1;
+        [Description("Sowing depth (mm)")]
+        public double sowing_depth {get; set;}
+        
+        public double Plant_population {get;set;}
+        
+        private byte HarvestCounter = 1;
 
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-		    Plant_population = 0;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{	
-			if (Clock.Today.Date == sowing_date)
-			{
-			    oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
-			}
-			
-			if (HarvestCounter == 14)
-			{
-				oilPalm.Harvest();
-				HarvestCounter = 1;
-			}
-			
-			HarvestCounter++;
-		}
-	}
+        {
+            Plant_population = 0;
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {    
+            if (Clock.Today.Date == sowing_date)
+            {
+                oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
+            }
+            
+            if (HarvestCounter == 14)
+            {
+                oilPalm.Harvest();
+                HarvestCounter = 1;
+            }
+            
+            HarvestCounter++;
+        }
+    }
 }
 ]]></Code>
           </Manager>
@@ -1447,6 +1437,8 @@ namespace Models
               <AnnualDenitrification>0</AnnualDenitrification>
               <AnnualN2O>0</AnnualN2O>
               <AnnualLeaching>0</AnnualLeaching>
+              <AnnualET>0</AnnualET>
+              <AnnualNPP>0</AnnualNPP>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -1458,36 +1450,36 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 { 
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] OilPalm OilPalm;
-		[Link] Soil Soil;
-		[Link] SurfaceOrganicMatter SurfaceOM;
-		[Link] Summary Summary;
-		[Link] Fertiliser Fertiliser;
-		[Link] Weather Weather;
-		
-		public double AnnualRain {get; set;}
-		public double Offset {get; set;}
-		public double AnnualFronds {get; set;}
-		public double AnnualBunches {get; set;}
-		public double AnnualYield {get; set;}
-		public double AnnualBunchSize {get; set;}
-		public double SoilCtpha {get; set;}
-		public double surfaceom_wt_oilpalmstem {get; set;}
-		public double surfaceom_wt_oilpalmunderstory {get; set;}
-	    public double OilPalmYield {get; set;}
-	    public double TotalNO3 {get; set;}
-	    public double NitTot {get;set;}
-	    public double AnnualUnderstoryNFixation {get; set;}	
-	    public double AnnualUnderstoryNPP {get; set;}	
-	    public double AnnualUnderstoryNUptake {get; set;}	
-	    public double AnnualPalmNUptake {get; set;}
-	    
-	    public double AnnualTotalVegetativeNPP {get; set;}
+    [Serializable]
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] OilPalm OilPalm;
+        [Link] Soil Soil;
+        [Link] SurfaceOrganicMatter SurfaceOM;
+        [Link] Summary Summary;
+        [Link] Fertiliser Fertiliser;
+        [Link] Weather Weather;
+        
+        public double AnnualRain {get; set;}
+        public double Offset {get; set;}
+        public double AnnualFronds {get; set;}
+        public double AnnualBunches {get; set;}
+        public double AnnualYield {get; set;}
+        public double AnnualBunchSize {get; set;}
+        public double SoilCtpha {get; set;}
+        public double surfaceom_wt_oilpalmstem {get; set;}
+        public double surfaceom_wt_oilpalmunderstory {get; set;}
+        public double OilPalmYield {get; set;}
+        public double TotalNO3 {get; set;}
+        public double NitTot {get;set;}
+        public double AnnualUnderstoryNFixation {get; set;}    
+        public double AnnualUnderstoryNPP {get; set;}    
+        public double AnnualUnderstoryNUptake {get; set;}    
+        public double AnnualPalmNUptake {get; set;}
+        
+        public double AnnualTotalVegetativeNPP {get; set;}
         public double AnnualPalmVegetativeNPP {get; set;}
         public double AnnualFrondNPP {get; set;}
         public double AnnualStemNPP {get; set;}
@@ -1499,26 +1491,29 @@ namespace Models
         public double AnnualDenitrification {get; set;}
         public double AnnualN2O {get;set;}
         public double AnnualLeaching {get; set;}
+        public double AnnualET {get; set;}
+        public double AnnualNPP {get; set;}
+
         
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-		    AnnualRain = 0;
-			Offset = 0;
-			OilPalmYield = 0;
-			AnnualFronds = 0;
-			AnnualBunches = 0;
-			AnnualBunchSize = 0;
-			AnnualYield = 0;
-			SoilCtpha = 0;
-			surfaceom_wt_oilpalmstem = 0;
-			surfaceom_wt_oilpalmunderstory = 0;	
-			NitTot=0;
-			TotalNO3 = 0;
-			AnnualUnderstoryNFixation = 0;
-			AnnualUnderstoryNPP = 0;
-			AnnualUnderstoryNUptake = 0;
-			AnnualPalmNUptake = 0;
+        {
+            AnnualRain = 0;
+            Offset = 0;
+            OilPalmYield = 0;
+            AnnualFronds = 0;
+            AnnualBunches = 0;
+            AnnualBunchSize = 0;
+            AnnualYield = 0;
+            SoilCtpha = 0;
+            surfaceom_wt_oilpalmstem = 0;
+            surfaceom_wt_oilpalmunderstory = 0;    
+            NitTot=0;
+            TotalNO3 = 0;
+            AnnualUnderstoryNFixation = 0;
+            AnnualUnderstoryNPP = 0;
+            AnnualUnderstoryNUptake = 0;
+            AnnualPalmNUptake = 0;
 
             AnnualTotalVegetativeNPP = 0;
             AnnualPalmVegetativeNPP = 0;
@@ -1527,26 +1522,28 @@ namespace Models
             AnnualRootNPP = 0;
             AnnualBunchNPP = 0;
             AnnualTotalNInput = 0;
-			AnnualFertiliserNAdded = 0;
-			AnnualNRemoved = 0;
-			AnnualDenitrification = 0;
-			AnnualN2O = 0;
-		    AnnualLeaching = 0;	
-		}
-		
+            AnnualFertiliserNAdded = 0;
+            AnnualNRemoved = 0;
+            AnnualDenitrification = 0;
+            AnnualN2O = 0;
+            AnnualLeaching = 0;    
+            AnnualET = 0;
+            AnnualNPP = 0;
+        }
+        
 
        [EventSubscribe("StartOfYear")]
        private void OnStartOfYear(object sender, EventArgs e)
        {
             AnnualRain = 0;
-	   		Offset = OilPalm.CumulativeFrondNumber;
-			AnnualYield = 0;
-			AnnualBunches = 0;
-			AnnualBunchSize = 0;
-			AnnualUnderstoryNFixation = 0;
-			AnnualUnderstoryNPP = 0;
-			AnnualUnderstoryNUptake = 0;
-			AnnualPalmNUptake = 0;
+               Offset = OilPalm.CumulativeFrondNumber;
+            AnnualYield = 0;
+            AnnualBunches = 0;
+            AnnualBunchSize = 0;
+            AnnualUnderstoryNFixation = 0;
+            AnnualUnderstoryNPP = 0;
+            AnnualUnderstoryNUptake = 0;
+            AnnualPalmNUptake = 0;
             AnnualTotalVegetativeNPP = 0;
             AnnualPalmVegetativeNPP = 0;
             AnnualUnderstoryNPP = 0;
@@ -1560,22 +1557,24 @@ namespace Models
             AnnualDenitrification = 0;
             AnnualN2O = 0;
             AnnualLeaching = 0;
-		}
-		
+            AnnualET = 0;
+            AnnualNPP = 0;
+        }
+        
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
-		{
+        {
             AnnualRain += Weather.Rain;
-			SoilCtpha = MathUtilities.Sum(Soil.SoilNitrogen.TotalC) / 1000;
-			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-			TotalNO3 = MathUtilities.Sum(Soil.NO3N);
-			NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
+            SoilCtpha = MathUtilities.Sum(Soil.SoilNitrogen.TotalC) / 1000;
+            surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
+            TotalNO3 = MathUtilities.Sum(Soil.NO3N);
+            NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
 
-			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
-			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
-			AnnualUnderstoryNUptake += MathUtilities.Sum(OilPalm.UnderstoryNUptake);
-			AnnualPalmNUptake += MathUtilities.Sum(OilPalm.NUptake);
-			AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;							
+            AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
+            AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
+            AnnualUnderstoryNUptake += MathUtilities.Sum(OilPalm.UnderstoryNUptake);
+            AnnualPalmNUptake += MathUtilities.Sum(OilPalm.NUptake);
+            AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;                            
 
 
             AnnualTotalVegetativeNPP += (OilPalm.RootGrowth + OilPalm.StemGrowth + OilPalm.FrondGrowth + OilPalm.UnderstoryDltDM) * 10;
@@ -1590,19 +1589,22 @@ namespace Models
             AnnualDenitrification += MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
             AnnualN2O += MathUtilities.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
-            
-		}
-		
-		[EventSubscribe("Harvesting")]
-		private void OnHarvesting(object sender, EventArgs e)
-		{
-			AnnualYield += OilPalm.HarvestFFB;
-			AnnualBunches += OilPalm.HarvestBunches;
-			if (AnnualBunches > 0)
-				AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);
-			AnnualNRemoved += OilPalm.HarvestNRemoved;
-		}
-	}
+
+            AnnualET += Soil.SoilWater.Es + OilPalm.EP + OilPalm.UnderstoryEP;
+            AnnualNPP = AnnualTotalVegetativeNPP + AnnualBunchNPP;
+
+        }
+        
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, EventArgs e)
+        {
+            AnnualYield += OilPalm.HarvestFFB;
+            AnnualBunches += OilPalm.HarvestBunches;
+            if (AnnualBunches > 0)
+                AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);
+            AnnualNRemoved += OilPalm.HarvestNRemoved;
+        }
+    }
 }
 ]]></Code>
           </Manager>
@@ -2032,6 +2034,7 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <DisabledSimNames />
     </Experiment>
     <Experiment>
       <Name>Hargy</Name>
@@ -2767,18 +2770,8 @@ namespace Models
               <string>[Calculations].Script.AnnualDenitrification</string>
               <string>[Calculations].Script.AnnualN2O</string>
               <string>[Calculations].Script.AnnualLeaching</string>
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
+              <string>[Calculations].Script.AnnualET</string>
+              <string>[Calculations].Script.AnnualNPP</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].EndOfYear</string>
@@ -2926,58 +2919,58 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] OilPalm oilPalm;
-		[Link] Summary Summary;
-		
-		[Description("Sowing date")]
-		public DateTime sowing_date {get; set;}
-		
-		[Description("Plant population /ha")]
-		public double population {get; set;}
+    [Serializable]
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] OilPalm oilPalm;
+        [Link] Summary Summary;
+        
+        [Description("Sowing date")]
+        public DateTime sowing_date {get; set;}
+        
+        [Description("Plant population /ha")]
+        public double population {get; set;}
 
 
-		[Description("Cultivar")]
-		[Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
+        [Description("Cultivar")]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
         public string cultivar {get; set;}
 
-		[Description("Sowing depth (mm)")]
-		public double sowing_depth {get; set;}
-		
-		public double Plant_population {get;set;}
-		
-		private byte HarvestCounter = 1;
+        [Description("Sowing depth (mm)")]
+        public double sowing_depth {get; set;}
+        
+        public double Plant_population {get;set;}
+        
+        private byte HarvestCounter = 1;
 
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-		    Plant_population = 0;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			// Add Trunk from previous plantation
-			//surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
-			
-			if (Clock.Today.Date == sowing_date)
-			{
-			    oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
-			}
-			
-			if (HarvestCounter == 14)
-			{
-				oilPalm.Harvest();
-				HarvestCounter = 1;
-			}
-			
-			HarvestCounter++;
-		}
-	}
+        {
+            Plant_population = 0;
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            // Add Trunk from previous plantation
+            //surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
+            
+            if (Clock.Today.Date == sowing_date)
+            {
+                oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
+            }
+            
+            if (HarvestCounter == 14)
+            {
+                oilPalm.Harvest();
+                HarvestCounter = 1;
+            }
+            
+            HarvestCounter++;
+        }
+    }
 }
 ]]></Code>
           </Manager>
@@ -3013,6 +3006,8 @@ namespace Models
               <AnnualDenitrification>0</AnnualDenitrification>
               <AnnualN2O>0</AnnualN2O>
               <AnnualLeaching>0</AnnualLeaching>
+              <AnnualET>0</AnnualET>
+              <AnnualNPP>0</AnnualNPP>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -3024,36 +3019,36 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 { 
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] OilPalm OilPalm;
-		[Link] Soil Soil;
-		[Link] SurfaceOrganicMatter SurfaceOM;
-		[Link] Summary Summary;
-		[Link] Fertiliser Fertiliser;
-		[Link] Weather Weather;
-		
-		public double AnnualRain {get; set;}
-		public double Offset {get; set;}
-		public double AnnualFronds {get; set;}
-		public double AnnualBunches {get; set;}
-		public double AnnualYield {get; set;}
-		public double AnnualBunchSize {get; set;}
-		public double SoilCtpha {get; set;}
-		public double surfaceom_wt_oilpalmstem {get; set;}
-		public double surfaceom_wt_oilpalmunderstory {get; set;}
-	    public double OilPalmYield {get; set;}
-	    public double TotalNO3 {get; set;}
-	    public double NitTot {get;set;}
-	    public double AnnualUnderstoryNFixation {get; set;}	
-	    public double AnnualUnderstoryNPP {get; set;}	
-	    public double AnnualUnderstoryNUptake {get; set;}	
-	    public double AnnualPalmNUptake {get; set;}
-	    
-	    public double AnnualTotalVegetativeNPP {get; set;}
+    [Serializable]
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] OilPalm OilPalm;
+        [Link] Soil Soil;
+        [Link] SurfaceOrganicMatter SurfaceOM;
+        [Link] Summary Summary;
+        [Link] Fertiliser Fertiliser;
+        [Link] Weather Weather;
+        
+        public double AnnualRain {get; set;}
+        public double Offset {get; set;}
+        public double AnnualFronds {get; set;}
+        public double AnnualBunches {get; set;}
+        public double AnnualYield {get; set;}
+        public double AnnualBunchSize {get; set;}
+        public double SoilCtpha {get; set;}
+        public double surfaceom_wt_oilpalmstem {get; set;}
+        public double surfaceom_wt_oilpalmunderstory {get; set;}
+        public double OilPalmYield {get; set;}
+        public double TotalNO3 {get; set;}
+        public double NitTot {get;set;}
+        public double AnnualUnderstoryNFixation {get; set;}    
+        public double AnnualUnderstoryNPP {get; set;}    
+        public double AnnualUnderstoryNUptake {get; set;}    
+        public double AnnualPalmNUptake {get; set;}
+        
+        public double AnnualTotalVegetativeNPP {get; set;}
         public double AnnualPalmVegetativeNPP {get; set;}
         public double AnnualFrondNPP {get; set;}
         public double AnnualStemNPP {get; set;}
@@ -3065,26 +3060,29 @@ namespace Models
         public double AnnualDenitrification {get; set;}
         public double AnnualN2O {get;set;}
         public double AnnualLeaching {get; set;}
+        public double AnnualET {get; set;}
+        public double AnnualNPP {get; set;}
+
         
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-		    AnnualRain = 0;
-			Offset = 0;
-			OilPalmYield = 0;
-			AnnualFronds = 0;
-			AnnualBunches = 0;
-			AnnualBunchSize = 0;
-			AnnualYield = 0;
-			SoilCtpha = 0;
-			surfaceom_wt_oilpalmstem = 0;
-			surfaceom_wt_oilpalmunderstory = 0;	
-			NitTot=0;
-			TotalNO3 = 0;
-			AnnualUnderstoryNFixation = 0;
-			AnnualUnderstoryNPP = 0;
-			AnnualUnderstoryNUptake = 0;
-			AnnualPalmNUptake = 0;
+        {
+            AnnualRain = 0;
+            Offset = 0;
+            OilPalmYield = 0;
+            AnnualFronds = 0;
+            AnnualBunches = 0;
+            AnnualBunchSize = 0;
+            AnnualYield = 0;
+            SoilCtpha = 0;
+            surfaceom_wt_oilpalmstem = 0;
+            surfaceom_wt_oilpalmunderstory = 0;    
+            NitTot=0;
+            TotalNO3 = 0;
+            AnnualUnderstoryNFixation = 0;
+            AnnualUnderstoryNPP = 0;
+            AnnualUnderstoryNUptake = 0;
+            AnnualPalmNUptake = 0;
 
             AnnualTotalVegetativeNPP = 0;
             AnnualPalmVegetativeNPP = 0;
@@ -3093,26 +3091,28 @@ namespace Models
             AnnualRootNPP = 0;
             AnnualBunchNPP = 0;
             AnnualTotalNInput = 0;
-			AnnualFertiliserNAdded = 0;
-			AnnualNRemoved = 0;
-			AnnualDenitrification = 0;
-			AnnualN2O = 0;
-		    AnnualLeaching = 0;	
-		}
-		
+            AnnualFertiliserNAdded = 0;
+            AnnualNRemoved = 0;
+            AnnualDenitrification = 0;
+            AnnualN2O = 0;
+            AnnualLeaching = 0;    
+            AnnualET = 0;
+            AnnualNPP = 0;
+        }
+        
 
        [EventSubscribe("StartOfYear")]
        private void OnStartOfYear(object sender, EventArgs e)
        {
             AnnualRain = 0;
-	   		Offset = OilPalm.CumulativeFrondNumber;
-			AnnualYield = 0;
-			AnnualBunches = 0;
-			AnnualBunchSize = 0;
-			AnnualUnderstoryNFixation = 0;
-			AnnualUnderstoryNPP = 0;
-			AnnualUnderstoryNUptake = 0;
-			AnnualPalmNUptake = 0;
+               Offset = OilPalm.CumulativeFrondNumber;
+            AnnualYield = 0;
+            AnnualBunches = 0;
+            AnnualBunchSize = 0;
+            AnnualUnderstoryNFixation = 0;
+            AnnualUnderstoryNPP = 0;
+            AnnualUnderstoryNUptake = 0;
+            AnnualPalmNUptake = 0;
             AnnualTotalVegetativeNPP = 0;
             AnnualPalmVegetativeNPP = 0;
             AnnualUnderstoryNPP = 0;
@@ -3126,22 +3126,24 @@ namespace Models
             AnnualDenitrification = 0;
             AnnualN2O = 0;
             AnnualLeaching = 0;
-		}
-		
+            AnnualET = 0;
+            AnnualNPP = 0;
+        }
+        
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
-		{
+        {
             AnnualRain += Weather.Rain;
-			SoilCtpha = MathUtilities.Sum(Soil.SoilNitrogen.TotalC) / 1000;
-			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-			TotalNO3 = MathUtilities.Sum(Soil.NO3N);
-			NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
+            SoilCtpha = MathUtilities.Sum(Soil.SoilNitrogen.TotalC) / 1000;
+            surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
+            TotalNO3 = MathUtilities.Sum(Soil.NO3N);
+            NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
 
-			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
-			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
-			AnnualUnderstoryNUptake += MathUtilities.Sum(OilPalm.UnderstoryNUptake);
-			AnnualPalmNUptake += MathUtilities.Sum(OilPalm.NUptake);
-			AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;							
+            AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
+            AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
+            AnnualUnderstoryNUptake += MathUtilities.Sum(OilPalm.UnderstoryNUptake);
+            AnnualPalmNUptake += MathUtilities.Sum(OilPalm.NUptake);
+            AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;                            
 
 
             AnnualTotalVegetativeNPP += (OilPalm.RootGrowth + OilPalm.StemGrowth + OilPalm.FrondGrowth + OilPalm.UnderstoryDltDM) * 10;
@@ -3156,19 +3158,22 @@ namespace Models
             AnnualDenitrification += MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
             AnnualN2O += MathUtilities.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
-            
-		}
-		
-		[EventSubscribe("Harvesting")]
-		private void OnHarvesting(object sender, EventArgs e)
-		{
-			AnnualYield += OilPalm.HarvestFFB;
-			AnnualBunches += OilPalm.HarvestBunches;
-			if (AnnualBunches > 0)
-				AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);
-			AnnualNRemoved += OilPalm.HarvestNRemoved;
-		}
-	}
+
+            AnnualET += Soil.SoilWater.Es + OilPalm.EP + OilPalm.UnderstoryEP;
+            AnnualNPP = AnnualTotalVegetativeNPP + AnnualBunchNPP;
+
+        }
+        
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, EventArgs e)
+        {
+            AnnualYield += OilPalm.HarvestFFB;
+            AnnualBunches += OilPalm.HarvestBunches;
+            if (AnnualBunches > 0)
+                AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);
+            AnnualNRemoved += OilPalm.HarvestNRemoved;
+        }
+    }
 }
 ]]></Code>
           </Manager>
@@ -3579,6 +3584,7 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <DisabledSimNames />
     </Experiment>
     <Experiment>
       <Name>Sagarai</Name>
@@ -4502,18 +4508,8 @@ namespace Models
               <string>[Calculations].Script.AnnualDenitrification</string>
               <string>[Calculations].Script.AnnualN2O</string>
               <string>[Calculations].Script.AnnualLeaching</string>
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
+              <string>[Calculations].Script.AnnualET</string>
+              <string>[Calculations].Script.AnnualNPP</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].EndOfYear</string>
@@ -4637,58 +4633,58 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] OilPalm oilPalm;
-		[Link] Summary Summary;
-		
-		[Description("Sowing date")]
-		public DateTime sowing_date {get; set;}
-		
-		[Description("Plant population /ha")]
-		public double population {get; set;}
+    [Serializable]
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] OilPalm oilPalm;
+        [Link] Summary Summary;
+        
+        [Description("Sowing date")]
+        public DateTime sowing_date {get; set;}
+        
+        [Description("Plant population /ha")]
+        public double population {get; set;}
 
 
-		[Description("Cultivar")]
-		[Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
+        [Description("Cultivar")]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
         public string cultivar {get; set;}
 
-		[Description("Sowing depth (mm)")]
-		public double sowing_depth {get; set;}
-		
-		public double Plant_population {get;set;}
-		
-		private byte HarvestCounter = 1;
+        [Description("Sowing depth (mm)")]
+        public double sowing_depth {get; set;}
+        
+        public double Plant_population {get;set;}
+        
+        private byte HarvestCounter = 1;
 
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-		    Plant_population = 0;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			// Add Trunk from previous plantation
-			//surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
-			
-			if (Clock.Today.Date == sowing_date)
-			{
-			    oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
-			}
-			
-			if (HarvestCounter == 14)
-			{
-				oilPalm.Harvest();
-				HarvestCounter = 1;
-			}
-			
-			HarvestCounter++;
-		}
-	}
+        {
+            Plant_population = 0;
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            // Add Trunk from previous plantation
+            //surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
+            
+            if (Clock.Today.Date == sowing_date)
+            {
+                oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
+            }
+            
+            if (HarvestCounter == 14)
+            {
+                oilPalm.Harvest();
+                HarvestCounter = 1;
+            }
+            
+            HarvestCounter++;
+        }
+    }
 }
 ]]></Code>
           </Manager>
@@ -4724,6 +4720,8 @@ namespace Models
               <AnnualDenitrification>0</AnnualDenitrification>
               <AnnualN2O>0</AnnualN2O>
               <AnnualLeaching>0</AnnualLeaching>
+              <AnnualET>0</AnnualET>
+              <AnnualNPP>0</AnnualNPP>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -4735,36 +4733,36 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 { 
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] OilPalm OilPalm;
-		[Link] Soil Soil;
-		[Link] SurfaceOrganicMatter SurfaceOM;
-		[Link] Summary Summary;
-		[Link] Fertiliser Fertiliser;
-		[Link] Weather Weather;
-		
-		public double AnnualRain {get; set;}
-		public double Offset {get; set;}
-		public double AnnualFronds {get; set;}
-		public double AnnualBunches {get; set;}
-		public double AnnualYield {get; set;}
-		public double AnnualBunchSize {get; set;}
-		public double SoilCtpha {get; set;}
-		public double surfaceom_wt_oilpalmstem {get; set;}
-		public double surfaceom_wt_oilpalmunderstory {get; set;}
-	    public double OilPalmYield {get; set;}
-	    public double TotalNO3 {get; set;}
-	    public double NitTot {get;set;}
-	    public double AnnualUnderstoryNFixation {get; set;}	
-	    public double AnnualUnderstoryNPP {get; set;}	
-	    public double AnnualUnderstoryNUptake {get; set;}	
-	    public double AnnualPalmNUptake {get; set;}
-	    
-	    public double AnnualTotalVegetativeNPP {get; set;}
+    [Serializable]
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] OilPalm OilPalm;
+        [Link] Soil Soil;
+        [Link] SurfaceOrganicMatter SurfaceOM;
+        [Link] Summary Summary;
+        [Link] Fertiliser Fertiliser;
+        [Link] Weather Weather;
+        
+        public double AnnualRain {get; set;}
+        public double Offset {get; set;}
+        public double AnnualFronds {get; set;}
+        public double AnnualBunches {get; set;}
+        public double AnnualYield {get; set;}
+        public double AnnualBunchSize {get; set;}
+        public double SoilCtpha {get; set;}
+        public double surfaceom_wt_oilpalmstem {get; set;}
+        public double surfaceom_wt_oilpalmunderstory {get; set;}
+        public double OilPalmYield {get; set;}
+        public double TotalNO3 {get; set;}
+        public double NitTot {get;set;}
+        public double AnnualUnderstoryNFixation {get; set;}    
+        public double AnnualUnderstoryNPP {get; set;}    
+        public double AnnualUnderstoryNUptake {get; set;}    
+        public double AnnualPalmNUptake {get; set;}
+        
+        public double AnnualTotalVegetativeNPP {get; set;}
         public double AnnualPalmVegetativeNPP {get; set;}
         public double AnnualFrondNPP {get; set;}
         public double AnnualStemNPP {get; set;}
@@ -4776,26 +4774,29 @@ namespace Models
         public double AnnualDenitrification {get; set;}
         public double AnnualN2O {get;set;}
         public double AnnualLeaching {get; set;}
+        public double AnnualET {get; set;}
+        public double AnnualNPP {get; set;}
+
         
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-		    AnnualRain = 0;
-			Offset = 0;
-			OilPalmYield = 0;
-			AnnualFronds = 0;
-			AnnualBunches = 0;
-			AnnualBunchSize = 0;
-			AnnualYield = 0;
-			SoilCtpha = 0;
-			surfaceom_wt_oilpalmstem = 0;
-			surfaceom_wt_oilpalmunderstory = 0;	
-			NitTot=0;
-			TotalNO3 = 0;
-			AnnualUnderstoryNFixation = 0;
-			AnnualUnderstoryNPP = 0;
-			AnnualUnderstoryNUptake = 0;
-			AnnualPalmNUptake = 0;
+        {
+            AnnualRain = 0;
+            Offset = 0;
+            OilPalmYield = 0;
+            AnnualFronds = 0;
+            AnnualBunches = 0;
+            AnnualBunchSize = 0;
+            AnnualYield = 0;
+            SoilCtpha = 0;
+            surfaceom_wt_oilpalmstem = 0;
+            surfaceom_wt_oilpalmunderstory = 0;    
+            NitTot=0;
+            TotalNO3 = 0;
+            AnnualUnderstoryNFixation = 0;
+            AnnualUnderstoryNPP = 0;
+            AnnualUnderstoryNUptake = 0;
+            AnnualPalmNUptake = 0;
 
             AnnualTotalVegetativeNPP = 0;
             AnnualPalmVegetativeNPP = 0;
@@ -4804,26 +4805,28 @@ namespace Models
             AnnualRootNPP = 0;
             AnnualBunchNPP = 0;
             AnnualTotalNInput = 0;
-			AnnualFertiliserNAdded = 0;
-			AnnualNRemoved = 0;
-			AnnualDenitrification = 0;
-			AnnualN2O = 0;
-		    AnnualLeaching = 0;	
-		}
-		
+            AnnualFertiliserNAdded = 0;
+            AnnualNRemoved = 0;
+            AnnualDenitrification = 0;
+            AnnualN2O = 0;
+            AnnualLeaching = 0;    
+            AnnualET = 0;
+            AnnualNPP = 0;
+        }
+        
 
        [EventSubscribe("StartOfYear")]
        private void OnStartOfYear(object sender, EventArgs e)
        {
             AnnualRain = 0;
-	   		Offset = OilPalm.CumulativeFrondNumber;
-			AnnualYield = 0;
-			AnnualBunches = 0;
-			AnnualBunchSize = 0;
-			AnnualUnderstoryNFixation = 0;
-			AnnualUnderstoryNPP = 0;
-			AnnualUnderstoryNUptake = 0;
-			AnnualPalmNUptake = 0;
+               Offset = OilPalm.CumulativeFrondNumber;
+            AnnualYield = 0;
+            AnnualBunches = 0;
+            AnnualBunchSize = 0;
+            AnnualUnderstoryNFixation = 0;
+            AnnualUnderstoryNPP = 0;
+            AnnualUnderstoryNUptake = 0;
+            AnnualPalmNUptake = 0;
             AnnualTotalVegetativeNPP = 0;
             AnnualPalmVegetativeNPP = 0;
             AnnualUnderstoryNPP = 0;
@@ -4837,22 +4840,24 @@ namespace Models
             AnnualDenitrification = 0;
             AnnualN2O = 0;
             AnnualLeaching = 0;
-		}
-		
+            AnnualET = 0;
+            AnnualNPP = 0;
+        }
+        
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
-		{
+        {
             AnnualRain += Weather.Rain;
-			SoilCtpha = MathUtilities.Sum(Soil.SoilNitrogen.TotalC) / 1000;
-			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-			TotalNO3 = MathUtilities.Sum(Soil.NO3N);
-			NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
+            SoilCtpha = MathUtilities.Sum(Soil.SoilNitrogen.TotalC) / 1000;
+            surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
+            TotalNO3 = MathUtilities.Sum(Soil.NO3N);
+            NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
 
-			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
-			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
-			AnnualUnderstoryNUptake += MathUtilities.Sum(OilPalm.UnderstoryNUptake);
-			AnnualPalmNUptake += MathUtilities.Sum(OilPalm.NUptake);
-			AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;							
+            AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
+            AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
+            AnnualUnderstoryNUptake += MathUtilities.Sum(OilPalm.UnderstoryNUptake);
+            AnnualPalmNUptake += MathUtilities.Sum(OilPalm.NUptake);
+            AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;                            
 
 
             AnnualTotalVegetativeNPP += (OilPalm.RootGrowth + OilPalm.StemGrowth + OilPalm.FrondGrowth + OilPalm.UnderstoryDltDM) * 10;
@@ -4867,19 +4872,22 @@ namespace Models
             AnnualDenitrification += MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
             AnnualN2O += MathUtilities.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
-            
-		}
-		
-		[EventSubscribe("Harvesting")]
-		private void OnHarvesting(object sender, EventArgs e)
-		{
-			AnnualYield += OilPalm.HarvestFFB;
-			AnnualBunches += OilPalm.HarvestBunches;
-			if (AnnualBunches > 0)
-				AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);
-			AnnualNRemoved += OilPalm.HarvestNRemoved;
-		}
-	}
+
+            AnnualET += Soil.SoilWater.Es + OilPalm.EP + OilPalm.UnderstoryEP;
+            AnnualNPP = AnnualTotalVegetativeNPP + AnnualBunchNPP;
+
+        }
+        
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, EventArgs e)
+        {
+            AnnualYield += OilPalm.HarvestFFB;
+            AnnualBunches += OilPalm.HarvestBunches;
+            if (AnnualBunches > 0)
+                AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);
+            AnnualNRemoved += OilPalm.HarvestNRemoved;
+        }
+    }
 }
 ]]></Code>
           </Manager>
@@ -5290,6 +5298,7 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <DisabledSimNames />
     </Experiment>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
