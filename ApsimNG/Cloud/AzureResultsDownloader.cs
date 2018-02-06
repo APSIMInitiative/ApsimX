@@ -265,6 +265,7 @@ namespace ApsimNG.Cloud
                     // Delete the output files if the user doesn't want to keep them
                     if (!saveRawOutputFiles)
                     {
+                        // this will delete all .db and .out files in the output directory
                         foreach (string resultFile in Directory.EnumerateFiles(rawResultsPath).Where(file => resultFileFormats.Contains(Path.GetExtension(file))))
                         {
                             try
@@ -695,25 +696,29 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="archive">Zip archive to be extracted.</param>
         /// <param name="path">Directory to extract the files to.</param>
-        private void ExtractZipArchive(string archive, string path)
+        private void ExtractZipArchive(string archivePath, string path)
         {            
-            foreach (ZipArchiveEntry file in ZipFile.OpenRead(archive).Entries)
-            {                
-                try
+            using (ZipArchive archive = ZipFile.OpenRead(archivePath))
+            {
+                foreach (ZipArchiveEntry file in archive.Entries)
                 {
-                    string filePath = Path.Combine(path, file.FullName);
-                    string dir = Path.GetDirectoryName(filePath);
+                    try
+                    {
+                        string filePath = Path.Combine(path, file.FullName);
+                        string dir = Path.GetDirectoryName(filePath);
 
-                    if (!Directory.Exists(dir))
-                        Directory.CreateDirectory(dir);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
 
-                    if (file.Name != "")
+                        if (file.Name != "")
+                            file.ExtractToFile(filePath, true);
+
                         file.ExtractToFile(filePath, true);
-
-                    file.ExtractToFile(filePath, true);
-                } catch (Exception e)
-                {
-                    presenter.ShowError(e.ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        presenter.ShowError(e.ToString());
+                    }
                 }
             }
         }

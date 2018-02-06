@@ -6,7 +6,6 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.Azure.Batch;
 using UserInterface.Interfaces;
 using System.IO;
-using ApsimNG.Properties;
 using System.ComponentModel;
 using Models.Core;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -97,7 +96,6 @@ namespace UserInterface.Presenters
         {
             this.view = (CloudJobDisplayView)view;
             this.view.Presenter = this;
-            Settings.Default["BatchAccount"] = "";
             GetCredentials();
         }
 
@@ -269,7 +267,7 @@ namespace UserInterface.Presenters
                 {
                     ShowError(e.ToString());
                 }
-
+                
                 string owner = GetAzureMetaData("job-" + cloudJob.Id, "Owner");
                                 
                 long numTasks = 1;
@@ -352,7 +350,7 @@ namespace UserInterface.Presenters
         /// <param name="e"></param>
         public void GetCredentials()
         {
-            if (CredentialsExist())
+            if (AzureCredentialsSetup.CredentialsExist())
             {
                 // store credentials
                 storageCredentials = StorageCredentials.FromConfiguration();
@@ -375,21 +373,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>
-        /// Checks if Azure credentials exist in Settings.Default. This method does not check their validity.
-        /// It also does not check to see if the path to the Azure licence file exists there.
-        /// </summary>
-        /// <returns>True if credentials exist, false otherwise.</returns>
-        private bool CredentialsExist()
-        {
-            string[] credentials = new string[] { "BatchAccount", "BatchUrl", "BatchKey", "StorageAccount", "StorageKey" };
-            foreach (string key in credentials)
-            {
-                string value = (string)Settings.Default[key];
-                if (value == null || value == "") return false;
-            }
-            return true;
-        }
 
         /// <summary>
         /// Tests if two jobs are equal.
@@ -439,7 +422,7 @@ namespace UserInterface.Presenters
             //view.HideLoadingProgressBar();
             view.ShowDownloadProgressBar();
             ShowMessage("");
-            string path = (string)Settings.Default["OutputDir"];
+            string path = (string)AzureSettings.Default["OutputDir"];
             AzureResultsDownloader dl;
 
             // If a results directory (outputPath\jobName) already exists, the user will receive a warning asking them if they want to continue.
@@ -456,9 +439,9 @@ namespace UserInterface.Presenters
                 view.DownloadProgress = 0;
 
                 // if output directory already exists and warning has not already been given, display a warning
-                if (Directory.Exists((string)Settings.Default["OutputDir"] + "\\" + jobName) && !ignoreWarning && saveToCsv)
+                if (Directory.Exists((string)AzureSettings.Default["OutputDir"] + "\\" + jobName) && !ignoreWarning && saveToCsv)
                 {
-                    if (!view.AskQuestion("Files detected in output directory (" + (string)Settings.Default["OutputDir"] + "\\" + jobName + "). Results will be collated from ALL files in this directory. Are you certain you wish to continue?"))
+                    if (!view.AskQuestion("Files detected in output directory (" + (string)AzureSettings.Default["OutputDir"] + "\\" + jobName + "). Results will be collated from ALL files in this directory. Are you certain you wish to continue?"))
                     {
                         // if user has chosen to cancel the download
                         view.HideDownloadProgressBar();
@@ -521,8 +504,8 @@ namespace UserInterface.Presenters
 
             if (Directory.Exists(dir))
             {
-                Settings.Default["OutputDir"] = dir;
-                Settings.Default.Save();
+                AzureSettings.Default["OutputDir"] = dir;
+                AzureSettings.Default.Save();
             }
             else
             {

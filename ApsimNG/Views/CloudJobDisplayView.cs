@@ -623,8 +623,9 @@ namespace UserInterface.Views
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnSetup_Click(object sender, EventArgs e)
-        {
-            Presenter.GetCredentials();
+        {            
+            var setup = new AzureCredentialsSetup();
+            setup.Finished += delegate { Presenter.GetCredentials(); }; // this ensures that the changes actually have an effect
         }
 
         /// <summary>

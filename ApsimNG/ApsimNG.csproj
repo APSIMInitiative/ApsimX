@@ -72,6 +72,10 @@
     <EmbeddedResource Include="Resources\Glade\ExplorerView.glade">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Cloud\AzureSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>AzureSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\Glade\GridView.glade" />
     <EmbeddedResource Include="Resources\Glade\TabbedMetDataView.glade" />
@@ -139,6 +143,11 @@
     <Compile Include="Cloud\ApsimJobPrepExtension.cs" />
     <Compile Include="Cloud\AzureCredentialsSetup.cs" />
     <Compile Include="Cloud\AzureResultsDownloader.cs" />
+    <Compile Include="Cloud\AzureSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>AzureSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Cloud\BatchConstants.cs" />
     <Compile Include="Cloud\BatchCredentials.cs" />
     <Compile Include="Cloud\DownloadWindow.cs" />

@@ -11,7 +11,6 @@
     using System.Security.Cryptography;
     using ApsimNG.Cloud;
     using Microsoft.Azure.Batch.Common;
-    using ApsimNG.Properties;
     using Models.Core;
 
     public class NewAzureJobPresenter : IPresenter, INewCloudJobPresenter
@@ -59,7 +58,6 @@
         /// <param name="jp">Job Parameters.</param>
         public void SubmitJob(JobParameters jp)
         {
-            if (!CredentialsExist()) return;
             if (jp.JobDisplayName.Length < 1)
             {
                 ShowError("A description is required");
@@ -122,8 +120,8 @@
 
             // save user's choices to ApsimNG.Properties.Settings            
             
-            Settings.Default["OutputDir"] = jp.OutputDir;
-            Settings.Default.Save();
+            AzureSettings.Default["OutputDir"] = jp.OutputDir;
+            AzureSettings.Default.Save();
             
             submissionWorker.RunWorkerAsync(jp);
         }
@@ -193,8 +191,8 @@
                     using (StreamWriter file = new StreamWriter(tmpConfig))
                     {
                         file.WriteLine("EmailRecipient=" + jp.Recipient);
-                        file.WriteLine("EmailSender=agresearch.azure@gmail.com");
-                        file.WriteLine("EmailPW=New-Tangent");
+                        file.WriteLine("EmailSender=" + AzureSettings.Default["EmailSender"]);
+                        file.WriteLine("EmailPW=" + AzureSettings.Default["EmailPW"]);
                     }
 
                     UploadFileIfNeeded("job-" + jp.JobId, tmpConfig);
@@ -433,8 +431,8 @@
             try
             {
                 var credentials = new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(
-                    (string)Settings.Default["StorageAccount"],
-                    (string)Settings.Default["StorageKey"]);
+                    (string)AzureSettings.Default["StorageAccount"],
+                    (string)AzureSettings.Default["StorageKey"]);
 
                 var storageAccount = new CloudStorageAccount(credentials, true);
                 var blobClient = storageAccount.CreateCloudBlobClient();
@@ -469,8 +467,8 @@
                         string val = line.Substring(separatorIndex + 1);
                         try
                         {
-                            Settings.Default[key] = val;
-                        } catch // key does not exist in ApsimNG.Properties.Settings.Default
+                            AzureSettings.Default[key] = val;
+                        } catch // key does not exist in AzureSettings
                         {
                             return false;
                         }                        
@@ -504,8 +502,8 @@
         private void UploadFileIfNeeded(string containerName, string filePath)
         {
             var credentials = new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(
-                (string)Settings.Default["StorageAccount"],
-                (string)Settings.Default["StorageKey"]);
+                (string)AzureSettings.Default["StorageAccount"],
+                (string)AzureSettings.Default["StorageKey"]);
 
             var storageAccount = new CloudStorageAccount(credentials, true);
             var blobClient = storageAccount.CreateCloudBlobClient();
@@ -642,7 +640,7 @@
         /// <param name="e"></param>
         private void GetCredentials(object sender, EventArgs e)
         {
-            if (CredentialsExist())
+            if (AzureCredentialsSetup.CredentialsExist())
             {
                 // store credentials
                 storageCredentials = StorageCredentials.FromConfiguration();
@@ -659,21 +657,6 @@
                 AzureCredentialsSetup cred = new AzureCredentialsSetup();
                 cred.Finished += GetCredentials;
             }
-        }
-
-        /// <summary>
-        /// Checks if Azure credentials exist in Settings.Default. This method does not check their validity.
-        /// </summary>
-        /// <returns>True if credentials exist, false otherwise.</returns>
-        private bool CredentialsExist()
-        {            
-            string[] credentials = new string[] { "BatchAccount", "BatchUrl", "BatchKey", "StorageAccount", "StorageKey" };
-            foreach (string key in credentials)
-            {
-                string value = (string)Settings.Default[key];
-                if (value == null || value == "") return false;
-            }
-            return true;
         }
         
         /// <summary>

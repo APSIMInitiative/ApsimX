@@ -9,13 +9,13 @@ draft: false
 When the simulations have finished running, all output files are copied into the job output container.
 
 #### Results
-An APSIM Classic job produces .out result files. For an APSIM Next Generation job, these will be .db files. 
+An APSIM Classic job produces .out result files. An APSIM Next Generation job produces .db files. 
 If you are using a recent version of the job manager, then the result files will first be zipped up before being copied.
 
 
 #### Debug Files
 In addition to the raw result files, the job manager produces a st of 'debug' (.stdout) files, which provide information that's useful when trying to find out what's going wrong with a simulation or job. 
-These debugging files are much smaller than the output files, and are not zipped up.
+These debugging files are typically much smaller than the output files, and are not zipped up.
 
 The job preparation and release tasks both produce a debug file, and each simulation being run will also produce a debug file.
 
@@ -47,11 +47,9 @@ This option allows the user to select a directory to download the results to. A 
 * If the result files are needed, the job downloader will attempt to download all zip files located in the job output container, but if it finds none, it will download each result file individually.
 * Once the zip files are downloaded, their contents will be extracted and the zip files deleted.
 * If the user wants a CSV but no raw result files, the result files will be deleted after being combined into a CSV.
-* Download progress is calculated as the number of files downloaded out of the total number of files to download; it does not take into account the time needed to summarise or delete the result files.
+* Download progress is calculated as the number of files downloaded out of the total number of files to download; it does not take into account the time needed to summarise (combine into a CSV) or delete the result files.
 
 ## Remarks
-
-This section probably needs to go into the User's Guide
 
 * Closing the APSIM UI will stop any downloads in progress.
 * If the job to be downloaded is not complete, the job downloader thread will do a busy wait until the job is finished and then download the results. 
