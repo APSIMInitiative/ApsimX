@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
     /// <summary>
     /// Presents the text from a memo component.
     /// </summary>
-    public class MemoPresenter : IPresenter, IExportable
+    public class MemoPresenter : IPresenter
     {
         /// <summary>
         /// The memo object
@@ -70,17 +70,5 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>
-        /// Export the contents of this memo to the specified file.
-        /// </summary>
-        /// <param name="folder">The name of the folder</param>
-        /// <returns>The text from the memo</returns>
-        public string ConvertToHtml(string folder)
-        {
-            System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-            doc.LoadXml(this.memoModel.MemoText);
-            XmlNode bodyNode = XmlUtilities.Find(doc.DocumentElement, "body");
-            return bodyNode.InnerXml;
-        }
     }
 }

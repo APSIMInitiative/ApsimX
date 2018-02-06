@@ -15,7 +15,7 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
-    public class PhaseLookupValue : Model, IFunction
+    public class PhaseLookupValue : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The phenology</summary>
         [Link]
@@ -72,7 +72,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -81,14 +81,14 @@ namespace Models.PMF.Functions
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
                 if (Parent.GetType() == typeof(PhaseLookup))
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The value of " + Parent.Name + " from " + Start + " to " + End + " is calculated as follows:", indent));
                     // write children.
                     foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                        child.Document(tags, -1, indent + 1);
+                        AutoDocumentation.DocumentModel(child, tags, -1, indent + 1);
                 }
                 else
                 {

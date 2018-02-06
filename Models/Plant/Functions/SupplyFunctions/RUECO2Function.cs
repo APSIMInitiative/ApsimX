@@ -8,6 +8,7 @@ using Models.Interfaces;
 namespace Models.PMF.Functions.SupplyFunctions
 {
     /// <summary>
+    /// # [Name]
     /// This model calculates CO2 Impact on RUE using the approach of [Reyenga1999].
     /// </summary>
     [Serializable]

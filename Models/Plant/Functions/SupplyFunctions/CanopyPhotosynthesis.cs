@@ -9,6 +9,7 @@ using Models.Interfaces;
 namespace Models.PMF.Functions.SupplyFunctions
 {
     /// <summary>
+    /// # [Name]
     /// Daily gross CO2 assimilation and biomass growth is simulated using a canopy photosynthesis model adopted from SPASS, which was a modified version of the original SUCROS model.
     /// The daily gross photosynthesis is called in reponse to event DoPotentialPlantGrowth.
     /// </summary>

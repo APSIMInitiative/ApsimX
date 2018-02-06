@@ -15,7 +15,7 @@ namespace UserInterface.Presenters
     /// This presenter connects an instance of a Model.Map with a 
     /// UserInterface.Views.MapView
     /// </summary>
-    public class MapPresenter : IPresenter
+    public class MapPresenter : IPresenter, IExportable
     {
         /// <summary>
         /// The axis model
@@ -59,7 +59,7 @@ namespace UserInterface.Presenters
         /// <summary>Export the map to PDF</summary>
         /// <param name="folder">The working directory name</param>
         /// <returns>The filename string</returns>
-        internal string ExportToPDF(string folder)
+        public string ExportToPNG(string folder)
         {
             string path = Apsim.FullPath(this.map).Replace(".Simulations.", string.Empty);
             string fileName = Path.Combine(folder, path + ".png");

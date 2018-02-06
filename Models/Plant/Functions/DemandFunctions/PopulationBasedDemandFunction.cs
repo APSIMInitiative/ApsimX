@@ -6,6 +6,7 @@ using Models.Core;
 namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
+    /// # [Name]
     /// Demand is calculated from the product of growth rate, thermal time and population.
     /// </summary>
     [Serializable]

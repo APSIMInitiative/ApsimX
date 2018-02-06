@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ArrayFunction : Model, IFunction
+    public class ArrayFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>Gets the value.</summary>
         [Description("The values of the array (space seperated)")]
@@ -52,7 +52,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             // get description and units.
             string description = AutoDocumentation.GetDescription(Parent, Name);
@@ -73,7 +73,7 @@ namespace Models.PMF.Functions
 
             // write memos.
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
         }
     }
