@@ -133,7 +133,7 @@ namespace Models.Core
         }
 
         /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun()
+        public Simulation NextSimulationToRun(bool doFullFactorial = true)
         {
             if (Parent is ISimulationGenerator || hasRun)
                 return null;
@@ -152,7 +152,7 @@ namespace Models.Core
         }
 
         /// <summary>Gets a list of simulation names</summary>
-        public IEnumerable<string> GetSimulationNames()
+        public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
             if (Parent is ISimulationGenerator)
                 return new string[0];
