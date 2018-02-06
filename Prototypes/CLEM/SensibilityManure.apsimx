@@ -144,13 +144,12 @@
             <TwinRate>0</TwinRate>
             <CriticalCowWeight>0.5</CriticalCowWeight>
             <ConceptionRateCoefficent>-12.634</ConceptionRateCoefficent>
-            <ConceptionRateIntercept>0</ConceptionRateIntercept>
-            <ConceptionRateAsymptote>0</ConceptionRateAsymptote>
-            <MaximumMaleMatingsPerDay>0</MaximumMaleMatingsPerDay>
-            <PrenatalMortality>0</PrenatalMortality>
-            <MaximumConceptionUncontrolledBreeding>0</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>0</MethaneProductionIntercept>
-            <MethaneProductionCoefficient>0</MethaneProductionCoefficient>
+            <ConceptionRateIntercept>5.182</ConceptionRateIntercept>
+            <ConceptionRateAsymptote>90</ConceptionRateAsymptote>
+            <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
+            <PrenatalMortality>0.079</PrenatalMortality>
+            <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
+            <MethaneProductionCoefficient>20.7</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </RuminantHerd>
