@@ -15620,9 +15620,9 @@ namespace Models
         <Folder>
           <Name>LeafGraphs</Name>
           <Graph>
-            <Name>GreenLeafNumber</Name>
+            <Name>AppearedLeaves</Name>
             <Series>
-              <Name>GreenLeaves_Sim</Name>
+              <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -15644,7 +15644,7 @@ namespace Models
               <CumulativeX>false</CumulativeX>
             </Series>
             <Series>
-              <Name>GreenLeaves_Obs</Name>
+              <Name>Observed</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
