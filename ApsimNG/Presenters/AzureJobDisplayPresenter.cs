@@ -445,9 +445,10 @@ namespace UserInterface.Presenters
             bool ignoreWarning = false;
 
             foreach (string id in jobsToDownload)
-            {                
-                // if the job id is invalid, skip downloading this job                
-                if (!Guid.TryParse(id, out Guid jobId)) continue;
+            {
+                // if the job id is invalid, skip downloading this job   
+                Guid jobId;             
+                if (!Guid.TryParse(id, out jobId)) continue;
                 currentlyDownloading.Add(jobId);
                 string jobName = GetJob(id).DisplayName;
 
@@ -726,7 +727,8 @@ namespace UserInterface.Presenters
             {
                 try
                 {
-                    if (!Guid.TryParse(id, out Guid parsedId)) continue;
+                    Guid parsedId;
+                    if (!Guid.TryParse(id, out parsedId)) continue;
                     // delete the job from Azure
                     CloudBlobContainer containerRef;
 

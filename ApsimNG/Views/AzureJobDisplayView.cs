@@ -389,7 +389,8 @@ namespace UserInterface.Views
         /// <returns></returns>
         private int SortInts(TreeModel model, TreeIter a, TreeIter b, int n)
         {
-            if (!Int32.TryParse((string)model.GetValue(a, n), out int x) || !Int32.TryParse((string)model.GetValue(b, n), out int y)) return -1;
+            int x, y;
+            if (!Int32.TryParse((string)model.GetValue(a, n), out x) || !Int32.TryParse((string)model.GetValue(b, n), out y)) return -1;
             return x.CompareTo(y);
         }
         
@@ -529,8 +530,9 @@ namespace UserInterface.Views
             Application.Invoke(delegate
             {
                 // remember which column is being sorted. If the results are not sorted at all, order by start time ascending
-
-                if (!sort.GetSortColumnId(out int sortIndex, out SortType order))
+                int sortIndex;
+                SortType order;
+                if (!sort.GetSortColumnId(out sortIndex, out order))
                 {
                     sortIndex = Array.IndexOf(columnTitles, "Start Time");
                     order = SortType.Ascending;
