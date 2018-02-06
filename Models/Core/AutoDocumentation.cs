@@ -212,11 +212,17 @@ namespace Models.Core
                 if (posEndMacro != -1)
                 {
                     string macro = line.Substring(posMacro + 1, posEndMacro - posMacro - 1);
-                    object value = Apsim.Get(model, macro, true);
-                    if (value != null)
+                    try
                     {
-                        line = line.Remove(posMacro, posEndMacro - posMacro + 1);
-                        line = line.Insert(posMacro, value.ToString());
+                        object value = Apsim.Get(model, macro, true);
+                        if (value != null)
+                        {
+                            line = line.Remove(posMacro, posEndMacro - posMacro + 1);
+                            line = line.Insert(posMacro, value.ToString());
+                        }
+                    }
+                    catch (Exception)
+                    {
                     }
                 }
 
