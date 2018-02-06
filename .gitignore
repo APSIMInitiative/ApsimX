@@ -31,7 +31,6 @@ _ReSharper*/
 /Models/AssemblyVersion.cs
 *MaizeTestModel*
 Documentation/html
-*.db
 packages/
 Tests/MultiZoneManagement/MultiFieldMultiZoneManagementBasic.db.sum
 *.sum
