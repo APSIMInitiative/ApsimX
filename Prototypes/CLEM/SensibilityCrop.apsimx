@@ -84,7 +84,7 @@
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           <LandItemNameToUse>Field</LandItemNameToUse>
-          <AreaRequested>0</AreaRequested>
+          <AreaRequested>1</AreaRequested>
           <UseAreaAvailable>true</UseAreaAvailable>
         </CropActivityManageCrop>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -163,7 +163,6 @@
       <Area>1</Area>
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
-      <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
     <FileCrop>
@@ -318,7 +317,7 @@
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           <LandItemNameToUse>Field</LandItemNameToUse>
-          <AreaRequested>0</AreaRequested>
+          <AreaRequested>1</AreaRequested>
           <UseAreaAvailable>true</UseAreaAvailable>
         </CropActivityManageCrop>
         <ResourceActivitySell>
@@ -426,7 +425,6 @@
       <Area>1</Area>
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
-      <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
     <FileCrop>
@@ -731,7 +729,7 @@
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           <LandItemNameToUse>Field</LandItemNameToUse>
-          <AreaRequested>0</AreaRequested>
+          <AreaRequested>1</AreaRequested>
           <UseAreaAvailable>true</UseAreaAvailable>
         </CropActivityManageCrop>
         <ResourceActivitySell>
@@ -866,7 +864,6 @@
       <Area>1</Area>
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
-      <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
     <FileCrop>
@@ -1171,7 +1168,7 @@
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           <LandItemNameToUse>Field</LandItemNameToUse>
-          <AreaRequested>0</AreaRequested>
+          <AreaRequested>1</AreaRequested>
           <UseAreaAvailable>true</UseAreaAvailable>
         </CropActivityManageCrop>
         <ResourceActivitySell>
@@ -1300,7 +1297,6 @@
       <Area>1</Area>
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
-      <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
     <FileCrop>
@@ -1436,7 +1432,7 @@
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           <LandItemNameToUse>Field</LandItemNameToUse>
-          <AreaRequested>0</AreaRequested>
+          <AreaRequested>1</AreaRequested>
           <UseAreaAvailable>true</UseAreaAvailable>
         </CropActivityManageCrop>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1527,7 +1523,6 @@
       <Area>1</Area>
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
-      <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
     <FileCrop>
