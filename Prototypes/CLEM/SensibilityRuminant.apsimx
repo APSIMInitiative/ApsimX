@@ -149,7 +149,6 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
             <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -322,7 +321,6 @@
       <Area>1</Area>
       <Slope>0</Slope>
       <ClimateRegion>0</ClimateRegion>
-      <EcologicalIndicatorsCalculationInterval>1</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -482,7 +480,6 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
             <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -799,7 +796,6 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
             <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1155,7 +1151,6 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
             <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1532,7 +1527,6 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
             <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1962,7 +1956,6 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
             <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2336,7 +2329,6 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
             <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2799,7 +2791,6 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
             <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3285,7 +3276,6 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
             <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3783,7 +3773,6 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
             <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4233,7 +4222,6 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>0.079</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
             <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
