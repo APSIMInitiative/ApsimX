@@ -30,18 +30,21 @@ public class Script
             mainPresenter.OpenApsimXFileInTab(fileName, true);
         
             // Get the presenter for this tab.
-            ExplorerPresenter presenter = mainPresenter.presenters1[0];
-            presenter.SelectNode(".Simulations");
+            ExplorerPresenter presenter = mainPresenter.presenters1[0] as ExplorerPresenter;
+			if (presenter != null)
+			{
+				presenter.SelectNode(".Simulations");
 
-            // Export the model to HTML
-            string folderName = Path.Combine(binFolder, @"..\Documentation\PDF");
-            Directory.CreateDirectory(folderName);
-           
-            ExportNodeCommand command = new ExportNodeCommand(presenter, presenter.CurrentNodePath);
-            command.Do(null);
+				// Export the model to HTML
+				string folderName = Path.Combine(binFolder, @"..\Documentation\PDF");
+				Directory.CreateDirectory(folderName);
+			   
+				ExportNodeCommand command = new ExportNodeCommand(presenter, presenter.CurrentNodePath);
+				command.Do(null);
 
-            // Copy the file into the PDF directory.
-            File.Copy(command.FileNameWritten, @"..\Documentation\PDF\" + modelName + ".pdf");
+				// Copy the file into the PDF directory.
+				File.Copy(command.FileNameWritten, @"..\Documentation\PDF\" + modelName + ".pdf");
+			}
         }
         // Close the user interface.
         mainPresenter.Close(false);
