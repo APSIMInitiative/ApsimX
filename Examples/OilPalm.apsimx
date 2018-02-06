@@ -505,7 +505,6 @@
           <string>[Calculations].Script.AnnualBunches</string>
           <string>[Calculations].Script.AnnualYield</string>
           <string>[Calculations].Script.AnnualBunchSize</string>
-          <string>[Calculations].Script.AnnualET</string>
           <string>sum of [OilPalm].UnderstoryDltDM*10 from 1-Jan to 31-Dec as AnnualUnderstoryNPP</string>
           <string>sum of [OilPalm].UnderstoryNFixation from 1-Jan to 31-Dec as AnnualUnderstoryNFixation</string>
           <string>sum of sum([OilPalm].UnderstoryNUptake) from 1-Jan to 31-Dec as AnnualUnderstoryNUptake</string>
@@ -516,6 +515,7 @@
           <string>sum of [OilPalm].BunchGrowth*10 from 1-Jan to 31-Dec as AnnualBunchNPP</string>
           <string>sum of (([OilPalm].RootGrowth+[OilPalm].StemGrowth+[OilPalm].FrondGrowth+[OilPalm].UnderstoryDltDM)*10) from 1-Jan to 31-Dec as AnnualTotalVegetativeNPP</string>
           <string>sum of (([OilPalm].RootGrowth+[OilPalm].StemGrowth+[OilPalm].FrondGrowth)*10) from 1-Jan to 31-Dec as AnnualPalmVegetativeNPP</string>
+          <string>sum of ([Soil].SoilWater.Es + [OilPalm].EP + [OilPalm].UnderstoryEP) from 1-Jan to 31-Dec as AnnualET</string>
           <string>[Calculations].Script.AnnualNRemoved</string>
           <string>avg of sum([Soil].SoilNitrogen.NO3) from 1-Jan to 31-Dec as AnnualAverageNO3</string>
           <string>avg of [SurfaceOM].Wt from 1-Jan to 31-Dec as AnnualLitterMass</string>
@@ -717,7 +717,6 @@ namespace Models
           <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
           <OilPalmYield>0</OilPalmYield>
           <AnnualNRemoved>0</AnnualNRemoved>
-          <AnnualET>0</AnnualET>
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
@@ -750,10 +749,7 @@ namespace Models
         public double surfaceom_wt_oilpalmunderstory {get; set;}
         public double OilPalmYield {get; set;}
         public double AnnualNRemoved {get; set;}
-        public double AnnualET {get; set;}
 
-
-        
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -766,7 +762,6 @@ namespace Models
             surfaceom_wt_oilpalmstem = 0;
             surfaceom_wt_oilpalmunderstory = 0;    
             AnnualNRemoved = 0;
-            AnnualET = 0;
 
         }
         
@@ -779,7 +774,6 @@ namespace Models
             AnnualBunches = 0;
             AnnualBunchSize = 0;
             AnnualNRemoved = 0;
-            AnnualET = 0;
         }
         
        [EventSubscribe("DoManagementCalculations")]
@@ -787,8 +781,6 @@ namespace Models
         {
             surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
             AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;  
-            AnnualET += Soil.SoilWater.Es + OilPalm.EP + OilPalm.UnderstoryEP;                          
-
         }
         
         [EventSubscribe("Harvesting")]
