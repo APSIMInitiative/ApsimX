@@ -102,9 +102,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
@@ -435,9 +435,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
@@ -752,9 +752,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
@@ -1108,9 +1108,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
@@ -1485,9 +1485,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
@@ -1915,9 +1915,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
@@ -2289,9 +2289,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
@@ -2752,9 +2752,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
@@ -3238,9 +3238,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
@@ -3736,9 +3736,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
@@ -4186,9 +4186,9 @@
             <ProteinCoefficient>120</ProteinCoefficient>
             <ProteinDegradability>0.9</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
+            <GreenDietMax>0.98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
+            <GreenDietZero>0.04</GreenDietZero>
             <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
             <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
             <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
