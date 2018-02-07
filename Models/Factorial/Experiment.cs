@@ -95,8 +95,9 @@
         /// Initialise the experiment ready for creating simulations.
         /// </summary>
         private void Initialise(bool fullFactorial = false)
-        {
-            allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations(); parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+        {            
+            parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
             Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
             serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
         }

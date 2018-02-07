@@ -8,12 +8,6 @@ namespace Models.WaterModel
         /// <summary>Amount of water in the soil (mm).</summary>
         double[] Water { get; set; }
 
-        /// <summary>Nitrate in the soil (kg/ha).</summary>
-        double[] NO3 { get; set; }
-
-        /// <summary>Ammonia in the soil (kg/ha).</summary>
-        double[] NH4 { get; set; }
-
         /// <summary>Infiltration (mm).</summary>
         double Infiltration { get; }
 
