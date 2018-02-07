@@ -3892,227 +3892,227 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <AcceptedStats>
           <RegrStats>
             <Name>FodderBeet.AboveGround.N</Name>
-            <n>31</n>
-            <Slope>0.78740450818203822</Slope>
-            <Intercept>9.0389481992461036</Intercept>
-            <SEslope>0.062305764020070854</SEslope>
-            <SEintercept>1.8279235000613561</SEintercept>
-            <R2>0.84632721491845952</R2>
-            <RMSE>4.9151552950241362</RMSE>
-            <NSE>0.73350279007501928</NSE>
-            <ME>3.1394233421740552</ME>
-            <MAE>4.0305255653282348</MAE>
-            <RSR>0.5078390746426</RSR>
+            <n>67</n>
+            <Slope>0.85720901823085149</Slope>
+            <Intercept>4.013372336625455</Intercept>
+            <SEslope>0.051476554189926138</SEslope>
+            <SEintercept>1.2012444946268566</SEintercept>
+            <R2>0.81010974209015663</R2>
+            <RMSE>5.3516917209335775</RMSE>
+            <NSE>0.79808210102415122</NSE>
+            <ME>1.147877663787571</ME>
+            <MAE>4.1219578687636185</MAE>
+            <RSR>0.44598676997320741</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.AboveGround.Wt</Name>
-            <n>50</n>
-            <Slope>0.9748586421654406</Slope>
-            <Intercept>181.60019733083755</Intercept>
-            <SEslope>0.050959751349786586</SEslope>
-            <SEintercept>96.820837463557112</SEintercept>
-            <R2>0.88404560479441074</R2>
-            <RMSE>344.90867294972372</RMSE>
-            <NSE>0.85025001278402357</NSE>
-            <ME>139.41516112667259</ME>
-            <MAE>268.32440023733193</MAE>
-            <RSR>0.38308613583847823</RSR>
+            <n>86</n>
+            <Slope>0.98776374982737014</Slope>
+            <Intercept>163.3963475437904</Intercept>
+            <SEslope>0.0403750761699704</SEslope>
+            <SEintercept>71.166872729365409</SEintercept>
+            <R2>0.87692688006226127</R2>
+            <RMSE>363.29815469226219</RMSE>
+            <NSE>0.83700698345700508</NSE>
+            <ME>144.8506533015657</ME>
+            <MAE>278.90964169323678</MAE>
+            <RSR>0.401369840557028</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.CoverGreen</Name>
             <n>80</n>
-            <Slope>0.66319858182017233</Slope>
-            <Intercept>0.24184333525671042</Intercept>
-            <SEslope>0.063344312835185</SEslope>
-            <SEintercept>0.050277540611593986</SEintercept>
-            <R2>0.5842560702955889</R2>
-            <RMSE>0.15250148391115923</RMSE>
-            <NSE>0.57009640875388268</NSE>
-            <ME>-0.01374684054481466</ME>
-            <MAE>0.11009787474951134</MAE>
-            <RSR>0.65155951098540554</RSR>
+            <Slope>0.70098043868146342</Slope>
+            <Intercept>0.18906975461654496</Intercept>
+            <SEslope>0.037753654862008622</SEslope>
+            <SEintercept>0.029965766942638535</SEintercept>
+            <R2>0.81549015990637308</R2>
+            <RMSE>0.1108327147952464</RMSE>
+            <NSE>0.77293046202777427</NSE>
+            <ME>-0.037848714606448258</ME>
+            <MAE>0.088238785126751526</MAE>
+            <RSR>0.473530536235598</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>FodderBeet.Leaf.CoverTotal</Name>
+            <n>120</n>
+            <Slope>0.684706234862576</Slope>
+            <Intercept>0.30826340981386741</Intercept>
+            <SEslope>0.0390668783647275</SEslope>
+            <SEintercept>0.027425890753788505</SEintercept>
+            <R2>0.72246965588418555</R2>
+            <RMSE>0.14521902540824</RMSE>
+            <NSE>0.49882208379979209</NSE>
+            <ME>0.096579426430681889</ME>
+            <MAE>0.10648669582782085</MAE>
+            <RSR>0.70498328601833271</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.LAI</Name>
-            <n>50</n>
-            <Slope>0.82554340241920954</Slope>
-            <Intercept>0.318745779108784</Intercept>
-            <SEslope>0.080619903629985779</SEslope>
-            <SEintercept>0.22787651886325294</SEintercept>
-            <R2>0.68597994571963561</R2>
-            <RMSE>0.70257848128705025</RMSE>
-            <NSE>0.645576170688219</NSE>
-            <ME>-0.12932854614995376</ME>
-            <MAE>0.57635624523239581</MAE>
-            <RSR>0.58935163758620823</RSR>
+            <n>86</n>
+            <Slope>0.50564889482404207</Slope>
+            <Intercept>0.71755169866906</Intercept>
+            <SEslope>0.04172452217733922</SEslope>
+            <SEintercept>0.11021498088562452</SEintercept>
+            <R2>0.63614943643393385</R2>
+            <RMSE>0.9115470805575826</RMSE>
+            <NSE>0.50349268889361687</NSE>
+            <ME>-0.42095427258540158</ME>
+            <MAE>0.64621632063313827</MAE>
+            <RSR>0.700524068308552</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.Live.N</Name>
             <n>31</n>
-            <Slope>1.0531069014677592</Slope>
-            <Intercept>-0.25638384797869573</Intercept>
-            <SEslope>0.14094550875373027</SEslope>
-            <SEintercept>0.98518341564104406</SEintercept>
-            <R2>0.65812675724342151</R2>
-            <RMSE>1.7586835633227165</RMSE>
-            <NSE>0.41941752762878481</NSE>
-            <ME>0.094001783053955776</ME>
-            <MAE>1.4765779863348687</MAE>
-            <RSR>0.749569213295564</RSR>
+            <Slope>0.36396107221728963</Slope>
+            <Intercept>2.8277546932216882</Intercept>
+            <SEslope>0.082939494904685579</SEslope>
+            <SEintercept>0.579731951760957</SEintercept>
+            <R2>0.39905006934957221</R2>
+            <RMSE>2.2563590828913394</RMSE>
+            <NSE>0.044336625262890172</NSE>
+            <ME>-1.3686660150693526</ME>
+            <MAE>1.7245517696538111</MAE>
+            <RSR>0.96168369224976391</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.Live.Wt</Name>
-            <n>50</n>
-            <Slope>0.90262958462985154</Slope>
-            <Intercept>15.261266842615498</Intercept>
-            <SEslope>0.078973290787320072</SEslope>
-            <SEintercept>13.380845772518596</SEintercept>
-            <R2>0.73129525496026337</R2>
-            <RMSE>38.03954637961661</RMSE>
-            <NSE>0.69114740297059007</NSE>
-            <ME>0.16943661531861012</ME>
-            <MAE>31.343631722656355</MAE>
-            <RSR>0.55015956329852322</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>FodderBeet.Leaf.Photosynthesis.RadnInt.Value()</Name>
-            <n>64</n>
-            <Slope>1.135381478758513</Slope>
-            <Intercept>1.3070835796569291</Intercept>
-            <SEslope>0.10321026984046726</SEslope>
-            <SEintercept>1.3244174687240378</SEintercept>
-            <R2>0.66122922070347223</R2>
-            <RMSE>5.8646194460767544</RMSE>
-            <NSE>0.11608736960238597</NSE>
-            <ME>2.8252599504545413</ME>
-            <MAE>4.9251957273244411</MAE>
-            <RSR>0.932792311046597</RSR>
+            <n>86</n>
+            <Slope>0.57613935758306012</Slope>
+            <Intercept>39.77101980873077</Intercept>
+            <SEslope>0.051824220915114225</SEslope>
+            <SEintercept>8.1003401080809336</SEintercept>
+            <R2>0.59535966572105714</R2>
+            <RMSE>48.451277198948979</RMSE>
+            <NSE>0.5160239125673467</NSE>
+            <ME>-19.53991759414809</ME>
+            <MAE>37.438556581008626</MAE>
+            <RSR>0.69162739861070988</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.PlantAppearedGreenLeafNo</Name>
             <n>117</n>
-            <Slope>0.869173490917819</Slope>
-            <Intercept>3.0548354135082967</Intercept>
-            <SEslope>0.031848047258715546</SEslope>
-            <SEintercept>0.71320155691636644</SEintercept>
-            <R2>0.86625000777138927</R2>
-            <RMSE>2.422261507007736</RMSE>
-            <NSE>0.86474468738640087</NSE>
-            <ME>0.2547008481800066</ME>
-            <MAE>1.7367522247836136</MAE>
-            <RSR>0.36619569126446916</RSR>
+            <Slope>0.759750591244297</Slope>
+            <Intercept>2.3199364856956208</Intercept>
+            <SEslope>0.02089482556031157</SEslope>
+            <SEintercept>0.46791635292590672</SEintercept>
+            <R2>0.91997778185787715</R2>
+            <RMSE>3.5562392763371293</RMSE>
+            <NSE>0.70846263419137268</NSE>
+            <ME>-2.8222222287430707</ME>
+            <MAE>3.0854701017722097</MAE>
+            <RSR>0.537629606189325</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Petiole.Live.N</Name>
             <n>31</n>
-            <Slope>0.40775555493033505</Slope>
-            <Intercept>1.6998203925649813</Intercept>
-            <SEslope>0.11009168484794742</SEslope>
-            <SEintercept>0.33286695495335422</SEintercept>
-            <R2>0.3211292349585354</R2>
-            <RMSE>0.89154299995778774</RMSE>
-            <NSE>0.2972698487605695</NSE>
-            <ME>0.023577562254906547</ME>
-            <MAE>0.690595816727686</MAE>
-            <RSR>0.82465837574314371</RSR>
+            <Slope>0.2565560554539576</Slope>
+            <Intercept>1.1055094433883257</Intercept>
+            <SEslope>0.097228527241332768</SEslope>
+            <SEintercept>0.29397464342671559</SEintercept>
+            <R2>0.19360873289183367</R2>
+            <RMSE>1.3901807602727194</RMSE>
+            <NSE>-0.7086241726007636</NSE>
+            <ME>-0.99867674553600638</ME>
+            <MAE>1.1812994523740132</MAE>
+            <RSR>1.2858877337494088</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Petiole.Live.Wt</Name>
-            <n>50</n>
-            <Slope>0.57050445540114836</Slope>
-            <Intercept>74.7031757139434</Intercept>
-            <SEslope>0.072821091806260618</SEslope>
-            <SEintercept>11.291728786738275</SEintercept>
-            <R2>0.56114977708171021</R2>
-            <RMSE>54.153862527625087</RMSE>
-            <NSE>0.5127514192924344</NSE>
-            <ME>17.039962901731545</ME>
-            <MAE>45.980410810923658</MAE>
-            <RSR>0.69101635949767082</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>FodderBeet.Phenology.AccumulatedThermalTime.Value()</Name>
-            <n>34</n>
-            <Slope>0.99425413129730811</Slope>
-            <Intercept>-72.001422753641691</Intercept>
-            <SEslope>0.0013746202561176477</SEslope>
-            <SEintercept>3.1949732819609129</SEintercept>
-            <R2>0.99993883625281021</R2>
-            <RMSE>84.833367670442627</RMSE>
-            <NSE>0.98998292139148036</NSE>
-            <ME>-84.436597934765729</ME>
-            <MAE>84.436597934765729</MAE>
-            <RSR>0.098602528615880466</RSR>
+            <n>86</n>
+            <Slope>0.31335916394251456</Slope>
+            <Intercept>44.850956250646469</Intercept>
+            <SEslope>0.029622967703162917</SEslope>
+            <SEintercept>4.1389419885082379</SEintercept>
+            <R2>0.57120843778390806</R2>
+            <RMSE>69.045748124097713</RMSE>
+            <NSE>0.29818965405498388</NSE>
+            <ME>-32.617813084879522</ME>
+            <MAE>48.788151780054811</MAE>
+            <RSR>0.83285638649592575</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Phenology.Stage</Name>
-            <n>10</n>
-            <Slope>0.88338852550147828</Slope>
-            <Intercept>0.65404018642059869</Intercept>
-            <SEslope>0.084579681104923116</SEslope>
-            <SEintercept>0.35382219118744318</SEintercept>
-            <R2>0.93167450636795146</R2>
-            <RMSE>0.37607664178602829</RMSE>
-            <NSE>0.90571090633529561</NSE>
-            <ME>0.18759428842651196</ME>
-            <MAE>0.33452525024651614</MAE>
-            <RSR>0.29130771410698</RSR>
+            <n>18</n>
+            <Slope>0.76436564796437578</Slope>
+            <Intercept>1.2057308093244363</Intercept>
+            <SEslope>0.062386520816486386</SEslope>
+            <SEintercept>0.22282714810773754</SEintercept>
+            <R2>0.90368052294121448</R2>
+            <RMSE>0.57961659287091238</RMSE>
+            <NSE>0.76188576227094851</NSE>
+            <ME>0.41201442649877451</ME>
+            <MAE>0.49364273862099906</MAE>
+            <RSR>0.47422111822052637</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.StorageRoot.Live.N</Name>
             <n>31</n>
-            <Slope>0.56614517391338492</Slope>
-            <Intercept>5.5521239918475072</Intercept>
-            <SEslope>0.053929781199584963</SEslope>
-            <SEintercept>1.0064697601665111</SEintercept>
-            <R2>0.79167301172017834</R2>
-            <RMSE>4.597402530020247</RMSE>
-            <NSE>0.68245839228331806</NSE>
-            <ME>-1.7300593522644019</ME>
-            <MAE>3.8456496223069982</MAE>
-            <RSR>0.55434495582480214</RSR>
+            <Slope>0.68156270393773111</Slope>
+            <Intercept>1.0152510203329168</Intercept>
+            <SEslope>0.057539054527642255</SEslope>
+            <SEintercept>1.0738281729036494</SEintercept>
+            <R2>0.82871576024893867</R2>
+            <RMSE>5.6467888531426915</RMSE>
+            <NSE>0.52095239219961309</NSE>
+            <ME>-4.3296676808036105</ME>
+            <MAE>4.7693366624085547</MAE>
+            <RSR>0.68087771234023</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.StorageRoot.Live.Wt</Name>
-            <n>50</n>
-            <Slope>0.81649461387095523</Slope>
-            <Intercept>138.8069219633569</Intercept>
-            <SEslope>0.040087509422410392</SEslope>
-            <SEintercept>59.884016213132696</SEintercept>
-            <R2>0.89629414027642285</R2>
-            <RMSE>275.84354550131735</RMSE>
-            <NSE>0.87419100747749234</NSE>
-            <ME>-95.242086291013763</ME>
-            <MAE>215.24173497870498</MAE>
-            <RSR>0.35113076292466533</RSR>
+            <n>86</n>
+            <Slope>0.81105292724648126</Slope>
+            <Intercept>168.16612794601122</Intercept>
+            <SEslope>0.036308420082749079</SEslope>
+            <SEintercept>50.324847268021607</SEintercept>
+            <R2>0.85591288058870163</R2>
+            <RMSE>293.94377847742862</RMSE>
+            <NSE>0.84896273519371268</NSE>
+            <ME>-51.2922471645545</ME>
+            <MAE>210.04497863291527</MAE>
+            <RSR>0.38636901731518003</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Structure.LeafTipsAppeared</Name>
-            <n>117</n>
-            <Slope>0.98773029896476128</Slope>
-            <Intercept>0.38895707373239219</Intercept>
-            <SEslope>0.011224110680821449</SEslope>
-            <SEintercept>0.42151036552166959</SEintercept>
-            <R2>0.98536734493753753</R2>
-            <RMSE>1.9245298467684762</RMSE>
-            <NSE>0.98535847793694731</NSE>
-            <ME>-0.028453960136785746</ME>
-            <MAE>1.4963923334145055</MAE>
-            <RSR>0.120483944361224</RSR>
+            <n>205</n>
+            <Slope>0.783581971254115</Slope>
+            <Intercept>6.1599326773430256</Intercept>
+            <SEslope>0.029855211400164595</SEslope>
+            <SEintercept>0.98950248147684017</SEintercept>
+            <R2>0.772384829547571</R2>
+            <RMSE>6.8502146344687089</RMSE>
+            <NSE>0.77176444420880219</NSE>
+            <ME>-0.30688433707001411</ME>
+            <MAE>5.7831884805094829</MAE>
+            <RSR>0.4765734063254124</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.TotalDead.N</Name>
             <n>29</n>
-            <Slope>3.0006513293337349</Slope>
-            <Intercept>1.7537083760366414</Intercept>
-            <SEslope>0.35876527118740259</SEslope>
-            <SEintercept>0.72654541297979158</SEintercept>
-            <R2>0.72151636708918621</R2>
-            <RMSE>5.9898627392876662</RMSE>
-            <NSE>-24.769580126122612</NSE>
-            <ME>5.0465045096733112</ME>
-            <MAE>5.0465045096733112</MAE>
-            <RSR>4.9880831904527225</RSR>
+            <Slope>3.2647381923954208</Slope>
+            <Intercept>2.1023287831432995</Intercept>
+            <SEslope>0.41934646955178823</SEslope>
+            <SEintercept>0.84923006313778249</SEintercept>
+            <R2>0.69181917092993872</R2>
+            <RMSE>6.9092593959413975</RMSE>
+            <NSE>-33.287561314883909</NSE>
+            <ME>5.8297754672701192</ME>
+            <MAE>5.8297754672701192</MAE>
+            <RSR>5.7537145927105806</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Nit</Name>
+            <n>1112</n>
+            <Slope>1</Slope>
+            <Intercept>0</Intercept>
+            <SEslope>0</SEslope>
+            <SEintercept>0</SEintercept>
+            <R2>1</R2>
+            <RMSE>0</RMSE>
+            <NSE>1</NSE>
+            <ME>0</ME>
+            <MAE>0</MAE>
+            <RSR>0</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4733,6 +4733,618 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
         </Graph>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
+      <Folder>
+        <Name>CombinedStatistics</Name>
+        <Folder>
+          <Name>CanopyStats</Name>
+          <Graph>
+            <Name>AppearedLeaves</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Structure.LeafTipsAppeared</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Structure.LeafTipsAppeared</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>GreenLeaves</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Leaf.PlantAppearedGreenLeafNo</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Leaf.PlantAppearedGreenLeafNo</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>LAI</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Leaf.LAI</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Leaf.LAI</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>LightInterception</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Leaf.CoverGreen</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Leaf.CoverGreen</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
+        </Folder>
+        <Folder>
+          <Name>BiomassStats</Name>
+          <Graph>
+            <Name>TotalWt</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.AboveGround.Wt</XFieldName>
+              <YFieldName>Predicted.FodderBeet.AboveGround.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>StorageRoot</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.StorageRoot.Live.Wt</XFieldName>
+              <YFieldName>Predicted.FodderBeet.StorageRoot.Live.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Leaf</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Leaf.Live.Wt</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Leaf.Live.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Petiole</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Petiole.Live.Wt</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Petiole.Live.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
+        </Folder>
+        <Folder>
+          <Name>N_uptakeStats</Name>
+          <Graph>
+            <Name>Total_N</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.AboveGround.N</XFieldName>
+              <YFieldName>Predicted.FodderBeet.AboveGround.N</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>StorageRoot_N</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.StorageRoot.Live.N</XFieldName>
+              <YFieldName>Predicted.FodderBeet.StorageRoot.Live.N</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Leaf_N</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Leaf.Live.N</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Leaf.Live.N</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Petiole</Name>
+            <Series>
+              <Name>Series1</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-2793984</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.FodderBeet.Petiole.Live.N</XFieldName>
+              <YFieldName>Predicted.FodderBeet.Petiole.Live.N</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
+        </Folder>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -12051,9 +12663,9 @@ namespace Models
                 <Name>SowDateCv</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>5</InitialRootDepth>
                   <CropToSow>Rivage</CropToSow>
                   <SowingDate>0001-01-01</SowingDate>
+                  <InitialRootDepth>5</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -14278,6 +14890,7 @@ namespace Models
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DisabledSimNames />
       </Experiment>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -14981,9 +15594,9 @@ namespace Models
                 <Name>SowDateCv</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>5</InitialRootDepth>
                   <CropToSow>Rivage</CropToSow>
                   <SowingDate>2016-10-18</SowingDate>
+                  <InitialRootDepth>5</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -16808,6 +17421,7 @@ namespace Models
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DisabledSimNames />
       </Experiment>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
