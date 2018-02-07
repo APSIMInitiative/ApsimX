@@ -9,11 +9,19 @@ namespace ApsimNG.Cloud
 {
     class DownloadWindow : Window
     {
+        /// <summary>
+        /// Whether or not the result files should be unzipped.
+        /// </summary>
+        private bool unzipResultFiles;
+        private bool downloadResults;
+        private bool collateResults;
+
         private CheckButton includeDebugFiles;
+        private CheckButton unzipResults;
         private CheckButton keepRawOutputs;
         private CheckButton generateCsv;
         private CheckButton runAsync;
-
+        private CheckButton chkDownloadResults;
         private Button btnDownload;
         private Button btnChangeOutputDir;
 
@@ -54,17 +62,48 @@ namespace ApsimNG.Cloud
             vboxPrimary = new VBox();
             HBox downloadDirectoryContainer = new HBox();
 
-            includeDebugFiles = new CheckButton("Include Debugging Files");            
-            keepRawOutputs = new CheckButton("Keep raw output files");
-            keepRawOutputs.Active = true;
-            generateCsv = new CheckButton("Collate Results");
-            generateCsv.Active = true;
-            runAsync = new CheckButton("Download results asynchronously")
-            {                
+            // Checkbox initialisation
+            includeDebugFiles = new CheckButton("Include Debugging Files");
+
+            runAsync = new CheckButton("Download asynchronously")
+            {
                 TooltipText = "If this is disabled, the UI will be unresponsive for the duration of the download. On the other hand, this functionality has not been thoroughly tested. Use at your own risk.",
                 Active = false
             };
 
+            chkDownloadResults = new CheckButton("Download results")
+            {
+                Active = true,
+                TooltipText = "Results will be downloaded if and only if this option is enabled."
+            };
+            chkDownloadResults.Toggled += DownloadResultsToggle;
+            downloadResults = true;
+
+            unzipResults = new CheckButton("Unzip results")
+            {
+                Active = true,
+                TooltipText = "Check this option to automatically unzip the results."
+            };
+            unzipResults.Toggled += UnzipToggle;
+            unzipResultFiles = true;
+
+            generateCsv = new CheckButton("Collate Results")
+            {
+                Active = true,
+                TooltipText = "Check this option to automatically combine results into a CSV file."
+            };
+            collateResults = true;
+            generateCsv.Toggled += GenerateCsvToggle;
+
+            keepRawOutputs = new CheckButton("Keep raw output files")
+            {
+                Active = true,
+                TooltipText = "By default, the raw output files are deleted after being combined into a CSV. Check this option to keep the raw outputs."
+            };
+
+            unzipResults.Active = false;
+
+            // Button initialisation
             btnDownload = new Button("Download");
             btnDownload.Clicked += Download;
 
@@ -81,11 +120,13 @@ namespace ApsimNG.Cloud
             currentFileProgress = new ProgressBar(new Adjustment(0, 0, 1, 0.01, 0.01, 0.01));            
             overallProgress = new ProgressBar(new Adjustment(0, 0, 1, 0.01, 0.01, 0.01));
             
-
+            // Put all form controls into the primary vbox
             vboxPrimary.PackStart(includeDebugFiles);
-            vboxPrimary.PackStart(keepRawOutputs);
-            vboxPrimary.PackStart(generateCsv);
             vboxPrimary.PackStart(runAsync);
+            vboxPrimary.PackStart(chkDownloadResults);
+            vboxPrimary.PackStart(unzipResults);
+            vboxPrimary.PackStart(generateCsv);
+            vboxPrimary.PackStart(keepRawOutputs);
             vboxPrimary.PackStart(downloadDirectoryContainer);            
             vboxPrimary.PackStart(new Label(""));
 
@@ -99,7 +140,6 @@ namespace ApsimNG.Cloud
             
             currentFileProgress.HideAll();
             overallProgress.HideAll();
-            
         }
 
         /// <summary>
@@ -112,17 +152,22 @@ namespace ApsimNG.Cloud
             btnDownload.Clicked -= Download;
             btnChangeOutputDir.Clicked -= ChangeOutputDir;
             Destroy();
-            presenter.DownloadResults(jobs, generateCsv.Active, includeDebugFiles.Active, keepRawOutputs.Active, runAsync.Active);
+            presenter.DownloadResults(jobs, generateCsv.Active, includeDebugFiles.Active, keepRawOutputs.Active, unzipResults.Active, runAsync.Active);
         }
 
+        /// <summary>
+        /// Opens a GUI asking the user for a default download directory, and saves their choice.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ChangeOutputDir(object sender, EventArgs e)
         {
             string dir = GetDirectory();
             if (dir != "")
             {
                 entryOutputDir.Text = dir;
-                Properties.Settings.Default["OutputDir"] = dir;                
-                Properties.Settings.Default.Save();                
+                AzureSettings.Default["OutputDir"] = dir;                
+                AzureSettings.Default.Save();                
             }
         }
 
@@ -143,7 +188,6 @@ namespace ApsimNG.Cloud
                                         "Cancel", ResponseType.Cancel,
                                         "Select Folder", ResponseType.Accept);
             string path = "";
-            
 
             try
             {
@@ -158,6 +202,44 @@ namespace ApsimNG.Cloud
             }
             fc.Destroy();
             return path;
+        }
+
+        /// <summary>
+        /// Event handler for toggling the generate CSV checkbox. Disables the keep raw outputs checkbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GenerateCsvToggle(object sender, EventArgs e)
+        {
+            collateResults = !collateResults;
+
+            keepRawOutputs.Active = false;
+            keepRawOutputs.Sensitive = collateResults;
+        }
+
+        /// <summary>
+        /// Event handler for toggling the unzip results checkbox. Disables the generate CSV checkbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UnzipToggle(object sender, EventArgs e)
+        {
+            unzipResultFiles = !unzipResultFiles;
+            generateCsv.Active = false;
+            generateCsv.Sensitive = unzipResultFiles;            
+        }
+
+        /// <summary>
+        /// Event handler for toggling the download results checkbox. Disables the unzip results checkbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DownloadResultsToggle(object sender, EventArgs e)
+        {
+            downloadResults = !downloadResults;
+
+            unzipResults.Active = false;
+            unzipResults.Sensitive = downloadResults;
         }
     }
 }

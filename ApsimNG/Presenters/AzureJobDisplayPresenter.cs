@@ -402,7 +402,7 @@ namespace UserInterface.Presenters
         /// <param name="saveToCsv">If true, results will be combined into a csv file.</param>
         /// <param name="includeDebugFiles">If true, debug files will be downloaded.</param>
         /// <param name="keepOutputFiles">If true, the raw .db output files will be saved.</param>
-        public void DownloadResults(List<string> jobsToDownload, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles, bool async = false)
+        public void DownloadResults(List<string> jobsToDownload, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles, bool unzipResults, bool async = false)
         {
             MainPresenter.ShowMessage("", Simulation.ErrorLevel.Information);
             view.DownloadStatus = "";            
@@ -458,7 +458,7 @@ namespace UserInterface.Presenters
                     continue;
                 }
 
-                dl = new AzureResultsDownloader(jobId, GetJob(id).DisplayName, path, this, saveToCsv, includeDebugFiles, keepOutputFiles);                
+                dl = new AzureResultsDownloader(jobId, GetJob(id).DisplayName, path, this, saveToCsv, includeDebugFiles, keepOutputFiles, unzipResults);                
                 dl.DownloadResults(async);
             }
             while (FetchJobs.IsBusy) ;
@@ -579,15 +579,15 @@ namespace UserInterface.Presenters
         /// Writes to a log file and asks the view to display an error message if download was unsuccessful.
         /// </summary>
         /// <param name="code"></param>
-        public void DisplayFinishedDownloadStatus(string name, int code, string path, DateTime timeStamp)
-        {
+        public void DisplayFinishedDownloadStatus(string name, int code, string path)
+        {            
             view.HideDownloadProgressBar();
             if (code == 0)
             {
                 ShowMessage("Download successful.");
                 return;
             }
-            string msg = timeStamp.ToLongTimeString().Split(' ')[0] + ": " +  name + ": ";
+            string msg = DateTime.Now.ToLongTimeString().Split(' ')[0] + ": " +  name + ": ";
             switch (code)
             {
                 case 1:

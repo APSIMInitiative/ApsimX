@@ -65,6 +65,11 @@ namespace ApsimNG.Cloud
         private bool saveRawOutputFiles;
 
         /// <summary>
+        /// Whether or not the result files should be extracted from the archive.
+        /// </summary>
+        private bool unzipResults;
+
+        /// <summary>
         /// Azure cloud storage account.
         /// </summary>
         private CloudStorageAccount storageAccount;
@@ -134,7 +139,7 @@ namespace ApsimNG.Cloud
         /// <param name="export"></param>
         /// <param name="includeDebugFiles"></param>
         /// <param name="keepOutputFiles"></param>
-        public AzureResultsDownloader(Guid id, string jobName, string path, AzureJobDisplayPresenter explorer, bool export, bool includeDebugFiles, bool keepOutputFiles)
+        public AzureResultsDownloader(Guid id, string jobName, string path, AzureJobDisplayPresenter explorer, bool export, bool includeDebugFiles, bool keepOutputFiles, bool unzipResultFiles)
         {
             numBlobsComplete = 0;
             jobId = id;
@@ -147,6 +152,7 @@ namespace ApsimNG.Cloud
             progressMutex = new object();
             dbMutex = new object();
             presenter = explorer;
+            unzipResults = unzipResultFiles;
             try
             {
                 // if we need to save files, create a directory under the output directory
@@ -222,13 +228,18 @@ namespace ApsimNG.Cloud
 
                 // might be worth including a 'download all' flag (for testing purposes?), where everything in outputs gets downloaded
                 List<CloudBlockBlob> outputs = ListJobOutputsFromStorage().ToList();
-                foreach (var blob in outputs) Console.WriteLine(blob.Name);
                 if (outputs == null || outputs.Count < 1)
                 {
                     presenter.ShowError("No files in output container.");
                     return;
                 }
-                
+
+                if (saveDebugFiles)
+                {
+                    List<CloudBlockBlob> debugBlobs = outputs.Where(blob => debugFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
+                    Download(debugBlobs, rawResultsPath, ref ct);
+                }
+
                 // Only download the results if the user wants a CSV or the result files themselves
                 if (saveRawOutputFiles || exportToCsv)
                 {                    
@@ -236,25 +247,29 @@ namespace ApsimNG.Cloud
                     if (zipBlobs != null && zipBlobs.Count > 0) // if the result file are nicely zipped up for us
                     {
                         List<string> localZipFiles = Download(zipBlobs, rawResultsPath, ref ct);
+                        if (!unzipResults)
+                        {
+                            // if user doesn't want to extract the results, we're done
+                            presenter.DownloadComplete(jobId);
+                            presenter.DisplayFinishedDownloadStatus(name, 0, outputPath);
+                            return;
+                        }
                         foreach (string archive in localZipFiles)
                         {                            
-                            ExtractZipArchive(archive, rawResultsPath);
-
+                            ExtractZipArchive(archive, rawResultsPath);                            
                             try
                             {
                                 File.Delete(archive);
                             } catch
                             {
 
-                            }
-                            
-                            
+                            }                            
                         }
                     } else
                     {
                         // Results are not zipped up (probably because the job was run on the old Azure job manager), so download each individual result file
                         List<CloudBlockBlob> resultBlobs = outputs.Where(blob => resultFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
-                        Download(resultBlobs, rawResultsPath, ref ct);
+                        Download(resultBlobs, rawResultsPath, ref ct);                        
                     }
 
                     if (exportToCsv)
@@ -278,12 +293,6 @@ namespace ApsimNG.Cloud
                         }
                     }
                 }
-
-                if (saveDebugFiles)
-                {
-                    List<CloudBlockBlob> debugBlobs = outputs.Where(blob => debugFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
-                    Download(debugBlobs, rawResultsPath, ref ct);
-                }
             }
             catch (AggregateException ae)
             {
@@ -292,7 +301,7 @@ namespace ApsimNG.Cloud
             
             
             presenter.DownloadComplete(jobId);
-            presenter.DisplayFinishedDownloadStatus(name, success, outputPath, DateTime.Now);
+            presenter.DisplayFinishedDownloadStatus(name, success, outputPath);
         }
 
         /// <summary>
