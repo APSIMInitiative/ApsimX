@@ -317,7 +317,7 @@ namespace Models.Core
 
             // Do the serialisation
             StringWriter writer = new StringWriter();
-            writer.Write(XmlUtilities.Serialise(model, true));
+            writer.Write(XmlUtilities.Serialise(model, false));
 
             // Let all models know that we have completed serialisation.
             events.Publish("Serialised", args);
@@ -369,12 +369,11 @@ namespace Models.Core
         /// <param name="model">The parent model</param>
         /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursively(IModel model)
-        {
+        {            
             List<IModel> models = new List<IModel>();
-
             foreach (Model child in model.Children)
-            {
-                models.Add(child);
+            {                
+                models.Add(child);                
                 models.AddRange(ChildrenRecursively(child));
             }
             return models;
