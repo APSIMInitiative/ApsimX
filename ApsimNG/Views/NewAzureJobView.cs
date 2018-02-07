@@ -406,7 +406,7 @@ namespace UserInterface.Views
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Presenter.ShowError(ex.ToString());
             }
             f.Destroy();
             return path;
@@ -436,7 +436,7 @@ namespace UserInterface.Views
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Presenter.ShowError("Error: " + ex.Message);
             }
             fc.Destroy();
             return path;            

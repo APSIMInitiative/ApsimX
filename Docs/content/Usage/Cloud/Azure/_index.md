@@ -10,3 +10,4 @@ draft: false
 * [Upload a File to Azure](/usage/cloud/azure/uploadafile)
 * [Creating a new Batch Job](/usage/cloud/azure/submitajob)
 * [Putting it all together](/usage/cloud/azure/puttingitalltogether)
+* [Download a job's results](/usage/cloud/azure/download)
