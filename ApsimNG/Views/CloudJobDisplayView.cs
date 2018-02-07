@@ -382,7 +382,9 @@ namespace UserInterface.Views
             Application.Invoke(delegate
             {
                 // remember which column is being sorted. If the results are not sorted at all, order by start time ascending
-                bool needToResort = sort.GetSortColumnId(out int sortIndex, out SortType order);
+                int sortIndex;
+                SortType order;
+                bool needToResort = sort.GetSortColumnId(out sortIndex, out order);
 
                 store.Clear();
                 foreach (JobDetails job in jobs)
@@ -472,7 +474,8 @@ namespace UserInterface.Views
         /// <returns></returns>
         private int SortInts(TreeModel model, TreeIter a, TreeIter b, int n)
         {
-            if (!Int32.TryParse((string)model.GetValue(a, n), out int x) || !Int32.TryParse((string)model.GetValue(b, n), out int y)) return -1;
+            int x, y;
+            if (!Int32.TryParse((string)model.GetValue(a, n), out x) || !Int32.TryParse((string)model.GetValue(b, n), out y)) return -1;
             return x.CompareTo(y);
         }
 
@@ -485,10 +488,11 @@ namespace UserInterface.Views
         /// <returns></returns>
         private int SortProgress(TreeModel model, TreeIter a, TreeIter b)
         {
+            int x, y;
             int columnIndex = (int)columns.Progress;
-            if (!Int32.TryParse(((string)model.GetValue(a, columnIndex)).Replace("%", ""), out int x))
+            if (!Int32.TryParse(((string)model.GetValue(a, columnIndex)).Replace("%", ""), out x))
                 return -1;
-            if (!Int32.TryParse(((string)model.GetValue(b, columnIndex)).Replace("%", ""), out int y))
+            if (!Int32.TryParse(((string)model.GetValue(b, columnIndex)).Replace("%", ""), out y))
                 return 1;
 
             if (x < y) return -1;
@@ -526,10 +530,10 @@ namespace UserInterface.Views
             string str2 = (string)model.GetValue(b, index);
             if (str1 == "" || str1 == null) return -1;
             if (str2 == "" || str2 == null) return 1;
-
-            if (!TimeSpan.TryParseExact(str1, TIMESPAN_FORMAT, null, out TimeSpan t1))
+            TimeSpan t1, t2;
+            if (!TimeSpan.TryParseExact(str1, TIMESPAN_FORMAT, null, out t1))
                 return -1;
-            if (!TimeSpan.TryParseExact(str2, TIMESPAN_FORMAT, null, out TimeSpan t2))
+            if (!TimeSpan.TryParseExact(str2, TIMESPAN_FORMAT, null, out t2))
                 return 1;
             return TimeSpan.Compare(t1, t2);
         }
@@ -540,9 +544,10 @@ namespace UserInterface.Views
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ApplyFilter(object sender, EventArgs e)
-        {
+        {            
             myJobsOnly = !myJobsOnly;
-            store.GetIterFirst(out TreeIter iter);
+            TreeIter iter;
+            store.GetIterFirst(out iter);
             for (int i = 0; i < store.IterNChildren(); i++)
             {
                 string id = (string)store.GetValue(iter, 1);
@@ -586,9 +591,10 @@ namespace UserInterface.Views
         {
             TreePath[] selectedRows = tree.Selection.GetSelectedRows();
             List<string> jobIds = new List<string>();
+            TreeIter iter;
             for (int i = 0; i < selectedRows.Count(); i++)
-            {
-                tree.Model.GetIter(out TreeIter iter, selectedRows[i]);
+            {                
+                tree.Model.GetIter(out iter, selectedRows[i]);
                 jobIds.Add((string)tree.Model.GetValue(iter, 1));
             }
             return jobIds;
@@ -655,7 +661,8 @@ namespace UserInterface.Views
         /// <returns></returns>
         private string GetId(TreePath row)
         {
-            tree.Model.GetIter(out TreeIter iter, row);
+            TreeIter iter;
+            tree.Model.GetIter(out iter, row);
             return (string)tree.Model.GetValue(iter, (int)columns.ID);
         }
 

@@ -428,11 +428,11 @@ namespace UserInterface.Presenters
             // If a results directory (outputPath\jobName) already exists, the user will receive a warning asking them if they want to continue.
             // This message should only be displayed once. Once it's been displayed this boolean is set to true so they won't be asked again.
             bool ignoreWarning = false;
-
+            Guid jobId;
             foreach (string id in jobsToDownload)
             {                
                 // if the job id is invalid, skip downloading this job                
-                if (!Guid.TryParse(id, out Guid jobId)) continue;
+                if (!Guid.TryParse(id, out jobId)) continue;
                 currentlyDownloading.Add(jobId);
                 string jobName = GetJob(id).DisplayName;
 
@@ -694,12 +694,12 @@ namespace UserInterface.Presenters
 
             // if user says no to the popup, no further action required
             if (!AskQuestion(msg)) return;
-
+            Guid parsedId;
             foreach (string id in jobIds)
             {
                 try
                 {
-                    if (!Guid.TryParse(id, out Guid parsedId)) continue;
+                    if (!Guid.TryParse(id, out parsedId)) continue;
                     // delete the job from Azure
                     CloudBlobContainer containerRef;
 
