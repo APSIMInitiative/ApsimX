@@ -40,18 +40,8 @@
         public static RunOrganiser ForFile(string fileName, bool runTests)
         {
             if (!File.Exists(fileName))
-                throw new Exception("Cannot find file: " + fileName);
-            Console.WriteLine("Filename: " + fileName);
-            Simulations simulations = Simulations.Read(fileName);
-            if (simulations == null)
-            {
-                Console.WriteLine("Simulations are null!");
-                Console.WriteLine(Environment.StackTrace);
-            } else
-            {
-                Console.WriteLine("Simulations are not null:");
-                Console.WriteLine(simulations.ToString());
-            }
+                throw new Exception("Cannot find file: " + fileName);            
+            Simulations simulations = Simulations.Read(fileName);            
             return ForSimulations(simulations, simulations, runTests);
         }
 
