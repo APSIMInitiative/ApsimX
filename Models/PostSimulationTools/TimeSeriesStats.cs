@@ -34,7 +34,7 @@ namespace Models.PostSimulationTools
         /// <param name="dataStore">The DataStore to work with</param>
         public void Run(IStorageReader dataStore)
         {
-            dataStore.DeleteTable(this.Name);
+            dataStore.DeleteDataInTable(this.Name);
 
             DataTable statsData = new DataTable();
             statsData.Columns.Add("SimulationName", typeof(string));
