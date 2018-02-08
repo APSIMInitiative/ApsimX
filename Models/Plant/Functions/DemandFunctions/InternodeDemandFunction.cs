@@ -7,6 +7,7 @@ using Models.PMF.Struct;
 namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
+    /// # [Name]
     /// Calculate internode demand
     /// </summary>
     [Serializable]

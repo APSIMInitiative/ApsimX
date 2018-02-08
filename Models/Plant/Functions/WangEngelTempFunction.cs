@@ -6,6 +6,7 @@ using Models.Interfaces;
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// A function that adds values from child functions
     /// </summary>
     [Serializable]
@@ -14,7 +15,7 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
 
     public class 
-        WangEngelTempFunction: Model, IFunction
+        WangEngelTempFunction: Model, IFunction, ICustomDocumentation
         {
         
         /// <summary>Minimum Temperature.</summary>
@@ -66,7 +67,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
                 SubtractFunction.DocumentMathFunction(this, '+', tags, headingLevel, indent);

@@ -18,6 +18,7 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF.OilPalm
 {
     /// <summary>
+    /// # [Name]
     /// An oil palm model
     /// </summary>
     [Serializable]

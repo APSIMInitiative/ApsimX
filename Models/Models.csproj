@@ -149,6 +149,7 @@
     <Compile Include="Core\EventArgs\LoadedEventArgs.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\ApsimFile\Format.cs" />
+    <Compile Include="Core\ICustomDocumentation.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Core\IStorageWriter.cs" />

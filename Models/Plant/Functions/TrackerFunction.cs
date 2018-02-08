@@ -8,6 +8,7 @@
     using Models.PMF.Phen;
 
     /// <summary>
+    /// # [Name]
     /// A function that accumulates values from child functions
     /// </summary>
     [Serializable]
