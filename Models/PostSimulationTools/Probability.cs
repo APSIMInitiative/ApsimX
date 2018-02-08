@@ -41,7 +41,7 @@ namespace Models.PostSimulationTools
         /// <param name="dataStore">The DataStore to work with</param>
         public void Run(IStorageReader dataStore)
         {
-            dataStore.DeleteTable(this.Name);
+            dataStore.DeleteDataInTable(this.Name);
 
             DataTable simulationData = dataStore.GetData("*", this.TableName);
             if (simulationData != null)

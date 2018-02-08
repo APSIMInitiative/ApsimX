@@ -312,7 +312,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void EmptyDataStore(object sender, EventArgs e)
         {
-            storage.DeleteAllTables();
+            storage.EmptyDataStore();
         }
 
         /// <summary>

@@ -15,13 +15,14 @@ namespace Models.Core
         /// Return all data from the specified simulation and table name. If simulationName = "*"
         /// the all simulation data will be returned.
         /// </summary>
+        /// <param name="checkpointName">Name of the checkpoint.</param>
         /// <param name="simulationName">Name of the simulation.</param>
         /// <param name="tableName">Name of the table.</param>
         /// <param name="fieldNames">Optional column names to retrieve from storage</param>
         /// <param name="filter">Optional filter</param>
         /// <param name="from">Optional start index. Only used when 'count' specified. The record number to offset.</param>
         /// <param name="count">Optional number of records to return or all if 0.</param>
-        DataTable GetData(string tableName, string simulationName = null, IEnumerable<string> fieldNames = null,
+        DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null,
                                  string filter = null,
                                  int from = 0, int count = 0);
 
@@ -53,7 +54,7 @@ namespace Models.Core
 
         /// <summary>Delete the specified table.</summary>
         /// <param name="tableName">Name of the table.</param>
-        void DeleteTable(string tableName);
+        void DeleteDataInTable(string tableName);
 
         /// <summary>Return all data from the specified simulation and table name.</summary>
         /// <param name="sql">The SQL.</param>
@@ -70,6 +71,6 @@ namespace Models.Core
         IEnumerable<string> ColumnNames(string tableName);
 
         /// <summary>Delete all tables</summary>
-        void DeleteAllTables();
+        void EmptyDataStore();
     }
 }

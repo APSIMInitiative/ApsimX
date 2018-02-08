@@ -102,11 +102,11 @@
             }
 
             Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
-                           "SimulationID, Col1,  Col2\r\n" +
-                           "           1,1.000,11.000\r\n" +
-                           "           1,2.000,12.000\r\n" +
-                           "           2,3.000,13.000\r\n" +
-                           "           2,4.000,14.000\r\n");
+                           "CheckpointID,SimulationID, Col1,  Col2\r\n" +
+                           "           1,           1,1.000,11.000\r\n" +
+                           "           1,           1,2.000,12.000\r\n" +
+                           "           1,           2,3.000,13.000\r\n" +
+                           "           1,           2,4.000,14.000\r\n");
         }
 
         /// <summary>Write data for 2 simulations, each with different columns, into one table. Ensure data was written correctly</summary>
@@ -135,11 +135,11 @@
             }
 
             Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
-                           "SimulationID, Col1,  Col2, Col3,  Col4\r\n" +
-                           "           1,1.000,11.000,     ,      \r\n" +
-                           "           1,2.000,12.000,     ,      \r\n" +
-                           "           2,     ,      ,3.000,13.000\r\n" +
-                           "           2,     ,      ,4.000,14.000\r\n");
+                           "CheckpointID,SimulationID, Col1,  Col2, Col3,  Col4\r\n" +
+                           "           1,           1,1.000,11.000,     ,      \r\n" +
+                           "           1,           1,2.000,12.000,     ,      \r\n" +
+                           "           1,           2,     ,      ,3.000,13.000\r\n" +
+                           "           1,           2,     ,      ,4.000,14.000\r\n");
         }
 
         /// <summary>Write array data that changes size into a table. Ensure data was written correctly</summary>
@@ -165,10 +165,10 @@
             }
 
             Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
-                           "SimulationID,Col(1),Col(2),Col(3)\r\n" +
-                           "           1, 1.000,      ,      \r\n" +
-                           "           1, 2.000, 2.100,      \r\n" +
-                           "           1, 3.000, 3.100, 3.200\r\n");
+                           "CheckpointID,SimulationID,Col(1),Col(2),Col(3)\r\n" +
+                           "           1,           1, 1.000,      ,      \r\n" +
+                           "           1,           1, 2.000, 2.100,      \r\n" +
+                           "           1,           1, 3.000, 3.100, 3.200\r\n");
         }
 
         /// <summary>Write array of structure data into a table. Ensure data was written correctly</summary>
@@ -209,9 +209,9 @@
             }
 
             Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
-                            "SimulationID,     Col.c,Col.d(1),Col.d(2),Col.e(1).a,Col.e(1).b,Col.e(2).a,Col.e(2).b,Col.e(3).a,Col.e(3).b\r\n" +
-                            "           1,2017-01-01, 100.000, 101.000,        10,        11,        12,        13,          ,          \r\n" +
-                            "           1,2017-01-02, 102.000, 103.000,        16,        17,        18,        19,        20,        21\r\n");
+                            "CheckpointID,SimulationID,     Col.c,Col.d(1),Col.d(2),Col.e(1).a,Col.e(1).b,Col.e(2).a,Col.e(2).b,Col.e(3).a,Col.e(3).b\r\n" +
+                            "           1,           1,2017-01-01, 100.000, 101.000,        10,        11,        12,        13,          ,          \r\n" +
+                            "           1,           1,2017-01-02, 102.000, 103.000,        16,        17,        18,        19,        20,        21\r\n");
         }
 
         /// <summary>Ensure that begin writing method does cleanup</summary>
@@ -255,9 +255,9 @@
             }
 
             Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
-                           "SimulationID,Col\r\n" +
-                           "           1,  1\r\n" +
-                           "           2,  4\r\n");
+                           "CheckpointID,SimulationID,Col\r\n" +
+                           "           1,           1,  1\r\n" +
+                           "           1,           2,  4\r\n");
         }
 
         /// <summary>Ensure that GetData when passed a table name returns data for the correct table</summary>
@@ -268,11 +268,11 @@
             {
                 CreateTable(storage);
                 Assert.AreEqual(Utilities.TableToString(storage.GetData("Report2")),
-                                "SimulationName,SimulationID,      Col1,  Col2\r\n" +
-                                "          Sim1,           1,2017-01-01,21.000\r\n" +
-                                "          Sim1,           1,2017-01-02,22.000\r\n" +
-                                "          Sim2,           2,2017-01-01,31.000\r\n" +
-                                "          Sim2,           2,2017-01-02,32.000\r\n");
+                                "CheckpointName,CheckpointID,SimulationName,SimulationID,      Col1,  Col2\r\n" +
+                                "       Current,           1,          Sim1,           1,2017-01-01,21.000\r\n" +
+                                "       Current,           1,          Sim1,           1,2017-01-02,22.000\r\n" +
+                                "       Current,           1,          Sim2,           2,2017-01-01,31.000\r\n" +
+                                "       Current,           1,          Sim2,           2,2017-01-02,32.000\r\n");
             }
         }
 
@@ -286,9 +286,9 @@
                 DataTable data = storage.GetData(tableName:"Report2",
                                                  simulationName: "Sim1");
                 Assert.AreEqual(Utilities.TableToString(data),
-                                "SimulationName,SimulationID,      Col1,  Col2\r\n" +
-                                "          Sim1,           1,2017-01-01,21.000\r\n" +
-                                "          Sim1,           1,2017-01-02,22.000\r\n");
+                                "CheckpointName,CheckpointID,SimulationName,SimulationID,      Col1,  Col2\r\n" +
+                                "       Current,           1,          Sim1,           1,2017-01-01,21.000\r\n" +
+                                "       Current,           1,          Sim1,           1,2017-01-02,22.000\r\n");
             }
         }
 
@@ -303,9 +303,9 @@
                                                  simulationName: "Sim1",
                                                  fieldNames: new string[] { "Col2" });
                 Assert.AreEqual(Utilities.TableToString(data),
-                                "SimulationName,SimulationID,  Col2\r\n" +
-                                "          Sim1,           1,21.000\r\n" +
-                                "          Sim1,           1,22.000\r\n");
+                                "CheckpointName,CheckpointID,SimulationName,SimulationID,  Col2\r\n" +
+                                "       Current,           1,          Sim1,           1,21.000\r\n" +
+                                "       Current,           1,          Sim1,           1,22.000\r\n");
             }
         }
 
@@ -324,8 +324,8 @@
                                                  fieldNames: new string[] { "Col2" },
                                                  filter: "Col2=22");
                 Assert.AreEqual(Utilities.TableToString(data),
-                                "SimulationName,SimulationID,  Col2\r\n" +
-                                "          Sim1,           1,22.000\r\n");
+                                "CheckpointName,CheckpointID,SimulationName,SimulationID,  Col2\r\n" +
+                                "       Current,           1,          Sim1,           1,22.000\r\n");
             }
         }
 
@@ -363,9 +363,9 @@
                 data.Rows.Add(row);
                 storage.WriteTableRaw(data);
                 Assert.AreEqual(Utilities.TableToString(fileName, "Test"),
-                                           "Col1,Col2\r\n" +
-                                           "  10,  20\r\n" +
-                                           "  11,  21\r\n");
+                                           "CheckpointID,Col1,Col2\r\n" +
+                                           "           1,  10,  20\r\n" +
+                                           "           1,  11,  21\r\n");
             }
         }
         
@@ -376,16 +376,10 @@
             using (DataStore storage = new DataStore(fileName))
             {
                 CreateTable(storage);
-                storage.DeleteTable("Report1");
-                Assert.IsFalse(storage.TableNames.Contains("Report1"));
-            }
+                storage.DeleteDataInTable("Report1");
 
-            SQLite database = new SQLite();
-            database.OpenDatabase(fileName, true);
-            DataTable tableData = database.ExecuteQuery("SELECT * FROM sqlite_master");
-            database.CloseDatabase();
-            string[] tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name");
-            Assert.AreEqual(Array.IndexOf(tableNames, "Report1"), -1);
+                Assert.AreEqual(storage.GetData("Report1").Rows.Count, 0);
+            }
         }
 
         /// <summary>Call DeleteTable with a valid table name. Ensure table is deleted</summary>
@@ -406,7 +400,7 @@
             using (DataStore storage = new DataStore(fileName))
             {
                 CreateTable(storage);
-                Assert.AreEqual(storage.ColumnNames("Report1").ToArray(), new string[] { "SimulationID", "Col1", "Col2" });
+                Assert.AreEqual(storage.ColumnNames("Report1").ToArray(), new string[] { "CheckpointID", "SimulationID", "Col1", "Col2" });
             }
         }
 

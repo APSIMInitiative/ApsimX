@@ -58,16 +58,27 @@ namespace Models.Storage
         {
             Name = tableName;
             Columns = new List<Column>();
-            Columns.Add(new Column("SimulationID", null, "integer"));
+            Columns.Add(new Column("CheckpointID", null, "integer"));
         }
 
         /// <summary>Add a row to our list of rows to write</summary>
-        /// <param name="simulationID"></param>
-        /// <param name="rowColumnNames"></param>
-        /// <param name="rowColumnUnits"></param>
-        /// <param name="rowValues"></param>
-        public void AddRow(int simulationID, IEnumerable<string> rowColumnNames, IEnumerable<string> rowColumnUnits, IEnumerable<object> rowValues)
+        /// <param name="checkpointID">ID of checkpoint</param>
+        /// <param name="simulationID">ID of simulation</param>
+        /// <param name="rowColumnNames">Column names of values</param>
+        /// <param name="rowColumnUnits">Units of values</param>
+        /// <param name="rowValues">The values</param>
+        public void AddRow(int checkpointID, int simulationID, IEnumerable<string> rowColumnNames, IEnumerable<string> rowColumnUnits, IEnumerable<object> rowValues)
         {
+            // If we have a valid simulation ID then make sure SimulationID is at index 1.
+            if (simulationID > 0 && Columns.Find(column => column.Name == "SimulationID") == null)
+            {
+                Column simIDColumn = new Column("SimulationID", null, "integer");
+                if (Columns.Count > 1)
+                    Columns.Insert(1, simIDColumn);
+                else
+                    Columns.Add(simIDColumn);
+            }
+
             // We want all rows to be a normalised flat table. All rows must have the same number of values
             // and be in correct order i.e. like a .NET DataTable.
 
@@ -104,7 +115,9 @@ namespace Models.Storage
             lock (lockObject)
             {
                 object[] newRow = new object[Columns.Count];
-                newRow[0] = simulationID;
+                newRow[0] = checkpointID;
+                if (simulationID > 0)
+                    newRow[1] = simulationID;
                 for (int i = 0; i < rowColumnNames.Count(); i++)
                 {
                     int columnIndex = Columns.FindIndex(column => column.Name == rowColumnNames.ElementAt(i));

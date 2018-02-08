@@ -61,7 +61,7 @@ namespace Models.PostSimulationTools
         {
             if (PredictedTableName != null && ObservedTableName != null)
             {
-                dataStore.DeleteTable(this.Name);
+                dataStore.DeleteDataInTable(this.Name);
                 
                 DataTable predictedDataNames = dataStore.RunQuery("PRAGMA table_info(" + PredictedTableName + ")");
                 DataTable observedDataNames  = dataStore.RunQuery("PRAGMA table_info(" + ObservedTableName + ")");

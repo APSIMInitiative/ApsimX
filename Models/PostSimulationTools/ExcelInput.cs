@@ -87,7 +87,7 @@ namespace Models.PostSimulationTools
             string fullFileName = AbsoluteFileName;
             if (fullFileName != null && File.Exists(fullFileName))
             {
-                dataStore.DeleteTable(this.Name);
+                dataStore.DeleteDataInTable(this.Name);
                 
                 // Open the file
                 FileStream stream = File.Open(fullFileName, FileMode.Open, FileAccess.Read);
