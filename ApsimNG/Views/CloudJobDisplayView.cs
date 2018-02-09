@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using ApsimNG.Cloud;
 using Gtk;
-using System.IO;
 
 namespace UserInterface.Views
 {
-    public class AzureJobDisplayView : ViewBase
+    public class CloudJobDisplayView : ViewBase
     {
         public Interfaces.ICloudJobPresenter Presenter { get; set; }
 
@@ -19,7 +18,7 @@ namespace UserInterface.Views
             get { return lblDownloadStatus.Text; }
             set
             {
-                Application.Invoke(delegate
+                Invoke(delegate
                 {
                     lblDownloadStatus.Text = value;
                 });
@@ -34,6 +33,8 @@ namespace UserInterface.Views
             get { return loadingProgress.Adjustment.Value; }
             set
             {
+                // If the job load progress bar starts causing issues (e.g. not (dis)appearing correctly), 
+                // try using this class' Invoke() method rather than Gtk.Application.Invoke here.
                 Application.Invoke(delegate
                 {
                     loadingProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), loadingProgress.Adjustment.Upper);
@@ -49,11 +50,8 @@ namespace UserInterface.Views
             get { return downloadProgress.Adjustment.Value; }
             set
             {
-                Application.Invoke(delegate
-                {
-                    if (!downloadProgressContainer.Visible) downloadProgressContainer.ShowAll();
-                    downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper);                    
-                });
+                // Set progresss bar to whichever is smaller - the value being passed in, or the maximum value the progress bar can take.
+                Invoke(delegate { downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper); });
             }
         }
 
@@ -177,15 +175,13 @@ namespace UserInterface.Views
         /// Constructor. Initialises the jobs TreeView and the controls associated with it.
         /// </summary>
         /// <param name="owner"></param>
-        public AzureJobDisplayView(ViewBase owner) : base(owner)
+        public CloudJobDisplayView(ViewBase owner) : base(owner)
         {
             store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
 
             Type[] types = new Type[columnTitles.Length];
-            tree = new TreeView();
+            tree = new TreeView() { CanFocus = true, RubberBanding = true, Name = "custom_treeview" };
             tree.Selection.Mode = SelectionMode.Multiple;
-            tree.CanFocus = true;
-            tree.RubberBanding = true;
 
             for (int i = 0; i < columnTitles.Length; i++)
             {
@@ -193,7 +189,9 @@ namespace UserInterface.Views
                 TreeViewColumn col = new TreeViewColumn
                 {
                     Title = columnTitles[i],
-                    SortColumnId = i
+                    SortColumnId = i,
+                    Resizable = true,
+                    Sizing = TreeViewColumnSizing.GrowOnly
                 };
                 CellRendererText cell = new CellRendererText();
                 col.PackStart(cell, false);
@@ -204,13 +202,15 @@ namespace UserInterface.Views
 
             // this filter holds the model (data) and is used to filter jobs based on whether 
             // they were submitted by the user
-            filterOwner = new TreeModelFilter(store, null);
-            filterOwner.VisibleFunc = FilterOwnerFunc;
+            filterOwner = new TreeModelFilter(store, null) { VisibleFunc = FilterOwnerFunc };
             filterOwner.Refilter();
 
             // the filter then goes into this TreeModelSort, which is used to sort results when
             // the user clicks on a column header
-            sort = new TreeModelSort(filterOwner);
+            sort = new TreeModelSort(filterOwner)
+            {
+                DefaultSortFunc = (model, a, b) => SortData(model, a, b, Array.IndexOf(columnTitles, "Start Time"))
+            };
             for (int i = 0; i < columnTitles.Length; i++)
             {
                 int count = i;
@@ -220,7 +220,6 @@ namespace UserInterface.Views
 
             // change the colour of every other row - makes it easier to read
             string style = "style \"custom-treestyle\"{ GtkTreeView::odd-row-color = \"#ECF2FD\" GtkTreeView::even-row-color = \"#FFFFFF\" GtkTreeView::allow-rules = 1 } widget \"*custom_treeview*\" style \"custom-treestyle\"";
-            tree.Name = "custom_treeview";
             //tree.CanFocus = true;
             tree.RulesHint = true;
             Rc.ParseString(style);
@@ -266,7 +265,7 @@ namespace UserInterface.Views
             lblDownloadStatus.Xalign = 0;
 
             btnChangeDownloadDir = new Button("Change Download Directory");
-            btnChangeDownloadDir.Clicked += btnChangeDownloadDir_Click;
+            btnChangeDownloadDir.Clicked += BtnChangeDownloadDir_Click;
 
             tblButtonContainer = new Table(1, 1, false);
             tblButtonContainer.Attach(btnChangeDownloadDir, 0, 1, 0, 1, AttachOptions.Shrink, AttachOptions.Shrink, 0, 0);
@@ -296,7 +295,7 @@ namespace UserInterface.Views
             progress.PackStart(loadingProgress, false, false, 0);
 
             vboxDownloadStatuses = new VBox();
-            
+
             controlsContainer = new VBox();
             controlsContainer.PackStart(chkFilterOwner, false, false, 0);
             controlsContainer.PackStart(downloadButtonContainer, false, false, 0);
@@ -323,6 +322,12 @@ namespace UserInterface.Views
             HideLoadingProgressBar();
         }
 
+        public void Detach()
+        {
+            RemoveEventHandlers();
+            MainWidget.Destroy();
+        }
+
         /// <summary>
         /// Displays a warning to the user, and asks if they want to continue.
         /// </summary>
@@ -334,6 +339,81 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Makes the download progress bar invisible.
+        /// </summary>
+        public void HideDownloadProgressBar()
+        {
+            Invoke(delegate { downloadProgressContainer.HideAll(); });
+        }
+
+        /// <summary>
+        /// Makes the download progress bar visible.
+        /// </summary>
+        public void ShowDownloadProgressBar()
+        {
+            Invoke(() => downloadProgressContainer.ShowAll());
+        }
+
+        /// <summary>
+        /// Makes the job load progress bar invisible.
+        /// </summary>
+        public void HideLoadingProgressBar()
+        {
+            Application.Invoke(delegate { progress.HideAll(); });
+        }
+
+        /// <summary>
+        /// Makes the job load progress bar visible.
+        /// </summary>
+        public void ShowLoadingProgressBar()
+        {
+            Application.Invoke(delegate { progress.ShowAll(); });
+        }
+
+        /// <summary>
+        /// Empties the TreeView and refills it with the contents of jobList.
+        /// Current sorting/filtering remains unchanged.
+        /// </summary>
+        public void UpdateJobTable(List<JobDetails> jobs)
+        {
+            // This entire function is run on the Gtk main loop thread.
+            // This may cause problems if another thread wants to modify a view at the same time,
+            // but is probably better than the alternative, which is concurrent modification of live Gtk elements.
+            Application.Invoke(delegate
+            {
+                // remember which column is being sorted. If the results are not sorted at all, order by start time ascending
+                int sortIndex;
+                SortType order;
+                bool needToResort = sort.GetSortColumnId(out sortIndex, out order);
+
+                store.Clear();
+                foreach (JobDetails job in jobs)
+                {
+                    string startTimeString = job.StartTime == null ? DateTime.UtcNow.ToLocalTime().ToString() : ((DateTime)job.StartTime).ToLocalTime().ToString();
+                    string endTimeString = job.EndTime == null ? "" : ((DateTime)job.EndTime).ToLocalTime().ToString();
+                    string dispName = myJobsOnly ? job.DisplayName : job.DisplayName + " (" + job.Owner + ")";
+                    string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";
+                    string timeStr = job.CpuTime == TimeSpan.Zero ? "" : job.CpuTime.ToString(TIMESPAN_FORMAT);
+                    string durationStr = job.Duration() == TimeSpan.Zero ? "" : job.Duration().ToString(TIMESPAN_FORMAT);
+                    store.AppendValues(dispName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, durationStr, timeStr);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Detaches all event handlers from view controls.
+        /// </summary>
+        private void RemoveEventHandlers()
+        {
+            chkFilterOwner.Toggled -= ApplyFilter;
+            btnChangeDownloadDir.Clicked -= BtnChangeDownloadDir_Click;
+            btnDownload.Clicked -= BtnDownload_Click;
+            btnDelete.Clicked -= BtnDelete_Click;
+            btnSetup.Clicked -= BtnSetup_Click;
+            btnStop.Clicked -= BtnStop_Click;
+        }
+
+        /// <summary>
         /// Comapres 2 elements from the ListStore and returns an indication of their relative values. 
         /// </summary>
         /// <param name="model">Model of the ListStore.</param>
@@ -342,23 +422,28 @@ namespace UserInterface.Views
         /// <param name="i">Column to take values from.</param>
         /// <returns></returns>
         private int SortData(TreeModel model, TreeIter a, TreeIter b, int i)
-        {                        
+        {
             if (i == (int)columns.Name || i == (int)columns.ID || i == (int)columns.State)
             {
                 return SortStrings(model, a, b, i);
-            } else if (i == (int)columns.StartTime || i == (int)columns.EndTime)
+            }
+            else if (i == (int)columns.StartTime || i == (int)columns.EndTime)
             {
                 return SortDateStrings(model, a, b, i);
-            } else if (i == (int)columns.NumSims)
+            }
+            else if (i == (int)columns.NumSims)
             {
                 return SortInts(model, a, b, i);
-            } else if (i == (int)columns.Progress)
+            }
+            else if (i == (int)columns.Progress)
             {
                 return SortProgress(model, a, b);
-            } else if (i == (int)columns.CpuTime || i == (int)columns.Duration)
+            }
+            else if (i == (int)columns.CpuTime || i == (int)columns.Duration)
             {
                 return SortCpuTime(model, a, b);
-            } else
+            }
+            else
             {
                 return SortData(model, a, b, Math.Abs(i % columnTitles.Length));
             }
@@ -389,10 +474,11 @@ namespace UserInterface.Views
         /// <returns></returns>
         private int SortInts(TreeModel model, TreeIter a, TreeIter b, int n)
         {
-            if (!Int32.TryParse((string)model.GetValue(a, n), out int x) || !Int32.TryParse((string)model.GetValue(b, n), out int y)) return -1;
+            int x, y;
+            if (!Int32.TryParse((string)model.GetValue(a, n), out x) || !Int32.TryParse((string)model.GetValue(b, n), out y)) return -1;
             return x.CompareTo(y);
         }
-        
+
         /// <summary>
         /// Sorts 2 progress strings (an integer followed by a % sign).
         /// </summary>
@@ -404,8 +490,10 @@ namespace UserInterface.Views
         {
             int x, y;
             int columnIndex = (int)columns.Progress;
-            Int32.TryParse(((string)model.GetValue(a, columnIndex)).Replace("%", ""), out x);
-            Int32.TryParse(((string)model.GetValue(b, columnIndex)).Replace("%", ""), out y);
+            if (!Int32.TryParse(((string)model.GetValue(a, columnIndex)).Replace("%", ""), out x))
+                return -1;
+            if (!Int32.TryParse(((string)model.GetValue(b, columnIndex)).Replace("%", ""), out y))
+                return 1;
 
             if (x < y) return -1;
             if (x == y) return 0;
@@ -442,10 +530,11 @@ namespace UserInterface.Views
             string str2 = (string)model.GetValue(b, index);
             if (str1 == "" || str1 == null) return -1;
             if (str2 == "" || str2 == null) return 1;
-
             TimeSpan t1, t2;
-            if (!TimeSpan.TryParseExact(str1, TIMESPAN_FORMAT, null, out t1)) return -1;
-            if (!TimeSpan.TryParseExact(str2, TIMESPAN_FORMAT, null, out t2)) return 1;
+            if (!TimeSpan.TryParseExact(str1, TIMESPAN_FORMAT, null, out t1))
+                return -1;
+            if (!TimeSpan.TryParseExact(str2, TIMESPAN_FORMAT, null, out t2))
+                return 1;
             return TimeSpan.Compare(t1, t2);
         }
 
@@ -455,15 +544,14 @@ namespace UserInterface.Views
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ApplyFilter(object sender, EventArgs e)
-        {
+        {            
             myJobsOnly = !myJobsOnly;
-            //filterOwner.Refilter();
             TreeIter iter;
             store.GetIterFirst(out iter);
             for (int i = 0; i < store.IterNChildren(); i++)
             {
                 string id = (string)store.GetValue(iter, 1);
-                string name = Presenter.GetJobName(id, !myJobsOnly);
+                string name = Presenter.GetFormattedJobName(id, !myJobsOnly);
                 store.SetValue(iter, 0, name);
                 store.IterNext(ref iter);
             }
@@ -479,91 +567,10 @@ namespace UserInterface.Views
         {
             object rawId = model.GetValue(iter, 1);
             if (rawId is string)
-            {                
+            {
                 return !myJobsOnly || Presenter.UserOwnsJob((string)rawId);
             }
             return true;
-        }
-
-        /// <summary>
-        /// Makes the download progress bar invisible.
-        /// </summary>
-        public void HideDownloadProgressBar()
-        {
-            Application.Invoke(delegate { downloadProgressContainer.HideAll(); });
-        }
-
-        /// <summary>
-        /// Makes the download progress bar visible.
-        /// </summary>
-        public void ShowDownloadProgressBar()
-        {
-            Application.Invoke(delegate { downloadProgressContainer.ShowAll(); });
-        }
-
-        /// <summary>
-        /// Makes the job load progress bar invisible.
-        /// </summary>
-        public void HideLoadingProgressBar()
-        {
-            Application.Invoke(delegate { progress.HideAll(); });
-        }
-
-        /// <summary>
-        /// Makes the job load progress bar visible.
-        /// </summary>
-        public void ShowLoadingProgressBar()
-        {
-            Application.Invoke(delegate { progress.ShowAll(); });
-        }
-
-        /// <summary>
-        /// Empties the TreeView and refills it with the contents of jobList.
-        /// Current sorting/filtering remains unchanged.
-        /// </summary>
-        public void UpdateJobTable(List<JobDetails> jobs)
-        {
-            // This entire function is run on the Gtk main loop thread.
-            // This may cause problems if another thread wants to modify a view at the same time,
-            // but is probably better than the alternative, which is concurrent modification of live Gtk elements.
-            Application.Invoke(delegate
-            {
-                // remember which column is being sorted. If the results are not sorted at all, order by start time ascending
-
-                if (!sort.GetSortColumnId(out int sortIndex, out SortType order))
-                {
-                    sortIndex = Array.IndexOf(columnTitles, "Start Time");
-                    order = SortType.Ascending;
-                }
-
-                store.Clear();
-                foreach (JobDetails job in jobs)
-                {
-                    string startTimeString = job.StartTime == null ? DateTime.UtcNow.ToLocalTime().ToString() : ((DateTime)job.StartTime).ToLocalTime().ToString();
-                    string endTimeString = job.EndTime == null ? "" : ((DateTime)job.EndTime).ToLocalTime().ToString();
-                    string dispName = myJobsOnly ? job.DisplayName : job.DisplayName + " (" + job.Owner + ")";
-                    string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";
-                    string timeStr = job.CpuTime == TimeSpan.Zero ? "" : job.CpuTime.ToString(TIMESPAN_FORMAT);
-                    string durationStr = job.Duration() == TimeSpan.Zero ? "" : job.Duration().ToString(TIMESPAN_FORMAT);
-                    store.AppendValues(dispName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, durationStr, timeStr);
-                }
-
-                filterOwner = new TreeModelFilter(store, null);
-                filterOwner.VisibleFunc = FilterOwnerFunc;
-                filterOwner.Refilter();
-
-                sort = new TreeModelSort(filterOwner);
-                for (int i = 0; i < columnTitles.Length; i++)
-                {
-                    int j = i; // ¯\_(ツ)_/¯
-                    sort.SetSortFunc(i, (model, a, b) => SortData(model, a, b, j));
-                }
-
-                sort.DefaultSortFunc = (model, a, b) => SortData(model, a, b, Array.IndexOf(columnTitles, "Start Time"));
-                sort.SetSortColumnId(sortIndex, order);
-
-                tree.Model = sort;
-            });
         }
 
         /// <summary>
@@ -573,7 +580,7 @@ namespace UserInterface.Views
         /// <returns>True if st starts with a vowel, false otherwise.</returns>
         private bool StartsWithVowel(string st)
         {
-            return "aeiou".IndexOf(st[0]) >= 0;
+            return "aeiou".Contains(st[0]);
         }
 
         /// <summary>
@@ -586,7 +593,7 @@ namespace UserInterface.Views
             List<string> jobIds = new List<string>();
             TreeIter iter;
             for (int i = 0; i < selectedRows.Count(); i++)
-            {
+            {                
                 tree.Model.GetIter(out iter, selectedRows[i]);
                 jobIds.Add((string)tree.Model.GetValue(iter, 1));
             }
@@ -601,7 +608,7 @@ namespace UserInterface.Views
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnStop_Click(object sender, EventArgs e)
-        {            
+        {
             Presenter.StopJobs(GetSelectedJobIds());
         }
 
@@ -622,8 +629,9 @@ namespace UserInterface.Views
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnSetup_Click(object sender, EventArgs e)
-        {
-            Presenter.SetupCredentials();
+        {            
+            var setup = new AzureCredentialsSetup();
+            setup.Finished += delegate { Presenter.GetCredentials(); }; // this ensures that the changes actually have an effect
         }
 
         /// <summary>
@@ -634,26 +642,16 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void BtnDownload_Click(object sender, EventArgs e)
         {
+
             List<string> jobIds = GetSelectedJobIds();
+            // Normally (when stopping or deleting) the presenter would check to make sure there is at least 1 job selected. 
+            // In this case though, we check here to prevent the download pop-up from appearing if nothing is selected.
             if (jobIds.Count < 1)
             {
                 (Owner as MainView).ShowMessage("Unable to download jobs: no jobs are selected", Models.Core.Simulation.ErrorLevel.Information);
                 return;
             }
-            DownloadWindow dl = new DownloadWindow(Presenter, jobIds);            
-        }
-
-        /// <summary>
-        /// Detaches all event handlers from view controls.
-        /// </summary>
-        private void RemoveEventHandlers()
-        {
-            chkFilterOwner.Toggled -= ApplyFilter;
-            btnChangeDownloadDir.Clicked -= btnChangeDownloadDir_Click;
-            btnDownload.Clicked -= BtnDownload_Click;
-            btnDelete.Clicked -= BtnDelete_Click;
-            btnSetup.Clicked -= BtnSetup_Click;
-            btnStop.Clicked -= BtnStop_Click;
+            DownloadWindow dl = new DownloadWindow(Presenter, jobIds);
         }
 
         /// <summary>
@@ -668,54 +666,15 @@ namespace UserInterface.Views
             return (string)tree.Model.GetValue(iter, (int)columns.ID);
         }
 
-        /// <summary>        
+        /// <summary>
         /// Asks the user to select a directory from via a GUI, then sets this to be the 
         /// default download directory (stored in ApsimNG.Properties.Settings.Default).        
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnChangeDownloadDir_Click(object sender, EventArgs e)
+        private void BtnChangeDownloadDir_Click(object sender, EventArgs e)
         {
-            string dir = GetDirectory();
-            Presenter.SetDownloadDirectory(dir);
-        }
-
-        /// <summary>
-        /// Opens a file chooser dialog so the user can choose a file with a specific extension.
-        /// </summary>
-        /// <param name="extensions">List of allowed file extensions. Extensions should not have a . in them, e.g. zip or tar or cs are valid but .cpp is not</param>
-        /// <param name="extName">Name of the file type</param>
-        /// <returns></returns>
-        public string GetFile(List<string> extensions, string extName = "")
-        {
-            string path = "";
-            string indefiniteArticle = StartsWithVowel(extName) ? "an" : "a";
-            FileChooserDialog f = new FileChooserDialog("Choose " + indefiniteArticle + " " + extName + " file",
-                                                         null,
-                                                         FileChooserAction.Open,
-                                                         "Cancel", ResponseType.Cancel,
-                                                         "Select", ResponseType.Accept);
-            FileFilter filter = new FileFilter();
-            filter.Name = extName;
-            foreach (string extension in extensions)
-            {
-                filter.AddPattern("*." + extension);
-            }
-            f.AddFilter(filter);
-
-            try
-            {
-                if (f.Run() == (int)ResponseType.Accept)
-                {
-                    path = f.Filename;
-                }
-            }
-            catch (Exception e)
-            {
-                (Owner as MainView).ShowMessage(e.ToString(), Models.Core.Simulation.ErrorLevel.Error);
-            }
-            f.Destroy();
-            return path;
+            Presenter.SetDownloadDirectory(GetDirectory());
         }
 
         /// <summary>Opens a file chooser dialog for the user to choose a directory.</summary>	
@@ -734,9 +693,6 @@ namespace UserInterface.Views
                                                         FileChooserAction.SelectFolder,
                                                         "Cancel", ResponseType.Cancel,
                                                         "Select Folder", ResponseType.Accept);
-
-
-
                 try
                 {
                     if (fc.Run() == (int)ResponseType.Accept)
@@ -747,19 +703,24 @@ namespace UserInterface.Views
                 catch (Exception ex)
                 {
                     (Owner as MainView).ShowMessage(ex.ToString(), Models.Core.Simulation.ErrorLevel.Error);
-                } finally
+                }
+                finally
                 {
                     fc.Destroy();
                 }
             });
-            
+
             return path;
         }
 
-        public void Detach()
+        /// <summary>
+        /// Waits until all events in the main event queue are processed and then runs an action on the main UI thread.
+        /// </summary>
+        /// <param name="action"></param>
+        private void Invoke(System.Action action)
         {
-            RemoveEventHandlers();
-            MainWidget.Destroy();
+            while (GLib.MainContext.Iteration()) ;
+            Application.Invoke(delegate { action(); });
         }
     }
 }

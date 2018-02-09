@@ -11,7 +11,6 @@
     using System.Security.Cryptography;
     using ApsimNG.Cloud;
     using Microsoft.Azure.Batch.Common;
-    using ApsimNG.Properties;
     using Models.Core;
 
     public class NewAzureJobPresenter : IPresenter, INewCloudJobPresenter
@@ -29,6 +28,8 @@
         private BatchCredentials batchCredentials;
         private PoolSettings poolSettings;
         private BackgroundWorker submissionWorker;
+
+        private const string SETTINGS_FILENAME = "settings.txt";
 
         public NewAzureJobPresenter()
         {            
@@ -57,7 +58,6 @@
         /// <param name="jp">Job Parameters.</param>
         public void SubmitJob(JobParameters jp)
         {
-            if (!CredentialsExist()) return;
             if (jp.JobDisplayName.Length < 1)
             {
                 ShowError("A description is required");
@@ -120,8 +120,8 @@
 
             // save user's choices to ApsimNG.Properties.Settings            
             
-            Settings.Default["OutputDir"] = jp.OutputDir;
-            Settings.Default.Save();
+            AzureSettings.Default["OutputDir"] = jp.OutputDir;
+            AzureSettings.Default.Save();
             
             submissionWorker.RunWorkerAsync(jp);
         }
@@ -173,7 +173,7 @@
             string toolsDir = Path.Combine(executableDirectory, "tools");
             if (!Directory.Exists(toolsDir))
             {
-                ShowError("Tools Directory not found: " + toolsDir);                
+                ShowError("Tools Directory not found: " + toolsDir);
             }
             
             foreach (string filePath in Directory.EnumerateFiles(toolsDir))
@@ -181,7 +181,29 @@
                 UploadFileIfNeeded("tools", filePath);
             }
 
+            if (jp.Recipient.Length > 0)
+            {
+                try
+                {
+                    // Store a config file into the job directory that has the e-mail config
 
+                    string tmpConfig = Path.Combine(Path.GetTempPath(), SETTINGS_FILENAME);
+                    using (StreamWriter file = new StreamWriter(tmpConfig))
+                    {
+                        file.WriteLine("EmailRecipient=" + jp.Recipient);
+                        file.WriteLine("EmailSender=" + AzureSettings.Default["EmailSender"]);
+                        file.WriteLine("EmailPW=" + AzureSettings.Default["EmailPW"]);
+                    }
+
+                    UploadFileIfNeeded("job-" + jp.JobId, tmpConfig);
+                    File.Delete(tmpConfig);
+                    
+                }
+                catch (Exception ex)
+                {
+                    ShowError("Error writing to settings file; you may not receive an email upon job completion: " + ex.ToString());
+                }
+            }
 
             // upload job manager            
             UploadFileIfNeeded("jobmanager", Path.Combine(executableDirectory, "azure-apsim.exe"));
@@ -210,9 +232,9 @@
 
             // generate xml
             string xml = "";
-            
             foreach (Simulation sim in Runner.AllSimulations(model))
             {
+                path = jp.ModelPath + "\\" + sim.Name + ".apsimx";
                 // if weather file is not in the same directory as the .apsimx file, display an error then abort
                 foreach (var child in sim.Children)
                 {
@@ -225,14 +247,18 @@
                             view.Status = "Cancelled";
                             return;
                         }
+                        string sourcePath = ((Models.Weather)sim.Children[0]).FullFileName;
+                        string destPath = Path.Combine(jp.ModelPath, ((Models.Weather)sim.Children[0]).FileName);
+                        if (!File.Exists(destPath)) File.Copy(sourcePath, destPath);
                     }
-                }
-                
-                path = jp.ModelPath + "\\" + sim.Name + ".apsimx";                
+                }                
                 xml = Apsim.Serialise(sim);
                 // delete model file if it already exists
                 if (File.Exists(path)) File.Delete(path);
-
+                string pattern = @"<\?xml[^<>]+>";
+                System.Text.RegularExpressions.Regex rx = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                var matches = rx.Matches(xml);
+                xml = "<Simulations xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Version=\"23\">\r\n<Name>" + sim.Name + "</Name>\r\n" + xml.Replace(matches[0].ToString(), "") + "<DataStore><Name>DataStore</Name><AutoExport>false</AutoExport><MaximumResultsPerPage>0</MaximumResultsPerPage></DataStore><ExplorerWidth>296</ExplorerWidth></Simulations>";
                 // write xml to file
                 using (FileStream fs = File.Create(path))
                 {
@@ -405,8 +431,8 @@
             try
             {
                 var credentials = new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(
-                    (string)Settings.Default["StorageAccount"],
-                    (string)Settings.Default["StorageKey"]);
+                    (string)AzureSettings.Default["StorageAccount"],
+                    (string)AzureSettings.Default["StorageKey"]);
 
                 var storageAccount = new CloudStorageAccount(credentials, true);
                 var blobClient = storageAccount.CreateCloudBlobClient();
@@ -441,8 +467,8 @@
                         string val = line.Substring(separatorIndex + 1);
                         try
                         {
-                            Settings.Default[key] = val;
-                        } catch // key does not exist in ApsimNG.Properties.Settings.Default
+                            AzureSettings.Default[key] = val;
+                        } catch // key does not exist in AzureSettings
                         {
                             return false;
                         }                        
@@ -476,8 +502,8 @@
         private void UploadFileIfNeeded(string containerName, string filePath)
         {
             var credentials = new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(
-                (string)Settings.Default["StorageAccount"],
-                (string)Settings.Default["StorageKey"]);
+                (string)AzureSettings.Default["StorageAccount"],
+                (string)AzureSettings.Default["StorageKey"]);
 
             var storageAccount = new CloudStorageAccount(credentials, true);
             var blobClient = storageAccount.CreateCloudBlobClient();
@@ -614,7 +640,7 @@
         /// <param name="e"></param>
         private void GetCredentials(object sender, EventArgs e)
         {
-            if (CredentialsExist())
+            if (AzureCredentialsSetup.CredentialsExist())
             {
                 // store credentials
                 storageCredentials = StorageCredentials.FromConfiguration();
@@ -631,21 +657,6 @@
                 AzureCredentialsSetup cred = new AzureCredentialsSetup();
                 cred.Finished += GetCredentials;
             }
-        }
-
-        /// <summary>
-        /// Checks if Azure credentials exist in Settings.Default. This method does not check their validity.
-        /// </summary>
-        /// <returns>True if credentials exist, false otherwise.</returns>
-        private bool CredentialsExist()
-        {            
-            string[] credentials = new string[] { "BatchAccount", "BatchUrl", "BatchKey", "StorageAccount", "StorageKey" };
-            foreach (string key in credentials)
-            {
-                string value = (string)Settings.Default[key];
-                if (value == null || value == "") return false;
-            }
-            return true;
         }
         
         /// <summary>

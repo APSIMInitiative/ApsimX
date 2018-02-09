@@ -7,6 +7,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// Raises the value of the child to the power of the exponent specified
     /// </summary>
     [Serializable]

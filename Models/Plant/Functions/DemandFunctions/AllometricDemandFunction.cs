@@ -6,7 +6,10 @@ using Models.Core;
 
 namespace Models.PMF.Functions.DemandFunctions
 {
-    /// <summary>Calculate partitioning of daily growth based upon allometric relationship</summary>
+    /// <summary>
+    /// # [Name]
+    /// Calculate partitioning of daily growth based upon allometric relationship
+    /// </summary>
     [Serializable]
     [Description("This function calculated dry matter demand using plant allometry which is described using a simple power function (y=kX^p).")]
     [ViewName("UserInterface.Views.GridView")]

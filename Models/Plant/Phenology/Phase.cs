@@ -46,7 +46,7 @@ namespace Models.PMF.Phen
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Phenology))]
-    abstract public class Phase : Model
+    abstract public class Phase : Model, ICustomDocumentation
     {
         /// <summary>The start</summary>
         [Models.Core.Description("Start")]
@@ -160,7 +160,7 @@ namespace Models.PMF.Phen
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -172,14 +172,14 @@ namespace Models.PMF.Phen
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
                 // get description of this class.
-                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                    child.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(child, tags, -1, indent);
             }
         }
     }

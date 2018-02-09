@@ -818,7 +818,7 @@ namespace UserInterface.Presenters
             view.ShowMessage(" ", Simulation.ErrorLevel.Information);
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "UserInterface.Views.AzureJobDisplayView", "UserInterface.Presenters.AzureJobDisplayPresenter");
+                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "UserInterface.Views.CloudJobDisplayView", "UserInterface.Presenters.AzureJobDisplayPresenter");
             } else
             {
                 ShowMessage("Microsoft Azure functionality is currently only available under Windows.", Simulation.ErrorLevel.Error);

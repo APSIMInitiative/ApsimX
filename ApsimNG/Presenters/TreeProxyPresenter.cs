@@ -18,7 +18,7 @@ namespace UserInterface.Presenters
     /// <summary>
     /// The tree proxy presenter
     /// </summary>
-    public class TreeProxyPresenter : IPresenter, IExportable
+    public class TreeProxyPresenter : IPresenter
     {
         /// <summary>
         /// The forestry model object
@@ -71,17 +71,6 @@ namespace UserInterface.Presenters
             forestryModel.CanopyWidths = forestryViewer.SaveCanopyWidths();
             forestryModel.TreeLeafAreas = forestryViewer.SaveTreeLeafAreas();
             forestryViewer.OnCellEndEdit -= OnCellEndEdit;
-        }
-
-        /// <summary>
-        /// Convert the object to html
-        /// </summary>
-        /// <param name="folder">The folder name</param>
-        /// <returns>The html text</returns>
-        public string ConvertToHtml(string folder)
-        {
-            // TODO: Implement
-            return string.Empty;
         }
 
         /// <summary>

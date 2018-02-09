@@ -46,6 +46,7 @@
             // First time through there. Get a list of things to run.
             if (simulationEnumerator == null)
             {
+                
                 Runner.SimulationEnumerator enumerator= new Runner.SimulationEnumerator(modelSelectedByUser);
                 simulationEnumerator = enumerator;
                 SimulationNamesBeingRun = enumerator.SimulationNamesBeingRun;

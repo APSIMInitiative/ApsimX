@@ -13,6 +13,7 @@ namespace Models.PMF.Organs
     using System.Xml.Serialization;
 
     ///<summary>
+    /// # [Name]
     /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each sol layer. 
     /// 
     /// **Root Growth**

@@ -310,25 +310,6 @@ namespace Models.Core
         [XmlIgnore]
         public bool IsHidden { get; set; }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public virtual void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write description of this class.
-                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent, true);
-
-                //foreach (IModel model in Children)
-                //    model.Document(tags, headingLevel+1, indent);
-            }
-        }
-
         /// <summary>
         /// Gets or sets a value indicating whether the graph should be included in the auto-doc documentation.
         /// </summary>

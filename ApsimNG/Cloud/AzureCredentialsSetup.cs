@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Gtk;
 
 namespace ApsimNG.Cloud
@@ -35,6 +31,16 @@ namespace ApsimNG.Cloud
         private Entry storageKeyInput;
 
         /// <summary>
+        /// Input field for the email address to send the automatic message from.
+        /// </summary>
+        private Entry emailSenderInput;
+
+        /// <summary>
+        /// Password for the email account to send the auto message from.
+        /// </summary>
+        private Entry emailPWInput;
+
+        /// <summary>
         /// Button to load the credentials data from a file.
         /// </summary>
         private Button btnLoad;
@@ -56,12 +62,15 @@ namespace ApsimNG.Cloud
         /// </summary>
         public AzureCredentialsSetup() : base("Azure Batch and Storage Account Information")
         {
+            WidthRequest = 500;
             // initialise input fields with the last values used
-            batchAccountInput = new Entry((string)Properties.Settings.Default["BatchAccount"]);
-            batchUrlInput = new Entry((string)Properties.Settings.Default["BatchUrl"]);
-            batchKeyInput = new Entry((string)Properties.Settings.Default["BatchKey"]);
-            storageAccountInput = new Entry((string)Properties.Settings.Default["StorageAccount"]);
-            storageKeyInput = new Entry((string)Properties.Settings.Default["StorageKey"]);
+            batchAccountInput = new Entry((string)AzureSettings.Default["BatchAccount"]);
+            batchUrlInput = new Entry((string)AzureSettings.Default["BatchUrl"]);
+            batchKeyInput = new Entry((string)AzureSettings.Default["BatchKey"]);
+            storageAccountInput = new Entry((string)AzureSettings.Default["StorageAccount"]);
+            storageKeyInput = new Entry((string)AzureSettings.Default["StorageKey"]);
+            emailSenderInput = new Entry((string)AzureSettings.Default["EmailSender"]);
+            emailPWInput = new Entry((string)AzureSettings.Default["EmailPW"]);
 
             btnLoad = new Button("Load from File");
             btnLoad.Clicked += LoadCredentialsFromFile;
@@ -77,7 +86,7 @@ namespace ApsimNG.Cloud
             buttonContainer.PackStart(btnHelp, false, false, 0);
             buttonContainer.PackEnd(btnSave, false, false, 0);
 
-            Table primaryContainer = new Table(7, 2, false);
+            Table primaryContainer = new Table(10, 2, false);
 
             primaryContainer.Attach(new Label("Batch Account:") { Xalign = 0 }, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
             primaryContainer.Attach(batchAccountInput, 1, 2, 0, 1, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
@@ -96,7 +105,15 @@ namespace ApsimNG.Cloud
 
             primaryContainer.Attach(new Label(""), 0, 2, 5, 6, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
 
-            primaryContainer.Attach(buttonContainer, 0, 2, 6, 7, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(new Label("Email Address:") { Xalign = 0 }, 0, 1, 6, 7, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(emailSenderInput, 1, 2, 6, 7, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+
+            primaryContainer.Attach(new Label("Email Password:") { Xalign = 0 }, 0, 1, 7, 8, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(emailPWInput, 1, 2, 7, 8, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+
+            primaryContainer.Attach(new Label(""), 0, 2, 8, 9, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+
+            primaryContainer.Attach(buttonContainer, 0, 2, 9, 10, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
                         
             Alignment adj = new Alignment(0f, 0f, 1f, 0f); // 3rd argument is 1 to make the controls to scale (horizontally) with viewport size
             adj.LeftPadding = adj.RightPadding = adj.TopPadding = adj.BottomPadding = 15;
@@ -117,14 +134,15 @@ namespace ApsimNG.Cloud
             string path = UserInterface.ViewBase.AskUserForFileName("Select a licence file", "Azure Licence file (*.lic) | *.lic", FileChooserAction.Open);            
             if (path != "" && path != null)
             {
-                Properties.Settings.Default["AzureLicenceFilepath"] = path;
-                Properties.Settings.Default.Save();
+                AzureSettings.Default["AzureLicenceFilePath"] = path;
+                AzureSettings.Default.Save();
                 string line = "";
                 System.IO.StreamReader file = new System.IO.StreamReader(path);
                 while ((line= file.ReadLine()) != null)
                 {
                     if (line.IndexOf('=') > -1)
                     {
+                        // Not a very scalable solution - see comment in this.CredentialsExist()
                         string key = line.Substring(0, line.IndexOf('='));
                         string value = line.Substring(line.IndexOf('=') + 1);
                         switch (key)
@@ -138,11 +156,17 @@ namespace ApsimNG.Cloud
                             case "BatchUrl":
                                 batchUrlInput.Text = value;
                                 break;
-                            case "BatchAccounts":
+                            case "BatchAccount":
                                 batchAccountInput.Text = value;
                                 break;
                             case "BatchKey":
                                 batchKeyInput.Text = value;
+                                break;
+                            case "GmailAccount":
+                                emailSenderInput.Text = value;
+                                break;
+                            case "GmailPassword":
+                                emailPWInput.Text = value;
                                 break;
                             default:
                                  // TODO : show error message, because if flow reaches here, the file is not a valid Azure Licence file
@@ -162,12 +186,14 @@ namespace ApsimNG.Cloud
         /// <param name="e"></param>
         private void SaveCredentials(object sender, EventArgs e)
         {
-            Properties.Settings.Default["StorageAccount"] = storageAccountInput.Text;
-            Properties.Settings.Default["StorageKey"] = storageKeyInput.Text;
-            Properties.Settings.Default["BatchUrl"] = batchUrlInput.Text;
-            Properties.Settings.Default["BatchAccount"] = batchAccountInput.Text;
-            Properties.Settings.Default["BatchKey"] = batchKeyInput.Text;            
-            Properties.Settings.Default.Save();
+            AzureSettings.Default["StorageAccount"] = storageAccountInput.Text;
+            AzureSettings.Default["StorageKey"] = storageKeyInput.Text;
+            AzureSettings.Default["BatchUrl"] = batchUrlInput.Text;
+            AzureSettings.Default["BatchAccount"] = batchAccountInput.Text;
+            AzureSettings.Default["BatchKey"] = batchKeyInput.Text;
+            AzureSettings.Default["EmailSender"] = emailSenderInput.Text;
+            AzureSettings.Default["EmailPW"] = emailPWInput.Text;
+            AzureSettings.Default.Save();
             Finished?.Invoke(this, e);
             this.Destroy();
         }
@@ -178,6 +204,24 @@ namespace ApsimNG.Cloud
             System.Diagnostics.Process.Start("https://azure.microsoft.com/free/");
             System.Diagnostics.Process.Start("https://docs.microsoft.com/en-us/azure/batch/batch-account-create-portal");
             System.Diagnostics.Process.Start("https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account");
+        }
+
+        /// <summary>
+        /// Checks if Azure credentials exist in AzureSettings.Default. This method does not check their validity.
+        /// It also does not check to see if the path to the Azure licence file exists there.
+        /// </summary>
+        /// <returns>True if credentials exist, false otherwise.</returns>
+        public static bool CredentialsExist()
+        {
+            string[] credentials = new string[] { "BatchAccount", "BatchUrl", "BatchKey", "StorageAccount", "StorageKey", "EmailSender", "EmailPW" };
+            // not very scalable, I know. the better solution would be to split the properties into 2 files: credentials, and misc settings. then just iterate over the following:
+            //List<string> properties = AzureSettings.Default.Properties.Cast<System.Configuration.SettingsProperty>().Select(p => p.Name).ToList();
+            foreach (string key in credentials)
+            {
+                string value = (string)AzureSettings.Default[key];
+                if (value == null || value == "") return false;
+            }
+            return true;
         }
     }
 }
