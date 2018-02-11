@@ -8,7 +8,7 @@ namespace Models.PostSimulationTools
     using System;
     using System.Data;
     using System.IO;
-    using Excel;
+    using ExcelDataReader;
     using Models.Core;
     using System.Xml.Serialization;
     using APSIM.Shared.Utilities;
@@ -103,8 +103,14 @@ namespace Models.PostSimulationTools
                 }
 
                 // Read all sheets from the EXCEL file as a data set
-                excelReader.IsFirstRowAsColumnNames = true;
-                DataSet dataSet = excelReader.AsDataSet();
+                // excelReader.IsFirstRowAsColumnNames = true;
+                DataSet dataSet = excelReader.AsDataSet(new ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                    {
+                        UseHeaderRow = true
+                    }
+                });
 
                 // Write all sheets that are specified in 'SheetNames' to the data store
                 foreach (DataTable table in dataSet.Tables)

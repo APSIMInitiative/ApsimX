@@ -14,7 +14,7 @@ namespace Models.PMF.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateFunction : Model, IFunction
+    public class AccumulateFunction : Model, IFunction, ICustomDocumentation
     {
         //Class members
         /// <summary>The accumulated value</summary>
@@ -150,7 +150,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -161,7 +161,7 @@ namespace Models.PMF.Functions
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                    child.Document(tags, headingLevel + 1, indent + 1);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }
     }

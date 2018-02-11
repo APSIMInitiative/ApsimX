@@ -50,19 +50,22 @@ namespace UserInterface.Presenters
         private readonly string[] MONTH_NAMES = { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" };
         public void Attach(object experiment, object viewer, ExplorerPresenter explorerPresenter)
         {
-            model = (Experiment)experiment;
+            model = experiment as Experiment;
             view = (FactorControlView)viewer;
             view.Presenter = this;
             this.explorerPresenter = explorerPresenter;            
             maxSimsToDisplay = DEFAULT_MAX_SIMS;
-
-            var simNames = model.GetSimulationNames().ToArray();
-            var allCombinations = model.AllCombinations();
-            headers = GetHeaderNames(allCombinations);
-            simulations = GetTableData(allCombinations);               
             
-            view.Initialise(headers);
-            UpdateView();
+            if (model != null)
+            {
+                var simNames = model.GetSimulationNames().ToArray();
+                var allCombinations = model.AllCombinations();
+                headers = GetHeaderNames(allCombinations);
+                simulations = GetTableData(allCombinations);
+
+                view.Initialise(headers);
+                UpdateView();
+            }            
         }
 
 
@@ -100,12 +103,13 @@ namespace UserInterface.Presenters
         /// <param name="str">Max number of simulations allowed to be displayed.</param>
         public void SetMaxNumSims(string str)
         {
+            int n;
             if (str == null || str == "")
             {
                 maxSimsToDisplay = DEFAULT_MAX_SIMS;
                 UpdateView();
             }
-            else if (Int32.TryParse(str, out int n))
+            else if (Int32.TryParse(str, out n))
             {
                 if (n > 1000 && explorerPresenter.MainPresenter.AskQuestion("Displaying more than 1000 rows of data is not recommended! Are you sure you wish to do this?") != QuestionResponseEnum.Yes)
                 {                    
@@ -323,7 +327,8 @@ namespace UserInterface.Presenters
                         string name = data[0];
                         if (data.Count == headers.Count)
                         {
-                            if (!bool.TryParse(data[data.Count - 1], out bool enabled)) throw new Exception("Unable to parse " + data[data.Count - 1] + " to bool on line " + i + ".");
+                            bool enabled;
+                            if (!bool.TryParse(data[data.Count - 1], out enabled)) throw new Exception("Unable to parse " + data[data.Count - 1] + " to bool on line " + i + ".");
                             simulations.Add(new Tuple<string, List<string>, bool>(data[0], data.Skip(1).Take(data.Count - 2).ToList(), enabled));
                         }
                         else if (data.Count > headers.Count) throw new Exception("Too many elements in row " + i + ".");

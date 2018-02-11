@@ -11,11 +11,12 @@ namespace Models.PMF.Library
     using System.Data;
 
     /// <summary>
+    /// # [Name]
     /// This class impliments biomass removal from live + dead pools.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]
-    public class BiomassRemoval : Model
+    public class BiomassRemoval : Model, ICustomDocumentation
     {
         [Link]
         Plant plant = null;
@@ -212,7 +213,7 @@ namespace Models.PMF.Library
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {

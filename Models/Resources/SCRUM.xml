@@ -19,7 +19,7 @@ SCRUM has a simple phenology model which divides the crop growth into three main
    4. A Nodule organ which is only activated and fixes nitrogen for the legume crops.  
 An Arbitrator is also included which determines the allocation of drymatter and nitrogen biomass between each of these organs.
 
-##Inclusion in APSIM simulations
+#Inclusion in APSIM simulations
 A scrum crop is included in a simulation the same as any other APSIM crop  
  * The SCRUM object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  
  * It is then planted with a sowing rule  

@@ -4,7 +4,10 @@ using Models.Core;
 
 namespace Models.PMF.Struct
 {
-    /// <summary>Calculate cohort populations using apex number</summary>
+    /// <summary>
+    /// # [Name]
+    /// Calculate cohort populations using apex number
+    /// </summary>
     [Serializable]
     public class ApexTiller : Model, IApex
     {

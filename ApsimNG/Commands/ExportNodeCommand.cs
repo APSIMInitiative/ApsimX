@@ -149,7 +149,7 @@ namespace UserInterface.Commands
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
             foreach (IModel child in ExplorerPresenter.ApsimXFile.Children)
             {
-                child.Document(tags, headingLevel:1, indent:1);
+                AutoDocumentation.DocumentModel(child, tags, headingLevel:1, indent:0);
                 if (child.Name == "TitlePage")
                 {
                     AddBackground(tags);
@@ -241,7 +241,7 @@ namespace UserInterface.Commands
                         while (Gtk.Application.EventsPending())
                             Gtk.Application.RunIteration();
                         if (model is Memo)
-                            model.Document(tags, 1, 0);
+                            AutoDocumentation.DocumentModel(model, tags, 1, 0);
                         else
                         {
                             System.Drawing.Image image = null;
@@ -576,9 +576,6 @@ namespace UserInterface.Commands
                     AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
                     if (heading.headingLevel > 0 && heading.headingLevel <= 6)
                     {
-                        //if (heading.headingLevel == 1)
-                        //    section.AddPageBreak();
-
                         Paragraph para = section.AddParagraph(heading.text, "Heading" + heading.headingLevel);
                         if (heading.headingLevel == 1)
                             para.Format.OutlineLevel = OutlineLevel.Level1;
@@ -628,7 +625,7 @@ namespace UserInterface.Commands
                     graphView.Width = 500;
                     graphView.Height = 500;
                     graphPresenter.Attach(tag, graphView, ExplorerPresenter);
-                    string PNGFileName = graphPresenter.ExportToPDF(workingDirectory);
+                    string PNGFileName = graphPresenter.ExportToPNG(workingDirectory);
                     section.AddImage(PNGFileName);
                     string caption = (tag as Graph).Caption;
                     if (caption != null)
@@ -641,7 +638,7 @@ namespace UserInterface.Commands
                     MapPresenter mapPresenter = new MapPresenter();
                     MapView mapView = new MapView(null);
                     mapPresenter.Attach(tag, mapView, ExplorerPresenter);
-                    string PNGFileName = mapPresenter.ExportToPDF(workingDirectory);
+                    string PNGFileName = mapPresenter.ExportToPNG(workingDirectory);
                     if (!String.IsNullOrEmpty(PNGFileName))
                         section.AddImage(PNGFileName);
                     mapPresenter.Detach();
@@ -657,30 +654,39 @@ namespace UserInterface.Commands
                     section.AddImage(PNGFileName);
                     figureNumber++;
                 }
-                else if (tag is DirectedGraph)
+                else if (tag is AutoDocumentation.ModelView)
                 {
+                    AutoDocumentation.ModelView modelView = tag as AutoDocumentation.ModelView;
+                    ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
+                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                    if (viewName != null && presenterName != null)
+                    {
+                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { null }, null, null) as ViewBase;
+                        IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
 
-                    DirectedGraphPresenter presenter = new DirectedGraphPresenter();
-                    ExplorerPresenter.ApsimXFile.Links.Resolve(presenter);
-                    DirectedGraphView view = new DirectedGraphView();
-                    presenter.Attach(new DirectedGraphContainer(tag as DirectedGraph), view, ExplorerPresenter);
+                        if (view != null && presenter != null)
+                        {
+                            ExplorerPresenter.ApsimXFile.Links.Resolve(presenter);
+                            presenter.Attach(modelView.model, view, ExplorerPresenter);
 
-                    Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
-                    popupWin.SetSizeRequest(800, 800);
-                    // Move the window offscreen; the user doesn't need to see it.
-                    // This works with IE, but not with WebKit
-                    // Not yet tested on OSX
-                    if (ProcessUtilities.CurrentOS.IsWindows)
-                        popupWin.Move(-10000, -10000);
-                    popupWin.Add(view.MainWidget);
-                    popupWin.ShowAll();
-                    while (Gtk.Application.EventsPending())
-                        Gtk.Application.RunIteration();
+                            Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
+                            popupWin.SetSizeRequest(800, 800);
+                            // Move the window offscreen; the user doesn't need to see it.
+                            // This works with IE, but not with WebKit
+                            // Not yet tested on OSX
+                            if (ProcessUtilities.CurrentOS.IsWindows)
+                                popupWin.Move(-10000, -10000);
+                            popupWin.Add(view.MainWidget);
+                            popupWin.ShowAll();
+                            while (Gtk.Application.EventsPending())
+                                Gtk.Application.RunIteration();
 
-                    string PNGFileName = presenter.ExportToPNG(workingDirectory);
-                    section.AddImage(PNGFileName);
-                    presenter.Detach();
-                    view.MainWidget.Destroy();
+                            string PNGFileName = (presenter as IExportable).ExportToPNG(workingDirectory);
+                            section.AddImage(PNGFileName);
+                            presenter.Detach();
+                            view.MainWidget.Destroy();
+                        }
+                    }
                 }
             }
         }
