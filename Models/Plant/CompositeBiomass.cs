@@ -13,7 +13,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class CompositeBiomass : Biomass
+    public class CompositeBiomass : Biomass, ICustomDocumentation
     {
         /// <summary>The propertys</summary>
         [Description("List of organs to agregate into composite biomass")]
@@ -156,7 +156,7 @@ namespace Models.PMF
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -164,11 +164,11 @@ namespace Models.PMF
                 tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
 
                 // write description of this class.
-                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                    child.Document(tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
 
                 tags.Add(new AutoDocumentation.Paragraph(this.Name + " is a composite of the following biomass objects:", indent));
 

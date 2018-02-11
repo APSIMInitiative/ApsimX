@@ -18,7 +18,7 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Use a linear function with a gradient after a trigger value is exceeded.")]
-    public class LinearAfterThresholdFunction : Model, IFunction
+    public class LinearAfterThresholdFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The x property</summary>
         [Description("XProperty")]
@@ -77,13 +77,13 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
                 // get description and units.
                 string description = AutoDocumentation.GetDescription(Parent, Name);

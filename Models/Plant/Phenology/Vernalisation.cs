@@ -7,6 +7,7 @@ namespace Models.PMF.Phen
 {
 
     /// <summary>
+    /// # [Name]
     /// Vernalisation model
     /// </summary>
     [Serializable]

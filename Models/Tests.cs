@@ -19,7 +19,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(PostSimulationTools.PredictedObserved))]
-    public class Tests : Model, ITestable
+    public class Tests : Model, ITestable, ICustomDocumentation
     {
         /// <summary>
         /// data table
@@ -248,7 +248,7 @@ namespace Models
         /// <param name="tags"></param>
         /// <param name="headingLevel"></param>
         /// <param name="indent"></param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {

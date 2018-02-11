@@ -6,6 +6,7 @@ using Models.Core;
 namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
+    /// # [Name]
     /// Filling rate is calculated from grain number, a maximum mass to be filled and the duration of the filling process.
     /// </summary>
     [Serializable]

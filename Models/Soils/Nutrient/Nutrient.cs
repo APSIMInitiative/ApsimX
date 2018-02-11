@@ -11,7 +11,14 @@
     using System.Drawing;
 
     /// <summary>
+    /// # [Name]
     /// The soil nutrient model includes functionality for simulating pools of organmic matter and mineral nitrogen.  The processes for each are described below.
+    /// ## Structure of nutrient
+    /// [DocumentView]
+    /// ## Pools
+    /// [DocumentType NutrientPool]
+    /// ## Solutes:
+    /// [DocumentType Solute]
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
@@ -306,24 +313,5 @@
             _directedGraphInfo.End();
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                tags.Add(new AutoDocumentation.Heading("Structure of nutrient model", headingLevel+1));
-                tags.Add(_directedGraphInfo);
-
-                // write description of this class.
-                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent, true);
-
-            }
-        }
     }
 }

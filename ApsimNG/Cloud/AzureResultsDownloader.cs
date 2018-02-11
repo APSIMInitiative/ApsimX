@@ -65,6 +65,11 @@ namespace ApsimNG.Cloud
         private bool saveRawOutputFiles;
 
         /// <summary>
+        /// Whether or not the result files should be extracted from the archive.
+        /// </summary>
+        private bool unzipResults;
+
+        /// <summary>
         /// Azure cloud storage account.
         /// </summary>
         private CloudStorageAccount storageAccount;
@@ -120,6 +125,11 @@ namespace ApsimNG.Cloud
         private readonly string[] zipFileFormats = { ".zip" };
 
         /// <summary>
+        /// Mutual exclusion sempahore for reading the .db files.
+        /// </summary>
+        private object dbMutex;
+
+        /// <summary>
         /// Constructor. Requires Azure credentials to already be set in ApsimNG.Properties.Settings. 
         /// </summary>
         /// <param name="id"></param>
@@ -129,7 +139,7 @@ namespace ApsimNG.Cloud
         /// <param name="export"></param>
         /// <param name="includeDebugFiles"></param>
         /// <param name="keepOutputFiles"></param>
-        public AzureResultsDownloader(Guid id, string jobName, string path, AzureJobDisplayPresenter explorer, bool export, bool includeDebugFiles, bool keepOutputFiles)
+        public AzureResultsDownloader(Guid id, string jobName, string path, AzureJobDisplayPresenter explorer, bool export, bool includeDebugFiles, bool keepOutputFiles, bool unzipResultFiles)
         {
             numBlobsComplete = 0;
             jobId = id;
@@ -140,7 +150,9 @@ namespace ApsimNG.Cloud
             rawResultsPath = outputPath + "\\" + jobName.ToString() + "_Results";
             tempPath = Path.GetTempPath() + "\\" + jobId;
             progressMutex = new object();
+            dbMutex = new object();
             presenter = explorer;
+            unzipResults = unzipResultFiles;
             try
             {
                 // if we need to save files, create a directory under the output directory
@@ -201,7 +213,8 @@ namespace ApsimNG.Cloud
             try
             {
                 if (downloader.CancellationPending || ct.IsCancellationRequested) return;
-
+                
+                // delete temp directory if it already exists and create a new one in its place
                 try
                 {
                     if (Directory.Exists(tempPath)) Directory.Delete(tempPath, true);
@@ -220,32 +233,43 @@ namespace ApsimNG.Cloud
                     presenter.ShowError("No files in output container.");
                     return;
                 }
-                if (saveRawOutputFiles || exportToCsv)
+
+                if (saveDebugFiles)
                 {
+                    List<CloudBlockBlob> debugBlobs = outputs.Where(blob => debugFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
+                    Download(debugBlobs, rawResultsPath, ref ct);
+                }
+
+                // Only download the results if the user wants a CSV or the result files themselves
+                if (saveRawOutputFiles || exportToCsv)
+                {                    
                     List<CloudBlockBlob> zipBlobs = outputs.Where(blob => zipFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
                     if (zipBlobs != null && zipBlobs.Count > 0) // if the result file are nicely zipped up for us
                     {
                         List<string> localZipFiles = Download(zipBlobs, rawResultsPath, ref ct);
+                        if (!unzipResults)
+                        {
+                            // if user doesn't want to extract the results, we're done
+                            presenter.DownloadComplete(jobId);
+                            presenter.DisplayFinishedDownloadStatus(name, 0, outputPath);
+                            return;
+                        }
                         foreach (string archive in localZipFiles)
                         {                            
-                            ExtractZipArchive(archive, rawResultsPath);
-                            while (File.Exists(archive))
+                            ExtractZipArchive(archive, rawResultsPath);                            
+                            try
                             {
-                                try
-                                {
-                                    File.Delete(archive);
-                                } catch
-                                {
+                                File.Delete(archive);
+                            } catch
+                            {
 
-                                }
-                            }
-                            
+                            }                            
                         }
                     } else
                     {
-                        // download each individual result file
+                        // Results are not zipped up (probably because the job was run on the old Azure job manager), so download each individual result file
                         List<CloudBlockBlob> resultBlobs = outputs.Where(blob => resultFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
-                        Download(resultBlobs, rawResultsPath, ref ct);
+                        Download(resultBlobs, rawResultsPath, ref ct);                        
                     }
 
                     if (exportToCsv)
@@ -253,8 +277,10 @@ namespace ApsimNG.Cloud
                         success = SummariseResults(true);
                     }
 
+                    // Delete the output files if the user doesn't want to keep them
                     if (!saveRawOutputFiles)
                     {
+                        // this will delete all .db and .out files in the output directory
                         foreach (string resultFile in Directory.EnumerateFiles(rawResultsPath).Where(file => resultFileFormats.Contains(Path.GetExtension(file))))
                         {
                             try
@@ -267,12 +293,6 @@ namespace ApsimNG.Cloud
                         }
                     }
                 }
-
-                if (saveDebugFiles)
-                {
-                    List<CloudBlockBlob> debugBlobs = outputs.Where(blob => debugFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
-                    Download(debugBlobs, rawResultsPath, ref ct);
-                }
             }
             catch (AggregateException ae)
             {
@@ -281,11 +301,11 @@ namespace ApsimNG.Cloud
             
             
             presenter.DownloadComplete(jobId);
-            presenter.DisplayFinishedDownloadStatus(name, success, outputPath, DateTime.Now);
+            presenter.DisplayFinishedDownloadStatus(name, success, outputPath);
         }
 
         /// <summary>
-        /// Downloads each given blob from Azure.
+        /// Downloads each given blob from Azure and returns a list of file names.
         /// </summary>
         /// <param name="blobs">List of Azure blobs to download.</param>
         /// <param name="downloadPath">Path to download the blobs to.</param>
@@ -298,7 +318,14 @@ namespace ApsimNG.Cloud
                              blob =>
                              {
                                  string filename = Path.Combine(downloadPath, blob.Name);
-                                 blob.DownloadToFile(filename, FileMode.Create);
+                                 try
+                                 {
+                                     blob.DownloadToFile(filename, FileMode.Create);
+                                 } catch
+                                 {
+
+                                 }
+                                 
                                  lock (outputHashLock)
                                  {
                                      downloader.ReportProgress(0, blob.Name);
@@ -315,13 +342,12 @@ namespace ApsimNG.Cloud
         /// <param name="e"></param>
         private void DownloadProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            // job name is currently unused, but maybe in the future the view could display the name of the currently downloading file 
+            // as well as the progress
             string jobName = e.UserState.ToString();
-            lock (progressMutex)
-            {
-                numBlobsComplete++;
-                double progress = 1.0 * numBlobsComplete / numBlobs;
-                presenter.UpdateDownloadProgress(progress);
-            }
+            numBlobsComplete++;
+            double progress = 1.0 * numBlobsComplete / numBlobs;
+            presenter.UpdateDownloadProgress(progress);
         }
 
         /// <summary>
@@ -421,7 +447,7 @@ namespace ApsimNG.Cloud
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                presenter.ShowError(e.ToString());
                 return 2;
             }
         }
@@ -435,60 +461,91 @@ namespace ApsimNG.Cloud
         /// <returns></returns>
         private string ReadSqliteDB(string path, bool printHeader, string delim)
         {
-            StringBuilder output = new StringBuilder();
-            SQLiteConnection m_dbConnection;
-            Dictionary<string, string> simNames = new Dictionary<string, string>();
-
-            DataTable table = new DataTable();
-            m_dbConnection = new SQLiteConnection("Data Source=" + path + ";Version=3;");
-            m_dbConnection.Open();
-
-            // Enumerate the simulation names
-            string sql = "SELECT * FROM simulations";
-            try
+            lock(dbMutex)
             {
-                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-                SQLiteDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                SQLiteConnection m_dbConnection;
+                Dictionary<string, string> simNames = new Dictionary<string, string>();
+
+                m_dbConnection = new SQLiteConnection("Data Source=" + path + ";Version=3;", true);                
+
+                try
                 {
-                    //Console.WriteLine("SimName: " + reader["Name"] + ", ID: " + reader["ID"]);
-                    simNames.Add(reader["ID"].ToString(), reader["Name"].ToString());
+                    m_dbConnection.Open();                    
+                } catch (Exception e)
+                {
+                    presenter.ShowError("Failed to open db at " + path + ": " + e.ToString());
+                    // No point continuing if unable to open the database
+                    return "";
                 }
-            } catch (Exception e)
-            {
-                Console.WriteLine("Error enumerating simulation names: " + e.ToString());
-            }
+                
 
-            sql = "SELECT * FROM Report";
-            try
-            {
-                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-                SQLiteDataReader reader = command.ExecuteReader();
-                table.Load(reader); // faster to load the result into a DataTable for some reason
-                printHeader = true;
-                foreach (DataRow row in table.Rows)
+                // Enumerate the simulation names
+                string sql = "SELECT * FROM _Simulations";
+                try
                 {
-                    if (printHeader)
+                    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
                     {
-                        output.Append("FileName" + delim + "SimName" + delim);
-                        foreach (DataColumn column in table.Columns)
-                        {
-                            output.Append(column.ColumnName + delim);
-                        }
-                        output.Append("\n");
-                        printHeader = false;
+                        simNames.Add(reader["ID"].ToString(), reader["Name"].ToString());
                     }
-
-                    output.Append(Path.GetFileNameWithoutExtension(path) + delim + simNames[row.ItemArray[0].ToString()] + delim);
-                    output.Append(String.Join(delim, row.ItemArray));
-                    output.Append("\n");
+                    command.Dispose();
+                    reader.Close();
                 }
-                return output.ToString();
-            } catch (Exception e)
-            {
-                presenter.ShowError("Error getting report: " + e.ToString());
-            }
-            return "";   
+                catch (Exception e)
+                {
+                    presenter.ShowError("Error enumerating simulation names: " + e.ToString());
+                }
+
+                // Enumerate the table names
+                sql = "SELECT name FROM sqlite_master WHERE type='table'";
+                List<string> tables = new List<string>();
+                try
+                {
+                    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) tables.Add(reader[0].ToString());
+                    command.Dispose();
+                    reader.Close();
+                } catch (Exception e)
+                {
+                    presenter.ShowError("Error reading table names: " + e.ToString());
+                }
+
+                // Read data from each 'report' table (any table whose name doesn't start with an underscore)
+                // Hopefully the user doesn't rename their report to start with an underscore.
+                List<string> reportTables = tables.Where(name => name[0] != '_').ToList();                                
+                DataTable master = new DataTable(); // master data table, containing data merged from all report tables
+
+                try
+                {
+                    foreach (string tableName in reportTables)
+                    {
+                        DataTable reportTable = new DataTable();
+                        sql = "SELECT * FROM " + tableName;
+                        SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                        SQLiteDataReader reader = command.ExecuteReader();
+                        reportTable.Load(reader);
+                        reportTable.Merge(master);
+                        master = reportTable;
+                        command.Dispose();
+                        reader.Close();
+                    }
+                }
+                catch (Exception e)
+                {
+                    presenter.ShowError("Error reading or merging table: " + e.ToString());
+                }
+                m_dbConnection.Close();
+                // Generate the CSV file data                
+                // enumerate delimited column names
+                string csvData = "File Name" + delim + "Sim Name" + delim + master.Columns.Cast<DataColumn>().Select(x => x.ColumnName).Aggregate((a, b) => a + delim + b) + "\n";
+
+                // for each row, append the contents of that row to the data table, delimited by the given character
+                master.Rows.Cast<DataRow>().ToList().ForEach(row => csvData += Path.GetFileNameWithoutExtension(path) + delim + simNames[row.ItemArray[0].ToString()] + delim + row.ItemArray.ToList().Aggregate((a, b) => a + delim + b) + "\n");
+
+                return csvData;
+            }            
         }
         
         /// <summary>
@@ -648,25 +705,29 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="archive">Zip archive to be extracted.</param>
         /// <param name="path">Directory to extract the files to.</param>
-        private void ExtractZipArchive(string archive, string path)
+        private void ExtractZipArchive(string archivePath, string path)
         {            
-            foreach (ZipArchiveEntry file in ZipFile.OpenRead(archive).Entries)
-            {                
-                try
+            using (ZipArchive archive = ZipFile.OpenRead(archivePath))
+            {
+                foreach (ZipArchiveEntry file in archive.Entries)
                 {
-                    string filePath = Path.Combine(path, file.FullName);
-                    string dir = Path.GetDirectoryName(filePath);
+                    try
+                    {
+                        string filePath = Path.Combine(path, file.FullName);
+                        string dir = Path.GetDirectoryName(filePath);
 
-                    if (!Directory.Exists(dir))
-                        Directory.CreateDirectory(dir);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
 
-                    if (file.Name != "")
+                        if (file.Name != "")
+                            file.ExtractToFile(filePath, true);
+
                         file.ExtractToFile(filePath, true);
-
-                    file.ExtractToFile(filePath, true);
-                } catch (Exception e)
-                {
-                    presenter.ShowError(e.ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        presenter.ShowError(e.ToString());
+                    }
                 }
             }
         }

@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
     [Description("Returns the ValueToHold which is updated daily until the WhenToHold stage is reached, beyond which it is held constant")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class HoldFunction : Model, IFunction
+    public class HoldFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The _ value</summary>
         private double _Value = 0;
@@ -63,7 +63,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -76,7 +76,7 @@ namespace Models.PMF.Functions
                 }
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                    child.Document(tags, headingLevel + 1, indent + 1);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }
     }

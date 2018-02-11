@@ -5,6 +5,7 @@ using System;
 namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
+    /// # [Name]
     /// Potential size demand function
     /// </summary>
     [Serializable]
