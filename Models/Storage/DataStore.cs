@@ -167,41 +167,31 @@
             t.AddRow(checkpointID, simulationID, columnNames, columnUnits, valuesToWrite);
         }
 
-        /// <summary>Completed writing data for simulation</summary>
-        /// <param name="simulationName"></param>
-        public void CompletedWritingSimulationData(string simulationName)
-        {
-            //int simulationID = simulationIDs[simulationName];
-            //lock (dataToWrite)
-            //{
-            //    simData = dataToWrite.Find(s => s.simulationID == simulationID);
-            //}
-            //if (simData != null)
-            //    simData.complete = true;
-        }
-
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null)
         {
+            // Tell all tables we're about to begin simulation runs.
+            tables.ForEach(table => table.BeginRun());
+
             stoppingWriteToDB = false;
-            if (knownSimulationNames != null && simulationNamesBeingRun != null)
+            if (knownSimulationNames != null)
             {
                 Open(readOnly: false);
-                CleanupDB(knownSimulationNames, simulationNamesBeingRun);
+                CleanupDB(knownSimulationNames);
             }
-            writeTask = Task.Run(() => WriteDBWorker(knownSimulationNames, simulationNamesBeingRun));
+            writeTask = Task.Run(() => WriteDBWorker());
         }
 
         /// <summary>Finish writing to DB file</summary>
         [EventSubscribe("EndRun")]
         private void OnEndRun(object sender, EventArgs e)
         {
-            //foreach (SimulationData data in dataToWrite)
-            //    data.complete = true;
-
             stoppingWriteToDB = true;
             writeTask.Wait();
+
+            // Cleanup unused fields.
+            CleanupUnusedFields();
 
             // Call the all completed event in all models
             if (Parent != null)
@@ -334,7 +324,7 @@
 
             bool startWriteThread = writeTask == null || writeTask.IsCompleted;
             if (startWriteThread)
-                OnBeginRun(null, null);
+                OnBeginRun(null);
 
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in data.Columns)
@@ -354,12 +344,7 @@
             }
 
             if (startWriteThread)
-            {
-                foreach (string simulationName in simulationNames)
-                    if (simulationName != null && simulationName != string.Empty)
-                        CompletedWritingSimulationData(simulationName);
                 OnEndRun(null, null);
-            }
         }
 
         /// <summary>Create a table in the database based on the specified one.</summary>
@@ -489,6 +474,69 @@
             return -1;
         }
 
+        /// <summary>
+        /// Return list of checkpoints.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> Checkpoints()
+        {
+            return checkpointIDs.Keys.ToList();
+        }
+
+        /// <summary>Add a checkpoint</summary>
+        /// <param name="name">Name of checkpoint</param>
+        public void AddCheckpoint(string name)
+        {
+            if (checkpointIDs.ContainsKey(name))
+                DeleteCheckpoint(name);
+
+            connection.ExecuteNonQuery("BEGIN");
+
+            int checkpointID = checkpointIDs["Current"];
+            int newCheckpointID = checkpointIDs.Values.Max() + 1;
+
+            foreach (Table t in tables)
+            {
+                List<string> columnNames = t.Columns.Select(column => column.Name).ToList();
+                if (columnNames.Contains("CheckpointID"))
+                { 
+                    columnNames.Remove("CheckpointID");
+
+                    string csvFieldNames = StringUtilities.BuildString(columnNames.ToArray(), ",");
+
+                    connection.ExecuteNonQuery("INSERT INTO " + t.Name + " (" + "CheckpointID," + csvFieldNames + ")" +
+                                               " SELECT " + newCheckpointID + "," + csvFieldNames +
+                                               " FROM " + t.Name +
+                                               " WHERE CheckpointID = " + checkpointID);
+                }
+            }
+            connection.ExecuteNonQuery("INSERT INTO _Checkpoints (ID, Name) VALUES (" + newCheckpointID + ", '" + name + "')");
+            connection.ExecuteNonQuery("END");
+            checkpointIDs.Add(name, newCheckpointID);
+        }
+
+        /// <summary>Delete a checkpoint</summary>
+        /// <param name="name">Name of checkpoint</param>
+        public void DeleteCheckpoint(string name)
+        {
+            if (!checkpointIDs.ContainsKey(name))
+                throw new Exception("Cannot find checkpoint: " + name);
+
+            connection.ExecuteNonQuery("BEGIN");
+            int checkpointID = checkpointIDs[name];
+            foreach (Table t in tables)
+            {
+                List<string> columnNames = t.Columns.Select(column => column.Name).ToList();
+                if (columnNames.Contains("CheckpointID"))
+                    connection.ExecuteNonQuery("DELETE FROM " + t.Name +
+                                               " WHERE CheckpointID = " + checkpointID);
+            }
+            connection.ExecuteNonQuery("DELETE FROM _Checkpoints" +
+                                        " WHERE ID = " + checkpointID);
+            connection.ExecuteNonQuery("END");
+            checkpointIDs.Remove(name);
+        }
+
         /// <summary>Wait for all records to be written.</summary>
         private void WaitForAllRecordsToBeWritten()
         {
@@ -510,9 +558,7 @@
         }
 
         /// <summary>Worker method for writing to the .db file. This runs in own thread.</summary>
-        /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file</param>
-        /// <param name="simulationNamesBeingRun">Collection of simulation names being run</param>
-        private void WriteDBWorker(IEnumerable<string> knownSimulationNames, IEnumerable<string> simulationNamesBeingRun)
+        private void WriteDBWorker()
         {
             Table dataToWriteToDB = null;
             try
@@ -640,7 +686,7 @@
                 connection.OpenDatabase(FileName, readOnly: false);
                 connection.ExecuteNonQuery("CREATE TABLE _Checkpoints (ID INTEGER PRIMARY KEY ASC, Name TEXT, Version TEXT)");
                 connection.ExecuteNonQuery("CREATE TABLE _Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
-                connection.ExecuteNonQuery("CREATE TABLE _Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
+                connection.ExecuteNonQuery("CREATE TABLE _Messages (CheckpointID INTEGER, ComponentID INTEGER, SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
                 connection.ExecuteNonQuery("CREATE TABLE _Units (TableName TEXT, ColumnHeading TEXT, Units TEXT)");
                 connection.ExecuteNonQuery("INSERT INTO [_Checkpoints] (Name) VALUES (\"Current\")");
                 connection.CloseDatabase();
@@ -715,27 +761,18 @@
 
         /// <summary>Remove all simulations from the database that don't exist in 'simulationsToKeep'</summary>
         /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file</param>
-        /// <param name="simulationNamesToBeRun">The simulation names about to be run.</param>
-        private void CleanupDB(IEnumerable<string> knownSimulationNames, IEnumerable<string> simulationNamesToBeRun)
+        private void CleanupDB(IEnumerable<string> knownSimulationNames)
         {
-            // Delete all tables in .db when all sims are being run. 
-            if (knownSimulationNames.SequenceEqual(simulationNamesToBeRun))
-                EmptyDataStore();
-            else
+            // Get a list of simulation names that are in the .db but we know nothing about them
+            // i.e. they are old and no longer needed.
+            var unknownSimulationNames = simulationIDs.Keys.SkipWhile(simName => knownSimulationNames.Contains(simName));
+
+            // Delete the unknown simulation names from the simulations table.
+            if (unknownSimulationNames.Count() > 0)
             {
-                // Get a list of simulation names that are in the .db but we know nothing about them
-                // i.e. they are old and no longer needed.
-                // Then delete the unknown simulation names from the simulations table.
-                string[] simulationNamesInDB = simulationIDs.Keys.ToArray();
-                List<string> unknownSimulationNames = new List<string>();
-                foreach (string simulationNameInDB in simulationNamesInDB)
-                    if (!knownSimulationNames.Contains(simulationNameInDB))
-                        unknownSimulationNames.Add(simulationNameInDB);
                 ExecuteDeleteQuery("DELETE FROM _Simulations WHERE [Name] IN (", unknownSimulationNames, ")");
 
-                // Delete all data that we are about to run, plus all data from simulations we
-                // know nothing about, from all tables except Simulations and Units 
-                unknownSimulationNames.AddRange(simulationNamesToBeRun);
+                // Delete the unknown simulation data from all data tables 
                 foreach (Table table in tables)
                     if (table.Columns.Find(c => c.Name == "SimulationID") != null)
                         ExecuteDeleteQueryUsingIDs("DELETE FROM " + table.Name + " WHERE [SimulationID] IN (", unknownSimulationNames, ")");
@@ -746,6 +783,28 @@
 
             // Refresh our simulation table in memory now that we have removed unwanted ones.
             Refresh();
+        }
+
+        /// <summary>
+        /// Cleanup all null fields in all tables.
+        /// </summary>
+        private void CleanupUnusedFields()
+        {
+            foreach (Table table in tables)
+            {
+                if (!table.Name.StartsWith("_"))
+                {
+                    var columnsToRemove = new List<string>();
+                    foreach (Table.Column column in table.Columns)
+                    {
+                        DataTable data = connection.ExecuteQuery("SELECT " + column.Name + " FROM " + table.Name + " WHERE " + column.Name + " IS NOT NULL LIMIT 1");
+                        if (data.Rows.Count == 0)
+                            columnsToRemove.Add(column.Name);
+                    }
+                    if (columnsToRemove.Count > 0)
+                        connection.DropColumns(table.Name, columnsToRemove);
+                }
+            }
         }
 
         /// <summary>
