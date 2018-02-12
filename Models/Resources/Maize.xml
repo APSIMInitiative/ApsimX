@@ -1102,40 +1102,16 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <FixedValue>40</FixedValue>
       <Units>m/g</Units>
     </Constant>
-    <LinearInterpolationFunction>
+    <Constant>
       <Name>KNO3</Name>
-      <XYPairs>
-        <Name>XYPairs</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <X>
-          <double>0</double>
-          <double>0.003</double>
-        </X>
-        <Y>
-          <double>0.03</double>
-          <double>0.03</double>
-        </Y>
-      </XYPairs>
+      <FixedValue>0.03</FixedValue>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <XProperty>[Root].LengthDensity</XProperty>
-    </LinearInterpolationFunction>
-    <LinearInterpolationFunction>
-      <Name>KNH4</Name>
-      <XYPairs>
-        <Name>XYPairs</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <X>
-          <double>0</double>
-          <double>0.003</double>
-        </X>
-        <Y>
-          <double>0</double>
-          <double>0.0003</double>
-        </Y>
-      </XYPairs>
+    </Constant>
+    <Constant>
+      <Name>KNO3</Name>
+      <FixedValue>0.02</FixedValue>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <XProperty>[Root].LengthDensity</XProperty>
-    </LinearInterpolationFunction>
+    </Constant>
     <LinearInterpolationFunction>
       <Name>NUptakeSWFactor</Name>
       <XYPairs>
