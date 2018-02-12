@@ -95,7 +95,7 @@ namespace UserInterface.Presenters
         public void OnHelp(object sender, EventArgs e)
         {
             Process process = new Process();
-            process.StartInfo.FileName = "http://www.apsim.info/Documentation/ApsimX/Overview.aspx";
+            process.StartInfo.FileName = "https://apsimnextgeneration.netlify.com/";
             process.Start();
         }
 
