@@ -173,6 +173,39 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
             <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
           </AccumulateFunction>
+          <MultiplyFunction>
+            <Name>FractionOfBudBurst</Name>
+            <Constant>
+              <Name>CHOEffect</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <SigmoidFunction>
+              <Name>BudNumberEffect</Name>
+              <VariableReference>
+                <Name>XValue</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Structure].PrimaryBudNo.Value()</VariableName>
+              </VariableReference>
+              <Constant>
+                <Name>Ymax</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>1.4</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>Xo</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>100</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>b</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>-54.8977</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </SigmoidFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>EndDormancy</Start>
           <End>BudBurst</End>
@@ -288,34 +321,28 @@ A function is used to provide flowering date as days after sowing(DAS).
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
-          <LinearInterpolationFunction>
-            <Name>PostEventValue1</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>182</double>
-                <double>365</double>
-                <double>366</double>
-                <double>1</double>
-                <double>181</double>
-              </X>
-              <Y>
-                <double>1</double>
-                <double>184</double>
-                <double>184</double>
-                <double>185</double>
-                <double>365</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Clock].Today.DayOfYear</XProperty>
-          </LinearInterpolationFunction>
           <VariableReference>
             <Name>PostEventValue</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Clock].Today.DayOfYear</VariableName>
           </VariableReference>
+          <LinearInterpolationFunction>
+            <Name>PostEventValue2</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <X>
+                <double>1</double>
+                <double>366</double>
+              </X>
+              <Y>
+                <double>1</double>
+                <double>366</double>
+              </Y>
+            </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <XProperty>[Clock].Today.DayOfYear</XProperty>
+          </LinearInterpolationFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>BudBurst</SetEvent>
           <ReSetEvent>StartDormancy</ReSetEvent>
@@ -1544,6 +1571,11 @@ A function is used to capture the year of the current season as in the south hem
           <Name>CarbonConcentration</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.4</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CaneDiameter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>10</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
@@ -2922,6 +2954,7 @@ Pollination alone results in the development of small, hard green berries (live 
         <string>[Grapevine].Phenology.Budding.AccChill.Value()</string>
         <string>[Grapevine].Structure.LeafTipsAppeared</string>
         <string>[Grapevine].Structure.PlantTotalNodeNo</string>
+        <string>[Grapevine].Phenology.Budding.FractionOfBudBurst.Value()</string>
         <string>[Grapevine].Leaf.LAI</string>
         <string>[Grapevine].Leaf.InitialisedCohortNo</string>
         <string>[Grapevine].Leaf.DeadCohortNo</string>
@@ -2941,6 +2974,7 @@ Pollination alone results in the development of small, hard green berries (live 
         <string>[Berry].NumberFunction.Value()</string>
         <string>[Berry].NumberFunction.Shoots.Value()</string>
         <string>[Arbitrator].FDM</string>
+        <string>[Structure].PrimaryBudNo</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -4544,6 +4578,70 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
     </Graph>
+    <Graph>
+      <Name>Budburst</Name>
+      <Series>
+        <Name>budNO</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Structure.PrimaryBudNo.Value()</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>FractionBudBurst</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Phenology.Budding.FractionOfBudBurst.Value()</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+    </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Experiment>
@@ -5177,6 +5275,7 @@ namespace Models
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <DisabledSimNames />
   </Experiment>
   <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>278</ExplorerWidth>
