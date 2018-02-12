@@ -12,6 +12,7 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF
 {
     /// <summary>
+    /// # [Name]
     /// A model of a simple tree
     /// </summary>
     [Serializable]

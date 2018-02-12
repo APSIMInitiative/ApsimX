@@ -8,7 +8,9 @@ using Models.Interfaces;
 
 namespace Models.PMF.Functions.SupplyFunctions
 {
-    ///<summary>%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    ///<summary>
+    /// # [Name]
+    ///%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     ///float DLL CanopyGrossPhotosynthesis(float fPgMax, float fLUE, float fLAI,
     ///                                float fLatitude,int nDay,float fHour, float fPARdir,float fPARdif)
     ///Author:   Enli Wang

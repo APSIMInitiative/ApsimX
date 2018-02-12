@@ -9,7 +9,7 @@ namespace Models.PMF.Functions
     /// <summary>Value returned is determined according to given criteria</summary>
     [Serializable]
     [Description("Tests if value of the first child is less than value of second child. Returns third child if true and forth if false")]
-    public class LessThanFunction : Model, IFunction
+    public class LessThanFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
@@ -50,7 +50,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -72,9 +72,9 @@ namespace Models.PMF.Functions
                     rhs = ChildFunctions[1].Name;
 
                 tags.Add(new AutoDocumentation.Paragraph("IF " + lhs + " < " + rhs + " THEN", indent));
-                ChildFunctions[2].Document(tags, headingLevel, indent + 1);
+                AutoDocumentation.DocumentModel(ChildFunctions[2], tags, headingLevel, indent + 1);
                 tags.Add(new AutoDocumentation.Paragraph("ELSE", indent));
-                ChildFunctions[3].Document(tags, headingLevel, indent + 1);
+                AutoDocumentation.DocumentModel(ChildFunctions[3], tags, headingLevel, indent + 1);
             }
         }
     }

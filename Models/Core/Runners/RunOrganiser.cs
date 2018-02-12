@@ -37,7 +37,10 @@
             // First time through there. Get a list of things to run.
             if (modelsToRun == null)
             {
-                GetListOfModelsToRun(modelSelectedByUser);
+                
+                Runner.SimulationEnumerator enumerator= new Runner.SimulationEnumerator(modelSelectedByUser);
+                simulationEnumerator = enumerator;
+                SimulationNamesBeingRun = enumerator.SimulationNamesBeingRun;
 
                 // Send event telling all models that we're about to begin running.
                 Events events = new Events(simulations);

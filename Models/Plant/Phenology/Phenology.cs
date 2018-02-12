@@ -106,7 +106,7 @@ namespace Models.PMF.Phen
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Phenology : Model
+    public class Phenology : Model, ICustomDocumentation
     {
         #region Links
         [Link]
@@ -798,7 +798,7 @@ namespace Models.PMF.Phen
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -806,11 +806,11 @@ namespace Models.PMF.Phen
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write description of this class.
-                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(Memo)))
-                    child.Document(tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
 
                 // Write Phase Table
                 tags.Add(new AutoDocumentation.Paragraph(" **List of stages and phases used in the simulation of crop phenological development**", indent));
@@ -848,12 +848,12 @@ namespace Models.PMF.Phen
                 // add a heading.
                 tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel + 1));
                 foreach (IModel child in Apsim.Children(this, typeof(Phase)))
-                    child.Document(tags, headingLevel + 2, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 2, indent);
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                     if (child.GetType() != typeof(Memo) && !typeof(Phase).IsAssignableFrom(child.GetType()))
-                        child.Document(tags, headingLevel + 1, indent);
+                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
     }

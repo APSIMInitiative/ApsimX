@@ -9,7 +9,14 @@
     using System.Collections.Generic;
 
     /// <summary>
+    /// # [Name]
     /// The soil nutrient model includes functionality for simulating pools of organmic matter and mineral nitrogen.  The processes for each are described below.
+    /// ## Structure of nutrient
+    /// [DocumentView]
+    /// ## Pools
+    /// [DocumentType NutrientPool]
+    /// ## Solutes:
+    /// [DocumentType Solute]
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
@@ -235,5 +242,57 @@
 
             
         }
+
+        /// <summary>Calculate / create a directed graph from model</summary>
+        public void CalculateDirectedGraph()
+        {
+            if (_directedGraphInfo == null)
+                _directedGraphInfo = new DirectedGraph();
+
+            _directedGraphInfo.Begin();
+
+            bool needAtmosphereNode = false;
+
+            foreach (NutrientPool pool in Apsim.Children(this, typeof(NutrientPool)))
+            {
+                _directedGraphInfo.AddNode(pool.Name, Color.LightGreen, Color.Black);
+                foreach (CarbonFlow cFlow in Apsim.Children(pool, typeof(CarbonFlow)))
+                {
+                    foreach (string destinationName in cFlow.destinationNames)
+                    {
+                        string destName = destinationName;
+                        if (destName == null)
+                        {
+                            destName = "Atmosphere";
+                            needAtmosphereNode = true;
+                        }
+                        _directedGraphInfo.AddArc(null, pool.Name, destName, Color.Black);
+
+                    }
+                }
+            }
+
+            foreach (Solute solute in Apsim.Children(this, typeof(Solute)))
+            {
+                _directedGraphInfo.AddNode(solute.Name, Color.LightCoral, Color.Black);
+                foreach (NFlow nitrogenFlow in Apsim.Children(solute, typeof(NFlow)))
+                {
+                    string destName = nitrogenFlow.destinationName;
+                    if (destName == null)
+                    {
+                        destName = "Atmosphere";
+                        needAtmosphereNode = true;
+                    }
+
+                    _directedGraphInfo.AddArc(null, nitrogenFlow.sourceName, destName, Color.Black);
+                }
+            }
+
+            if (needAtmosphereNode)
+                _directedGraphInfo.AddNode("Atmosphere", Color.White, Color.White);
+
+            _directedGraphInfo.End();
+        }
+
     }
 }

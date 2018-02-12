@@ -15,7 +15,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class GenericOrgan : Model, IOrgan, IArbitration
+    public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation
     {
         /// <summary>The parent plant</summary>
         [Link]
@@ -408,7 +408,7 @@ namespace Models.PMF.Organs
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation && structuralFraction != null)
             {
@@ -416,13 +416,13 @@ namespace Models.PMF.Organs
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write description of this class.
-                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // Documment DM demands.
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
                 tags.Add(new AutoDocumentation.Paragraph("Total Dry matter demand is calculated by the DMDemandFunction", indent));
                 IModel DMDemand = Apsim.Child(this, "DMDemandFunction");
-                DMDemand.Document(tags, -1, indent);
+                AutoDocumentation.DocumentModel(DMDemand, tags, headingLevel+1, indent);
                 IModel StrucFrac = Apsim.Child(this, "StructuralFraction");
                 if (StrucFrac.GetType() == typeof(Constant))
                 {
@@ -440,7 +440,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of total biomass that is partitioned to structural is determined by the StructuralFraction", indent));
-                    StrucFrac.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(StrucFrac, tags, headingLevel + 1, indent);
                     tags.Add(new AutoDocumentation.Paragraph("Any Non-structural Demand Capacity (StructuralWt/StructuralFraction) that is not currently occupied is also included in Non-structural DM Demand", indent));
                 }
 
@@ -448,10 +448,10 @@ namespace Models.PMF.Organs
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
                 tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand is the product of Total DM demand and a Minimum N concentration", indent));
                 IModel MinN = Apsim.Child(this, "MinimumNConc");
-                MinN.Document(tags, -1, indent);
+                AutoDocumentation.DocumentModel(MinN, tags, headingLevel + 1, indent);
                 tags.Add(new AutoDocumentation.Paragraph("The daily Storage N demand is the product of Total DM demand and a Maximum N concentration", indent));
                 IModel MaxN = Apsim.Child(this, "MaximumNConc");
-                MaxN.Document(tags, -1, indent);
+                AutoDocumentation.DocumentModel(MaxN, tags, headingLevel + 1, indent);
                 IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
                 if (NDemSwitch.GetType() == typeof(Constant))
                 {
@@ -467,7 +467,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandFactor", indent));
-                    NDemSwitch.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(NDemSwitch, tags, headingLevel + 1, indent);
                 }
 
                 //Document DM supplies
@@ -483,7 +483,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM tha is allocated each day is quantified by the DMReallocationFactor", indent));
-                    DMReallocFac.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 1, indent);
                 }
                 IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
                 if (DMRetransFac.GetType() == typeof(Constant))
@@ -496,7 +496,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural DM tha is allocated each day is quantified by the DMReallocationFactor", indent));
-                    DMRetransFac.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(DMRetransFac, tags, headingLevel + 1, indent);
                 }
 
                 //Document N supplies
@@ -512,7 +512,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N tha is allocated each day is quantified by the NReallocationFactor", indent));
-                    NReallocFac.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 1, indent);
                 }
                 IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
                 if (NRetransFac.GetType() == typeof(Constant))
@@ -525,7 +525,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor", indent));
-                    NRetransFac.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(NRetransFac, tags, headingLevel + 1, indent);
                 }
 
                 //Document Biomass Senescence and Detachment
@@ -541,7 +541,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceFraction", indent));
-                    Sen.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(Sen, tags, headingLevel + 1, indent);
                 }
 
                 IModel Det = Apsim.Child(this, "DetachmentRateFunction");
@@ -555,7 +555,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction", indent));
-                    Det.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(Det, tags, headingLevel + 1, indent);
                 }
 
                 if (biomassRemovalModel != null)

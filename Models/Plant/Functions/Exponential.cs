@@ -7,6 +7,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// An exponential function
     /// </summary>
     [Serializable]

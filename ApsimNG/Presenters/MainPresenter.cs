@@ -780,6 +780,27 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Open a tab which shows a list of jobs submitted to the cloud.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event Arguments</param>
+        public void OnViewCloudJobs(object sender, EventArgs e)
+        {
+            bool onLeftTabControl = view.IsControlOnLeft(sender);            
+            // Clear the message window
+            view.ShowMessage(" ", Simulation.ErrorLevel.Information);
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "UserInterface.Views.CloudJobDisplayView", "UserInterface.Presenters.AzureJobDisplayPresenter");
+            } else
+            {
+                ShowMessage("Microsoft Azure functionality is currently only available under Windows.", Simulation.ErrorLevel.Error);
+                Console.WriteLine("You aren't on Windows!");
+            }
+            
+        }
+
+        /// <summary>
         /// Open a file open dialog with the initial directory in an Examples directory.
         /// Use one that is at the same level as this app directory.
         /// Any files opened here will need to be saved before running.

@@ -13,14 +13,14 @@ using Models.PMF.Struct;
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// # Leaf #
+    /// # [Name]
     /// The leaves are modeled as a set of leaf cohorts and the properties of each of these cohorts are summed to give overall values for the leaf organ.  
     ///   A cohort represents all the leaves of a given main stem node position including all of the branch leaves appearing at the same time as the given main-stem leaf ([lawless2005wheat]).  
     ///   The number of leaves in each cohort is the product of the number of plants per m<sup>2</sup> and the number of branches per plant.  
     ///   The *Structure* class models the appearance of main-stem leaves and branches.  Once cohorts are initiated the *Leaf* class models the area and biomass dynamics of each.  
     ///   It is assumed all the leaves in each cohort have the same size and biomass properties.  The modelling of the status and function of individual cohorts is delegated to *LeafCohort* classes.  
     /// 
-    /// ## Dry Matter Fixation ##
+    /// ## Dry Matter Fixation
     /// The most important DM supply from leaf is the photosynthetic fixiation supply.  Radiation interception is calculated from
     ///   LAI using an extinction coefficient of:
     /// [Document ExtinctionCoeff]
@@ -156,7 +156,7 @@ namespace Models.PMF.Organs
 
         #region Structures
         /// <summary>
-        /// ## Potential Leaf Area index ##
+        /// # Potential Leaf Area index
         /// Leaf area index is calculated as the sum of the area of each cohort of leaves 
         /// The appearance of a new cohort of leaves occurs each time Structure.LeafTipsAppeared increases by one.
         /// From tip appearance the area of each cohort will increase for a certian number of degree days defined by the <i>GrowthDuration</i>
@@ -175,7 +175,7 @@ namespace Models.PMF.Organs
         /// Each cohort models the proportion of its area that is lost to shade induced senescence each day as:
         /// [Document ShadeInducedSenescenceRate]
         /// 
-        /// ## Stress effects on Leaf Area Index ##
+        /// # Stress effects on Leaf Area Index
         /// Stress reduces leaf area in a number of ways.
         /// Firstly, stress occuring prior to the appearance of the cohort can reduce cell division, so reducing the maximum leaf size.
         /// Leaf captures this by multiplying the <i>MaxSize</i> of each cohort by a <i>CellDivisionStress</i> factor which is calculated as:
@@ -200,7 +200,7 @@ namespace Models.PMF.Organs
         /// [Document DroughtInducedLagAcceleration]
         /// [Document DroughtInducedSenAcceleration]
         /// 
-        /// ## Dry matter Demand ##
+        /// # Dry matter Demand
         /// Leaf calculates the DM demand from each cohort as a function of the potential size increment (DeltaPotentialArea) an specific leaf area bounds.
         /// Under non stressed conditions the demand for non-storage DM is calculated as <i>DeltaPotentialArea</i> divided by the mean of <i>SpecificLeafAreaMax</i> and <i>SpecificLeafAreaMin</i>.
         /// Under stressed conditions it is calculated as <i>DeltaWaterConstrainedArea</i> divided by <i>SpecificLeafAreaMin</i>.
@@ -214,7 +214,7 @@ namespace Models.PMF.Organs
         /// multiplied by a <i>NonStructuralFraction</i>:
         /// [Document NonStructuralFraction]
         /// 
-        /// ## Nitrogen Demand ##
+        /// # Nitrogen Demand
         /// 
         /// Leaf calculates the N demand from each cohort as a function of the potential DM increment and N concentration bounds.
         /// Structural N demand = <i>PotentialStructuralDMAllocation</i> * <i>MinimumNConc</i> where:
@@ -227,14 +227,14 @@ namespace Models.PMF.Organs
         /// multiplied by <i>LuxaryNconc</i> (<i>MaximumNConc</i> - <i>CriticalNConc</i>) less the amount of storage N already present.  <i>MaximumNConc</i> is given by:
         /// [Document MaximumNConc]
         ///
-        /// ## Drymatter supply ##
+        /// # Drymatter supply
         /// In additon to photosynthesis, the leaf can also supply DM by reallocation of senescing DM and retranslocation of storgage DM:
         /// Reallocation supply is a proportion of the metabolic and non-structural DM that would be senesced each day where the proportion is set by:
         /// [Document DMReallocationFactor]
         /// Retranslocation supply is calculated as a proportion of the amount of storage DM in each cohort where the proportion is set by :
         /// [Document DMRetranslocationFactor]
         ///
-        /// ## Nitrogen supply ##
+        /// # Nitrogen supply
         /// Nitrogen supply from the leaf comes from the reallocation of metabolic and storage N in senescing material
         /// and the retranslocation of metabolic and storage N.  Reallocation supply is a proportion of the Metabolic and Storage DM that would be senesced each day where the proportion is set by:
         /// [Document NReallocationFactor]
@@ -1768,7 +1768,7 @@ namespace Models.PMF.Organs
         public void DocumentFunction(string FunctName, List<AutoDocumentation.ITag> tags, int indent)
         {
             IModel Funct = Apsim.Child(this, FunctName);
-            Funct.Document(tags, -1, indent);
+            AutoDocumentation.DocumentModel(Funct, tags, -1, indent);
         }
 
     }

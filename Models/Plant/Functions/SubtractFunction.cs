@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("From the value of the first child function, subtract the values of the subsequent children functions")]
-    public class SubtractFunction : Model, IFunction
+    public class SubtractFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
@@ -44,7 +44,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
                 DocumentMathFunction(this, '-', tags, headingLevel, indent);
@@ -66,7 +66,7 @@ namespace Models.PMF.Functions
 
             // write memos.
             foreach (IModel memo in Apsim.Children(function, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
             // create a string to display 'child1 - child2 - child3...'
             string msg = string.Empty;
@@ -88,7 +88,7 @@ namespace Models.PMF.Functions
 
                 // write children.
                 foreach (IModel child in childrenToDocument)
-                    child.Document(tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(child, tags, -1, indent + 1);
             }
         }
 

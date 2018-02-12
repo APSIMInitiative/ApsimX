@@ -14,6 +14,7 @@ using Models.Core.Runners;
 namespace Models.Core
 {
     /// <summary>
+    /// # [Name]
     /// Encapsulates a collection of simulations. It is responsible for creating this collection,
     /// changing the structure of the components within the simulations, renaming components, adding
     /// new ones, deleting components. The user interface talks to an instance of this class.
@@ -407,7 +408,7 @@ namespace Models.Core
                         child.IncludeInDocumentation = true;
 
                     // Document the model.
-                    modelToDocument.Document(tags, headingLevel, 0);
+                    AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0);
 
                     // Unresolve links.
                     Links.Unresolve(clonedSimulation);

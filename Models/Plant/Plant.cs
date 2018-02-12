@@ -20,6 +20,7 @@ namespace Models.PMF
     using System.Data;
 
     ///<summary>
+    /// # [Name]
     /// The generic plant model
     /// </summary>
     /// \pre Summary A Summary model has to exist to write summary message.
@@ -59,7 +60,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
-    public class Plant : ModelCollectionFromResource, ICrop
+    public class Plant : ModelCollectionFromResource, ICrop, ICustomDocumentation
     {
         #region Class links
         /// <summary>The summary</summary>
@@ -449,7 +450,7 @@ namespace Models.PMF
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -473,7 +474,7 @@ namespace Models.PMF
                 tags.Add(new AutoDocumentation.Table(tableData, indent));
 
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                    child.Document(tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
     }

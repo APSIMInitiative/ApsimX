@@ -15,6 +15,7 @@
     using APSIM.Shared.Utilities;
 
     /// <summary>
+    /// # [Name]
     /// The surface organic matter model, ported by Ben Jolley from the
     /// Fortran version.
     /// Tidied up (somewhat) for ApsimX by Eric Zurcher, August 2014.

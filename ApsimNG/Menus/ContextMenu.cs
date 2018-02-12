@@ -410,6 +410,14 @@ namespace UserInterface.Presenters
             }
         }
 
+        [ContextMenu(MenuName = "Run on cloud (In development - DO NOT USE)",
+                     AppliesTo = new Type[] { typeof(Simulation),
+                                              typeof(Simulations),
+                                              typeof(Experiment),
+                                              typeof(Folder)
+                                            }            
+                    )
+        ]
         /// <summary>
         /// Event handler for a Add model action
         /// </summary>

@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Stores the value of its child function (called Integral) from yesterday and returns the difference between that and todays value of the child function")]
-    public class DeltaFunction : Model, IFunction
+    public class DeltaFunction : Model, IFunction, ICustomDocumentation
     {
         //Class members
         /// <summary>The accumulated value</summary>
@@ -77,7 +77,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -86,9 +86,7 @@ namespace Models.PMF.Functions
 
                 // write a description of the child it is returning the differential of.
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    child.Document(tags, headingLevel + 1, indent + 1);
-                }
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }
     }

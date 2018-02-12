@@ -6,6 +6,7 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
+    /// # [Name]
     /// Water demand is calculated using the Transpiration Efficiency (TE) approach (ie TE=Coefficient/VDP).
     /// </summary>
     [Serializable]

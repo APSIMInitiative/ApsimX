@@ -17,7 +17,10 @@ using APSIM.Shared.Utilities;
 
 namespace Models.AgPasture
 {
-    /// <summary>Describes a pasture species.</summary>
+    /// <summary>
+    /// # [Name]
+    /// Describes a pasture species.
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

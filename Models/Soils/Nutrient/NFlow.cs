@@ -7,6 +7,7 @@ namespace Models.Soils.Nutrient
     using System.Reflection;
 
     /// <summary>
+    /// # [Name]
     /// Encapsulates a nitrogen flow between mineral N pools.
     /// </summary>
     [Serializable]
