@@ -33,7 +33,10 @@ namespace UnitTests
         {
             SQLite database = new SQLite();
             database.OpenDatabase(fileName, true);
-            DataTable data = database.ExecuteQuery("SELECT * FROM " + tableName);
+            string sql = "SELECT * FROM " + tableName;
+            if (database.GetColumnNames(tableName).Contains("CheckpointID"))
+                sql += " ORDER BY CheckpointID";
+            DataTable data = database.ExecuteQuery(sql);
             database.CloseDatabase();
             return TableToString(data);
         }

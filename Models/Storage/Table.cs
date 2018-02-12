@@ -40,6 +40,9 @@ namespace Models.Storage
         /// <summary>A set of column names for quickly checking if columns exist in this table.</summary>
         private SortedSet<string> sortedColumnNames = new SortedSet<string>();
 
+        /// <summary>A list of simulations that we have already written data for</summary>
+        private List<int> simulationsWithDataWritten = new List<int>();
+
         /// <summary>Name of table.</summary>
         public string Name { get; private set; }
 
@@ -61,6 +64,13 @@ namespace Models.Storage
             Columns.Add(new Column("CheckpointID", null, "integer"));
         }
 
+
+        /// <summary>Simulations are about to start running</summary>
+        public void BeginRun()
+        {
+            simulationsWithDataWritten.Clear();
+        }
+
         /// <summary>Add a row to our list of rows to write</summary>
         /// <param name="checkpointID">ID of checkpoint</param>
         /// <param name="simulationID">ID of simulation</param>
@@ -69,7 +79,7 @@ namespace Models.Storage
         /// <param name="rowValues">The values</param>
         public void AddRow(int checkpointID, int simulationID, IEnumerable<string> rowColumnNames, IEnumerable<string> rowColumnUnits, IEnumerable<object> rowValues)
         {
-            // If we have a valid simulation ID then make sure SimulationID is at index 1.
+            // If we have a valid simulation ID then make sure SimulationID is at index 1 in the Columns
             if (simulationID > 0 && Columns.Find(column => column.Name == "SimulationID") == null)
             {
                 Column simIDColumn = new Column("SimulationID", null, "integer");
@@ -177,6 +187,20 @@ namespace Models.Storage
                     columnNames.AddRange(Columns.Select(column => column.Name));
                     values.AddRange(RowsToWrite.GetRange(0, numRows));
                     RowsToWrite.RemoveRange(0, numRows);
+                }
+
+                // If this is the first time we've written data for this simulation then clear old data
+                int simulationID = GetValueFromRow(values[0], "SimulationID");
+                if (simulationID > 0 && !simulationsWithDataWritten.Contains(simulationID))
+                {
+                    int checkpointID = GetValueFromRow(values[0], "CheckpointID");
+                    if (checkpointID > 0)
+                    {
+                        connection.ExecuteNonQuery("DELETE FROM " + Name +
+                                                   " WHERE SimulationID = " + simulationID +
+                                                   " AND CheckpointID = " + checkpointID);
+                        simulationsWithDataWritten.Add(simulationID);
+                    }
                 }
 
                 // Create an insert query
@@ -340,7 +364,7 @@ namespace Models.Storage
         /// 'Flatten' the row passed in, into a list of columns ready to be added
         /// to a data table.
         /// </summary>
-        public static void Flatten(ref IEnumerable<string> columnNames, ref IEnumerable<string> columnUnits, ref IEnumerable<object> columnValues)
+        private static void Flatten(ref IEnumerable<string> columnNames, ref IEnumerable<string> columnUnits, ref IEnumerable<object> columnValues)
         {
             List<string> newColumnNames = new List<string>();
             List<string> newColumnUnits = new List<string>();
@@ -440,5 +464,18 @@ namespace Models.Storage
             }
         }
 
+        /// <summary>
+        /// Get the simulation ID for the specified row.
+        /// </summary>
+        /// <param name="values">The row values</param>
+        /// <param name="columnName">The column name to look for</param>
+        /// <returns>Returns ID or 0 if not found</returns>
+        private int GetValueFromRow(object[] values, string columnName)
+        {
+            int indexSimulationID = Columns.FindIndex(column => column.Name == columnName);
+            if (indexSimulationID != -1)
+                return (int)values[indexSimulationID];
+            return 0;
+        }
     }
 }
