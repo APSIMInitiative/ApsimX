@@ -75,6 +75,25 @@
             return newSimulation;
         }
 
+        /// <summary>
+        /// Generates an .apsimx file for the specified simulation and returns an error message (if it fails).
+        /// </summary>
+        /// <param name="path">Full path including filename and extension.</param>
+        /// <returns>Empty string if successful, error message if it fails.</returns>
+        public string GenerateApsimXFile(string path)
+        {
+            string err = "";
+            string xml = Apsim.Serialise(this);
+            try
+            {
+                File.WriteAllText(path, xml);
+            }
+            catch (Exception ex)
+            {
+                err += ex.ToString();
+            }
+            return err;
+        }
         /// <summary>Gets a list of simulation names</summary>
         public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {

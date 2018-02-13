@@ -239,6 +239,121 @@ namespace UserInterface
             return fileName;
         }
 
+        /// <summary>Ask user for a directory on Windows.</summary>
+        /// <param name="prompt">String to use as dialog heading</param>        
+        /// <param name="initialPath">Optional Initial starting filename or directory</param>
+        /// <returns>string containing the path to the chosen directory.</returns>
+        static public string WindowsDirectoryDialog(string prompt, string initialPath = "")
+        {
+            string fileName = null;
+            FolderBrowserDialog dialog = new FolderBrowserDialog()
+            {
+                Description = prompt
+            };
+
+            if (!String.IsNullOrWhiteSpace(initialPath) && (File.Exists(initialPath)))
+            {
+                dialog.SelectedPath = Path.GetDirectoryName(initialPath);                
+                // This almost works, but Windows is buggy.
+                // If the file name is long, it doesn't display in a sensible way
+                // dialog.FileName = Path.GetFileName(initialPath);
+            }
+            else if (Directory.Exists(initialPath))
+                dialog.SelectedPath = initialPath;
+            else
+                dialog.SelectedPath = Utility.Configuration.Settings.PreviousFolder;
+            /*
+            if (!string.IsNullOrEmpty(initialPath))
+            {
+                timer.Tick += new EventHandler(WindowsWorkaround);
+                timer.Interval = 50;
+                timer.Tag = dialog;
+                timer.Start();
+            }*/
+            if (dialog.ShowDialog() == DialogResult.OK)
+                fileName = dialog.SelectedPath;
+            dialog = null;
+            return fileName;
+        }
+
+        /// <summary>Ask user for a directory on OSX.</summary>
+        /// <param name="prompt">String to use as dialog heading.</param>
+        /// <param name="initialPath">Optional initial starting filename or directory.</param>
+        /// <returns>string containing the path to the chosen directory.</returns>
+        static public string OsxDirectoryDialog(string prompt, string initialPath = "")
+        {
+            NSOpenPanel panel = new NSOpenPanel
+            {
+                Title = prompt,
+                CanChooseDirectories = true,
+                CanChooseFiles = false
+            };            
+
+            if (File.Exists(initialPath))
+            {
+                panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(Path.GetDirectoryName(initialPath));
+                panel.NameFieldStringValue = Path.GetFileName(initialPath);
+            }
+            else if (Directory.Exists(initialPath))
+                panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(initialPath);
+            else
+                panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(Utility.Configuration.Settings.PreviousFolder);
+                        
+            string dir = "";
+            if (panel.RunModal() == 1 /*NSFileHandlingPanelOKButton*/)
+            {
+                dir = panel.Url.Path;
+            }
+            return dir;
+
+        }
+
+        /// <summary>
+        /// Ask the user for a directory.
+        /// </summary>
+        /// <param name="prompt">String to use as dialog heading.</param>
+        /// <param name="initialPath">Optional initial starting filename or directory.</param>
+        /// <returns>string containing the path to the chosen directory.</returns>
+        static public string AskUserForDirectory(string prompt, string initialPath = "")
+        {            
+            if (ProcessUtilities.CurrentOS.IsWindows)
+                return WindowsDirectoryDialog(prompt, initialPath);
+            else if (ProcessUtilities.CurrentOS.IsMac)
+                return OsxDirectoryDialog(prompt, initialPath);
+            else
+            {
+                string path = "";
+                FileChooserDialog fc = new FileChooserDialog(
+                    prompt,
+                    null,
+                    FileChooserAction.SelectFolder,
+                    "Cancel", ResponseType.Cancel,
+                    "Select Folder", ResponseType.Accept);
+                try
+                {
+                    int response = (int)ResponseType.Cancel;
+                    Gtk.Application.Invoke(delegate
+                    {
+                        response = fc.Run();
+                    });
+                    if (response == (int)ResponseType.Accept)
+                    {
+                        path = fc.Filename;
+                    }
+                }
+                catch
+                {
+                    
+                }
+                finally
+                {
+                    fc.Destroy();
+                }
+
+                return path;
+            }
+        }
+
         /// <summary>
         /// "Native" structure for a key press event
         /// </summary>

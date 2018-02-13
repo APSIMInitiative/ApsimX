@@ -438,7 +438,49 @@ namespace UserInterface.Presenters
             }
             
         }
-        
+
+        /// <summary>
+        /// Event handler for generate .apsimx files option.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Generate .apsimx files",
+             AppliesTo = new Type[] {   typeof(Folder),
+                                        typeof(Simulations),
+                                        typeof(Simulation),
+                                        typeof(Experiment),
+                                    }
+            )
+        ]
+        public void OnGenerateApsimXFiles(object sender, EventArgs e)
+        {
+            IModel node = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+
+            List<IModel> children;
+            if (node is Experiment)
+            {
+                children = new List<IModel> { node };
+            }
+            else
+            {
+                children = Apsim.ChildrenRecursively(node, typeof(Experiment));
+            }
+
+            //string outDir = Path.Combine(Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName), "ModelFiles");
+            string outDir = ViewBase.AskUserForDirectory("Select a directory to save model files to.");
+            if (!Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
+            string err = "";
+            children.ForEach(expt => 
+            {
+                err += (expt as Experiment).GenerateApsimXFile(Path.Combine(outDir, expt.Name + ".apsimx"));
+            });            
+            if (err.Length < 1)
+                explorerPresenter.MainPresenter.ShowMessage("Successfully generated .apsimx files under " + outDir + ".", Simulation.ErrorLevel.Information);
+            else
+                explorerPresenter.MainPresenter.ShowMessage(err, Simulation.ErrorLevel.Error);
+        }
+
         /// <summary>
         /// Event handler for a Add model action
         /// </summary>
