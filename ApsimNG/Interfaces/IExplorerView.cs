@@ -130,9 +130,6 @@ namespace UserInterface.Interfaces
         /// <summary>Invoked then a node is renamed.</summary>
         event EventHandler<NodeRenameArgs> Renamed;
 
-        /// <summary>Invoked when a shortcut key is pressed.</summary>
-        event EventHandler<KeysArgs> ShortcutKeyPressed;
-
         /// <summary>Refreshes the entire tree from the specified descriptions.</summary>
         /// <param name="nodeDescriptions">The nodes descriptions.</param>
         void Refresh(NodeDescriptionArgs nodeDescriptions);
