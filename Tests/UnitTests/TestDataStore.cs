@@ -587,7 +587,6 @@
             }
         }
 
-
         /// <summary>Create a table that we can test</summary>
         private static void CreateTable(DataStore storage)
         {
