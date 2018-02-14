@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Models.Core;
 using Models.Interfaces;
@@ -7,7 +7,7 @@ using StdUnits;
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.  
+    /// A day of year starting from July 1st  
     /// </summary>
     [Serializable]
     public class DOYFromJuly1st : Model, IFunction, ICustomDocumentation
@@ -31,10 +31,10 @@ namespace Models.PMF.Functions
             else
 
                 return ((Clock.Today.DayOfYear - 182) > 0) ? Clock.Today.DayOfYear - 182 : Clock.Today.DayOfYear + 184;
-            
+
         }
 
-        
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
