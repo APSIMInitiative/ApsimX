@@ -171,6 +171,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.Constant))]
         [XmlElement(typeof(Models.PMF.Functions.DeltaFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DivideFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.DOYFromJuly1st))]
         [XmlElement(typeof(Models.PMF.Functions.ExponentialFunction))]
         [XmlElement(typeof(Models.PMF.Functions.ExpressionFunction))]
         [XmlElement(typeof(Models.PMF.Functions.ExternalVariable))]
