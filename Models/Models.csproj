@@ -170,6 +170,7 @@
     <Compile Include="Core\VariableMethod.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
+    <Compile Include="Plant\Functions\DOYFromJuly1st.cs" />
     <Compile Include="Plant\Functions\TrackerFunction.cs" />
     <Compile Include="Plant\Functions\ArrayFunction.cs" />
     <Compile Include="Storage\DataStore.cs" />
