@@ -309,7 +309,7 @@ namespace UserInterface
         }
 
         /// <summary>
-        /// Ask the user for a directory.
+        /// Ask the user for a directory. Returns the path to that directory, or null if they did not choose a directory.
         /// </summary>
         /// <param name="prompt">String to use as dialog heading.</param>
         /// <param name="initialPath">Optional initial starting filename or directory.</param>
@@ -322,7 +322,7 @@ namespace UserInterface
                 return OsxDirectoryDialog(prompt, initialPath);
             else
             {
-                string path = "";
+                string path = null;
                 FileChooserDialog fc = new FileChooserDialog(
                     prompt,
                     null,
@@ -336,6 +336,9 @@ namespace UserInterface
                     {
                         response = fc.Run();
                     });
+                    // The issue here is that if this method is called from the main UI thread, the 
+                    // Application.Invoke delegate will not be called until the main thread is idle.
+                    while (GLib.MainContext.Iteration()) ;
                     if (response == (int)ResponseType.Accept)
                     {
                         path = fc.Filename;

@@ -466,14 +466,20 @@ namespace UserInterface.Presenters
                 children = Apsim.ChildrenRecursively(node, typeof(Experiment));
             }
 
-            //string outDir = Path.Combine(Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName), "ModelFiles");
             string outDir = ViewBase.AskUserForDirectory("Select a directory to save model files to.");
+            if (outDir == null)                
+                return;
             if (!Directory.Exists(outDir))
                 Directory.CreateDirectory(outDir);
             string err = "";
+            int i = 0;            
             children.ForEach(expt => 
             {
-                err += (expt as Experiment).GenerateApsimXFile(Path.Combine(outDir, expt.Name + ".apsimx"));
+                explorerPresenter.MainPresenter.ShowMessage("Generating simulation files: ", Simulation.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowProgress(100 * i / children.Count, false);                
+                while (GLib.MainContext.Iteration()) ;
+                err += (expt as Experiment).GenerateApsimXFile(outDir);
+                i++;
             });            
             if (err.Length < 1)
                 explorerPresenter.MainPresenter.ShowMessage("Successfully generated .apsimx files under " + outDir + ".", Simulation.ErrorLevel.Information);
