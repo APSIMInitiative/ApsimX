@@ -27,6 +27,7 @@ namespace Models.Graph
         /// <summary>Constructor for a series</summary>
         public Series()
         {
+            this.Checkpoint = "Current";
             this.XAxis = Axis.AxisType.Bottom;
             this.FactorIndexToVaryColours = -1;
             this.FactorIndexToVaryLines = -1;
@@ -82,6 +83,9 @@ namespace Models.Graph
 
         /// <summary>Gets or sets the line thickness</summary>
         public LineThicknessType LineThickness { get; set; }
+
+        /// <summary>Gets or sets the checkpoint to get data from.</summary>
+        public string Checkpoint { get; set; }
 
         /// <summary>Gets or sets the name of the table to get data from.</summary>
         public string TableName { get; set; }
@@ -474,7 +478,11 @@ namespace Models.Graph
             seriesDefinition.showInLegend = ShowInLegend;
             seriesDefinition.title = simulationZone.GetSeriesTitle();
             if (IncludeSeriesNameInLegend)
+            {
                 seriesDefinition.title += ": " + Name;
+            }
+            if (Checkpoint != "Current")
+                seriesDefinition.title += " (" + Checkpoint + ")";
             if (simulationZone.data.Count > 0)
             {
                 seriesDefinition.data = simulationZone.data.ToTable();
@@ -665,7 +673,7 @@ namespace Models.Graph
             foreach (EventNamesOnGraph annotation in Apsim.Children(this, typeof(EventNamesOnGraph)))
                 fieldNames.Add(annotation.ColumnName);
 
-            return storage.GetData(tableName: TableName, fieldNames: fieldNames, filter: filter);
+            return storage.GetData(tableName: TableName, checkpointName: Checkpoint, fieldNames: fieldNames, filter: filter);
         }
 
         /// <summary>This class encapsulates a simulation / zone pair to put onto graph</summary>

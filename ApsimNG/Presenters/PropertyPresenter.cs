@@ -403,11 +403,12 @@ namespace UserInterface.Presenters
                     IGridCell cell = this.grid.GetCell(1, i);
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
                     {
-                        DataTable data = this.storage.RunQuery("SELECT * FROM " + cell.Value.ToString() + " LIMIT 1");
+                        string tableName = cell.Value.ToString();
+                        DataTable data = null;
+                        if (storage.TableNames.Contains(tableName))
+                            data = this.storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
                         if (data != null)
-                        {
                             fieldNames = DataTableUtilities.GetColumnNames(data);
-                        }
                     }
                 }
             }

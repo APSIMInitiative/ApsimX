@@ -152,9 +152,12 @@
         {
             Table t;
             int checkpointID = checkpointIDs["Current"];
-            int simulationID = 0;
+            int simulationID = -1;
             if (simulationName != null)
-                simulationID = simulationIDs[simulationName];
+            {
+                if (!simulationIDs.TryGetValue(simulationName, out simulationID))
+                    simulationID = 0;  // Denotes a simulation name was supplied but it isn't one we know about.
+            }
             lock (dataToWrite)
             {
                 t = dataToWrite.Find(table => table.Name == tableName);
@@ -180,15 +183,17 @@
                 Open(readOnly: false);
                 CleanupDB(knownSimulationNames);
             }
-            writeTask = Task.Run(() => WriteDBWorker());
+            StartDBWriteThread();
         }
 
         /// <summary>Finish writing to DB file</summary>
         [EventSubscribe("EndRun")]
         private void OnEndRun(object sender, EventArgs e)
         {
-            stoppingWriteToDB = true;
-            writeTask.Wait();
+            StopDBWriteThread();
+
+            WriteUnitsTable();
+            Open(readOnly: true);
 
             // Cleanup unused fields.
             CleanupUnusedFields();
@@ -243,12 +248,15 @@
             
             foreach (string fieldName in fieldList)
             {
-                sql.Append(",T.");
-                sql.Append("[");
-                sql.Append(fieldName);
-                sql.Append(']');
-                if (fieldName == "Clock.Today")
-                    hasToday = true;
+                if (table.HasColumn(fieldName))
+                {
+                    sql.Append(",T.");
+                    sql.Append("[");
+                    sql.Append(fieldName);
+                    sql.Append(']');
+                    if (fieldName == "Clock.Today")
+                        hasToday = true;
+                }
             }
 
             // Write FROM clause
@@ -324,7 +332,7 @@
 
             bool startWriteThread = writeTask == null || writeTask.IsCompleted;
             if (startWriteThread)
-                OnBeginRun(null);
+                StartDBWriteThread();
 
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in data.Columns)
@@ -344,70 +352,7 @@
             }
 
             if (startWriteThread)
-                OnEndRun(null, null);
-        }
-
-        /// <summary>Create a table in the database based on the specified one.</summary>
-        /// <param name="table">The table.</param>
-        public void WriteTableRaw(DataTable table)
-        {
-            if (table.Columns.Count > 0)
-            {
-                // Open the .db for writing.
-                Open(readOnly: false);
-
-                WriteTable(table);
-
-                //if (table.Columns.Contains("SimulationName"))
-                //    AddSimulationIDColumnToTable(table);
-
-                //// Get a list of all names and datatypes for each field in this table.
-                //List<string> names = new List<string>();
-                //List<Type> types = new List<Type>();
-
-                //// Go through all columns for this table and add to 'names' and 'types'
-                //foreach (DataColumn column in table.Columns)
-                //{
-                //    names.Add(column.ColumnName);
-                //    types.Add(column.DataType);
-                //}
-
-                //// Create the table.
-                //CreateTable(table.TableName, names, types);
-
-                //// Prepare the insert query sql
-                //IntPtr query = PrepareInsertIntoTable(connection, table.TableName, names);
-
-                //// Tell SQLite that we're beginning a transaction.
-                //connection.ExecuteNonQuery("BEGIN");
-
-                //try
-                //{
-                //    // Write each row to the .db
-                //    if (table != null)
-                //    {
-                //        object[] values = new object[names.Count];
-                //        foreach (DataRow row in table.Rows)
-                //        {
-                //            for (int i = 0; i < names.Count; i++)
-                //                if (table.Columns.Contains(names[i]))
-                //                    values[i] = row[names[i]];
-
-                //            // Write the row to the .db
-                //            connection.BindParametersAndRunQuery(query, values);
-                //        }
-                //    }
-                //}
-                //finally
-                //{
-                //    // tell SQLite we're ending our transaction.
-                //    connection.ExecuteNonQuery("END");
-
-                //    // finalise our query.
-                //    connection.Finalize(query);
-                //}
-            }
-
+                StopDBWriteThread();
         }
 
         /// <summary>Delete the specified table.</summary>
@@ -418,7 +363,8 @@
 
             int checkpointID = checkpointIDs["Current"];
 
-            connection.ExecuteNonQuery("DELETE FROM " + tableName + " WHERE CheckpointID = " + checkpointID);
+            if (tables.Find(table => table.Name == tableName) != null)
+                connection.ExecuteNonQuery("DELETE FROM " + tableName + " WHERE CheckpointID = " + checkpointID);
         }
 
         /// <summary>Return all data from the specified simulation and table name.</summary>
@@ -474,6 +420,17 @@
             return -1;
         }
 
+        /// <summary>Get a checkpoint ID for the specified checkpoint name</summary>
+        /// <param name="checkpointName">The simulation name to look for</param>
+        /// <returns>The database ID or -1 if not found</returns>
+        public int GetCheckpointID(string checkpointName)
+        {
+            int id;
+            if (checkpointIDs.TryGetValue(checkpointName, out id))
+                return id;
+            return -1;
+        }
+
         /// <summary>
         /// Return list of checkpoints.
         /// </summary>
@@ -490,6 +447,7 @@
             if (checkpointIDs.ContainsKey(name))
                 DeleteCheckpoint(name);
 
+            Open(readOnly: false);
             connection.ExecuteNonQuery("BEGIN");
 
             int checkpointID = checkpointIDs["Current"];
@@ -502,7 +460,13 @@
                 { 
                     columnNames.Remove("CheckpointID");
 
-                    string csvFieldNames = StringUtilities.BuildString(columnNames.ToArray(), ",");
+                    string csvFieldNames = null;
+                    foreach (string columnName in columnNames)
+                    {
+                        if (csvFieldNames != null)
+                            csvFieldNames += ",";
+                        csvFieldNames += "[" + columnName + "]";
+                    }
 
                     connection.ExecuteNonQuery("INSERT INTO " + t.Name + " (" + "CheckpointID," + csvFieldNames + ")" +
                                                " SELECT " + newCheckpointID + "," + csvFieldNames +
@@ -512,6 +476,8 @@
             }
             connection.ExecuteNonQuery("INSERT INTO _Checkpoints (ID, Name) VALUES (" + newCheckpointID + ", '" + name + "')");
             connection.ExecuteNonQuery("END");
+            Open(readOnly: true);
+
             checkpointIDs.Add(name, newCheckpointID);
         }
 
@@ -555,6 +521,19 @@
                     return true;
             }
             return false;
+        }
+
+        /// <summary>Start the thread that writes to the .db</summary>
+        private void StartDBWriteThread()
+        {
+            writeTask = Task.Run(() => WriteDBWorker());
+        }
+
+        /// <summary>Stop the thread that writes to the .db</summary>
+        private void StopDBWriteThread()
+        {
+            stoppingWriteToDB = true;
+            writeTask.Wait();
         }
 
         /// <summary>Worker method for writing to the .db file. This runs in own thread.</summary>
@@ -609,19 +588,6 @@
                     msg += " \"" + dataToWriteToDB.Name + "\"";
                 throw new Exception(msg, err);
             }
-            finally
-            {
-                connection.ExecuteNonQuery("BEGIN");
-                try
-                {
-                    WriteUnitsTable();
-                }
-                finally
-                {
-                    connection.ExecuteNonQuery("END");
-                }
-                Open(readOnly: true);
-            }
 
             foreach (Table table in dataToWrite)
             {
@@ -638,6 +604,8 @@
         /// <summary>Write a _units table to .db</summary>
         private void WriteUnitsTable()
         {
+            connection.ExecuteNonQuery("BEGIN");
+
             connection.ExecuteQuery("DELETE FROM _Units");
             foreach (Table table in dataToWrite)
             {
@@ -657,6 +625,8 @@
                     }
                 }
             }
+            connection.ExecuteNonQuery("END");
+
         }
 
         /// <summary>Open the SQLite database.</summary>
@@ -664,6 +634,8 @@
         /// <returns>True if file was successfully opened</returns>
         private bool Open(bool readOnly)
         {
+            if (connection != null && !connection.IsOpen)
+                connection = null;
             if (connection != null && readOnly == connection.IsReadOnly)
                 return true;  // already open.
 
@@ -797,7 +769,8 @@
                     var columnsToRemove = new List<string>();
                     foreach (Table.Column column in table.Columns)
                     {
-                        DataTable data = connection.ExecuteQuery("SELECT " + column.Name + " FROM " + table.Name + " WHERE " + column.Name + " IS NOT NULL LIMIT 1");
+                        string bracketedColumnName = "[" + column.Name + "]";
+                        DataTable data = connection.ExecuteQuery("SELECT " + bracketedColumnName + " FROM " + table.Name + " WHERE " + bracketedColumnName + " IS NOT NULL LIMIT 1");
                         if (data.Rows.Count == 0)
                             columnsToRemove.Add(column.Name);
                     }

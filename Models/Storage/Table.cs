@@ -80,7 +80,7 @@ namespace Models.Storage
         public void AddRow(int checkpointID, int simulationID, IEnumerable<string> rowColumnNames, IEnumerable<string> rowColumnUnits, IEnumerable<object> rowValues)
         {
             // If we have a valid simulation ID then make sure SimulationID is at index 1 in the Columns
-            if (simulationID > 0 && Columns.Find(column => column.Name == "SimulationID") == null)
+            if (simulationID != -1 && Columns.Find(column => column.Name == "SimulationID") == null)
             {
                 Column simIDColumn = new Column("SimulationID", null, "integer");
                 if (Columns.Count > 1)
@@ -224,6 +224,13 @@ namespace Models.Storage
                 if (Columns.Find(c => c.Name == column.Name) == null)
                     Columns.Add(column);
             }
+        }
+
+        /// <summary>Does the table have the specified column name</summary>
+        /// <param name="fieldName">Column name to look for</param>
+        public bool HasColumn(string fieldName)
+        {
+            return Columns.Find(column => column.Name.Equals(fieldName, StringComparison.CurrentCultureIgnoreCase)) != null;
         }
 
         /// <summary>Does the specified table exist?</summary>
@@ -473,7 +480,7 @@ namespace Models.Storage
         private int GetValueFromRow(object[] values, string columnName)
         {
             int indexSimulationID = Columns.FindIndex(column => column.Name == columnName);
-            if (indexSimulationID != -1)
+            if (indexSimulationID != -1 && values[indexSimulationID] != null)
                 return (int)values[indexSimulationID];
             return 0;
         }

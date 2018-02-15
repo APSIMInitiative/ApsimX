@@ -115,5 +115,10 @@ namespace UnitTests
         public void WriteTableRaw(DataTable data)
         {
         }
+
+        public List<string> Checkpoints()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

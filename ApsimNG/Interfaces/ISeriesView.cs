@@ -12,6 +12,9 @@ namespace UserInterface.Interfaces
     /// </summary>
     public interface ISeriesView
     {
+        /// <summary>Checkpoint</summary>
+        IDropDownView Checkpoint { get; }
+
         /// <summary>Data source</summary>
         IDropDownView DataSource { get; }
 

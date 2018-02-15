@@ -87,8 +87,6 @@ namespace Models.PostSimulationTools
             string fullFileName = AbsoluteFileName;
             if (fullFileName != null && File.Exists(fullFileName))
             {
-                dataStore.DeleteDataInTable(this.Name);
-                
                 // Open the file
                 FileStream stream = File.Open(fullFileName, FileMode.Open, FileAccess.Read);
 
@@ -119,7 +117,9 @@ namespace Models.PostSimulationTools
                     if (keep)
                     {
                         TruncateDates(table);
-                        dataStore.WriteTableRaw(table);
+
+                        dataStore.DeleteDataInTable(table.TableName);
+                        dataStore.WriteTable(table);
                     }
                 }
 
