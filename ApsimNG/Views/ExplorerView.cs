@@ -902,25 +902,28 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Get whatever text is currently on the _APSIM_MODEL clipboard
+        /// Get whatever text is currently on a specific clipboard.
         /// </summary>
+        /// <param name="clipboardName">Name of the clipboard.</param>
         /// <returns></returns>
-        public string GetClipboardText()
+        public string GetClipboardText(string clipboardName)
         {
-            Gdk.Atom modelClipboard = Gdk.Atom.Intern("_APSIM_MODEL", false);
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
             Clipboard cb = Clipboard.Get(modelClipboard);
+            
             return cb.WaitForText();
         }
 
         /// <summary>
-        /// Place text on the clipboard
+        /// Place text on a specific clipboard.
         /// </summary>
-        /// <param name="text"></param>
-        public void SetClipboardText(string text)
+        /// <param name="text">Text to place on the clipboard.</param>
+        /// <param name="clipboardName">Name of the clipboard.</param>
+        public void SetClipboardText(string text, string clipboardName)
         {
-            Gdk.Atom modelClipboard = Gdk.Atom.Intern("_APSIM_MODEL", false);
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
             Clipboard cb = Clipboard.Get(modelClipboard);
-            cb.Text = text;
+            cb.Text = text;            
         }
 
         /*

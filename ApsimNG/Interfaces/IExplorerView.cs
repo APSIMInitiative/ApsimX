@@ -198,13 +198,13 @@ namespace UserInterface.Interfaces
         /// Get whatever text is currently on the clipboard
         /// </summary>
         /// <returns></returns>
-        string GetClipboardText();
+        string GetClipboardText(string clipboardName);
 
         /// <summary>
         /// Place text on the clipboard
         /// </summary>
         /// <param name="text"></param>
-        void SetClipboardText(string text);
+        void SetClipboardText(string text, string clipboardName);
 
         /// <summary>
         /// Gets or sets the width of the tree view.

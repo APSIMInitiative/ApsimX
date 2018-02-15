@@ -73,7 +73,9 @@ namespace UserInterface.Presenters
             if (model != null)
             {
                 // Set the clipboard text.
-                this.explorerPresenter.SetClipboardText(Apsim.Serialise(model));
+                string xml = Apsim.Serialise(model);
+                this.explorerPresenter.SetClipboardText(xml, "_APSIM_MODEL");
+                this.explorerPresenter.SetClipboardText(xml, "CLIPBOARD");
             }
         }
 
@@ -85,7 +87,29 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Paste", ShortcutKey = "Ctrl+V")]
         public void OnPasteClick(object sender, EventArgs e)
         {
-            this.explorerPresenter.Add(this.explorerPresenter.GetClipboardText(), this.explorerPresenter.CurrentNodePath);
+            string internalCBText = this.explorerPresenter.GetClipboardText("_APSIM_MODEL");
+            string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
+
+            if (externalCBText == null || externalCBText == "")
+                this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);                
+            else
+            {
+                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                try
+                {
+                    doc.LoadXml(externalCBText);
+                    this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
+                }
+                catch (System.Xml.XmlException)
+                {
+                    // External clipboard does not contain valid xml
+                    this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
+                }
+                catch (Exception ex)
+                {
+                    this.explorerPresenter.MainPresenter.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
+                }
+            }
         }
 
         /// <summary>
