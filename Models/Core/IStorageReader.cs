@@ -12,6 +12,11 @@ namespace Models.Core
         string FileName { get; }
 
         /// <summary>
+        /// Return list of checkpoints.
+        /// </summary>
+        List<string> Checkpoints();
+
+        /// <summary>
         /// Return all data from the specified simulation and table name. If simulationName = "*"
         /// the all simulation data will be returned.
         /// </summary>
@@ -31,6 +36,11 @@ namespace Models.Core
         /// <returns>The database ID or -1 if not found</returns>
         int GetSimulationID(string simulationName);
 
+        /// <summary>Get a checkpoint ID for the specified checkpoint name</summary>
+        /// <param name="checkpointName">The simulation name to look for</param>
+        /// <returns>The database ID or -1 if not found</returns>
+        int GetCheckpointID(string checkpointName);
+
         /// <summary>
         /// Obtain the units for a column of data
         /// </summary>
@@ -45,12 +55,6 @@ namespace Models.Core
         /// </summary>
         /// <param name="data">The data to write</param>
         void WriteTable(DataTable data);
-
-        /// <summary>
-        /// Create a table in the database based on the specified data. 
-        /// </summary>
-        /// <param name="data">The data to write</param>
-        void WriteTableRaw(DataTable data);
 
         /// <summary>Delete the specified table.</summary>
         /// <param name="tableName">Name of the table.</param>

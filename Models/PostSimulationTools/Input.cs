@@ -69,7 +69,7 @@ namespace Models.PostSimulationTools
                 if (data != null)
                 {
                     data.TableName = this.Name;
-                    dataStore.WriteTableRaw(data);
+                    dataStore.WriteTable(data);
                 }
             }
         }

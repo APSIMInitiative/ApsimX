@@ -87,11 +87,16 @@ namespace Models.PostSimulationTools
                     query.Replace("@field", s);
                 }
 
+
                 query.Append("FROM " + ObservedTableName + " I INNER JOIN " + PredictedTableName + " R USING (SimulationID) WHERE I.'@match1' = R.'@match1'");
                 if (FieldName2UsedForMatch != null && FieldName2UsedForMatch != string.Empty)
                     query.Append(" AND I.'@match2' = R.'@match2'");
                 if (FieldName3UsedForMatch != null && FieldName3UsedForMatch != string.Empty)
                     query.Append(" AND I.'@match3' = R.'@match3'");
+
+                int checkpointID = dataStore.GetCheckpointID("Current");
+                query.Append(" AND R.CheckpointID = " + checkpointID);
+
                 query.Replace(", FROM", " FROM"); // get rid of the last comma
                 query.Replace("I.'SimulationID' AS 'Observed.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID'", "I.'SimulationID' AS 'SimulationID'");
 
@@ -124,7 +129,7 @@ namespace Models.PostSimulationTools
                 if (predictedObservedData != null)
                 {
                     predictedObservedData.TableName = this.Name;
-                    dataStore.WriteTableRaw(predictedObservedData);
+                    dataStore.WriteTable(predictedObservedData);
                 }
                 else
                 {
