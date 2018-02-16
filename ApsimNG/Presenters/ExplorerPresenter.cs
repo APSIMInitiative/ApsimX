@@ -477,18 +477,18 @@ namespace UserInterface.Presenters
         /// Get whatever text is currently on the clipboard
         /// </summary>
         /// <returns>Clipboard text</returns>
-        public string GetClipboardText()
+        public string GetClipboardText(string clipboardName = "_APSIM_MODEL")
         {
-            return this.view.GetClipboardText();
+            return this.view.GetClipboardText(clipboardName);
         }
 
         /// <summary>
         /// Place text on the clipboard
         /// </summary>
         /// <param name="text">The text to be stored in the clipboard</param>
-        public void SetClipboardText(string text)
+        public void SetClipboardText(string text, string clipboardName = "_APSIM_MODEL")
         {
-            this.view.SetClipboardText(text);
+            this.view.SetClipboardText(text, clipboardName);
         }
 
         /// <summary>
