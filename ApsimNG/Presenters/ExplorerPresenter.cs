@@ -110,7 +110,6 @@ namespace UserInterface.Presenters
             this.view.AllowDrop += this.OnAllowDrop;
             this.view.Droped += this.OnDrop;
             this.view.Renamed += this.OnRename;
-            this.view.ShortcutKeyPressed += this.OnShortcutKeyPress;
 
             this.view.Refresh(this.GetNodeDescription(this.ApsimXFile));
             this.WriteLoadErrors();
@@ -125,7 +124,6 @@ namespace UserInterface.Presenters
             this.view.AllowDrop -= this.OnAllowDrop;
             this.view.Droped -= this.OnDrop;
             this.view.Renamed -= this.OnRename;
-            this.view.ShortcutKeyPressed -= this.OnShortcutKeyPress;
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
@@ -849,16 +847,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>User has pressed one of our shortcut keys.</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnShortcutKeyPress(object sender, KeysArgs e)
-        {
-            if (e.Keys == ConsoleKey.F5)
-            {
-                contextMenu.RunAPSIM(sender, null);
-            }
-        }
         #endregion
 
         #region Privates        
