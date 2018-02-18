@@ -5,6 +5,7 @@ using Models.Core;
 namespace Models.Lifecycle
 {
     /// <summary>
+    /// # [Name]
     /// A generic cohort item that exists in a Lifestage within a Lifecycle
     /// </summary>
     [Serializable]
