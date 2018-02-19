@@ -1,7 +1,6 @@
 ﻿using Models.Soils;
 using Models.Core;
 using System;
-using Models.PMF.Functions;
 
 namespace Models.PMF.Organs
 {
@@ -20,15 +19,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The root organ</summary>
         private  Root root = null;
-
-        /// <summary>The root front velocity function</summary>
-        private IFunction rootFrontVelocity;
-
-        /// <summary>The Maximum Root Depth</summary>
-        private IFunction maximumRootDepth = null;
-
-        /// <summary>The cost for remobilisation</summary>
-        private IFunction remobilisationCost = null;
 
         /// <summary>Zone name</summary>
         public string Name = null;
@@ -81,20 +71,11 @@ namespace Models.PMF.Organs
         /// <param name="initialDM">Initial dry matter</param>
         /// <param name="population">plant population</param>
         /// <param name="maxNConc">maximum n concentration</param>
-        /// <param name="rfv">Root front velocity</param>
-        /// <param name="mrd">Maximum root depth</param>
-        /// <param name="remobCost">Remobilisation cost</param>
-        public ZoneState(Plant Plant, Root Root, Soil soil, double depth, 
-                         double initialDM, double population, double maxNConc,
-                         IFunction rfv, IFunction mrd, IFunction remobCost)
+        public ZoneState(Plant Plant, Root Root, Soil soil, double depth, double initialDM, double population, double maxNConc)
         {
             this.soil = soil;
             this.plant = Plant;
             this.root = Root;
-            this.rootFrontVelocity = rfv;
-            this.maximumRootDepth = mrd;
-            this.remobilisationCost = remobCost;
-
             Clear();
             Zone zone = Apsim.Parent(soil, typeof(Zone)) as Zone;
             if (zone == null)
@@ -173,9 +154,9 @@ namespace Models.PMF.Organs
             //SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
             double[] xf = soil.XF(plant.Name);
             if (soil.Weirdo == null)
-                Depth = Depth + rootFrontVelocity.Value(RootLayer) * xf[RootLayer];
+                Depth = Depth + root.RootFrontVelocity.Value(RootLayer) * xf[RootLayer];
             else
-                Depth = Depth + rootFrontVelocity.Value(RootLayer);
+                Depth = Depth + root.RootFrontVelocity.Value(RootLayer);
 
 
             // Limit root depth for impeded layers
@@ -191,7 +172,7 @@ namespace Models.PMF.Organs
                     MaxDepth += soil.Thickness[i];
             }
             // Limit root depth for the crop specific maximum depth
-            MaxDepth = Math.Min(maximumRootDepth.Value(), MaxDepth);
+            MaxDepth = Math.Min(root.MaximumRootDepth.Value(), MaxDepth);
 
             Depth = Math.Min(Depth, MaxDepth);
 

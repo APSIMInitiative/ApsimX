@@ -20,7 +20,6 @@ using Models.PostSimulationTools;
 using PdfSharp.Fonts;
 using System.Data;
 using PdfSharp.Drawing;
-using Models.Interfaces;
 
 namespace UserInterface.Commands
 {
@@ -640,7 +639,7 @@ namespace UserInterface.Commands
                     mapPresenter.Attach(tag, mapView, ExplorerPresenter);
                     string PNGFileName = mapPresenter.ExportToPNG(workingDirectory);
                     if (!String.IsNullOrEmpty(PNGFileName))
-                        section.AddImage(PNGFileName);
+                       section.AddImage(PNGFileName);
                     mapPresenter.Detach();
                     mapView.MainWidget.Destroy();
                 }
@@ -906,19 +905,6 @@ namespace UserInterface.Commands
                 stream.Read(data, 0, count);
                 return data;
             }
-        }
-    }
-
-
-    /// <summary>A simple container for holding a directed graph - used in auto-doc</summary>
-    public class DirectedGraphContainer : IVisualiseAsDirectedGraph
-    {
-        /// <summary>A property for holding the graph</summary>
-        public DirectedGraph DirectedGraphInfo { get; set; }
-
-        public DirectedGraphContainer(DirectedGraph graph)
-        {
-            DirectedGraphInfo = graph;
         }
     }
 }

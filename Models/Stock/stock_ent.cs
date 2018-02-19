@@ -1,10 +1,149 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using CMPServices;
+using StdUnits;
 
 namespace Models.GrazPlan
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using StdUnits;
+    /// <summary>
+    /// Shear by tag details
+    /// </summary>
+    [Serializable]
+    public struct TShearByTag
+    {
+        /// <summary>
+        /// Tag number
+        /// </summary>
+        public int tagNo;
+        /// <summary>
+        /// Day of year
+        /// </summary>
+        public int doy;
+    }
+
+    /// <summary>
+    /// Replacement specifics
+    /// </summary>
+    [Serializable]
+    public class TStockReplacement
+    {
+        /// <summary>
+        /// Purchase animals
+        /// </summary>
+        public bool purchase;
+        /// <summary>
+        /// Sex of animals
+        /// </summary>
+        public string sex;
+        /// <summary>
+        /// Age in days
+        /// </summary>
+        public int age;
+        /// <summary>
+        /// Weight in kg
+        /// </summary>
+        public double weight;
+        /// <summary>
+        /// Condition score
+        /// </summary>
+        public double condition;
+        /// <summary>
+        /// Is mated
+        /// </summary>
+        public bool mated;
+        /// <summary>
+        /// Tag number
+        /// </summary>
+        public int tag_no;
+
+    }
+
+    /// <summary>
+    /// Sale and replace details for an animal group cohort
+    /// </summary>
+    [Serializable]
+    public class TSaleReplace
+    {
+        /// <summary>
+        /// First day for sale
+        /// </summary>
+        public string sell_first_day;
+        /// <summary>
+        /// Last day for sale
+        /// </summary>
+        public string sell_last_day;
+        /// <summary>
+        /// 
+        /// </summary>
+        public int sell_first_years;
+        /// <summary>
+        /// 
+        /// </summary>
+        public int sell_last_years;
+        /// <summary>
+        /// Selling weight
+        /// </summary>
+        public double sell_weight;
+        /// <summary>
+        /// Replacement day 
+        /// </summary>
+        public string replace_day;
+
+        /// <summary>
+        /// Replacement requirements
+        /// </summary>
+        public TStockReplacement replace_stock;
+        /// <summary>
+        /// Weight gain limit for sale
+        /// </summary>
+        public double weight_gain;
+        /// <summary>
+        /// Days to average the weight gain over
+        /// </summary>
+        public int gain_days;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [Serializable]
+    public class TYoungSales
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public string first_day;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string last_day;
+        /// <summary>
+        /// 
+        /// </summary>
+        public int first_years;
+        /// <summary>
+        /// 
+        /// </summary>
+        public int last_years;
+        /// <summary>
+        /// 
+        /// </summary>
+        public double weight;
+        /// <summary>
+        /// 
+        /// </summary>
+        public double weight_gain;
+        /// <summary>
+        /// 
+        /// </summary>
+        public int gain_days;
+        /// <summary>
+        /// 
+        /// </summary>
+        public int[] young_tags;
+    }
 
     /// <summary>
     /// Enterprise type init
@@ -40,6 +179,22 @@ namespace Models.GrazPlan
         /// age lamb,weaner, x-n
         /// </summary>
         public TAgeInfo[] ages;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [Serializable]
+    public class TShearingInfo
+    {
+        /// <summary>
+        /// doy
+        /// </summary>
+        public string shearing_day;
+        /// <summary>
+        /// Each tag can be shorn on a date
+        /// </summary>
+        public TShearByTag[] shear_by_tag;
     }
 
     /// <summary>
@@ -95,6 +250,10 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
+        public TYoungSales[] young_sales;
+        /// <summary>
+        /// 
+        /// </summary>
         public double male_ratio;
         /// <summary>
         /// 
@@ -119,6 +278,14 @@ namespace Models.GrazPlan
         public const int PERIOD_COUNT = 2;
         public static string[] PERIOD_TEXT = new string[2] { "Fixed", "Flexible" };
 
+
+        public const int MOB_MAIN = 1;
+        public const int MOB_YOUNG = 2;
+        public const int MOB_FEM = 1;
+        public const int MOB_MALE = 2;
+        public const int PURE = 1;
+        public const int XBRED = 2;
+
         public const int MINWEANAGE = 60;                                               // Minimum age at weaning                 
         public const int EWEGESTATION = 150 - 1;                                        // One less than the actual gestation     
         public const int COWGESTATION = 285 - 1;                                        // One less than the actual gestation     
@@ -127,7 +294,7 @@ namespace Models.GrazPlan
         public const double INVALID_WTGAIN = -999.0;  //see greplace.pas unit
         public const int WETHER = 0;
         public const int EWEWETHER = 1;
-        public const int STEERS_COWS = 2;
+        public const int STEER = 2;
         public const int BEEF = 3;
         public const int LAMBS = 4;
 
@@ -137,7 +304,7 @@ namespace Models.GrazPlan
         /// The stock enterprise type names
         /// This should parallel the TStockEnterprise enumeration 
         /// </summary>
-        public static string[] ENT = new string[ENT_MAXIDX + 1] { "Wether", "Ewe & Wether", "Cattle", "Beef Cow", "Lambs" };
+        public static string[] ENT = new string[ENT_MAXIDX + 1] { "Wether", "Ewe & Wether", "Steer", "Beef Cow", "Lambs" };
         /// <summary>
         /// Enterprise type
         /// </summary>
@@ -175,7 +342,7 @@ namespace Models.GrazPlan
                 return TStockEnterprise.entWether;
             else if (String.Compare(className, ENT[EWEWETHER], true) == 0)
                 return TStockEnterprise.entEweWether;
-            else if (String.Compare(className, ENT[STEERS_COWS], true) == 0)
+            else if (String.Compare(className, ENT[STEER], true) == 0)
                 return TStockEnterprise.entSteer;
             else if (String.Compare(className, ENT[BEEF], true) == 0)
                 return TStockEnterprise.entBeefCow;
@@ -219,6 +386,187 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
+        /// Get the first day of sale
+        /// </summary>
+        /// <param name="iReplaceNo">1-n</param>
+        /// <returns></returns>
+        public int getFirstSaleDay(int iReplaceNo)
+        {
+            return asStdDate(replacement[iReplaceNo - 1].sell_first_day);
+
+        }
+
+        /// <summary>
+        /// Set the first day of sale
+        /// </summary>
+        /// <param name="iReplaceNo">1-n</param>
+        /// <param name="Value"></param>
+        public void setFirstSaleDay(int iReplaceNo, int Value)
+        {
+            replacement[iReplaceNo - 1].sell_first_day = setFromStdDate(Value);
+        }
+
+        /// <summary>
+        /// Get the first year of sale
+        /// </summary>
+        /// <param name="iReplaceNo">1-n</param>
+        /// <returns></returns>
+        public int getFirstSaleYears(int iReplaceNo)
+        {
+            return replacement[iReplaceNo - 1].sell_first_years;
+        }
+
+        /// <summary>
+        /// Set the first year of sale
+        /// </summary>
+        /// <param name="iReplaceNo">1-n</param>
+        /// <param name="Value"></param>
+        public void setFirstSaleYears(int iReplaceNo, int Value)
+        {
+            replacement[iReplaceNo - 1].sell_first_years = Value;
+        }
+        /// <summary>
+        /// Is this purchased
+        /// </summary>
+        /// <param name="iReplaceNo"></param>
+        /// <returns></returns>
+        public bool getPurchase(int iReplaceNo)
+        {
+            return replacement[iReplaceNo - 1].replace_stock.purchase;
+        }
+
+        /// <summary>
+        /// Set this is purchased
+        /// </summary>
+        /// <param name="iReplaceNo"></param>
+        /// <param name="Value"></param>
+        public void setPurchase(int iReplaceNo, bool Value)
+        {
+            replacement[iReplaceNo - 1].replace_stock.purchase = Value;
+        }
+
+        /// <summary>
+        /// Get first day of sale for young
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        public int getYoungSaleFirstDay(int idx)
+        {
+            return asStdDate(reproduction.young_sales[idx - 1].first_day);
+        }
+
+        /// <summary>
+        /// Set first day of sale for young
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <param name="Value"></param>
+        public void setYoungSaleFirstDay(int idx, int Value)
+        {
+            reproduction.young_sales[idx - 1].first_day = setFromStdDate(Value);
+        }
+
+        /// <summary>
+        /// Get first year of young sale
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        public int getYoungSaleFirstYears(int idx)
+        {
+            return reproduction.young_sales[idx - 1].first_years;
+        }
+
+        /// <summary>
+        /// Set first year of young sale
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <param name="Value"></param>
+        public void setYoungSaleFirstYears(int idx, int Value)
+        {
+            reproduction.young_sales[idx - 1].first_years = Value;
+        }
+        /*function getYoungSaleGainDays(const idx: integer): integer; 
+        procedure setYoungSaleLastYears(const idx, Value: integer);*/
+        /// <summary>
+        /// Get last day of young sale
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        public int getYoungSaleLastDay(int idx)
+        {
+            return asStdDate(reproduction.young_sales[idx - 1].last_day);
+        }
+
+        /// <summary>
+        /// Set last day of young sale
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <param name="Value"></param>
+        public void setYoungSaleLastDay(int idx, int Value)
+        {
+            reproduction.young_sales[idx - 1].last_day = setFromStdDate(Value);
+        }
+        /// <summary>
+        /// Get young sale weight
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        public double getYoungSaleWeight(int idx)
+        {
+            return reproduction.young_sales[idx - 1].weight;
+        }
+        /// <summary>
+        /// Set the young sale weight
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <param name="Value"></param>
+        public void setYoungSaleWeight(int idx, double Value)
+        {
+            reproduction.young_sales[idx - 1].weight = Value;
+        }
+        /// <summary>
+        /// Get young sale weight gain
+        /// if YoungSaleWeightGain = -999 => not used
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        public double getYoungSaleWtGain(int idx)
+        {
+            return reproduction.young_sales[idx - 1].weight_gain;
+        }
+
+        /// <summary>
+        /// Set young sale weight gain
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <param name="Value"></param>
+        public void setYoungSaleWtGain(int idx, double Value)
+        {
+            reproduction.young_sales[idx - 1].weight_gain = Value;
+        }
+        /// <summary>
+        /// Is the paddock stocked
+        /// </summary>
+        /// <param name="idx">idx 1..n</param>
+        /// <returns></returns>
+        public bool getStockedPad(int idx)
+        {
+            bool result = false;
+            if (stocked.Length >= idx)
+                result = stocked[idx - 1];
+            return result;
+        }
+
+        /// <summary>
+        /// Set this paddock as stocked
+        /// </summary>
+        /// <param name="idx">idx 1..n</param>
+        /// <param name="Value"></param>
+        public void setStockedPad(int idx, bool Value)
+        {
+            if (stocked.Length >= idx)
+                stocked[idx - 1] = Value;
+        }
+        /// <summary>
         /// user entered name
         /// </summary>
         public string Name { get; set; }
@@ -237,12 +585,42 @@ namespace Models.GrazPlan
         /// flock/herd genotype
         /// </summary>
         public string BaseGenoType { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ManageInit { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ManageSR { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ManageShearing { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ManageCFA { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ManageSelling { get; set; }
         /// <summary>
         /// 
         /// </summary>
         public bool ManageReproduction { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ManageReplacement { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ManageMaintFeed { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ManageProdFeed { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -255,7 +633,81 @@ namespace Models.GrazPlan
         /// mob - sex,breeding
         /// </summary>
         public TTagFlock[] tag_flock;
-
+        /// <summary>
+        /// Count of stocked paddocks
+        /// </summary>
+        public int StockedPaddocks
+        {
+            get { return stocked.Length; }
+            set { Array.Resize(ref stocked, value); }
+        }
+        /// <summary>
+        /// which paddock is stocked at init time
+        /// </summary>
+        public bool[] stocked;
+        /// <summary>
+        /// Stocking rate of the females /ha
+        /// </summary>
+        public double StockRateFemale { get; set; }
+        /// <summary>
+        /// Stocking rate of the males /ha
+        /// </summary>
+        public double StockRateMale { get; set; }
+        /// <summary>
+        /// alternative to the stocked array, ha
+        /// </summary>
+        public double GrazedArea { get; set; }
+        /// <summary>
+        /// Shearing plan
+        /// </summary>
+        public TShearingInfo shearing;
+        /// <summary>
+        /// Shearing date property
+        /// </summary>
+        public int ShearingDate
+        {
+            get { return asStdDate(shearing.shearing_day); }
+            set { shearing.shearing_day = setFromStdDate(value); }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="idx">idx: 1 -> n</param>
+        /// <param name="shearInfo"></param>
+        /// <returns></returns>
+        public bool getShearingTag(int idx, ref TShearByTag shearInfo)
+        {
+            bool result = false;
+            if (idx <= shearing.shear_by_tag.Length)
+            {
+                TShearByTag tagItem = shearing.shear_by_tag[idx - 1];
+                shearInfo.tagNo = tagItem.tagNo;
+                shearInfo.doy = tagItem.doy;
+                result = true;
+            }
+            return result;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="idx">idx: 1 -> n</param>
+        /// <param name="shearInfo"></param>
+        public void setShearingTag(int idx, TShearByTag shearInfo)
+        {
+            if (idx <= shearing.shear_by_tag.Length)
+            {
+                shearing.shear_by_tag[idx - 1].tagNo = shearInfo.tagNo;
+                shearing.shear_by_tag[idx - 1].doy = shearInfo.doy;
+            }
+        }
+        /// <summary>
+        /// The shearing tags count
+        /// </summary>
+        public int ShearingTagCount
+        {
+            get { return shearing.shear_by_tag.Length; }
+            set { Array.Resize(ref shearing.shear_by_tag, value); }
+        }
         /// <summary>
         /// Mating day
         /// </summary>
@@ -359,7 +811,38 @@ namespace Models.GrazPlan
             get { return reproduction.weanerM_tag; }
             set { reproduction.weanerM_tag = value; }
         }
-        
+        /// <summary>
+        /// Replacement day
+        /// </summary>
+        public int ReplacementDay
+        {
+            get { return asStdDate(replacement[0].replace_day); }
+            set { replacement[0].replace_day = setFromStdDate(value); }
+        }
+        /// <summary>
+        /// Replacement age
+        /// </summary>
+        public int ReplaceAge
+        {
+            get { return replacement[0].replace_stock.age; }
+            set { replacement[0].replace_stock.age = value; }
+        }
+        /// <summary>
+        /// Replacement condition score
+        /// </summary>
+        public double ReplaceCond
+        {
+            get { return replacement[0].replace_stock.condition; }
+            set { replacement[0].replace_stock.condition = value; }
+        }
+        /// <summary>
+        /// Replacement weight
+        /// </summary>
+        public double ReplaceWeight
+        {
+            get { return replacement[0].replace_stock.weight; }
+            set { replacement[0].replace_stock.weight = value; }
+        }
         /// <summary>
         /// Determine if this Enterprise uses this tag number to specify an animal group.
         /// </summary>
@@ -387,7 +870,18 @@ namespace Models.GrazPlan
             }
             return found;
         }
-
+        /// <summary>
+        /// Day of tag updates
+        /// </summary>
+        public int TagUpdateDay
+        {
+            get { return asStdDate(tag_update_day); }
+            set { tag_update_day = setFromStdDate(value); }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public TSaleReplace[] replacement;
         /// <summary>
         /// 
         /// </summary>

@@ -22,17 +22,6 @@
         [Link]
         private List<ISolute> soluteModels = null;
 
-        /// <summary>The known types of solute setters.</summary>
-        public enum SoluteSetterType
-        {
-            /// <summary>The setting model is a plant model</summary>
-            Plant,
-            /// <summary>The setting model is a soil model</summary>
-            Soil,
-            /// <summary>The setting model is a fertiliser model</summary>
-            Fertiliser
-        }
-
         /// <summary>Return a list of solute names.</summary>
         public string[] SoluteNames
         {
@@ -55,67 +44,64 @@
             Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (foundSolute == null)
                 throw new Exception("Cannot find solute: " + name);
-            return foundSolute.GetValue();
+            return foundSolute.Value;
         }
 
         /// <summary>
         /// Set the value of a solute. Will throw if solute not found.
         /// </summary>
         /// <param name="name">Name of solute</param>
-        /// <param name="callingModelType">Type of calling model</param>
         /// <param name="value">Value of solute</param>
-        public void SetSolute(string name, SoluteSetterType callingModelType, double[] value)
+        public void SetSolute(string name, double[] value)
         {
             Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (foundSolute == null)
                 throw new Exception("Cannot find solute: " + name);
-            foundSolute.SetValue(callingModelType, value);
+            foundSolute.Value = value;
         }
 
         /// <summary>
         /// Set the value of a solute by specifying a delta. Will throw if solute not found.
         /// </summary>
         /// <param name="name">Name of solute</param>
-        /// <param name="callingModelType">Type of calling model</param>
         /// <param name="delta">Delta values to be added to solute</param>
-        public void Add(string name, SoluteSetterType callingModelType, double[] delta)
+        public void Add(string name, double[] delta)
         {
             Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (foundSolute == null)
                 throw new Exception("Cannot find solute: " + name);
-            foundSolute.SetValue(callingModelType, MathUtilities.Add(foundSolute.GetValue(), delta));
+            foundSolute.Value = MathUtilities.Add(foundSolute.Value, delta);
         }
 
         /// <summary>
         /// Add a delta value to the top layer of a solute. Will throw if solute not found.
         /// </summary>
         /// <param name="name">Name of solute</param>
-        /// <param name="callingModelType">Type of calling model</param>
         /// <param name="layerIndex">Layer index to add delta to</param>
         /// <param name="delta">Value to be added to top layer of solute</param>
-        public void AddToLayer(int layerIndex, string name, SoluteSetterType callingModelType, double delta)
+        public void AddToLayer(int layerIndex, string name, double delta)
         {
             Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (foundSolute == null)
                 throw new Exception("Cannot find solute: " + name);
 
-            double[] values = foundSolute.GetValue();
+            double[] values = foundSolute.Value;
             values[layerIndex] += delta;
-            foundSolute.SetValue(callingModelType, values);
+            foundSolute.Value = values;
         }
+
 
         /// <summary>
         /// Set the value of a solute by specifying a delta. Will throw if solute not found.
         /// </summary>
         /// <param name="name">Name of solute</param>
-        /// <param name="callingModelType">Type of calling model</param>
         /// <param name="delta">Delta values to be subtracted from solute</param>
-        public void Subtract(string name, SoluteSetterType callingModelType, double[] delta)
+        public void Subtract(string name, double[] delta)
         {
             Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (foundSolute == null)
                 throw new Exception("Cannot find solute: " + name);
-            foundSolute.SetValue(callingModelType, MathUtilities.Subtract(foundSolute.GetValue(), delta));
+            foundSolute.Value = MathUtilities.Subtract(foundSolute.Value, delta);
         }
 
         /// <summary>Performs the initial checks and setup</summary>
@@ -139,15 +125,15 @@
                 {
                     if (ReflectionUtilities.GetAttribute(property, typeof(SoluteAttribute), false) != null)
                     {
-                        string setterName = "Set" + property.Name;
-                        MethodInfo setterMethod = soluteModel.GetType().GetMethod(setterName);
-                        solutes.Add(new Solute() { model = soluteModel, property = property, setMethod = setterMethod});
+                        string addToTopLayerName = "Add" + property.Name + "ToTopLayer";
+                        MethodInfo addToTopLayerMethod = soluteModel.GetType().GetMethod(addToTopLayerName);
+                        solutes.Add(new Solute() { model = soluteModel, property = property, addToTopLayerMethod = addToTopLayerMethod });
                     }
                 }
 
                 PropertyInfo kgha = soluteModel.GetType().GetProperty("kgha");
                 if (kgha != null)
-                    solutes.Add(new Solute() { model = soluteModel, property = kgha });
+                    solutes.Add(new Solute() { model = soluteModel, property = kgha, addToTopLayerMethod = null });
             }
         }
 
@@ -158,8 +144,8 @@
         private class Solute
         {
             public PropertyInfo property;
-            public MethodInfo setMethod;
             public IModel model;
+            public MethodInfo addToTopLayerMethod;
             public string Name
             {
                 get
@@ -170,16 +156,16 @@
                         return property.Name;
                 }
             }
-            public double[] GetValue()
+            public double[] Value
             {
-                return (double[])property.GetValue(model);
-            }
-            public void SetValue(SoluteSetterType callingModelType, double[] value)
-            {
-                if (setMethod == null)
+                get
+                {
+                    return (double[])property.GetValue(model);
+                }
+                set
+                {
                     property.SetValue(model, value);
-                else
-                    setMethod.Invoke(model, new object[] { callingModelType, value });
+                }
             }
         }
     }

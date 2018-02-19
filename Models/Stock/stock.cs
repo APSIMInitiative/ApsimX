@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="stock.cs" company="CSIRO">
-// CSIRO Agriculture & Food
+// CSIRO Agriculture
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -544,49 +544,6 @@ namespace Models.GrazPlan
             {
                 int[] numbers = new int[FModel.iHighestTag()];
                 StockVars.PopulateNumberValue(FModel, StockVars.CountType.eMale, true, false, true, ref numbers);
-                return numbers;
-            }
-        }
-
-        // ================ Deaths ================
-        /// <summary>
-        /// Deaths of all non suckling animals
-        /// </summary>
-        [Description("Number of all deaths")]
-        public int DeathsAll
-        {
-            get
-            {
-                int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eDeaths, false, true, false, ref numbers);
-                return numbers[0];
-            }
-        }
-
-        /// <summary>
-        /// Deaths of non suckling animals in each group
-        /// </summary>
-        [Description("Number of deaths in each group")]
-        public int[] Deaths
-        {
-            get
-            {
-                int[] numbers = new int[FModel.Count()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eDeaths, false, false, false, ref numbers);
-                return numbers;
-            }
-        }
-
-        /// <summary>
-        /// Deaths of non suckling animals in each tag group
-        /// </summary>
-        [Description("Number of deaths in each tag group")]
-        public int[] DeathsTag
-        {
-            get
-            {
-                int[] numbers = new int[FModel.iHighestTag()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eDeaths, false, false, true, ref numbers);
                 return numbers;
             }
         }
@@ -3071,20 +3028,6 @@ namespace Models.GrazPlan
             }
         }
 
-        /// <summary>
-        /// Metabolizable energy use for each animal group
-        /// </summary>
-        [Description("Metabolizable energy use for each animal group")]
-        public TEnergyUse[] EnergyUse
-        {
-            get
-            {
-                TEnergyUse[] use = new TEnergyUse[FModel.Count()];
-                StockVars.MakeEnergyUse(FModel, ref use);
-                return use;
-            }
-        }
-
         // =========== Output of methane (per head) ==================
         /// <summary>
         /// Output of methane (per head) by group
@@ -3823,7 +3766,7 @@ namespace Models.GrazPlan
             }
         }
 
-        #endregion readable properties
+        #endregion
 
         #region Subscribed events ====================================================
 
@@ -4218,7 +4161,6 @@ namespace Models.GrazPlan
 
         #endregion
 
-        #region Private functions ============================================
         /// <summary>
         /// Get the current time and weather values
         /// </summary>
@@ -4316,6 +4258,6 @@ namespace Models.GrazPlan
             return result;
         }
 
-        #endregion
+
     }
 }

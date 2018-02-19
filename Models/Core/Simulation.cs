@@ -20,7 +20,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Experiment))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model, ISimulationGenerator
+    public class Simulation : Model, IJobGenerator
     {
         [NonSerialized]
         private ScopingRules scope = null;
@@ -133,9 +133,9 @@ namespace Models.Core
         }
 
         /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun(bool doFullFactorial = true)
+        public IRunnable NextJobToRun()
         {
-            if (Parent is ISimulationGenerator || hasRun)
+            if (Parent is IJobGenerator || hasRun)
                 return null;
             hasRun = true;
 
@@ -148,13 +148,13 @@ namespace Models.Core
                 simulationToRun = Apsim.Clone(this) as Simulation;
                 simulationEngine.MakeSubstitutions(simulationToRun);
             }
-            return simulationToRun;
+            return new RunSimulation(simulationToRun, doClone: false);
         }
 
         /// <summary>Gets a list of simulation names</summary>
-        public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
+        public IEnumerable<string> GetSimulationNames()
         {
-            if (Parent is ISimulationGenerator)
+            if (Parent is IJobGenerator)
                 return new string[0];
             return new string[] { Name };
         }

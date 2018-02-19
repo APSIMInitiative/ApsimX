@@ -3,7 +3,6 @@
 namespace UnitTests
 {
     using Models.Core;
-    using Models.Core.ApsimFile;
     using Models;
     using APSIM.Shared.Utilities;
     using NUnit.Framework;
@@ -45,7 +44,7 @@ namespace UnitTests
             ModelWrapper zone = simulation.Add(new Zone());
 
             // Write the above simulations object to an xml string.
-            Format fileFormat = new Format();
+            FileFormat fileFormat = new FileFormat();
             string xml = fileFormat.WriteXML(rootNode1);
 
             // Read XML back in.
@@ -68,7 +67,7 @@ namespace UnitTests
             Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream
                 ("UnitTests.Resources.APSIMFileReaderTests1.xml");
 
-            Format fileFormat = new Format();
+            FileFormat fileFormat = new FileFormat();
             ModelWrapper rootNode = fileFormat.Read(s);
             Assert.AreEqual(rootNode.Children.Count, 2);
         }

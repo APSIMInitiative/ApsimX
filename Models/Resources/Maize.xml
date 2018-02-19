@@ -861,11 +861,6 @@ Though tillering is common in some maize varieties under certain agronomic condi
       </OrganBiomassRemovalType>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
-    <Constant>
-      <Name>CarbonConcentration</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.4</FixedValue>
-    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1157,11 +1152,6 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Name>MaintenanceRespirationFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
-    </Constant>
-    <Constant>
-      <Name>CarbonConcentration</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
@@ -1988,11 +1978,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
-    <Constant>
-      <Name>CarbonConcentration</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.4</FixedValue>
-    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -2270,11 +2255,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Start>Emergence</Start>
       <End>StartGrainFill</End>
     </PhaseBasedSwitch>
-    <Constant>
-      <Name>CarbonConcentration</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.4</FixedValue>
-    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
@@ -2535,11 +2515,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Start>Emergence</Start>
       <End>StartGrainFill</End>
     </PhaseBasedSwitch>
-    <Constant>
-      <Name>CarbonConcentration</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.4</FixedValue>
-    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
@@ -2773,11 +2748,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </MultiplyFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </AddFunction>
-    <Constant>
-      <Name>CarbonConcentration</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.4</FixedValue>
-    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <CompositeBiomass>

@@ -443,27 +443,6 @@ namespace UserInterface.Presenters
                     )
         ]
         /// <summary>
-        /// Event handler for the run on cloud action
-        /// </summary>        
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        public void RunOnCloud(object sender, EventArgs e)
-        {
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-            {
-                object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
-                explorerPresenter.HideRightHandPanel();
-                explorerPresenter.ShowInRightHandPanel(model,
-                                                       "UserInterface.Views.NewAzureJobView",
-                                                       "UserInterface.Presenters.NewAzureJobPresenter");
-            } else
-            {
-                explorerPresenter.MainPresenter.ShowMessage("Microsoft Azure functionality is currently only available under Windows.", Simulation.ErrorLevel.Error);
-            }
-            
-        }
-        
-        /// <summary>
         /// Event handler for a Add model action
         /// </summary>
         /// <param name="sender">Sender of the event</param>

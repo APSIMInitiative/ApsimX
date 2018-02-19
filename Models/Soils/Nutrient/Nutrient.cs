@@ -7,8 +7,6 @@
     using Models.SurfaceOM;
     using Models.Soils;
     using System.Collections.Generic;
-    using Models.Graph;
-    using System.Drawing;
 
     /// <summary>
     /// # [Name]
@@ -22,25 +20,8 @@
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    [ViewName("UserInterface.Views.DirectedGraphView")]
-    [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
-    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph
+    public class Nutrient : Model, INutrient
     {
-        private DirectedGraph _directedGraphInfo;
-
-        /// <summary>Get directed graph from model</summary>
-        public DirectedGraph DirectedGraphInfo
-        {
-            get
-            {
-                CalculateDirectedGraph();
-                return _directedGraphInfo;
-            }
-            set
-            {
-                _directedGraphInfo = value;
-            }
-        }
 
         /// <summary>
         /// Summary file Link

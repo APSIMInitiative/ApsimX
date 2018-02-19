@@ -1007,11 +1007,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
     </Constant>
-    <Constant>
-      <Name>CarbonConcentration</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.4</FixedValue>
-    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <CohortsInitialised>false</CohortsInitialised>
     <TipsAtEmergence>0</TipsAtEmergence>
@@ -1574,11 +1569,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Stem].MinimumNConc.Value()</VariableName>
     </VariableReference>
-    <Constant>
-      <Name>CarbonConcentration</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.4</FixedValue>
-    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
@@ -2040,11 +2030,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Inflorescence].MinimumNConc.Value()</VariableName>
     </VariableReference>
-    <Constant>
-      <Name>CarbonConcentration</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.4</FixedValue>
-    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
@@ -2481,11 +2466,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Taproot].MinimumNConc.Value()</VariableName>
     </VariableReference>
-    <Constant>
-      <Name>CarbonConcentration</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.4</FixedValue>
-    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <Root>
@@ -2961,11 +2941,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       </OrganBiomassRemovalType>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
-    <Constant>
-      <Name>CarbonConcentration</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.4</FixedValue>
-    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <ZoneNamesToGrowRootsIn />

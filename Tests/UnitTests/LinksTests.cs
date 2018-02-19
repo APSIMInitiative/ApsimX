@@ -84,16 +84,6 @@ namespace UnitTests
     }
 
     [Serializable]
-    class ModelWithLinkByPath : Model
-    {
-        [LinkByPath(Path = "[zone2].irrig1")]
-        public IIrrigation irrigation1 = null;
-
-        [LinkByPath(Path = ".Simulations.Simulation.zone2.irrig2")]
-        public IIrrigation irrigation2 = null;
-    }
-
-    [Serializable]
     class ModelWithServices : Model
     {
         [Link]
@@ -289,31 +279,6 @@ namespace UnitTests
             // Should find the closest match.
             Assert.AreEqual(modelWithParentLink.zone.Name, "zone1");
             Assert.AreEqual(modelWithParentLink.sim.Name, "Simulation");
-        }
-
-        /// <summary>Ensure a [LinkByPath] works</summary>
-        [Test]
-        public void Links_EnsureLinkByPathWorks()
-        {
-            ModelWithLinkByPath modelWithLinkByPath = new UnitTests.ModelWithLinkByPath();
-
-            // Create a simulation
-            Simulation simulation = new Simulation();
-            simulation.Children.Add(new Clock());
-            simulation.Children.Add(new MockSummary());
-            simulation.Children.Add(new Zone() { Name = "zone1" });
-            simulation.Children.Add(new Zone() { Name = "zone2" });
-            simulation.Children[2].Children.Add(modelWithLinkByPath); // added to zone1
-            MockIrrigation irrig1 = new MockIrrigation() { Name = "irrig1" };
-            MockIrrigation irrig2 = new MockIrrigation() { Name = "irrig2" };
-            simulation.Children[3].Children.Add(irrig1); // added to zone2
-            simulation.Children[3].Children.Add(irrig2); // added to zone2
-
-            Simulations engine = Simulations.Create(new Model[] { simulation, new DataStore() });
-            engine.Links.Resolve(simulation);
-
-            Assert.AreEqual(modelWithLinkByPath.irrigation1, irrig1);
-            Assert.AreEqual(modelWithLinkByPath.irrigation2, irrig2);
         }
 
         /// <summary>Ensure link can resolve services</summary>

@@ -548,7 +548,20 @@ namespace UserInterface.Views
             if (hasResource(description.ResourceNameForImage))
                 pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
             else
-                pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
+            {
+                // Search for image based on resource name including model name from namespace
+                string[] splitResourceName = description.ResourceNameForImage.Split('.');
+                string resourceNameOnly = "ApsimNG.Resources.TreeViewImages." + splitResourceName[splitResourceName.Length - 2] + "." + splitResourceName[splitResourceName.Length - 1];
+                if (hasResource(resourceNameOnly))
+                {
+                    pixbuf = new Gdk.Pixbuf(null, resourceNameOnly);
+                }
+                else
+                {
+                    // Is there something else we could use as a default?
+                    pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png");
+                }
+            }
 
             treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip);
 

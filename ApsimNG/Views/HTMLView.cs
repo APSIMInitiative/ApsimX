@@ -56,15 +56,12 @@ namespace UserInterface.Views
 
     public class TWWebBrowserIE : IBrowserWidget
     {
-        internal class NativeMethods
-        {
-            [System.Runtime.InteropServices.DllImportAttribute("user32.dll",
-                EntryPoint = "SetParent")]
-            internal static extern System.IntPtr
-            SetParent([System.Runtime.InteropServices.InAttribute()] System.IntPtr
-                hWndChild, [System.Runtime.InteropServices.InAttribute()] System.IntPtr
-                hWndNewParent);
-        }
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll",
+            EntryPoint = "SetParent")]
+        internal static extern System.IntPtr
+        SetParent([System.Runtime.InteropServices.InAttribute()] System.IntPtr
+            hWndChild, [System.Runtime.InteropServices.InAttribute()] System.IntPtr
+            hWndNewParent);
 
         public System.Windows.Forms.WebBrowser wb = null;
         public Gtk.Socket socket = null;
@@ -87,7 +84,7 @@ namespace UserInterface.Views
             socket.UnmapEvent += Socket_UnmapEvent;
             IntPtr browser_handle = wb.Handle;
             IntPtr window_handle = (IntPtr)socket.Id;
-            NativeMethods.SetParent(browser_handle, window_handle);
+            SetParent(browser_handle, window_handle);
 
             /// Another interesting issue is that on Windows, the WebBrowser control by default is
             /// effectively an IE7 browser, and I don't think you can easily change that without
@@ -209,33 +206,30 @@ namespace UserInterface.Views
 
     public class TWWebBrowserSafari : IBrowserWidget
     {
-        internal class NativeMethods
-        {
-            const string LIBQUARTZ = "libgtk-quartz-2.0.dylib";
+        const string LIBQUARTZ = "libgtk-quartz-2.0.dylib";
 
-            [DllImport(LIBQUARTZ)]
-            internal static extern IntPtr gdk_quartz_window_get_nsview(IntPtr window);
+        [DllImport(LIBQUARTZ)]
+        static extern IntPtr gdk_quartz_window_get_nsview(IntPtr window);
 
-            [DllImport(LIBQUARTZ)]
-            internal static extern IntPtr gdk_quartz_window_get_nswindow(IntPtr window);
+        [DllImport(LIBQUARTZ)]
+        static extern IntPtr gdk_quartz_window_get_nswindow(IntPtr window);
 
-            [DllImport(LIBQUARTZ, CallingConvention = CallingConvention.Cdecl)]
-            internal static extern bool gdk_window_supports_nsview_embedding();
+        [DllImport(LIBQUARTZ, CallingConvention = CallingConvention.Cdecl)]
+        static extern bool gdk_window_supports_nsview_embedding();
 
-            [DllImport(LIBQUARTZ)]
-            internal extern static IntPtr gtk_ns_view_new(IntPtr nsview);
-        }
+        [DllImport(LIBQUARTZ)]
+        extern static IntPtr gtk_ns_view_new(IntPtr nsview);
 
         public static Gtk.Widget NSViewToGtkWidget(NSView view)
         {
-            return new Gtk.Widget(NativeMethods.gtk_ns_view_new((IntPtr)view.Handle));
+            return new Gtk.Widget(gtk_ns_view_new((IntPtr)view.Handle));
         }
 
         public static NSWindow GetWindow(Gtk.Window window)
         {
             if (window.GdkWindow == null)
                 return null;
-            var ptr = NativeMethods.gdk_quartz_window_get_nswindow(window.GdkWindow.Handle);
+            var ptr = gdk_quartz_window_get_nswindow(window.GdkWindow.Handle);
             if (ptr == IntPtr.Zero)
                 return null;
             return (NSWindow)MonoMac.ObjCRuntime.Runtime.GetNSObject(ptr);
@@ -243,7 +237,7 @@ namespace UserInterface.Views
 
         public static NSView GetView(Gtk.Widget widget)
         {
-            var ptr = NativeMethods.gdk_quartz_window_get_nsview(widget.GdkWindow.Handle);
+            var ptr = gdk_quartz_window_get_nsview(widget.GdkWindow.Handle);
             if (ptr == IntPtr.Zero)
                 return null;
             return (NSView)MonoMac.ObjCRuntime.Runtime.GetNSObject(ptr);

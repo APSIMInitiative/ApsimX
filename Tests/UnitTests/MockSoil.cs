@@ -6,10 +6,9 @@ namespace UnitTests
     using Models.WaterModel;
     using System;
     using APSIM.Shared.Soils;
-    using Models.Core;
 
     [Serializable]
-    class MockSoil : Model, ISoil
+    class MockSoil : ISoil
     {
         public double[] CL { get; set; }
 

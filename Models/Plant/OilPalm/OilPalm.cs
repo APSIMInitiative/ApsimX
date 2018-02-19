@@ -1258,7 +1258,7 @@ namespace Models.PMF.OilPalm
 
             for (int j = 0; j < Soil.LL15mm.Length; j++)
                 NUptake[j] = PotNUptake[j] * Fr;
-            solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, NUptake);
+            solutes.Subtract("NO3", NUptake);
 
             Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Sum(NUptake) / BunchNDemand));
             double DeltaBunchN = BunchNDemand * Fr;

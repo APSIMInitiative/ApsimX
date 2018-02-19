@@ -87,7 +87,7 @@ namespace Models.Core
         /// <summary>Constructor</summary>
         private Simulations()
         {
-            Version = ApsimFile.Converter.LastestVersion;
+            Version = APSIMFileConverter.LastestVersion;
             LoadErrors = new List<Exception>();
         }
 
@@ -95,10 +95,10 @@ namespace Models.Core
         /// Create a simulations model
         /// </summary>
         /// <param name="children">The child models</param>
-        public static Simulations Create(IEnumerable<IModel> children)
+        public static Simulations Create(IEnumerable<Model> children)
         {
             Simulations newSimulations = new Core.Simulations();
-            newSimulations.Children.AddRange(children.Cast<Model>());
+            newSimulations.Children.AddRange(children);
 
             // Call the OnDeserialised method in each model.
             Events events = new Core.Events(newSimulations);
@@ -127,7 +127,7 @@ namespace Models.Core
         public static Simulations Read(string FileName)
         {
             // Run the converter.
-            ApsimFile.Converter.ConvertToLatestVersion(FileName);
+            APSIMFileConverter.ConvertToLatestVersion(FileName);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(FileName, Assembly.GetExecutingAssembly()) as Simulations;
@@ -167,7 +167,7 @@ namespace Models.Core
         public static Simulations Read(XmlNode node)
         {
             // Run the converter.
-            ApsimFile.Converter.ConvertToLatestVersion(node, null);
+            APSIMFileConverter.ConvertToLatestVersion(node, null);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;
@@ -205,7 +205,7 @@ namespace Models.Core
         public void Run(Simulation simulation, bool doClone)
         {
             Apsim.ParentAllChildren(simulation);
-            RunSimulation simulationRunner = new RunSimulation(this, simulation, doClone);
+            RunSimulation simulationRunner = new RunSimulation(simulation, doClone);
             Links.Resolve(simulationRunner);
             simulationRunner.Run(new System.Threading.CancellationTokenSource());
         }

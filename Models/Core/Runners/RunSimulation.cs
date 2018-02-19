@@ -44,14 +44,12 @@
         private Stopwatch timer;
 
         /// <summary>Constructor</summary>
-        /// <param name="simEngine">Simulation engine</param>
         /// <param name="simulation">The simulation to clone and run.</param>
         /// <param name="doClone">Clone the simulation before running?</param>
-        public RunSimulation(ISimulationEngine simEngine, Simulation simulation, bool doClone)
+        public RunSimulation(Simulation simulation, bool doClone)
         {
             simulationToRun = simulation;
             cloneSimulationBeforeRun = doClone;
-            simulationEngine = simEngine;
         }
 
         /// <summary>

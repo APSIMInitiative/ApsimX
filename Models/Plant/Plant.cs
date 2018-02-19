@@ -266,8 +266,6 @@ namespace Models.PMF
         public event EventHandler Cutting;
         /// <summary>Occurs when a plant is about to be pruned.</summary>
         public event EventHandler Grazing;
-        /// <summary>Occurs when a plant is about to flower</summary>
-        public event EventHandler Flowering;
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
@@ -305,8 +303,6 @@ namespace Models.PMF
                     message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
                 }
                 Summary.WriteMessage(this, message);
-                if (Phenology.CurrentPhase.Start == "Flowering" && Flowering != null)
-                    Flowering.Invoke(this, null);
             }
         }
 

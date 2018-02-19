@@ -7,15 +7,14 @@
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// # [Name]
     /// Encapsulates a factorial experiment.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.FactorControlView")]
-    [PresenterName("UserInterface.Presenters.FactorControlPresenter")]
+    [ViewName("UserInterface.Views.MemoView")]
+    [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class Experiment : Model, ISimulationGenerator, ICustomDocumentation
     {
@@ -26,26 +25,21 @@
         private Stream serialisedBase;
         private Simulations parentSimulations;
 
-        /// <summary>
-        /// List of names of the disabled simulations. Any simulation name not in this list is assumed to be enabled.
-        /// </summary>
-        public List<string> DisabledSimNames { get; set; }
-
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
         private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
-            Initialise();
+            allCombinations = AllCombinations();
+            parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
+            serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
         }
 
         /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun(bool fullFactorial = true)
+        public IRunnable NextJobToRun()
         {
             if (allCombinations == null || allCombinations.Count == 0)
                 return null;
-
-            if (serialisedBase == null)
-                Initialise(fullFactorial);
 
             var combination = allCombinations[0];
             allCombinations.RemoveAt(0);
@@ -72,14 +66,14 @@
 
             PushFactorsToReportModels(newSimulation, combination);
             StoreFactorsInDataStore(newSimulation, combination);
-            return newSimulation;
+            return new RunSimulation(newSimulation, doClone: false);
         }
 
         /// <summary>Gets a list of simulation names</summary>
-        public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
+        public IEnumerable<string> GetSimulationNames()
         {
             List<string> names = new List<string>();
-            allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
+            allCombinations = AllCombinations();
             foreach (List<FactorValue> combination in allCombinations)
             {
                 string newSimulationName = Name;
@@ -91,18 +85,7 @@
             }
             return names;
         }
-
-        /// <summary>
-        /// Initialise the experiment ready for creating simulations.
-        /// </summary>
-        private void Initialise(bool fullFactorial = false)
-        {            
-            parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-            allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
-            Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
-            serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
-        }
-
+        
         /// <summary>Find all report models and give them the factor values.</summary>
         /// <param name="factorValues">The factor values to send to each report model.</param>
         /// <param name="simulation">The simulation to search for report models.</param>
@@ -124,7 +107,7 @@
         /// <param name="factorValues">The factor value instances</param>
         /// <param name="names">The return list of factor names</param>
         /// <param name="values">The return list of factor values</param>
-        public static void GetFactorNamesAndValues(List<FactorValue> factorValues, List<string> names, List<string> values)
+        private static void GetFactorNamesAndValues(List<FactorValue> factorValues, List<string> names, List<string> values)
         {
             foreach (FactorValue factorValue in factorValues)
             {
@@ -148,37 +131,34 @@
         /// <param name="simulation">The simulation to search for report models.</param>
         private void StoreFactorsInDataStore(Simulation simulation, List<FactorValue> factorValues)
         {
-            if (storage != null)
+            List<string> names = new List<string>();
+            List<string> values = new List<string>();
+
+            GetFactorNamesAndValues(factorValues, names, values);
+
+            string parentFolderName = null;
+            IModel parentFolder = Apsim.Parent(this, typeof(Folder));
+            if (parentFolder != null)
+                parentFolderName = parentFolder.Name;
+
+            DataTable factorTable = new DataTable();
+            factorTable.TableName = "_Factors";
+            factorTable.Columns.Add("ExperimentName", typeof(string));
+            factorTable.Columns.Add("SimulationName", typeof(string));
+            factorTable.Columns.Add("FolderName", typeof(string));
+            factorTable.Columns.Add("FactorName", typeof(string));
+            factorTable.Columns.Add("FactorValue", typeof(string));
+            for (int i = 0; i < names.Count; i++)
             {
-                List<string> names = new List<string>();
-                List<string> values = new List<string>();
-
-                GetFactorNamesAndValues(factorValues, names, values);
-
-                string parentFolderName = null;
-                IModel parentFolder = Apsim.Parent(this, typeof(Folder));
-                if (parentFolder != null)
-                    parentFolderName = parentFolder.Name;
-
-                DataTable factorTable = new DataTable();
-                factorTable.TableName = "_Factors";
-                factorTable.Columns.Add("ExperimentName", typeof(string));
-                factorTable.Columns.Add("SimulationName", typeof(string));
-                factorTable.Columns.Add("FolderName", typeof(string));
-                factorTable.Columns.Add("FactorName", typeof(string));
-                factorTable.Columns.Add("FactorValue", typeof(string));
-                for (int i = 0; i < names.Count; i++)
-                {
-                    DataRow row = factorTable.NewRow();
-                    row[0] = Name;
-                    row[1] = simulation.Name;
-                    row[2] = parentFolderName;
-                    row[3] = names[i];
-                    row[4] = values[i];
-                    factorTable.Rows.Add(row);
-                }
-                storage.WriteTable(factorTable);
+                DataRow row = factorTable.NewRow();
+                row[0] = Name;
+                row[1] = simulation.Name;
+                row[2] = parentFolderName;
+                row[3] = names[i];
+                row[4] = values[i];
+                factorTable.Rows.Add(row);
             }
+            storage.WriteTable(factorTable);
         }
 
         /// <summary>
@@ -259,34 +239,6 @@
                     return allValues;
             }
             return null;
-        }
-
-        /// <summary>
-        /// Generates a partial factorial list of lists of factor values, based on the list of enabled factor names.
-        /// If this list is empty, this function will return a full factorial list of simulations.
-        /// </summary>
-        /// <returns></returns>
-        public List<List<FactorValue>> EnabledCombinations()
-        {
-            if (DisabledSimNames == null || DisabledSimNames.Count < 1) return AllCombinations();
-
-            // easy but inefficient method (for testing purposes)
-            return AllCombinations().Where(x => (DisabledSimNames.IndexOf(GetName(x)) < 0)).ToList();
-        }
-
-        /// <summary>
-        /// Generates the name for a combination of FactorValues.
-        /// </summary>
-        /// <param name="factors"></param>
-        /// <returns></returns>
-        private string GetName(List<FactorValue> factors)
-        {
-            string str = "";
-            foreach (FactorValue factor in factors)
-            {
-                str += factor.Name;
-            }
-            return str;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

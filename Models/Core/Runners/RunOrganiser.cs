@@ -11,22 +11,13 @@
         private Simulations simulations;
         private IModel modelSelectedByUser;
         private bool runTests;
-        private IEnumerator<Simulation> simulationEnumerator;
+        private List<IJobGenerator> modelsToRun;
 
         /// <summary>Simulation names being run</summary>
         public List<string> SimulationNamesBeingRun { get; private set; }
 
         /// <summary>All known simulation names</summary>
-        public List<string> AllSimulationNames
-        {
-            get
-            {
-                List<string> AllSimulationNames = new List<string>();
-                List<ISimulationGenerator> allModels = Apsim.ChildrenRecursively(simulations, typeof(ISimulationGenerator)).Cast<ISimulationGenerator>().ToList();
-                allModels.ForEach(model => AllSimulationNames.AddRange(model.GetSimulationNames(false)));
-                return AllSimulationNames;
-            }
-        }
+        public List<string> AllSimulationNames { get; private set; }
 
         /// <summary>Constructor</summary>
         /// <param name="model">The model to run.</param>
@@ -44,7 +35,7 @@
         public IRunnable GetNextJobToRun()
         {
             // First time through there. Get a list of things to run.
-            if (simulationEnumerator == null)
+            if (modelsToRun == null)
             {
                 
                 Runner.SimulationEnumerator enumerator= new Runner.SimulationEnumerator(modelSelectedByUser);
@@ -54,13 +45,30 @@
                 // Send event telling all models that we're about to begin running.
                 Events events = new Events(simulations);
                 events.Publish("BeginRun", new object[] { AllSimulationNames, SimulationNamesBeingRun });
+
+                modelsToRun.ForEach(model => simulations.Links.Resolve(model));
             }
 
             // If we didn't find anything to run then return null to tell job runner to exit.
-            if (simulationEnumerator.MoveNext())
-                return new RunSimulation(simulations, simulationEnumerator.Current, false);
-            else
+            if (modelsToRun == null || modelsToRun.Count == 0)
                 return null;
+
+            else
+            {
+                // Iterate through all jobs and return the next one.
+                IRunnable job = modelsToRun[0].NextJobToRun();
+                while (job == null && modelsToRun.Count > 0)
+                {
+                    modelsToRun.RemoveAt(0);
+                    if (modelsToRun.Count > 0)
+                        job = modelsToRun[0].NextJobToRun();
+                }
+
+                // If we didn't find a job to run then send event telling all models that we're about to end running.
+                if (job != null)
+                    simulations.Links.Resolve(job);
+                return job;
+            }
         }
 
         /// <summary>Called by the job runner when all jobs completed</summary>
@@ -75,6 +83,26 @@
                 foreach (Tests test in Apsim.ChildrenRecursively(simulations, typeof(Tests)))
                     test.Test();
             }
+        }
+
+        /// <summary>Determine the list of jobs to run</summary>
+        /// <param name="relativeTo">Model to use to find jobs to run</param>
+        private void GetListOfModelsToRun(IModel relativeTo)
+        {
+            AllSimulationNames = new List<string>();
+            SimulationNamesBeingRun = new List<string>();
+
+            // get a list of all simulation names.
+            List<IJobGenerator> allModels = Apsim.ChildrenRecursively(simulations, typeof(IJobGenerator)).Cast<IJobGenerator>().ToList();
+            allModels.ForEach(model => AllSimulationNames.AddRange(model.GetSimulationNames()));
+
+            // Get a list of all models we're going to run.
+            modelsToRun = Apsim.ChildrenRecursively(relativeTo, typeof(IJobGenerator)).Cast<IJobGenerator>().ToList();
+            if (relativeTo is IJobGenerator)
+                modelsToRun.Add(relativeTo as IJobGenerator);
+
+            // For each model, get a list of simulation names.
+            modelsToRun.ForEach(model => SimulationNamesBeingRun.AddRange(model.GetSimulationNames()));
         }
     }
 }
