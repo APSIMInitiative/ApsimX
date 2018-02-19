@@ -760,23 +760,28 @@ namespace Models.Core.ApsimFile
                 connection.OpenDatabase(dbFileName, false);
                 try
                 {
-                    connection.ExecuteNonQuery("BEGIN");
                     DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
-                    foreach (string tableName in DataTableUtilities.GetColumnAsStrings(tableData, "Name"))
+                    List<string> tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name").ToList();
+                    if (!tableNames.Contains("_Checkpoints"))
                     {
-                        List<string> columnNames = connection.GetColumnNames(tableName);
-                        if (columnNames.Contains("SimulationID"))
+                        connection.ExecuteNonQuery("BEGIN");
+
+                        foreach (string tableName in tableNames)
                         {
-                            connection.ExecuteNonQuery("ALTER TABLE " + tableName + " ADD COLUMN CheckpointID INTEGER DEFAULT 1");
+                            List<string> columnNames = connection.GetColumnNames(tableName);
+                            if (columnNames.Contains("SimulationID"))
+                            {
+                                connection.ExecuteNonQuery("ALTER TABLE " + tableName + " ADD COLUMN CheckpointID INTEGER DEFAULT 1");
+                            }
                         }
+
+                        // Now add a _checkpointfiles table.
+                        connection.ExecuteNonQuery("CREATE TABLE _Checkpoints (ID INTEGER PRIMARY KEY ASC, Name TEXT, Version TEXT, Date TEXT)");
+                        connection.ExecuteNonQuery("CREATE TABLE _CheckpointFiles (CheckpointID INTEGER, FileName TEXT, Contents BLOB)");
+                        connection.ExecuteNonQuery("INSERT INTO [_Checkpoints] (Name) VALUES (\"Current\")");
+
+                        connection.ExecuteNonQuery("END");
                     }
-
-                    // Now add a _checkpointfiles table.
-                    connection.ExecuteNonQuery("CREATE TABLE _Checkpoints (ID INTEGER PRIMARY KEY ASC, Name TEXT, Version TEXT, Date TEXT)");
-                    connection.ExecuteNonQuery("CREATE TABLE _CheckpointFiles (CheckpointID INTEGER, FileName TEXT, Contents BLOB)");
-                    connection.ExecuteNonQuery("INSERT INTO [_Checkpoints] (Name) VALUES (\"Current\")");
-
-                    connection.ExecuteNonQuery("END");
                 }
                 finally
                 {
