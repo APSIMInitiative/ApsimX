@@ -47,6 +47,7 @@ namespace UserInterface.Presenters
             this.view.List.Values = storage.Checkpoints().ToArray();
             this.view.AddButton("Add", null, this.OnAddButtonClicked);
             this.view.AddButton("Delete", null, this.OnDeleteButtonClicked);
+            this.view.AddButton("RevertTo", null, this.OnRevertToButtonClicked);
             PopulateList();
         }
 
@@ -75,10 +76,18 @@ namespace UserInterface.Presenters
                                      explorerPresenter.MainPresenter.AskQuestion("A checkpoint with this name already exists. Do you want to overwrite previous checkpoint?") == QuestionResponseEnum.Yes;
                 if (addCheckpoint)
                 {
-                    explorerPresenter.MainPresenter.ShowWaitCursor(true);
-                    storage.AddCheckpoint(checkpointName);
-                    PopulateList();
-                    explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                    try
+                    {
+                        explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                        explorerPresenter.ApsimXFile.AddCheckpoint(checkpointName);
+                        PopulateList();
+                        explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                        explorerPresenter.MainPresenter.ShowMessage("Checkpoint created: " + checkpointName, Simulation.ErrorLevel.Information);
+                    }
+                    catch (Exception err)
+                    {
+                        explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                    }
                 }
             }
         }
@@ -88,6 +97,50 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnDeleteButtonClicked(object sender, EventArgs e)
         {
+            string checkpointName = view.List.SelectedValue;
+            if (explorerPresenter.MainPresenter.AskQuestion("Are you sure you want to delete checkpoint " + checkpointName + "?") == QuestionResponseEnum.Yes)
+            {
+                if (checkpointName != null)
+                {
+                    try
+                    {
+                        storage.DeleteCheckpoint(checkpointName);
+                        PopulateList();
+                        explorerPresenter.MainPresenter.ShowMessage("Checkpoint deleted", Simulation.ErrorLevel.Information);
+                    }
+                    catch (Exception err)
+                    {
+                        explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                    }
+                }
+            }
+        }
+
+        /// <summary>The user has clicked the revert to button.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnRevertToButtonClicked(object sender, EventArgs e)
+        {
+            string checkpointName = view.List.SelectedValue;
+            if (explorerPresenter.MainPresenter.AskQuestion("Are you sure you want to revert to checkpoint " + checkpointName + "?") == QuestionResponseEnum.Yes)
+            {
+                if (checkpointName != null)
+                {
+                    try
+                    {
+                        explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                        Simulations newSimulations = explorerPresenter.ApsimXFile.RevertCheckpoint(checkpointName);
+                        explorerPresenter.ApsimXFile = newSimulations;
+                        explorerPresenter.Refresh();
+                        explorerPresenter.MainPresenter.ShowMessage("Reverted to checkpoint: " + checkpointName, Simulation.ErrorLevel.Information);
+                        explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                    }
+                    catch (Exception err)
+                    {
+                        explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                    }
+                }
+            }
         }
 
     }

@@ -13,6 +13,7 @@ namespace Models.PostSimulationTools
     using System.Xml.Serialization;
     using APSIM.Shared.Utilities;
     using Storage;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
@@ -21,7 +22,7 @@ namespace Models.PostSimulationTools
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class ExcelInput : Model, IPostSimulationTool
+    public class ExcelInput : Model, IPostSimulationTool, IReferenceExternalFiles
     {
         private string _filename;
 
@@ -56,6 +57,12 @@ namespace Models.PostSimulationTools
         /// </summary>
         [Description("EXCEL sheet names (csv)")]
         public string[] SheetNames { get; set; }
+
+        /// <summary>Return our input filenames</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return new string[] { FileName };
+        }
 
         /// <summary>
         /// Gets the parent simulation or null if not found

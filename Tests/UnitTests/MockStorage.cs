@@ -120,5 +120,10 @@ namespace UnitTests
         {
             throw new NotImplementedException();
         }
+
+        public int GetCheckpointID(string checkpointName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -10,6 +10,7 @@
     using System.Reflection;
     using System.Linq;
     using Models.Core;
+    using Models;
 
     [TestFixture]
     public class TestDataStore
@@ -66,7 +67,7 @@
             sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
             if (!File.Exists(sqliteFileName))
             {
-                File.Copy(sqliteSourceFileName, sqliteFileName);
+                File.Copy(sqliteSourceFileName, sqliteFileName, overwrite:true);
             }
         }
 
@@ -371,7 +372,7 @@
                 row["Col1"] = 11;
                 row["Col2"] = 21;
                 data.Rows.Add(row);
-                storage.WriteTableRaw(data);
+                storage.WriteTable(data);
                 Assert.AreEqual(Utilities.TableToString(fileName, "Test"),
                                            "CheckpointID,Col1,Col2\r\n" +
                                            "           1,  10,  20\r\n" +
@@ -437,11 +438,9 @@
         [Test]
         public void AddCheckpoint()
         {
-            DataTable data = null;
             using (DataStore storage = new DataStore(fileName))
             {
                 CreateTable(storage);
-                data = storage.RunQuery("SELECT Col1 FROM Report1");
 
                 // Add a checkpoint
                 storage.AddCheckpoint("checkpoint1");
@@ -458,24 +457,45 @@
                            "           2,           2,2017-01-01,11.000\r\n" +
                            "           2,           2,2017-01-02,12.000\r\n");
 
-            Assert.AreEqual(Utilities.TableToString(fileName, "_Checkpoints"),
-                            "ID,       Name,Version\r\n" +
-                            " 1,    Current,       \r\n" +
-                            " 2,checkpoint1,       \r\n");
+            Assert.AreEqual(Utilities.TableToString(fileName, "_Checkpoints", new string[] { "ID", "Name" }),
+                            "ID,       Name\r\n" +
+                            " 1,    Current\r\n" +
+                            " 2,checkpoint1\r\n");
+
+            File.Delete("Temp.apsimx");
+        }
+
+        /// <summary>Get all checkpoint files</summary>
+        [Test]
+        public void GetCheckpointFiles()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+
+                // Add a checkpoint
+                File.WriteAllText("Dummy.txt", "abcde");
+                storage.AddCheckpoint("checkpoint1", new string[] { "Dummy.txt" });
+                var files = storage.GetCheckpointFiles("checkpoint1");
+                Assert.AreEqual(files.Count(), 1);
+                Assert.AreEqual(files.ElementAt(0).fileName, "Dummy.txt");
+                Assert.AreEqual(System.Text.Encoding.UTF8.GetString(files.ElementAt(0).contents), "abcde");
+            }
+
+            File.Delete("Dummy.txt");
         }
 
         /// <summary>Delete a checkpoint</summary>
         [Test]
         public void DeleteCheckpoint()
         {
-            DataTable data = null;
             using (DataStore storage = new DataStore(fileName))
             {
                 CreateTable(storage);
-                data = storage.RunQuery("SELECT Col1 FROM Report1");
 
-                // Add a checkpoint
-                storage.AddCheckpoint("checkpoint1");
+                // Add a checkpoint with some files
+                File.WriteAllText("Dummy.txt", "abcde");
+                storage.AddCheckpoint("checkpoint1", new string[] { "Dummy.txt" });
 
                 // Delete a checkpoint
                 storage.DeleteCheckpoint("checkpoint1");
@@ -488,9 +508,56 @@
                            "           1,           2,2017-01-01,11.000\r\n" +
                            "           1,           2,2017-01-02,12.000\r\n");
             Assert.AreEqual(Utilities.TableToString(fileName, "_Checkpoints"),
-                "ID,   Name,Version\r\n" +
-                " 1,Current,       \r\n");
+                "ID,   Name,Version,Date\r\n" +
+                " 1,Current,       ,    \r\n");
 
+            Assert.AreEqual(Utilities.TableToString(fileName, "_CheckpointFiles"),
+                "\r\n");
+        }
+
+        /// <summary>Revert a checkpoint</summary>
+        [Test]
+        public void RevertCheckpoint()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+
+                // Add a checkpoint with some files
+                File.WriteAllText("Dummy.txt", "abcde");
+                storage.AddCheckpoint("checkpoint1", new string[] { "Dummy.txt" });
+
+                // Change contents of our file.
+                File.WriteAllText("Dummy.txt", "qwerty");
+
+                // Write some new current data.
+                // Create a database with 3 sims.
+                object[] arguments = new object[] { new string[] { "Sim1", "Sim2" } };
+                Utilities.CallEvent(storage, "BeginRun", arguments);
+                string[] columnNames1 = new string[] { "Col1", "Col2" };
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 3), 100.0 });
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 4), 200.0 });
+                Utilities.CallEvent(storage, "EndRun");
+
+                // Now revert back to checkpoint1
+                storage.RevertCheckpoint("checkpoint1");
+            }
+
+            Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
+                           "CheckpointID,SimulationID,      Col1,  Col2\r\n" +
+                           "           1,           1,2017-01-01, 1.000\r\n" +
+                           "           1,           1,2017-01-02, 2.000\r\n" +
+                           "           1,           2,2017-01-01,11.000\r\n" +
+                           "           1,           2,2017-01-02,12.000\r\n" +
+                           "           2,           1,2017-01-01, 1.000\r\n" +
+                           "           2,           1,2017-01-02, 2.000\r\n" +
+                           "           2,           2,2017-01-01,11.000\r\n" +
+                           "           2,           2,2017-01-02,12.000\r\n");
+
+            Assert.AreEqual(Utilities.TableToString(fileName, "_Checkpoints", new string[] { "ID", "Name" }),
+                            "ID,       Name\r\n" +
+                            " 1,    Current\r\n" +
+                            " 2,checkpoint1\r\n");
         }
 
         /// <summary>Add a checkpoint and then write some new rows</summary>
@@ -609,6 +676,5 @@
             storage.WriteRow("Sim2", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 2), 32.0 });
             Utilities.CallEvent(storage, "EndRun");
         }
-        
     }
 }
