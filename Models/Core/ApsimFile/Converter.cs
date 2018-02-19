@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 24; } }
+        public static int LastestVersion { get { return 25; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -744,6 +744,45 @@ namespace Models.Core.ApsimFile
                 manager.Write(managerNode);
             }
                 
+        }
+
+        /// <summary>
+        /// Upgrades to version 25. Add checkpoint fields and table to .db
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion25(XmlNode node, string fileName)
+        {
+            string dbFileName = Path.ChangeExtension(fileName, ".db");
+            if (File.Exists(dbFileName))
+            {
+                SQLite connection = new SQLite();
+                connection.OpenDatabase(dbFileName, false);
+                try
+                {
+                    connection.ExecuteNonQuery("BEGIN");
+                    DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
+                    foreach (string tableName in DataTableUtilities.GetColumnAsStrings(tableData, "Name"))
+                    {
+                        List<string> columnNames = connection.GetColumnNames(tableName);
+                        if (columnNames.Contains("SimulationID"))
+                        {
+                            connection.ExecuteNonQuery("ALTER TABLE " + tableName + " ADD COLUMN CheckpointID INTEGER DEFAULT 1");
+                        }
+                    }
+
+                    // Now add a _checkpointfiles table.
+                    connection.ExecuteNonQuery("CREATE TABLE _Checkpoints (ID INTEGER PRIMARY KEY ASC, Name TEXT, Version TEXT, Date TEXT)");
+                    connection.ExecuteNonQuery("CREATE TABLE _CheckpointFiles (CheckpointID INTEGER, FileName TEXT, Contents BLOB)");
+                    connection.ExecuteNonQuery("INSERT INTO [_Checkpoints] (Name) VALUES (\"Current\")");
+
+                    connection.ExecuteNonQuery("END");
+                }
+                finally
+                {
+                    connection.CloseDatabase();
+                }
+            }
         }
     }
 }
