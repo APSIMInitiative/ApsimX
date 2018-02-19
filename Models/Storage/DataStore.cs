@@ -7,6 +7,7 @@
     using System.Data;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -328,6 +329,7 @@
         /// <param name="data">The data to write</param>
         public void WriteTable(DataTable data)
         {
+            Open(readOnly: false);
             SortedSet<string> simulationNames = new SortedSet<string>();
 
             bool startWriteThread = writeTask == null || writeTask.IsCompleted;
@@ -437,12 +439,14 @@
         /// <returns></returns>
         public List<string> Checkpoints()
         {
+            Open(readOnly: false);
             return checkpointIDs.Keys.ToList();
         }
 
         /// <summary>Add a checkpoint</summary>
         /// <param name="name">Name of checkpoint</param>
-        public void AddCheckpoint(string name)
+        /// <param name="filesToCheckpoint">Files to checkpoint</param>
+        public void AddCheckpoint(string name, IEnumerable<string> filesToCheckpoint = null)
         {
             if (checkpointIDs.ContainsKey(name))
                 DeleteCheckpoint(name);
@@ -456,7 +460,7 @@
             foreach (Table t in tables)
             {
                 List<string> columnNames = t.Columns.Select(column => column.Name).ToList();
-                if (columnNames.Contains("CheckpointID"))
+                if (t.Name != "_CheckpointFiles" && columnNames.Contains("CheckpointID"))
                 { 
                     columnNames.Remove("CheckpointID");
 
@@ -474,7 +478,30 @@
                                                " WHERE CheckpointID = " + checkpointID);
                 }
             }
-            connection.ExecuteNonQuery("INSERT INTO _Checkpoints (ID, Name) VALUES (" + newCheckpointID + ", '" + name + "')");
+            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string now = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
+            connection.ExecuteNonQuery("INSERT INTO _Checkpoints (ID, Name, Version, Date) VALUES (" + newCheckpointID + ", '" + name + "', '" + version + "', '" + now + "')");
+
+            if (filesToCheckpoint != null)
+            {
+                IntPtr insertQuery = connection.Prepare("INSERT INTO _CheckpointFiles (CheckpointID, FileName, Contents) VALUES (?, ?, ?)");
+
+                // Add in all referenced files.
+                Simulations sims = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                object[] values = new object[3];
+                values[0] = newCheckpointID;
+                foreach (string fileName in filesToCheckpoint)
+                {
+                    if (File.Exists(fileName))
+                    {
+                        values[1] = fileName;
+                        values[2] = File.ReadAllBytes(fileName);
+                        connection.BindParametersAndRunQuery(insertQuery, values);
+                    }
+                }
+                connection.Finalize(insertQuery);
+            }
+
             connection.ExecuteNonQuery("END");
             Open(readOnly: true);
 
@@ -501,6 +528,71 @@
                                         " WHERE ID = " + checkpointID);
             connection.ExecuteNonQuery("END");
             checkpointIDs.Remove(name);
+        }
+
+        /// <summary>Revert a checkpoint</summary>
+        /// <param name="name">Name of checkpoint</param>
+        public void RevertCheckpoint(string name)
+        {
+            if (!checkpointIDs.ContainsKey(name))
+                throw new Exception("Cannot find checkpoint: " + name);
+
+            // Revert all files.
+            var files = GetCheckpointFiles(name);
+            foreach (DataStore.CheckpointFile checkpointFile in files)
+                File.WriteAllBytes(checkpointFile.fileName, checkpointFile.contents);
+
+            // Revert data
+            connection.ExecuteNonQuery("BEGIN");
+            int checkpointID = checkpointIDs[name];
+            int currentID = checkpointIDs["Current"];
+            foreach (Table t in tables)
+            {
+                List<string> columnNames = t.Columns.Select(column => column.Name).ToList();
+
+                if (t.Name != "_CheckpointFiles" && columnNames.Contains("CheckpointID"))
+                {
+                    // Get a comma separated list of column names.
+                    string csvFieldNames = null;
+                    foreach (string columnName in columnNames)
+                    {
+                        if (csvFieldNames != null)
+                            csvFieldNames += ",";
+                        csvFieldNames += "[" + columnName + "]";
+                    }
+
+                    // Delete old current values.
+                    connection.ExecuteNonQuery("DELETE FROM " + t.Name +
+                                               " WHERE CheckpointID = " + currentID);
+
+                    // Copy checkpoint values to current values.
+                    connection.ExecuteNonQuery("INSERT INTO " + t.Name + " (" + "CheckpointID," + csvFieldNames + ")" +
+                                               " SELECT " + currentID + "," + csvFieldNames +
+                                               " FROM " + t.Name +
+                                               " WHERE CheckpointID = " + checkpointID);
+                }
+            }
+            connection.ExecuteNonQuery("END");
+        }
+
+        /// <summary>Return a list of checkpoint files</summary>
+        /// <param name="name">Name of checkpoint</param>
+        public IEnumerable<CheckpointFile> GetCheckpointFiles(string name)
+        {
+            List<CheckpointFile> files = new List<CheckpointFile>();
+            int checkpointID = GetCheckpointID(name);
+            if (checkpointID != -1)
+            {
+                DataTable data = connection.ExecuteQuery("SELECT * FROM _CheckpointFiles WHERE CheckpointID = " + checkpointID);
+                foreach (DataRow row in data.Rows)
+                {
+                    CheckpointFile file = new CheckpointFile();
+                    file.fileName = row["FileName"] as string;
+                    file.contents = row["Contents"] as byte[];
+                    files.Add(file);
+                }
+            }
+            return files;
         }
 
         /// <summary>Wait for all records to be written.</summary>
@@ -656,7 +748,8 @@
             if (!File.Exists(FileName))
             {
                 connection.OpenDatabase(FileName, readOnly: false);
-                connection.ExecuteNonQuery("CREATE TABLE _Checkpoints (ID INTEGER PRIMARY KEY ASC, Name TEXT, Version TEXT)");
+                connection.ExecuteNonQuery("CREATE TABLE _Checkpoints (ID INTEGER PRIMARY KEY ASC, Name TEXT, Version TEXT, Date TEXT)");
+                connection.ExecuteNonQuery("CREATE TABLE _CheckpointFiles (CheckpointID INTEGER, FileName TEXT, Contents BLOB)");
                 connection.ExecuteNonQuery("CREATE TABLE _Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
                 connection.ExecuteNonQuery("CREATE TABLE _Messages (CheckpointID INTEGER, ComponentID INTEGER, SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
                 connection.ExecuteNonQuery("CREATE TABLE _Units (TableName TEXT, ColumnHeading TEXT, Units TEXT)");
@@ -775,7 +868,10 @@
                             columnsToRemove.Add(column.Name);
                     }
                     if (columnsToRemove.Count > 0)
+                    {
+                        table.Columns.RemoveAll(column => columnsToRemove.Contains(column.Name));
                         connection.DropColumns(table.Name, columnsToRemove);
+                    }
                 }
             }
         }
@@ -966,5 +1062,14 @@
             }
         }
 
+        /// <summary>Encapsulates a file that has been checkpointed</summary>
+        public struct CheckpointFile
+        {
+            /// <summary>Name of file</summary>
+            public string fileName;
+
+            /// <summary>Contents of file</summary>
+            public byte[] contents;
+        }
     }
 }

@@ -156,6 +156,7 @@
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Core\IStorageWriter.cs" />
+    <Compile Include="Core\IReferenceExternalFiles.cs" />
     <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobRunnerMultiProcess.cs" />
     <Compile Include="Core\Links.cs" />

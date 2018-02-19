@@ -25,7 +25,7 @@ namespace Models.PostSimulationTools
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class Input : Model, IPostSimulationTool
+    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
     {
         /// <summary>
         /// Gets or sets the file name to read from.
@@ -52,6 +52,12 @@ namespace Models.PostSimulationTools
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
             }
+        }
+
+        /// <summary>Return our input filenames</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return new string[] { FileName };
         }
 
         /// <summary>

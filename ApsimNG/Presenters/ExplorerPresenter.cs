@@ -111,9 +111,17 @@ namespace UserInterface.Presenters
             this.view.Droped += this.OnDrop;
             this.view.Renamed += this.OnRename;
 
+            Refresh();
+            this.PopulateMainMenu();
+        }
+
+        /// <summary>
+        /// Refresh the view.
+        /// </summary>
+        public void Refresh()
+        {
             this.view.Refresh(this.GetNodeDescription(this.ApsimXFile));
             this.WriteLoadErrors();
-            this.PopulateMainMenu();
         }
 
         /// <summary>Detach the model from the view.</summary>
