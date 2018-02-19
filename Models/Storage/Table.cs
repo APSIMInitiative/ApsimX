@@ -86,14 +86,17 @@ namespace Models.Storage
         public void AddRow(int checkpointID, int simulationID, IEnumerable<string> rowColumnNames, IEnumerable<string> rowColumnUnits, IEnumerable<object> rowValues)
         {
             // If we have a valid simulation ID then make sure SimulationID is at index 1 in the Columns
-            if (!haveCheckedForSimulationIDColumn && simulationID != -1 && Columns.Find(column => column.Name == "SimulationID") == null)
-            {
-                Column simIDColumn = new Column("SimulationID", null, "integer");
-                if (Columns.Count > 1)
-                    Columns.Insert(1, simIDColumn);
-                else
-                    Columns.Add(simIDColumn);
-                haveCheckedForSimulationIDColumn = true;
+            lock (lockObject)
+                {
+                if (!haveCheckedForSimulationIDColumn && simulationID != -1 && Columns.Find(column => column.Name == "SimulationID") == null)
+                {
+                    Column simIDColumn = new Column("SimulationID", null, "integer");
+                    if (Columns.Count > 1)
+                        Columns.Insert(1, simIDColumn);
+                    else
+                        Columns.Add(simIDColumn);
+                    haveCheckedForSimulationIDColumn = true;
+                }
             }
 
             // We want all rows to be a normalised flat table. All rows must have the same number of values
