@@ -618,6 +618,7 @@
         /// <summary>Start the thread that writes to the .db</summary>
         private void StartDBWriteThread()
         {
+            stoppingWriteToDB = false;
             writeTask = Task.Run(() => WriteDBWorker());
         }
 
