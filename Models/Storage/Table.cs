@@ -43,6 +43,12 @@ namespace Models.Storage
         /// <summary>A list of simulations that we have already written data for</summary>
         private List<int> simulationsWithDataWritten = new List<int>();
 
+        /// <summary>Have we checked for a simulation ID column?</summary>
+        private bool haveCheckedForSimulationIDColumn = false;
+
+        /// <summary>Have we checked for a simulation ID column?</summary>
+        private Dictionary<string, int> columnIndexes = new Dictionary<string, int>();
+
         /// <summary>Name of table.</summary>
         public string Name { get; private set; }
 
@@ -80,13 +86,14 @@ namespace Models.Storage
         public void AddRow(int checkpointID, int simulationID, IEnumerable<string> rowColumnNames, IEnumerable<string> rowColumnUnits, IEnumerable<object> rowValues)
         {
             // If we have a valid simulation ID then make sure SimulationID is at index 1 in the Columns
-            if (simulationID != -1 && Columns.Find(column => column.Name == "SimulationID") == null)
+            if (!haveCheckedForSimulationIDColumn && simulationID != -1 && Columns.Find(column => column.Name == "SimulationID") == null)
             {
                 Column simIDColumn = new Column("SimulationID", null, "integer");
                 if (Columns.Count > 1)
                     Columns.Insert(1, simIDColumn);
                 else
                     Columns.Add(simIDColumn);
+                haveCheckedForSimulationIDColumn = true;
             }
 
             // We want all rows to be a normalised flat table. All rows must have the same number of values
@@ -130,7 +137,14 @@ namespace Models.Storage
                     newRow[1] = simulationID;
                 for (int i = 0; i < rowColumnNames.Count(); i++)
                 {
-                    int columnIndex = Columns.FindIndex(column => column.Name == rowColumnNames.ElementAt(i));
+                    // Get a column index for the column - use a cache (dictionary) to speed up lookups.
+                    string columnName = rowColumnNames.ElementAt(i);
+                    int columnIndex;
+                    if (!columnIndexes.TryGetValue(columnName, out columnIndex))
+                    {
+                        columnIndex = Columns.FindIndex(column => column.Name == columnName);
+                        columnIndexes.Add(columnName, columnIndex);
+                    }
                     newRow[columnIndex] = rowValues.ElementAt(i);
                     if (Columns[columnIndex].SQLiteDataType == null)
                         Columns[columnIndex].SQLiteDataType = GetSQLiteDataType(newRow[columnIndex]);
