@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -30,7 +30,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -45,7 +45,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\Bin\Models.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Prefer32Bit>true</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,7 +56,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DocumentationFile>..\Bin\Models.xml</DocumentationFile>
-    <Prefer32Bit>true</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -84,15 +84,17 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Excel, Version=2.1.2.3, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\ExcelDataReader.2.1.2.3\lib\net45\Excel.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="ExcelDataReader, Version=3.4.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.4.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.4.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.4.0\lib\net45\ExcelDataReader.DataSet.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="MathNet.Numerics, Version=3.20.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MathNet.Numerics.3.20.0\lib\net40\MathNet.Numerics.dll</HintPath>
+    <Reference Include="MathNet.Numerics, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.0.0\lib\net40\MathNet.Numerics.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MigraDoc.DocumentObjectModel-gdi, Version=1.50.3638.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
@@ -120,6 +122,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -145,17 +148,18 @@
     <Compile Include="CLEM\Old\RuminantActivityPredictiveStockingENSOOrig.cs" />
     <Compile Include="CLEM\Reporting\ReportActivitiesPerformed.cs" />
     <Compile Include="CLEM\Reporting\ReportPasturePoolDetails.cs" />
-    <Compile Include="CLEM\Reporting\ReportResourceShortfalls.cs" />
     <Compile Include="CLEM\Reporting\ReportResourceBalances.cs" />
+    <Compile Include="CLEM\Reporting\ReportResourceShortfalls.cs" />
     <Compile Include="CLEM\Resources\Equipment.cs" />
     <Compile Include="CLEM\Resources\EquipmentType.cs" />
     <Compile Include="CLEM\Resources\RuminantConceptionAdvanced.cs" />
     <Compile Include="CLEM\Resources\WaterType.cs" />
     <Compile Include="CLEM\Resources\WaterStore.cs" />
-    <Compile Include="Core\APSIMFileConverterUtilities.cs" />
-    <Compile Include="Core\APSIMFileConverter.cs" />
-    <Compile Include="Core\APSIMFileReader.cs" />
-    <Compile Include="Core\APSIMFileWriter.cs" />
+    <Compile Include="Core\ApsimFile\ManagerConverter.cs" />
+    <Compile Include="Core\ApsimFile\ConverterUtilities.cs" />
+    <Compile Include="Core\ApsimFile\Converter.cs" />
+    <Compile Include="Core\ApsimFile\Reader.cs" />
+    <Compile Include="Core\ApsimFile\Writer.cs" />
     <Compile Include="Core\Attributes\BriefLabelAttribute.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Core\Attributes\HelpUriAttribute.cs" />
@@ -165,9 +169,10 @@
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\EventArgs\LoadedEventArgs.cs" />
     <Compile Include="Core\Events.cs" />
-    <Compile Include="Core\FileFormat.cs" />
+    <Compile Include="Core\ApsimFile\Format.cs" />
+    <Compile Include="Core\ICustomDocumentation.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
-    <Compile Include="Core\IJobGenerator.cs" />
+    <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Core\IStorageWriter.cs" />
     <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobRunnerMultiProcess.cs" />
@@ -182,6 +187,9 @@
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
+    <Compile Include="Graph\DirectedGraph.cs" />
+    <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
+    <Compile Include="Plant\Functions\TrackerFunction.cs" />
     <Compile Include="Plant\Functions\ArrayFunction.cs" />
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
@@ -660,6 +668,7 @@
   <ItemGroup>
     <None Include="Resources\Maize.xml" />
     <None Include="Resources\Chicory.xml" />
+    <None Include="Resources\Potato.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>

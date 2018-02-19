@@ -9,10 +9,10 @@ using Models;
 
 namespace Models.Core
 {
-
-
-    //=========================================================================
-    /// <summary>A generic system that can have children</summary>
+    /// <summary>
+    /// # [Name]
+    /// A generic system that can have children
+    /// </summary>
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]

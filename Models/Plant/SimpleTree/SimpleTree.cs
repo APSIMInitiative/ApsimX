@@ -12,6 +12,7 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF
 {
     /// <summary>
+    /// # [Name]
     /// A model of a simple tree
     /// </summary>
     [Serializable]
@@ -259,8 +260,8 @@ namespace Models.PMF
             NO3Uptake = info[0].NO3N;
             NH4Uptake = info[0].NH4N;
 
-            solutes.Subtract("NO3", NO3Uptake);
-            solutes.Subtract("NH4", NH4Uptake);
+            solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, NO3Uptake);
+            solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, NH4Uptake);
         }
 
 

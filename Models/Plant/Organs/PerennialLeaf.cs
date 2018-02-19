@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 namespace Models.PMF.Organs
 {
     /// <summary>
+    /// # [Name]
     /// This plant organ is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It also calculates the growth, senescence and detachment of leaves.
     /// </summary>
     [Serializable]
@@ -24,6 +25,12 @@ namespace Models.PMF.Organs
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
+
+
+        /// <summary>Carbon concentration</summary>
+        /// [Units("-")]
+        [Link]
+        IFunction CarbonConcentration = null;
 
         /// <summary>Gets the cohort live.</summary>
         [XmlIgnore]
@@ -614,9 +621,14 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dry matter allocation.</summary>
         public void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
-            GrowthRespiration = dryMatter.Structural * (1 - DMConversionEfficiency.Value())
-                              + dryMatter.Storage * (1 - DMConversionEfficiency.Value());
-
+            // GrowthRespiration with unit CO2 
+            // GrowthRespiration is calculated as 
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // CO2 (44/12).
+            double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
+            GrowthRespiration = (dryMatter.Structural + dryMatter.Storage) * growthRespFactor;
+            
             AddNewLeafMaterial(StructuralWt: Math.Min(dryMatter.Structural * DMConversionEfficiency.Value(), StructuralDMDemand),
                                StorageWt: dryMatter.Storage * DMConversionEfficiency.Value(),
                                StructuralN: 0,

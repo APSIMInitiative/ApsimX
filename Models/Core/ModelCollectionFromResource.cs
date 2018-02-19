@@ -79,10 +79,26 @@ namespace Models.Core
                         doc.LoadXml(xml);
                         Model ModelFromResource = XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly()) as Model;
                         Children.AddRange(ModelFromResource.Children);
-
+                        CopyPropertiesFrom(ModelFromResource);
                         SetNotVisible(ModelFromResource);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Copy all properties from the specified resource.
+        /// </summary>
+        /// <param name="from">Model to copy from</param>
+        private void CopyPropertiesFrom(Model from)
+        {
+            foreach (PropertyInfo property in from.GetType().GetProperties())
+            {
+                if (property.CanWrite && 
+                    property.Name != "Name" && 
+                    property.Name != "Children" && 
+                    property.Name != "IncludeInDocumentation")
+                    property.SetValue(this, property.GetValue(from));
             }
         }
 

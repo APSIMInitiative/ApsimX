@@ -8,6 +8,7 @@ namespace Models.Soils.Nutrient
     using System.Collections.Generic;
 
     /// <summary>
+    /// # [Name]
     /// Encapsulates a carbon and nutrient flow between pools.  This flow is characterised in terms of the rate of flow (fraction of the pool per day).  Carbon loss as CO2 is expressed in terms of the efficiency of C retension within the soil.
     /// </summary>
     [Serializable]
@@ -127,8 +128,8 @@ namespace Models.Soils.Nutrient
                 }
 
             }
-            solutes.SetSolute("NH4", NH4);
-            solutes.SetSolute("NO3", NO3);
+            solutes.SetSolute("NH4", SoluteManager.SoluteSetterType.Soil, NH4);
+            solutes.SetSolute("NO3", SoluteManager.SoluteSetterType.Soil, NO3);
         }
 
 

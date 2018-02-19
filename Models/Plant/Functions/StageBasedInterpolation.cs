@@ -9,6 +9,7 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// A value is linearly interpolated between phenological growth stages
     /// </summary>
     [Serializable]

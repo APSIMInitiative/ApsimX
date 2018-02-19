@@ -15,6 +15,7 @@
     using APSIM.Shared.Utilities;
 
     /// <summary>
+    /// # [Name]
     /// The surface organic matter model, ported by Ben Jolley from the
     /// Fortran version.
     /// Tidied up (somewhat) for ApsimX by Eric Zurcher, August 2014.
@@ -2245,8 +2246,8 @@
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
             if (no3Incorp > 0.0 || nh4Incorp > 0.0 || po4Incorp > 0.0)
             {
-                solutes.AddToLayer(0, "NH4", nh4Incorp);
-                solutes.AddToLayer(0, "NO3", no3Incorp);
+                solutes.AddToLayer(0, "NH4", SoluteManager.SoluteSetterType.Soil, nh4Incorp);
+                solutes.AddToLayer(0, "NO3", SoluteManager.SoluteSetterType.Soil, no3Incorp);
 
                 if (phosphorusAware)
                 {

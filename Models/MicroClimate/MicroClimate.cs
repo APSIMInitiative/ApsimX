@@ -7,6 +7,7 @@ using APSIM.Shared.Utilities;
 namespace Models
 {
     /// <summary>
+    /// # [Name]
     /// The module MICROMET, described here, has been developed to allow the calculation of 
     /// potential transpiration for multiple competing canopies that can be either layered or intermingled.
     /// </summary>

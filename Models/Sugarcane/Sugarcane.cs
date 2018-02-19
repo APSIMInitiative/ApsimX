@@ -17,6 +17,7 @@ namespace Models
     {
 
     /// <summary>
+    /// # [Name]
     ///##Model Components Overview
     ///
     ///Crop dry weight accumulation is driven by the conversion of intercepted radiation to biomass, via a radiation-use efficiency (RUE). 
@@ -210,7 +211,7 @@ namespace Models
     ///Secondly, the daily dry weight increment between structural stem and sucrose shifts in favour of sucrose as water deficits develop. 
     ///
     ///
-    ///#Water excess limitation
+    ///##Water excess limitation
     ///The proportion of the root system exposed to saturated or near saturated soil water conditions is calculated and used to calculate a water logging stress factor. 
     ///This factor reduces photosynthetic activity via an effect on RUE.
     ///
@@ -14205,8 +14206,8 @@ namespace Models
                     }
 
 
-                solutes.Add("NO3", l_dlt_NO3);
-                solutes.Add("NH4", l_dlt_NH4);
+                solutes.Add("NO3", SoluteManager.SoluteSetterType.Plant, l_dlt_NO3);
+                solutes.Add("NH4", SoluteManager.SoluteSetterType.Plant, l_dlt_NH4);
 
 
 
@@ -14232,8 +14233,8 @@ namespace Models
                     }
 
 
-                solutes.Add("NO3", l_dlt_NO3);
-                solutes.Add("NH4", l_dlt_NH4);
+                solutes.Add("NO3", SoluteManager.SoluteSetterType.Plant, l_dlt_NO3);
+                solutes.Add("NH4", SoluteManager.SoluteSetterType.Plant, l_dlt_NH4);
             }
             else
                 {

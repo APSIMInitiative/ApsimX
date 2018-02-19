@@ -17,7 +17,10 @@ using APSIM.Shared.Utilities;
 
 namespace Models.AgPasture
 {
-    /// <summary>Describes a pasture species.</summary>
+    /// <summary>
+    /// # [Name]
+    /// Describes a pasture species.
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -432,8 +435,8 @@ namespace Models.AgPasture
                 PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == Z.Zone.Name);
                 if (root != null)
                 {
-                    root.solutes.Subtract("NO3", Z.NO3N);
-                    root.solutes.Subtract("NH4", Z.NH4N);
+                    root.solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, Z.NO3N);
+                    root.solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, Z.NH4N);
 
                     mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, Z.NH4N);
                     mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, Z.NO3N);

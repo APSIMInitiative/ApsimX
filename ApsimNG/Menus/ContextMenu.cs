@@ -73,7 +73,9 @@ namespace UserInterface.Presenters
             if (model != null)
             {
                 // Set the clipboard text.
-                this.explorerPresenter.SetClipboardText(Apsim.Serialise(model));
+                string xml = Apsim.Serialise(model);
+                this.explorerPresenter.SetClipboardText(xml, "_APSIM_MODEL");
+                this.explorerPresenter.SetClipboardText(xml, "CLIPBOARD");
             }
         }
 
@@ -85,7 +87,29 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Paste", ShortcutKey = "Ctrl+V")]
         public void OnPasteClick(object sender, EventArgs e)
         {
-            this.explorerPresenter.Add(this.explorerPresenter.GetClipboardText(), this.explorerPresenter.CurrentNodePath);
+            string internalCBText = this.explorerPresenter.GetClipboardText("_APSIM_MODEL");
+            string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
+
+            if (externalCBText == null || externalCBText == "")
+                this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);                
+            else
+            {
+                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                try
+                {
+                    doc.LoadXml(externalCBText);
+                    this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
+                }
+                catch (System.Xml.XmlException)
+                {
+                    // External clipboard does not contain valid xml
+                    this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
+                }
+                catch (Exception ex)
+                {
+                    this.explorerPresenter.MainPresenter.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
+                }
+            }
         }
 
         /// <summary>
@@ -410,6 +434,35 @@ namespace UserInterface.Presenters
             }
         }
 
+        [ContextMenu(MenuName = "Run on cloud (In development - DO NOT USE)",
+                     AppliesTo = new Type[] { typeof(Simulation),
+                                              typeof(Simulations),
+                                              typeof(Experiment),
+                                              typeof(Folder)
+                                            }            
+                    )
+        ]
+        /// <summary>
+        /// Event handler for the run on cloud action
+        /// </summary>        
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        public void RunOnCloud(object sender, EventArgs e)
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowInRightHandPanel(model,
+                                                       "UserInterface.Views.NewAzureJobView",
+                                                       "UserInterface.Presenters.NewAzureJobPresenter");
+            } else
+            {
+                explorerPresenter.MainPresenter.ShowMessage("Microsoft Azure functionality is currently only available under Windows.", Simulation.ErrorLevel.Error);
+            }
+            
+        }
+        
         /// <summary>
         /// Event handler for a Add model action
         /// </summary>

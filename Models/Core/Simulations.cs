@@ -14,6 +14,7 @@ using Models.Core.Runners;
 namespace Models.Core
 {
     /// <summary>
+    /// # [Name]
     /// Encapsulates a collection of simulations. It is responsible for creating this collection,
     /// changing the structure of the components within the simulations, renaming components, adding
     /// new ones, deleting components. The user interface talks to an instance of this class.
@@ -86,7 +87,7 @@ namespace Models.Core
         /// <summary>Constructor</summary>
         private Simulations()
         {
-            Version = APSIMFileConverter.LastestVersion;
+            Version = ApsimFile.Converter.LastestVersion;
             LoadErrors = new List<Exception>();
         }
 
@@ -94,10 +95,10 @@ namespace Models.Core
         /// Create a simulations model
         /// </summary>
         /// <param name="children">The child models</param>
-        public static Simulations Create(IEnumerable<Model> children)
+        public static Simulations Create(IEnumerable<IModel> children)
         {
             Simulations newSimulations = new Core.Simulations();
-            newSimulations.Children.AddRange(children);
+            newSimulations.Children.AddRange(children.Cast<Model>());
 
             // Call the OnDeserialised method in each model.
             Events events = new Core.Events(newSimulations);
@@ -126,7 +127,7 @@ namespace Models.Core
         public static Simulations Read(string FileName)
         {
             // Run the converter.
-            APSIMFileConverter.ConvertToLatestVersion(FileName);
+            ApsimFile.Converter.ConvertToLatestVersion(FileName);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(FileName, Assembly.GetExecutingAssembly()) as Simulations;
@@ -166,7 +167,7 @@ namespace Models.Core
         public static Simulations Read(XmlNode node)
         {
             // Run the converter.
-            APSIMFileConverter.ConvertToLatestVersion(node, null);
+            ApsimFile.Converter.ConvertToLatestVersion(node, null);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;
@@ -204,7 +205,7 @@ namespace Models.Core
         public void Run(Simulation simulation, bool doClone)
         {
             Apsim.ParentAllChildren(simulation);
-            RunSimulation simulationRunner = new RunSimulation(simulation, doClone);
+            RunSimulation simulationRunner = new RunSimulation(this, simulation, doClone);
             Links.Resolve(simulationRunner);
             simulationRunner.Run(new System.Threading.CancellationTokenSource());
         }
@@ -407,7 +408,7 @@ namespace Models.Core
                         child.IncludeInDocumentation = true;
 
                     // Document the model.
-                    modelToDocument.Document(tags, headingLevel, 0);
+                    AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
 
                     // Unresolve links.
                     Links.Unresolve(clonedSimulation);

@@ -12,6 +12,7 @@ using Models.PMF.Functions;
 namespace Models.PMF.Organs
 {
     /// <summary>
+    /// # [Name]
     /// This class represents a base organ
     /// </summary>
     [Serializable]
@@ -113,7 +114,9 @@ namespace Models.PMF.Organs
         #region Organ properties
 
         /// <summary>Growth Respiration</summary>
+        /// [Units("CO_2")]
         public double GrowthRespiration { get; set; }
+
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [XmlIgnore]
