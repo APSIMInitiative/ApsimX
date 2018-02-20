@@ -206,17 +206,19 @@ namespace Models.Storage
                     RowsToWrite.RemoveRange(0, numRows);
                 }
 
-                // If this is the first time we've written data for this simulation then clear old data
-                int simulationID = GetValueFromRow(values[0], "SimulationID");
-                if (simulationID > 0 && !simulationsWithDataWritten.Contains(simulationID))
+                // If this is the first time we've written data for this collection of simulations then clear old data
+                var uniqueSimulationIDs = GetValuesFromRows(values, "SimulationID");
+                var simulationIDsWithOldData = uniqueSimulationIDs.Except(simulationsWithDataWritten);
+                if (simulationIDsWithOldData.Count() > 0)
                 {
                     int checkpointID = GetValueFromRow(values[0], "CheckpointID");
                     if (checkpointID > 0)
                     {
+                        string queryString = "(" + StringUtilities.Build(simulationIDsWithOldData, ",") + ")";
                         connection.ExecuteNonQuery("DELETE FROM " + Name +
-                                                   " WHERE SimulationID = " + simulationID +
+                                                   " WHERE SimulationID IN " + queryString +
                                                    " AND CheckpointID = " + checkpointID);
-                        simulationsWithDataWritten.Add(simulationID);
+                        simulationsWithDataWritten.AddRange(simulationIDsWithOldData);
                     }
                 }
 
@@ -500,6 +502,25 @@ namespace Models.Storage
             if (indexSimulationID != -1 && values[indexSimulationID] != null)
                 return (int)values[indexSimulationID];
             return 0;
+        }
+
+        /// <summary>
+        /// Get all simulation IDs for the specified rows.
+        /// </summary>
+        /// <param name="values">The row values</param>
+        /// <param name="columnName">The column name to look for</param>
+        /// <returns>Returns ID or 0 if not found</returns>
+        private IEnumerable<int> GetValuesFromRows(List<object[]> values, string columnName)
+        {
+            SortedSet<int> ids = new SortedSet<int>();
+            int indexSimulationID = Columns.FindIndex(column => column.Name == columnName);
+            if (indexSimulationID != -1 && values[indexSimulationID] != null)
+            {
+                foreach (object[] rowValues in values)
+                    if (rowValues[indexSimulationID] != null)
+                        ids.Add((int)rowValues[indexSimulationID]);
+            }
+            return ids;
         }
     }
 }
