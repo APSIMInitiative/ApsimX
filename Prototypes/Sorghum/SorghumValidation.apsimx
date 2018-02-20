@@ -2634,13 +2634,6 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <string>Apsim79HE1BusterNoTillers</string>
       </SheetNames>
     </ExcelInput>
-    <PredictedObserved>
-      <Name>PredictedObservedApsim79</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <PredictedTableName>Report</PredictedTableName>
-      <ObservedTableName>Apsim79HE1BusterNoTillers</ObservedTableName>
-      <FieldNameUsedForMatch>Stage</FieldNameUsedForMatch>
-    </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </DataStore>
   <Folder>
