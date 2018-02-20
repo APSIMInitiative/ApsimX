@@ -1,5 +1,5 @@
 ---
-title: "5. Merge changes into the master repository"
+title: "3. Merge changes"
 draft: false
 ---
 
@@ -7,13 +7,13 @@ draft: false
 
 Once you're ready to share your commits with the wider APSIM community and have them merged into the master repository, you will need to push your commits to your forked remote repository (e.g. hol353). Doing a push won't impact on other developers and won't cause Jenkins to run the test suite. Pushing will allow other developers to pull from your branch on your repository so it is a good way to share what you are doing with others.
 
-![SourceTreeRemotes](/images/Development.SourceTreeRemotes.png) 
+To list your remote repositories, use ````git remote````. To check the URL of a remote repository, use ````git remote get-url <remote>````, where \<remote\> is the name of a remote repository. 
 
-In this image there are two remote repositories, hol353 (a developers remote) and MasterRepo (the main APSIM repository). **You should never push to the MasterRepo remote**. Instead, you push to your remote repository - *hol353* in this example. Click the push button.
+**You should never push to the main APSIM repository** (located at https://github.com/APSIMInitiative/ApsimX/).
 
-![SourceTreeRemotes](/images/Development.SourceTreePush.png)
+To push your current branch to a remote repository, use ````git push <remote>````, where \<remote\> is the name of your remote repository.
 
-Always make sure the remote (highlighted in the above image) is your remote and not *MasterRepo*. You also need to tick the branch you want to push to your remote repository, in this case master.
+For more details, see ````git help push````.
 
 ## Open a Pull Request
 
@@ -21,6 +21,7 @@ Pull Requests initiate discussion about your commits. They say to other develope
 
 You can open a Pull Request at any point during the development process: when you have little or no code but want to share some screenshots or general ideas, when you're stuck and need help or advice, or when you're ready for someone to review your work. By using GitHub's @mention system in your Pull Request message, you can ask for feedback from specific people or teams, whether they're down the hall or ten time zones away.
 
+To open a pull request, open a web browser and navigate to your remote repository on GitHub, then click New Pull Request.
 
 ### 1. Peer review
 
@@ -38,7 +39,7 @@ or
 
 Working on #45
 
-This will alert the administrators of the APSIM repository that the pull request fixes issue number 45 (or you are working on it). All merges to master must have an issue describing the piece of work. T
+This will alert the administrators of the APSIM repository that the pull request fixes issue number 45 (or you are working on it). All merges to master must have an issue describing the piece of work.
 
 ### 3. The APSIM Performance Testing site
 
