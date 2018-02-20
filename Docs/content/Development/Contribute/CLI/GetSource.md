@@ -3,8 +3,6 @@ title: "1. Get source code"
 draft: false
 ---
 
-This document describes the process of getting source code from GitHub via the command line. Follow these steps if you are not using SourceTree.
-
 ## Create GitHub account
 
 The APSIM source code is located on GitHub so you will need to have a GitHub login if you want to contribute new features or modifications to the APSIM repository.
