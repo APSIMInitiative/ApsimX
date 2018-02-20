@@ -162,6 +162,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.BuddingPhase))]
         [XmlElement(typeof(Models.PMF.Functions.ArrayFunction))]
         [XmlElement(typeof(Models.PMF.Functions.AccumulateFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.AccumulateByDate))]
         [XmlElement(typeof(Models.PMF.Functions.AccumulateByNumericPhase))]  
         [XmlElement(typeof(Models.PMF.Functions.MovingAverageFunction))]
         [XmlElement(typeof(Models.PMF.Functions.MovingSumFunction))]
