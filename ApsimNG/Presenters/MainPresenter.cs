@@ -178,9 +178,9 @@ namespace UserInterface.Presenters
         /// Show progress bar with the specified percent.
         /// </summary>
         /// <param name="percent">The progress</param>
-        public void ShowProgress(int percent)
+        public void ShowProgress(int percent, bool showStopButton = true)
         {
-            this.view.ShowProgress(percent);
+            this.view.ShowProgress(percent, showStopButton);
         }
 
         /// <summary>
