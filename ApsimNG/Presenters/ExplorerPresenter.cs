@@ -593,6 +593,13 @@ namespace UserInterface.Presenters
                 {
                     ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                    DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+
+                    if (descriptionName != null)
+                    {
+                        viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
+                    }
 
                     if (this.advancedMode)
                     {
@@ -906,7 +913,8 @@ namespace UserInterface.Presenters
             }
             else
             {
-                imageFileName = model.GetType().Name;
+                // Add model name from namespace to the resource image name
+                imageFileName = model.GetType().FullName.Split('.')[1] + "." + model.GetType().Name;
             }
 
             if (model.GetType().Namespace.Contains("Models.PMF"))
