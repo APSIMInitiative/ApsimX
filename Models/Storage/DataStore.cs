@@ -332,9 +332,6 @@
             Open(readOnly: false);
             SortedSet<string> simulationNames = new SortedSet<string>();
 
-            bool startWriteThread = writeTask == null || writeTask.IsCompleted;
-            if (startWriteThread)
-                StartDBWriteThread();
 
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in data.Columns)
@@ -353,8 +350,13 @@
                 simulationNames.Add(simulationName);
             }
 
+
+            bool startWriteThread = writeTask == null || writeTask.IsCompleted;
             if (startWriteThread)
+            {
+                StartDBWriteThread();
                 StopDBWriteThread();
+            }
         }
 
         /// <summary>Delete the specified table.</summary>
