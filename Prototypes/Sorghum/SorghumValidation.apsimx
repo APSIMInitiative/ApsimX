@@ -208,10 +208,53 @@ The model predicts development of primordia on the apex of the main stem and app
             </PhaseLookupValue>
             <PhaseLookupValue>
               <Name>TTFM</Name>
-              <AirTemperatureFunction>
-                <Name>ThermalTime</Name>
+              <WeightedTemperatureFunction>
+                <Name>WeightedTemperatureFunction</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <XFieldName>.Simulations.Replacements.Sorghum.Phenology.ThermalTime.TT.TTFM.ThermalTime.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Sorghum.Phenology.ThermalTime.TT.TTFM.ThermalTime.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>5.7</double>
@@ -223,7 +266,8 @@ The model predicts development of primordia on the apex of the main stem and app
                   </Y>
                 </XYPairs>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AirTemperatureFunction>
+                <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+              </WeightedTemperatureFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>Flowering</Start>
               <End>Maturity</End>
