@@ -49,6 +49,9 @@ namespace UserInterface.Views
         /// <summary>Turn split window on/off</summary>
         bool SplitWindowOn { get; set; }
 
+        /// <summary>Height of the status panel</summary>
+        int StatusPanelHeight { get; set; }
+
         /// <summary>
         /// Returns true if the object is a control on the left side
         /// </summary>
@@ -146,6 +149,17 @@ namespace UserInterface.Views
         /// <summary>Invoked when application tries to close</summary>
         public event EventHandler<EventArgs> StopSimulation;
 
+        public int StatusPanelHeight
+        {
+            get
+            {
+                return hbox1.Allocation.Height;
+            }
+            set
+            {
+                hbox1.HeightRequest = value;                
+            }
+        }
         private Views.ListButtonView listButtonView1;
         private Views.ListButtonView listButtonView2;
 
