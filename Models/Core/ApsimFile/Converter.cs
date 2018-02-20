@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 24; } }
+        public static int LastestVersion { get { return 25; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -745,5 +745,18 @@ namespace Models.Core.ApsimFile
             }
                 
         }
+
+
+        /// <summary>
+        /// Upgrades to version 25. Add leaf development rate constant to perrenial leaf
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion25(XmlNode node, string fileName)
+        {
+            foreach (XmlNode perennialLeaf in XmlUtilities.FindAllRecursivelyByType(node, "PerennialLeaf"))
+                ConverterUtilities.AddConstantFuntionIfNotExists(perennialLeaf, "LeafDevelopmentRate", "1.0");
+        }
+
     }
 }

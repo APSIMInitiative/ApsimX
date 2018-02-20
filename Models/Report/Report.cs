@@ -191,7 +191,8 @@ namespace Models.Report
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            storage.CompletedWritingSimulationData(simulation.Name);
+            if (simulation != null)
+                storage.CompletedWritingSimulationData(simulation.Name);
         }
     }
 }
