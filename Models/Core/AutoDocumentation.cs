@@ -198,7 +198,7 @@ namespace Models.Core
                 foreach (IModel child in Apsim.Children(model, typeof(IModel)))
                 {
                     if (!childrenDocumented.Contains(child))
-                        DocumentModel(child, tags, headingLevel + 1, indent);
+                        DocumentModel(child, tags, headingLevel + 1, indent, documentAllChildren);
                 }
             }
         }

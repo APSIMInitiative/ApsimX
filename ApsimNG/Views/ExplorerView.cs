@@ -217,9 +217,6 @@ namespace UserInterface.Views
         /// <summary>Invoked then a node is renamed.</summary>
         public event EventHandler<NodeRenameArgs> Renamed;
 
-        /// <summary>Invoked when a global key is pressed.</summary>
-        public event EventHandler<KeysArgs> ShortcutKeyPressed;
-
         /// <summary>Refreshes the entire tree from the specified descriptions.</summary>
         /// <param name="nodeDescriptions">The nodes descriptions.</param>
         public void Refresh(NodeDescriptionArgs nodeDescriptions)
@@ -738,7 +735,7 @@ namespace UserInterface.Views
         private void OnDragBegin(object sender, DragBeginArgs e)
         {
             if (textRender.Editable) // If the node to be dragged is open for editing (renaming), close it now.
-                textRender.CancelEditing();
+                textRender.StopEditing(true);
             DragStartArgs args = new DragStartArgs();
             args.NodePath = SelectedNode; // FullPath(e.Item as TreeNode);
             if (DragStarted != null)
@@ -902,25 +899,28 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Get whatever text is currently on the _APSIM_MODEL clipboard
+        /// Get whatever text is currently on a specific clipboard.
         /// </summary>
+        /// <param name="clipboardName">Name of the clipboard.</param>
         /// <returns></returns>
-        public string GetClipboardText()
+        public string GetClipboardText(string clipboardName)
         {
-            Gdk.Atom modelClipboard = Gdk.Atom.Intern("_APSIM_MODEL", false);
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
             Clipboard cb = Clipboard.Get(modelClipboard);
+            
             return cb.WaitForText();
         }
 
         /// <summary>
-        /// Place text on the clipboard
+        /// Place text on a specific clipboard.
         /// </summary>
-        /// <param name="text"></param>
-        public void SetClipboardText(string text)
+        /// <param name="text">Text to place on the clipboard.</param>
+        /// <param name="clipboardName">Name of the clipboard.</param>
+        public void SetClipboardText(string text, string clipboardName)
         {
-            Gdk.Atom modelClipboard = Gdk.Atom.Intern("_APSIM_MODEL", false);
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
             Clipboard cb = Clipboard.Get(modelClipboard);
-            cb.Text = text;
+            cb.Text = text;            
         }
 
         /*

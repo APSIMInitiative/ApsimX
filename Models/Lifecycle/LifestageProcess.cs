@@ -9,6 +9,7 @@ using Models.PMF.Functions;
 namespace Models.Lifecycle
 {
     /// <summary>
+    /// # [Name]
     /// Specifies the type of lifestage process
     /// </summary>
     public enum ProcessType

@@ -287,7 +287,13 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    this.view.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                    string message = err.Message;
+                    while (err.InnerException != null)
+                    {
+                        message += "\r\n" + err.InnerException.Message;
+                        err = err.InnerException;
+                    }
+                    this.view.ShowMessage(message, Simulation.ErrorLevel.Error);
                 }
 
                 this.view.ShowWaitCursor(false);

@@ -36,11 +36,6 @@ namespace UserInterface.Presenters
         private PropertyPresenter propertyPresenter;
 
         /// <summary>
-        /// The mid points of the soil
-        /// </summary>
-        private double[] soilMidpoints;
-
-        /// <summary>
         /// Attach the presenter
         /// </summary>
         /// <param name="model">The model object</param>
