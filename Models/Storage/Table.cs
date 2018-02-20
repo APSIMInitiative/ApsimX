@@ -514,7 +514,7 @@ namespace Models.Storage
         {
             SortedSet<int> ids = new SortedSet<int>();
             int indexSimulationID = Columns.FindIndex(column => column.Name == columnName);
-            if (indexSimulationID != -1 && values[indexSimulationID] != null)
+            if (indexSimulationID != -1)
             {
                 foreach (object[] rowValues in values)
                     if (rowValues[indexSimulationID] != null)
