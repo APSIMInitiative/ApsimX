@@ -213,6 +213,12 @@ google.maps.event.addDomListener(window, 'load', initialize);
         }
 
         /// <summary>
+        /// Returns the Popup window used for exporting
+        /// </summary>
+        /// <returns></returns>
+        public Gtk.Window GetPopupWin() { return popupWin; }
+
+        /// <summary>
         /// Export the map to an image.
         /// </summary>
         public Image Export()

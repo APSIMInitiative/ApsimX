@@ -458,8 +458,8 @@ namespace UserInterface.Views
                 // Move the window offscreen; the user doesn't need to see it.
                 // This works with IE, but not with WebKit
                 // Not yet tested on OSX
-                if (ProcessUtilities.CurrentOS.IsWindows)
-                    popupWin.Move(-10000, -10000);
+                //if (ProcessUtilities.CurrentOS.IsWindows)
+                //    popupWin.Move(-10000, -10000);
                 popupWin.Add(MainWidget);
                 popupWin.ShowAll();
                 while (Gtk.Application.EventsPending())
@@ -490,7 +490,7 @@ namespace UserInterface.Views
                 if (vbox2.Toplevel is Window)
                     (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
                 frame1.Unrealized -= Frame1_Unrealized;
-                (browser as TWWebBrowserIE).socket.UnmapEvent += (browser as TWWebBrowserIE).Socket_UnmapEvent;
+                (browser as TWWebBrowserIE).socket.UnmapEvent -= (browser as TWWebBrowserIE).Socket_UnmapEvent;
             }
             if (browser != null)
                 browser.Dispose();
@@ -688,5 +688,6 @@ namespace UserInterface.Views
             if (browser is TWWebBrowserIE)
                 (browser as TWWebBrowserIE).wb.Parent.Enabled = state;
         }
+
     }
 }
