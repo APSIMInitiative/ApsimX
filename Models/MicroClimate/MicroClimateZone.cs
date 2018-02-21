@@ -237,9 +237,12 @@ namespace Models
             /// </summary>
             public double RadnGreenFraction(int j)
             {
-                double klGreen = -Math.Log(1.0 - Canopies[j].Canopy.CoverGreen);
-                double klTot = -Math.Log(1.0 - Canopies[j].Canopy.CoverTotal);
-                return MathUtilities.Divide(klGreen, klTot, 0.0);
+                //double klGreen = -Math.Log(1.0 - Canopies[j].Canopy.CoverGreen);
+                //double klTot = -Math.Log(1.0 - Canopies[j].Canopy.CoverGreen);
+                //return MathUtilities.Divide(klGreen, klTot, 0.0);
+
+                return MathUtilities.Divide(Canopies[j].Canopy.CoverGreen, Canopies[j].Canopy.CoverGreen, 0.0);
+
             }
         }
     }
