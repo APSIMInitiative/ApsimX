@@ -4020,7 +4020,7 @@ namespace Models
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
-              <Date>2001-12-24</Date>
+              <Date>2001-12-25</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
           </Operations>
@@ -6940,7 +6940,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>ObsAll</TableName>
+              <TableName>ObsAllData</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>SWC</YFieldName>
               <ShowInLegend>false</ShowInLegend>
