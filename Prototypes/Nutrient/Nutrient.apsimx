@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="25">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="26">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -489,6 +489,7 @@ But their data suggests a value of 0.3]]></MemoText>
                   <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
                   <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
@@ -551,6 +552,7 @@ But their data suggests a value of 0.3]]></MemoText>
                   <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
                   <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
@@ -613,6 +615,7 @@ But their data suggests a value of 0.3]]></MemoText>
                   <MarkerSize>Normal</MarkerSize>
                   <Line>Solid</Line>
                   <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
                   <XFieldName>[XYPairs].X</XFieldName>
                   <YFieldName>[XYPairs].Y</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
@@ -1343,6 +1346,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>PredictedObservedSoil</TableName>
           <XFieldName>Observed.TOC0_30cm</XFieldName>
           <YFieldName>Predicted.TOC0_30cm</YFieldName>
@@ -7617,6 +7621,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>HarvestReport</TableName>
               <XFieldName>Clock.Today.Year</XFieldName>
               <YFieldName>Wheat.Grain.Wt</YFieldName>
@@ -7639,6 +7644,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>ObsCrop</TableName>
               <XFieldName>Clock.Today.Year</XFieldName>
               <YFieldName>Wheat.Grain.Wt</YFieldName>
@@ -7686,6 +7692,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>PredictedObserved</TableName>
               <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
               <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
@@ -7733,6 +7740,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TOC0_30cm</YFieldName>
@@ -7755,6 +7763,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>ObsSoil</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TOC0_30cm</YFieldName>
@@ -7803,6 +7812,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>PredictedObservedSoil</TableName>
               <XFieldName>Observed.TOC0_30cm</XFieldName>
               <YFieldName>Predicted.TOC0_30cm</YFieldName>
@@ -7845,6 +7855,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TOC0_10cm</YFieldName>
@@ -7867,6 +7878,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>ObsSoil</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TOC0_10cm</YFieldName>
@@ -7915,6 +7927,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>PredictedObservedSoil</TableName>
               <XFieldName>Observed.TOC0_10cm</XFieldName>
               <YFieldName>Predicted.TOC0_10cm</YFieldName>
@@ -7957,6 +7970,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TOC10_30cm</YFieldName>
@@ -7979,6 +7993,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>ObsSoil</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TOC10_30cm</YFieldName>
@@ -8027,6 +8042,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>PredictedObservedSoil</TableName>
               <XFieldName>Observed.TOC10_30cm</XFieldName>
               <YFieldName>Predicted.TOC10_30cm</YFieldName>
@@ -8069,6 +8085,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TOC30_60cm</YFieldName>
@@ -8091,6 +8108,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>ObsSoil</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TOC30_60cm</YFieldName>
@@ -8139,6 +8157,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>PredictedObservedSoil</TableName>
               <XFieldName>Observed.TOC30_60cm</XFieldName>
               <YFieldName>Predicted.TOC30_60cm</YFieldName>
@@ -14308,6 +14327,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.AboveGround.Wt</YFieldName>
@@ -14330,6 +14350,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Crop</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.AboveGround.Wt</YFieldName>
@@ -14352,6 +14373,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>W1ObsCrop</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Barley.AboveGround.Wt</YFieldName>
@@ -14394,6 +14416,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Grain.Wt</YFieldName>
@@ -14416,6 +14439,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Crop</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Grain.Wt</YFieldName>
@@ -14438,6 +14462,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>W1ObsCrop</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Barley.AboveGround.Wt</YFieldName>
@@ -14480,6 +14505,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Leaf.LAI</YFieldName>
@@ -14502,6 +14528,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Crop</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Leaf.LAI</YFieldName>
@@ -14524,6 +14551,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>W1ObsCrop</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Barley.AboveGround.Wt</YFieldName>
@@ -16392,6 +16420,7 @@ The model consists of:
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>ObsSoil</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TOC0_10cm</YFieldName>
@@ -16414,6 +16443,7 @@ The model consists of:
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TOC0_10cm</YFieldName>
@@ -16456,6 +16486,7 @@ The model consists of:
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>ObsSoil</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TOC0_30cm</YFieldName>
@@ -16478,6 +16509,7 @@ The model consists of:
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TOC0_30cm</YFieldName>
@@ -23594,6 +23626,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>ObsSoil</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TOC0_10cm</YFieldName>
@@ -23616,6 +23649,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TOC0_10cm</YFieldName>
@@ -23658,6 +23692,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>ObsSoil</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TON0_10cm</YFieldName>
@@ -23680,6 +23715,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TON0_10cm</YFieldName>
@@ -23722,6 +23758,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>ObsSoil</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TOC0_30cm</YFieldName>
@@ -23744,6 +23781,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TOC0_30cm</YFieldName>
@@ -23786,6 +23824,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>ObsSoil</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TON0_30cm</YFieldName>
@@ -23808,6 +23847,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TON0_30cm</YFieldName>
@@ -23850,6 +23890,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>BrigalowReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TotalFOMC</YFieldName>
@@ -32592,6 +32633,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>ObsSoil</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>TOC0_30cm</YFieldName>
@@ -32614,6 +32656,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>HarvestReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>TOC0_30cm</YFieldName>
@@ -32656,6 +32699,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>ObsSoil</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>TOC30_60cm</YFieldName>
@@ -32678,6 +32722,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>HarvestReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>TOC30_60cm</YFieldName>
@@ -32720,6 +32765,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>ObsSoil</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>TON0_30cm</YFieldName>
@@ -32742,6 +32788,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>HarvestReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>TON0_30cm</YFieldName>
@@ -32784,6 +32831,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>ObsSoil</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>TON30_60cm</YFieldName>
@@ -32806,6 +32854,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>HarvestReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>TON30_60cm</YFieldName>
@@ -32848,6 +32897,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>ObsSoil</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>CNR0_30cm</YFieldName>
@@ -32870,6 +32920,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>HarvestReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>CNR0_30cm</YFieldName>
@@ -32912,6 +32963,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>ObsSoil</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>CNR30_60cm</YFieldName>
@@ -32934,6 +32986,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>HarvestReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>CNR30_60cm</YFieldName>
@@ -32981,6 +33034,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>PredictedObservedSoil</TableName>
                 <XFieldName>Observed.TOC0_30cm</XFieldName>
                 <YFieldName>Predicted.TOC0_30cm</YFieldName>
@@ -33028,6 +33082,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>PredictedObservedSoil</TableName>
                 <XFieldName>Observed.TOC30_60cm</XFieldName>
                 <YFieldName>Predicted.TOC30_60cm</YFieldName>
@@ -33075,6 +33130,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>PredictedObservedSoil</TableName>
                 <XFieldName>Observed.TON0_30cm</XFieldName>
                 <YFieldName>Predicted.TON0_30cm</YFieldName>
@@ -33122,6 +33178,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>PredictedObservedSoil</TableName>
                 <XFieldName>Observed.TON30_60cm</XFieldName>
                 <YFieldName>Predicted.TON30_60cm</YFieldName>
@@ -33169,6 +33226,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>ObsCrop</TableName>
                 <XFieldName>Clock.Today.Year</XFieldName>
                 <YFieldName>Wheat.Grain.Wt</YFieldName>
@@ -33191,6 +33249,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>HarvestReport</TableName>
                 <XFieldName>Clock.Today.Year</XFieldName>
                 <YFieldName>Wheat.Grain.Wt</YFieldName>
@@ -33238,6 +33297,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>PredictedObserved</TableName>
                 <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
                 <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
@@ -33280,6 +33340,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>ObsCrop</TableName>
                 <XFieldName>Clock.Today.Year</XFieldName>
                 <YFieldName>Nexport</YFieldName>
@@ -33302,6 +33363,7 @@ The model consists of:
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>HarvestReport</TableName>
                 <XFieldName>Clock.Today.Year</XFieldName>
                 <YFieldName>NExport</YFieldName>

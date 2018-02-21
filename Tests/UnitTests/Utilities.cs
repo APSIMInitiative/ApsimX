@@ -3,6 +3,7 @@ namespace UnitTests
 {
     using APSIM.Shared.Utilities;
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.IO;
     using System.Reflection;
@@ -29,11 +30,29 @@ namespace UnitTests
 
 
         /// <summary>Convert a SQLite table to a string.</summary>
-        public static string TableToString(string fileName, string tableName)
+        public static string TableToString(string fileName, string tableName, IEnumerable<string> fieldNames = null)
         {
             SQLite database = new SQLite();
             database.OpenDatabase(fileName, true);
-            DataTable data = database.ExecuteQuery("SELECT * FROM " + tableName);
+            string sql = "SELECT ";
+            if (fieldNames == null)
+                sql += "*";
+            else
+            {
+                bool first = true;
+                foreach (string fieldName in fieldNames)
+                {
+                    if (first)
+                        first = false;
+                    else
+                        sql += ",";
+                    sql += fieldName;
+                }
+            }
+            sql += " FROM " + tableName;
+            if (database.GetColumnNames(tableName).Contains("CheckpointID"))
+                sql += " ORDER BY CheckpointID";
+            DataTable data = database.ExecuteQuery(sql);
             database.CloseDatabase();
             return TableToString(data);
         }

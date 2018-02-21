@@ -16,17 +16,18 @@ namespace UserInterface.Views
         private Label label4 = null;
         private Label label5 = null;
 
-        private DropDownView dropDownView1;
-        private DropDownView dropDownView2;
-        private DropDownView dropDownView3;
-        private DropDownView dropDownView4;
-        private DropDownView dropDownView5;
-        private DropDownView dropDownView6;
-        private DropDownView dropDownView7;
-        private DropDownView dropDownView8;
-        private ColourDropDownView dropDownView9;
-        private DropDownView dropDownView10;
-        private DropDownView dropDownView11;
+        private DropDownView checkpointDropDown;
+        private DropDownView dataSourceDropDown;
+        private DropDownView xDropDown;
+        private DropDownView yDropDown;
+        private DropDownView x2DropDown;
+        private DropDownView y2DropDown;
+        private DropDownView seriesDropDown;
+        private DropDownView lineTypeDropDown;
+        private DropDownView markerTypeDropDown;
+        private ColourDropDownView colourDropDown;
+        private DropDownView lineThicknessDropDown;
+        private DropDownView markerSizeDropDown;
         private CheckBoxView checkBoxView1;
         private CheckBoxView checkBoxView2;
         private CheckBoxView checkBoxView3;
@@ -49,17 +50,18 @@ namespace UserInterface.Views
             graphView1 = new GraphView(this);
             vbox1.PackStart(graphView1.MainWidget, true, true, 0);
 
-            dropDownView1 = new DropDownView(this);
-            dropDownView2 = new DropDownView(this);
-            dropDownView3 = new DropDownView(this);
-            dropDownView4 = new DropDownView(this);
-            dropDownView5 = new DropDownView(this);
-            dropDownView6 = new DropDownView(this);
-            dropDownView7 = new DropDownView(this);
-            dropDownView8 = new DropDownView(this);
-            dropDownView9 = new ColourDropDownView(this);
-            dropDownView10 = new DropDownView(this);
-            dropDownView11 = new DropDownView(this);
+            checkpointDropDown = new DropDownView(this);
+            dataSourceDropDown = new DropDownView(this);
+            xDropDown = new DropDownView(this);
+            yDropDown = new DropDownView(this);
+            x2DropDown = new DropDownView(this);
+            y2DropDown = new DropDownView(this);
+            seriesDropDown = new DropDownView(this);
+            lineTypeDropDown = new DropDownView(this);
+            markerTypeDropDown = new DropDownView(this);
+            colourDropDown = new ColourDropDownView(this);
+            lineThicknessDropDown = new DropDownView(this);
+            markerSizeDropDown = new DropDownView(this);
 
             checkBoxView1 = new CheckBoxView(this);
             checkBoxView1.TextOfLabel = "on top?";
@@ -76,15 +78,17 @@ namespace UserInterface.Views
 
             editView1 = new EditView(this);
 
-            table1.Attach(dropDownView1.MainWidget, 1, 2, 0, 1, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(dropDownView2.MainWidget, 1, 2, 1, 2, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(dropDownView3.MainWidget, 1, 2, 2, 3, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(dropDownView5.MainWidget, 1, 2, 3, 4, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(dropDownView4.MainWidget, 1, 2, 4, 5, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(dropDownView6.MainWidget, 1, 2, 5, 6, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(dropDownView7.MainWidget, 1, 2, 6, 7, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(dropDownView8.MainWidget, 1, 2, 7, 8, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(dropDownView9.MainWidget, 1, 2, 8, 9, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(checkpointDropDown.MainWidget, 1, 2, 0, 1, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(dataSourceDropDown.MainWidget, 1, 2, 1, 2, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(xDropDown.MainWidget, 1, 2, 2, 3, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(yDropDown.MainWidget, 1, 2, 3, 4, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(y2DropDown.MainWidget, 1, 2, 4, 5, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(x2DropDown.MainWidget, 1, 2, 5, 6, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(seriesDropDown.MainWidget, 1, 2, 6, 7, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(lineTypeDropDown.MainWidget, 1, 2, 7, 8, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(markerTypeDropDown.MainWidget, 1, 2, 8, 9, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(colourDropDown.MainWidget, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
+
             Image helpImage = new Image(null, "ApsimNG.Resources.help.png");
             EventBox ebHelp = new EventBox();
             ebHelp.Add(helpImage);
@@ -94,35 +98,36 @@ namespace UserInterface.Views
             filterBox.PackEnd(ebHelp, false, true, 0);
 
             //table1.Attach(editView1.MainWidget, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(filterBox, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(filterBox, 1, 2, 10, 11, AttachOptions.Fill, 0, 10, 2);
 
-            table1.Attach(checkBoxView1.MainWidget, 2, 3, 1, 2, AttachOptions.Fill, 0, 0, 0);
-            table1.Attach(checkBoxView2.MainWidget, 2, 3, 2, 3, AttachOptions.Fill, 0, 0, 0);
-            table1.Attach(checkBoxView3.MainWidget, 3, 4, 1, 2, AttachOptions.Fill, 0, 0, 0);
-            table1.Attach(checkBoxView4.MainWidget, 3, 4, 2, 3, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView1.MainWidget, 2, 3, 2, 3, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView2.MainWidget, 2, 3, 3, 4, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView3.MainWidget, 3, 4, 2, 3, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView4.MainWidget, 3, 4, 3, 4, AttachOptions.Fill, 0, 0, 0);
 
-            table1.Attach(checkBoxView5.MainWidget, 2, 4, 8, 9, AttachOptions.Fill, 0, 0, 0);
-            table1.Attach(checkBoxView6.MainWidget, 2, 4, 9, 10, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView5.MainWidget, 2, 4, 9, 10, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView6.MainWidget, 2, 4, 10, 11, AttachOptions.Fill, 0, 0, 0);
 
-            table1.Attach(dropDownView10.MainWidget, 3, 4, 6, 7, AttachOptions.Fill, 0, 0, 5);
-            table1.Attach(dropDownView11.MainWidget, 3, 4, 7, 8, AttachOptions.Fill, 0, 0, 5);
+            table1.Attach(lineThicknessDropDown.MainWidget, 3, 4, 7, 8, AttachOptions.Fill, 0, 0, 5);
+            table1.Attach(markerSizeDropDown.MainWidget, 3, 4, 8, 9, AttachOptions.Fill, 0, 0, 5);
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            dropDownView1.MainWidget.Destroy();
-            dropDownView2.MainWidget.Destroy();
-            dropDownView3.MainWidget.Destroy();
-            dropDownView4.MainWidget.Destroy();
-            dropDownView5.MainWidget.Destroy();
-            dropDownView6.MainWidget.Destroy();
-            dropDownView7.MainWidget.Destroy();
-            dropDownView8.MainWidget.Destroy();
-            dropDownView9.MainWidget.Destroy();
-            dropDownView10.MainWidget.Destroy();
-            dropDownView11.MainWidget.Destroy();
+            checkpointDropDown.MainWidget.Destroy();
+            dataSourceDropDown.MainWidget.Destroy();
+            xDropDown.MainWidget.Destroy();
+            yDropDown.MainWidget.Destroy();
+            x2DropDown.MainWidget.Destroy();
+            y2DropDown.MainWidget.Destroy();
+            seriesDropDown.MainWidget.Destroy();
+            lineTypeDropDown.MainWidget.Destroy();
+            markerTypeDropDown.MainWidget.Destroy();
+            colourDropDown.MainWidget.Destroy();
+            lineThicknessDropDown.MainWidget.Destroy();
+            markerSizeDropDown.MainWidget.Destroy();
             checkBoxView1.MainWidget.Destroy();
             checkBoxView2.MainWidget.Destroy();
             checkBoxView3.MainWidget.Destroy();
@@ -134,38 +139,41 @@ namespace UserInterface.Views
             _owner = null;
         }
 
+        /// <summary>Checkpoint control</summary>
+        public IDropDownView Checkpoint { get { return checkpointDropDown; } }
+
         /// <summary>Data source</summary>
-        public IDropDownView DataSource { get { return dropDownView1; } }
+        public IDropDownView DataSource { get { return dataSourceDropDown; } }
 
         /// <summary>X field</summary>
-        public IDropDownView X { get { return dropDownView2; } }
+        public IDropDownView X { get { return xDropDown; } }
 
         /// <summary>Y field</summary>
-        public IDropDownView Y { get { return dropDownView3; } }
+        public IDropDownView Y { get { return yDropDown; } }
 
         /// <summary>X2 field</summary>
-        public IDropDownView X2 { get { return dropDownView4; } }
+        public IDropDownView X2 { get { return x2DropDown; } }
 
         /// <summary>Y2 field</summary>
-        public IDropDownView Y2 { get { return dropDownView5; } }
+        public IDropDownView Y2 { get { return y2DropDown; } }
 
         /// <summary>Series type</summary>
-        public IDropDownView SeriesType { get { return dropDownView6; } }
+        public IDropDownView SeriesType { get { return seriesDropDown; } }
 
         /// <summary>Line type</summary>
-        public IDropDownView LineType { get { return dropDownView7; } }
+        public IDropDownView LineType { get { return lineTypeDropDown; } }
 
         /// <summary>MarkerType</summary>
-        public IDropDownView MarkerType { get { return dropDownView8; } }
+        public IDropDownView MarkerType { get { return markerTypeDropDown; } }
 
         /// <summary>Line thickness</summary>
-        public IDropDownView LineThickness { get { return dropDownView10; } }
+        public IDropDownView LineThickness { get { return lineThicknessDropDown; } }
 
         /// <summary>Marker size</summary>
-        public IDropDownView MarkerSize { get { return dropDownView11; } }
+        public IDropDownView MarkerSize { get { return markerSizeDropDown; } }
 
         /// <summary>Colour</summary>
-        public IColourDropDownView Colour { get { return dropDownView9; } }
+        public IColourDropDownView Colour { get { return colourDropDown; } }
 
         /// <summary>X on top checkbox.</summary>
         public ICheckBoxView XOnTop { get { return checkBoxView1; } }

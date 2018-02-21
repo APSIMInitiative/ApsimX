@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 25; } }
+        public static int LastestVersion { get { return 26; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -117,29 +117,29 @@ namespace Models.Core.ApsimFile
         /// <param name="node">The node to upgrade.</param>
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion1(XmlNode node, string fileName)
+    {
+        foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
         {
-            foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
-            {
-                XmlUtilities.Rename(seriesNode, "Title", "Name");
-                XmlUtilities.Move(seriesNode, "X/TableName", seriesNode, "TableName");
-                XmlUtilities.Move(seriesNode, "X/FieldName", seriesNode, "XFieldName");
-                XmlUtilities.Move(seriesNode, "Y/FieldName", seriesNode, "YFieldName");
-                XmlUtilities.Move(seriesNode, "X2/FieldName", seriesNode, "X2FieldName");
-                XmlUtilities.Move(seriesNode, "Y2/FieldName", seriesNode, "Y2FieldName");
+            XmlUtilities.Rename(seriesNode, "Title", "Name");
+            XmlUtilities.Move(seriesNode, "X/TableName", seriesNode, "TableName");
+            XmlUtilities.Move(seriesNode, "X/FieldName", seriesNode, "XFieldName");
+            XmlUtilities.Move(seriesNode, "Y/FieldName", seriesNode, "YFieldName");
+            XmlUtilities.Move(seriesNode, "X2/FieldName", seriesNode, "X2FieldName");
+            XmlUtilities.Move(seriesNode, "Y2/FieldName", seriesNode, "Y2FieldName");
 
-                bool showRegression = XmlUtilities.Value(seriesNode.ParentNode, "ShowRegressionLine") == "true";
-                if (showRegression)
-                    seriesNode.AppendChild(seriesNode.OwnerDocument.CreateElement("Regression"));
+            bool showRegression = XmlUtilities.Value(seriesNode.ParentNode, "ShowRegressionLine") == "true";
+            if (showRegression)
+                seriesNode.AppendChild(seriesNode.OwnerDocument.CreateElement("Regression"));
 
-                string seriesType = XmlUtilities.Value(seriesNode, "Type");
-                if (seriesType == "Line")
-                    XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
+            string seriesType = XmlUtilities.Value(seriesNode, "Type");
+            if (seriesType == "Line")
+                XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
 
-                XmlUtilities.DeleteValue(seriesNode, "X");
-                XmlUtilities.DeleteValue(seriesNode, "Y");
+            XmlUtilities.DeleteValue(seriesNode, "X");
+            XmlUtilities.DeleteValue(seriesNode, "Y");
 
-            }
         }
+    }
 
         /// <summary>Upgrades to version 2.</summary>
         /// <remarks>
@@ -718,6 +718,7 @@ namespace Models.Core.ApsimFile
                 if (ConverterUtilities.FindModelNode(n, "CarbonConcentration") == null)
                     n.AppendChild(DMnode);
             }
+
         }
 
         /// <summary>
@@ -744,12 +745,57 @@ namespace Models.Core.ApsimFile
             }
                 
         }
+
         /// <summary>
-        /// Upgrades to version 24. Replace SoilNitrogen model with Nutrient.
+        /// Upgrades to version 25. Add checkpoint fields and table to .db
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion25(XmlNode node, string fileName)
+        {
+            string dbFileName = Path.ChangeExtension(fileName, ".db");
+            if (File.Exists(dbFileName))
+            {
+                SQLite connection = new SQLite();
+                connection.OpenDatabase(dbFileName, false);
+                try
+                {
+                    DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
+                    List<string> tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name").ToList();
+                    if (!tableNames.Contains("_Checkpoints"))
+                    {
+                        connection.ExecuteNonQuery("BEGIN");
+
+                        foreach (string tableName in tableNames)
+                        {
+                            List<string> columnNames = connection.GetColumnNames(tableName);
+                            if (columnNames.Contains("SimulationID"))
+                            {
+                                connection.ExecuteNonQuery("ALTER TABLE " + tableName + " ADD COLUMN CheckpointID INTEGER DEFAULT 1");
+                            }
+                        }
+
+                        // Now add a _checkpointfiles table.
+                        connection.ExecuteNonQuery("CREATE TABLE _Checkpoints (ID INTEGER PRIMARY KEY ASC, Name TEXT, Version TEXT, Date TEXT)");
+                        connection.ExecuteNonQuery("CREATE TABLE _CheckpointFiles (CheckpointID INTEGER, FileName TEXT, Contents BLOB)");
+                        connection.ExecuteNonQuery("INSERT INTO [_Checkpoints] (Name) VALUES (\"Current\")");
+
+                        connection.ExecuteNonQuery("END");
+                    }
+                }
+                finally
+                {
+                    connection.CloseDatabase();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 26. Replace SoilNitrogen model with Nutrient.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion26(XmlNode node, string fileName)
         {
             ConverterUtilities.RenameVariable(node, "using Models.Soils;", "using Models.Soils;\r\nusing Models.Soils.Nutrients;");
 
@@ -842,6 +888,5 @@ namespace Models.Core.ApsimFile
             }
 
         }
-
     }
 }
