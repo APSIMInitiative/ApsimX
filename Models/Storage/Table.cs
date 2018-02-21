@@ -40,6 +40,15 @@ namespace Models.Storage
         /// <summary>A set of column names for quickly checking if columns exist in this table.</summary>
         private SortedSet<string> sortedColumnNames = new SortedSet<string>();
 
+        /// <summary>A list of simulations that we have already written data for</summary>
+        private List<int> simulationsWithDataWritten = new List<int>();
+
+        /// <summary>Have we checked for a simulation ID column?</summary>
+        private bool haveCheckedForSimulationIDColumn = false;
+
+        /// <summary>Have we checked for a simulation ID column?</summary>
+        private Dictionary<string, int> columnIndexes = new Dictionary<string, int>();
+
         /// <summary>Name of table.</summary>
         public string Name { get; private set; }
 
@@ -58,16 +67,38 @@ namespace Models.Storage
         {
             Name = tableName;
             Columns = new List<Column>();
-            Columns.Add(new Column("SimulationID", null, "integer"));
+            Columns.Add(new Column("CheckpointID", null, "integer"));
+        }
+
+
+        /// <summary>Simulations are about to start running</summary>
+        public void BeginRun()
+        {
+            simulationsWithDataWritten.Clear();
         }
 
         /// <summary>Add a row to our list of rows to write</summary>
-        /// <param name="simulationID"></param>
-        /// <param name="rowColumnNames"></param>
-        /// <param name="rowColumnUnits"></param>
-        /// <param name="rowValues"></param>
-        public void AddRow(int simulationID, IEnumerable<string> rowColumnNames, IEnumerable<string> rowColumnUnits, IEnumerable<object> rowValues)
+        /// <param name="checkpointID">ID of checkpoint</param>
+        /// <param name="simulationID">ID of simulation</param>
+        /// <param name="rowColumnNames">Column names of values</param>
+        /// <param name="rowColumnUnits">Units of values</param>
+        /// <param name="rowValues">The values</param>
+        public void AddRow(int checkpointID, int simulationID, IEnumerable<string> rowColumnNames, IEnumerable<string> rowColumnUnits, IEnumerable<object> rowValues)
         {
+            // If we have a valid simulation ID then make sure SimulationID is at index 1 in the Columns
+            lock (lockObject)
+                {
+                if (!haveCheckedForSimulationIDColumn && simulationID != -1 && Columns.Find(column => column.Name == "SimulationID") == null)
+                {
+                    Column simIDColumn = new Column("SimulationID", null, "integer");
+                    if (Columns.Count > 1)
+                        Columns.Insert(1, simIDColumn);
+                    else
+                        Columns.Add(simIDColumn);
+                    haveCheckedForSimulationIDColumn = true;
+                }
+            }
+
             // We want all rows to be a normalised flat table. All rows must have the same number of values
             // and be in correct order i.e. like a .NET DataTable.
 
@@ -104,10 +135,19 @@ namespace Models.Storage
             lock (lockObject)
             {
                 object[] newRow = new object[Columns.Count];
-                newRow[0] = simulationID;
+                newRow[0] = checkpointID;
+                if (simulationID > 0)
+                    newRow[1] = simulationID;
                 for (int i = 0; i < rowColumnNames.Count(); i++)
                 {
-                    int columnIndex = Columns.FindIndex(column => column.Name == rowColumnNames.ElementAt(i));
+                    // Get a column index for the column - use a cache (dictionary) to speed up lookups.
+                    string columnName = rowColumnNames.ElementAt(i);
+                    int columnIndex;
+                    if (!columnIndexes.TryGetValue(columnName, out columnIndex))
+                    {
+                        columnIndex = Columns.FindIndex(column => column.Name == columnName);
+                        columnIndexes.Add(columnName, columnIndex);
+                    }
                     newRow[columnIndex] = rowValues.ElementAt(i);
                     if (Columns[columnIndex].SQLiteDataType == null)
                         Columns[columnIndex].SQLiteDataType = GetSQLiteDataType(newRow[columnIndex]);
@@ -166,6 +206,22 @@ namespace Models.Storage
                     RowsToWrite.RemoveRange(0, numRows);
                 }
 
+                // If this is the first time we've written data for this collection of simulations then clear old data
+                var uniqueSimulationIDs = GetValuesFromRows(values, "SimulationID");
+                var simulationIDsWithOldData = uniqueSimulationIDs.Except(simulationsWithDataWritten);
+                if (simulationIDsWithOldData.Count() > 0)
+                {
+                    int checkpointID = GetValueFromRow(values[0], "CheckpointID");
+                    if (checkpointID > 0)
+                    {
+                        string queryString = "(" + StringUtilities.Build(simulationIDsWithOldData, ",") + ")";
+                        connection.ExecuteNonQuery("DELETE FROM " + Name +
+                                                   " WHERE SimulationID IN " + queryString +
+                                                   " AND CheckpointID = " + checkpointID);
+                        simulationsWithDataWritten.AddRange(simulationIDsWithOldData);
+                    }
+                }
+
                 // Create an insert query
                 preparedInsertQuery = CreateInsertQuery(connection, columnNames);
 
@@ -187,6 +243,13 @@ namespace Models.Storage
                 if (Columns.Find(c => c.Name == column.Name) == null)
                     Columns.Add(column);
             }
+        }
+
+        /// <summary>Does the table have the specified column name</summary>
+        /// <param name="fieldName">Column name to look for</param>
+        public bool HasColumn(string fieldName)
+        {
+            return Columns.Find(column => column.Name.Equals(fieldName, StringComparison.CurrentCultureIgnoreCase)) != null;
         }
 
         /// <summary>Does the specified table exist?</summary>
@@ -327,7 +390,7 @@ namespace Models.Storage
         /// 'Flatten' the row passed in, into a list of columns ready to be added
         /// to a data table.
         /// </summary>
-        public static void Flatten(ref IEnumerable<string> columnNames, ref IEnumerable<string> columnUnits, ref IEnumerable<object> columnValues)
+        private static void Flatten(ref IEnumerable<string> columnNames, ref IEnumerable<string> columnUnits, ref IEnumerable<object> columnValues)
         {
             List<string> newColumnNames = new List<string>();
             List<string> newColumnUnits = new List<string>();
@@ -427,5 +490,37 @@ namespace Models.Storage
             }
         }
 
+        /// <summary>
+        /// Get the simulation ID for the specified row.
+        /// </summary>
+        /// <param name="values">The row values</param>
+        /// <param name="columnName">The column name to look for</param>
+        /// <returns>Returns ID or 0 if not found</returns>
+        private int GetValueFromRow(object[] values, string columnName)
+        {
+            int indexSimulationID = Columns.FindIndex(column => column.Name == columnName);
+            if (indexSimulationID != -1 && values[indexSimulationID] != null)
+                return (int)values[indexSimulationID];
+            return 0;
+        }
+
+        /// <summary>
+        /// Get all simulation IDs for the specified rows.
+        /// </summary>
+        /// <param name="values">The row values</param>
+        /// <param name="columnName">The column name to look for</param>
+        /// <returns>Returns ID or 0 if not found</returns>
+        private IEnumerable<int> GetValuesFromRows(List<object[]> values, string columnName)
+        {
+            SortedSet<int> ids = new SortedSet<int>();
+            int indexSimulationID = Columns.FindIndex(column => column.Name == columnName);
+            if (indexSimulationID != -1)
+            {
+                foreach (object[] rowValues in values)
+                    if (rowValues[indexSimulationID] != null)
+                        ids.Add((int)rowValues[indexSimulationID]);
+            }
+            return ids;
+        }
     }
 }

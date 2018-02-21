@@ -41,7 +41,7 @@ namespace Models.PostSimulationTools
         /// <param name="dataStore">The DataStore to work with</param>
         public void Run(IStorageReader dataStore)
         {
-            dataStore.DeleteTable(this.Name);
+            dataStore.DeleteDataInTable(this.Name);
 
             DataTable simulationData = dataStore.GetData("*", this.TableName);
             if (simulationData != null)
@@ -86,7 +86,7 @@ namespace Models.PostSimulationTools
 
                 // Write the stats data to the DataStore
                 probabilityData.TableName = this.Name;
-                dataStore.WriteTableRaw(probabilityData);
+                dataStore.WriteTable(probabilityData);
             }
         }
     }
