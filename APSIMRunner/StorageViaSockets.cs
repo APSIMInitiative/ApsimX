@@ -10,13 +10,6 @@
     {
         List<JobRunnerMultiProcess.TransferRowInTable> data = new List<JobRunnerMultiProcess.TransferRowInTable>();
 
-        /// <summary>We have completed the simulation - write remaining data</summary>
-        /// <param name="simulationName"></param>
-        public void CompletedWritingSimulationData(string simulationName)
-        {
-            WriteAllData();
-        } 
-
         /// <summary>Write to permanent storage.</summary>
         /// <param name="simulationName">Name of simulation</param>
         /// <param name="tableName">Name of table</param>
@@ -39,7 +32,7 @@
         }
 
         /// <summary>Write all the data we stored</summary>
-        private void WriteAllData()
+        public void WriteAllData()
         {
             if (data.Count > 0)
             {

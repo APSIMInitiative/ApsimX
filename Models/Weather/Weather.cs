@@ -35,7 +35,7 @@ namespace Models
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
-    public class Weather : Model, IWeather
+    public class Weather : Model, IWeather, IReferenceExternalFiles
     {
         /// <summary>
         /// A link to the clock model.
@@ -443,8 +443,12 @@ namespace Models
                 return this.MetData.Radn / ((this.MetData.Maxt + this.MetData.Mint) / 2);
             }
         }
-        
 
+        /// <summary>Return our input filenames</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return new string[] { FileName };
+        }
 
         /// <summary>
         /// Gets the duration of the day in hours.

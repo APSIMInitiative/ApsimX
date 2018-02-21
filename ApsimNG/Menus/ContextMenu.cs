@@ -318,7 +318,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void EmptyDataStore(object sender, EventArgs e)
         {
-            storage.DeleteAllTables();
+            storage.EmptyDataStore();
         }
 
         /// <summary>
@@ -624,5 +624,19 @@ namespace UserInterface.Presenters
             return (folder != null) ? folder.ShowPageOfGraphs : false;
         }
 
+        /// <summary>
+        /// Event handler for 'Checkpoints' menu item
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Checkpoints", IsToggle = true,
+                     AppliesTo = new Type[] { typeof(Simulations) })]
+        public void ShowCheckpoints(object sender, EventArgs e)
+        {
+            explorerPresenter.HideRightHandPanel();
+            explorerPresenter.ShowInRightHandPanel(explorerPresenter.ApsimXFile,
+                                                   "UserInterface.Views.ListButtonView",
+                                                   "UserInterface.Presenters.CheckpointsPresenter");
+        }
     }
 }
