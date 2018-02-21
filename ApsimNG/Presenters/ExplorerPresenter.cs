@@ -111,9 +111,17 @@ namespace UserInterface.Presenters
             this.view.Droped += this.OnDrop;
             this.view.Renamed += this.OnRename;
 
+            Refresh();
+            this.PopulateMainMenu();
+        }
+
+        /// <summary>
+        /// Refresh the view.
+        /// </summary>
+        public void Refresh()
+        {
             this.view.Refresh(this.GetNodeDescription(this.ApsimXFile));
             this.WriteLoadErrors();
-            this.PopulateMainMenu();
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -593,6 +601,13 @@ namespace UserInterface.Presenters
                 {
                     ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                    DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+
+                    if (descriptionName != null)
+                    {
+                        viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
+                    }
 
                     if (this.advancedMode)
                     {
@@ -906,7 +921,8 @@ namespace UserInterface.Presenters
             }
             else
             {
-                imageFileName = model.GetType().Name;
+                // Add model name from namespace to the resource image name
+                imageFileName = model.GetType().FullName.Split('.')[1] + "." + model.GetType().Name;
             }
 
             if (model.GetType().Namespace.Contains("Models.PMF"))

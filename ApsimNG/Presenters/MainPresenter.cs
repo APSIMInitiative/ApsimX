@@ -75,7 +75,10 @@ namespace UserInterface.Presenters
             this.view.StartPage2.List.DoubleClicked += this.OnFileDoubleClicked;
             this.view.TabClosing += this.OnTabClosing;
             this.view.Show();
-
+            if (Utility.Configuration.Settings.StatusPanelHeight > 0.5 * this.view.WindowSize.Height)
+                this.view.StatusPanelHeight = 20;
+            else
+                this.view.StatusPanelHeight = Utility.Configuration.Settings.StatusPanelHeight;
             // Process command line.
             this.ProcessCommandLineArguments(commandLineArguments);
         }
@@ -178,9 +181,9 @@ namespace UserInterface.Presenters
         /// Show progress bar with the specified percent.
         /// </summary>
         /// <param name="percent">The progress</param>
-        public void ShowProgress(int percent)
+        public void ShowProgress(int percent, bool showStopButton = true)
         {
-            this.view.ShowProgress(percent);
+            this.view.ShowProgress(percent, showStopButton);
         }
 
         /// <summary>
@@ -904,6 +907,7 @@ namespace UserInterface.Presenters
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
+                Utility.Configuration.Settings.StatusPanelHeight = this.view.StatusPanelHeight;
             }
         }
     }

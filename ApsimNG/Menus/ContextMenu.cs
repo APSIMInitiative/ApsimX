@@ -312,7 +312,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void EmptyDataStore(object sender, EventArgs e)
         {
-            storage.DeleteAllTables();
+            storage.EmptyDataStore();
         }
 
         /// <summary>
@@ -462,7 +462,55 @@ namespace UserInterface.Presenters
             }
             
         }
-        
+
+        /// <summary>
+        /// Event handler for generate .apsimx files option.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Generate .apsimx files",
+             AppliesTo = new Type[] {   typeof(Folder),
+                                        typeof(Simulations),
+                                        typeof(Simulation),
+                                        typeof(Experiment),
+                                    }
+            )
+        ]
+        public void OnGenerateApsimXFiles(object sender, EventArgs e)
+        {
+            IModel node = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+
+            List<IModel> children;
+            if (node is Experiment)
+            {
+                children = new List<IModel> { node };
+            }
+            else
+            {
+                children = Apsim.ChildrenRecursively(node, typeof(Experiment));
+            }
+
+            string outDir = ViewBase.AskUserForDirectory("Select a directory to save model files to.");
+            if (outDir == null)                
+                return;
+            if (!Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
+            string err = "";
+            int i = 0;            
+            children.ForEach(expt => 
+            {
+                explorerPresenter.MainPresenter.ShowMessage("Generating simulation files: ", Simulation.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowProgress(100 * i / children.Count, false);                
+                while (GLib.MainContext.Iteration()) ;
+                err += (expt as Experiment).GenerateApsimXFile(outDir);
+                i++;
+            });            
+            if (err.Length < 1)
+                explorerPresenter.MainPresenter.ShowMessage("Successfully generated .apsimx files under " + outDir + ".", Simulation.ErrorLevel.Information);
+            else
+                explorerPresenter.MainPresenter.ShowMessage(err, Simulation.ErrorLevel.Error);
+        }
+
         /// <summary>
         /// Event handler for a Add model action
         /// </summary>
@@ -570,5 +618,19 @@ namespace UserInterface.Presenters
             return (folder != null) ? folder.ShowPageOfGraphs : false;
         }
 
+        /// <summary>
+        /// Event handler for 'Checkpoints' menu item
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Checkpoints", IsToggle = true,
+                     AppliesTo = new Type[] { typeof(Simulations) })]
+        public void ShowCheckpoints(object sender, EventArgs e)
+        {
+            explorerPresenter.HideRightHandPanel();
+            explorerPresenter.ShowInRightHandPanel(explorerPresenter.ApsimXFile,
+                                                   "UserInterface.Views.ListButtonView",
+                                                   "UserInterface.Presenters.CheckpointsPresenter");
+        }
     }
 }
