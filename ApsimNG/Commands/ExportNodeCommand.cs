@@ -679,8 +679,8 @@ namespace UserInterface.Commands
                             {
                                 popupWin = new Gtk.Window(Gtk.WindowType.Popup);
                                 popupWin.SetSizeRequest(800, 800);
+                                popupWin.Add(view.MainWidget);
                             }
-                            popupWin.Add(view.MainWidget);
                             popupWin.ShowAll();
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
