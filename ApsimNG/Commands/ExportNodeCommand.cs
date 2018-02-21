@@ -669,13 +669,17 @@ namespace UserInterface.Commands
                             ExplorerPresenter.ApsimXFile.Links.Resolve(presenter);
                             presenter.Attach(modelView.model, view, ExplorerPresenter);
 
-                            Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
-                            popupWin.SetSizeRequest(800, 800);
-                            // Move the window offscreen; the user doesn't need to see it.
-                            // This works with IE, but not with WebKit
-                            // Not yet tested on OSX
-                            if (ProcessUtilities.CurrentOS.IsWindows)
-                                popupWin.Move(-10000, -10000);
+                            Gtk.Window popupWin;
+                            if (view is MapView)
+                            {
+                                popupWin = (view as MapView).GetPopupWin();
+                                popupWin.SetSizeRequest(500, 500);
+                            }
+                            else
+                            {
+                                popupWin = new Gtk.Window(Gtk.WindowType.Popup);
+                                popupWin.SetSizeRequest(800, 800);
+                            }
                             popupWin.Add(view.MainWidget);
                             popupWin.ShowAll();
                             while (Gtk.Application.EventsPending())
@@ -685,6 +689,7 @@ namespace UserInterface.Commands
                             section.AddImage(PNGFileName);
                             presenter.Detach();
                             view.MainWidget.Destroy();
+                            popupWin.Destroy();
                         }
                     }
                 }
