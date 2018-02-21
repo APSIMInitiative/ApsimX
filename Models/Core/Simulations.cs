@@ -408,7 +408,7 @@ namespace Models.Core
                         child.IncludeInDocumentation = true;
 
                     // Document the model.
-                    AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0);
+                    AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
 
                     // Unresolve links.
                     Links.Unresolve(clonedSimulation);

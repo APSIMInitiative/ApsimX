@@ -110,7 +110,6 @@ namespace UserInterface.Presenters
             this.view.AllowDrop += this.OnAllowDrop;
             this.view.Droped += this.OnDrop;
             this.view.Renamed += this.OnRename;
-            this.view.ShortcutKeyPressed += this.OnShortcutKeyPress;
 
             this.view.Refresh(this.GetNodeDescription(this.ApsimXFile));
             this.WriteLoadErrors();
@@ -125,7 +124,6 @@ namespace UserInterface.Presenters
             this.view.AllowDrop -= this.OnAllowDrop;
             this.view.Droped -= this.OnDrop;
             this.view.Renamed -= this.OnRename;
-            this.view.ShortcutKeyPressed -= this.OnShortcutKeyPress;
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
@@ -479,18 +477,18 @@ namespace UserInterface.Presenters
         /// Get whatever text is currently on the clipboard
         /// </summary>
         /// <returns>Clipboard text</returns>
-        public string GetClipboardText()
+        public string GetClipboardText(string clipboardName = "_APSIM_MODEL")
         {
-            return this.view.GetClipboardText();
+            return this.view.GetClipboardText(clipboardName);
         }
 
         /// <summary>
         /// Place text on the clipboard
         /// </summary>
         /// <param name="text">The text to be stored in the clipboard</param>
-        public void SetClipboardText(string text)
+        public void SetClipboardText(string text, string clipboardName = "_APSIM_MODEL")
         {
-            this.view.SetClipboardText(text);
+            this.view.SetClipboardText(text, clipboardName);
         }
 
         /// <summary>
@@ -595,6 +593,13 @@ namespace UserInterface.Presenters
                 {
                     ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                    DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+
+                    if (descriptionName != null)
+                    {
+                        viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
+                    }
 
                     if (this.advancedMode)
                     {
@@ -849,16 +854,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>User has pressed one of our shortcut keys.</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnShortcutKeyPress(object sender, KeysArgs e)
-        {
-            if (e.Keys == ConsoleKey.F5)
-            {
-                contextMenu.RunAPSIM(sender, null);
-            }
-        }
         #endregion
 
         #region Privates        
@@ -918,7 +913,8 @@ namespace UserInterface.Presenters
             }
             else
             {
-                imageFileName = model.GetType().Name;
+                // Add model name from namespace to the resource image name
+                imageFileName = model.GetType().FullName.Split('.')[1] + "." + model.GetType().Name;
             }
 
             if (model.GetType().Namespace.Contains("Models.PMF"))

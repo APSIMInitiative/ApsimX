@@ -27,7 +27,7 @@ The model consists of:
     <ExpressionFunction>
       <Name>InitialCarbon</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Expression>[Soil].FInert*[Soil].OC * 100 * [Soil].BD * [Soil].Thickness</Expression>
+      <Expression>[Soil].FInert * [Soil].OC * 100 * [Soil].BD * [Soil].Thickness</Expression>
     </ExpressionFunction>
     <ExpressionFunction>
       <Name>InitialNitrogen</Name>

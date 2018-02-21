@@ -75,6 +75,34 @@
             return newSimulation;
         }
 
+        /// <summary>
+        /// Generates an .apsimx file for each simulation in the experiment and returns an error message (if it fails).
+        /// </summary>
+        /// <param name="path">Full path including filename and extension.</param>
+        /// <returns>Empty string if successful, error message if it fails.</returns>
+        public string GenerateApsimXFile(string path)
+        {
+            if (allCombinations == null || allCombinations.Count < 1)
+                allCombinations = EnabledCombinations();
+            string err = "";
+            Simulation sim = NextSimulationToRun();
+            while (sim != null)
+            {
+                Simulations sims = Simulations.Create(new List<IModel> { sim, new Models.Storage.DataStore() });
+
+                string xml = Apsim.Serialise(sims);
+                try
+                {
+                    File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), xml);
+                }
+                catch (Exception e)
+                {
+                    err += e.ToString();
+                }
+                sim = NextSimulationToRun();
+            }
+            return err;
+        }
         /// <summary>Gets a list of simulation names</summary>
         public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {

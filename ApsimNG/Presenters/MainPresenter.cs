@@ -178,9 +178,9 @@ namespace UserInterface.Presenters
         /// Show progress bar with the specified percent.
         /// </summary>
         /// <param name="percent">The progress</param>
-        public void ShowProgress(int percent)
+        public void ShowProgress(int percent, bool showStopButton = true)
         {
-            this.view.ShowProgress(percent);
+            this.view.ShowProgress(percent, showStopButton);
         }
 
         /// <summary>
@@ -287,7 +287,13 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    this.view.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                    string message = err.Message;
+                    while (err.InnerException != null)
+                    {
+                        message += "\r\n" + err.InnerException.Message;
+                        err = err.InnerException;
+                    }
+                    this.view.ShowMessage(message, Simulation.ErrorLevel.Error);
                 }
 
                 this.view.ShowWaitCursor(false);
