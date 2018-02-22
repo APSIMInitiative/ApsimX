@@ -49,6 +49,9 @@ namespace UserInterface.Views
         /// <summary>Turn split window on/off</summary>
         bool SplitWindowOn { get; set; }
 
+        /// <summary>Height of the status panel</summary>
+        int StatusPanelHeight { get; set; }
+
         /// <summary>
         /// Returns true if the object is a control on the left side
         /// </summary>
@@ -88,7 +91,7 @@ namespace UserInterface.Views
         /// Show progress bar with the specified percent.
         /// </summary>
         /// <param name="percent"></param>
-        void ShowProgress(int percent);
+        void ShowProgress(int percent, bool showStopButton = true);
 
         /// <summary>Set the wait cursor (or not)/</summary>
         /// <param name="wait">Shows wait cursor if true, normal cursor if false.</param>
@@ -146,6 +149,17 @@ namespace UserInterface.Views
         /// <summary>Invoked when application tries to close</summary>
         public event EventHandler<EventArgs> StopSimulation;
 
+        public int StatusPanelHeight
+        {
+            get
+            {
+                return hbox1.Allocation.Height;
+            }
+            set
+            {
+                hbox1.HeightRequest = value;                
+            }
+        }
         private Views.ListButtonView listButtonView1;
         private Views.ListButtonView listButtonView2;
 
@@ -619,7 +633,7 @@ namespace UserInterface.Views
         /// Show progress bar with the specified percent.
         /// </summary>
         /// <param name="percent"></param>
-        public void ShowProgress(int percent)
+        public void ShowProgress(int percent, bool showStopButton = true)
         {
             // We need to use "Invoke" if the timer is running in a
             // different thread. That means we can use either
@@ -629,7 +643,8 @@ namespace UserInterface.Views
             {
                 progressBar.Visible = true;
                 progressBar.Fraction = percent / 100.0;
-                stopButton.Visible = true;
+                if (showStopButton)
+                    stopButton.Visible = true;
             });
         }
 

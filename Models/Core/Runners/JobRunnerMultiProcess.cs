@@ -213,7 +213,6 @@ namespace Models.Core.Runners
                 {
                     if (JobCompleted != null)
                         JobCompleted.Invoke(this, jobCompleteArguments);
-                    storageWriter.CompletedWritingSimulationData(arguments.simulationName);
                     runningJobs.Remove(arguments.key);
                 }
                 server.Send(args.socket, "OK");

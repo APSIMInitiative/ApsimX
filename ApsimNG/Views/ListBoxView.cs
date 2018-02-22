@@ -133,16 +133,29 @@ namespace UserInterface.Views
                 listmodel.Clear();
                 foreach (string val in value)
                 {
+                    // simplify text from FullName (now passed) to Name - lie112 to allow Resource TreeViewImages folder structure based on Model namespace
                     string text = val;
+                    string addedModelDetails = "";
+                    string[] nameParts = val.Split('.');
+                    if (val.StartsWith("Models."))
+                    {
+                        text = nameParts[nameParts.Length - 1];
+                        addedModelDetails = nameParts[1] + ".";
+                    }
                     Gdk.Pixbuf image = null;
-                    int posLastSlash = val.LastIndexOfAny("\\/".ToCharArray());
+                    int posLastSlash = text.LastIndexOfAny("\\/".ToCharArray());
                     if (posLastSlash != -1)
                     {
                         text = AddFileNameListItem(val, ref image);
                     }
                     else if (_isModels)
                     {
-                        string resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + val + ".png";
+                        // lie112 Add model name component of namespace to allow for treeview images to be placed in folders in resources
+                        string resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + addedModelDetails + text + ".png";
+                        if (!hasResource(resourceNameForImage))
+                        {
+                            resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + text + ".png";
+                        }
                         if (hasResource(resourceNameForImage))
                             image = new Gdk.Pixbuf(null, resourceNameForImage);
                         else

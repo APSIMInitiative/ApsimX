@@ -53,7 +53,7 @@
 
                 // Send event telling all models that we're about to begin running.
                 Events events = new Events(simulations);
-                events.Publish("BeginRun", new object[] { AllSimulationNames, SimulationNamesBeingRun });
+                events.Publish("BeginRun", new object[] { AllSimulationNames });
             }
 
             // If we didn't find anything to run then return null to tell job runner to exit.
