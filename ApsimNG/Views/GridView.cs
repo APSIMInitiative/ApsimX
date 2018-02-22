@@ -302,28 +302,36 @@ namespace UserInterface.Views
                 }
                 else
                 {
-                    do
+                    char keyChar = (char)Gdk.Keyval.ToUnicode(args.Event.KeyValue);
+                    if (keyChar == '.')
                     {
-                        if (keyName == "Tab") // Move horizontally
+                        ShowCompletionWindow();
+                    }
+                    else
+                    {
+                        do
                         {
-                            if (++nextCol >= nCols)
-                            {
-                                if (++nextRow >= RowCount)
-                                    nextRow = 0;
-                                nextCol = 0;
-                            }
-                        }
-                        else if (keyName == "Return") // Move vertically
-                        {
-                            if (++nextRow >= RowCount)
+                            if (keyName == "Tab") // Move horizontally
                             {
                                 if (++nextCol >= nCols)
+                                {
+                                    if (++nextRow >= RowCount)
+                                        nextRow = 0;
                                     nextCol = 0;
-                                nextRow = 0;
+                                }
+                            }
+                            else if (keyName == "Return") // Move vertically
+                            {
+                                if (++nextRow >= RowCount)
+                                {
+                                    if (++nextCol >= nCols)
+                                        nextCol = 0;
+                                    nextRow = 0;
+                                }
                             }
                         }
-                    }
-                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+                    }                    
                 }
                 EndEdit();
                 while (GLib.MainContext.Iteration())
@@ -332,6 +340,11 @@ namespace UserInterface.Views
                     gridview.SetCursor(new TreePath(new int[1] { nextRow }), gridview.GetColumn(nextCol), true);
                 args.RetVal = true;
             }
+        }
+
+        private void ShowCompletionWindow()
+        {
+            string cellContents = this.GetCurrentCell.Value as string;
         }
 
         /// <summary>
