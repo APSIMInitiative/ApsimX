@@ -54,6 +54,9 @@ namespace UserInterface.Views
         /// <summary>Occurs when user clicks a button on the cell.</summary>
         public event EventHandler<GridCellsChangedArgs> ButtonClick;
 
+        /// <summary>Invoked when the editor needs context items (after user presses '.')</summary>
+        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
+
         /// <summary>
         /// Is the user currently editing a cell?
         /// </summary>
@@ -100,7 +103,11 @@ namespace UserInterface.Views
         private Menu Popup = new Menu();
         private AccelGroup accel = new AccelGroup();
         private GridCell popupCell = null;
-
+        private ListStore completionModel;
+        private Window completionForm;
+        private TreeView completionView = new TreeView();
+        private Gdk.Pixbuf functionPixbuf;
+        private Gdk.Pixbuf propertyPixbuf;
         /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
         /// </summary>
@@ -133,9 +140,99 @@ namespace UserInterface.Views
             image1.Pixbuf = null;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
+
+
+            completionForm = new Window(WindowType.Toplevel);
+            completionForm.HeightRequest = 300;
+            completionForm.WidthRequest = 750;
+            completionForm.Decorated = false;
+            completionForm.SkipPagerHint = true;
+            completionForm.SkipTaskbarHint = true;
+            Frame completionFrame = new Frame();
+            completionForm.Add(completionFrame);
+            ScrolledWindow completionScroller = new ScrolledWindow();
+            completionFrame.Add(completionScroller);
+            completionModel = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
+            completionView = new TreeView(completionModel);
+            completionScroller.Add(completionView);
+            TreeViewColumn column = new TreeViewColumn();
+            CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
+            column.PackStart(iconRender, false);
+            CellRendererText textRender = new Gtk.CellRendererText();
+            textRender.Editable = false;
+            column.PackStart(textRender, true);
+            column.SetAttributes(iconRender, "pixbuf", 0);
+            column.SetAttributes(textRender, "text", 1);
+            column.Title = "Item";
+            column.Resizable = true;
+            completionView.AppendColumn(column);
+            textRender = new CellRendererText();
+            column = new TreeViewColumn("Units", textRender, "text", 2);
+            column.Resizable = true;
+            completionView.AppendColumn(column);
+            textRender = new CellRendererText();
+            column = new TreeViewColumn("Type", textRender, "text", 3);
+            column.Resizable = true;
+            completionView.AppendColumn(column);
+            textRender = new CellRendererText();
+            column = new TreeViewColumn("Descr", textRender, "text", 4);
+            column.Resizable = true;
+            completionView.AppendColumn(column);
+            functionPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Function.png", 16, 16);
+            propertyPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Property.png", 16, 16);            
+            completionView.HasTooltip = true;
+            completionView.TooltipColumn = 5;
+            completionForm.FocusOutEvent += OnLeaveCompletion;
+            completionView.ButtonPressEvent += OnContextListMouseDoubleClick;
+            completionView.KeyPressEvent += OnContextListKeyDown;
+            completionView.KeyReleaseEvent += CompletionView_KeyReleaseEvent;
         }
 
+        [GLib.ConnectBefore]
+        private void CompletionView_KeyReleaseEvent(object sender, KeyReleaseEventArgs e)
+        {
+            if (e.Event.Key == Gdk.Key.Return)
+                InsertCompletionText();
+        }
+        [GLib.ConnectBefore]
+        private void OnContextListKeyDown(object sender, KeyPressEventArgs e)
+        {            
+            if (e.Event.Key == Gdk.Key.Return)
+                InsertCompletionText();
+        }
 
+        [GLib.ConnectBefore]
+        private void OnContextListMouseDoubleClick(object sender, ButtonPressEventArgs e)
+        {
+            if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1)
+                InsertCompletionText();
+        }
+
+        [GLib.ConnectBefore]
+        private void OnLeaveCompletion(object sender, EventArgs e)
+        {
+            completionForm.Hide();
+        }
+
+        /// <summary>
+        /// Inserts the currently selected text in the intellisense popup into the active grid cell.
+        /// </summary>
+        private void InsertCompletionText()
+        {
+            TreePath path;
+            TreeViewColumn col;
+            completionView.GetCursor(out path, out col);
+            if (path != null)
+            {
+                TreeIter iter;
+                completionModel.GetIter(out iter, path);
+                string text = (string)completionModel.GetValue(iter, 1);
+                while (GLib.MainContext.Iteration()) ;
+                GetCurrentCell.Value += text;
+                while (GLib.MainContext.Iteration()) ;
+                completionForm.Hide();
+            }
+        }
         /// <summary>
         /// Does cleanup when the main widget is destroyed
         /// </summary>
@@ -253,6 +350,7 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void Gridview_KeyPressEvent(object o, KeyPressEventArgs args)
         {
+            System.Diagnostics.Debug.WriteLine("testing");
             string keyName = Gdk.Keyval.Name(args.Event.KeyValue);
             IGridCell cell = GetCurrentCell;
             if (cell == null)
@@ -302,37 +400,30 @@ namespace UserInterface.Views
                 }
                 else
                 {
-                    char keyChar = (char)Gdk.Keyval.ToUnicode(args.Event.KeyValue);
-                    if (keyChar == '.')
+                    do
                     {
-                        ShowCompletionWindow();
-                    }
-                    else
-                    {
-                        do
+                        if (keyName == "Tab") // Move horizontally
                         {
-                            if (keyName == "Tab") // Move horizontally
-                            {
-                                if (++nextCol >= nCols)
-                                {
-                                    if (++nextRow >= RowCount)
-                                        nextRow = 0;
-                                    nextCol = 0;
-                                }
-                            }
-                            else if (keyName == "Return") // Move vertically
+                            if (++nextCol >= nCols)
                             {
                                 if (++nextRow >= RowCount)
-                                {
-                                    if (++nextCol >= nCols)
-                                        nextCol = 0;
                                     nextRow = 0;
-                                }
+                                nextCol = 0;
                             }
                         }
-                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
-                    }                    
+                        else if (keyName == "Return") // Move vertically
+                        {
+                            if (++nextRow >= RowCount)
+                            {
+                                if (++nextCol >= nCols)
+                                    nextCol = 0;
+                                nextRow = 0;
+                            }
+                        }
+                    }
+                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
                 }
+                
                 EndEdit();
                 while (GLib.MainContext.Iteration())
                     ;
@@ -340,11 +431,64 @@ namespace UserInterface.Views
                     gridview.SetCursor(new TreePath(new int[1] { nextRow }), gridview.GetColumn(nextCol), true);
                 args.RetVal = true;
             }
+            else if ((char)Gdk.Keyval.ToUnicode(args.Event.KeyValue) == '.')
+            {
+                ShowCompletionWindow();
+            }
         }
 
         private void ShowCompletionWindow()
         {
-            string cellContents = this.GetCurrentCell.Value as string;
+            try
+            {
+                string cellContents = this.GetCurrentCell.Value as string;
+                List<string> items = new List<string>();
+                List<NeedContextItemsArgs.ContextItem> allItems = new List<NeedContextItemsArgs.ContextItem>();
+                ContextItemsNeeded(this, new NeedContextItemsArgs() { ObjectName = cellContents, Items = items, AllItems = allItems });
+
+                completionModel.Clear();
+                foreach (NeedContextItemsArgs.ContextItem item in allItems)
+                {
+                    completionModel.AppendValues(item.IsEvent ? functionPixbuf : propertyPixbuf, item.Name, item.Units, item.TypeName, item.Descr, item.ParamString);
+                }
+                if (completionModel.IterNChildren() > 0)
+                {
+                    // If user is inserting text partway through the cell, this will not work
+                    while (GLib.MainContext.Iteration()) ;
+                    GetCurrentCell.Value = GetCurrentCell.Value + ".";
+                    while (GLib.MainContext.Iteration()) ;
+                    // Work out where to put the completion window.
+                    // This should probably be done a bit more intelligently to detect when we are too near the bottom or right
+                    // of the screen, and move accordingly. Left as an exercise for the student.                
+                    /**
+                    int x, y;
+                    (GetCurrentCell as Widget).TranslateCoordinates(GetCurrentCell, (GetCurrentCell as Widget).Allocation.X, (GetCurrentCell as Widget).Allocation.Y, out x, out y);
+                    **/
+                    //Cairo.Point p = new Cairo.Point((GetCurrentCell as Widget).Allocation.X, (GetCurrentCell as Widget).Allocation.Y);
+                    //p.Y += (int)textEditor.LineHeight; 
+                    // Need to convert to screen coordinates....
+                    /*
+                    int x, y;
+                    int frameX, frameY;
+                    mainWindow.GetOrigin(out frameX, out frameY);
+                    (GetCurrentCell as Widget).TranslateCoordinates(_mainWidget.Toplevel, 100, 100, out x, out y);
+                    */
+                    completionForm.TransientFor = MainWidget.Toplevel as Window;
+                    completionForm.ShowAll();
+                    TreeView completionView = new TreeView();
+                    completionForm.Resize(completionView.Requisition.Width, 300);                    
+                    if (completionForm.GdkWindow != null)
+                        completionForm.GdkWindow.Focus(0);
+                    while (Gtk.Application.EventsPending())
+                        Gtk.Application.RunIteration();
+
+                    this.completionView.SetCursor(new TreePath("0"), null, false);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }            
         }
 
         /// <summary>
