@@ -77,6 +77,7 @@ namespace UserInterface.Presenters
         /// <summary>Connect all view events.</summary>
         private void ConnectViewEvents()
         {
+            this.seriesView.Checkpoint.Changed += OnCheckpointChanged;
             this.seriesView.DataSource.Changed += OnDataSourceChanged;
             this.seriesView.SeriesType.Changed += OnSeriesTypeChanged;
             this.seriesView.LineType.Changed += OnLineTypeChanged;
@@ -100,6 +101,7 @@ namespace UserInterface.Presenters
         /// <summary>Disconnect all view events.</summary>
         private void DisconnectViewEvents()
         {
+            this.seriesView.Checkpoint.Changed -= OnCheckpointChanged;
             this.seriesView.DataSource.Changed -= OnDataSourceChanged;
             this.seriesView.SeriesType.Changed -= OnSeriesTypeChanged;
             this.seriesView.LineType.Changed -= OnLineTypeChanged;
@@ -316,6 +318,15 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>User has changed the checkpoint.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnCheckpointChanged(object sender, EventArgs e)
+        {
+            if (series.Checkpoint != this.seriesView.Checkpoint.SelectedValue)
+                this.SetModelProperty("Checkpoint", this.seriesView.Checkpoint.SelectedValue);
+        }
+
         /// <summary>User has changed the show in legend</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -358,6 +369,10 @@ namespace UserInterface.Presenters
             PopulateMarkerDropDown();
             PopulateLineDropDown();
             PopulateColourDropDown();
+
+            // Populate the checkpoint drop down.
+            seriesView.Checkpoint.Values = storage.Checkpoints().ToArray();
+            seriesView.Checkpoint.SelectedValue = series.Checkpoint;
 
             // Populate line thickness drop down.
             List<string> thicknesses = new List<string>(Enum.GetNames(typeof(LineThicknessType)));

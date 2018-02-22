@@ -153,7 +153,7 @@ namespace UserInterface.Presenters
                     int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
                     if (ExperimentFilter != null)
                     {
-                        string filter = "NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                        string filter = "S.NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
                         data = dataStore.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
                     }
                     else if (SimulationFilter != null)

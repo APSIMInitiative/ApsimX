@@ -234,7 +234,7 @@ namespace Models.Core
 
         private static void StoreParagraphSoFarIntoTags(List<ITag> tags, int indent, ref string paragraphSoFar)
         {
-            if (paragraphSoFar != string.Empty)
+            if (paragraphSoFar.Trim() != string.Empty) 
                 tags.Add(new Paragraph(paragraphSoFar, indent));
             paragraphSoFar = string.Empty;
         }
