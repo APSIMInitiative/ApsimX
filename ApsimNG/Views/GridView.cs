@@ -350,7 +350,6 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void Gridview_KeyPressEvent(object o, KeyPressEventArgs args)
         {
-            System.Diagnostics.Debug.WriteLine("testing");
             string keyName = Gdk.Keyval.Name(args.Event.KeyValue);
             IGridCell cell = GetCurrentCell;
             if (cell == null)
@@ -453,9 +452,14 @@ namespace UserInterface.Views
                 }
                 if (completionModel.IterNChildren() > 0)
                 {
-                    // If user is inserting text partway through the cell, this will not work
-                    while (GLib.MainContext.Iteration()) ;
-                    GetCurrentCell.Value = GetCurrentCell.Value + ".";
+                    // If user is inserting text partway through the cell, this will not work                               
+                    string txt = GetCurrentCell.Value + ".";
+                    System.Diagnostics.Debug.WriteLine("setting current cell to " + txt);
+                    GetCurrentCell.Value = txt;
+                    int colNum = GetCurrentCell.ColumnIndex;
+                    int rowNum = GetCurrentCell.RowIndex;
+                    //PopulateGrid();
+                    var currentCell = GetCell(colNum, rowNum);
                     while (GLib.MainContext.Iteration()) ;
                     // Work out where to put the completion window.
                     // This should probably be done a bit more intelligently to detect when we are too near the bottom or right
@@ -487,7 +491,7 @@ namespace UserInterface.Views
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                System.Diagnostics.Debug.WriteLine(e.ToString());
             }            
         }
 
