@@ -419,6 +419,8 @@ namespace Models.Core
         /// <returns></returns>
         private string AsString(object value)
         {
+            if (value == null)
+                return string.Empty;
             Type type = value.GetType();
             if (type == typeof(double))
                 return ((double)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
