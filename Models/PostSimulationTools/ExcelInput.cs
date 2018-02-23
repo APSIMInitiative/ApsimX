@@ -120,13 +120,21 @@ namespace Models.PostSimulationTools
                 // Write all sheets that are specified in 'SheetNames' to the data store
                 foreach (DataTable table in dataSet.Tables)
                 {
-                    bool keep = StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
-                    if (keep)
+                    if (Char.IsNumber(table.TableName[0]))
                     {
-                        TruncateDates(table);
+                        // table/sheet names starting with a number are permitted by Excel, but will break APSIM
+                        // this should be probably reported to the user
+                    }
+                    else
+                    {
+                        bool keep = StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
+                        if (keep)
+                        {
+                            TruncateDates(table);
 
-                        dataStore.DeleteDataInTable(table.TableName);
-                        dataStore.WriteTable(table);
+                            dataStore.DeleteDataInTable(table.TableName);
+                            dataStore.WriteTable(table);
+                        }
                     }
                 }
 
