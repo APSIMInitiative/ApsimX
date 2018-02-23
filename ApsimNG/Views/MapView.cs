@@ -226,6 +226,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
             // Create a Bitmap and draw the DataGridView on it.
             int width;
             int height;
+            Gdk.Window gridWindow = MainWidget.GdkWindow;
+            gridWindow.GetSize(out width, out height);
             if (ProcessUtilities.CurrentOS.IsWindows)
             {
                 // Give the browser half a second to run all its scripts
@@ -236,9 +238,16 @@ google.maps.event.addDomListener(window, 'load', initialize);
                 watch.Start();
                 while (watch.ElapsedMilliseconds < 500)
                     Gtk.Application.RunIteration();
+                if ((browser as TWWebBrowserIE) != null)
+                {
+                    System.Windows.Forms.WebBrowser wb = (browser as TWWebBrowserIE).wb;
+                    System.Drawing.Bitmap bm = new System.Drawing.Bitmap(width, height);
+                    System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, width, height);
+                    wb.DrawToBitmap(bm, rect);
+                    return bm;
+                }
+
             }
-            Gdk.Window gridWindow = MainWidget.GdkWindow;
-            gridWindow.GetSize(out width, out height);
             Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
             byte[] buffer = screenshot.SaveToBuffer("png");
             MemoryStream stream = new MemoryStream(buffer);
