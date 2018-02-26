@@ -9,7 +9,6 @@ using System.Xml;
 using System.IO;
 using APSIM.Shared.Utilities;
 using System.Data;
-using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
 {
@@ -112,9 +111,6 @@ namespace Models.PMF.Phen
         #region Links
         [Link]
         private Plant Plant = null;
-
-        [Link]
-        Structure structure = null;
 
         /// <summary>The clock</summary>
         [Link]
@@ -321,7 +317,7 @@ namespace Models.PMF.Phen
         {
             Germinated = false;
             Emerged = false;
-            structure.PrimaryBudNo = Plant.SowingData.BudNumber;
+            
         }
 
 
