@@ -320,7 +320,7 @@
             <VariableName>[Phenology].DaysAfterCutting</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <SetEvent>[Phenology].Flowering</SetEvent>
+          <SetEvent>[Phenology].StartFlowering</SetEvent>
           <ReSetEvent>1</ReSetEvent>
         </OnEventFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3257,7 +3257,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <string>[Lucerne].Phenology.CurrentPhaseName</string>
         <string>[Lucerne].Phenology.CurrentStageName</string>
         <string>[Lucerne].Phenology.Stage</string>
-        <string>[Lucerne].Phenology.DaysAfterCutting</string>
+        <string>[Lucerne].Phenology.DaysAfterCutting.Value()</string>
         <string>[Lucerne].Phenology.FloweringDaysAfterCutting as FloweringDays</string>
         <string>[Lucerne].Pod.Wt</string>
         <string>[Lucerne].Pod.N</string>
