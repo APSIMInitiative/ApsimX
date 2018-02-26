@@ -317,6 +317,7 @@ namespace Models.PMF.Phen
         {
             Germinated = false;
             Emerged = false;
+            
         }
 
 

@@ -55,7 +55,7 @@ namespace UnitTests
             rows.Add(new Row() { values = APSIM.Shared.Utilities.ReflectionUtilities.Clone(valuesToWrite) as IEnumerable<object> });
         }
 
-        public DataTable GetData(string tableName, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0)
+        public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0)
         {
             return null;
         }
@@ -69,7 +69,7 @@ namespace UnitTests
         {
         }
 
-        public void DeleteTable(string tableName)
+        public void DeleteDataInTable(string tableName)
         {
         }
 
@@ -95,7 +95,7 @@ namespace UnitTests
         {
         }
 
-        public void DeleteAllTables()
+        public void EmptyDataStore()
         {
         }
 
@@ -114,6 +114,16 @@ namespace UnitTests
 
         public void WriteTableRaw(DataTable data)
         {
+        }
+
+        public List<string> Checkpoints()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetCheckpointID(string checkpointName)
+        {
+            throw new NotImplementedException();
         }
     }
 }

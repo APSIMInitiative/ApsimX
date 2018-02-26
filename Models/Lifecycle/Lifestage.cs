@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 namespace Models.Lifecycle
 {
     /// <summary>
+    /// # [Name]
     /// A lifestage is a developmental segment of a lifecycle. It contains cohorts.
     /// </summary>
     [Serializable]

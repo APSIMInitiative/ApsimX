@@ -74,6 +74,7 @@ namespace Models
             for (int i = 0; i < columnNames.Count; i++)
                 columnNames[i] = columnNames[i].Replace("Observed.", "");
             columnNames.Sort(); //ensure column names are always in the same order
+            columnNames.Remove("CheckpointID");
             stats = new MathUtilities.RegrStats[columnNames.Count];
             List<double> x = new List<double>();
             List<double> y = new List<double>();
