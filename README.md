@@ -10,17 +10,17 @@ ApsimX is the next generation of [APSIM](http://www.apsim.info)
 
 **Hardware required**: 
 
-Any recent PC with a minimum of 2 Gb of RAM, 32 or 64 bit.
+Any recent PC with a minimum of 2 Gb of RAM.
 
 **Software required**:
 
-Microsoft Windows XP, Vista, Windows 7 or Windows 8. The model (not the user interface) will run on LINUX.
+64-bit version of Microsoft Windows Vista, Windows 7, Windows 8, Windows 10, Linux or macOS.
 
 ### Installation
 
 ## Contributing
 
-Please read our [guide](CONTRIBUTING.md).
+Please read our [guide](https://apsimnextgeneration.netlify.com/development/contribute/).
 
 ## Publications 
 

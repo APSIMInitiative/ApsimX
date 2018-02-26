@@ -73,7 +73,9 @@ namespace UserInterface.Presenters
             if (model != null)
             {
                 // Set the clipboard text.
-                this.explorerPresenter.SetClipboardText(Apsim.Serialise(model));
+                string xml = Apsim.Serialise(model);
+                this.explorerPresenter.SetClipboardText(xml, "_APSIM_MODEL");
+                this.explorerPresenter.SetClipboardText(xml, "CLIPBOARD");
             }
         }
 
@@ -85,7 +87,29 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Paste", ShortcutKey = "Ctrl+V")]
         public void OnPasteClick(object sender, EventArgs e)
         {
-            this.explorerPresenter.Add(this.explorerPresenter.GetClipboardText(), this.explorerPresenter.CurrentNodePath);
+            string internalCBText = this.explorerPresenter.GetClipboardText("_APSIM_MODEL");
+            string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
+
+            if (externalCBText == null || externalCBText == "")
+                this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);                
+            else
+            {
+                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                try
+                {
+                    doc.LoadXml(externalCBText);
+                    this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
+                }
+                catch (System.Xml.XmlException)
+                {
+                    // External clipboard does not contain valid xml
+                    this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
+                }
+                catch (Exception ex)
+                {
+                    this.explorerPresenter.MainPresenter.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
+                }
+            }
         }
 
         /// <summary>
@@ -157,6 +181,18 @@ namespace UserInterface.Presenters
         public void RunAPSIMMultiProcess(object sender, EventArgs e)
         {
             RunAPSIMInternal(multiProcessRunner: true);
+        }
+
+        [ContextMenu(MenuName = "Copy path to node",
+                     ShortcutKey = "Ctrl+Shift+C")]
+        public void CopyPathToNode(object sender, EventArgs e)
+        {
+            string nodePath = explorerPresenter.CurrentNodePath;            
+            if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is Models.PMF.Functions.IFunction)
+            {
+                nodePath += ".Value()";
+            }
+            explorerPresenter.SetClipboardText(Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName) + nodePath, "CLIPBOARD");
         }
 
         /// <summary>Run APSIM.</summary>
@@ -288,7 +324,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void EmptyDataStore(object sender, EventArgs e)
         {
-            storage.DeleteAllTables();
+            storage.EmptyDataStore();
         }
 
         /// <summary>
@@ -438,7 +474,55 @@ namespace UserInterface.Presenters
             }
             
         }
-        
+
+        /// <summary>
+        /// Event handler for generate .apsimx files option.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Generate .apsimx files",
+             AppliesTo = new Type[] {   typeof(Folder),
+                                        typeof(Simulations),
+                                        typeof(Simulation),
+                                        typeof(Experiment),
+                                    }
+            )
+        ]
+        public void OnGenerateApsimXFiles(object sender, EventArgs e)
+        {
+            IModel node = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+
+            List<IModel> children;
+            if (node is Experiment)
+            {
+                children = new List<IModel> { node };
+            }
+            else
+            {
+                children = Apsim.ChildrenRecursively(node, typeof(Experiment));
+            }
+
+            string outDir = ViewBase.AskUserForDirectory("Select a directory to save model files to.");
+            if (outDir == null)                
+                return;
+            if (!Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
+            string err = "";
+            int i = 0;            
+            children.ForEach(expt => 
+            {
+                explorerPresenter.MainPresenter.ShowMessage("Generating simulation files: ", Simulation.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowProgress(100 * i / children.Count, false);                
+                while (GLib.MainContext.Iteration()) ;
+                err += (expt as Experiment).GenerateApsimXFile(outDir);
+                i++;
+            });            
+            if (err.Length < 1)
+                explorerPresenter.MainPresenter.ShowMessage("Successfully generated .apsimx files under " + outDir + ".", Simulation.ErrorLevel.Information);
+            else
+                explorerPresenter.MainPresenter.ShowMessage(err, Simulation.ErrorLevel.Error);
+        }
+
         /// <summary>
         /// Event handler for a Add model action
         /// </summary>
@@ -546,5 +630,19 @@ namespace UserInterface.Presenters
             return (folder != null) ? folder.ShowPageOfGraphs : false;
         }
 
+        /// <summary>
+        /// Event handler for 'Checkpoints' menu item
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Checkpoints", IsToggle = true,
+                     AppliesTo = new Type[] { typeof(Simulations) })]
+        public void ShowCheckpoints(object sender, EventArgs e)
+        {
+            explorerPresenter.HideRightHandPanel();
+            explorerPresenter.ShowInRightHandPanel(explorerPresenter.ApsimXFile,
+                                                   "UserInterface.Views.ListButtonView",
+                                                   "UserInterface.Presenters.CheckpointsPresenter");
+        }
     }
 }

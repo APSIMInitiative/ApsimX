@@ -9,6 +9,7 @@ using Models.PMF.Functions;
 namespace Models.Lifecycle
 {
     /// <summary>
+    /// # [Name]
     /// A Reproduction process within a Lifestage.
     /// Reproduction process that creates new numbers for a new cohort in the linked lifestage
     /// </summary>
