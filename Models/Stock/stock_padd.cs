@@ -1,10 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using CMPServices;
+
 
 namespace Models.GrazPlan
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using CMPServices;
+
     /*
      GRAZPLAN animal biology model for AusFarm - TPaddockList & TForageList classes                                                                   
                                                                                
@@ -23,6 +25,7 @@ namespace Models.GrazPlan
     /// <summary>
     /// Chemistry data for the forage
     /// </summary>
+    [Serializable]
     public struct TChemData
     {
         /// <summary>
@@ -80,6 +83,7 @@ namespace Models.GrazPlan
             fcVarDMDClasses
         };
 #pragma warning disable 1591 //missing xml comment
+        protected const double MISSING_POINT = 99999.9;
         protected const double CLASSWIDTH = 0.10;
         protected const double HIGHEST_DMD = 0.85;
         protected const double EPSILON = 1.0E-6;
@@ -104,8 +108,8 @@ namespace Models.GrazPlan
 
         private double getBottom()
         {
-            if (this.FBottom_MM == +99999.9)
-                return 0;
+            if (this.FBottom_MM == MISSING_POINT)
+                return 0.0;
             else
                 return this.FBottom_MM;
         }
@@ -270,7 +274,7 @@ namespace Models.GrazPlan
         /// * The providing forage component is specifying a quantity of forage with
         ///   a single digestibility, as part of a distribution of digestibilities
         ///   *provided by the source component*.
-        /// * We therefore calculate the DMD and then place all foage mass in the
+        /// * We therefore calculate the DMD and then place all forage mass in the
         ///   TAnimalGroup DMD class that contains that DMD value
         /// </summary>
         /// <param name="dAvailPropn"></param>
@@ -322,6 +326,14 @@ namespace Models.GrazPlan
             else if (((FSeedType == GrazType.UNRIPE) || (FSeedType == GrazType.RIPE)) && (dTotalDM > 0.0))
             {
                 populateSeedRecord(ref Result, dAvailPropn, DDM, IDM);
+
+                // The relative intake calculations for seed use dmd's from the herbage array. If this is a
+                // seed only forage then the herbage dmd should be set
+                dMeanDMD= Result.Seeds[1, FSeedType].Digestibility;
+                iDMD= Convert.ToInt32(Math.Min(1, Math.Max(1 + Math.Truncate((HIGHEST_DMD - dMeanDMD) / CLASSWIDTH), GrazType.DigClassNo)));
+                Result.SeedClass[1, FSeedType] = iDMD;                          // will then use the [iDMD] digestibility class from the herbage array
+                Result.Herbage[iDMD].Digestibility = dMeanDMD;
+
                 this.dSeedRipeFract[FSeedType] = Result.Seeds[1, FSeedType].Biomass; // for later division by the total for the seed ripeness class
             }
             return Result;
@@ -747,6 +759,8 @@ namespace Models.GrazPlan
         public TForageInfo()
         {
             FChemistryType = TForageChemistry.fcUnknown;
+            FBottom_MM = 0;
+            FTop_MM = 0;
         }
         /// <summary>
         /// Initialise a forage
@@ -755,7 +769,7 @@ namespace Models.GrazPlan
         {
             int iChem;
 
-            this.FBottom_MM = +99999.9;  // Missing value marker
+            this.FBottom_MM = MISSING_POINT;  // Missing value marker
             FTop_MM = 0.0;
             for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType] - 1; iChem++)
             {
@@ -790,7 +804,7 @@ namespace Models.GrazPlan
             bool bMatched;
             int iChem;
 
-            sCohort = sCohort.ToLower();
+            sCohort = sCohort.ToLower();    // composite name
             sOrgan = sOrgan.ToLower();
             sAgeClass = sAgeClass.ToLower();
             sChem = sChem.ToLower();
@@ -812,7 +826,7 @@ namespace Models.GrazPlan
                 int i = 0;
                 while ((i < ages.Length) && (!bAddingGreen))
                 {
-                    bAddingGreen = (sCohort == ages[i]);
+                    bAddingGreen = (sAgeClass == ages[i]);
                     i++;
                 }
             }
@@ -971,9 +985,14 @@ namespace Models.GrazPlan
                 {
                     if (Result.Herbage[iDMD].Biomass > 0.0)
                         this.dHerbageDMDFract[iDMD] = this.dHerbageDMDFract[iDMD] / Result.Herbage[iDMD].Biomass;
+                    // where not all digestible classes are used ensure that all the .digestibilty dmd's are set anyway
+                    if ((iDMD > 1) && (Result.Herbage[iDMD - 1].Digestibility > 0))
+                        Result.Herbage[iDMD].Digestibility = Result.Herbage[iDMD - 1].Digestibility - CLASSWIDTH;
                     for (iRipe = GrazType.UNRIPE; iRipe <= GrazType.RIPE; iRipe++)
+                    {
                         if (Result.Seeds[1, iRipe].Biomass > 0.0)
                             this.dSeedRipeFract[iRipe] = this.dSeedRipeFract[iRipe] / Result.Seeds[1, iRipe].Biomass;
+                    }
                 }
             }
             return Result;
@@ -1003,10 +1022,10 @@ namespace Models.GrazPlan
             sChemType = this.CHEMISTRY_CLASSES[(int)FChemistryType, Idx];
             dChemRemovalKgHa = 0.0;
 
-            if (FSeedType == 0)  // herbage
+            if (FSeedType == NOT_SEED)  // herbage
             {
                 dTotalMass = 0.0;
-                for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType]; iChem++)
+                for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType] - 1; iChem++)
                     dTotalMass = dTotalMass + FChemData[iChem].dMass_KgHa;
 
                 dTotalRemoval = 0.0;
@@ -1018,7 +1037,22 @@ namespace Models.GrazPlan
                 if (dTotalMass > 0.0)
                     dChemRemovalKgHa = Math.Min(1.0, dTotalRemoval / dTotalMass) * FChemData[Idx].dMass_KgHa;
             }
-            // TODO: handle seed
+            else
+            {
+                // seed removal
+                dTotalMass = 0.0;
+                for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType] - 1; iChem++)
+                    dTotalMass = dTotalMass + FChemData[iChem].dMass_KgHa;
+
+                if (dTotalMass > 0.0)  //if there was some available to remove
+                {
+                    dTotalRemoval = RemovalKG.Seed[1, FSeedType];
+                    if ((InPaddock != null) && (dTotalRemoval > 0.0))
+                        dTotalRemoval = dTotalRemoval / InPaddock.fArea;
+
+                    dChemRemovalKgHa = Math.Min(1.0, dTotalRemoval / dTotalMass) * FChemData[Idx].dMass_KgHa;
+                }
+            }
         }
 
         /// <summary>
@@ -1258,17 +1292,18 @@ namespace Models.GrazPlan
             string sCohortName;
             TForageInfo forage;
 
+            // only Plant components
             if (FUseCohorts) 
             {
                 // Need to clear the forage data for all the forages in this provider
-                for (i = 0; i <= FForages.Count() - 1; i++) // for each forage
+                for (i = 0; i <= FForages.Count() - 1; i++)             // for each forage
                     FForages.byIndex(i).clearForageData();
 
                 for (i = 1; i <= availableForage.Length; i++)
                 {
-                    cohortItem = availableForage[i-1];
-                    sCohort = cohortItem.CohortID;     // wheat, sorghum
-                    if (sCohort.Length > 0)                            // must have a cohort name
+                    cohortItem = availableForage[i - 1];
+                    sCohort = cohortItem.CohortID;                      // wheat, sorghum
+                    if (sCohort.Length > 0)                             // must have a cohort name
                     {
                         sOrgan = cohortItem.Organ;
                         sAge = cohortItem.AgeID;
@@ -1280,26 +1315,26 @@ namespace Models.GrazPlan
                         {
                             forage = new TForageInfo();
                             forage.sName = sCohortName;
+                            forage.sCohortID = sCohort;
                             forage.sOrgan = sOrgan;
                             forage.sAgeClass = sAge;
-                            FOwningPaddock.AssignForage(forage);              // the paddock in the model can access this forage
-                            FForages.Add(forage);                             // create a new forage for this cohort
+                            FOwningPaddock.AssignForage(forage);              //the paddock in the model can access this forage
+                            FForages.Add(forage);                             //create a new forage for this cohort
                         }
 
-                        forage.addForageData(sCohort, sOrgan, sAge,      // Accessible when availForage() is called by the model
+                        forage.addForageData(sCohortName, sOrgan, sAge,    // Accessible when availForage() is called by the model
                                               cohortItem.Chem,
-                                              cohortItem.Bottom,
-                                              cohortItem.Top,
-                                              cohortItem.Weight,
-                                              cohortItem.N,
-                                              cohortItem.P,
-                                              cohortItem.S,
-                                              cohortItem.AshAlk);
+                                                  cohortItem.Bottom,
+                                                  cohortItem.Top,
+                                                  cohortItem.Weight,
+                                                  cohortItem.N,
+                                                  cohortItem.P,
+                                                  cohortItem.S,
+                                                  cohortItem.AshAlk);
                     }
                 }
             }
         }
-
 
         /// <summary>
         /// The forage name is the name of the cohort.

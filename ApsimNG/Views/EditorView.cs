@@ -215,7 +215,19 @@
                     }
                 }
             }
+
+            Popup.Destroy();
+            accel.Dispose();
+            completionModel.Dispose();
+            functionPixbuf.Dispose();
+            propertyPixbuf.Dispose();
+            CompletionView.Dispose();
+            CompletionForm.Destroy();
+            CompletionForm = null;
+            textEditor.Destroy();
+            textEditor = null;
             _findForm.Destroy();
+            _owner = null;
         }
 
         /// <summary>

@@ -11,6 +11,7 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// A value is returned via Akima spline interpolation of a given set of XY pairs
     /// </summary>
     [Serializable]
@@ -51,9 +52,10 @@ namespace Models.PMF.Functions
                 if (v == null)
                     throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                 if (v is Array && arrayIndex > -1)
-                    XValue = Convert.ToDouble((v as Array).GetValue(arrayIndex));
+                    XValue = Convert.ToDouble((v as Array).GetValue(arrayIndex), 
+                                              System.Globalization.CultureInfo.InvariantCulture);
                 else
-                    XValue = Convert.ToDouble(v);
+                    XValue = Convert.ToDouble(v, System.Globalization.CultureInfo.InvariantCulture);
             }
             catch (IndexOutOfRangeException)
             {

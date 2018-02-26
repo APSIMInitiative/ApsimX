@@ -44,12 +44,14 @@
         private Stopwatch timer;
 
         /// <summary>Constructor</summary>
+        /// <param name="simEngine">Simulation engine</param>
         /// <param name="simulation">The simulation to clone and run.</param>
         /// <param name="doClone">Clone the simulation before running?</param>
-        public RunSimulation(Simulation simulation, bool doClone)
+        public RunSimulation(ISimulationEngine simEngine, Simulation simulation, bool doClone)
         {
             simulationToRun = simulation;
             cloneSimulationBeforeRun = doClone;
+            simulationEngine = simEngine;
         }
 
         /// <summary>
@@ -90,7 +92,8 @@
                     simulationToRun = Apsim.Clone(simulationToRun) as Simulation;
                     events = new Events(simulationToRun);
                     simulationEngine.MakeSubstitutions(simulationToRun);
-                    events.Publish("Loaded", null);
+                    LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                    events.Publish("Loaded", new object[] { simulationToRun, loadedArgs });
                 }
                 else
                     events = new Events(simulationToRun);
@@ -116,8 +119,11 @@
             catch (Exception err)
             {
                 string errorMessage = "ERROR in file: " + fileName + "\r\n" +
-                                      "Simulation name: " + simulationToRun.Name + "\r\n" +
-                                      err.ToString();
+                                      "Simulation name: " + simulationToRun.Name + "\r\n";
+                if (err.InnerException == null)
+                    errorMessage += err.ToString();
+                else
+                    errorMessage += err.InnerException.ToString();
 
                 ISummary summary = Apsim.Find(simulationToRun, typeof(Summary)) as ISummary;
                 if (summary != null)

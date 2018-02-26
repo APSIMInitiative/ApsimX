@@ -88,6 +88,8 @@ namespace Models
         /// <param name="message">The message to write</param>
         public void WriteMessage(IModel model, string message)
         {
+            if (storage == null)
+                throw new ApsimXException(model, "No datastore is available!");
             string modelPath = Apsim.FullPath(model);
             string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
 
@@ -100,6 +102,8 @@ namespace Models
         /// <param name="message">The warning message to write</param>
         public void WriteWarning(IModel model, string message)
         {
+            if (storage == null)
+                throw new ApsimXException(model, "No datastore is available!");
             string modelPath = Apsim.FullPath(model);
             string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
 
@@ -131,7 +135,7 @@ namespace Models
                 FindAllProperties(model, properties);
                 foreach (VariableProperty property in properties)
                 {
-                    string propertyValue = property.ValueWithArrayHandling.ToString();
+                    string propertyValue = property.ValueAsString();
                     if (propertyValue != string.Empty)
                     {
                         if (propertyValue != null && property.DataType == typeof(DateTime))
@@ -330,16 +334,16 @@ namespace Models
                 foreach (DataRow row in messages.Rows)
                 {
                     // Work out the column 1 text.
-                    string modelName = (string)row[2];
+                    string modelName = (string)row[4];
 
                     string col1Text;
-                    if (row[3].GetType() == typeof(DateTime))
+                    if (row[6].GetType() == typeof(DateTime))
                     {
-                        DateTime date = (DateTime)row[3];
+                        DateTime date = (DateTime)row[5];
                         col1Text = date.ToString("yyyy-MM-dd") + " " + modelName;
                     }
                     else
-                        col1Text = row[3].ToString();
+                        col1Text = row[6].ToString();
 
                     // If the date and model name have changed then write a row.
                     if (col1Text != previousCol1Text)
@@ -357,8 +361,8 @@ namespace Models
                         col1Text = null;
                     }
 
-                    string message = (string)row[4];
-                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row[5].ToString());
+                    string message = (string)row[6];
+                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row[7].ToString());
 
                     if (errorLevel == Simulation.ErrorLevel.Error)
                     {
@@ -773,7 +777,7 @@ namespace Models
 
             if (dataTypeName == "Double" || dataTypeName == "Single")
             {
-                double doubleValue = Convert.ToDouble(value);
+                double doubleValue = Convert.ToDouble(value, System.Globalization.CultureInfo.InvariantCulture);
                 if (format == null || format == string.Empty)
                 {
                     return string.Format("{0:F3}", doubleValue);

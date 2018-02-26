@@ -104,46 +104,65 @@ namespace Models
         /// <summary> Process a Pest and Disease lifecycle object </summary>
         public event EventHandler DoLifecycle;
 
-		/// <summary>WholeFarm update pasture</summary>
-		public event EventHandler WFUpdatePasture;
-		///// <summary>WholeFarm update resources other than pasture</summary>
-		//public event EventHandler WFGetResourcesRequired;
-		/// <summary>WholeFarm cut and carry</summary>
-		public event EventHandler WFDoCutAndCarry;
-		/// <summary>WholeFarm Do Animal (Ruminant and Other) Breeding and milk calculations</summary>
-		public event EventHandler WFAnimalBreeding;
-		/// <summary>Get potential intake. This includes suckling milk consumption</summary>
-		public event EventHandler WFPotentialIntake;
-		/// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
-		public event EventHandler WFGetResourcesRequired;
-		/// <summary>WholeFarm Calculate Animals (Ruminant and Other) milk production</summary>
-		public event EventHandler WFAnimalMilkProduction;
-		/// <summary>WholeFarm Calculate Animals(Ruminant and Other) weight gain</summary>
-		public event EventHandler WFAnimalWeightGain;
-		/// <summary>WholeFarm Do Animal (Ruminant and Other) death</summary>
-		public event EventHandler WFAnimalDeath;
-		/// <summary>WholeFarm Do Animal (Ruminant and Other) milking</summary>
-		public event EventHandler WFAnimalMilking;
-		/// <summary>WholeFarm Do Animal (Ruminant and Other) Herd Management (Kulling, Castrating, Weaning, etc.)</summary>
-		public event EventHandler WFAnimalManage;
-		/// <summary>WholeFarm stock animals to pasture availability or other metrics</summary>
-		public event EventHandler WFAnimalStock;
-		/// <summary>WholeFarm sell animals to market including transporting and labour</summary>
-		public event EventHandler WFAnimalSell;
-		/// <summary>WholeFarm Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
-		public event EventHandler WFAgeResources;
-		// WholeFarm versions of the following events to ensure APSIM tasks perfomed before WF not yet implemented
-		///// <summary>WholeFarm start of simulation performed after APSIM StartOfSimulation</summary>
-		//public event EventHandler WFStartOfSimulation;
-		///// <summary>WholeFarm start of month performed after APSIM StartOfMonth</summary>
-		//public event EventHandler WFStartOfMonth;
-		///// <summary>WholeFarm end of month performed after APSIM EndOfMonth</summary>
-		//public event EventHandler WFEndOfMonth;
+        /// <summary>CLEM initialise Resources occurs once at start of simulation</summary>
+        public event EventHandler CLEMInitialiseResource;
+        /// <summary>CLEM initialise Activity occurs once at start of simulation</summary>
+        public event EventHandler CLEMInitialiseActivity;
+        /// <summary>CLEM start of timestep event</summary>
+        public event EventHandler CLEMStartOfTimeStep;
+        /// <summary>CLEM update pasture</summary>
+        public event EventHandler CLEMUpdatePasture;
+        /// <summary>CLEM pasture has been added and is ready for use</summary>
+        public event EventHandler CLEMPastureReady;
+        /// <summary>CLEM cut and carry</summary>
+        public event EventHandler CLEMDoCutAndCarry;
+        /// <summary>CLEM Do Animal (Ruminant and Other) Breeding and milk calculations</summary>
+        public event EventHandler CLEMAnimalBreeding;
+        /// <summary>Get potential intake. This includes suckling milk consumption</summary>
+        public event EventHandler CLEMPotentialIntake;
+        /// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
+        public event EventHandler CLEMCalculateManure;
+        /// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
+        public event EventHandler CLEMCollectManure;
+        /// <summary>Request and perform the collection of maure after resources are allocated and manure produced in time-step</summary>
+        public event EventHandler CLEMGetResourcesRequired;
+        /// <summary>CLEM Calculate Animals (Ruminant and Other) milk production</summary>
+        public event EventHandler CLEMAnimalMilkProduction;
+        /// <summary>CLEM Calculate Animals(Ruminant and Other) weight gain</summary>
+        public event EventHandler CLEMAnimalWeightGain;
+        /// <summary>CLEM Do Animal (Ruminant and Other) death</summary>
+        public event EventHandler CLEMAnimalDeath;
+        /// <summary>CLEM Do Animal (Ruminant and Other) milking</summary>
+        public event EventHandler CLEMAnimalMilking;
+        /// <summary>CLEM Calculate ecological state after all deaths and before management</summary>
+        public event EventHandler CLEMCalculateEcologicalState;
+        /// <summary>CLEM Do Animal (Ruminant and Other) Herd Management (Kulling, Castrating, Weaning, etc.)</summary>
+        public event EventHandler CLEMAnimalManage;
+        /// <summary>CLEM stock animals to pasture availability or other metrics</summary>
+        public event EventHandler CLEMAnimalStock;
+        /// <summary>CLEM sell animals to market including transporting and labour</summary>
+        public event EventHandler CLEMAnimalSell;
+        /// <summary>CLEM buy animals including transporting and labour</summary>
+        public event EventHandler CLEMAnimalBuy;
+        /// <summary>CLEM Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
+        public event EventHandler CLEMAgeResources;
+        /// <summary>CLEM event to calculate monthly herd summary</summary>
+        public event EventHandler CLEMHerdSummary;
+        /// <summary>CLEM end of timestep event</summary>
+        public event EventHandler CLEMEndOfTimeStep;
 
-		// Public properties available to other models.
-		/// <summary>Gets the today.</summary>
-		/// <value>The today.</value>
-		[XmlIgnore]
+        // CLEM versions of the following events to ensure APSIM tasks perfomed before CLEM not yet implemented
+        ///// <summary>CLEM start of simulation performed after APSIM StartOfSimulation</summary>
+        //public event EventHandler CLEMStartOfSimulation;
+        ///// <summary>CLEM start of month performed after APSIM StartOfMonth</summary>
+        //public event EventHandler CLEMStartOfMonth;
+        ///// <summary>CLEM end of month performed after APSIM EndOfMonth</summary>
+        //public event EventHandler CLEMEndOfMonth;
+
+        // Public properties available to other models.
+        /// <summary>Gets the today.</summary>
+        /// <value>The today.</value>
+        [XmlIgnore]
         public DateTime Today { get; private set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -161,13 +180,17 @@ namespace Models
         [EventSubscribe("DoCommence")]
         private void OnDoCommence(object sender, Core.Runners.RunSimulation.CommenceArgs e)
         {
-            try
-            {
                 if (DoInitialSummary != null)
                     DoInitialSummary.Invoke(this, args);
 
                 if (StartOfSimulation != null)
                     StartOfSimulation.Invoke(this, args);
+
+                if (CLEMInitialiseResource != null)
+                    CLEMInitialiseResource.Invoke(this, args);
+
+                if (CLEMInitialiseActivity != null)
+                    CLEMInitialiseActivity.Invoke(this, args);
 
                 while (Today <= EndDate && !e.CancelToken.IsCancellationRequested)
                 {
@@ -209,7 +232,8 @@ namespace Models
 
                     if (DoSurfaceOrganicMatterDecomposition != null)
                         DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
-
+                    if (Today.DayOfYear == 16)
+                    { }
                     if (DoWaterArbitration != null)
                         DoWaterArbitration.Invoke(this, args);
 
@@ -257,34 +281,49 @@ namespace Models
 
                     if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
                     {
-                        // WholeFarm events performed before APSIM EndOfMonth
-                        if (WFUpdatePasture != null)
-                            WFUpdatePasture.Invoke(this, args);
-                        if (WFDoCutAndCarry != null)
-                            WFDoCutAndCarry.Invoke(this, args);
-                        if (WFAnimalBreeding != null)
-                            WFAnimalBreeding.Invoke(this, args);
-                        if (WFPotentialIntake != null)
-                            WFPotentialIntake.Invoke(this, args);
-                        if (WFGetResourcesRequired != null)
-                            WFGetResourcesRequired.Invoke(this, args);
-                        if (WFAnimalMilkProduction != null)
-                            WFAnimalMilkProduction.Invoke(this, args);
-                        if (WFAnimalWeightGain != null)
-                            WFAnimalWeightGain.Invoke(this, args);
-                        if (WFAnimalDeath != null)
-                            WFAnimalDeath.Invoke(this, args);
-                        if (WFAnimalMilking != null)
-                            WFAnimalMilking.Invoke(this, args);
-                        if (WFAnimalManage != null)
-                            WFAnimalManage.Invoke(this, args);
-                        if (WFAnimalStock != null)
-                            WFAnimalStock.Invoke(this, args);
-                        if (WFAnimalSell != null)
-                            WFAnimalSell.Invoke(this, args);
-                        if (WFAgeResources != null)
-                            WFAgeResources.Invoke(this, args);
-
+                        // CLEM events performed before APSIM EndOfMonth
+                        if (CLEMStartOfTimeStep != null)
+                            CLEMStartOfTimeStep.Invoke(this, args);
+                        if (CLEMUpdatePasture != null)
+                            CLEMUpdatePasture.Invoke(this, args);
+                        if (CLEMPastureReady != null)
+                            CLEMPastureReady.Invoke(this, args);
+                        if (CLEMDoCutAndCarry != null)
+                            CLEMDoCutAndCarry.Invoke(this, args);
+                        if (CLEMAnimalBreeding != null)
+                            CLEMAnimalBreeding.Invoke(this, args);
+                        if (CLEMAnimalMilkProduction != null)
+                            CLEMAnimalMilkProduction.Invoke(this, args);
+                        if (CLEMPotentialIntake != null)
+                            CLEMPotentialIntake.Invoke(this, args);
+                        if (CLEMGetResourcesRequired != null)
+                            CLEMGetResourcesRequired.Invoke(this, args);
+                        if (CLEMAnimalWeightGain != null)
+                            CLEMAnimalWeightGain.Invoke(this, args);
+                        if (CLEMCalculateManure != null)
+                            CLEMCalculateManure.Invoke(this, args);
+                        if (CLEMCollectManure != null)
+                            CLEMCollectManure.Invoke(this, args);
+                        if (CLEMAnimalDeath != null)
+                            CLEMAnimalDeath.Invoke(this, args);
+                        if (CLEMAnimalMilking != null)
+                            CLEMAnimalMilking.Invoke(this, args);
+                        if (CLEMCalculateEcologicalState != null)
+                            CLEMCalculateEcologicalState.Invoke(this, args);
+                        if (CLEMAnimalManage != null)
+                            CLEMAnimalManage.Invoke(this, args);
+                        if (CLEMAnimalStock != null)
+                            CLEMAnimalStock.Invoke(this, args);
+                        if (CLEMAnimalSell != null)
+                            CLEMAnimalSell.Invoke(this, args);
+                        if (CLEMHerdSummary != null)
+                            CLEMHerdSummary.Invoke(this, args);
+                        if (CLEMAgeResources != null)
+                            CLEMAgeResources.Invoke(this, args);
+                        if (CLEMAnimalBuy != null)
+                            CLEMAnimalBuy.Invoke(this, args);
+                        if (CLEMEndOfTimeStep != null)
+                            CLEMEndOfTimeStep.Invoke(this, args);
                         EndOfMonth.Invoke(this, args);
                     }
 
@@ -298,15 +337,6 @@ namespace Models
                 }
                 Summary.WriteMessage(this, "Simulation terminated normally");
             }
-            catch (Exception ex)
-            {
-                Summary.WriteMessage(this, "Simulation terminated due to exception: " + ex.Message);
-                // Is there a good mechanism for letting our invoker know that an error has occurred?
-                // Throwing this back to the caller doesn't seem to work. This seems to be a consequence
-                // of the Invoke method used to call us crossing the native/managed boundary. I'm not
-                // sure why this is so...
-                // throw ex;
-            }
-        }
+
     }
 }

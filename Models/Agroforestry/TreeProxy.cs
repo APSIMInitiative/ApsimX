@@ -15,6 +15,7 @@ using Models.Zones;
 namespace Models.Agroforestry
 {
     /// <summary>
+    /// # [Name]
     /// A simple proxy for a full tree model is provided for use in agroforestry simulations.  It allows the user to directly specify the size and structural data for trees within the simulation rather than having to simulate complex tree development (e.g. tree canopy structure under specific pruning regimes).
     /// 
     /// Several parameters are required of the user to specify the state of trees within the simulation.  These include:
@@ -298,10 +299,11 @@ namespace Models.Agroforestry
 
             for (int i = 2; i < Table.Count; i++)
             {
-                shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0]));
+                shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0], 
+                                                             System.Globalization.CultureInfo.InvariantCulture));
                 List<double> getRLDs = new List<double>();
                 for (int j = 3; j < Table[1].Count; j++)
-                    getRLDs.Add(Convert.ToDouble(Table[i][j]));
+                    getRLDs.Add(Convert.ToDouble(Table[i][j], System.Globalization.CultureInfo.InvariantCulture));
                 rld.Add(THCutoffs[i - 2], getRLDs.ToArray());
             }
         }

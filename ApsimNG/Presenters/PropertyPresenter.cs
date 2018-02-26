@@ -10,12 +10,12 @@ namespace UserInterface.Presenters
     using System.Data;
     using System.Linq;
     using System.Reflection;
+    using APSIM.Shared.Utilities;
     using EventArguments;
     using Interfaces;
-    using Views;
     using Models;
     using Models.Core;
-    using APSIM.Shared.Utilities;
+    using Views;
 
     /// <summary>
     /// <para>
@@ -33,8 +33,11 @@ namespace UserInterface.Presenters
     /// </summary>
     public class PropertyPresenter : IPresenter
     {
+        /// <summary>
+        /// Linked storage reader
+        /// </summary>
         [Link]
-        IStorageReader storage = null;
+        private IStorageReader storage = null;
 
         /// <summary>
         /// The underlying grid control to work with.
@@ -89,7 +92,7 @@ namespace UserInterface.Presenters
 
             string[] split;
 
-            grid.NumericFormat = "G6"; 
+            this.grid.NumericFormat = "G6"; 
             this.FindAllProperties(this.model);
             if (this.grid.DataSource == null)
             {
@@ -98,11 +101,11 @@ namespace UserInterface.Presenters
             else
             {
                 this.grid.ResizeControls();
-                FormatTestGrid();
+                this.FormatTestGrid();
             }
 
             this.grid.CellsChanged += this.OnCellValueChanged;
-            this.grid.ButtonClick += OnFileBrowseClick;
+            this.grid.ButtonClick += this.OnFileBrowseClick;
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             if (model != null)
             {
@@ -119,7 +122,7 @@ namespace UserInterface.Presenters
         {
             this.grid.EndEdit();
             this.grid.CellsChanged -= this.OnCellValueChanged;
-            this.grid.ButtonClick -= OnFileBrowseClick;
+            this.grid.ButtonClick -= this.OnFileBrowseClick;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
 
@@ -139,7 +142,10 @@ namespace UserInterface.Presenters
             this.FillTable(table);
             this.FormatGrid();
             if (selectedCell != null)
+            {
                 this.grid.GetCurrentCell = selectedCell;
+            }
+
             this.grid.ResizeControls();
         }
 
@@ -167,6 +173,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Find all properties from the model and fill this.properties.
         /// </summary>
+        /// <param name="model">The mode object</param>
         public void FindAllProperties(Model model)
         {
             this.model = model;
@@ -206,13 +213,55 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Fill the specified table with columns and rows based on this.Properties
+        /// Updates the lists of Cultivar and Field names in the model.
+        /// This is used when the model has been changed. For example, when a 
+        /// new crop has been selecled.
         /// </summary>
-        /// <param name="table">The table that needs to be filled</param>
+        /// <param name="model">The new model</param>
+        public void UpdateModel(Model model)
+        {
+            this.model = model;
+            if (this.model != null)
+            {
+                IGridCell curCell = this.grid.GetCurrentCell;
+                for (int i = 0; i < this.properties.Count; i++)
+                {
+                    IGridCell cell = this.grid.GetCell(1, i);
+                    if (curCell != null && cell.RowIndex == curCell.RowIndex && cell.ColumnIndex == curCell.ColumnIndex)
+                    {
+                        continue;
+                    }
+
+                    if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
+                    {
+                        ICrop crop = this.GetCrop(this.properties);
+                        if (crop != null)
+                        {
+                            cell.DropDownStrings = this.GetCultivarNames(crop);
+                        }
+                    }
+                    else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FieldName)
+                    {
+                        string[] fieldNames = this.GetFieldNames();
+                        if (fieldNames != null)
+                        {
+                            cell.DropDownStrings = fieldNames;
+                        }
+                    }
+                }
+            }
+        }
+        
+        /// <summary>
+                 /// Fill the specified table with columns and rows based on this.Properties
+                 /// </summary>
+                 /// <param name="table">The table that needs to be filled</param>
         private void FillTable(DataTable table)
         {
             foreach (VariableProperty property in this.properties)
+            {
                 table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
+            }
 
             this.grid.DataSource = table;
         }
@@ -225,7 +274,9 @@ namespace UserInterface.Presenters
             int numCols = this.grid.DataSource.Columns.Count;
 
             for (int i = 0; i < numCols; i++)
+            {
                 this.grid.GetColumn(i).Format = "F4";
+            }
         }
 
         /// <summary>
@@ -240,17 +291,16 @@ namespace UserInterface.Presenters
                 if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.TableName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    cell.DropDownStrings = storage.TableNames.ToArray();
+                    cell.DropDownStrings = this.storage.TableNames.ToArray();
                 }
                 else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    ICrop crop = GetCrop(properties);
+                    ICrop crop = this.GetCrop(this.properties);
                     if (crop != null)
                     {
-                        cell.DropDownStrings = GetCultivarNames(crop);
+                        cell.DropDownStrings = this.GetCultivarNames(crop);
                     }
-                    
                 }
                 else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FileName)
                 {
@@ -259,9 +309,11 @@ namespace UserInterface.Presenters
                 else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FieldName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    string[] fieldNames = GetFieldNames();
+                    string[] fieldNames = this.GetFieldNames();
                     if (fieldNames != null)
+                    {
                         cell.DropDownStrings = fieldNames;
+                    }
                 }
                 else
                 {
@@ -287,6 +339,7 @@ namespace UserInterface.Presenters
                         {
                             cropNames.Add(crop.Name);
                         }
+
                         cell.DropDownStrings = cropNames.ToArray();
                     }
                     else if (this.properties[i].DataType == typeof(ICrop))
@@ -323,11 +376,15 @@ namespace UserInterface.Presenters
                 {
                     ICrop replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as ICrop;
                     if (replacementCrop != null)
+                    {
                         return replacementCrop.CultivarNames;
+                    }
                 }
             }
             else
+            {
                 return crop.CultivarNames;
+            }
 
             return new string[0];
         }
@@ -346,12 +403,16 @@ namespace UserInterface.Presenters
                     IGridCell cell = this.grid.GetCell(1, i);
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
                     {
-                        DataTable data = storage.RunQuery("SELECT * FROM " + cell.Value.ToString() + " LIMIT 1");
+                        string tableName = cell.Value.ToString();
+                        DataTable data = null;
+                        if (storage.TableNames.Contains(tableName))
+                            data = this.storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
                         if (data != null)
                             fieldNames = DataTableUtilities.GetColumnNames(data);
                     }
                 }
             }
+
             return fieldNames;
         }
 
@@ -369,7 +430,9 @@ namespace UserInterface.Presenters
                 {
                     ICrop plant = property.Value as ICrop;
                     if (plant != null)
+                    {
                         return plant;
+                    }
                 }
             }
 
@@ -380,10 +443,8 @@ namespace UserInterface.Presenters
         /// <summary>
         /// User has changed the value of a cell.
         /// </summary>
-        /// <param name="col">The column index of the cell that has changed</param>
-        /// <param name="row">The row index of the cell that has changed</param>
-        /// <param name="oldValue">The cell value before the user changed it</param>
-        /// <param name="newValue">The cell value the user has entered</param>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event parameters</param>
         private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
@@ -391,7 +452,10 @@ namespace UserInterface.Presenters
             foreach (IGridCell cell in e.ChangedCells)
             {
                 if (e.invalidValue)
+                {
                     this.explorerPresenter.MainPresenter.ShowMsgDialog("The value you entered was not valid for its datatype", "Invalid entry", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
+                }
+
                 this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
             }
             
@@ -462,48 +526,12 @@ namespace UserInterface.Presenters
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
         {
-            string fileName = ViewBase.AskUserForFileName("Select file path", "", Gtk.FileChooserAction.Open, e.ChangedCells[0].Value.ToString());
+            string fileName = ViewBase.AskUserForFileName("Select file path", string.Empty, Gtk.FileChooserAction.Open, e.ChangedCells[0].Value.ToString());
             if (fileName != null && fileName != e.ChangedCells[0].Value.ToString())
             {
                 e.ChangedCells[0].Value = fileName;
-                OnCellValueChanged(sender, e);
-                PopulateGrid(model);
-            }
-        }
-
-        /// <summary>
-        /// Updates the lists of Cultivar and Field names in the model.
-        /// This is used when the model has been changed. For example, when a 
-        /// new crop has been selecled.
-        /// </summary>
-        /// <param name="model">The new model</param>
-        public void UpdateModel(Model model)
-        {
-            this.model = model;
-            if (this.model != null)
-            {
-                IGridCell curCell = this.grid.GetCurrentCell;
-                for (int i = 0; i < this.properties.Count; i++)
-                {
-                    IGridCell cell = this.grid.GetCell(1, i);
-                    if (curCell != null && cell.RowIndex == curCell.RowIndex && cell.ColumnIndex == curCell.ColumnIndex)
-                        continue;
-                    if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
-                    {
-                        ICrop crop = GetCrop(properties);
-                        if (crop != null)
-                        {
-                            cell.DropDownStrings = GetCultivarNames(crop);
-                        }
-
-                    }
-                    else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FieldName)
-                    {
-                        string[] fieldNames = GetFieldNames();
-                        if (fieldNames != null)
-                            cell.DropDownStrings = fieldNames;
-                    }
-                }
+                this.OnCellValueChanged(sender, e);
+                this.PopulateGrid(this.model);
             }
         }
     }

@@ -6,12 +6,12 @@
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <MemoText>
       <![CDATA[
-## Presentation
+# Presentation
 
 This model has been developed to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds (these may be included in future releases).  The model was built using the Plant Modelling Framework (PMF) described by [brown_plant_2014].  To simulate the aboveground plant structure, including the photosynthesis process, the Chicory model uses the SimpleLeaf organ type of PMF.  The model describes a semi-perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.
 
 
-## Inclusion in APSIM simulations
+# Inclusion in APSIM simulations
 A forage chicory crop can be included in a simulation the same as any other APSIM crop.
 
   * - The chicory object can be dragged or copied from the Crop folder in the tool box into a Field in your simulation;
@@ -22,7 +22,7 @@ A forage chicory crop can be included in a simulation the same as any other APSI
 If a specified cultivar is not available, a fatal error will be thrown.
 
 
-### Harvest and biomass removal
+## Harvest and biomass removal
 Chicory biomass can be removed by raising one of the valid methods: Harvest, Cut, Graze, or Prune; this is done using a manager script, like for other crops.  The proportion of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified; otherwise defaults will be used.  Note that the sum of fractions removed and added to residue should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:
 <pre><code class='language-cs'>
 [EventSubscribe("Commencing")]  
@@ -45,7 +45,7 @@ private void OnDoManagement(object sender, EventArgs e)
 The RemovalFractions class can be sent with Harvest, Cut, Graze, or Prune events. All parameters are optional, defaults are used whenever any value is not specified.
 
 
-### Crop termination
+## Crop termination
 To fully terminate a crop the EndCrop event should be raised:
 <pre><code class='language-cs'>
   Chicory.EndCrop();  
@@ -53,7 +53,7 @@ To fully terminate a crop the EndCrop event should be raised:
 Once a crop has been ended the field is open to be used by another APSIM plant model, or another chicory crop.  Note that ending chicory is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.  
 
 
-## Acknowledgements
+# Acknowledgements
 This model was developed with help from Russel McAuliffe and Brittany Paton organising data and simulations. Datasets were kindly shared by Julia M. Lee, Hamish E. Brown, and the Forages for Reduced Nitrogen Leaching (FRNL) programme.
 ]]>
     </MemoText>
@@ -375,6 +375,12 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>1</FixedValue>
       <Units>g/g</Units>
     </Constant>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>    
     <Constant>
       <Name>MinimumNConc</Name>
       <Memo>
@@ -960,14 +966,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -1009,6 +1007,11 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
     </Constant>
+    <Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <CohortsInitialised>false</CohortsInitialised>
     <TipsAtEmergence>0</TipsAtEmergence>
@@ -1034,6 +1037,12 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText><![CDATA[__Note:__ Represents all the stems and branches in the plant, without any distinction between age or the position in the canopy. ]]></MemoText>
     </Memo>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>    
     <Constant>
       <Name>InitialWtFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1519,14 +1528,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -1573,6 +1574,11 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Stem].MinimumNConc.Value()</VariableName>
     </VariableReference>
+    <Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
@@ -1582,6 +1588,12 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText><![CDATA[__Note:__ Represents the reproductive parts of the plant, flowers, pods, seeds, etc.]]></MemoText>
     </Memo>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
     <Constant>
       <Name>InitialWtFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1982,14 +1994,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -2036,6 +2040,11 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Inflorescence].MinimumNConc.Value()</VariableName>
     </VariableReference>
+    <Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
@@ -2049,6 +2058,12 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       For the chicory model the set of parameters related to the storage of reserves and their utilisation (StructuralFraction, DMRetranslocationFactor, and NRetranslocationFactor) were manipulated in order to reflect the trends shown in the literature review and attempting to reproduce the results of the available experimental datasets (used in the validation tests).  These should be upgraded when data more specific to the retranslocation process is made available. ]]>
       </MemoText>
     </Memo>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
     <Constant>
       <Name>InitialWtFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2420,14 +2435,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
-    <Biomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
-    <Biomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Biomass>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -2474,6 +2481,11 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Taproot].MinimumNConc.Value()</VariableName>
     </VariableReference>
+    <Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <Root>
@@ -2486,6 +2498,12 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       There is no distinction of age, but root biomass is allocated separately for each soil layer within the root zone.   The depth of the root zone can change over time as root grows.  ]]>
       </MemoText>
     </Memo>
+    <Constant>
+      <Name>RemobilisationCost</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+      <Units />
+    </Constant>
     <Constant>
       <Name>InitialDM</Name>
       <Memo>
@@ -2907,20 +2925,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Root].RWC</XProperty>
     </LinearInterpolationFunction>
-    <CompositeBiomass>
-      <Name>Live</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Root].LayerLive</string>
-      </Propertys>
-    </CompositeBiomass>
-    <CompositeBiomass>
-      <Name>Dead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Root].LayerDead</string>
-      </Propertys>
-    </CompositeBiomass>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -2957,9 +2961,13 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       </OrganBiomassRemovalType>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
+    <Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
-    <MaintenanceRespiration>0</MaintenanceRespiration>
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />

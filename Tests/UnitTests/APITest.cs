@@ -257,7 +257,7 @@ namespace UnitTests
         [Test]
         public void MoveUpDown()
         {
-            IExplorerView explorerView = new ExplorerView();
+            IExplorerView explorerView = new ExplorerView(null);
             ExplorerPresenter explorerPresenter = new ExplorerPresenter(null);
             CommandHistory commandHistory = new CommandHistory();
 

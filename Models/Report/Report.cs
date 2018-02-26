@@ -96,12 +96,12 @@ namespace Models.Report
             foreach (string eventName in EventNames)
             {
                 if (eventName != string.Empty)
-                    events.Subscribe(eventName.Trim(), DoOutput);
+                    events.Subscribe(eventName.Trim(), DoOutputEvent);
             }
         }
 
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
-        public void DoOutput(object sender, EventArgs args)
+        public void DoOutput()
         {
             object[] valuesToWrite = new object[columns.Count];
             for (int i = 0; i < columns.Count; i++)
@@ -120,11 +120,39 @@ namespace Models.Report
                 DataTable data = storage.GetData(tableName);
                 if (data != null && data.Rows.Count > 0)
                 {
+                    SortColumnsOfDataTable(data);
                     StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
                     DataTableUtilities.DataTableToText(data, 0, ",", true, report);
                     report.Close();
                 }
             }
+        }
+
+        /// <summary>Sort the columns alphabetically</summary>
+        /// <param name="table">The table to sort</param>
+        private static void SortColumnsOfDataTable(DataTable table)
+        {
+            var columnArray = new DataColumn[table.Columns.Count];
+            table.Columns.CopyTo(columnArray, 0);
+            var ordinal = -1;
+            foreach (var orderedColumn in columnArray.OrderBy(c => c.ColumnName))
+                orderedColumn.SetOrdinal(++ordinal);
+
+            ordinal = -1;
+            int i = table.Columns.IndexOf("SimulationName");
+            if (i != -1)
+                table.Columns[i].SetOrdinal(++ordinal);
+
+            i = table.Columns.IndexOf("SimulationID");
+            if (i != -1)
+                table.Columns[i].SetOrdinal(++ordinal);
+        }
+
+
+        /// <summary>Called when one of our 'EventNames' events are invoked</summary>
+        public void DoOutputEvent(object sender, EventArgs e)
+        {
+            DoOutput();
         }
 
         /// <summary>
@@ -153,17 +181,6 @@ namespace Models.Report
                 for (int i = 0; i < ExperimentFactorNames.Count; i++)
                     this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
             }
-        }
-
-        /// <summary>
-        /// Simulation has completed - write the report table.
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            storage.CompletedWritingSimulationData(simulation.Name);
         }
     }
 }

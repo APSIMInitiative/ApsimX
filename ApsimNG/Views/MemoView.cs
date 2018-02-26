@@ -51,7 +51,7 @@ namespace UserInterface.Views
         
         public MemoView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.MemoView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MemoView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             textView = (TextView)builder.GetObject("textView");
             label1 = (Label)builder.GetObject("label1");
@@ -83,6 +83,9 @@ namespace UserInterface.Views
             textView.FocusOutEvent -= richTextBox1_Leave;
             textView.Buffer.Changed -= richTextBox1_TextChanged;
             textView.PopulatePopup -= TextView_PopulatePopup;
+            menuItemList.Clear();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>
@@ -178,7 +181,10 @@ namespace UserInterface.Views
             if (menuItemList.Count > 0)
             {
                 foreach (Widget w in args.Menu)
+                {
                     args.Menu.Remove(w);
+                    w.Destroy();
+                }
                 foreach (MenuInfo item in menuItemList)
                 {
                     MenuItem menuItem = new MenuItem(item.menuText);

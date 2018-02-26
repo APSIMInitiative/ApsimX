@@ -14,7 +14,7 @@ namespace Models.PMF.Functions
     [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Ymax * 1/1+exp(-(x-Xo)/b)")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SigmoidFunction : Model, IFunction
+    public class SigmoidFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The ymax</summary>
         [Link]
@@ -47,7 +47,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -60,7 +60,7 @@ namespace Models.PMF.Functions
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                    child.Document(tags, 0, indent+1);
+                    AutoDocumentation.DocumentModel(child, tags, 0, indent+1);
             }
         }
     }

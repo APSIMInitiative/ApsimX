@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="18">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -12,8 +12,6 @@ _Huth, N.I., Fainges, J.L. and Holzworth, D.P._]]></MemoText>
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>false</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>Simple Test Using Split Populations</Name>
@@ -2086,14 +2084,14 @@ This test compares the water demands and uptakes from two instances of Slurp, ru
         <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>Slurp1.Root.Depth</string>
-          <string>Slurp2.Root.Depth</string>
-          <string>Slurp1.Leaf.LAI</string>
-          <string>Slurp2.Leaf.LAI</string>
-          <string>Slurp1.Root.WaterUptake</string>
-          <string>Slurp2.Root.WaterUptake</string>
-          <string>Slurp1.Leaf.WaterDemand</string>
-          <string>Slurp2.Leaf.WaterDemand</string>
+          <string>[Slurp1].Root.Depth</string>
+          <string>[Slurp2].Root.Depth</string>
+          <string>[Slurp1].Leaf.LAI</string>
+          <string>[Slurp2].Leaf.LAI</string>
+          <string>[Slurp1].Root.WaterUptake</string>
+          <string>[Slurp2].Root.WaterUptake</string>
+          <string>[Slurp1].Leaf.WaterDemand</string>
+          <string>[Slurp2].Leaf.WaterDemand</string>
           <string>[ExtraVariables].Script.AccumEO</string>
           <string>[ExtraVariables].Script.AccumEP</string>
           <string>[ExtraVariables].Script.AccumES</string>
@@ -2730,20 +2728,6 @@ zone.Set("Slurp.Leaf.HeightFunction.FixedValue", HeightResetValue);<br>
             <MemoText><![CDATA[
 Stuff regarding Root]]></MemoText>
           </Memo>
-          <CompositeBiomass>
-            <Name>Live</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Propertys>
-              <string>[Root].LayerLive</string>
-            </Propertys>
-          </CompositeBiomass>
-          <CompositeBiomass>
-            <Name>Dead</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Propertys>
-              <string>[Root].LayerDead</string>
-            </Propertys>
-          </CompositeBiomass>
           <Constant>
             <Name>RootFrontVelocity</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -2927,14 +2911,6 @@ This is important in SLURP as it is set for each species to represent their diff
         </Root>
         <SimpleLeaf>
           <Name>Leaf</Name>
-          <Biomass>
-            <Name>Live</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-          </Biomass>
-          <Biomass>
-            <Name>Dead</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-          </Biomass>
           <Constant>
             <Name>DetachmentRateFunction</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -3155,6 +3131,14 @@ This is important in SLURP as it is set for each species to represent their diff
             <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Live>
+            <Name>Biomass</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Live>
+          <Dead>
+            <Name>Biomass</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Dead>
           <CohortsInitialised>false</CohortsInitialised>
           <TipsAtEmergence>0</TipsAtEmergence>
           <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -3289,20 +3273,6 @@ zone.Set("Slurp.Leaf.HeightFunction.FixedValue", HeightResetValue);<br>
             <MemoText><![CDATA[
 Stuff regarding Root]]></MemoText>
           </Memo>
-          <CompositeBiomass>
-            <Name>Live</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Propertys>
-              <string>[Root].LayerLive</string>
-            </Propertys>
-          </CompositeBiomass>
-          <CompositeBiomass>
-            <Name>Dead</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Propertys>
-              <string>[Root].LayerDead</string>
-            </Propertys>
-          </CompositeBiomass>
           <Constant>
             <Name>RootFrontVelocity</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -3486,14 +3456,6 @@ This is important in SLURP as it is set for each species to represent their diff
         </Root>
         <SimpleLeaf>
           <Name>Leaf</Name>
-          <Biomass>
-            <Name>Live</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-          </Biomass>
-          <Biomass>
-            <Name>Dead</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-          </Biomass>
           <Constant>
             <Name>DetachmentRateFunction</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -3714,6 +3676,14 @@ This is important in SLURP as it is set for each species to represent their diff
             <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Live>
+            <Name>Biomass</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Live>
+          <Dead>
+            <Name>Biomass</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Dead>
           <CohortsInitialised>false</CohortsInitialised>
           <TipsAtEmergence>0</TipsAtEmergence>
           <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -3927,7 +3897,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 	}
 }
@@ -4062,5 +4032,5 @@ namespace Models
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>350</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

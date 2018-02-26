@@ -20,7 +20,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Experiment))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model, IJobGenerator
+    public class Simulation : Model, ISimulationGenerator
     {
         [NonSerialized]
         private ScopingRules scope = null;
@@ -127,29 +127,34 @@ namespace Models.Core
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null)
         {
             hasRun = false;
         }
 
         /// <summary>Gets the next job to run</summary>
-        public IRunnable NextJobToRun()
+        public Simulation NextSimulationToRun(bool doFullFactorial = true)
         {
-            if (Parent is IJobGenerator || hasRun)
+            if (Parent is ISimulationGenerator || hasRun)
                 return null;
             hasRun = true;
 
-            Simulations simulationEngine = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-            Simulation simulationToRun = Apsim.Clone(this) as Simulation;
-            simulationEngine.MakeSubstitutions(simulationToRun);
-
-            return new RunSimulation(simulationToRun, doClone: false);
+            Simulation simulationToRun;
+            if (this.Parent == null)
+                simulationToRun = this;
+            else
+            {
+                Simulations simulationEngine = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                simulationToRun = Apsim.Clone(this) as Simulation;
+                simulationEngine.MakeSubstitutions(simulationToRun);
+            }
+            return simulationToRun;
         }
 
         /// <summary>Gets a list of simulation names</summary>
-        public IEnumerable<string> GetSimulationNames()
+        public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
-            if (Parent is IJobGenerator)
+            if (Parent is ISimulationGenerator)
                 return new string[0];
             return new string[] { Name };
         }

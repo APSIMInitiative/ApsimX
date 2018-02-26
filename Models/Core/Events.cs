@@ -112,7 +112,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="eventName">The name of the event</param>
         /// <param name="args">The event arguments. Can be null</param>
-        internal List<Exception> Publish(string eventName, object[] args)
+        internal void Publish(string eventName, object[] args)
         {
             List<IModel> allModels = new List<IModel>();
             allModels.Add(relativeTo);
@@ -122,19 +122,8 @@ namespace Models.Core
             List<Subscriber> matches = subscribers.FindAll(subscriber => subscriber.Name == eventName &&
                                                                          allModels.Contains(subscriber.Model as IModel));
 
-            List<Exception> errors = new List<Exception>();
             foreach (Subscriber subscriber in matches)
-            {
-                try
-                {
-                    subscriber.Invoke(args);
-                }
-                catch (Exception err)
-                {
-                    errors.Add(err);
-                }
-            }
-            return errors;
+                subscriber.Invoke(args);
         }
 
         /// <summary>Connect the specified publisher to all subscribers in scope</summary>

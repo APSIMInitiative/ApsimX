@@ -7,7 +7,7 @@ namespace UnitTests
 {
     using APSIM.Shared.Utilities;
     using Models;
-    using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Graph;
     using Models.Soils;
     using NUnit.Framework;
@@ -40,9 +40,9 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
+            Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, null));
 
-            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"" + Converter.LastestVersion + "\">" +
                              "<Graph>" +
                                "<Series>" +
                                  "<TableName>HarvestReport</TableName>" +
@@ -67,9 +67,9 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
+            Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, null));
 
-            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"" + Converter.LastestVersion + "\">" +
                              "<Cultivar>" +
                                  "<Alias>" +
                                    "<Name>Cultivar1</Name>" +
@@ -93,23 +93,23 @@ namespace UnitTests
                              "using Models.PMF;\r\n" +
                              "namespace Models\r\n" +
                              "{\r\n" +
-                             "    	[Serializable]\r\n" +
-                             "    	public class Script : Model\r\n" +
-                             "    	{\r\n" +
-                             "    		[Link] Clock Clock;\r\n" +
-                             "    		[Link] Fertiliser Fertiliser;\r\n" +
-                             "    		[Link] Summary Summary;\r\n" +
-                             "          private void OnDoManagement(object sender, EventArgs e)\r\n" +
-                             "          {\r\n" +
-                             "          	accumulatedRain.Update();\r\n" +
-                             "          	if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n" +
-                             "          	    Soil.SoilWater.ESW > MinESW &&\r\n" +
-                             "          	    accumulatedRain.Sum > MinRain)\r\n" +
-                             "          	{\r\n" +
-                             "          		Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);\r\n" +
-                             "          	}\r\n" +
-                             "          }\r\n" +
-                             "    	}\r\n" +
+                             "    [Serializable]\r\n" +
+                             "    public class Script : Model\r\n" +
+                             "    {\r\n" +
+                             "        [Link] Clock Clock;\r\n" +
+                             "        [Link] Fertiliser Fertiliser;\r\n" +
+                             "        [Link] Summary Summary;\r\n" +
+                             "        private void OnDoManagement(object sender, EventArgs e)\r\n" +
+                             "        {\r\n" +
+                             "            accumulatedRain.Update();\r\n" +
+                             "            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n" +
+                             "                Soil.SoilWater.ESW > MinESW &&\r\n" +
+                             "                accumulatedRain.Sum > MinRain)\r\n" +
+                             "            {\r\n" +
+                             "                Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);\r\n" +
+                             "            }\r\n" +
+                             "        }\r\n" +
+                             "    }\r\n" +
                              "}\r\n" +
                              "]]></Code>\r\n" +
                              "      </Manager>\r\n" +
@@ -124,9 +124,9 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
+            Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, null));
 
-            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"" + Converter.LastestVersion + "\">" +
                              "<Manager>" +
                              "<Code>"+
                              "<![CDATA[using System;\r\n" +
@@ -135,23 +135,23 @@ namespace UnitTests
                              "using APSIM.Shared.Utilities;\r\n" +
                              "namespace Models\r\n" +
                              "{\r\n" +
-                             "    	[Serializable]\r\n" +
-                             "    	public class Script : Model\r\n" +
-                             "    	{\r\n" +
-                             "    		[Link] Clock Clock;\r\n" +
-                             "    		[Link] Fertiliser Fertiliser;\r\n" +
-                             "    		[Link] Summary Summary;\r\n" +
-                             "          private void OnDoManagement(object sender, EventArgs e)\r\n" +
-                             "          {\r\n" +
-                             "          	accumulatedRain.Update();\r\n" +
-                             "          	if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n" +
-                             "          	    MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n" +
-                             "          	    accumulatedRain.Sum > MinRain)\r\n" +
-                             "          	{\r\n" +
-                             "          		Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);\r\n" +
-                             "          	}\r\n" +
-                             "          }\r\n" +
-                             "    	}\r\n" +
+                             "    [Serializable]\r\n" +
+                             "    public class Script : Model\r\n" +
+                             "    {\r\n" +
+                             "        [Link] Clock Clock;\r\n" +
+                             "        [Link] Fertiliser Fertiliser;\r\n" +
+                             "        [Link] Summary Summary;\r\n" +
+                             "        private void OnDoManagement(object sender, EventArgs e)\r\n" +
+                             "        {\r\n" +
+                             "            accumulatedRain.Update();\r\n" +
+                             "            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n" +
+                             "                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n" +
+                             "                accumulatedRain.Sum > MinRain)\r\n" +
+                             "            {\r\n" +
+                             "                Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);\r\n" +
+                             "            }\r\n" +
+                             "        }\r\n" +
+                             "    }\r\n" +
                              "}\r\n" +
                              "]]></Code>" +
                              "</Manager>" +
@@ -178,9 +178,9 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
+            Assert.IsTrue(Converter.ConvertToVersion(doc.DocumentElement, null, 10));
 
-            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"10\">" +
                              "<GenericOrgan>" +
                                "<Name>Stem</Name>" +
                                "<Constant>" +
@@ -263,9 +263,9 @@ namespace UnitTests
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(fromXML);
-            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, null));
+            Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, null));
 
-            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"" + Converter.LastestVersion + "\">" +
                              "<Manager>" +
                                "<Code><![CDATA[using System;\r\n" +
                                "using Models.Core;\r\n" +
@@ -335,7 +335,7 @@ namespace UnitTests
 
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(fromXML);
-                Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement, fileName));
+                Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, fileName));
                 DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
                 string[] tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name");
                 Assert.AreEqual(tableNames, new string[] { "_Simulations", "_Messages", "_Units", "Report" } );

@@ -64,8 +64,26 @@ namespace Models.Core
         /// <param name="headingLevel">The heading level to use.</param>
         /// <param name="indent">The indentation level.</param>
         /// <param name="documentAllChildren">Document all children?</param>
-        /// <param name="withHeading">Put a heading in for this model?</param>
-        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = false, bool withHeading = false)
+        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = false)
+        {
+            if (model.IncludeInDocumentation)
+            {
+                if (model is ICustomDocumentation)
+                    (model as ICustomDocumentation).Document(tags, headingLevel, indent);
+                else
+                    DocumentModelSummary(model, tags, headingLevel, indent, documentAllChildren);
+            }
+        }
+
+        /// <summary>
+        /// Document the summary description of a model.
+        /// </summary>
+        /// <param name="model">The model to get documentation for.</param>
+        /// <param name="tags">The tags to add to.</param>
+        /// <param name="headingLevel">The heading level to use.</param>
+        /// <param name="indent">The indentation level.</param>
+        /// <param name="documentAllChildren">Document all children?</param>
+        public static void DocumentModelSummary(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren)
         {
             if (doc == null)
             {
@@ -74,94 +92,149 @@ namespace Models.Core
                 doc.Load(fileName);
             }
 
-            if (withHeading)
-                tags.Add(new AutoDocumentation.Heading(model.Name, headingLevel));
-
-            List<IModel> childrenDocumented = new List<Core.IModel>();
-
             string nameToFindInSummary = "members/T:" + model.GetType().FullName.Replace("+", ".") + "/summary";
             XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
             if (summaryNode != null)
+                ParseTextForTags(summaryNode.InnerXml, model, tags, headingLevel, indent, documentAllChildren);
+        }
+
+        /// <summary>
+        /// Parse a string into documentation tags
+        /// </summary>
+        /// <param name="stringToParse">The string to parse</param>
+        /// <param name="model">The associated model where the string came from</param>
+        /// <param name="tags">The list of tags to add to</param>
+        /// <param name="headingLevel">The current heading level</param>
+        /// <param name="indent">The current indent level</param>
+        /// <param name="documentAllChildren">Ensure all children are documented?</param>
+        public static void ParseTextForTags(string stringToParse, IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren)
+        {
+            List<IModel> childrenDocumented = new List<Core.IModel>();
+            int numSpacesStartOfLine = -1;
+            string paragraphSoFar = string.Empty;
+            if (stringToParse.StartsWith("\r\n"))
+                stringToParse = stringToParse.Remove(0, 2);
+            StringReader reader = new StringReader(stringToParse);
+            string line = reader.ReadLine();
+            int targetHeadingLevel = headingLevel;
+            while (line != null)
             {
-                int numSpacesStartOfLine = -1;
-                string paragraphSoFar = string.Empty;
-                string st = summaryNode.InnerXml;
-                if (st.StartsWith("\r\n"))
-                    st = st.Remove(0, 2);
-                StringReader reader = new StringReader(st);
-                string line = reader.ReadLine();
-                int targetHeadingLevel = headingLevel;
-                while (line != null)
+                line = line.Trim();
+
+                // Adjust heading levels.
+                if (line.StartsWith("#"))
                 {
-                    line = line.Trim();
-
-                    // Adjust heading levels.
-                    if (line.StartsWith("#"))
-                    {
-                        int currentHeadingLevel = line.Count(c => c == '#') / 2;
-                        targetHeadingLevel = headingLevel + currentHeadingLevel - 1;
-                        string hashString = new string('#', targetHeadingLevel);
-                        line = hashString + line.Replace("#", "") + hashString;
-                    }
-
-                    if (line != string.Empty)
-                    {
-                        {
-                            if (numSpacesStartOfLine == -1)
-                            {
-                                int preLineLength = line.Length;
-                                line = line.TrimStart();
-                                numSpacesStartOfLine = preLineLength - line.Length - 1;
-                            }
-                            else
-                                line = line.Remove(0, numSpacesStartOfLine);
-                        }
-                    }
-                    string heading;
-                    int thisHeadingLevel;
-                    if (GetHeadingFromLine(line, out heading, out thisHeadingLevel))
-                    {
-                        StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
-                        tags.Add(new Heading(heading, thisHeadingLevel));
-                    }
-                    else if (line.StartsWith("[Document "))
-                    {
-                        StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
-
-                        // Find child
-                        string childName = line.Replace("[Document ", "").Replace("]", "");
-                        IModel child = Apsim.Get(model, childName) as IModel;
-                        if (child == null)
-                            paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
-                        else
-                        {
-                            child.Document(tags, targetHeadingLevel + 1, indent);
-                            childrenDocumented.Add(child);
-                        }
-                    }
-                    else
-                        paragraphSoFar += " " + line + "\r\n";
-
-                    line = reader.ReadLine();
+                    int currentHeadingLevel = line.Count(c => c == '#');
+                    targetHeadingLevel = headingLevel + currentHeadingLevel - 1; // assumes models start numbering headings at 1 '#' character
+                    string hashString = new string('#', targetHeadingLevel);
+                    line = hashString + line.Replace("#", "") + hashString;
                 }
 
-                StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+                if (line != string.Empty)
+                {
+                    {
+                        if (numSpacesStartOfLine == -1)
+                        {
+                            int preLineLength = line.Length;
+                            line = line.TrimStart();
+                            numSpacesStartOfLine = preLineLength - line.Length - 1;
+                        }
+                        else
+                            line = line.Remove(0, numSpacesStartOfLine);
+                    }
+                }
+
+                // Remove expression macros and replace with values.
+                line = RemoveMacros(model, line);
+
+                string heading;
+                int thisHeadingLevel;
+                if (GetHeadingFromLine(line, out heading, out thisHeadingLevel))
+                {
+                    StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+                    tags.Add(new Heading(heading, thisHeadingLevel));
+                }
+                else if (line.StartsWith("[Document "))
+                {
+                    StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+
+                    // Find child
+                    string childName = line.Replace("[Document ", "").Replace("]", "");
+                    IModel child = Apsim.Get(model, childName) as IModel;
+                    if (child == null)
+                        paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
+                    else
+                    {
+                        DocumentModel(child, tags, targetHeadingLevel + 1, indent);
+                        childrenDocumented.Add(child);
+                    }
+                }
+                else if (line.StartsWith("[DocumentType "))
+                {
+                    StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+
+                    // Find children
+                    string childTypeName = line.Replace("[DocumentType ", "").Replace("]", "");
+                    Type childType = ReflectionUtilities.GetTypeFromUnqualifiedName(childTypeName);
+                    foreach (IModel child in Apsim.Children(model, childType))
+                    {
+                        DocumentModel(child, tags, targetHeadingLevel + 1, indent);
+                        childrenDocumented.Add(child);
+                    }
+                }
+                else if (line == "[DocumentView]")
+                    tags.Add(new ModelView(model));
+                else
+                    paragraphSoFar += " " + line + "\r\n";
+
+                line = reader.ReadLine();
             }
 
-            if(documentAllChildren)
+            StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+
+            if (documentAllChildren)
             {
                 // write children.
                 foreach (IModel child in Apsim.Children(model, typeof(IModel)))
                 {
                     if (!childrenDocumented.Contains(child))
-                        child.Document(tags, headingLevel + 1, indent);
+                        DocumentModel(child, tags, headingLevel + 1, indent, documentAllChildren);
                 }
             }
         }
 
+        private static string RemoveMacros(IModel model, string line)
+        {
+            int posMacro = line.IndexOf('[');
+            while (posMacro != -1)
+            {
+                int posEndMacro = line.IndexOf(']', posMacro);
+                if (posEndMacro != -1)
+                {
+                    string macro = line.Substring(posMacro + 1, posEndMacro - posMacro - 1);
+                    try
+                    {
+                        object value = Apsim.Get(model, macro, true);
+                        if (value != null)
+                        {
+                            line = line.Remove(posMacro, posEndMacro - posMacro + 1);
+                            line = line.Insert(posMacro, value.ToString());
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+
+                posMacro = line.IndexOf('[', posMacro + 1);
+            }
+
+            return line;
+        }
+
         private static void StoreParagraphSoFarIntoTags(List<ITag> tags, int indent, ref string paragraphSoFar)
         {
-            if (paragraphSoFar != string.Empty)
+            if (paragraphSoFar.Trim() != string.Empty) 
                 tags.Add(new Paragraph(paragraphSoFar, indent));
             paragraphSoFar = string.Empty;
         }
@@ -186,7 +259,7 @@ namespace Models.Core
                 headingLevel = 3;
                 return true;
             }
-            if (st.StartsWith("#"))
+            if (st.StartsWith("##"))
             {
                 headingLevel = 2;
                 return true;
@@ -212,7 +285,7 @@ namespace Models.Core
             foreach (IModel child in model.Children)
                 if (child.IncludeInDocumentation && 
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
-                    child.Document(tags, headingLevel + 1, indent);
+                    DocumentModel(child, tags, headingLevel + 1, indent);
         }
 
         /// <summary>
@@ -341,11 +414,25 @@ namespace Models.Core
             public string name;
         }
 
-
         /// <summary>Describes a new page for the tags system.</summary>
         public class NewPage : ITag
         {
 
         }
+
+        /// <summary>Describes a model view for the tags system.</summary>
+        public class ModelView : ITag
+        {
+            /// <summary>Model</summary>
+            public IModel model;
+
+            /// <summary>Constructor</summary>
+            /// <param name="modelToDocument">The model to document</param>
+            public ModelView(IModel modelToDocument)
+            {
+                model = modelToDocument;
+            }
+        }
+
     }
 }

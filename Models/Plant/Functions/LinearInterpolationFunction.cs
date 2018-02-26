@@ -16,14 +16,19 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("A value is returned via linear interpolation of a given set of XY pairs")]
-    public class LinearInterpolationFunction : Model, IFunction
+    public class LinearInterpolationFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The ys are all the same</summary>
         private bool YsAreAllTheSame = false;
+
         /// <summary>Gets the xy pairs.</summary>
-        /// <value>The xy pairs.</value>
         [Link]
-        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+        private XYPairs XYPairs = null;
+
+        [Link]
+        private ILocator locator = null;
+
+        private Dictionary<double, double> cache = new Dictionary<double, double>();
 
         /// <summary>The x property</summary>
         [Description("XProperty")]
@@ -46,7 +51,7 @@ namespace Models.PMF.Functions
 
         /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             if (XYPairs != null)
             {
@@ -71,8 +76,9 @@ namespace Models.PMF.Functions
             if (YsAreAllTheSame)
                 return XYPairs.Y[0];
 
+            
             string PropertyName = XProperty;
-            object v = Apsim.Get(this, PropertyName);
+            object v = locator.Get(PropertyName);
             if (v == null)
                 throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
             double XValue;
@@ -97,7 +103,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -106,7 +112,7 @@ namespace Models.PMF.Functions
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
                 // add graph and table.
                 if (XYPairs != null)

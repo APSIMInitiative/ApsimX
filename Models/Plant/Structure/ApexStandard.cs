@@ -4,7 +4,10 @@ using Models.Core;
 
 namespace Models.PMF.Struct
 {
-    /// <summary>Calculate cohort population using stem population.</summary>
+    /// <summary>
+    /// # [Name]
+    /// Calculate cohort population using stem population.
+    /// </summary>
     [Serializable]    
     public class ApexStandard : Model, IApex
     {

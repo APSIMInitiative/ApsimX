@@ -28,12 +28,12 @@
             locator.Values["A"] = new VariableObject(10);
             locator.Values["B"] = new VariableObject(20);
             locator.Values["C"] = new VariableObject(30);
-            report.DoOutput(null, null);
+            report.DoOutput();
 
             locator.Values["A"] = new VariableObject(40);
             locator.Values["B"] = new VariableObject(50);
             locator.Values["C"] = new VariableObject(60);
-            report.DoOutput(null, null);
+            report.DoOutput();
             Utilities.CallEvent(report, "Completed");
 
 

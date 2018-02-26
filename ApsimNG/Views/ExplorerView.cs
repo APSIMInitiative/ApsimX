@@ -75,12 +75,11 @@ namespace UserInterface.Views
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.ExplorerView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             toolStrip = (Toolbar)builder.GetObject("toolStrip");
             treeview1 = (TreeView)builder.GetObject("treeview1");
             RightHandView = (Viewport)builder.GetObject("RightHandView");
-            toolbarlabel = (Label)builder.GetObject("toolbarlabel");
             _mainWidget = vbox1;
             RightHandView.ShadowType = ShadowType.EtchedOut;
 
@@ -121,8 +120,8 @@ namespace UserInterface.Views
             treeview1.DragEnd += OnDragEnd;
             treeview1.FocusInEvent += Treeview1_FocusInEvent;
             treeview1.FocusOutEvent += Treeview1_FocusOutEvent;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
             timer.Elapsed += Timer_Elapsed;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -165,8 +164,13 @@ namespace UserInterface.Views
                         }
                     }
                 }
+                toolStrip.Remove(child);
+                child.Destroy();
             }
             ClearPopup();
+            Popup.Destroy();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private void ClearPopup()
@@ -185,8 +189,9 @@ namespace UserInterface.Views
                             (w as MenuItem).Activated -= handler;
                         }
                     }
-                    Popup.Remove(w);
                 }
+                Popup.Remove(w);
+                w.Destroy();
             }
         }
 
@@ -211,9 +216,6 @@ namespace UserInterface.Views
 
         /// <summary>Invoked then a node is renamed.</summary>
         public event EventHandler<NodeRenameArgs> Renamed;
-
-        /// <summary>Invoked when a global key is pressed.</summary>
-        public event EventHandler<KeysArgs> ShortcutKeyPressed;
 
         /// <summary>Refreshes the entire tree from the specified descriptions.</summary>
         /// <param name="nodeDescriptions">The nodes descriptions.</param>
@@ -351,7 +353,10 @@ namespace UserInterface.Views
         public void PopulateMainToolStrip(List<MenuDescriptionArgs> menuDescriptions)
         {
             foreach (Widget child in toolStrip.Children)
+            {
                 toolStrip.Remove(child);
+                child.Destroy();
+            }
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 if (!hasResource(description.ResourceNameForImage))
@@ -543,7 +548,20 @@ namespace UserInterface.Views
             if (hasResource(description.ResourceNameForImage))
                 pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
             else
-                pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
+            {
+                // Search for image based on resource name including model name from namespace
+                string[] splitResourceName = description.ResourceNameForImage.Split('.');
+                string resourceNameOnly = "ApsimNG.Resources.TreeViewImages." + splitResourceName[splitResourceName.Length - 2] + "." + splitResourceName[splitResourceName.Length - 1];
+                if (hasResource(resourceNameOnly))
+                {
+                    pixbuf = new Gdk.Pixbuf(null, resourceNameOnly);
+                }
+                else
+                {
+                    // Is there something else we could use as a default?
+                    pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png");
+                }
+            }
 
             treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip);
 
@@ -730,7 +748,7 @@ namespace UserInterface.Views
         private void OnDragBegin(object sender, DragBeginArgs e)
         {
             if (textRender.Editable) // If the node to be dragged is open for editing (renaming), close it now.
-                textRender.CancelEditing();
+                textRender.StopEditing(true);
             DragStartArgs args = new DragStartArgs();
             args.NodePath = SelectedNode; // FullPath(e.Item as TreeNode);
             if (DragStarted != null)
@@ -894,25 +912,28 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Get whatever text is currently on the _APSIM_MODEL clipboard
+        /// Get whatever text is currently on a specific clipboard.
         /// </summary>
+        /// <param name="clipboardName">Name of the clipboard.</param>
         /// <returns></returns>
-        public string GetClipboardText()
+        public string GetClipboardText(string clipboardName)
         {
-            Gdk.Atom modelClipboard = Gdk.Atom.Intern("_APSIM_MODEL", false);
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
             Clipboard cb = Clipboard.Get(modelClipboard);
+            
             return cb.WaitForText();
         }
 
         /// <summary>
-        /// Place text on the clipboard
+        /// Place text on a specific clipboard.
         /// </summary>
-        /// <param name="text"></param>
-        public void SetClipboardText(string text)
+        /// <param name="text">Text to place on the clipboard.</param>
+        /// <param name="clipboardName">Name of the clipboard.</param>
+        public void SetClipboardText(string text, string clipboardName)
         {
-            Gdk.Atom modelClipboard = Gdk.Atom.Intern("_APSIM_MODEL", false);
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
             Clipboard cb = Clipboard.Get(modelClipboard);
-            cb.Text = text;
+            cb.Text = text;            
         }
 
         /*

@@ -806,7 +806,7 @@ namespace Models.Soils
             ResidueWater = ResidueWater + ResidueInterception(IrrigationData.Amount);
             Irrigation += IrrigationData.Amount - ResidueInterception(IrrigationData.Amount);
             //Fix me.  Need to subtract out canopy interception also
-            IrrigationDuration += IrrigationData.Duration;
+            IrrigationDuration += IrrigationData.Duration / 60.0;
         }
         /// <summary>
         /// sets up daily met data
@@ -843,7 +843,7 @@ namespace Models.Soils
             if (Met.Rain > 0)
             {  //On days when rainfall occurs put it into hourly increments
                 int RainHours = 4;
-                if ((Met.RainfallHours != double.NaN) && (Met.RainfallHours > 0)) //Set rainfall hours to value for met file if it is there.
+                if (!Double.IsNaN(Met.RainfallHours) && (Met.RainfallHours > 0)) //Set rainfall hours to value for met file if it is there.
                     RainHours = (int)Math.Ceiling(Met.RainfallHours);
                 double RainRate = Math.Min(Met.Rain / RainHours, Met.Rain);
                 for (int h = 0; h < RainHours; h++)

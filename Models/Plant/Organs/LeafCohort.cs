@@ -44,7 +44,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class LeafCohort : Model
+    public class LeafCohort : Model, ICustomDocumentation
     {
         #region Paramater Input Classes
 
@@ -399,7 +399,8 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsSenescing
         {
-            get { return Age > GrowthDuration + LagDuration; }
+            get { return Age > GrowthDuration + LagDuration & Age < GrowthDuration + LagDuration + SenescenceDuration; }
+
         }
         /// <summary>Gets a value indicating whether this instance is not senescing.</summary>
         /// <value>
@@ -787,16 +788,14 @@ namespace Models.PMF.Organs
         {
             //Reduce leaf Population in Cohort due to plant mortality
             double startPopulation = CohortPopulation;
-            if (!(Apex is ApexTiller))
-            {
-                if (Structure.ProportionPlantMortality > 0)
-                    CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
 
-                //Reduce leaf Population in Cohort  due to branch mortality
-                if ((Structure.ProportionBranchMortality > 0) && (CohortPopulation > Structure.MainStemPopn))
-                    //Ensure we there are some branches.
-                    CohortPopulation -= CohortPopulation * Structure.ProportionBranchMortality;
-            }
+            if (Structure.ProportionPlantMortality > 0)
+                CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
+
+            //Reduce leaf Population in Cohort  due to branch mortality
+            if ((Structure.ProportionBranchMortality > 0) && (CohortPopulation > Structure.MainStemPopn))
+                //Ensure we there are some branches.
+                CohortPopulation -= Math.Min(Structure.ProportionBranchMortality * (CohortPopulation - Structure.MainStemPopn), CohortPopulation - Plant.Population);
 
             double propnStemMortality = (startPopulation - CohortPopulation) / startPopulation;
 
@@ -821,7 +820,7 @@ namespace Models.PMF.Organs
                 //Leaf area growth parameters
                 DeltaPotentialArea = PotentialAreaGrowthFunction(thermalTime);
                 //Calculate delta leaf area in the absence of water stress
-                DeltaStressConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStress.Value();
+                DeltaStressConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStressValue;
                 //Reduce potential growth for water stress
 
                 CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
@@ -863,9 +862,9 @@ namespace Models.PMF.Organs
                 LeafStartStorageNReallocationSupply = SenescedFrac * liveBiomass.StorageN * NReallocationFactor;
                 //Retranslocated N is only that which occurs after N uptake. Both Non-structural and metabolic N are able to be retranslocated but metabolic N will only be moved if remobilisation of non-structural N does not meet demands
                 LeafStartMetabolicNRetranslocationSupply = Math.Max(0.0,
-                    liveBiomass.MetabolicN * NRetranslocationFactor - LeafStartMetabolicNReallocationSupply);
+                    liveBiomass.MetabolicN * (1 - SenescedFrac) * NRetranslocationFactor);
                 LeafStartStorageNRetranslocationSupply = Math.Max(0.0,
-                    liveBiomass.StorageN * NRetranslocationFactor - LeafStartStorageNReallocationSupply);
+                    liveBiomass.StorageN * (1 - SenescedFrac) * NRetranslocationFactor);
                 LeafStartNReallocationSupply = LeafStartStorageNReallocationSupply + LeafStartMetabolicNReallocationSupply;
                 LeafStartNRetranslocationSupply = LeafStartStorageNRetranslocationSupply + LeafStartMetabolicNRetranslocationSupply;
 
@@ -1069,6 +1068,35 @@ namespace Models.PMF.Organs
             return scaledLeafSize;
         }
 
+        /// <summary>Live leaf number</summary>
+        /// 
+
+        public double LiveStemNumber (Leaf.LeafCohortParameters leafCohortParameters)
+        {
+            double _lagDuration;
+            double _senescenceDuration;
+            double lsn = 0;
+            for (int i = 0; i < ApexGroupAge.Count; i++)
+            {
+                if (i == 0)
+                {
+                    _lagDuration = LagDuration;
+                    _senescenceDuration = SenescenceDuration;
+                }
+                else
+                {
+                    _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                    _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                }
+
+                if (Age >= 0 & Age < _lagDuration + GrowthDuration + _senescenceDuration / 2) 
+                {
+                    lsn += ApexGroupSize[i];
+                }
+            }
+            return lsn * CohortPopulation / MathUtilities.Sum(ApexGroupSize);           
+        }
+
         /// <summary>Fractions the senescing.</summary>
         /// <param name="tt">The tt.</param>
         /// <param name="stemMortality">The stem mortality.</param>
@@ -1176,13 +1204,13 @@ namespace Models.PMF.Organs
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
                 tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
             }

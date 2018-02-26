@@ -12,6 +12,7 @@ namespace Models.Soils.Nutrient
     using System.Threading.Tasks;
 
     /// <summary>
+    /// # [Name]
     /// Encapsulates a solute class.
     /// </summary>
     [Serializable]

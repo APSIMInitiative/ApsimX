@@ -35,7 +35,7 @@ namespace Models
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
-    public class Weather : Model, IWeather
+    public class Weather : Model, IWeather, IReferenceExternalFiles
     {
         /// <summary>
         /// A link to the clock model.
@@ -443,8 +443,12 @@ namespace Models
                 return this.MetData.Radn / ((this.MetData.Maxt + this.MetData.Mint) / 2);
             }
         }
-        
 
+        /// <summary>Return our input filenames</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return new string[] { FileName };
+        }
 
         /// <summary>
         /// Gets the duration of the day in hours.
@@ -771,8 +775,8 @@ namespace Models
                 values = this.reader.GetNextLineOfData();
                 curDate = this.reader.GetDateFromValues(values);
                 int yearIndex = curDate.Year - start.Year;
-                maxt = Convert.ToDouble(values[this.maximumTemperatureIndex]);
-                mint = Convert.ToDouble(values[this.minimumTemperatureIndex]);
+                maxt = Convert.ToDouble(values[this.maximumTemperatureIndex], System.Globalization.CultureInfo.InvariantCulture);
+                mint = Convert.ToDouble(values[this.minimumTemperatureIndex], System.Globalization.CultureInfo.InvariantCulture);
 
                 // accumulate the daily mean for each month
                 if (curMonth != curDate.Month)

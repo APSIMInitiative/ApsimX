@@ -297,9 +297,16 @@ namespace Models.Core
             {
                 if (elementPropertyName != null)
                     return ProcessPropertyOfArrayElement();
-                
-                object obj = this.property.GetValue(this.Object, null);
 
+                object obj = null;
+                try
+                {
+                    obj = this.property.GetValue(this.Object, null);
+                }
+                catch (Exception err)
+                {
+                    throw err.InnerException;
+                }
                 if (this.lowerArraySpecifier != 0 && obj != null && obj is IList)
                 {
                     IList array = obj as IList;
@@ -391,6 +398,35 @@ namespace Models.Core
             return values;
         }
 
+        /// <summary>
+        /// Returns the string representation of our value
+        /// </summary>
+        /// <returns></returns>
+        public string ValueAsString()
+        {
+            if (this.DataType.IsArray)
+                return ValueWithArrayHandling.ToString();
+            else
+                return AsString(this.Value);
+        }
+
+        /// <summary>
+        /// Returns the string representation of a scalar value. 
+        /// Uses InvariantCulture when converting doubles
+        /// to ensure a consistent representation of Nan and Inf
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private string AsString(object value)
+        {
+            if (value == null)
+                return string.Empty;
+            Type type = value.GetType();
+            if (type == typeof(double))
+                return ((double)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            else
+                return value.ToString();
+        }
 
         /// <summary>
         /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
@@ -423,7 +459,7 @@ namespace Models.Core
 
                         Array arr2d = arr.GetValue(j) as Array;
                         if (arr2d == null)
-                            stringValue += arr.GetValue(j).ToString();
+                           stringValue += AsString(arr.GetValue(j));
                         else
                         {
                             for (int k = 0; k < arr2d.Length; k++)
@@ -432,8 +468,7 @@ namespace Models.Core
                                 {
                                     stringValue += " \r\n ";
                                 }
-                                
-                                stringValue += arr2d.GetValue(k).ToString();
+                                stringValue += AsString(arr2d.GetValue(k));
                             }
                         }
                     }

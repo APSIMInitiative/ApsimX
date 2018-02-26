@@ -70,7 +70,7 @@ namespace UserInterface.Views
         /// </summary>
         public GraphView(ViewBase owner = null) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.GraphView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
             vbox2 = (VBox)builder.GetObject("vbox2");
@@ -129,6 +129,10 @@ namespace UserInterface.Views
                 }
             }
             Clear();
+            Popup.Dispose();
+            plot1.Destroy();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>
@@ -256,6 +260,7 @@ namespace UserInterface.Views
         /// <param name="title">The series title</param>
         /// <param name="x">The x values for the series</param>
         /// <param name="y">The y values for the series</param>
+        /// <param name="error">The error values for the series</param>
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
@@ -269,6 +274,7 @@ namespace UserInterface.Views
              string title,
              IEnumerable x,
              IEnumerable y,
+             IEnumerable error,
              Models.Graph.Axis.AxisType xAxisType,
              Models.Graph.Axis.AxisType yAxisType,
              Color colour,
@@ -278,9 +284,10 @@ namespace UserInterface.Views
              Models.Graph.MarkerSizeType markerSize,
              bool showOnLegend)
         {
+            Utility.LineSeriesWithTracker series = null;
             if (x != null && y != null)
             {
-                Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
+                series = new Utility.LineSeriesWithTracker();
                 series.OnHoverOverPoint += OnHoverOverPoint;
                 if (showOnLegend)
                     series.Title = title;
@@ -335,7 +342,17 @@ namespace UserInterface.Views
                 }
 
                 this.plot1.Model.Series.Add(series);
+                if (error != null)
+                {
+                    ScatterErrorSeries errorSeries = new ScatterErrorSeries();
+                    errorSeries.ItemsSource = this.PopulateErrorPointSeries(x, y, error, xAxisType, yAxisType);
+                    errorSeries.XAxisKey = xAxisType.ToString();
+                    errorSeries.YAxisKey = yAxisType.ToString();
+                    errorSeries.ErrorBarColor = series.MarkerFill;
+                    this.plot1.Model.Series.Add(errorSeries);
+                }
             }
+
         }
 
         /// <summary>
@@ -455,7 +472,7 @@ namespace UserInterface.Views
             if (x is DateTime)
                 xPosition = DateTimeAxis.ToDouble(x);
             else
-                xPosition = Convert.ToDouble(x);
+                xPosition = Convert.ToDouble(x, System.Globalization.CultureInfo.InvariantCulture);
             double yPosition = 0.0;
             if ((double)y == double.MinValue)
             {
@@ -498,7 +515,7 @@ namespace UserInterface.Views
             if (x1 is DateTime)
                 x1Position = DateTimeAxis.ToDouble(x1);
             else
-                x1Position = Convert.ToDouble(x1);
+                x1Position = Convert.ToDouble(x1, System.Globalization.CultureInfo.InvariantCulture);
             double y1Position = 0.0;
             if ((double)y1 == double.MinValue)
                 y1Position = AxisMinimum(Models.Graph.Axis.AxisType.Left);
@@ -510,7 +527,7 @@ namespace UserInterface.Views
             if (x2 is DateTime)
                 x2Position = DateTimeAxis.ToDouble(x2);
             else
-                x2Position = Convert.ToDouble(x2);
+                x2Position = Convert.ToDouble(x2, System.Globalization.CultureInfo.InvariantCulture);
             double y2Position = 0.0;
             if ((double)y2 == double.MinValue)
                 y2Position = AxisMinimum(Models.Graph.Axis.AxisType.Left);
@@ -641,7 +658,14 @@ namespace UserInterface.Views
             Widget editor = editorObj as Widget;
             if (editor != null)
             {
-                expander1.Foreach(delegate(Widget widget) { if (widget != label2) expander1.Remove(widget); });
+                expander1.Foreach(delegate(Widget widget) 
+                {
+                    if (widget != label2)
+                    {
+                        expander1.Remove(widget);
+                        widget.Destroy();
+                    }
+                });
                 expander1.Add(editor);
                 expander1.Visible = true;
                 expander1.Expanded = true;
@@ -842,6 +866,44 @@ namespace UserInterface.Views
                 return null;
         }
 
+        /// <summary>
+        /// Populate the specified DataPointSeries with data from the data table.
+        /// </summary>
+        /// <param name="x">The x values</param>
+        /// <param name="y">The y values</param>
+        /// <param name="error">The error size values</param>
+        /// <param name="xAxisType">The x axis the data is associated with</param>
+        /// <param name="yAxisType">The y axis the data is associated with</param>
+        /// <returns>A list of 'DataPoint' objects ready to be plotted</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        private List<ScatterErrorPoint> PopulateErrorPointSeries(
+            IEnumerable x,
+            IEnumerable y,
+            IEnumerable error,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType)
+        {
+            List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
+            if (x != null && y != null && error != null)
+            {
+                // Create a new data point for each x.
+                double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
+                double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
+                double[] errorValues = GetDataPointValues(error.GetEnumerator(), yAxisType);
+
+                if (xValues.Length == yValues.Length && xValues.Length == errorValues.Length)
+                {
+                    // Create data points
+                    for (int i = 0; i < xValues.Length; i++)
+                        if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(errorValues[i]))
+                            points.Add(new ScatterErrorPoint(xValues[i], yValues[i], 0, errorValues[i], 0));
+
+                    return points;
+                }
+            }
+            return null;
+        }
+
         /// <summary>Gets an array of values for the given enumerator</summary>
         /// <param name="xEnum">The enumumerator</param>
         /// <param name="axisType">Type of the axis.</param>
@@ -870,7 +932,8 @@ namespace UserInterface.Views
             {
                 this.EnsureAxisExists(axisType, typeof(double));
                 do
-                    dataPointValues.Add(Convert.ToDouble(enumerator.Current));
+                    dataPointValues.Add(Convert.ToDouble(enumerator.Current, 
+                                                         System.Globalization.CultureInfo.InvariantCulture));
                 while (enumerator.MoveNext());
             }
             else

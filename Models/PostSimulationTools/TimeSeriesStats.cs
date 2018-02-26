@@ -34,7 +34,7 @@ namespace Models.PostSimulationTools
         /// <param name="dataStore">The DataStore to work with</param>
         public void Run(IStorageReader dataStore)
         {
-            dataStore.DeleteTable(this.Name);
+            dataStore.DeleteDataInTable(this.Name);
 
             DataTable statsData = new DataTable();
             statsData.Columns.Add("SimulationName", typeof(string));
@@ -87,7 +87,7 @@ namespace Models.PostSimulationTools
 
                 // Write the stats data to the DataStore
                 statsData.TableName = this.Name;
-                dataStore.WriteTableRaw(statsData);
+                dataStore.WriteTable(statsData);
             }
         }
 
@@ -109,8 +109,10 @@ namespace Models.PostSimulationTools
                 if (!Convert.IsDBNull(view[row][observedColumnName]) &&
                     !Convert.IsDBNull(view[row][predictedColumnName]))
                 {
-                    observedData.Add(Convert.ToDouble(view[row][observedColumnName]));
-                    predictedData.Add(Convert.ToDouble(view[row][predictedColumnName]));
+                    observedData.Add(Convert.ToDouble(view[row][observedColumnName], 
+                                                      System.Globalization.CultureInfo.InvariantCulture));
+                    predictedData.Add(Convert.ToDouble(view[row][predictedColumnName], 
+                                                       System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
 

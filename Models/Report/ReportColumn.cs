@@ -133,7 +133,11 @@ namespace Models.Report
             {
                 IVariable var = locator.GetObject(variableName);
                 if (var != null)
+                {
                     Units = var.UnitsLabel;
+                    if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
+                        Units = Units.Substring(1, Units.Length - 2);
+                }
             }
             catch (Exception) { }
 
@@ -413,7 +417,11 @@ namespace Models.Report
                     {
                         IVariable var = locator.GetObject(variableName);
                         if (var != null)
+                        {
                             Units = var.UnitsLabel;
+                            if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
+                                Units = Units.Substring(1, Units.Length - 2);
+                        }
                         haveGotUnits = true;
                     }
 
@@ -463,11 +471,12 @@ namespace Models.Report
                 else if (this.aggregationFunction.Equals("max", StringComparison.CurrentCultureIgnoreCase))
                     result = MathUtilities.Max(this.valuesToAggregate);
                 else if (this.aggregationFunction.Equals("first", StringComparison.CurrentCultureIgnoreCase))
-                    result = Convert.ToDouble(this.valuesToAggregate.First());
+                    result = Convert.ToDouble(this.valuesToAggregate.First(), System.Globalization.CultureInfo.InvariantCulture);
                 else if (this.aggregationFunction.Equals("last", StringComparison.CurrentCultureIgnoreCase))
-                    result = Convert.ToDouble(this.valuesToAggregate.Last());
+                    result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture);
                 else if (this.aggregationFunction.Equals("diff", StringComparison.CurrentCultureIgnoreCase))
-                    result = Convert.ToDouble(this.valuesToAggregate.Last()) - Convert.ToDouble(this.valuesToAggregate.First());
+                    result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture) - 
+                                    Convert.ToDouble(this.valuesToAggregate.First(), System.Globalization.CultureInfo.InvariantCulture);
 
                 if (!double.IsNaN(result))
                     this.valuesToAggregate.Clear();

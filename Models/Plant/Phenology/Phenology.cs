@@ -106,7 +106,7 @@ namespace Models.PMF.Phen
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Phenology : Model
+    public class Phenology : Model, ICustomDocumentation
     {
         #region Links
         [Link]
@@ -266,7 +266,7 @@ namespace Models.PMF.Phen
         public Phenology() { }
         /// <summary>Initialize the phase list of phenology.</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             Phases = new List<Phase>();
             foreach (Phase phase in Apsim.Children(this, typeof(Phase)))
@@ -317,6 +317,7 @@ namespace Models.PMF.Phen
         {
             Germinated = false;
             Emerged = false;
+            
         }
 
 
@@ -352,7 +353,7 @@ namespace Models.PMF.Phen
         public int IndexOfPhase(string Name)
         {
             for (int P = 0; P < Phases.Count; P++)
-                if (Phases[P].Name.ToLower() == Name.ToLower())
+                if (String.Equals(Phases[P].Name, Name, StringComparison.OrdinalIgnoreCase))
                     return P;
             return -1;
         }
@@ -571,7 +572,7 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         public bool InPhase(String PhaseName)
         {
-            return CurrentPhase.Name.ToLower() == PhaseName.ToLower();
+            return String.Equals(CurrentPhase.Name, PhaseName, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -590,30 +591,31 @@ namespace Models.PMF.Phen
             string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
             double StartFraction = 0;
             if (StartFractionSt != "")
-                StartFraction = Convert.ToDouble(StartFractionSt);
+                StartFraction = Convert.ToDouble(StartFractionSt, 
+                                                 System.Globalization.CultureInfo.InvariantCulture);
 
-            string EndFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
-            double EndFraction = 0;
-            if (EndFractionSt != "")
-                EndFraction = Convert.ToDouble(EndFractionSt);
-
-            int StartPhaseIndex = Phases.IndexOf(PhaseStartingWith(Start));
-            int EndPhaseIndex = Phases.IndexOf(PhaseEndingWith(End));
-            int CurrentPhaseIndex = 0;
-            //Set the index of the current phase, if it is a parallel phase set the index to that of its parallel
-            if (CurrentPhase.PhaseParallel == null)
-                CurrentPhaseIndex = IndexOfPhase(CurrentPhase.Name);
-            else CurrentPhaseIndex = IndexOfPhase(CurrentPhase.PhaseParallel);
+            int StartPhaseIndex = -1;
+            int EndPhaseIndex = -1;
+            for (int i = 0; i < Phases.Count; i++)
+            {
+                if (Phases[i].Start == Start)
+                    StartPhaseIndex = i;
+                if (Phases[i].End == End)
+                    EndPhaseIndex = i;
+            }
+            if (StartPhaseIndex == -1)
+                throw new Exception("Cannot find phase: " + Start);
+            if (EndPhaseIndex == -1)
+                throw new Exception("Cannot find phase: " + End);
+            if (StartPhaseIndex > EndPhaseIndex)
+                throw new Exception("Start phase " + Start + " is after phase " + End);
 
             if (StartPhaseIndex == -1 || EndPhaseIndex == -1)
                 throw new Exception("Cannot test between stages " + Start + " " + End);
-
-            if (CurrentPhaseIndex == StartPhaseIndex)
-                return CurrentPhase.FractionComplete >= StartFraction;
-
-            else if (CurrentPhaseIndex == EndPhaseIndex)
-                return CurrentPhase.FractionComplete <= EndPhaseIndex;
-
+            
+            if (CurrentPhaseIndex == StartPhaseIndex && StartFraction > 0)
+                return Stage >= Math.Truncate(Stage) + StartFraction;
+  
             else
                 return CurrentPhaseIndex >= StartPhaseIndex && CurrentPhaseIndex <= EndPhaseIndex;
         }
@@ -630,8 +632,8 @@ namespace Models.PMF.Phen
             string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
             double StartFraction = 0;
             if (StartFractionSt != "")
-                StartFraction = Convert.ToDouble(StartFractionSt);
-
+                StartFraction = double.Parse(StartFractionSt.ToString(), 
+                                             System.Globalization.CultureInfo.InvariantCulture);
             int StartPhaseIndex = Phases.IndexOf(PhaseStartingWith(Start));
             //Set the index of the current phase, if it is a parallel phase set the index to that of its parallel
             if (CurrentPhase.PhaseParallel == null)
@@ -797,7 +799,7 @@ namespace Models.PMF.Phen
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -805,11 +807,11 @@ namespace Models.PMF.Phen
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write description of this class.
-                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(Memo)))
-                    child.Document(tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
 
                 // Write Phase Table
                 tags.Add(new AutoDocumentation.Paragraph(" **List of stages and phases used in the simulation of crop phenological development**", indent));
@@ -847,12 +849,12 @@ namespace Models.PMF.Phen
                 // add a heading.
                 tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel + 1));
                 foreach (IModel child in Apsim.Children(this, typeof(Phase)))
-                    child.Document(tags, headingLevel + 2, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 2, indent);
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                     if (child.GetType() != typeof(Memo) && !typeof(Phase).IsAssignableFrom(child.GetType()))
-                        child.Document(tags, headingLevel + 1, indent);
+                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
     }

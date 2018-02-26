@@ -17,7 +17,7 @@ namespace Models.PMF.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ExpressionFunction : Model, IFunction
+    public class ExpressionFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The expression</summary>
         [Core.Description("Expression")]
@@ -87,12 +87,14 @@ namespace Models.PMF.Functions
                     Array arr = sometypeofobject as Array;
                     symFilled.m_values = new double[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
-                        symFilled.m_values[i] = Convert.ToDouble(arr.GetValue(i));
+                        symFilled.m_values[i] = Convert.ToDouble(arr.GetValue(i), 
+                                                                 System.Globalization.CultureInfo.InvariantCulture);
                 }
                 else if (sometypeofobject is IFunction)
                     symFilled.m_value = (sometypeofobject as IFunction).Value(arrayIndex);
                 else
-                    symFilled.m_value = Convert.ToDouble(sometypeofobject);
+                    symFilled.m_value = Convert.ToDouble(sometypeofobject, 
+                                                         System.Globalization.CultureInfo.InvariantCulture);
                 varFilled.Add(symFilled);
             }
             fn.Variables = varFilled;
@@ -145,7 +147,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {

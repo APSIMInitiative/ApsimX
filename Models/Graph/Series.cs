@@ -27,6 +27,7 @@ namespace Models.Graph
         /// <summary>Constructor for a series</summary>
         public Series()
         {
+            this.Checkpoint = "Current";
             this.XAxis = Axis.AxisType.Bottom;
             this.FactorIndexToVaryColours = -1;
             this.FactorIndexToVaryLines = -1;
@@ -82,6 +83,9 @@ namespace Models.Graph
 
         /// <summary>Gets or sets the line thickness</summary>
         public LineThicknessType LineThickness { get; set; }
+
+        /// <summary>Gets or sets the checkpoint to get data from.</summary>
+        public string Checkpoint { get; set; }
 
         /// <summary>Gets or sets the name of the table to get data from.</summary>
         public string TableName { get; set; }
@@ -165,13 +169,16 @@ namespace Models.Graph
 
                 // Get data for each simulation / zone object
                 DataTable baseData = GetBaseData(storage, simulationZones);
-                simulationZones.ForEach(simulationZone => simulationZone.CreateDataView(baseData, this));
+                if (baseData != null && baseData.Rows.Count > 0)
+                {
+                    simulationZones.ForEach(simulationZone => simulationZone.CreateDataView(baseData, this));
 
-                // Setup all colour, marker, line types etc in all simulation / zone objects.
-                PaintAllSimulationZones(simulationZones);
+                    // Setup all colour, marker, line types etc in all simulation / zone objects.
+                    PaintAllSimulationZones(simulationZones);
 
-                // Convert all simulation / zone objects to seriesdefinitions.
-                simulationZones.ForEach(simZone => ourDefinitions.Add(ConvertToSeriesDefinition(storage, simZone)));
+                    // Convert all simulation / zone objects to seriesdefinitions.
+                    simulationZones.ForEach(simZone => ourDefinitions.Add(ConvertToSeriesDefinition(storage, simZone)));
+                }
             }
 
             // Get all data.
@@ -471,7 +478,11 @@ namespace Models.Graph
             seriesDefinition.showInLegend = ShowInLegend;
             seriesDefinition.title = simulationZone.GetSeriesTitle();
             if (IncludeSeriesNameInLegend)
+            {
                 seriesDefinition.title += ": " + Name;
+            }
+            if (Checkpoint != "Current")
+                seriesDefinition.title += " (" + Checkpoint + ")";
             if (simulationZone.data.Count > 0)
             {
                 seriesDefinition.data = simulationZone.data.ToTable();
@@ -479,6 +490,7 @@ namespace Models.Graph
                 seriesDefinition.y = GetDataFromTable(seriesDefinition.data, YFieldName);
                 seriesDefinition.x2 = GetDataFromTable(seriesDefinition.data, X2FieldName);
                 seriesDefinition.y2 = GetDataFromTable(seriesDefinition.data, Y2FieldName);
+                seriesDefinition.error = GetErrorDataFromTable(seriesDefinition.data, YFieldName);
                 if (Cumulative)
                     seriesDefinition.y = MathUtilities.Cumulative(seriesDefinition.y as IEnumerable<double>);
                 if (CumulativeX)
@@ -545,6 +557,21 @@ namespace Models.Graph
                     return DataTableUtilities.GetColumnAsStrings(data, fieldName);
                 else
                     return DataTableUtilities.GetColumnAsDoubles(data, fieldName);
+            }
+            return null;
+        }
+
+        /// <summary>Gets a column of error data from a table.</summary>
+        /// <param name="data">The table</param>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <returns>The column of data.</returns>
+        private IEnumerable GetErrorDataFromTable(DataTable data, string fieldName)
+        {
+            string errorFieldName = fieldName + "Error";
+            if (fieldName != null && data != null && data.Columns.Contains(errorFieldName))
+            {
+                if (data.Columns[errorFieldName].DataType == typeof(double))
+                    return DataTableUtilities.GetColumnAsDoubles(data, errorFieldName);
             }
             return null;
         }
@@ -632,6 +659,11 @@ namespace Models.Graph
                 fieldNames.Add(XFieldName);
             if (YFieldName != null && !fieldNames.Contains(YFieldName))
                 fieldNames.Add(YFieldName);
+            if (YFieldName != null && !fieldNames.Contains(YFieldName + "Error"))
+            {
+                if (storage.ColumnNames(TableName).Contains(YFieldName + "Error"))
+                    fieldNames.Add(YFieldName + "Error");
+            }
             if (X2FieldName != null && !fieldNames.Contains(X2FieldName))
                 fieldNames.Add(X2FieldName);
             if (Y2FieldName != null && !fieldNames.Contains(Y2FieldName))
@@ -641,7 +673,7 @@ namespace Models.Graph
             foreach (EventNamesOnGraph annotation in Apsim.Children(this, typeof(EventNamesOnGraph)))
                 fieldNames.Add(annotation.ColumnName);
 
-            return storage.GetData(tableName: TableName, fieldNames: fieldNames, filter: filter);
+            return storage.GetData(tableName: TableName, checkpointName: Checkpoint, fieldNames: fieldNames, filter: filter);
         }
 
         /// <summary>This class encapsulates a simulation / zone pair to put onto graph</summary>

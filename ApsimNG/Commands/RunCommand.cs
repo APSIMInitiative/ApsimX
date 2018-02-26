@@ -51,7 +51,6 @@
             this.jobName = model.Name;
             this.explorerPresenter = presenter;
             this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
-
             jobManager = Runner.ForSimulations(explorerPresenter.ApsimXFile, model, false);
 
             if (multiProcess)
@@ -86,9 +85,12 @@
         /// <summary>Job has completed</summary>
         private void OnJobCompleded(object sender, JobCompleteArgs e)
         {
-            numSimulationsRun++;
-            if (e.exceptionThrowByJob != null)
-                errors.Add(e.exceptionThrowByJob);
+            lock (this)
+            {
+                numSimulationsRun++;
+                if (e.exceptionThrowByJob != null)
+                    errors.Add(e.exceptionThrowByJob);
+            }
         }
 
         /// <summary>All jobs have completed</summary>
@@ -104,7 +106,8 @@
             else
             {
                 string errorMessage = null;
-                errors.ForEach(error => errorMessage += error.ToString() + Environment.NewLine);
+                errors.ForEach(error => errorMessage += error.ToString() + Environment.NewLine
+                                                     +  "----------------------------------------------" + Environment.NewLine);
                 explorerPresenter.MainPresenter.ShowMessage(errorMessage, Simulation.ErrorLevel.Error);
             }
 

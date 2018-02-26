@@ -156,6 +156,16 @@ namespace Models.Core
             {
                 simulation.ClearCaches();
             }
+            else
+            {
+                // If the model didn't have a Simulation object as an ancestor, then it's likely to 
+                // have a Simulations object as one. If so, the Simulations links may need to be updated.
+                var simulations = Apsim.Parent(model, typeof(Simulations)) as Simulations;
+                if (simulations != null)
+                {
+                    simulations.ClearLinks();
+                }
+            }
         }
 
 
@@ -258,7 +268,8 @@ namespace Models.Core
             Apsim.EnsureNameIsUnique(modelToAdd);
 
             // Call OnLoaded
-            events.Publish("Loaded", null);
+            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+            events.Publish("Loaded", new object[] { modelToAdd, loadedArgs });
 
             Locator(parent).Clear();
 
@@ -306,7 +317,7 @@ namespace Models.Core
 
             // Do the serialisation
             StringWriter writer = new StringWriter();
-            writer.Write(XmlUtilities.Serialise(model, true));
+            writer.Write(XmlUtilities.Serialise(model, false));
 
             // Let all models know that we have completed serialisation.
             events.Publish("Serialised", args);
@@ -358,12 +369,11 @@ namespace Models.Core
         /// <param name="model">The parent model</param>
         /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursively(IModel model)
-        {
+        {            
             List<IModel> models = new List<IModel>();
-
             foreach (Model child in model.Children)
-            {
-                models.Add(child);
+            {                
+                models.Add(child);                
                 models.AddRange(ChildrenRecursively(child));
             }
             return models;

@@ -25,7 +25,7 @@ namespace Models.PostSimulationTools
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class Input : Model, IPostSimulationTool
+    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
     {
         /// <summary>
         /// Gets or sets the file name to read from.
@@ -54,6 +54,12 @@ namespace Models.PostSimulationTools
             }
         }
 
+        /// <summary>Return our input filenames</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return new string[] { FileName };
+        }
+
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
@@ -64,10 +70,13 @@ namespace Models.PostSimulationTools
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
 
-                dataStore.DeleteTable(Name);
+                dataStore.DeleteDataInTable(Name);
                 DataTable data = GetTable();
-                data.TableName = this.Name;
-                dataStore.WriteTableRaw(data);
+                if (data != null)
+                {
+                    data.TableName = this.Name;
+                    dataStore.WriteTable(data);
+                }
             }
         }
 

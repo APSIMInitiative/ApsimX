@@ -39,7 +39,7 @@ namespace UserInterface.Views
 
     }
 
-    public interface IBrowserWidget
+    public interface IBrowserWidget : IDisposable
     {
         void Navigate(string uri);
         void LoadHTML(string html);
@@ -56,12 +56,15 @@ namespace UserInterface.Views
 
     public class TWWebBrowserIE : IBrowserWidget
     {
-        [System.Runtime.InteropServices.DllImportAttribute("user32.dll",
-            EntryPoint = "SetParent")]
-        internal static extern System.IntPtr
-        SetParent([System.Runtime.InteropServices.InAttribute()] System.IntPtr
-            hWndChild, [System.Runtime.InteropServices.InAttribute()] System.IntPtr
-            hWndNewParent);
+        internal class NativeMethods
+        {
+            [System.Runtime.InteropServices.DllImportAttribute("user32.dll",
+                EntryPoint = "SetParent")]
+            internal static extern System.IntPtr
+            SetParent([System.Runtime.InteropServices.InAttribute()] System.IntPtr
+                hWndChild, [System.Runtime.InteropServices.InAttribute()] System.IntPtr
+                hWndNewParent);
+        }
 
         public System.Windows.Forms.WebBrowser wb = null;
         public Gtk.Socket socket = null;
@@ -84,7 +87,7 @@ namespace UserInterface.Views
             socket.UnmapEvent += Socket_UnmapEvent;
             IntPtr browser_handle = wb.Handle;
             IntPtr window_handle = (IntPtr)socket.Id;
-            SetParent(browser_handle, window_handle);
+            NativeMethods.SetParent(browser_handle, window_handle);
 
             /// Another interesting issue is that on Windows, the WebBrowser control by default is
             /// effectively an IE7 browser, and I don't think you can easily change that without
@@ -152,7 +155,7 @@ namespace UserInterface.Views
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            while (wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
+            while (wb != null && wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
         }
@@ -173,34 +176,66 @@ namespace UserInterface.Views
         {
             wb.Document.InvokeScript(command, args);
         }
+
+        // Flag: Has Dispose already been called? 
+        bool disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers. 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern. 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                wb.Dispose();
+                wb = null;
+                socket.Dispose();
+                socket = null;
+            }
+
+            // Free any unmanaged objects here. 
+            //
+            disposed = true;
+        }
     }
 
     public class TWWebBrowserSafari : IBrowserWidget
     {
-        const string LIBQUARTZ = "libgtk-quartz-2.0.dylib";
+        internal class NativeMethods
+        {
+            const string LIBQUARTZ = "libgtk-quartz-2.0.dylib";
 
-        [DllImport(LIBQUARTZ)]
-        static extern IntPtr gdk_quartz_window_get_nsview(IntPtr window);
+            [DllImport(LIBQUARTZ)]
+            internal static extern IntPtr gdk_quartz_window_get_nsview(IntPtr window);
 
-        [DllImport(LIBQUARTZ)]
-        static extern IntPtr gdk_quartz_window_get_nswindow(IntPtr window);
+            [DllImport(LIBQUARTZ)]
+            internal static extern IntPtr gdk_quartz_window_get_nswindow(IntPtr window);
 
-        [DllImport(LIBQUARTZ, CallingConvention = CallingConvention.Cdecl)]
-        static extern bool gdk_window_supports_nsview_embedding();
+            [DllImport(LIBQUARTZ, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern bool gdk_window_supports_nsview_embedding();
 
-        [DllImport(LIBQUARTZ)]
-        extern static IntPtr gtk_ns_view_new(IntPtr nsview);
+            [DllImport(LIBQUARTZ)]
+            internal extern static IntPtr gtk_ns_view_new(IntPtr nsview);
+        }
 
         public static Gtk.Widget NSViewToGtkWidget(NSView view)
         {
-            return new Gtk.Widget(gtk_ns_view_new((IntPtr)view.Handle));
+            return new Gtk.Widget(NativeMethods.gtk_ns_view_new((IntPtr)view.Handle));
         }
 
         public static NSWindow GetWindow(Gtk.Window window)
         {
             if (window.GdkWindow == null)
                 return null;
-            var ptr = gdk_quartz_window_get_nswindow(window.GdkWindow.Handle);
+            var ptr = NativeMethods.gdk_quartz_window_get_nswindow(window.GdkWindow.Handle);
             if (ptr == IntPtr.Zero)
                 return null;
             return (NSWindow)MonoMac.ObjCRuntime.Runtime.GetNSObject(ptr);
@@ -208,7 +243,7 @@ namespace UserInterface.Views
 
         public static NSView GetView(Gtk.Widget widget)
         {
-            var ptr = gdk_quartz_window_get_nsview(widget.GdkWindow.Handle);
+            var ptr = NativeMethods.gdk_quartz_window_get_nsview(widget.GdkWindow.Handle);
             if (ptr == IntPtr.Zero)
                 return null;
             return (NSView)MonoMac.ObjCRuntime.Runtime.GetNSObject(ptr);
@@ -239,7 +274,7 @@ namespace UserInterface.Views
             // We use a timeout so we don't sit here forever if a document fails to load.
 			Stopwatch watch = new Stopwatch();
 			watch.Start();
-			while (wb.IsLoading && watch.ElapsedMilliseconds < 10000)
+			while (wb != null && wb.IsLoading && watch.ElapsedMilliseconds < 10000)
 				while (Gtk.Application.EventsPending())
 					Gtk.Application.RunIteration();
         }
@@ -266,6 +301,36 @@ namespace UserInterface.Views
                 argString += obj.ToString();
             }
             wb.StringByEvaluatingJavaScriptFromString(command + "(" + argString + ");");
+        }
+
+        // Flag: Has Dispose already been called? 
+        bool disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers. 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern. 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                wb.Dispose();
+                wb = null;
+                socket.Dispose();
+                socket = null;
+                scrollWindow.Destroy();
+            }
+
+            // Free any unmanaged objects here. 
+            //
+            disposed = true;
         }
     }
 
@@ -298,7 +363,7 @@ namespace UserInterface.Views
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            while (wb.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
+            while (wb != null && wb.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
         }
@@ -326,6 +391,33 @@ namespace UserInterface.Views
             }
             wb.ExecuteScript(command + "(" + argString + ")");
         }
+        // Flag: Has Dispose already been called? 
+        bool disposed = false;
+
+        // Public implementation of Dispose pattern callable by consumers. 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern. 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                wb.Dispose();
+                wb = null;
+                scrollWindow.Destroy();
+            }
+
+            // Free any unmanaged objects here. 
+            //
+            disposed = true;
+        }
     }
 
     /// <summary>
@@ -352,7 +444,7 @@ namespace UserInterface.Views
         /// </summary>
         public HTMLView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.HTMLView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.HTMLView.glade");
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             vbox2 = (VBox)builder.GetObject("vbox2");
             frame1 = (Frame)builder.GetObject("frame1");
@@ -398,12 +490,18 @@ namespace UserInterface.Views
                 if (vbox2.Toplevel is Window)
                     (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
                 frame1.Unrealized -= Frame1_Unrealized;
-                (browser as TWWebBrowserIE).socket.UnmapEvent += (browser as TWWebBrowserIE).Socket_UnmapEvent;
+                (browser as TWWebBrowserIE).socket.UnmapEvent -= (browser as TWWebBrowserIE).Socket_UnmapEvent;
             }
+            if (browser != null)
+                browser.Dispose();
             if (popupWin != null)
             {
                 popupWin.Destroy();
             }
+            memoView1.MainWidget.Destroy();
+            memoView1 = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private void Hbox1_Realized(object sender, EventArgs e)
@@ -590,5 +688,6 @@ namespace UserInterface.Views
             if (browser is TWWebBrowserIE)
                 (browser as TWWebBrowserIE).wb.Parent.Enabled = state;
         }
+
     }
 }

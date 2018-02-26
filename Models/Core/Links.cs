@@ -77,7 +77,7 @@ namespace Models.Core
                     object match = services.Find(s => field.FieldType.IsAssignableFrom(s.GetType()));
                     if (match != null)
                         field.SetValue(GetModel(obj), GetModel(match));
-                    else
+                    else if (!link.IsOptional)
                         throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                 }
             }
@@ -148,6 +148,12 @@ namespace Models.Core
                         {
                             matches = new List<object>();
                             matches.Add(GetParent(obj, fieldType));
+                        }
+                        else if (link is LinkByPathAttribute)
+                        {
+                            object match = Apsim.Get(obj as IModel, (link as LinkByPathAttribute).Path);
+                            if (match != null)
+                                matches.Add(match);
                         }
                         else if (link.IsScoped(field))
                             matches = GetModelsInScope(obj, allModels);

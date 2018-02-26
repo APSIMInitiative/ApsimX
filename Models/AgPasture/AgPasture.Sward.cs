@@ -17,7 +17,10 @@ using APSIM.Shared.Utilities;
 
 namespace Models.AgPasture
 {
-    /// <summary>A multi-species pasture model.</summary>
+    /// <summary>
+    /// # [Name]
+    /// A multi-species pasture model.
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -1125,7 +1128,7 @@ namespace Models.AgPasture
 
         /// <summary>Called when the simulation is loaded.</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             // get the number and reference to the mySpecies in the sward
             numSpecies = Apsim.Children(this, typeof(PastureSpecies)).Count;

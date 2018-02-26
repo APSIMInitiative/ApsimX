@@ -8,11 +8,12 @@ namespace Models.PostSimulationTools
     using System;
     using System.Data;
     using System.IO;
-    using Excel;
+    using ExcelDataReader;
     using Models.Core;
     using System.Xml.Serialization;
     using APSIM.Shared.Utilities;
     using Storage;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
@@ -21,7 +22,7 @@ namespace Models.PostSimulationTools
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class ExcelInput : Model, IPostSimulationTool
+    public class ExcelInput : Model, IPostSimulationTool, IReferenceExternalFiles
     {
         private string _filename;
 
@@ -57,6 +58,12 @@ namespace Models.PostSimulationTools
         [Description("EXCEL sheet names (csv)")]
         public string[] SheetNames { get; set; }
 
+        /// <summary>Return our input filenames</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return new string[] { FileName };
+        }
+
         /// <summary>
         /// Gets the parent simulation or null if not found
         /// </summary>
@@ -87,8 +94,6 @@ namespace Models.PostSimulationTools
             string fullFileName = AbsoluteFileName;
             if (fullFileName != null && File.Exists(fullFileName))
             {
-                dataStore.DeleteTable(this.Name);
-                
                 // Open the file
                 FileStream stream = File.Open(fullFileName, FileMode.Open, FileAccess.Read);
 
@@ -103,20 +108,52 @@ namespace Models.PostSimulationTools
                 }
 
                 // Read all sheets from the EXCEL file as a data set
-                excelReader.IsFirstRowAsColumnNames = true;
-                DataSet dataSet = excelReader.AsDataSet();
+                // excelReader.IsFirstRowAsColumnNames = true;
+                DataSet dataSet = excelReader.AsDataSet(new ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                    {
+                        UseHeaderRow = true
+                    }
+                });
 
                 // Write all sheets that are specified in 'SheetNames' to the data store
                 foreach (DataTable table in dataSet.Tables)
                 {
                     bool keep = StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
                     if (keep)
-                        dataStore.WriteTableRaw(table);
+                    {
+                        TruncateDates(table);
+
+                        dataStore.DeleteDataInTable(table.TableName);
+                        dataStore.WriteTable(table);
+                    }
                 }
 
                 // Close the reader and free resources.
                 excelReader.Close();
             }
+        }
+
+        /// <summary>
+        /// If the data table contains DateTime fields, convert them to hold
+        /// only the "Date" portion, and not the "Time" within the day.
+        /// We do this because in estatablishing PredictedObserved connections,
+        /// we commonly use the DateTime fields, but are (currently) only 
+        /// interested in the Date.
+        /// WARNING: This could potentially cause issues in the future, especially
+        /// if we begin to make use of sub-day model steps.
+        /// </summary>
+        /// <param name="table">Table to be adjusted</param>
+        private void TruncateDates(DataTable table)
+        {
+            for (int icol = 0; icol < table.Columns.Count; icol++)
+                if (table.Columns[icol].DataType == typeof(DateTime))
+                {
+                    foreach (DataRow row in table.Rows)
+                        if (!DBNull.Value.Equals(row[icol]))
+                            row[icol] = Convert.ToDateTime(row[icol]).Date;
+                }
         }
     }
 }

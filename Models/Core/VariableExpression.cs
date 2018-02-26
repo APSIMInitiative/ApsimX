@@ -151,9 +151,9 @@ namespace Models.Core
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " while evaluating expression: " + expression);
                 if (sometypeofobject is double)
-                {
                     sym.m_value = (double)sometypeofobject;
-                }
+                else if (sometypeofobject is int)
+                    sym.m_value = Convert.ToDouble(sometypeofobject, System.Globalization.CultureInfo.InvariantCulture);
                 else if (sometypeofobject is double[])
                 {
                     sym.m_values = (double[])sometypeofobject;

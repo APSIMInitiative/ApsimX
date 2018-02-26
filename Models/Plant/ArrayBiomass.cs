@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 namespace Models.PMF
 {
     /// <summary>
+    /// # [Name]
     /// This class encapsulates an array of biomass objects
     /// </summary>
     [Serializable]
@@ -182,13 +183,15 @@ namespace Models.PMF
                 {
                     foreach (object Value in Obj as IEnumerable)
                     {
-                        Values[i] = Convert.ToDouble(Value);
+                        Values[i] = Convert.ToDouble(Value, 
+                                                     System.Globalization.CultureInfo.InvariantCulture);
                         i++;
                     }
                 }
                 else
                 {
-                    Values[i] = Convert.ToDouble(Obj);
+                    Values[i] = Convert.ToDouble(Obj, 
+                                                 System.Globalization.CultureInfo.InvariantCulture);
                     i++;
                 }
 

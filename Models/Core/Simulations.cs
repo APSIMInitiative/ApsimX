@@ -10,10 +10,12 @@ using APSIM.Shared.Utilities;
 using System.Linq;
 using Models.Core.Interfaces;
 using Models.Core.Runners;
+using Models.Storage;
 
 namespace Models.Core
 {
     /// <summary>
+    /// # [Name]
     /// Encapsulates a collection of simulations. It is responsible for creating this collection,
     /// changing the structure of the components within the simulations, renaming components, adding
     /// new ones, deleting components. The user interface talks to an instance of this class.
@@ -86,17 +88,18 @@ namespace Models.Core
         /// <summary>Constructor</summary>
         private Simulations()
         {
-            Version = APSIMFileConverter.LastestVersion;
+            Version = ApsimFile.Converter.LastestVersion;
+            LoadErrors = new List<Exception>();
         }
 
         /// <summary>
         /// Create a simulations model
         /// </summary>
         /// <param name="children">The child models</param>
-        public static Simulations Create(IEnumerable<Model> children)
+        public static Simulations Create(IEnumerable<IModel> children)
         {
             Simulations newSimulations = new Core.Simulations();
-            newSimulations.Children.AddRange(children);
+            newSimulations.Children.AddRange(children.Cast<Model>());
 
             // Call the OnDeserialised method in each model.
             Events events = new Core.Events(newSimulations);
@@ -108,8 +111,41 @@ namespace Models.Core
             Apsim.ParentAllChildren(newSimulations);
 
             // Call OnLoaded in all models.
-            newSimulations.LoadErrors = events.Publish("Loaded", null);
+            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+            events.Publish("Loaded", new object[] { newSimulations, loadedArgs });
+            if (loadedArgs.errors.Count > 0)
+            {
+                newSimulations.LoadErrors = new List<Exception>();
+                newSimulations.LoadErrors.AddRange(loadedArgs.errors);
+            }
             return newSimulations;
+        }
+
+        /// <summary>
+        /// Checkpoint the simulation.
+        /// </summary>
+        /// <param name="checkpointName">Name of checkpoint</param>
+        public void AddCheckpoint(string checkpointName)
+        {
+            List<string> filesReferenced = new List<string>();
+            filesReferenced.Add(FileName);
+            filesReferenced.AddRange(FindAllReferencedFiles());
+            DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            if (storage != null)
+                storage.AddCheckpoint(checkpointName, filesReferenced);
+        }
+
+        /// <summary>
+        /// Revert this object to a previous one.
+        /// </summary>
+        /// <param name="checkpointName">Name of checkpoint</param>
+        /// <returns>A new simulations object that represents the file on disk</returns>
+        public Simulations RevertCheckpoint(string checkpointName)
+        {
+            DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            if (storage != null)
+                storage.RevertCheckpoint(checkpointName);
+            return Read(FileName);
         }
 
         /// <summary>Create a simulations object by reading the specified filename</summary>
@@ -119,7 +155,7 @@ namespace Models.Core
         public static Simulations Read(string FileName)
         {
             // Run the converter.
-            APSIMFileConverter.ConvertToLatestVersion(FileName);
+            ApsimFile.Converter.ConvertToLatestVersion(FileName);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(FileName, Assembly.GetExecutingAssembly()) as Simulations;
@@ -140,7 +176,13 @@ namespace Models.Core
                 Apsim.ParentAllChildren(simulations);
 
                 // Call OnLoaded in all models.
-                simulations.LoadErrors = events.Publish("Loaded", null);
+                LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                events.Publish("Loaded", new object[] { simulations, loadedArgs });
+                if (loadedArgs.errors.Count > 0)
+                {
+                    simulations.LoadErrors = new List<Exception>();
+                    simulations.LoadErrors.AddRange(loadedArgs.errors);
+                }
             }
 
             return simulations;
@@ -153,7 +195,7 @@ namespace Models.Core
         public static Simulations Read(XmlNode node)
         {
             // Run the converter.
-            APSIMFileConverter.ConvertToLatestVersion(node, null);
+            ApsimFile.Converter.ConvertToLatestVersion(node, null);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;
@@ -172,7 +214,13 @@ namespace Models.Core
                 simulations.Parent = null;
                 Apsim.ParentAllChildren(simulations);
 
-                events.Publish("Loaded", null);
+                LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                events.Publish("Loaded", new object[] { simulations, loadedArgs });
+                if (loadedArgs.errors.Count > 0)
+                {
+                    simulations.LoadErrors = new List<Exception>();
+                    simulations.LoadErrors.AddRange(loadedArgs.errors);
+                }
             }
             else
                 throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
@@ -185,7 +233,7 @@ namespace Models.Core
         public void Run(Simulation simulation, bool doClone)
         {
             Apsim.ParentAllChildren(simulation);
-            RunSimulation simulationRunner = new RunSimulation(simulation, doClone);
+            RunSimulation simulationRunner = new RunSimulation(this, simulation, doClone);
             Links.Resolve(simulationRunner);
             simulationRunner.Run(new System.Threading.CancellationTokenSource());
         }
@@ -210,7 +258,8 @@ namespace Models.Core
                             newModel.Parent = match.Parent;
                             match.Parent.Children.Remove(match as Model);
                             Events events = new Events(newModel);
-                            events.Publish("Loaded", null);
+                            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                            events.Publish("Loaded", new object[] { newModel, loadedArgs });
                         }
                     }
                 }
@@ -221,7 +270,7 @@ namespace Models.Core
         /// <param name="FileName">Name of the file.</param>
         public void Write(string FileName)
         {
-            string tempFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(FileName));
+            string tempFileName = Path.GetTempFileName();
             StreamWriter Out = new StreamWriter(tempFileName);
             Write(Out);
             Out.Close();
@@ -303,6 +352,14 @@ namespace Models.Core
                     (simulation as Simulation).FileName = FileName;
         }
 
+        /// <summary>
+        /// Nulls the link object, which will force it to be recreated when it's needed
+        /// </summary>
+        public void ClearLinks()
+        {
+            links = null;
+        }
+
         /// <summary>Create a links object</summary>
         private void CreateLinks()
         {
@@ -328,6 +385,17 @@ namespace Models.Core
                     (simulation as Simulation).ClearCaches();
             // Explicitly clear the child lists
             ClearChildLists();
+        }
+
+        /// <summary>Find all referenced files from all models.</summary>
+        public IEnumerable<string> FindAllReferencedFiles()
+        {
+            SortedSet<string> fileNames = new SortedSet<string>();
+            foreach (IReferenceExternalFiles model in Apsim.ChildrenRecursively(this, typeof(IReferenceExternalFiles)))
+                foreach (string fileName in model.GetReferencedFileNames())
+                    fileNames.Add(PathUtilities.GetAbsolutePath(fileName, FileName));
+            
+            return fileNames;
         }
 
         /// <summary>Documents the specified model.</summary>
@@ -379,12 +447,13 @@ namespace Models.Core
                         child.IncludeInDocumentation = true;
 
                     // Document the model.
-                    modelToDocument.Document(tags, headingLevel, 0);
+                    AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
 
                     // Unresolve links.
                     Links.Unresolve(clonedSimulation);
                 }
             }
         }
+
     }
 }

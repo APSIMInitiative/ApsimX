@@ -18,7 +18,7 @@ namespace UserInterface.Views
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
         {
-            Builder builder = new Builder("ApsimNG.Resources.Glade.SummaryView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SummaryView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             combobox1 = (ComboBox)builder.GetObject("combobox1");
             _mainWidget = vbox1;
@@ -28,6 +28,15 @@ namespace UserInterface.Views
             combobox1.Changed += comboBox1_TextChanged;
             htmlview = new HTMLView(this);
             vbox1.PackEnd(htmlview.MainWidget, true, true, 0);
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            comboModel.Dispose();
+            comboRender.Destroy();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Occurs when the name of the simulation is changed by the user</summary>

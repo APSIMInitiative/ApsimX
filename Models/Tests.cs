@@ -19,7 +19,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(PostSimulationTools.PredictedObserved))]
-    public class Tests : Model, ITestable
+    public class Tests : Model, ITestable, ICustomDocumentation
     {
         /// <summary>
         /// data table
@@ -74,6 +74,7 @@ namespace Models
             for (int i = 0; i < columnNames.Count; i++)
                 columnNames[i] = columnNames[i].Replace("Observed.", "");
             columnNames.Sort(); //ensure column names are always in the same order
+            columnNames.Remove("CheckpointID");
             stats = new MathUtilities.RegrStats[columnNames.Count];
             List<double> x = new List<double>();
             List<double> y = new List<double>();
@@ -161,7 +162,8 @@ namespace Models
             for (int i = 0; i < AcceptedStats.Count(); i++)
                 for (int j = 1; j < statNames.Count; j++) //start at 1; we don't want Name field.
                 {
-                    accepted = Convert.ToDouble(AcceptedStats[i].GetType().GetField(statNames[j]).GetValue(AcceptedStats[i]));
+                    accepted = Convert.ToDouble(AcceptedStats[i].GetType().GetField(statNames[j]).GetValue(AcceptedStats[i]), 
+                                                System.Globalization.CultureInfo.InvariantCulture);
                     AcceptedTable.Rows.Add(PO.Name,
                                     AcceptedStats[i].Name,
                                     statNames[j],
@@ -177,7 +179,8 @@ namespace Models
             for (int i = 0; i < stats.Count(); i++)
                 for (int j = 1; j < statNames.Count; j++) //start at 1; we don't want Name field.
                 {
-                    current = Convert.ToDouble(stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]));
+                    current = Convert.ToDouble(stats[i].GetType().GetField(statNames[j]).GetValue(stats[i]), 
+                                               System.Globalization.CultureInfo.InvariantCulture);
                     CurrentTable.Rows.Add(PO.Name,
                                     stats[i].Name,
                                     statNames[j],
@@ -207,8 +210,11 @@ namespace Models
 
                 if (row["Accepted"] != DBNull.Value && row["Current"] != DBNull.Value)
                 {
-                    row["Difference"] = Convert.ToDouble(row["Current"]) - Convert.ToDouble(row["Accepted"]);
-                    row["Fail?"] = Math.Abs(Convert.ToDouble(row["Difference"])) > Math.Abs(Convert.ToDouble(row["Accepted"])) * 0.01 ? sigIdent : " ";
+                    row["Difference"] = Convert.ToDouble(row["Current"], 
+                                                         System.Globalization.CultureInfo.InvariantCulture) - 
+                                               Convert.ToDouble(row["Accepted"], System.Globalization.CultureInfo.InvariantCulture);
+                    row["Fail?"] = Math.Abs(Convert.ToDouble(row["Difference"], System.Globalization.CultureInfo.InvariantCulture)) 
+                                       > Math.Abs(Convert.ToDouble(row["Accepted"], System.Globalization.CultureInfo.InvariantCulture)) * 0.01 ? sigIdent : " ";
                 }
                 else
                 {
@@ -243,7 +249,7 @@ namespace Models
         /// <param name="tags"></param>
         /// <param name="headingLevel"></param>
         /// <param name="indent"></param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -286,7 +292,8 @@ namespace Models
                             string formattedValue;
                             if (currentValue.GetType() == typeof(double))
                             {
-                                double doubleValue = Convert.ToDouble(currentValue);
+                               double doubleValue = Convert.ToDouble(currentValue, 
+                                                                     System.Globalization.CultureInfo.InvariantCulture);
                                 if (!double.IsNaN(doubleValue))
                                 {
                                     if (statIndex == 0)
