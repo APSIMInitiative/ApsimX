@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="24">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="25">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -34,29 +34,6 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
     <Name>Replacements</Name>
     <Plant>
       <Name>Grapevine</Name>
-      <LinearInterpolationFunction>
-        <Name>SouthDOY</Name>
-        <XYPairs>
-          <Name>XYPairs</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <X>
-            <double>182</double>
-            <double>365</double>
-            <double>366</double>
-            <double>1</double>
-            <double>181</double>
-          </X>
-          <Y>
-            <double>1</double>
-            <double>184</double>
-            <double>184</double>
-            <double>185</double>
-            <double>365</double>
-          </Y>
-        </XYPairs>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Clock].Today.DayOfYear</XProperty>
-      </LinearInterpolationFunction>
       <Cultivar>
         <Name>SauvignonBlanc</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -173,6 +150,39 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
             <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
           </AccumulateFunction>
+          <MultiplyFunction>
+            <Name>FractionOfBudBurst</Name>
+            <Constant>
+              <Name>CHOEffect</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <SigmoidFunction>
+              <Name>BudNumberEffect</Name>
+              <VariableReference>
+                <Name>XValue</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Structure].PrimaryBudNo.Value()</VariableName>
+              </VariableReference>
+              <Constant>
+                <Name>Ymax</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>1.4</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>Xo</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>100</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>b</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>-54.8977</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </SigmoidFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>EndDormancy</Start>
           <End>BudBurst</End>
@@ -288,33 +298,15 @@ A function is used to provide flowering date as days after sowing(DAS).
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
-          <LinearInterpolationFunction>
-            <Name>PostEventValue1</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>182</double>
-                <double>365</double>
-                <double>366</double>
-                <double>1</double>
-                <double>181</double>
-              </X>
-              <Y>
-                <double>1</double>
-                <double>184</double>
-                <double>184</double>
-                <double>185</double>
-                <double>365</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Clock].Today.DayOfYear</XProperty>
-          </LinearInterpolationFunction>
           <VariableReference>
             <Name>PostEventValue</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Clock].Today.DayOfYear</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>PostEventValue1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Grapevine].DOYFromJuly1st.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>BudBurst</SetEvent>
@@ -1544,6 +1536,11 @@ A function is used to capture the year of the current season as in the south hem
           <Name>CarbonConcentration</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.4</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CaneDiameter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>10</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
@@ -2912,23 +2909,21 @@ Pollination alone results in the development of small, hard green berries (live 
       <VariableNames>
         <string>[Clock].Today</string>
         <string>[Clock].Today.Year</string>
+        <string>[Clock].Today.DayOfYear</string>
         <string>[Grapevine].Phenology.CurrentSeason.Value()</string>
         <string>[Grapevine].Phenology.Stage</string>
-        <string>[Grapevine].Phenology.AccumulatedEmergedTT.Value()</string>
+        <string>[Grapevine].Phenology.AccumulatedEmergedTT</string>
         <string>[Grapevine].Phenology.BudBurstDOY.Value()</string>
         <string>[Grapevine].Phenology.FloweringDOY.Value()</string>
         <string>[Grapevine].Phenology.VeraisonDOY.Value()</string>
         <string>[Grapevine].Phenology.CurrentStageName</string>
         <string>[Grapevine].Phenology.Budding.AccChill.Value()</string>
-        <string>[Grapevine].Structure.LeafTipsAppeared</string>
-        <string>[Grapevine].Structure.PlantTotalNodeNo</string>
         <string>[Grapevine].Leaf.LAI</string>
         <string>[Grapevine].Leaf.InitialisedCohortNo</string>
         <string>[Grapevine].Leaf.DeadCohortNo</string>
         <string>[Grapevine].Leaf.AppearedCohortNo</string>
         <string>[Grapevine].Leaf.CohortSize</string>
         <string>[Grapevine].Leaf.Fn</string>
-        <string>[Grapevine].Phenology.AccumulatedEmergedTT</string>
         <string>[Grapevine].Leaf.Fw</string>
         <string>[Grapevine].Root.Live.Wt</string>
         <string>[Grapevine].Berry.Live.Wt</string>
@@ -2941,6 +2936,10 @@ Pollination alone results in the development of small, hard green berries (live 
         <string>[Berry].NumberFunction.Value()</string>
         <string>[Berry].NumberFunction.Shoots.Value()</string>
         <string>[Arbitrator].FDM</string>
+        <string>[Grapevine].Phenology.Budding.FractionOfBudBurst.Value()</string>
+        <string>[Structure].PrimaryBudNo</string>
+        <string>[Structure].LeafTipsAppeared</string>
+        <string>[Structure].PlantTotalNodeNo</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -2955,7 +2954,7 @@ Pollination alone results in the development of small, hard green berries (live 
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Observations\Marlborough_Sauvignon_blanc_PhenologyObs.xlsx</FileName>
       <SheetNames>
-        <string>Sheet1</string>
+        <string>Data</string>
       </SheetNames>
     </ExcelInput>
     <PredictedObserved>
@@ -2967,44 +2966,44 @@ Pollination alone results in the development of small, hard green berries (live 
           <RegrStats>
             <Name>Grapevine.Phenology.BudBurstDOY.Value()</Name>
             <n>28</n>
-            <Slope>0.89399822667937312</Slope>
-            <Intercept>24.557709358833591</Intercept>
-            <SEslope>0.1841436097625484</SEslope>
-            <SEintercept>51.422706511587634</SEintercept>
-            <R2>0.47548945263585896</R2>
-            <RMSE>7.9124675580467851</RMSE>
-            <NSE>-0.50071850062677736</NSE>
-            <ME>-5.0357142857142856</ME>
-            <MAE>6.4642857142857135</MAE>
-            <RSR>1.202963595175963</RSR>
+            <Slope>0.894701440058715</Slope>
+            <Intercept>24.397101537893747</Intercept>
+            <SEslope>0.18478702492688184</SEslope>
+            <SEintercept>51.602382304862715</SEintercept>
+            <R2>0.47414202068925082</R2>
+            <RMSE>7.9056941504209481</RMSE>
+            <NSE>-0.49815024306723354</NSE>
+            <ME>-5</ME>
+            <MAE>6.4285714285714279</MAE>
+            <RSR>1.2019338073468953</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Grapevine.Phenology.FloweringDOY.Value()</Name>
             <n>28</n>
-            <Slope>0.72343289321859583</Slope>
-            <Intercept>82.548583515010989</Intercept>
-            <SEslope>0.11732762665958126</SEslope>
-            <SEintercept>40.677518861716827</SEintercept>
-            <R2>0.59386792725227566</R2>
-            <RMSE>13.955285736952863</RMSE>
-            <NSE>-3.8930906294064869</NSE>
-            <ME>-13.321428571428571</ME>
-            <MAE>13.321428571428571</MAE>
-            <RSR>2.1721734260049241</RSR>
+            <Slope>0.721061402384207</Slope>
+            <Intercept>83.406358159245912</Intercept>
+            <SEslope>0.11822708635904335</SEslope>
+            <SEintercept>40.98936177486447</SEintercept>
+            <R2>0.588589520883842</R2>
+            <RMSE>13.930952177486956</RMSE>
+            <NSE>-3.8760415331367781</NSE>
+            <ME>-13.285714285714285</ME>
+            <MAE>13.285714285714285</MAE>
+            <RSR>2.1683858495820356</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Grapevine.Phenology.VeraisonDOY.Value()</Name>
             <n>28</n>
-            <Slope>0.55590567397796242</Slope>
-            <Intercept>-13.306250643600006</Intercept>
-            <SEslope>0.13204324082395721</SEslope>
-            <SEintercept>6.3342919415341363</SEintercept>
-            <R2>0.4053654082562449</R2>
-            <RMSE>34.903438226054462</RMSE>
-            <NSE>-18.670641540521054</NSE>
-            <ME>-34.321428571428569</ME>
-            <MAE>34.321428571428569</MAE>
-            <RSR>4.3552403640166162</RSR>
+            <Slope>0.534054165379466</Slope>
+            <Intercept>-12.950777468849731</Intercept>
+            <SEslope>0.1252689459962858</SEslope>
+            <SEintercept>6.0093199030660385</SEintercept>
+            <R2>0.411437017215453</R2>
+            <RMSE>35.548759271095321</RMSE>
+            <NSE>-19.404736896303156</NSE>
+            <ME>-35</ME>
+            <MAE>35</MAE>
+            <RSR>4.43576332696682</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -3012,7 +3011,7 @@ Pollination alone results in the development of small, hard green berries (live 
       </Tests>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
-      <ObservedTableName>Sheet1</ObservedTableName>
+      <ObservedTableName>Data</ObservedTableName>
       <FieldNameUsedForMatch>Grapevine.Phenology.CurrentSeason.Value()</FieldNameUsedForMatch>
       <FieldName2UsedForMatch>Grapevine.Phenology.CurrentStageName</FieldName2UsedForMatch>
     </PredictedObserved>
@@ -3475,7 +3474,7 @@ namespace Models
     <Weather>
       <Name>Weather</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
+      <FileName>Blenheim.met</FileName>
       <ExcelWorkSheetName />
     </Weather>
     <Clock>
@@ -3508,6 +3507,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Phenology.CurrentStageName</YFieldName>
@@ -3556,6 +3556,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.InitialisedCohortNo</YFieldName>
@@ -3578,6 +3579,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.AppearedCohortNo</YFieldName>
@@ -3600,6 +3602,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.DeadCohortNo</YFieldName>
@@ -3642,6 +3645,7 @@ namespace Models
         <MarkerSize>Small</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(1)</YFieldName>
@@ -3664,6 +3668,7 @@ namespace Models
         <MarkerSize>Small</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(2)</YFieldName>
@@ -3686,6 +3691,7 @@ namespace Models
         <MarkerSize>Small</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(3)</YFieldName>
@@ -3708,6 +3714,7 @@ namespace Models
         <MarkerSize>Small</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(4)</YFieldName>
@@ -3730,6 +3737,7 @@ namespace Models
         <MarkerSize>Small</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(5)</YFieldName>
@@ -3752,6 +3760,7 @@ namespace Models
         <MarkerSize>Small</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(6)</YFieldName>
@@ -3774,6 +3783,7 @@ namespace Models
         <MarkerSize>Small</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(7)</YFieldName>
@@ -3796,6 +3806,7 @@ namespace Models
         <MarkerSize>Small</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(8)</YFieldName>
@@ -3818,6 +3829,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(9)</YFieldName>
@@ -3840,6 +3852,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(10)</YFieldName>
@@ -3862,6 +3875,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(11)</YFieldName>
@@ -3884,6 +3898,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(12)</YFieldName>
@@ -3906,6 +3921,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(13)</YFieldName>
@@ -3928,6 +3944,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(14)</YFieldName>
@@ -3950,6 +3967,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(15)</YFieldName>
@@ -3972,6 +3990,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(16)</YFieldName>
@@ -3994,6 +4013,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(17)</YFieldName>
@@ -4016,6 +4036,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.CohortSize(18)</YFieldName>
@@ -4062,6 +4083,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Berry.MeanTempFlowering.Value()</YFieldName>
@@ -4084,6 +4106,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Berry.MeanTempInitiationY0.Value()</YFieldName>
@@ -4126,6 +4149,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Berry.NumberFunction.Shoots.Value()</YFieldName>
@@ -4148,6 +4172,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Berry.BunchesPerShoot.Value()</YFieldName>
@@ -4197,6 +4222,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Berry.BerriesPerBunch.Value()</YFieldName>
@@ -4219,6 +4245,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Berry.NumberFunction.Value()</YFieldName>
@@ -4268,6 +4295,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Grapevine.Berry.Live.Wt</YFieldName>
@@ -4318,6 +4346,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.Fn</YFieldName>
@@ -4345,6 +4374,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Leaf.Fw</YFieldName>
@@ -4387,6 +4417,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Root.Live.Wt</YFieldName>
@@ -4429,6 +4460,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Shoot.Wt</YFieldName>
@@ -4471,6 +4503,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Phenology.Budding.AccChill.Value()</YFieldName>
@@ -4518,6 +4551,7 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Arbitrator.FDM</YFieldName>
@@ -4544,6 +4578,72 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
     </Graph>
+    <Graph>
+      <Name>Budburst</Name>
+      <Series>
+        <Name>FractionBudBurst</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>Grapevine.Phenology.Budding.FractionOfBudBurst.Value()</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>BudNo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today.Year</XFieldName>
+        <YFieldName>Structure.PrimaryBudNo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+    </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Experiment>
@@ -4554,7 +4654,7 @@ namespace Models
         <Name>Climate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Specifications>
-          <string>[Weather].FileName = Site1001.met,Site1002.met,Site1003.met,Site1004.met</string>
+          <string>[Weather].FileName = Site1001_BRA.met,Site1002_OYB.met,Site1003_SEA.met,Site1004_RPC.met</string>
         </Specifications>
       </Factor>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -5045,18 +5145,19 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-990142</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>Dash</Line>
+          <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>PhenoPredObs</TableName>
           <XFieldName>Observed.Grapevine.Phenology.BudBurstDOY.Value()</XFieldName>
           <YFieldName>Predicted.Grapevine.Phenology.BudBurstDOY.Value()</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5065,15 +5166,15 @@ namespace Models
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
-          <Minimum>200</Minimum>
-          <Maximum>365</Maximum>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Inverted>false</Inverted>
-          <Minimum>200</Minimum>
-          <Maximum>365</Maximum>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
@@ -5100,6 +5201,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>PhenoPredObs</TableName>
           <XFieldName>Observed.Grapevine.Phenology.FloweringDOY.Value()</XFieldName>
           <YFieldName>Predicted.Grapevine.Phenology.FloweringDOY.Value()</YFieldName>
@@ -5147,6 +5249,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>PhenoPredObs</TableName>
           <XFieldName>Observed.Grapevine.Phenology.VeraisonDOY.Value()</XFieldName>
           <YFieldName>Predicted.Grapevine.Phenology.VeraisonDOY.Value()</YFieldName>
@@ -5177,7 +5280,693 @@ namespace Models
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <DisabledSimNames />
+  </Experiment>
+  <Experiment>
+    <Name>ParameterOptimize</Name>
+    <Factors>
+      <Name>Factors</Name>
+      <Factor>
+        <Name>EndoDormancy</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Specifications>
+          <string>[ParameterTest].Script.EndoTarget = 10, 11</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>BudBurst</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Specifications>
+          <string>[ParameterTest].Script.BudBurstBase = 40,50</string>
+        </Specifications>
+      </Factor>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Factors>
+    <Simulation>
+      <Name>OptimizationBase</Name>
+      <Weather>
+        <Name>Weather</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FileName>Site1004_RPC.met</FileName>
+        <ExcelWorkSheetName />
+      </Weather>
+      <Clock>
+        <Name>Clock</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <StartDate>2005-01-01T00:00:00</StartDate>
+        <EndDate>2012-09-29T00:00:00</EndDate>
+      </Clock>
+      <Summary>
+        <Name>Summary</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Summary>
+      <SoilArbitrator>
+        <Name>Soil Arbitrator</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </SoilArbitrator>
+      <Zone>
+        <Name>Vineyard</Name>
+        <Soil>
+          <Name>Soil</Name>
+          <Water>
+            <Name>Water</Name>
+            <SoilCrop>
+              <Name>GrapevineSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <LL>
+                <double>0.13</double>
+                <double>0.23</double>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.3</double>
+                <double>0.3</double>
+              </LL>
+              <KL>
+                <double>0.1</double>
+                <double>0.06</double>
+                <double>0.04</double>
+                <double>0.01</double>
+                <double>0</double>
+                <double>0</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
+                <double>0</double>
+              </XF>
+            </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <BD>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+            </BD>
+            <AirDry>
+              <double>0.08</double>
+              <double>0.16</double>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.15</double>
+              <double>0.15</double>
+            </AirDry>
+            <LL15>
+              <double>0.16</double>
+              <double>0.16</double>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.15</double>
+              <double>0.15</double>
+            </LL15>
+            <DUL>
+              <double>0.33</double>
+              <double>0.33</double>
+              <double>0.31</double>
+              <double>0.27</double>
+              <double>0.3</double>
+              <double>0.3</double>
+            </DUL>
+            <SAT>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.44</double>
+              <double>0.46</double>
+              <double>0.44</double>
+              <double>0.44</double>
+            </SAT>
+          </Water>
+          <SoilWater>
+            <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <SummerDate>1-Nov</SummerDate>
+            <SummerU>9</SummerU>
+            <SummerCona>4.4</SummerCona>
+            <WinterDate>1-Apr</WinterDate>
+            <WinterU>9</WinterU>
+            <WinterCona>4.4</WinterCona>
+            <DiffusConst>88</DiffusConst>
+            <DiffusSlope>35.4</DiffusSlope>
+            <Salb>0.18</Salb>
+            <CN2Bare>0</CN2Bare>
+            <CNRed>-9E-05</CNRed>
+            <CNCov>0</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <SWCON>
+              <double>0.55</double>
+              <double>0.55</double>
+              <double>0.55</double>
+              <double>0.55</double>
+              <double>0.55</double>
+              <double>0.55</double>
+            </SWCON>
+            <KLAT>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KLAT>
+            <residueinterception>0</residueinterception>
+          </SoilWater>
+          <SoilNitrogen>
+            <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <fom_type>
+              <string>default</string>
+              <string>manure</string>
+              <string>mucuna</string>
+              <string>lablab</string>
+              <string>shemp</string>
+              <string>stable</string>
+            </fom_type>
+            <fract_carb>
+              <double>0.2</double>
+              <double>0.3</double>
+              <double>0.54</double>
+              <double>0.57</double>
+              <double>0.45</double>
+              <double>0</double>
+            </fract_carb>
+            <fract_cell>
+              <double>0.7</double>
+              <double>0.3</double>
+              <double>0.37</double>
+              <double>0.37</double>
+              <double>0.47</double>
+              <double>0.1</double>
+            </fract_cell>
+            <fract_lign>
+              <double>0.1</double>
+              <double>0.4</double>
+              <double>0.09</double>
+              <double>0.06</double>
+              <double>0.08</double>
+              <double>0.9</double>
+            </fract_lign>
+          </SoilNitrogen>
+          <SoilOrganicMatter>
+            <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <RootCN>30</RootCN>
+            <RootWt>3000</RootWt>
+            <SoilCN>11.5</SoilCN>
+            <EnrACoeff>7.4</EnrACoeff>
+            <EnrBCoeff>0.2</EnrBCoeff>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <Depth>
+              <string>0-10</string>
+              <string>10-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+            </Depth>
+            <OC>
+              <double>3.5</double>
+              <double>2.5</double>
+              <double>1.2</double>
+              <double>1.03</double>
+              <double>0.47</double>
+              <double>0.47</double>
+            </OC>
+            <FBiom>
+              <double>0.025</double>
+              <double>0.025</double>
+              <double>0.015</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </FBiom>
+            <FInert>
+              <double>0.3</double>
+              <double>0.4</double>
+              <double>0.75</double>
+              <double>0.9</double>
+              <double>0.96</double>
+              <double>0.96</double>
+            </FInert>
+            <OCUnits>Total</OCUnits>
+          </SoilOrganicMatter>
+          <Analysis>
+            <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <PH>
+              <double>6.6</double>
+              <double>6.2</double>
+              <double>5.7</double>
+              <double>5.5</double>
+              <double>5.5</double>
+              <double>5.5</double>
+            </PH>
+            <PHUnits>Water</PHUnits>
+            <BoronUnits>HotWater</BoronUnits>
+          </Analysis>
+          <InitialWater>
+            <Name>Initial water</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <PercentMethod>FilledFromTop</PercentMethod>
+            <FractionFull>1</FractionFull>
+            <DepthWetSoil>NaN</DepthWetSoil>
+          </InitialWater>
+          <Sample>
+            <Name>Sample</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <NO3>
+              <double>40</double>
+              <double>30</double>
+              <double>14</double>
+              <double>14</double>
+              <double>1.38</double>
+              <double>1.38</double>
+            </NO3>
+            <NH4>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+            </NH4>
+            <NO3Units>kgha</NO3Units>
+            <NH4Units>kgha</NH4Units>
+            <SWUnits>Volumetric</SWUnits>
+            <OCUnits>Total</OCUnits>
+            <PHUnits>Water</PHUnits>
+          </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <RecordNumber>0</RecordNumber>
+          <SoilType>Sedementary</SoilType>
+          <LocalName>Lincoln</LocalName>
+          <Site />
+          <NearestTown />
+          <Region />
+          <NaturalVegetation />
+          <Latitude>0</Latitude>
+          <Longitude>0</Longitude>
+        </Soil>
+        <SurfaceOrganicMatter>
+          <Name>SurfaceOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <PondActive>no</PondActive>
+          <ReportAdditions>no</ReportAdditions>
+          <ReportRemovals>no</ReportRemovals>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <TillageTypes>
+            <Name>TillageTypesList</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <TillageType />
+          </TillageTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Grapevine</PoolName>
+              <ResidueType>Grapevine</ResidueType>
+              <Mass>2000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>Grapevine</PoolName>
+          <type>Grapevine</type>
+          <mass>2000</mass>
+          <standing_fraction>0</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        </SurfaceOrganicMatter>
+        <MicroClimate>
+          <Name>MicroClimate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.23</soil_albedo>
+          <sun_angle>15</sun_angle>
+          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+          <night_interception_fraction>0.5</night_interception_fraction>
+          <refheight>2</refheight>
+          <albedo>0.15</albedo>
+          <emissivity>0.96</emissivity>
+          <RadIntTotal>0</RadIntTotal>
+        </MicroClimate>
+        <Irrigation>
+          <Name>Irrigation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Irrigation>
+        <Fertiliser>
+          <Name>Fertiliser</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Fertiliser>
+        <Plant>
+          <Name>Grapevine</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ResourceName>Grapevine</ResourceName>
+          <CropType>Grapevine</CropType>
+        </Plant>
+        <Operations>
+          <Name>Operations</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Operation>
+            <Date>2005-05-13</Date>
+            <Action>[Grapevine].Sow(population: 0.1667, cultivar: "SauvignonBlanc", depth: 50, rowSpacing: 3100, budNumber:24);</Action>
+          </Operation>
+        </Operations>
+        <Report>
+          <Name>Report</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string />
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
+        <Manager>
+          <Name>Pruning</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Script>
+            <PruneDateString>15-May</PruneDateString>
+          </Script>
+          <Code><![CDATA[
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System.Xml.Serialization;
+
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant Grapevine;
+        [Link] Clock Clock;
+
+        [Description("Prune Date")]
+        public string PruneDateString { get; set; }
+        [XmlIgnore] private DateTime PruneDate { get; set; }
+        [XmlIgnore] private RemovalFractions Remove { get; set; }
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Remove = new RemovalFractions();
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.
+            PruneDate = DateTime.Parse(PruneDateString);
+                        
+            if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)
+            {
+                Remove.SetPhenologyStage = 1;
+                Grapevine.RemoveBiomass("Prune", Remove);
+            }
+        }
+    }
+}
+            
+                
+]]></Code>
+        </Manager>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SoluteManager>
+        <Manager>
+          <Name>ParameterTest</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Script>
+            <BudBurstBase>0</BudBurstBase>
+            <EndoTarget>0</EndoTarget>
+          </Script>
+          <Code><![CDATA[
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System.Xml.Serialization;
+
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+    	[Link] Zone zone;
+        [Link] Summary Summary;
+
+		[Description("BudBurstBase")]
+        public double BudBurstBase  {get; set;}
+        [Description("EndoTarget")]
+        public double EndoTarget  {get; set;}
+
+                
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, EventArgs e)
+        {
+        	zone.Set("Grapevine.Phenology.Budding.Target.Base.FixedValue", BudBurstBase);
+			zone.Set("Grapevine.Phenology.EndoDormancy.Target.FixedValue", EndoTarget);           
+        }
+    }
+}
+            
+                
+]]></Code>
+        </Manager>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>1</Area>
+        <Slope>0</Slope>
+      </Zone>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Simulation>
+    <Folder>
+      <Name>PhenoValidation</Name>
+      <Graph>
+        <Name>BudBurstPredic</Name>
+        <Series>
+          <Name>Series</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>true</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-990142</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Dash</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>PhenoPredObs</TableName>
+          <XFieldName>Observed.Grapevine.Phenology.BudBurstDOY.Value()</XFieldName>
+          <YFieldName>Predicted.Grapevine.Phenology.BudBurstDOY.Value()</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>200</Minimum>
+          <Maximum>365</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>200</Minimum>
+          <Maximum>365</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>FloweringPred</Name>
+        <Series>
+          <Name>Series</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>true</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>PhenoPredObs</TableName>
+          <XFieldName>Observed.Grapevine.Phenology.FloweringDOY.Value()</XFieldName>
+          <YFieldName>Predicted.Grapevine.Phenology.FloweringDOY.Value()</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>250</Minimum>
+          <Maximum>365</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>250</Minimum>
+          <Maximum>365</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>VeraisonPred</Name>
+        <Series>
+          <Name>Series</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>PhenoPredObs</TableName>
+          <XFieldName>Observed.Grapevine.Phenology.VeraisonDOY.Value()</XFieldName>
+          <YFieldName>Predicted.Grapevine.Phenology.VeraisonDOY.Value()</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
+    </Folder>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <DisabledSimNames />
   </Experiment>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>278</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
