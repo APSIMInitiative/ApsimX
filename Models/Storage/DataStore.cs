@@ -404,10 +404,12 @@
             if (connection != null)
                 openForReadOnly = connection.IsReadOnly;
 
-            foreach (Table t in tables)
+            // Don't iterate through the table or TableNames properties directly,
+            // since the deletion operation can mess up the iterator.
+            string[] tableNames = TableNames.ToArray();
+            foreach (string tableName in tableNames)
             {
-                if (!t.Name.StartsWith("_"))
-                    DeleteDataInTable(t.Name);
+                DeleteDataInTable(tableName);
             }
 
             Open(openForReadOnly);
