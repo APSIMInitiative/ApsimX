@@ -23080,7 +23080,7 @@ namespace Models
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
               <Checkpoint>Current</Checkpoint>
-              <TableName>ObsAll</TableName>
+              <TableName>ObsAllData</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>node_no</YFieldName>
               <ShowInLegend>true</ShowInLegend>
