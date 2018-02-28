@@ -124,6 +124,7 @@ namespace Models.PostSimulationTools
                     {
                         // table/sheet names starting with a number are permitted by Excel, but will break APSIM
                         // this should be probably reported to the user
+                        throw new Exception("Unable to input from Excel: sheet names must not start with a number.");
                     }
                     else
                     {
