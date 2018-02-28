@@ -19,6 +19,7 @@ namespace UserInterface.Views
     using Gtk;
     using Interfaces;
     using Models.Core;
+    using System.Linq;
 
     /// <summary>
     /// We want to have a "button" we can press within a grid cell. We could use a Gtk CellRendererPixbuf for this, 
@@ -88,6 +89,11 @@ namespace UserInterface.Views
         /// </summary>
         private bool selfCursorMove = false;
 
+        /// <summary>
+        /// A value storing the caret location when the user activates intellisense.
+        /// </summary>
+        private int caretLocation;
+
         private ScrolledWindow scrolledwindow1 = null;
         public TreeView gridview = null;
         public TreeView fixedcolview = null;
@@ -103,11 +109,7 @@ namespace UserInterface.Views
         private Menu Popup = new Menu();
         private AccelGroup accel = new AccelGroup();
         private GridCell popupCell = null;
-        private ListStore completionModel;
-        private Window completionForm;
-        private TreeView completionView = new TreeView();
-        private Gdk.Pixbuf functionPixbuf;
-        private Gdk.Pixbuf propertyPixbuf;
+        private IntellisenseView intellisense;
         /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
         /// </summary>
@@ -140,99 +142,36 @@ namespace UserInterface.Views
             image1.Pixbuf = null;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
-
-
-            completionForm = new Window(WindowType.Toplevel);
-            completionForm.HeightRequest = 300;
-            completionForm.WidthRequest = 750;
-            completionForm.Decorated = false;
-            completionForm.SkipPagerHint = true;
-            completionForm.SkipTaskbarHint = true;
-            Frame completionFrame = new Frame();
-            completionForm.Add(completionFrame);
-            ScrolledWindow completionScroller = new ScrolledWindow();
-            completionFrame.Add(completionScroller);
-            completionModel = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
-            completionView = new TreeView(completionModel);
-            completionScroller.Add(completionView);
-            TreeViewColumn column = new TreeViewColumn();
-            CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
-            column.PackStart(iconRender, false);
-            CellRendererText textRender = new Gtk.CellRendererText();
-            textRender.Editable = false;
-            column.PackStart(textRender, true);
-            column.SetAttributes(iconRender, "pixbuf", 0);
-            column.SetAttributes(textRender, "text", 1);
-            column.Title = "Item";
-            column.Resizable = true;
-            completionView.AppendColumn(column);
-            textRender = new CellRendererText();
-            column = new TreeViewColumn("Units", textRender, "text", 2);
-            column.Resizable = true;
-            completionView.AppendColumn(column);
-            textRender = new CellRendererText();
-            column = new TreeViewColumn("Type", textRender, "text", 3);
-            column.Resizable = true;
-            completionView.AppendColumn(column);
-            textRender = new CellRendererText();
-            column = new TreeViewColumn("Descr", textRender, "text", 4);
-            column.Resizable = true;
-            completionView.AppendColumn(column);
-            functionPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Function.png", 16, 16);
-            propertyPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Property.png", 16, 16);            
-            completionView.HasTooltip = true;
-            completionView.TooltipColumn = 5;
-            completionForm.FocusOutEvent += OnLeaveCompletion;
-            completionView.ButtonPressEvent += OnContextListMouseDoubleClick;
-            completionView.KeyPressEvent += OnContextListKeyDown;
-            completionView.KeyReleaseEvent += CompletionView_KeyReleaseEvent;
-        }
-
-        [GLib.ConnectBefore]
-        private void CompletionView_KeyReleaseEvent(object sender, KeyReleaseEventArgs e)
-        {
-            if (e.Event.Key == Gdk.Key.Return)
-                InsertCompletionText();
-        }
-        [GLib.ConnectBefore]
-        private void OnContextListKeyDown(object sender, KeyPressEventArgs e)
-        {            
-            if (e.Event.Key == Gdk.Key.Return)
-                InsertCompletionText();
-        }
-
-        [GLib.ConnectBefore]
-        private void OnContextListMouseDoubleClick(object sender, ButtonPressEventArgs e)
-        {
-            if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1)
-                InsertCompletionText();
-        }
-
-        [GLib.ConnectBefore]
-        private void OnLeaveCompletion(object sender, EventArgs e)
-        {
-            completionForm.Hide();
+                        
+            intellisense = new IntellisenseView();
+            intellisense.ContextItemsNeeded += ContextItemsNeeded;
+            intellisense.ItemSelected += InsertCompletionText;
         }
 
         /// <summary>
-        /// Inserts the currently selected text in the intellisense popup into the active grid cell.
+        /// Inserts the currently selected text in the intellisense popup into the active grid cell, puts the cell in edit mode, then hides the intellisense popup.
         /// </summary>
-        private void InsertCompletionText()
-        {
-            TreePath path;
-            TreeViewColumn col;
-            completionView.GetCursor(out path, out col);
-            if (path != null)
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event arguments</param>
+        private void InsertCompletionText(object sender, IntellisenseItemSelectedArgs e)
+        {   
+            try
             {
-                TreeIter iter;
-                completionModel.GetIter(out iter, path);
-                string text = (string)completionModel.GetValue(iter, 1);
+                string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation + 1);
+                string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation + 1);
+
+                GetCurrentCell.Value = beforeCaret + e.ItemSelected + afterCaret;
+                gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), gridview.GetColumn(GetCurrentCell.ColumnIndex), true);
+                (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
+
                 while (GLib.MainContext.Iteration()) ;
-                GetCurrentCell.Value += text;
-                while (GLib.MainContext.Iteration()) ;
-                completionForm.Hide();
+            }
+            catch (Exception ex)
+            {
+                (Owner.Owner as MainView).ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
             }
         }
+
         /// <summary>
         /// Does cleanup when the main widget is destroyed
         /// </summary>
@@ -349,7 +288,7 @@ namespace UserInterface.Views
         /// <param name="args"></param>
         [GLib.ConnectBefore]
         private void Gridview_KeyPressEvent(object o, KeyPressEventArgs args)
-        {
+        {            
             string keyName = Gdk.Keyval.Name(args.Event.KeyValue);
             IGridCell cell = GetCurrentCell;
             if (cell == null)
@@ -440,59 +379,98 @@ namespace UserInterface.Views
         {
             try
             {
-                string cellContents = this.GetCurrentCell.Value as string;
-                List<string> items = new List<string>();
-                List<NeedContextItemsArgs.ContextItem> allItems = new List<NeedContextItemsArgs.ContextItem>();
-                ContextItemsNeeded(this, new NeedContextItemsArgs() { ObjectName = cellContents, Items = items, AllItems = allItems });
+                caretLocation = (editControl as Entry).Position;
+                string cellContents = (editControl as Entry).Text;
+                string contentsToCursor = cellContents.Substring(0, caretLocation);
+                string contentsAfterCursor = cellContents.Substring(caretLocation);
+                string node = contentsToCursor.Substring(contentsToCursor.LastIndexOf(',') + 1);
 
-                completionModel.Clear();
-                foreach (NeedContextItemsArgs.ContextItem item in allItems)
-                {
-                    completionModel.AppendValues(item.IsEvent ? functionPixbuf : propertyPixbuf, item.Name, item.Units, item.TypeName, item.Descr, item.ParamString);
-                }
-                if (completionModel.IterNChildren() > 0)
-                {
-                    // If user is inserting text partway through the cell, this will not work                               
-                    string txt = GetCurrentCell.Value + ".";
-                    System.Diagnostics.Debug.WriteLine("setting current cell to " + txt);
-                    GetCurrentCell.Value = txt;
-                    int colNum = GetCurrentCell.ColumnIndex;
-                    int rowNum = GetCurrentCell.RowIndex;
-                    //PopulateGrid();
-                    var currentCell = GetCell(colNum, rowNum);
-                    while (GLib.MainContext.Iteration()) ;
-                    // Work out where to put the completion window.
-                    // This should probably be done a bit more intelligently to detect when we are too near the bottom or right
-                    // of the screen, and move accordingly. Left as an exercise for the student.                
-                    /**
-                    int x, y;
-                    (GetCurrentCell as Widget).TranslateCoordinates(GetCurrentCell, (GetCurrentCell as Widget).Allocation.X, (GetCurrentCell as Widget).Allocation.Y, out x, out y);
-                    **/
-                    //Cairo.Point p = new Cairo.Point((GetCurrentCell as Widget).Allocation.X, (GetCurrentCell as Widget).Allocation.Y);
-                    //p.Y += (int)textEditor.LineHeight; 
-                    // Need to convert to screen coordinates....
-                    /*
-                    int x, y;
-                    int frameX, frameY;
-                    mainWindow.GetOrigin(out frameX, out frameY);
-                    (GetCurrentCell as Widget).TranslateCoordinates(_mainWidget.Toplevel, 100, 100, out x, out y);
-                    */
-                    completionForm.TransientFor = MainWidget.Toplevel as Window;
-                    completionForm.ShowAll();
-                    TreeView completionView = new TreeView();
-                    completionForm.Resize(completionView.Requisition.Width, 300);                    
-                    if (completionForm.GdkWindow != null)
-                        completionForm.GdkWindow.Focus(0);
-                    while (Gtk.Application.EventsPending())
-                        Gtk.Application.RunIteration();
+                intellisense.ContextItemsNeeded += this.ContextItemsNeeded;
+                if (!intellisense.GenerateAutoCompletionOptions(node))
+                    return;
 
-                    this.completionView.SetCursor(new TreePath("0"), null, false);
-                }
+                GetCurrentCell.Value = contentsToCursor + "." + contentsAfterCursor;
+                gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), gridview.Columns[GetCurrentCell.ColumnIndex], true);
+                (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
+                // Get the coordinates of the cell 1 row beneath the current one - we don't want the popup to cover the cell we're working on
+                Tuple<int, int> coordinates = GetAbsoluteCellPosition(GetCurrentCell.ColumnIndex, GetCurrentCell.RowIndex + 1);
+                intellisense.MainWindow = MainWidget.Toplevel as Window;                
+                intellisense.ShowAtCoordinates(coordinates.Item1, coordinates.Item2);
+
+                while (Gtk.Application.EventsPending())
+                    Gtk.Application.RunIteration();
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.ToString());
+                (Owner.Owner as MainView).ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
             }            
+        }
+
+        /// <summary>
+        /// Calculates the size of a given cell.
+        /// Results are returned in a tuple, where Item1 is the width and Item2 is the height of the cell.
+        /// </summary>
+        /// <param name="col">Column number of the cell.</param>
+        /// <param name="row">Row number of the cell.</param>
+        /// <returns></returns>
+        private Tuple<int, int> GetCellSize (int col, int row)
+        {
+            int cellHeight;
+            int offsetX;
+            int offsetY;
+            int cellWidth;
+            Gdk.Rectangle rectangle = new Gdk.Rectangle();
+            TreeViewColumn column = gridview.GetColumn(col);
+
+            // Getting dimensions from TreeViewColumn
+            column.CellGetSize(rectangle, out offsetX, out offsetY,
+                out cellWidth, out cellHeight);
+
+            // And now get padding from CellRenderer
+            CellRenderer renderer = column.CellRenderers[row];
+            cellHeight += (int)renderer.Ypad;
+            cellWidth += (int)renderer.Xpad;
+            return new Tuple<int, int>(cellWidth, cellHeight);
+        }        
+
+        /// <summary>
+        /// Calculates the XY coordinates of a given cell relative to the origin of the TreeView.
+        /// Results are returned in a tuple, where Item1 is the x-coord and Item2 is the y-coord.
+        /// </summary>
+        /// <param name="col">Column number of the cell.</param>
+        /// <param name="row">Row number of the cell.</param>
+        /// <returns></returns>
+        private Tuple<int, int> GetCellPosition(int col, int row)
+        {
+            int x = 0;            
+
+            for (int i = 0; i < col; i++)
+            {
+                Tuple<int, int> cellSize = GetCellSize(i, 0);
+                x += cellSize.Item1;
+            }
+
+            // Rows are uniform in height, so we just get the height of the first cell in the table, 
+            // then multiply by the number of rows.
+            int y = GetCellSize(0, 0).Item2 * row;
+            
+            return new Tuple<int, int>(x, y);
+        }
+
+        /// <summary>
+        /// Calculates the absolute coordinates of the top-left corner of a given cell on the screen. 
+        /// Results are returned in a tuple, where Item1 is the x-coordinate and Item2 is the y-coordinate.
+        /// </summary>
+        /// <param name="col">Column of the cell.</param>
+        /// <param name="row">Row of the cell.</param>
+        /// <returns></returns>
+        private Tuple<int, int> GetAbsoluteCellPosition(int col, int row)
+        {
+            int frameX, frameY, containerX, containerY;
+            mainWindow.GetOrigin(out frameX, out frameY);            
+            gridview.GdkWindow.GetOrigin(out containerX, out containerY);
+            Tuple<int, int> relCoordinates = GetCellPosition(col, row + 1);
+            return new Tuple<int, int>(relCoordinates.Item1 + containerX, relCoordinates.Item2 + containerY);
         }
 
         /// <summary>
