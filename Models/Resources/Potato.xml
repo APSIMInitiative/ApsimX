@@ -1212,17 +1212,17 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 			<ArrayFunction>
 				<Name>LagDurationAgeMultiplier</Name>
 				<IncludeInDocumentation>true</IncludeInDocumentation>
-				<Values>1 1 1</Values>
+				<ArrayValues>1 1 1</ArrayValues>
 			</ArrayFunction>
 			<ArrayFunction>
 				<Name>SenescenceDurationAgeMultiplier</Name>
 				<IncludeInDocumentation>true</IncludeInDocumentation>
-				<Values>1 1 1</Values>
+				<ArrayValues>1 1 1</ArrayValues>
 			</ArrayFunction>
 			<ArrayFunction>
 				<Name>LeafSizeAgeMultiplier</Name>
 				<IncludeInDocumentation>true</IncludeInDocumentation>
-				<Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+				<ArrayValues>1 1 1 1 1 1 1 1 1 1 1 1</ArrayValues>
 			</ArrayFunction>
 			<Constant>
 				<Name>RemobilisationCost</Name>

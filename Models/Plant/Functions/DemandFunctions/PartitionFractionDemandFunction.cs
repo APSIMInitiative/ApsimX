@@ -1,18 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-
+// ----------------------------------------------------------------------
+// <copyright file="PartitionFractionDemandFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions.DemandFunctions
 {
+    using Models.Core;
+    using System;
+
     /// <summary>
     /// # [Name]
     /// This is the Partition Fraction Demand Function which returns the product of its PartitionFraction and the total DM supplied to the arbitrator by all organs
     /// </summary>
     [Serializable]
     [Description("Demand is calculated as a fraction of the total plant supply term.")]
-    public class PartitionFractionDemandFunction : Model, IFunction
+    public class PartitionFractionDemandFunction : BaseFunction
     {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+
         /// <summary>The partition fraction</summary>
         [Link]
         IFunction PartitionFraction = null;
@@ -22,13 +28,13 @@ namespace Models.PMF.Functions.DemandFunctions
         OrganArbitrator Arbitrator = null;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             if (Arbitrator.DM != null)
-                return Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value(arrayIndex);
+                returnValue[0] = Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value();
             else
-                return 0;
+                returnValue[0] = 0;
+            return returnValue;
         }
 
     }

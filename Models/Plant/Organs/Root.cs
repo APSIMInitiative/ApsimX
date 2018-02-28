@@ -631,7 +631,16 @@ namespace Models.PMF.Organs
                 double[] bd = myZone.soil.BD;
 
                 double accuDepth = 0;
-                
+
+                double[] nUptakeSWFactors = nUptakeSWFactor.Values();
+                if (nUptakeSWFactors.Length == 1)
+                    nUptakeSWFactors = MathUtilities.CreateArrayOfValues(nUptakeSWFactors[0], thickness.Length);
+                double[] kno3s = kno3.Values();
+                if (kno3s.Length == 1)
+                    kno3s = MathUtilities.CreateArrayOfValues(kno3s[0], thickness.Length);
+                double[] knh4s = knh4.Values();
+                if (knh4s.Length == 1)
+                    knh4s = MathUtilities.CreateArrayOfValues(knh4s[0], thickness.Length);
                 for (int layer = 0; layer < thickness.Length; layer++)
                 {
                     accuDepth += thickness[layer];
@@ -640,14 +649,14 @@ namespace Models.PMF.Organs
                         double factorRootDepth = Math.Max(0, Math.Min(1, 1 - (accuDepth - Depth ) / thickness[layer]));
                         RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
                         RWC[layer] = Math.Max(0.0, Math.Min(RWC[layer], 1.0));
-                        double SWAF = nUptakeSWFactor.Value(layer);
+                        double SWAF = nUptakeSWFactors[layer];
 
-                        double kno3 = this.kno3.Value(layer);
+                        double kno3 = kno3s[layer];
                         double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
                         NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxDailyNUptake.Value() - NO3Uptake));
                         NO3Uptake += NO3Supply[layer];
 
-                        double knh4 = this.knh4.Value(layer);
+                        double knh4 = knh4s[layer];
                         double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
                         NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxDailyNUptake.Value() - NH4Uptake));
                         NH4Uptake += NH4Supply[layer];
@@ -716,6 +725,9 @@ namespace Models.PMF.Organs
             {
                 double[] kl = myZone.soil.KL(Plant.Name);
                 double[] ll = myZone.soil.LL(Plant.Name);
+                double[] klModifiers = klModifier.Values();
+                if (klModifiers.Length == 1)
+                    klModifiers = MathUtilities.CreateArrayOfValues(klModifiers[0], myZone.soil.Thickness.Length);
 
                 double[] supply = new double[myZone.soil.Thickness.Length];
                 LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
@@ -723,7 +735,7 @@ namespace Models.PMF.Organs
                 {
                     if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
                     {
-                        supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
+                        supply[layer] = Math.Max(0.0, kl[layer] * klModifiers[layer] *
                             (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
                     }
                 }

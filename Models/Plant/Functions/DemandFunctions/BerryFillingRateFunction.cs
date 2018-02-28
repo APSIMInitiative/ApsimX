@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using Models.PMF.Phen;
-
+﻿// ----------------------------------------------------------------------
+// <copyright file="BerryFillingRateFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions.DemandFunctions
 {
+    using Models.Core;
+    using Models.PMF.Phen;
+    using System;
+
     /// <summary>
     /// # [Name]
     /// Filling rate is calculated from grain number, a maximum mass to be filled and the duration of the filling process.
@@ -13,8 +16,11 @@ namespace Models.PMF.Functions.DemandFunctions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class BerryFillingRateFunction : Model, IFunction
+    public class BerryFillingRateFunction : BaseFunction
     {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+
         /// <summary>InitialGrowthPhase</summary>
         [Description("InitialGrowthPhase")]
         public String FirstPhase { get; set; }
@@ -57,28 +63,28 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             if (Phenology.CurrentPhaseName == FirstPhase)
             {
-                AccTT += TT.Value(arrayIndex);
+                AccTT += TT.Value();
                 double TodaysDM = 0;
                 TodaysDM = Wf1 / (1 + (Wf1 - Wo1) / Wo1 * Math.Exp(-Mu1 * AccTT));
-                double returnValue = TodaysDM - yesterdaysDM;
+                returnValue[0] = TodaysDM - yesterdaysDM;
                 yesterdaysDM = TodaysDM;
-                return returnValue;
             }
-            if (Phenology.CurrentPhaseName == SecondPhase)
+            else if (Phenology.CurrentPhaseName == SecondPhase)
             {
-                AccTT += TT.Value(arrayIndex);
+                AccTT += TT.Value();
                 double TodaysDM = 0;
                 TodaysDM = Wf1 / (1 + (Wf1 - Wo1) / Wo1 * Math.Exp(-Mu1 * AccTT)) + Wf2 / (1 + (Wf2 - Wo2) / Wo2 * Math.Exp(-Mu2 * AccTT));
-                double returnValue = TodaysDM - yesterdaysDM;
+                returnValue[0] = TodaysDM - yesterdaysDM;
                 yesterdaysDM = TodaysDM;
-                return returnValue;
             }
             else
-                return 0;
+                returnValue[0] = 0;
+
+            return returnValue;
         }
 
         /// <summary>Called when crop is being prunned.</summary>

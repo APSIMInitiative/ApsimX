@@ -1,13 +1,18 @@
-﻿using Models;
-using Models.Core;
-using Models.Core.Interfaces;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using Models.PMF.Functions;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="TrackerFunctionTests.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace UnitTests
 {
+    using Models;
+    using Models.Core;
+    using Models.Core.Interfaces;
+    using NUnit.Framework;
+    using System;
+    using System.Collections.Generic;
+    using Models.PMF.Functions;
+
     [TestFixture]
     class TrackerFunctionTests
     {
@@ -20,11 +25,24 @@ namespace UnitTests
             {
                 valuesToReturn = values;
             }
-            public double Value(int arrayIndex = -1)
+            public double Value()
             {
                 return valuesToReturn[i++];
             }
+
+            public double[] Values()
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>Gets the value, either a double or a double[]</summary>
+            public object ValueAsObject()
+            {
+                throw new NotImplementedException();
+            }
         }
+    
+    
 
         /// <summary>Ensure the tracker function actually works.</summary>
         [Test]

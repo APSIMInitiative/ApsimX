@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-
+﻿// ----------------------------------------------------------------------
+// <copyright file="BaseFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions.DemandFunctions
 {
+    using Models.Core;
+    using System;
+
     /// <summary>
     /// # [Name]
     /// Calculate partitioning of daily growth based upon allometric relationship
@@ -14,44 +16,46 @@ namespace Models.PMF.Functions.DemandFunctions
     [Description("This function calculated dry matter demand using plant allometry which is described using a simple power function (y=kX^p).")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AllometricDemandFunction : Model, IFunction
+    public class AllometricDemandFunction : BaseFunction
     {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+
         /// <summary>The constant</summary>
         [Description("Constant")]
         public double Const { get; set; }
+
         /// <summary>The power</summary>
         [Description("Power")]
         public double Power { get; set; }
+
         /// <summary>The x property</summary>
         [Description("XProperty")]
         public string XProperty { get; set; }
+
         /// <summary>The y property</summary>
         [Description("YProperty")]
         public string YProperty { get; set; }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        /// <exception cref="System.Exception">
-        /// Cannot find variable:  + XProperty +  in function:  + this.Name
-        /// or
-        /// Cannot find variable:  + YProperty +  in function:  + this.Name
-        /// </exception>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            double returnValue = 0.0;
-            object XValue = Apsim.Get(this, XProperty);
-            if (XValue == null)
+            object xValue = Apsim.Get(this, XProperty);
+            if (xValue == null)
                 throw new Exception("Cannot find variable: " + XProperty + " in function: " + this.Name);
-            object YValue = Apsim.Get(this, YProperty);
-            if (YValue == null)
+
+            object yValue = Apsim.Get(this, YProperty);
+            if (yValue == null)
                 throw new Exception("Cannot find variable: " + YProperty + " in function: " + this.Name);
 
-            if (XValue is Array)
-                XValue = (XValue as Array).GetValue(arrayIndex);
-            if (YValue is Array)
-                YValue = (YValue as Array).GetValue(arrayIndex);
-            double Target = Const * Math.Pow((double)XValue, Power);
-            returnValue = Math.Max(0.0, Target - (double)YValue);
+            if (!(xValue is double))
+                throw new Exception("In function: " + Name + " the x property must be a double");
+            if (!(yValue is double))
+                throw new Exception("In function: " + Name + " the y property must be a double");
+
+
+            double Target = Const * Math.Pow((double)xValue, Power);
+            returnValue[0] = Math.Max(0.0, Target - (double)yValue);
 
             return returnValue;
         }

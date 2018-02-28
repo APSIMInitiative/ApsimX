@@ -1,35 +1,38 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using System.IO;
-
+// ----------------------------------------------------------------------
+// <copyright file="PhaseLookup.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Look up a value based upon the current growth phase.
     /// </summary>
     [Serializable]
     [Description("A value is chosen according to the current growth phase.")]
-    public class PhaseLookup : Model, IFunction, ICustomDocumentation
+    public class PhaseLookup : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        /// <summary>The value being returned</summary>
+        private double[] zero = new double[1] { 0 };
+
+        /// <summary>All child functions</summary>
+        [ChildLink]
+        private List<IFunction> childFunctions = null;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
-
-            foreach (IFunction F in ChildFunctions)
+            foreach (IFunction F in childFunctions)
             {
                 PhaseLookupValue P = F as PhaseLookupValue;
                 if (P.InPhase)
-                    return P.Value(arrayIndex);
+                    return P.Values();
             }
-            return 0;  // Default value is zero
+            return zero;  // Default value is zero
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

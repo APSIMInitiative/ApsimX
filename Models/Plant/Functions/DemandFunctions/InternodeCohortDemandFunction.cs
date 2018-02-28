@@ -1,11 +1,15 @@
-using System;
-using Models.Core;
-using Models.Interfaces;
-using Models.PMF.Organs;
-using Models.PMF.Struct;
-
+// ----------------------------------------------------------------------
+// <copyright file="InternodeCohortDemandFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions.DemandFunctions
 {
+    using Models.Core;
+    using Models.PMF.Organs;
+    using Models.PMF.Struct;
+    using System;
+
     /// <summary>
     /// # [Name]
     /// Calculate individual internode demand base on age and maxSize
@@ -14,8 +18,11 @@ namespace Models.PMF.Functions.DemandFunctions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Calculate individual internode demand base on age and maxSize.")]
-    public class InternodeCohortDemandFunction : Model, IFunction
+    public class InternodeCohortDemandFunction : BaseFunction
     {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+
         /// <summary>YinBetaFunction Constructor</summary>
         public InternodeCohortDemandFunction()
         {
@@ -42,8 +49,7 @@ namespace Models.PMF.Functions.DemandFunctions
         Structure Structure = null;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             double sinkStrength = 0;
             foreach (LeafCohort L in Leaf.Leaves)
@@ -67,7 +73,8 @@ namespace Models.PMF.Functions.DemandFunctions
                     }
                 } 
             }
-            return Structure.TotalStemPopn * sinkStrength;
+            returnValue[0] = Structure.TotalStemPopn * sinkStrength;
+            return returnValue;
         }
     }
 }   

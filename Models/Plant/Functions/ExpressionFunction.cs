@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
-using System.Reflection;
-
-using Models.Core;
-using APSIM.Shared.Utilities;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="ExpressionFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
 
     /// <summary>
     /// A mathematical expression is evaluated using variables exposed within the Plant Modelling Framework.
@@ -17,33 +17,32 @@ namespace Models.PMF.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ExpressionFunction : Model, IFunction, ICustomDocumentation
+    public class ExpressionFunction : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The expression</summary>
-        [Core.Description("Expression")]
-        public string Expression { get; set; }
-
         /// <summary>The function</summary>
         private ExpressionEvaluator fn = new ExpressionEvaluator();
+        
         /// <summary>The parsed</summary>
         private bool parsed = false;
 
+        /// <summary>The expression</summary>
+        [Description("Expression")]
+        public string Expression { get; set; }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             if (!parsed)
             {
                 Parse(fn, Expression);
                 parsed = true;
             }
-            FillVariableNames(fn, this, arrayIndex);
+            FillVariableNames(fn, this);
             Evaluate(fn);
-            if (fn.Results != null && arrayIndex != -1)
-                return fn.Results[arrayIndex];
+            if (fn.Results != null)
+                return fn.Results;
             else
-                return fn.Result;
+                return new double[] { fn.Result };
         }
 
         /// <summary>
@@ -56,19 +55,18 @@ namespace Models.PMF.Functions
 
         /// <summary>Parses the specified function.</summary>
         /// <param name="fn">The function.</param>
-        /// <param name="ExpressionProperty">The expression property.</param>
-        private static void Parse(ExpressionEvaluator fn, string ExpressionProperty)
+        /// <param name="expressionProperty">The expression property.</param>
+        private static void Parse(ExpressionEvaluator fn, string expressionProperty)
         {
-            fn.Parse(ExpressionProperty.Trim());
+            fn.Parse(expressionProperty.Trim());
             fn.Infix2Postfix();
         }
 
         /// <summary>Fills the variable names.</summary>
         /// <param name="fn">The function.</param>
-        /// <param name="RelativeTo">The relative to.</param>
-        /// <param name="arrayIndex">The array index</param>
+        /// <param name="relativeTo">The relative to.</param>
         /// <exception cref="System.Exception">Cannot find variable:  + sym.m_name +  in function:  + RelativeTo.Name</exception>
-        private static void FillVariableNames(ExpressionEvaluator fn, Model RelativeTo, int arrayIndex)
+        private static void FillVariableNames(ExpressionEvaluator fn, Model relativeTo)
         {
             ArrayList varUnfilled = fn.Variables;
             ArrayList varFilled = new ArrayList();
@@ -79,22 +77,16 @@ namespace Models.PMF.Functions
                 symFilled.m_type = ExpressionType.Variable;
                 symFilled.m_values = null;
                 symFilled.m_value = 0;
-                object sometypeofobject = Apsim.Get(RelativeTo, sym.m_name.Trim());
+                object sometypeofobject = Apsim.Get(relativeTo, sym.m_name.Trim());
                 if (sometypeofobject == null)
-                    throw new Exception("Cannot find variable: " + sym.m_name + " in function: " + RelativeTo.Name);
-                if (sometypeofobject is Array)
-                {
-                    Array arr = sometypeofobject as Array;
-                    symFilled.m_values = new double[arr.Length];
-                    for (int i = 0; i < arr.Length; i++)
-                        symFilled.m_values[i] = Convert.ToDouble(arr.GetValue(i), 
-                                                                 System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else if (sometypeofobject is IFunction)
-                    symFilled.m_value = (sometypeofobject as IFunction).Value(arrayIndex);
+                    throw new Exception("Cannot find variable: " + sym.m_name + " in function: " + relativeTo.Name);
+                if (sometypeofobject is IFunction)
+                    sometypeofobject = (sometypeofobject as IFunction).Values();
+
+                if (sometypeofobject is double[])
+                    symFilled.m_values = (double[])sometypeofobject;
                 else
-                    symFilled.m_value = Convert.ToDouble(sometypeofobject, 
-                                                         System.Globalization.CultureInfo.InvariantCulture);
+                    symFilled.m_value = (double)sometypeofobject;
                 varFilled.Add(symFilled);
             }
             fn.Variables = varFilled;
@@ -135,7 +127,7 @@ namespace Models.PMF.Functions
         {
             ExpressionEvaluator fn = new ExpressionEvaluator();
             Parse(fn, Expression);
-            FillVariableNames(fn, RelativeTo, -1);
+            FillVariableNames(fn, RelativeTo);
             Evaluate(fn);
             if (fn.Results != null)
                 return fn.Results;

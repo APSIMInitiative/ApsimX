@@ -1,11 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using System.IO;
-
+// ----------------------------------------------------------------------
+// <copyright file="SoilTemperatureFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Returns the temperature of the surface soil layer
     /// </summary>
@@ -13,11 +16,14 @@ namespace Models.PMF.Functions
     [Description("returns the temperature of the surface soil layer")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SoilTemperatureFunction : Model, IFunction, ICustomDocumentation
+    public class SoilTemperatureFunction : BaseFunction, ICustomDocumentation
     {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+
         /// <summary>The xy pairs</summary>
-        [Link]
-        private XYPairs XYPairs = null;               // Temperature effect on Growth Interpolation Set
+        [ChildLink]
+        private XYPairs xyPairs = null;               // Temperature effect on Growth Interpolation Set
 
         /// <summary>The maxt_soil_surface</summary>
         [Description("maxt_soil_surface")]
@@ -35,11 +41,11 @@ namespace Models.PMF.Functions
         }
         
         /// <summary>Gets the value.</summary>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             AirTemperatureFunction airtempfunction = new AirTemperatureFunction();
-            //airtempfunction.XYPairs = XYPairs;
-            return airtempfunction.Linint3hrlyTemp(maxt_soil_surface, mint_soil_surface, XYPairs);
+            returnValue[0] = airtempfunction.Linint3hrlyTemp(maxt_soil_surface, mint_soil_surface, xyPairs);
+            return returnValue;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
@@ -58,8 +64,8 @@ namespace Models.PMF.Functions
                     AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
                 // add graph and table.
-                if (XYPairs != null)
-                    tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, Name, "Temperature (oC)", Name + " (deg. day)", indent));
+                if (xyPairs != null)
+                    tags.Add(new AutoDocumentation.GraphAndTable(xyPairs, Name, "Temperature (oC)", Name + " (deg. day)", indent));
             }
         }
     }

@@ -14,11 +14,10 @@ namespace Models.PMF.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateByNumericPhase : Model, IFunction 
+    public class AccumulateByNumericPhase : BaseFunction 
     {
-        //Class members
         /// <summary>The accumulated value</summary>
-        private double AccumulatedValue = 0;
+        private double[] AccumulatedValue = new double[1] { 0 };
         
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
@@ -61,7 +60,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            AccumulatedValue = 0;
+            AccumulatedValue[0] = 0;
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
@@ -81,7 +80,7 @@ namespace Models.PMF.Functions
                     DailyIncrement += function.Value();
                 }
 
-                AccumulatedValue += DailyIncrement;
+                AccumulatedValue[0] += DailyIncrement;
             }
         }
 
@@ -92,12 +91,11 @@ namespace Models.PMF.Functions
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
             if (phaseChange.EventStageName == ResetStageName)
-                AccumulatedValue = 0.0;
+                AccumulatedValue[0] = 0.0;
         }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             return AccumulatedValue;
         }
@@ -108,7 +106,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("Cutting")]
         private void OnCut(object sender, EventArgs e)
         {
-            AccumulatedValue -= FractionRemovedOnCut * AccumulatedValue;
+            AccumulatedValue[0] -= FractionRemovedOnCut * AccumulatedValue[0];
         }
 
         /// <summary>Called when [cut].</summary>
@@ -117,7 +115,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("Harvesting")]
         private void OnHarvest(object sender, EventArgs e)
         {
-            AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
+            AccumulatedValue[0] -= FractionRemovedOnHarvest * AccumulatedValue[0];
         }
         /// <summary>Called when [cut].</summary>
         /// <param name="sender">The sender.</param>
@@ -125,7 +123,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("Grazing")]
         private void OnGraze(object sender, EventArgs e)
         {
-            AccumulatedValue -= FractionRemovedOnGraze * AccumulatedValue;
+            AccumulatedValue[0] -= FractionRemovedOnGraze * AccumulatedValue[0];
         }
 
         /// <summary>Called when [cut].</summary>
@@ -134,7 +132,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("Pruning")]
         private void OnPrune(object sender, EventArgs e)
         {
-            AccumulatedValue -= FractionRemovedOnPrune * AccumulatedValue;
+            AccumulatedValue[0] -= FractionRemovedOnPrune * AccumulatedValue[0];
         }
 
         /// <summary>Called when [EndCrop].</summary>
@@ -143,7 +141,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            AccumulatedValue = 0;
+            AccumulatedValue[0] = 0;
         }
     }
 }

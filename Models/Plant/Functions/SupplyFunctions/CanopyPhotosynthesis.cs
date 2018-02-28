@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Interfaces;
 
 namespace Models.PMF.Functions.SupplyFunctions
 {
+    using Models.Core;
+    using Models.Interfaces;
+    using System;
+
     /// <summary>
     /// # [Name]
     /// Daily gross CO2 assimilation and biomass growth is simulated using a canopy photosynthesis model adopted from SPASS, which was a modified version of the original SUCROS model.
@@ -18,8 +16,11 @@ namespace Models.PMF.Functions.SupplyFunctions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ILeaf))]
 
-    public class CanopyPhotosynthesis : Model, IFunction
+    public class CanopyPhotosynthesis : BaseFunction
     {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+
         /// <summary>The Plant</summary>
         [Link]
         public Plant Plant = null;
@@ -207,9 +208,10 @@ namespace Models.PMF.Functions.SupplyFunctions
 
         /// <summary>Daily growth increment of total plant biomass</summary>
         /// <returns>g dry matter/m2 soil/day</returns>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            return GrossPhotosynthesis;
+            returnValue[0] = GrossPhotosynthesis;
+            return returnValue;
         }
     }
 }

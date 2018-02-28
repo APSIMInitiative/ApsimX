@@ -1,11 +1,13 @@
-﻿namespace Models.PMF.Functions
+﻿// ----------------------------------------------------------------------
+// <copyright file="TrackerFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
+namespace Models.PMF.Functions
 {
+    using Models.Core;
     using System;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Reflection;
-    using Models.Core;
-    using Models.PMF.Phen;
 
     /// <summary>
     /// # [Name]
@@ -15,8 +17,11 @@
     [Description("Keeps track of a variable")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class TrackerFunction : Model, IFunction
+    public class TrackerFunction : BaseFunction
     {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+
         /// <summary>Values we have kept</summary>
         private List<double> variableValues = new List<double>();
 
@@ -51,10 +56,10 @@
         public string EndEventName { get; set; }
 
         /// <summary>Gets the value.</summary>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             if (referenceValues.Count == 0)
-                return 0;
+                returnValue[0] = 0;
             if (Statistic.StartsWith("value back "))
             {
                 double accumulationTarget = Convert.ToDouble(Statistic.Replace("value back ", ""));
@@ -65,13 +70,17 @@
                 {
                     accumulationValue += referenceValues[i];
                     if (accumulationValue >= accumulationTarget)
-                        return variableValues[i];
+                    {
+                        returnValue[0] = variableValues[i];
+                        return returnValue;
+                    }
                 }
             }
             else
                 throw new Exception("Invalid statistic found in TrackerFunction: " + Statistic);
 
-            return 0;
+            returnValue[0] = 0;
+            return returnValue;
         }
 
         /// <summary>Invoked when simulation commences</summary>

@@ -1,6 +1,7 @@
 ﻿
 namespace Models.Soils.Nutrient
 {
+    using APSIM.Shared.Utilities;
     using Core;
     using Models.PMF.Functions;
     using System;
@@ -64,13 +65,19 @@ namespace Models.Soils.Nutrient
             if (destinationName !=null)
                 destination = solutes.GetSolute(destinationName);
 
+            double[] rates = rate.Values();
+            if (rates.Length == 1)
+                rates = MathUtilities.CreateArrayOfValues(rates[0], source.Length);
+            double[] nlosses = NLoss.Values();
+            if (nlosses.Length == 1)
+                nlosses = MathUtilities.CreateArrayOfValues(nlosses[0], source.Length);
             for (int i= 0; i < source.Length; i++)
             {
-                double nitrogenFlow = rate.Value(i) * source[i];
-                Loss[i]= nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
+                double nitrogenFlow = rates[i] * source[i];
+                Loss[i]= nitrogenFlow * nlosses[i];  // keep value of loss for use in output
                 double nitrogenFlowToDestination = nitrogenFlow - Loss[i];
 
-                if (destination == null && NLoss.Value(i) != 1)
+                if (destination == null && nlosses[i] != 1)
                     throw new Exception("N loss fraction for N flow must be 1 if no destination is specified.");
 
                 source[i] -= nitrogenFlow;

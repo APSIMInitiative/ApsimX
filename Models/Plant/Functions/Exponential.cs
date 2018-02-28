@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="ExponentialFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// # [Name]
     /// An exponential function
@@ -14,8 +17,15 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Takes the value of the child as the x value and returns the y value from a exponential of the form y = A + B * exp(x * C)")]
-    public class ExponentialFunction : Model, IFunction
+    public class ExponentialFunction : BaseFunction
     {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+        
+        /// <summary>The child functions</summary>
+        [ChildLink]
+        private List<IModel> childFunctions = null;
+
         /// <summary>ExponentialFunction Constructor</summary>
         public ExponentialFunction()
         {
@@ -23,32 +33,28 @@ namespace Models.PMF.Functions
             B = 1.0;
             C = 1.0;
         }
+
         /// <summary>a</summary>
         [Description("A")]
         public double A { get; set; }
+
         /// <summary>The b</summary>
         [Description("B")]
         public double B { get; set; }
+
         /// <summary>The c</summary>
         [Description("C")]
         public double C { get; set; }
-        /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
-
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        /// <exception cref="System.Exception">Sigmoid function must have only one argument</exception>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
-
-            if (ChildFunctions.Count == 1)
+            if (childFunctions.Count == 1)
             {
-                IFunction F = ChildFunctions[0] as IFunction;
+                IFunction F = childFunctions[0] as IFunction;
 
-                return A + B * Math.Exp(C * F.Value(arrayIndex));
+                returnValue[0] = A + B * Math.Exp(C * F.Value());
+                return returnValue;
             }
             else
             {

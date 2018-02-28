@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using Models.PMF.Phen;
-using APSIM.Shared.Utilities;
-
+﻿// ----------------------------------------------------------------------
+// <copyright file="MovingSumFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// # [Name]
     /// A function that accumulates values from child functions
@@ -16,31 +18,33 @@ namespace Models.PMF.Functions
     [Description("Maintains a moving sum of a given value for a user-specified number of simulation days")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class MovingSumFunction : Model, IFunction, ICustomDocumentation
+    public class MovingSumFunction : BaseFunction, ICustomDocumentation
     {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+
+        /// <summary>All child functions</summary>
+        [ChildLink]
+        private List<IFunction> childFunctions = null;
+
+        /// <summary>The accumulated value</summary>
+        private List<double> AccumulatedValues = new List<double>();
+
         /// <summary>The number of days over which to calculate the moving sum</summary>
         [Description("Number of Days")]
         public int NumberOfDays { get; set; }
-
-        
-        /// <summary>The accumulated value</summary>
-        private List<double> AccumulatedValues = new List<double>();
 
         /// <summary>The child functions</summary>
         private IFunction ChildFunction
         {
             get
             {
-                IFunction value;
-                List<IModel> ChildFunctions = Apsim.Children(this, typeof(IFunction));
-                if (ChildFunctions.Count == 1)
-                    value = ChildFunctions[0] as IFunction;
+                if (childFunctions.Count == 1)
+                    return childFunctions[0] as IFunction;
                 else
                     throw new ApsimXException(this, "Moving sum function " + this.Name + " must only have one child node.");
-                return value;
             }
         }
-
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -64,12 +68,12 @@ namespace Models.PMF.Functions
 
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             if (NumberOfDays == 0)
                 throw new ApsimXException(this, "Number of days for moving sum cannot be zero in function " + this.Name);
-            return MathUtilities.Sum(AccumulatedValues);
+            returnValue[0] = MathUtilities.Sum(AccumulatedValues);
+            return returnValue;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

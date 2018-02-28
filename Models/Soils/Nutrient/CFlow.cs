@@ -66,9 +66,15 @@ namespace Models.Soils.Nutrient
             double[] NH4 = solutes.GetSolute("NH4");
             double[] NO3 = solutes.GetSolute("NO3");
 
+            double[] rates = Rate.Values();
+            if (rates.Length == 1)
+                rates = MathUtilities.CreateArrayOfValues(rates[0], source.C.Length);
+            double[] co2s = CO2Efficiency.Values();
+            if (co2s.Length == 1)
+                co2s = MathUtilities.CreateArrayOfValues(co2s[0], source.C.Length);
             for (int i = 0; i < source.C.Length; i++)
             {
-                double carbonFlowFromSource = Rate.Value(i) * source.C[i];
+                double carbonFlowFromSource = rates[i] * source.C[i];
                 double nitrogenFlowFromSource = MathUtilities.Divide(carbonFlowFromSource, source.CNRatio[i], 0);
 
                 double[] carbonFlowToDestination = new double[destinations.Count];
@@ -76,7 +82,7 @@ namespace Models.Soils.Nutrient
 
                 for (int j = 0; j < destinations.Count; j++)
                 {
-                    carbonFlowToDestination[j] = carbonFlowFromSource * CO2Efficiency.Value(i) * destinationFraction[j];
+                    carbonFlowToDestination[j] = carbonFlowFromSource * co2s[i] * destinationFraction[j];
                     nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j],destinations[j].CNRatio[i],0.0);
                 }
 

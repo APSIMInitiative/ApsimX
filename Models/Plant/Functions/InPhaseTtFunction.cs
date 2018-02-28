@@ -1,28 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using Models.PMF.Phen;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="InPhaseTtFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using Models.PMF.Phen;
+    using System;
+
     /// <summary>
     /// Returns the thermal time accumulation from the current phase in phenology
     /// </summary>
     [Description("Returns the thermal time accumulation from the current phase in phenology")]
     [Serializable]
-    public class InPhaseTtFunction : Model, IFunction
+    public class InPhaseTtFunction : BaseFunction
     {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+
         /// <summary>The phenology</summary>
         [Link]
-        Phenology Phenology = null;
-
+        private Phenology phenologyModel = null;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            return Phenology.CurrentPhase.TTinPhase;
+            returnValue[0] = phenologyModel.CurrentPhase.TTinPhase;
+            return returnValue;
         }
     }
 }

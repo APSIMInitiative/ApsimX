@@ -1,38 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using Models.PMF.Phen;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="DeltaFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using Models.PMF.Phen;
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// This function returns the daily delta for its child function
     /// </summary>
     [Serializable]
     [Description("Stores the value of its child function (called Integral) from yesterday and returns the difference between that and todays value of the child function")]
-    public class DeltaFunction : Model, IFunction, ICustomDocumentation
+    public class DeltaFunction : BaseFunction, ICustomDocumentation
     {
-        //Class members
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+
+        /// <summary>The child function to return a delta for</summary>
+        [ChildLinkByName]
+        private IFunction Integral = null;
+
+        /// <summary>The phenology</summary>
+        [Link]
+        private Phenology Phenology = null;
+        
         /// <summary>The accumulated value</summary>
-        private double YesterdaysValue = 0;
+        private double yesterdaysValue = 0;
 
         /// <summary>The start stage name</summary>
         [Description("StartStageName")]
         public string StartStageName { get; set; }
 
-        /// <summary>The child function to return a delta for</summary>
-        [Link]
-        IFunction Integral = null;
-
-        /// <summary>The phenology</summary>
-        [Link]
-        Phenology Phenology = null;
-
+        [EventSubscribe("SimulationCommencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            YesterdaysValue = 0;
+            yesterdaysValue = 0;
         }
 
         [EventSubscribe("DoDailyInitialisation")]
@@ -42,18 +48,18 @@ namespace Models.PMF.Functions
             {
                 if (Phenology.Beyond(StartStageName))
                 {
-                    YesterdaysValue = Integral.Value();
+                    yesterdaysValue = Integral.Value();
                 }
             }
             else
-                YesterdaysValue = Integral.Value();
+                yesterdaysValue = Integral.Value();
         }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            return Integral.Value(arrayIndex) - YesterdaysValue;
+            returnValue[0] = Integral.Value() - yesterdaysValue;
+            return returnValue;
         }
 
         /// <summary>Called when [EndCrop].</summary>
@@ -62,7 +68,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            YesterdaysValue = 0;
+            yesterdaysValue = 0;
         }
 
         /// <summary>Called when [EndCrop].</summary>
@@ -71,7 +77,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("PhaseRewind")]
         private void OnPhaseRewind(object sender, EventArgs e)
         {
-            YesterdaysValue = Integral.Value();
+            yesterdaysValue = Integral.Value();
         }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>

@@ -1,10 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Models.Core;
-using Models.Interfaces;
-
+﻿// ----------------------------------------------------------------------
+// <copyright file="WangEngelTempFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using Models.Interfaces;
+    using System;
+
     /// <summary>
     /// # [Name]
     /// A function that adds values from child functions
@@ -14,39 +18,42 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
 
-    public class 
-        WangEngelTempFunction: Model, IFunction, ICustomDocumentation
-        {
-        
+    public class WangEngelTempFunction : BaseFunction
+    {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+
+        /// <summary>The met data</summary>
+        [Link]
+        private IWeather weatherData = null;
+
         /// <summary>Minimum Temperature.</summary>
         [Description("Minimum Temperature")]
         public double MinTemp { get; set; }
+
         /// <summary>Optimum Temperature</summary>
         [Description("Optimum Temperature")]
         public double OptTemp { get; set; }
+
         /// <summary>Maximum Temperature</summary>
         [Description("Maximum Temperature")]
         public double MaxTemp { get; set; }
-        /// <summary>The met data</summary>
 
+        /// <summary>The met data</summary>
         [Description("Reference Temperature (MinTemp<RefTemp<MaxTemp)")]
         public double RefTemp { get; set; }
-        /// <summary>The met data</summary>
 
-        [Link]
-        protected IWeather MetData = null;
-        
         /// <summary>The maximum temperature weighting</summary>
         [Description("Maximum Temperature Weighting")]
         public double MaximumTemperatureWeighting { get; set; }
-        
+
         /// <summary>Gets the value.</summary>
-        public double Value(int arrayIndex = -1)
-            {
+        public override double[] Values()
+        {
             double RelEff = 0.0;
             double RelEffRefTemp = 1.0;
             double p = 0.0;
-            double Tav = MaximumTemperatureWeighting * MetData.MaxT + (1 - MaximumTemperatureWeighting) * MetData.MinT;
+            double Tav = MaximumTemperatureWeighting * weatherData.MaxT + (1 - MaximumTemperatureWeighting) * weatherData.MinT;
 
             if ((Tav > MinTemp) && (Tav < MaxTemp))
             {
@@ -60,18 +67,8 @@ namespace Models.PMF.Functions
                 RelEffRefTemp = (2 * Math.Pow(RefTemp - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(RefTemp - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
             }
 
-            return RelEff/ RelEffRefTemp;
-            }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-                SubtractFunction.DocumentMathFunction(this, '+', tags, headingLevel, indent);
+            returnValue[0] = RelEff / RelEffRefTemp;
+            return returnValue;
         }
     }
-
 }

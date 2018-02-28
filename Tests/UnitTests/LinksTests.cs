@@ -30,9 +30,19 @@ namespace UnitTests
     {
         public double value;
 
-        public double Value(int arrayIndex = -1)
+        public double Value()
         {
             return value;
+        }
+
+        public object ValueAsObject()
+        {
+            throw new NotImplementedException();
+        }
+
+        public double[] Values()
+        {
+            throw new NotImplementedException();
         }
     }
 

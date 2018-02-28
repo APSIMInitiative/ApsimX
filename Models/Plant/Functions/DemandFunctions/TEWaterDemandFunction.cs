@@ -1,17 +1,21 @@
-using System;
-using Models.Core;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Functions.DemandFunctions
 {
+    using System;
+    using Models.Core;
+    using Models.Interfaces;
+    using APSIM.Shared.Utilities;
+
     /// <summary>
     /// # [Name]
     /// Water demand is calculated using the Transpiration Efficiency (TE) approach (ie TE=Coefficient/VDP).
     /// </summary>
     [Serializable]
-    public class TEWaterDemandFunction : Model, IFunction
+    public class TEWaterDemandFunction : BaseFunction
     {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+
         /// <summary>Average Daily Vapour Pressure Deficit as a proportion of daily Maximum.</summary>
         [Link]
         IFunction SVPFrac = null;
@@ -38,10 +42,10 @@ namespace Models.PMF.Functions.DemandFunctions
         }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            return Photosynthesis.Value(arrayIndex) / (TranspirationEfficiencyCoefficient.Value(arrayIndex) / VPD / 0.001);
+            returnValue[0] = Photosynthesis.Value() / (TranspirationEfficiencyCoefficient.Value() / VPD / 0.001);
+            return returnValue;
         }
 
     }

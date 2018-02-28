@@ -1,15 +1,15 @@
-﻿
+﻿// ----------------------------------------------------------------------
+// <copyright file="CNReductionForTillage.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.WaterModel
 {
     using APSIM.Shared.Utilities;
     using Core;
     using Interfaces;
     using Models.PMF.Functions;
-    using SurfaceOM;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Implements the curve number reduction caused by tillage.
@@ -19,7 +19,7 @@ namespace Models.WaterModel
     /// and erosion.Aust.J.Soil Res. 34: 91-102.
     /// </summary>
     [Serializable]
-    public class CNReductionForTillage : Model, IFunction
+    public class CNReductionForTillage : BaseFunction
     {
         // --- Links -------------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ namespace Models.WaterModel
         // --- Outputs -----------------------------------------------------------------------
 
         /// <summary>Returns the value to subtract from curve number due to tillage.</summary>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             if (tillageCnCumWater > 0.0)
             {
@@ -51,10 +51,10 @@ namespace Models.WaterModel
                 // and gets smaller and becomes 0 when reaches tillageCnCumWater.
                 double tillage_fract = MathUtilities.Divide(cumWaterSinceTillage, tillageCnCumWater, 0.0);
                 double tillage_reduction = tillageCnRed * tillage_fract;
-                return tillage_reduction;
+                return new double[] { tillage_reduction };
             }
             else
-                return 0;
+                return new double[] { 0.0 };
         }
 
         // --- Event handlers ----------------------------------------------------------------

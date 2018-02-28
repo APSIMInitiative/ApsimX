@@ -1757,17 +1757,17 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
       <ArrayFunction>
         <Name>LagDurationAgeMultiplier</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Values>1 1 1</Values>
+        <ArrayValues>1 1 1</ArrayValues>
       </ArrayFunction>
       <ArrayFunction>
         <Name>SenescenceDurationAgeMultiplier</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Values>1 1 1</Values>
+        <ArrayValues>1 1 1</ArrayValues>
       </ArrayFunction>
       <ArrayFunction>
         <Name>LeafSizeAgeMultiplier</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+        <ArrayValues>1 1 1 1 1 1 1 1 1 1 1 1</ArrayValues>
       </ArrayFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ExpansionStressValue>0</ExpansionStressValue>

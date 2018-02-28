@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using APSIM.Shared.Utilities;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="AccumulateByDate.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// A function that accumulates values from child functions
     /// </summary>
@@ -14,11 +17,10 @@ namespace Models.PMF.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateByDate : Model, IFunction
+    public class AccumulateByDate : BaseFunction
     {
-        //Class members
         /// <summary>The accumulated value</summary>
-        private double AccumulatedValue = 0;
+        private double[] AccumulatedValue = new double[1] { 0 };
 
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
@@ -45,10 +47,10 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            AccumulatedValue = 0;
+            AccumulatedValue[0] = 0;
         }
 
-      /// <summary>Called at the start of each day</summary>
+        /// <summary>Called at the start of each day</summary>
         /// <param name="sender">Plant.cs</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("StartOfDay")]
@@ -66,18 +68,17 @@ namespace Models.PMF.Functions
                     DailyIncrement += function.Value();
                 }
 
-                AccumulatedValue += DailyIncrement;
+                AccumulatedValue[0] += DailyIncrement;
             }
 
             //Zero value if today is reset date
-         if (DateUtilities.WithinDates(ResetDate, clock.Today, ResetDate))
-               AccumulatedValue = 0;
+            if (DateUtilities.WithinDates(ResetDate, clock.Today, ResetDate))
+                AccumulatedValue[0] = 0;
         }
 
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             return AccumulatedValue;
         }

@@ -1,15 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using MathNet.Numerics.Interpolation;
-
-using System.Collections;
-using Models.Core;
-using APSIM.Shared.Utilities;
-
+// ----------------------------------------------------------------------
+// <copyright file="SplineInterpolationFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using MathNet.Numerics.Interpolation;
+    using Models.Core;
+    using System;
+
     /// <summary>
     /// # [Name]
     /// A value is returned via Akima spline interpolation of a given set of XY pairs
@@ -18,65 +17,52 @@ namespace Models.PMF.Functions
     [Description("A value is returned via Akima spline interpolation of a given set of XY pairs")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SplineInterpolationFunction : Model, IFunction
+    public class SplineInterpolationFunction : BaseFunction
     {
-        /// <summary>Gets the xy pairs.</summary>
-        /// <value>The xy pairs.</value>
-        [Link]
-        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
 
-        /// <summary>The x property</summary>
-        [Description("XProperty")]
-        public string XProperty { get; set; }
+        /// <summary>A locator object</summary>
+        [Link]
+        private ILocator locator = null;
+
+        /// <summary>Gets the xy pairs.</summary>
+        [ChildLink]
+        private XYPairs xys = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>The spline</summary>
         [NonSerialized]
         private CubicSpline spline = null;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SplineInterpolationFunction"/> class.
-        /// </summary>
-        public SplineInterpolationFunction()
-        {
-        }
+        /// <summary>The x property</summary>
+        [Description("XProperty")]
+        public string XProperty { get; set; }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            double XValue = 0;
-            try
-            {
-                object v = Apsim.Get(this, XProperty);
-                if (v == null)
-                    throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
-                if (v is Array && arrayIndex > -1)
-                    XValue = Convert.ToDouble((v as Array).GetValue(arrayIndex), 
-                                              System.Globalization.CultureInfo.InvariantCulture);
-                else
-                    XValue = Convert.ToDouble(v, System.Globalization.CultureInfo.InvariantCulture);
-            }
-            catch (IndexOutOfRangeException)
-            {
-            }
-
             if (spline == null)
+                spline = CubicSpline.InterpolateBoundaries(xys.X, xys.Y, SplineBoundaryCondition.FirstDerivative, 0, SplineBoundaryCondition.FirstDerivative, 0);
+
+            object v = locator.Get(XProperty);
+            if (v == null)
+                throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
+            if (v is IFunction)
+                v = (v as IFunction).Values();
+
+            if (v is double[])
             {
-                spline = CubicSpline.InterpolateBoundaries(XYPairs.X, XYPairs.Y, SplineBoundaryCondition.FirstDerivative, 0, SplineBoundaryCondition.FirstDerivative, 0);
-                    
+                double[] array = v as double[];
+                for (int i = 0; i < array.Length; i++)
+                    array[i] = spline.Interpolate(array[i]);
+                return array;
             }
+            else if (v is double)
+                return new double[] { spline.Interpolate((double)v) };
 
-            return Interpolate(XValue);
-        }
-
-        /// <summary>Interpolates the specified x.</summary>
-        /// <param name="x">The x.</param>
-        /// <returns></returns>
-        private double Interpolate(double x)
-        {
-            return spline.Interpolate(x);
+            else
+                throw new Exception("Cannot do a spline interpolation on type: " + v.GetType().Name +
+                                    " in function: " + Name);
         }
     }
-
 }

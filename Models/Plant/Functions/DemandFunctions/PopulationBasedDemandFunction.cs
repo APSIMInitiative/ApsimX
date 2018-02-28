@@ -1,10 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-
+// ----------------------------------------------------------------------
+// <copyright file="PopulationBasedDemandFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions.DemandFunctions
 {
+    using Models.Core;
+    using System;
+
     /// <summary>
     /// # [Name]
     /// Demand is calculated from the product of growth rate, thermal time and population.
@@ -12,8 +15,11 @@ namespace Models.PMF.Functions.DemandFunctions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PopulationBasedDemandFunction : Model, IFunction
+    public class PopulationBasedDemandFunction : BaseFunction
     {
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
+        
         /// <summary>The thermal time</summary>
         [Link]
         IFunction ThermalTime = null;
@@ -72,17 +78,17 @@ namespace Models.PMF.Functions.DemandFunctions
 
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             double Value = 0.0;
-            if ((Phenology.Stage >= StartStage.Value(arrayIndex)) && (AccumulatedThermalTime < GrowthDuration.Value(arrayIndex)))
+            if ((Phenology.Stage >= StartStage.Value()) && (AccumulatedThermalTime < GrowthDuration.Value()))
             {
-                double Rate = MaximumOrganWt.Value(arrayIndex) / GrowthDuration.Value(arrayIndex);
-                Value = Rate * ThermalTimeToday * OrganPopulation.Value(arrayIndex);
+                double Rate = MaximumOrganWt.Value() / GrowthDuration.Value();
+                Value = Rate * ThermalTimeToday * OrganPopulation.Value();
             }
 
-            return Value * ExpansionStress.Value(arrayIndex);
+            returnValue[0] = Value * ExpansionStress.Value();
+            return returnValue;
         }
         
         [EventSubscribe("PlantSowing")]
