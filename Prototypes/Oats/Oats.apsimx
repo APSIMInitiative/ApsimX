@@ -3881,6 +3881,14 @@ late drought increased screenings.
               <Operations>
                 <Name>Irrig</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>1999-02-10</Date>
+                  <Action>[Oats].Harvest();</Action>
+                </Operation>
+                <Operation>
+                  <Date>1999-02-10</Date>
+                  <Action>[Oats].EndCrop();</Action>
+                </Operation>
               </Operations>
               <Water>
                 <Name>Water</Name>
@@ -4103,6 +4111,14 @@ late drought increased screenings.
                   <Date>1999-03-01</Date>
                   <Action>[Irrigation].Apply(24);</Action>
                 </Operation>
+                <Operation>
+                  <Date>1999-03-03</Date>
+                  <Action>[Oats].Harvest();</Action>
+                </Operation>
+                <Operation>
+                  <Date>1999-03-03</Date>
+                  <Action>[Oats].EndCrop();</Action>
+                </Operation>
               </Operations>
               <Water>
                 <Name>Water</Name>
@@ -4273,6 +4289,14 @@ late drought increased screenings.
                   <Date>1998-11-02</Date>
                   <Action>[Irrigation].Apply(30);</Action>
                 </Operation>
+                <Operation>
+                  <Date>1999-02-10</Date>
+                  <Action>[Oats].Harvest();</Action>
+                </Operation>
+                <Operation>
+                  <Date>1999-02-10</Date>
+                  <Action>[Oats].EndCrop();</Action>
+                </Operation>
               </Operations>
               <Water>
                 <Name>Water</Name>
@@ -4440,6 +4464,14 @@ late drought increased screenings.
                 <Operation>
                   <Date>1998-12-07</Date>
                   <Action>[Irrigation].Apply( 41.6)</Action>
+                </Operation>
+                <Operation>
+                  <Date>1999-02-10</Date>
+                  <Action>[Oats].Harvest();</Action>
+                </Operation>
+                <Operation>
+                  <Date>1999-02-10</Date>
+                  <Action>[Oats].EndCrop();</Action>
                 </Operation>
               </Operations>
               <Water>
@@ -4654,6 +4686,14 @@ late drought increased screenings.
                 <Operation>
                   <Date>1999-03-01</Date>
                   <Action> [Irrigation].Apply(  24 )</Action>
+                </Operation>
+                <Operation>
+                  <Date>1999-03-03</Date>
+                  <Action>[Oats].Harvest();</Action>
+                </Operation>
+                <Operation>
+                  <Date>1999-03-03</Date>
+                  <Action>[Oats].EndCrop();</Action>
                 </Operation>
               </Operations>
               <Water>
@@ -7798,6 +7838,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <SDSwitch>0</SDSwitch>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
@@ -7806,7 +7847,6 @@ Grazing winter forage crops is an important management strategy for profitable l
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -8740,6 +8780,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <SDSwitch>0</SDSwitch>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
@@ -8748,7 +8789,6 @@ Grazing winter forage crops is an important management strategy for profitable l
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -10334,8 +10374,8 @@ namespace Models
                 <Name>AdditionalActions</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <IrrFactor>False</IrrFactor>
                   <NitFactor>0</NitFactor>
+                  <IrrFactor>False</IrrFactor>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -20370,9 +20410,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowDate>02-Feb</SowDate>
                   <CultivarName>
                   </CultivarName>
+                  <SowDate>02-Feb</SowDate>
                   <SowingDepth>30</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
