@@ -395,7 +395,7 @@ namespace UserInterface.Views
                 // Get the coordinates of the cell 1 row beneath the current one - we don't want the popup to cover the cell we're working on
                 Tuple<int, int> coordinates = GetAbsoluteCellPosition(GetCurrentCell.ColumnIndex, GetCurrentCell.RowIndex + 1);
                 intellisense.MainWindow = MainWidget.Toplevel as Window;                
-                intellisense.ShowAtCoordinates(coordinates.Item1, coordinates.Item2);
+                intellisense.SmartShowAtCoordinates(coordinates.Item1, coordinates.Item2);
 
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
@@ -415,10 +415,7 @@ namespace UserInterface.Views
         /// <returns></returns>
         private Tuple<int, int> GetCellSize (int col, int row)
         {
-            int cellHeight;
-            int offsetX;
-            int offsetY;
-            int cellWidth;
+            int cellHeight, offsetX, offsetY, cellWidth;
             Gdk.Rectangle rectangle = new Gdk.Rectangle();
             TreeViewColumn column = gridview.GetColumn(col);
 
@@ -428,10 +425,9 @@ namespace UserInterface.Views
 
             // And now get padding from CellRenderer
             CellRenderer renderer = column.CellRenderers[row];
-            cellHeight += (int)renderer.Ypad;
-            cellWidth += (int)renderer.Xpad;
-            return new Tuple<int, int>(cellWidth, cellHeight);
-        }        
+            cellHeight += (int)renderer.Ypad;            
+            return new Tuple<int, int>(column.Width, cellHeight);
+        }
 
         /// <summary>
         /// Calculates the XY coordinates of a given cell relative to the origin of the TreeView.

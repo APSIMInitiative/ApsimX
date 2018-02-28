@@ -162,11 +162,11 @@ namespace UserInterface.Views
         /// <summary>
         /// Displays the intellisense popup at the specified coordinates. Returns true if the 
         /// popup is successfully generated (e.g. if it finds some auto-completion options). 
-        /// Returns false otherwise.
+        /// Returns false otherwise.        
         /// </summary>
         /// <param name="x">Horizontal coordinate</param>
         /// <param name="y">Vertical coordinate</param>        
-        public bool ShowAtCoordinates(int x, int y)
+        private bool showAtCoordinates(int x, int y)
         {            
             // only display the list if there are options to display
             if (completionModel.IterNChildren() > 0)
@@ -174,7 +174,7 @@ namespace UserInterface.Views
                 completionForm.ShowAll();
                 completionForm.TransientFor = MainWindow;
                 completionForm.Move(x, y);
-                completionForm.Resize(completionView.Requisition.Width, 300);
+                completionForm.Resize(completionForm.WidthRequest, completionForm.HeightRequest);
                 completionView.SetCursor(new TreePath("0"), null, false);
                 if (completionForm.GdkWindow != null)
                     completionForm.GdkWindow.Focus(0);
@@ -184,7 +184,37 @@ namespace UserInterface.Views
             return false;
         }
 
-        
+        /// <summary>
+        /// Tries to display the intellisense popup at the specified coordinates. If the coordinates are
+        /// too close to the right or bottom of the screen, they will be adjusted appropriately.
+        /// Returns true if the popup is successfully generated (e.g. if it finds some auto-completion options).
+        /// Returns false otherwise.
+        /// </summary>
+        /// <param name="x">Horizontal coordinate</param>
+        /// <param name="y">Vertical coordinate</param>
+        /// <param name="lineHeight">Font height</param>
+        /// <returns></returns>
+        public bool SmartShowAtCoordinates(int x, int y, int lineHeight = 17)
+        {
+            // By default, we use the given coordinates as the top-left hand corner of the popup.
+            // If the popup is too close to the right of the screen, we use the x-coordinate as 
+            // the right hand side of the popup instead.
+            // If the popup is too close to the bottom of the screen, we use the y-coordinate as
+            // the bottom side of the popup instead.
+            int xres = MainWindow.Screen.Width;
+            int yres = MainWindow.Screen.Height;
+
+            if ((x + completionForm.WidthRequest) > xres)            
+                // We are very close to the right-hand side of the screen
+                x -= completionForm.WidthRequest;            
+            
+            if ((y + completionForm.HeightRequest) > yres)
+                // We are very close to the bottom of the screen
+                // Move the popup one line higher as well, to room allow for the input box in the popup.
+                y -= (completionForm.HeightRequest + lineHeight);
+
+            return showAtCoordinates(x, y);
+        }
 
         /// <summary>
         /// Generates a list of auto-completion options.
@@ -303,6 +333,9 @@ namespace UserInterface.Views
             }                
         }
 
+        /// <summary>
+        /// Safely disposes of several objects.
+        /// </summary>
         public void Cleanup()
         {
             if (completionForm.IsRealized)

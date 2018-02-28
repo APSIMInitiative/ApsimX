@@ -302,9 +302,7 @@
             // Turn readonly on so that the editing window doesn't process keystrokes.
             textEditor.Document.ReadOnly = true;
 
-            // Work out where to put the completion window.
-            // This should probably be done a bit more intelligently to detect when we are too near the bottom or right
-            // of the screen, and move accordingly. Left as an exercise for the student.
+            // Work out where to put the completion window.            
             Cairo.Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
             p.Y += (int)textEditor.LineHeight;
             // Need to convert to screen coordinates....
@@ -312,9 +310,9 @@
             mainWindow.GetOrigin(out frameX, out frameY);
             textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
 
-            intellisense.ItemSelected += InsertCompletionItemIntoTextBox;                        
-
-            return intellisense.ShowAtCoordinates(frameX + x, frameY + y);
+            intellisense.ItemSelected += InsertCompletionItemIntoTextBox;
+            intellisense.MainWindow = MainWidget.Toplevel as Window;
+            return intellisense.SmartShowAtCoordinates(frameX + x, frameY + y);
         }
 
 
