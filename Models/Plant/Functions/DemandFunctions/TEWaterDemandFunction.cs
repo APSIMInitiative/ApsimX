@@ -13,9 +13,6 @@ namespace Models.PMF.Functions.DemandFunctions
     [Serializable]
     public class TEWaterDemandFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>Average Daily Vapour Pressure Deficit as a proportion of daily Maximum.</summary>
         [Link]
         IFunction SVPFrac = null;
@@ -44,8 +41,7 @@ namespace Models.PMF.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            returnValue[0] = Photosynthesis.Value() / (TranspirationEfficiencyCoefficient.Value() / VPD / 0.001);
-            return returnValue;
+            return new double[] { Photosynthesis.Value() / (TranspirationEfficiencyCoefficient.Value() / VPD / 0.001) };
         }
 
     }

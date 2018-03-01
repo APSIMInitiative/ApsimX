@@ -1,5 +1,6 @@
 ﻿namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
 
@@ -17,7 +18,7 @@
         /// <param name="value2">The second value</param>
         protected override double PerformOperation(double value1, double value2)
         {
-            return value1 / value2;
+            return MathUtilities.Divide(value1, value2, 0.0);
         }
     }
 }

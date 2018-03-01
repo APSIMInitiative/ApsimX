@@ -16,9 +16,6 @@ namespace Models.PMF.Functions
     [Description("Returns the age (in years) of the crop")]
     public class AgeCalculatorFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         private int _Age = 0;
 
         /// <summary>Called when [do daily initialisation].</summary>
@@ -33,8 +30,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            returnValue[0] = _Age / 365.25;
-            return returnValue;
+            return new double[] { _Age / 365.25 };
         }
     }
 }

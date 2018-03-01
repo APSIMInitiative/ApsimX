@@ -37,7 +37,7 @@ namespace Models.PMF.Functions
                 {
                     double[] lowerValues = Lower.Values();
                     double[] upperValues = Upper.Values();
-                    double[] values = child.Values();
+                    double[] values = child.Values().ToArray();
 
                     if (lowerValues.Length == 1 && values.Length > 1)
                         lowerValues = MathUtilities.CreateArrayOfValues(lowerValues[0], values.Length);

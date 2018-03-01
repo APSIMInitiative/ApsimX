@@ -15,9 +15,6 @@ namespace Models.PMF.Functions.DemandFunctions
     [Serializable]
     public class FillingRateFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The partition fraction</summary>
         [Link]
         IFunction FillingDuration = null;
@@ -39,8 +36,7 @@ namespace Models.PMF.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            returnValue[0] = (PotentialSizeIncrement.Value() / FillingDuration.Value()) * ThermalTime.Value() * NumberFunction.Value();
-            return returnValue;
+            return new double[] { (PotentialSizeIncrement.Value() / FillingDuration.Value()) * ThermalTime.Value() * NumberFunction.Value() };
         }
 
     }

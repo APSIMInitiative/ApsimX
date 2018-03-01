@@ -17,9 +17,6 @@ namespace Models.PMF.Functions
     [Description("Stores the value of its child function (called Integral) from yesterday and returns the difference between that and todays value of the child function")]
     public class DeltaFunction : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The child function to return a delta for</summary>
         [ChildLinkByName]
         private IFunction Integral = null;
@@ -58,8 +55,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            returnValue[0] = Integral.Value() - yesterdaysValue;
-            return returnValue;
+            return new double[] { Integral.Value() - yesterdaysValue };
         }
 
         /// <summary>Called when [EndCrop].</summary>

@@ -20,9 +20,6 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class MovingAverageFunction : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>All child functions</summary>
         [ChildLink]
         private List<IFunction> childFunctions = null;
@@ -104,8 +101,7 @@ namespace Models.PMF.Functions
         {
             if (NumberOfDays == 0)
                 throw new ApsimXException(this, "Number of days for moving average cannot be zero in function " + this.Name);
-            returnValue[0] = MathUtilities.Average(AccumulatedValues);
-            return returnValue;
+            return new double[] { MathUtilities.Average(AccumulatedValues) };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

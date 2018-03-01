@@ -18,9 +18,6 @@ namespace Models.PMF.Functions.SupplyFunctions
 
     public class CanopyPhotosynthesis : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The Plant</summary>
         [Link]
         public Plant Plant = null;
@@ -210,8 +207,7 @@ namespace Models.PMF.Functions.SupplyFunctions
         /// <returns>g dry matter/m2 soil/day</returns>
         public override double[] Values()
         {
-            returnValue[0] = GrossPhotosynthesis;
-            return returnValue;
+            return new double[] { GrossPhotosynthesis };
         }
     }
 }

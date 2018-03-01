@@ -20,9 +20,6 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PhotoperiodDeltaFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The met data</summary>
         [Link]
         private IWeather weatherData = null;
@@ -41,8 +38,7 @@ namespace Models.PMF.Functions
             double photoperiodToday = MathUtilities.DayLength(clockModel.Today.DayOfYear, Twilight, weatherData.Latitude);
             double photoperiodYesterday = MathUtilities.DayLength(clockModel.Today.DayOfYear - 1, Twilight, weatherData.Latitude);
             double photoperiodDelta = photoperiodToday - photoperiodYesterday;
-            returnValue[0] = photoperiodDelta;
-            return returnValue;
+            return new double[] { photoperiodDelta };
         }
     }
 }

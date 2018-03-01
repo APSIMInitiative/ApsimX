@@ -16,9 +16,6 @@ namespace Models.PMF.Functions
     [Serializable]
     public class AirTemperatureFunction : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The met data</summary>
         [Link]
         protected IWeather MetData = null;
@@ -54,8 +51,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            returnValue[0] = Linint3hrlyTemp(MetData.MaxT, MetData.MinT, XYPairs);
-            return returnValue;
+            return new double[] { Linint3hrlyTemp(MetData.MaxT, MetData.MinT, XYPairs) };
         }
         /// <summary>Linint3hrlies the temporary.</summary>
         /// <param name="tmax">The tmax.</param>

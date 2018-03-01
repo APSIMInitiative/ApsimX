@@ -17,9 +17,6 @@ namespace Models.PMF.Functions.DemandFunctions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PopulationBasedDemandFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-        
         /// <summary>The thermal time</summary>
         [Link]
         IFunction ThermalTime = null;
@@ -87,8 +84,7 @@ namespace Models.PMF.Functions.DemandFunctions
                 Value = Rate * ThermalTimeToday * OrganPopulation.Value();
             }
 
-            returnValue[0] = Value * ExpansionStress.Value();
-            return returnValue;
+            return new double[] { Value * ExpansionStress.Value() };
         }
         
         [EventSubscribe("PlantSowing")]

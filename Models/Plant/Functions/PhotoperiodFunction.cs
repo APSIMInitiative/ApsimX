@@ -24,9 +24,6 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PhotoperiodFunction : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The met data</summary>
         [Link]
         private IWeather weatherData = null;
@@ -44,8 +41,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            returnValue[0] = DayLength;
-            return returnValue;
+            return new double[] { DayLength };
         }
 
         [EventSubscribe("DoWeather")]

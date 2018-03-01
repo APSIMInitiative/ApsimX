@@ -19,9 +19,6 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PowerFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-        
         /// <summary>All child functions</summary>
         [ChildLink]
         private List<IFunction> childFunctions = null;
@@ -40,17 +37,15 @@ namespace Models.PMF.Functions
         public override double[] Values()
         {
             if (childFunctions.Count == 1)
-                returnValue[0] = Math.Pow(childFunctions[0].Value(), Exponent);
+                return new double[] { Math.Pow(childFunctions[0].Value(), Exponent) };
             else if (childFunctions.Count == 2)
             {
                 IFunction f = childFunctions[0];
                 IFunction p = childFunctions[1];
-                returnValue[0] = Math.Pow(f.Value(), p.Value());
+                return new double[] { Math.Pow(f.Value(), p.Value()) };
             }
             else
                 throw new Exception("Invalid number of arguments for Power function");
-
-            return returnValue;
         }
     }
 }

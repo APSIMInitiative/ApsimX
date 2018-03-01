@@ -19,9 +19,6 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class TrackerFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>Values we have kept</summary>
         private List<double> variableValues = new List<double>();
 
@@ -59,7 +56,7 @@ namespace Models.PMF.Functions
         public override double[] Values()
         {
             if (referenceValues.Count == 0)
-                returnValue[0] = 0;
+                return new double[] { 0 };
             if (Statistic.StartsWith("value back "))
             {
                 double accumulationTarget = Convert.ToDouble(Statistic.Replace("value back ", ""));
@@ -71,16 +68,14 @@ namespace Models.PMF.Functions
                     accumulationValue += referenceValues[i];
                     if (accumulationValue >= accumulationTarget)
                     {
-                        returnValue[0] = variableValues[i];
-                        return returnValue;
+                        return new double[] { variableValues[i] };
                     }
                 }
             }
             else
                 throw new Exception("Invalid statistic found in TrackerFunction: " + Statistic);
 
-            returnValue[0] = 0;
-            return returnValue;
+            return new double[] { 0 };
         }
 
         /// <summary>Invoked when simulation commences</summary>

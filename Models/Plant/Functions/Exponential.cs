@@ -19,9 +19,6 @@ namespace Models.PMF.Functions
     [Description("Takes the value of the child as the x value and returns the y value from a exponential of the form y = A + B * exp(x * C)")]
     public class ExponentialFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-        
         /// <summary>The child functions</summary>
         [ChildLink]
         private List<IModel> childFunctions = null;
@@ -53,8 +50,7 @@ namespace Models.PMF.Functions
             {
                 IFunction F = childFunctions[0] as IFunction;
 
-                returnValue[0] = A + B * Math.Exp(C * F.Value());
-                return returnValue;
+                return new double[] { A + B * Math.Exp(C * F.Value()) };
             }
             else
             {

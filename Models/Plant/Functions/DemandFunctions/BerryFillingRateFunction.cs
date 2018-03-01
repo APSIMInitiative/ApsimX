@@ -18,9 +18,6 @@ namespace Models.PMF.Functions.DemandFunctions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class BerryFillingRateFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>InitialGrowthPhase</summary>
         [Description("InitialGrowthPhase")]
         public String FirstPhase { get; set; }
@@ -65,6 +62,8 @@ namespace Models.PMF.Functions.DemandFunctions
         /// <value>The value.</value>
         public override double[] Values()
         {
+            double[] returnValue = new double[1];
+
             if (Phenology.CurrentPhaseName == FirstPhase)
             {
                 AccTT += TT.Value();

@@ -17,9 +17,6 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Constant : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>Gets the value.</summary>
         [Description("The value of the constant")]
         public double FixedValue { get; set; }
@@ -31,8 +28,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value of the function.</summary>
         public override double[] Values()
         {
-            returnValue[0] = FixedValue;
-            return returnValue;
+            return new double[] { FixedValue };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

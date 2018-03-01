@@ -16,9 +16,6 @@ namespace Models.PMF.Functions.DemandFunctions
     [Description("Demand is calculated as a fraction of the total plant supply term.")]
     public class PartitionFractionDemandFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The partition fraction</summary>
         [Link]
         IFunction PartitionFraction = null;
@@ -31,10 +28,9 @@ namespace Models.PMF.Functions.DemandFunctions
         public override double[] Values()
         {
             if (Arbitrator.DM != null)
-                returnValue[0] = Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value();
+                return new double[] { Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value() };
             else
-                returnValue[0] = 0;
-            return returnValue;
+                return new double[] { 0 };
         }
 
     }

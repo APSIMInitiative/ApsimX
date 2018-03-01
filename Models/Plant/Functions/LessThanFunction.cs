@@ -13,9 +13,6 @@ namespace Models.PMF.Functions
     [Serializable]
     public class LessThanFunction : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The child functions</summary>
         [ChildLink]
         private List<IFunction> childFunctions = null;
@@ -44,11 +41,9 @@ namespace Models.PMF.Functions
             }
 
             if (testVariable < lessThanCriteria)
-                returnValue[0] = ifTrue;
+                return new double[] { ifTrue };
             else
-                returnValue[0] = ifFalse;
-
-            return returnValue;
+                return new double[] { ifFalse };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

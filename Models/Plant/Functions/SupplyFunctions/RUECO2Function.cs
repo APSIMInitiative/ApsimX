@@ -20,9 +20,6 @@ namespace Models.PMF.Functions.SupplyFunctions
     [ValidParent(ParentType = typeof(IFunction))]
     public class RUECO2Function : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The photosynthetic pathway</summary>
         [Description("PhotosyntheticPathway")]
         public String PhotosyntheticPathway { get; set; }
@@ -55,7 +52,7 @@ namespace Models.PMF.Functions.SupplyFunctions
                 if (MetData.CO2 < 350)
                     throw new Exception("CO2 concentration too low for RUE CO2 Function");
                 else if (MetData.CO2 == 350)
-                    returnValue[0] = 1.0;
+                    return new double[] { 1.0 };
                 else
                 {
                     double CP;      //co2 compensation point (ppm)
@@ -66,17 +63,15 @@ namespace Models.PMF.Functions.SupplyFunctions
 
                     first = (MetData.CO2 - CP) * (350.0 + 2.0 * CP);
                     second = (MetData.CO2 + 2.0 * CP) * (350.0 - CP);
-                    returnValue[0] = first / second;
+                    return new double[] { first / second };
                 }
             }
             else if (PhotosyntheticPathway == "C4")
             {
-                returnValue[0] = 0.000143 * MetData.CO2 + 0.95; //Mark Howden, personal communication
+                return new double[] { 0.000143 * MetData.CO2 + 0.95 }; //Mark Howden, personal communication
             }
             else
                 throw new Exception("Unknown photosynthetic pathway in RUECO2Function");
-
-            return returnValue;
         }
     }
 }

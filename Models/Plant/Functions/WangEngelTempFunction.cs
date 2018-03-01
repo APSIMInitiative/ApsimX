@@ -20,9 +20,6 @@ namespace Models.PMF.Functions
 
     public class WangEngelTempFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The met data</summary>
         [Link]
         private IWeather weatherData = null;
@@ -67,8 +64,7 @@ namespace Models.PMF.Functions
                 RelEffRefTemp = (2 * Math.Pow(RefTemp - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(RefTemp - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
             }
 
-            returnValue[0] = RelEff / RelEffRefTemp;
-            return returnValue;
+            return new double[] { RelEff / RelEffRefTemp };
         }
     }
 }

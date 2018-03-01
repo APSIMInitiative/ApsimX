@@ -20,9 +20,6 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SoilTemperatureWeightedFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-        
         /// <summary>The value for the day before yesterday</summary>
         private double dayBeforeYesterday = 0;
 
@@ -61,8 +58,7 @@ namespace Models.PMF.Functions
         public override double[] Values()
         {
             double weightedTemperature = 0.25 * dayBeforeYesterday + 0.5 * yesterday + 0.25 * today;
-            returnValue[0] = xyPairs.ValueIndexed(weightedTemperature);
-            return returnValue;
+            return new double[] { xyPairs.ValueIndexed(weightedTemperature) };
         }
     }
 }

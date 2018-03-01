@@ -19,7 +19,7 @@ namespace Models.PMF.Functions
     public class OnEventFunction : BaseFunction, ICustomDocumentation
     {
         /// <summary>The _ value</summary>
-        private double[] returnValue = new double[] { 0 };
+        private double returnValue = 0;
 
         /// <summary>The pre event value</summary>
         [ChildLinkByName]
@@ -43,7 +43,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            returnValue[0] = preEventValue.Value();
+            returnValue = preEventValue.Value();
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -62,19 +62,19 @@ namespace Models.PMF.Functions
         /// <summary>Called when [re set event].</summary>
         public void OnReSetEvent()
         {
-            returnValue[0] = preEventValue.Value();
+            returnValue = preEventValue.Value();
         }
 
         /// <summary>Called when [set event].</summary>
         public void OnSetEvent()
         {
-            returnValue[0] = postEventValue.Value();
+            returnValue = postEventValue.Value();
         }
 
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            return returnValue;
+            return new double[] { returnValue };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

@@ -20,7 +20,7 @@ namespace Models.PMF.Functions
     public class PhaseBasedSwitch : BaseFunction, ICustomDocumentation
     {
         /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
+        private double returnValue = 0;
 
         //Fixme.  This can be removed an phase lookup returnig a constant of 1 if in phase.
 
@@ -51,11 +51,11 @@ namespace Models.PMF.Functions
                 throw new Exception("Phase end name not set:" + Name);
 
             if (phenologyModel.Between(Start, End))
-                returnValue[0] = 1.0;
+                returnValue = 1.0;
             else
-                returnValue[0] = 0.0;
+                returnValue = 0.0;
 
-            return returnValue;
+            return new double[] { returnValue };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

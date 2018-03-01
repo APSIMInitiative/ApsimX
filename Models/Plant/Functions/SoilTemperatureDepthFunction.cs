@@ -19,9 +19,6 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SoilTemperatureDepthFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The soil</summary>
         [Link]
         private Soils.Soil soilModel = null;
@@ -35,8 +32,7 @@ namespace Models.PMF.Functions
         public override double[] Values()
         {
             int layer = LayerIndex(Depth, soilModel.Thickness);
-            returnValue[0] = soilModel.Temperature[layer];
-            return returnValue;
+            return new double[] { soilModel.Temperature[layer] };
         }
 
         /// <summary>Returns the soil layer index for a specified soil depth (mm)</summary>

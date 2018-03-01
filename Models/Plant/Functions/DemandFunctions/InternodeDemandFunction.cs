@@ -17,9 +17,6 @@ namespace Models.PMF.Functions.DemandFunctions
     [Description("Internode demand is calculated fromm the product of change in node number, stem population and internode weight.")]
     public class InternodeDemandFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The inter node wt</summary>
         [Link]
         public IFunction InterNodeWt = null;
@@ -31,8 +28,7 @@ namespace Models.PMF.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public override double[] Values() 
         {
-            returnValue[0] = Structure.DeltaTipNumber * Structure.TotalStemPopn * InterNodeWt.Value();
-            return returnValue;
+            return new double[] { Structure.DeltaTipNumber * Structure.TotalStemPopn * InterNodeWt.Value() };
         }
     }
 }   

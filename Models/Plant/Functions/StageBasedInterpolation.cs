@@ -18,9 +18,6 @@ namespace Models.PMF.Functions
     [Description("A value is linearly interpolated between phenological growth stages")]
     public class StageBasedInterpolation : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-        
         /// <summary>The phenology</summary>
         [Link]
         Phenology phenologyModel = null;
@@ -68,29 +65,29 @@ namespace Models.PMF.Functions
             {
                 if (phenologyModel.Stage <= stageCodes[i])
                 {
+                    double returnValue;
                     if (i == 0)
-                        returnValue[0] = Codes[0];
+                        returnValue = Codes[0];
                     else if (phenologyModel.Stage == stageCodes[i])
-                        returnValue[0] = Codes[i];
+                        returnValue = Codes[i];
 
                     else if (Proportional)
                     {
                         double slope = MathUtilities.Divide(Codes[i] - Codes[i - 1],
                                                             stageCodes[i] - stageCodes[i - 1],
                                                             Codes[i]);
-                        returnValue[0] = Codes[i] + slope * (phenologyModel.Stage - stageCodes[i]);
+                        returnValue = Codes[i] + slope * (phenologyModel.Stage - stageCodes[i]);
                     }
                     else
                     {
                         // Simple lookup.
-                        returnValue[0] = Codes[i - 1];
+                        returnValue = Codes[i - 1];
                     }
 
-                    return returnValue;
+                    return new double[] { returnValue };
                 }
             }
-            returnValue[0] = Codes[stageCodes.Length - 1];
-            return returnValue;
+            return new double[] { Codes[stageCodes.Length - 1] };
         }
         
     }

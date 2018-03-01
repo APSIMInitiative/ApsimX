@@ -14,9 +14,6 @@ namespace Models.PMF.Functions.DemandFunctions
     [Description("This must be renamed DMDemandFunction for the source code to recoginise it!!!!  This function calculates DM demand beyond the start stage as the product of current organ wt (g), relative growth rate and the specified organ number.")]
     public class RelativeGrowthRateDemandFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The initial wt</summary>
         public double InitialWt = 0;
 
@@ -49,8 +46,7 @@ namespace Models.PMF.Functions.DemandFunctions
                 StartWt = InitialWt;                                   //This is to initiate mass so relative growth rate can kick in
             double CurrentOrganWt = Math.Max(StartWt, Live.Wt / OrganNumber.Value());
             double OrganDemand = CurrentOrganWt * RelativeGrowthRate.Value();
-            returnValue[0] = OrganDemand * OrganNumber.Value();
-            return returnValue;
+            return new double[] { OrganDemand * OrganNumber.Value() };
         }
 
     }

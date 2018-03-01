@@ -17,9 +17,6 @@ namespace Models.PMF.Functions.DemandFunctions
     [Description("Demand is calculated from the product of potential growth increment, organ number and thermal time.")]
     public class PotentialSizeDemandFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-        
         /// <summary>The start stage name</summary>
         public string StartStageName = "";
 
@@ -58,10 +55,9 @@ namespace Models.PMF.Functions.DemandFunctions
         public override double[] Values()
         {
             if (Phenology.Between(StartStageName, EndStageName))
-                returnValue[0] = PotentialGrowthIncrement.Value() * OrganNumber.Value() * ThermalTime.Value();
+                return new double[] { PotentialGrowthIncrement.Value() * OrganNumber.Value() * ThermalTime.Value() };
             else
-                returnValue[0] = 0;
-            return returnValue;
+                return new double[] { 0 };
         }
 
     }

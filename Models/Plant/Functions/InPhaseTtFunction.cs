@@ -16,9 +16,6 @@ namespace Models.PMF.Functions
     [Serializable]
     public class InPhaseTtFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The phenology</summary>
         [Link]
         private Phenology phenologyModel = null;
@@ -26,8 +23,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            returnValue[0] = phenologyModel.CurrentPhase.TTinPhase;
-            return returnValue;
+            return new double[] { phenologyModel.CurrentPhase.TTinPhase };
         }
     }
 }

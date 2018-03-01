@@ -16,9 +16,6 @@ namespace Models.PMF.Functions
     [Serializable]
     public class BellCurveFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The largest leaf position</summary>
         [Link] IFunction LargestLeafPosition = null; // Node position where the largest leaf occurs (e.g. 10 is the 10th leaf from bottom to top)
         /// <summary>The area maximum</summary>
@@ -35,9 +32,8 @@ namespace Models.PMF.Functions
         {
             double LeafNo = Structure.LeafTipsAppeared;
 
-            returnValue[0] =  AreaMax.Value() * Math.Exp(Breadth.Value() * Math.Pow(LeafNo - LargestLeafPosition.Value(), 2.0)
-                                + Skewness.Value() * (Math.Pow(LeafNo - LargestLeafPosition.Value(), 3.0)));
-            return returnValue;
+            return new double[] {  AreaMax.Value() * Math.Exp(Breadth.Value() * Math.Pow(LeafNo - LargestLeafPosition.Value(), 2.0)
+                                + Skewness.Value() * (Math.Pow(LeafNo - LargestLeafPosition.Value(), 3.0))) };
         }
     }
 }

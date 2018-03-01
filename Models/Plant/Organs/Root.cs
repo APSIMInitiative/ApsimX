@@ -723,6 +723,7 @@ namespace Models.PMF.Organs
                 return new double[myZone.soil.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
             else
             {
+                LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
                 double[] kl = myZone.soil.KL(Plant.Name);
                 double[] ll = myZone.soil.LL(Plant.Name);
                 double[] klModifiers = klModifier.Values();
@@ -730,7 +731,6 @@ namespace Models.PMF.Organs
                     klModifiers = MathUtilities.CreateArrayOfValues(klModifiers[0], myZone.soil.Thickness.Length);
 
                 double[] supply = new double[myZone.soil.Thickness.Length];
-                LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
                 for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                 {
                     if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))

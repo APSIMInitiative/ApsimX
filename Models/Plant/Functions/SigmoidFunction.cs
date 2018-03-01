@@ -18,9 +18,6 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SigmoidFunction : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The ymax</summary>
         [ChildLinkByName]
         private IFunction Ymax = null;
@@ -42,13 +39,12 @@ namespace Models.PMF.Functions
         {
             try
             {
-                returnValue[0] = Ymax.Value() * 1 / (1 + Math.Exp(-(XValue.Value() - Xo.Value()) / b.Value()));
+                return new double[] { Ymax.Value() * 1 / (1 + Math.Exp(-(XValue.Value() - Xo.Value()) / b.Value())) };
             }
             catch (Exception)
             {
                 throw new Exception("Error with values to Sigmoid function");
             }
-            return returnValue;
         }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>

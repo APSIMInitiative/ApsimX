@@ -18,9 +18,6 @@ namespace Models.PMF.Functions.DemandFunctions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AllometricDemandFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The constant</summary>
         [Description("Constant")]
         public double Const { get; set; }
@@ -55,9 +52,7 @@ namespace Models.PMF.Functions.DemandFunctions
 
 
             double Target = Const * Math.Pow((double)xValue, Power);
-            returnValue[0] = Math.Max(0.0, Target - (double)yValue);
-
-            return returnValue;
+            return new double[] { Math.Max(0.0, Target - (double)yValue) };
         }
 
     }

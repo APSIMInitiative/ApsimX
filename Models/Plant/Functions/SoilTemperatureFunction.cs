@@ -18,9 +18,6 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SoilTemperatureFunction : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The xy pairs</summary>
         [ChildLink]
         private XYPairs xyPairs = null;               // Temperature effect on Growth Interpolation Set
@@ -44,8 +41,7 @@ namespace Models.PMF.Functions
         public override double[] Values()
         {
             AirTemperatureFunction airtempfunction = new AirTemperatureFunction();
-            returnValue[0] = airtempfunction.Linint3hrlyTemp(maxt_soil_surface, mint_soil_surface, xyPairs);
-            return returnValue;
+            return new double[] { airtempfunction.Linint3hrlyTemp(maxt_soil_surface, mint_soil_surface, xyPairs) };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

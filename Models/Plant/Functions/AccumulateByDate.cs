@@ -20,7 +20,7 @@ namespace Models.PMF.Functions
     public class AccumulateByDate : BaseFunction
     {
         /// <summary>The accumulated value</summary>
-        private double[] AccumulatedValue = new double[1] { 0 };
+        private double AccumulatedValue = 0;
 
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
@@ -47,7 +47,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            AccumulatedValue[0] = 0;
+            AccumulatedValue = 0;
         }
 
         /// <summary>Called at the start of each day</summary>
@@ -68,19 +68,19 @@ namespace Models.PMF.Functions
                     DailyIncrement += function.Value();
                 }
 
-                AccumulatedValue[0] += DailyIncrement;
+                AccumulatedValue += DailyIncrement;
             }
 
             //Zero value if today is reset date
             if (DateUtilities.WithinDates(ResetDate, clock.Today, ResetDate))
-                AccumulatedValue[0] = 0;
+                AccumulatedValue = 0;
         }
 
 
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            return AccumulatedValue;
+            return new double[] { AccumulatedValue };
         }
 
 

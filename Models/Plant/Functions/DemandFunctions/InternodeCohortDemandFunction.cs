@@ -20,9 +20,6 @@ namespace Models.PMF.Functions.DemandFunctions
     [Description("Calculate individual internode demand base on age and maxSize.")]
     public class InternodeCohortDemandFunction : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>YinBetaFunction Constructor</summary>
         public InternodeCohortDemandFunction()
         {
@@ -73,8 +70,7 @@ namespace Models.PMF.Functions.DemandFunctions
                     }
                 } 
             }
-            returnValue[0] = Structure.TotalStemPopn * sinkStrength;
-            return returnValue;
+            return new double[] { Structure.TotalStemPopn * sinkStrength };
         }
     }
 }   

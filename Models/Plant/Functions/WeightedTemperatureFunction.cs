@@ -18,9 +18,6 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class WeightedTemperatureFunction : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>Gets the xy pairs.</summary>
         [ChildLink]
         private XYPairs xys = null;   // Temperature effect on Growth Interpolation Set
@@ -37,8 +34,7 @@ namespace Models.PMF.Functions
         public override double[] Values()
         {
             double tav = MaximumTemperatureWeighting * weatherData.MaxT + (1 - MaximumTemperatureWeighting) * weatherData.MinT;
-            returnValue[0] = xys.ValueIndexed(tav);
-            return returnValue;
+            return new double[] { xys.ValueIndexed(tav) };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

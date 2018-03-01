@@ -21,9 +21,6 @@ namespace Models.PMF.Functions.SupplyFunctions
     [ValidParent(ParentType = typeof(ILeaf))]
     public class RUEModel : BaseFunction
     {
-        /// <summary>The value being returned</summary>
-        private double[] returnValue = new double[1];
-
         /// <summary>The rue</summary>
         [ChildLinkByName]
         private IFunction RUE = null;
@@ -101,9 +98,7 @@ namespace Models.PMF.Functions.SupplyFunctions
                 throw new Exception("NaN Radiation interception value supplied to RUE model");
             if (radiationInterception < 0)
                 throw new Exception("Negative Radiation interception value supplied to RUE model");
-            returnValue[0] = radiationInterception * RueAct;
-
-            return returnValue;
+            return new double[] { radiationInterception * RueAct };
         }
         #endregion
     }
