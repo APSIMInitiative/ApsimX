@@ -183,6 +183,18 @@ namespace UserInterface.Presenters
             RunAPSIMInternal(multiProcessRunner: true);
         }
 
+        [ContextMenu(MenuName = "Copy path to node",
+                     ShortcutKey = "Ctrl+Shift+C")]
+        public void CopyPathToNode(object sender, EventArgs e)
+        {
+            string nodePath = explorerPresenter.CurrentNodePath;            
+            if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is Models.PMF.Functions.IFunction)
+            {
+                nodePath += ".Value()";
+            }
+            explorerPresenter.SetClipboardText(Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName) + nodePath, "CLIPBOARD");
+        }
+
         /// <summary>Run APSIM.</summary>
         /// <param name="multiProcessRunner">Use the multi-process runner?</param>
         private void RunAPSIMInternal(bool multiProcessRunner)

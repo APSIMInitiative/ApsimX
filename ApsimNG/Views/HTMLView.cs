@@ -458,8 +458,8 @@ namespace UserInterface.Views
                 // Move the window offscreen; the user doesn't need to see it.
                 // This works with IE, but not with WebKit
                 // Not yet tested on OSX
-                //if (ProcessUtilities.CurrentOS.IsWindows)
-                //    popupWin.Move(-10000, -10000);
+                if (ProcessUtilities.CurrentOS.IsWindows)
+                    popupWin.Move(-10000, -10000);
                 popupWin.Add(MainWidget);
                 popupWin.ShowAll();
                 while (Gtk.Application.EventsPending())

@@ -135,7 +135,7 @@ namespace Models
                 FindAllProperties(model, properties);
                 foreach (VariableProperty property in properties)
                 {
-                    string propertyValue = property.ValueWithArrayHandling.ToString();
+                    string propertyValue = property.ValueAsString();
                     if (propertyValue != string.Empty)
                     {
                         if (propertyValue != null && property.DataType == typeof(DateTime))
@@ -334,12 +334,12 @@ namespace Models
                 foreach (DataRow row in messages.Rows)
                 {
                     // Work out the column 1 text.
-                    string modelName = (string)row[5];
+                    string modelName = (string)row[4];
 
                     string col1Text;
                     if (row[6].GetType() == typeof(DateTime))
                     {
-                        DateTime date = (DateTime)row[6];
+                        DateTime date = (DateTime)row[5];
                         col1Text = date.ToString("yyyy-MM-dd") + " " + modelName;
                     }
                     else
@@ -361,8 +361,8 @@ namespace Models
                         col1Text = null;
                     }
 
-                    string message = (string)row[7];
-                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row[8].ToString());
+                    string message = (string)row[6];
+                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row[7].ToString());
 
                     if (errorLevel == Simulation.ErrorLevel.Error)
                     {
