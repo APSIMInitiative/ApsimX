@@ -1015,6 +1015,7 @@ namespace Models.PMF.Organs
         protected void Clear()
         {
             Leaves = new List<LeafCohort>();
+            needToRecalculateLiveDead = true;
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
