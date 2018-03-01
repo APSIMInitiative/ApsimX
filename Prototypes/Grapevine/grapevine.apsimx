@@ -6180,14 +6180,14 @@ namespace Models
         <Name>EndoDormancy</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Specifications>
-          <string>[ParameterTest].Script.EndoTarget = 10, 11</string>
+          <string>[ParameterTest].Script.EndoTarget = 13</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>BudBurst</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Specifications>
-          <string>[ParameterTest].Script.BudBurstBase = 40,50</string>
+          <string>[ParameterTest].Script.BudBurstBase = 140,150</string>
         </Specifications>
       </Factor>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6705,155 +6705,6 @@ namespace Models
       </Zone>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Simulation>
-    <Folder>
-      <Name>PhenoValidation</Name>
-      <Graph>
-        <Name>BudBurstPredic</Name>
-        <Series>
-          <Name>Series</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>true</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>PhenoPredObs</TableName>
-          <XFieldName>Observed.Grapevine.Phenology.BudBurstDOY.Value()</XFieldName>
-          <YFieldName>Predicted.Grapevine.Phenology.BudBurstDOY.Value()</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>FloweringPred</Name>
-        <Series>
-          <Name>Series</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>true</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>PhenoPredObs</TableName>
-          <XFieldName>Observed.Grapevine.Phenology.FloweringDOY.Value()</XFieldName>
-          <YFieldName>Predicted.Grapevine.Phenology.FloweringDOY.Value()</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>300</Minimum>
-          <Maximum>366</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Inverted>false</Inverted>
-          <Minimum>300</Minimum>
-          <Maximum>365</Maximum>
-          <Interval>10</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>VeraisonPred</Name>
-        <Series>
-          <Name>Series</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>PhenoPredObs</TableName>
-          <XFieldName>Observed.Grapevine.Phenology.VeraisonDOY.Value()</XFieldName>
-          <YFieldName>Predicted.Grapevine.Phenology.VeraisonDOY.Value()</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ShowPageOfGraphs>true</ShowPageOfGraphs>
-    </Folder>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <DisabledSimNames />
   </Experiment>
