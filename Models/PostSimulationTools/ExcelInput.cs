@@ -52,6 +52,9 @@ namespace Models.PostSimulationTools
         /// <value>The texture metadata.</value>
         public string[] FileNameMetadata { get; set; }
 
+        /// <summary>
+        /// List of Excel sheet names to read from.
+        /// </summary>
         private string[] sheetNames;
 
         /// <summary>
