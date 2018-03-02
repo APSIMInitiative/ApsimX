@@ -910,7 +910,8 @@ namespace Models.PMF.Organs
             double[] ageMultipliers = leafCohortParameters.LeafSizeAgeMultiplier.Values();
             for (int i=1; i< ApexGroupAge.Count;i++)
             {
-                double f = ageMultipliers[(int)ApexGroupAge[i] - 1];
+                int ageIndex = Math.Min((int)ApexGroupAge[i] - 1, ageMultipliers.Length - 1);
+                double f = ageMultipliers[ageIndex];
                 totalf += f * Leaf.ApexGroupSize[i];
             }
 

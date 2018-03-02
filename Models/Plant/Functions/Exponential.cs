@@ -22,7 +22,7 @@ namespace Models.PMF.Functions
     {
         /// <summary>The child functions</summary>
         [ChildLink]
-        private List<IModel> childFunctions = null;
+        private List<IFunction> childFunctions = null;
 
         /// <summary>ExponentialFunction Constructor</summary>
         public ExponentialFunction()
