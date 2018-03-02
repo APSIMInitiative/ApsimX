@@ -620,7 +620,8 @@ namespace Models.PMF.Organs
                     double TotalRadn = 0;
                     for (int i = 0; i < LightProfile.Length; i++)
                         TotalRadn += LightProfile[i].amount;
-                    return TotalRadn;
+                    //return TotalRadn;
+                    return CoverGreen * MetData.Radn;
                 }
                 else
                     return CoverGreen * MetData.Radn;
