@@ -6,8 +6,11 @@ or
 
 	"resolves #XXX"
     
-where `XXX` is an issue number.  Thus, you must also have already logged a relevant issue to relate your pull request to or be fixing an existing issue.
+where XXX is an issue number.  Thus, you must also have already logged a relevant issue to relate your pull request to or be fixing an existing issue.
 
 To get Jenkins to retest a pull request you can type this into a comment:
 
 	retest this please Jenkins
+
+	
+	
