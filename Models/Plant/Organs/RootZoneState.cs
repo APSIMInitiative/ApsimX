@@ -172,10 +172,13 @@ namespace Models.PMF.Organs
 
             //SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
             double[] xf = soil.XF(plant.Name);
+            double[] rootFrontVelocitys = rootFrontVelocity.Values();
+            if (rootFrontVelocitys.Length == 1)
+                rootFrontVelocitys = APSIM.Shared.Utilities.MathUtilities.CreateArrayOfValues(rootFrontVelocitys[0], soil.Thickness.Length);
             if (soil.Weirdo == null)
-                Depth = Depth + rootFrontVelocity.Value(RootLayer) * xf[RootLayer];
+                Depth = Depth + rootFrontVelocitys[RootLayer] * xf[RootLayer];
             else
-                Depth = Depth + rootFrontVelocity.Value(RootLayer);
+                Depth = Depth + rootFrontVelocitys[RootLayer];
 
 
             // Limit root depth for impeded layers

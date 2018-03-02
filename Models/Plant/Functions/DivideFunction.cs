@@ -1,60 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-
-namespace Models.PMF.Functions
+﻿namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using System;
+
     /// <summary>
-    /// Starting with the first child function, recursively divide by the values of the subsequent child functions
+    /// From the value of the first child function, subtract the values of the subsequent children functions
     /// </summary>
     [Serializable]
-    [Description("Starting with the first child function, recursively divide by the values of the subsequent child functions")]
-    public class DivideFunction : Model, IFunction, ICustomDocumentation
+    public class DivideFunction : MathematicalBaseFunction, ICustomDocumentation
     {
-        /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        /// <summary>Returns the character to insert into auto-generated documentation</summary>
+        protected override char OperatorCharForDocumentation { get { return '/'; } }
 
-        /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        /// <summary>Perform the mathematical operation</summary>
+        /// <param name="value1">The first value</param>
+        /// <param name="value2">The second value</param>
+        protected override double PerformOperation(double value1, double value2)
         {
-            if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
-
-            double returnValue = 0.0;
-            if (ChildFunctions.Count > 0)
-            {
-                IFunction F = ChildFunctions[0] as IFunction;
-                returnValue = F.Value(arrayIndex);
-
-                if (ChildFunctions.Count > 1)
-                    for (int i = 1; i < ChildFunctions.Count; i++)
-                    {
-                        F = ChildFunctions[i] as IFunction;
-                        double denominator = F.Value(arrayIndex);
-                        if (denominator == 0)
-                            returnValue = 0;
-                        else
-                            returnValue = returnValue / denominator;
-                    }
-
-            }
-            return returnValue;
+            return MathUtilities.Divide(value1, value2, 0.0);
         }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                SubtractFunction.DocumentMathFunction(this, '/', tags, headingLevel, indent);
-            }
-        }
-
     }
 }

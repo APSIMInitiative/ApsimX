@@ -101,7 +101,7 @@ namespace Models.Core
         {
             get
             {
-                return method.Invoke(Object, new object[] { -1 });
+                return method.Invoke(Object, null);
             }
 
             set

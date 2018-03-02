@@ -1,10 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-
+// ----------------------------------------------------------------------
+// <copyright file="SoilTemperatureWeightedFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using System;
+    using System.Diagnostics;
+
     /// <summary>
     /// # [Name]
     /// Returns the temperature of the surface soil layer with the weighting: " +
@@ -15,31 +19,30 @@ namespace Models.PMF.Functions
                  "0.25*DayBeforeYesterday + 0.5*Yesterday + 0.25*Today")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SoilTemperatureWeightedFunction : Model, IFunction
+    public class SoilTemperatureWeightedFunction : BaseFunction
     {
-        /// <summary>constructor</summary>
-        public SoilTemperatureWeightedFunction()
-        {
-            maxt_soil_surface = 15;
-        }
-        #region Class Data Members
+        /// <summary>The value for the day before yesterday</summary>
+        private double dayBeforeYesterday = 0;
 
-        /// <summary>The day before yesterday</summary>
-        private double DayBeforeYesterday = 0;
-        /// <summary>The yesterday</summary>
-        private double Yesterday = 0;
-        /// <summary>The today</summary>
-        private double Today = 0;
+        /// <summary>The value yesterday</summary>
+        private double yesterday = 0;
+
+        /// <summary>The value today</summary>
+        private double today = 0;
+
         /// <summary>Gets or sets the xy pairs.</summary>
-        /// <value>The xy pairs.</value>
-        [Link]
-        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+        [ChildLink]
+        private XYPairs xyPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>The maxt_soil_surface</summary>
         [Units("oC")]
         double maxt_soil_surface { get; set; }  //Fixme.  Need to connect to soil temp model when it is working
 
-        #endregion
+        /// <summary>constructor</summary>
+        public SoilTemperatureWeightedFunction()
+        {
+            maxt_soil_surface = 15;
+        }
 
         /// <summary>EventHandler for OnPrepare.</summary>
         /// <param name="sender">The sender.</param>
@@ -47,19 +50,17 @@ namespace Models.PMF.Functions
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            DayBeforeYesterday = Yesterday;
-            Yesterday = Today;
-            Today = maxt_soil_surface;
+            dayBeforeYesterday = yesterday;
+            yesterday = today;
+            today = maxt_soil_surface;
         }
 
-
-
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            double WeightedTemperature = 0.25 * DayBeforeYesterday + 0.5 * Yesterday + 0.25 * Today;
-            return XYPairs.ValueIndexed(WeightedTemperature);
+            double weightedTemperature = 0.25 * dayBeforeYesterday + 0.5 * yesterday + 0.25 * today;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + xyPairs.ValueIndexed(weightedTemperature));
+            return new double[] { xyPairs.ValueIndexed(weightedTemperature) };
         }
     }
 }

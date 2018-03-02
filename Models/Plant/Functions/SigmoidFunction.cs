@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using System.Xml.Serialization;
-
+﻿// ----------------------------------------------------------------------
+// <copyright file="SigmoidFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     /// <summary>
     /// Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)
     /// </summary>
@@ -14,29 +17,32 @@ namespace Models.PMF.Functions
     [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Ymax * 1/1+exp(-(x-Xo)/b)")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SigmoidFunction : Model, IFunction, ICustomDocumentation
+    public class SigmoidFunction : BaseFunction, ICustomDocumentation
     {
         /// <summary>The ymax</summary>
-        [Link]
-        IFunction Ymax = null;
+        [ChildLinkByName]
+        private IFunction Ymax = null;
+
         /// <summary>The x value</summary>
-        [Link]
-        IFunction XValue = null;
+        [ChildLinkByName]
+        private IFunction XValue = null;
+
         /// <summary>The Xo</summary>
-        [Link]
-        IFunction Xo = null;
+        [ChildLinkByName]
+        private IFunction Xo = null;
+
         /// <summary>The b</summary>
-        [Link]
-        IFunction b = null;
+        [ChildLinkByName]
+        private IFunction b = null;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        /// <exception cref="System.Exception">Error with values to Sigmoid function</exception>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             try
             {
-                return Ymax.Value(arrayIndex) * 1 / (1 + Math.Exp(-(XValue.Value(arrayIndex) - Xo.Value(arrayIndex)) / b.Value(arrayIndex)));
+                double returnValue = Ymax.Value() * 1 / (1 + Math.Exp(-(XValue.Value() - Xo.Value()) / b.Value()));
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+                return new double[] { returnValue };
             }
             catch (Exception)
             {

@@ -1,17 +1,22 @@
-using System;
-using System.Collections.Generic;
-using Models.Core;
-using Models.Interfaces;
-
+// -----------------------------------------------------------------------
+// <copyright file="AirTemperatureFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Core;
+    using Models.Interfaces;
+    using System.Diagnostics;
+
     /// <summary>
     /// A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.  
     /// </summary>
     [Serializable]
-    public class AirTemperatureFunction : Model, IFunction, ICustomDocumentation
+    public class AirTemperatureFunction : BaseFunction, ICustomDocumentation
     {
-
         /// <summary>The met data</summary>
         [Link]
         protected IWeather MetData = null;
@@ -45,9 +50,11 @@ namespace Models.PMF.Functions
 
 
         /// <summary>Gets the value.</summary>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            return Linint3hrlyTemp(MetData.MaxT, MetData.MinT, XYPairs);
+            double returnValue = Linint3hrlyTemp(MetData.MaxT, MetData.MinT, XYPairs);
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
         /// <summary>Linint3hrlies the temporary.</summary>
         /// <param name="tmax">The tmax.</param>

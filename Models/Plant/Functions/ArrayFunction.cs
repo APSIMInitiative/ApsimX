@@ -1,51 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using Models.Core;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="ArrayFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Core;
+    using System.Diagnostics;
+
     /// <summary>
     /// Returns the value at the given index. If the index is outside the array, the last value will be returned.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ArrayFunction : Model, IFunction, ICustomDocumentation
+    public class ArrayFunction : BaseFunction, ICustomDocumentation
     {
         /// <summary>Gets the value.</summary>
         [Description("The values of the array (space seperated)")]
-        public string Values { get; set; }
+        public string ArrayValues { get; set; }
 
         /// <summary>Gets the optional units</summary>
         [Description("The optional units of the array")]
         public string Units { get; set; }
 
-        private List<double> str2dbl = new List<double>();
+        private double[] str2dbl = null;
 
         /// <summary>Gets the value of the function.</summary>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            if (arrayIndex == -1)
-                throw new ApsimXException(this, "ArrayFunction must have an index to return.");
-
-            if (str2dbl.Count == 0)
+            if (str2dbl == null)
             {
-                string[] split = Values.Split(' ');
-                foreach (string s in split)
+                string[] split = ArrayValues.Split(' ');
+                str2dbl = new double[split.Length];
+                for (int i = 0; i < split.Length; i++)
                     try
                     {
-                        str2dbl.Add(Convert.ToDouble(s, System.Globalization.CultureInfo.InvariantCulture));
+                        str2dbl[i] = Convert.ToDouble(split[i], System.Globalization.CultureInfo.InvariantCulture);
                     }
                     catch (Exception)
                     {
-                        throw new ApsimXException(this, "ArrayFunction: Could not convert " + s + " to a number.");
+                        throw new ApsimXException(this, "ArrayFunction: Could not convert " + split[i] + " to a number.");
                     }
             }
 
-            if (arrayIndex > str2dbl.Count - 1)
-                return str2dbl[str2dbl.Count - 1];
-
-            return str2dbl[arrayIndex];
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + ArrayValues);
+            return str2dbl;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
@@ -66,7 +68,7 @@ namespace Models.PMF.Functions
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             //TODO: Tidy up the printing -JF
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + Values + units + "</i>", indent));
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + ArrayValues + units + "</i>", indent));
 
             if (!String.IsNullOrEmpty(description))
                 tags.Add(new AutoDocumentation.Paragraph(description, indent));

@@ -1,36 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="BoundFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+
     /// <summary>
     /// Bounds the child function between lower and upper bounds
     /// </summary>
     [Serializable]
     [Description("Bounds the child function between lower and upper bounds")]
-    public class BoundFunction : Model, IFunction, ICustomDocumentation
+    public class BoundFunction : BaseFunction, ICustomDocumentation
     {
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        [ChildLink]
+        private List<IFunction> childFunctions = null;
 
         [ChildLinkByName]
-        IFunction Lower = null;
+        private IFunction Lower = null;
 
         [ChildLinkByName]
-        IFunction Upper = null;
+        private IFunction Upper = null;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
-            foreach (IFunction child in ChildFunctions)
+            foreach (IFunction child in childFunctions)
+            {
                 if (child != Lower && child != Upper)
-                    return Math.Max(Math.Min(Upper.Value(arrayIndex), child.Value(arrayIndex)),Lower.Value(arrayIndex));
+                {
+                    double[] lowerValues = Lower.Values();
+                    double[] upperValues = Upper.Values();
+                    double[] values = child.Values().ToArray();
+
+                    if (lowerValues.Length == 1 && values.Length > 1)
+                        lowerValues = MathUtilities.CreateArrayOfValues(lowerValues[0], values.Length);
+                    if (upperValues.Length == 1 && values.Length > 1)
+                        upperValues = MathUtilities.CreateArrayOfValues(upperValues[0], values.Length);
+                    if (lowerValues.Length > 1 && lowerValues.Length != values.Length ||
+                        upperValues.Length > 1 && upperValues.Length != values.Length)
+                        throw new Exception("In function: " + Name + " cannot perform a bound on different length arrays.");
+
+                    for (int i = 0; i < values.Length; i++)
+                        values[i] = Math.Max(Math.Min(upperValues[i], values[i]), lowerValues[i]);
+
+                    Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(values, "F3"));
+                    return values;
+                }
+            }
             throw new Exception("Cannot find function value to apply in bound");
         }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
@@ -42,11 +66,9 @@ namespace Models.PMF.Functions
             if (IncludeInDocumentation)
             {
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in childFunctions.OfType<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, -1, indent);
-                if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
-                foreach (IFunction child in ChildFunctions)
+                foreach (IFunction child in childFunctions)
                     if (child != Lower && child != Upper)
                     {
                         tags.Add(new AutoDocumentation.Paragraph(Name + " is the value of " + (child as IModel).Name + " bound between a lower and upper bound where:", indent));

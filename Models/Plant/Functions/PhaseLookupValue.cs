@@ -1,13 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using Models.PMF.Phen;
-using System.IO;
-using APSIM.Shared.Utilities;
-
+// ----------------------------------------------------------------------
+// <copyright file="PhaseLookupValue.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.PMF.Phen;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     /// <summary>
     /// Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.
     /// </summary>
@@ -15,14 +19,18 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
-    public class PhaseLookupValue : Model, IFunction, ICustomDocumentation
+    public class PhaseLookupValue : BaseFunction, ICustomDocumentation
     {
+        /// <summary>The value being returned</summary>
+        private double[] zero = new double[1] { 0 };
+
         /// <summary>The phenology</summary>
         [Link]
-        Phenology Phenology = null;
+        private Phenology phenologyModel = null;
 
-        /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        /// <summary>All child functions</summary>
+        [ChildLink]
+        private List<IFunction> childFunctions = null;
 
         /// <summary>The start</summary>
         [Description("Start")]
@@ -39,23 +47,25 @@ namespace Models.PMF.Functions
         /// or
         /// Phase end name not set: + Name
         /// </exception>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
-
             if (Start == "")
                 throw new Exception("Phase start name not set:" + Name);
             if (End == "")
                 throw new Exception("Phase end name not set:" + Name);
 
-            if (Phenology != null && Phenology.Between(Start, End) && ChildFunctions.Count > 0)
+            if (phenologyModel != null && phenologyModel.Between(Start, End) && childFunctions.Count > 0)
             {
-                IFunction Lookup = ChildFunctions[0] as IFunction;
-                return Lookup.Value(arrayIndex);
+                IFunction Lookup = childFunctions[0] as IFunction;
+                double[] returnValues = Lookup.Values();
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValues, "F3"));
+                return returnValues;
             }
             else
-                return 0.0;
+            {
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:0");
+                return zero;
+            }
         }
 
         /// <summary>Gets a value indicating whether [in phase].</summary>
@@ -64,7 +74,7 @@ namespace Models.PMF.Functions
         {
             get
             {
-                return Phenology.Between(Start, End);
+                return phenologyModel.Between(Start, End);
             }
         }
 

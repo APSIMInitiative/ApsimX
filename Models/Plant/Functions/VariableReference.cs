@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using APSIM.Shared;
-using Models.Core;
-using APSIM.Shared.Utilities;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="MathematicalBaseFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Globalization;
+
     /// <summary>
     /// # [Name]
     /// Return the value of a nominated internal \ref Models.PMF.Plant "Plant" numerical variable
@@ -18,32 +22,32 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of a nominated internal Plant numerical variable")]
-    public class VariableReference : Model, IFunction, ICustomDocumentation
+    public class VariableReference : BaseFunction, ICustomDocumentation
     {
         [Link]
-        ILocator locator = null;
+        private ILocator locator = null;
 
         /// <summary>The variable name</summary>
         [Description("Specify an internal Plant variable")]
         public string VariableName { get; set; }
 
-
-        /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        /// <summary>Gets a double value</summary>
+        public override double[] Values()
         {
             object o = locator.Get(VariableName.Trim());
             if (o is IFunction)
-                return (o as IFunction).Value(arrayIndex);
-            else if (o is Array)
-                return Convert.ToDouble((o as Array).GetValue(arrayIndex), 
-                                        System.Globalization.CultureInfo.InvariantCulture);
+                o = (o as IFunction).Values();
+
+            if (o is double[])
+            {
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(o as double[], "F3"));
+                return (double[])o;
+            }
             else
             {
-                double doubleValue = Convert.ToDouble(o, System.Globalization.CultureInfo.InvariantCulture);
-                if (double.IsNaN(doubleValue))
-                    throw new Exception("NaN (not a number) found when getting variable: " + VariableName);
-                return doubleValue;
+                double value = Convert.ToDouble(o, CultureInfo.InvariantCulture);
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + value);
+                return new double[1] { value };
             }
         }
 
@@ -58,7 +62,6 @@ namespace Models.PMF.Functions
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                     AutoDocumentation.DocumentModel(memo, tags, -1, indent);
-
 
                 tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + StringUtilities.RemoveTrailingString(VariableName, ".Value()") + "</i>", indent));
             }

@@ -1,11 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-
+﻿// ----------------------------------------------------------------------
+// <copyright file="PowerFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     /// <summary>
     /// # [Name]
     /// Raises the value of the child to the power of the exponent specified
@@ -14,44 +18,37 @@ namespace Models.PMF.Functions
     [Description("Raises the value of the child to the power of the exponent specified")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PowerFunction : Model, IFunction
+    public class PowerFunction : BaseFunction
     {
+        /// <summary>All child functions</summary>
+        [ChildLink]
+        private List<IFunction> childFunctions = null;
+
+        /// <summary>The exponent</summary>
+        [Description("Exponent")]
+        public double Exponent { get; set; }
+
         /// <summary>constructor</summary>
         public PowerFunction()
         {
             Exponent = 1.0;
         }
-        /// <summary>The exponent</summary>
-        [Description("Exponent")]
-        public double Exponent { get; set; }
 
-        /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        /// <exception cref="System.Exception">Power function must have only one argument</exception>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
-
-            if (ChildFunctions.Count == 1)
+            if (childFunctions.Count == 1)
+                return new double[] { Math.Pow(childFunctions[0].Value(), Exponent) };
+            else if (childFunctions.Count == 2)
             {
-                IFunction F = ChildFunctions[0] as IFunction;
-                return Math.Pow(F.Value(arrayIndex), Exponent);
+                IFunction f = childFunctions[0];
+                IFunction p = childFunctions[1];
+                double returnValue = Math.Pow(f.Value(), p.Value());
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+                return new double[] { returnValue };
             }
-            else if (ChildFunctions.Count == 2)
-            {
-
-                IFunction F = ChildFunctions[0] as IFunction;
-                IFunction P = ChildFunctions[1] as IFunction;
-                return Math.Pow(F.Value(arrayIndex), P.Value(arrayIndex));
-            }
-            else {
-
+            else
                 throw new Exception("Invalid number of arguments for Power function");
-            }
         }
-
     }
 }

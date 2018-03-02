@@ -1,11 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using Models.PMF.Phen;
-
+// ----------------------------------------------------------------------
+// <copyright file="PhaseBasedSwitch.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using Models.PMF.Phen;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     /// <summary>
     /// # [Name]
     /// Returns a value of 1 if phenology is between start and end phases and otherwise a value of 0.
@@ -13,13 +18,16 @@ namespace Models.PMF.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PhaseBasedSwitch : Model, IFunction, ICustomDocumentation
+    public class PhaseBasedSwitch : BaseFunction, ICustomDocumentation
     {
+        /// <summary>The value being returned</summary>
+        private double returnValue = 0;
+
         //Fixme.  This can be removed an phase lookup returnig a constant of 1 if in phase.
 
         /// <summary>The phenology</summary>
         [Link]
-        Phenology Phenology = null;
+        private Phenology phenologyModel = null;
 
         /// <summary>The start</summary>
         [Description("Start")]
@@ -29,7 +37,6 @@ namespace Models.PMF.Functions
         [Description("End")]
         public string End { get; set; }
 
-
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">
@@ -37,19 +44,20 @@ namespace Models.PMF.Functions
         /// or
         /// Phase end name not set: + Name
         /// </exception>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             if (Start == "")
                 throw new Exception("Phase start name not set:" + Name);
             if (End == "")
                 throw new Exception("Phase end name not set:" + Name);
 
-            if (Phenology.Between(Start, End))
-            {
-                return 1.0;
-            }
+            if (phenologyModel.Between(Start, End))
+                returnValue = 1.0;
             else
-                return 0.0;
+                returnValue = 0.0;
+
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

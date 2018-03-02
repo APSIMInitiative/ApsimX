@@ -50,7 +50,7 @@ namespace Models.WaterModel
     /// cumulative rain, ie.roughness is smoothed out by rain. 
     /// </summary>
     [Serializable]
-    public class RunoffModel : Model, IFunction
+    public class RunoffModel : BaseFunction
     {
         // --- Links -------------------------------------------------------------------------
 
@@ -80,13 +80,13 @@ namespace Models.WaterModel
         // --- Outputs -----------------------------------------------------------------------
 
         /// <summary>Calculate and return the runoff (mm).</summary>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             double runoff = 0.0;
 
             if (soil.PotentialRunoff > 0.0)
             {
-                double cn2New = CN2Bare - reductionForCover.Value(arrayIndex) - reductionForTillage.Value(arrayIndex);
+                double cn2New = CN2Bare - reductionForCover.Value() - reductionForTillage.Value();
 
                 // cut off response to cover at high covers
                 cn2New = MathUtilities.Bound(cn2New, 0.0, 100.0);
@@ -123,10 +123,10 @@ namespace Models.WaterModel
                 runoff = MathUtilities.Divide(xpb * xpb, (soil.PotentialRunoff + 0.8 * s), 0.0);
 
                 // bound check the ouput variable
-                return MathUtilities.Bound(runoff, 0.0, soil.PotentialRunoff);
+                return new double[] { MathUtilities.Bound(runoff, 0.0, soil.PotentialRunoff) };
             }
 
-            return 0.0;
+            return new double[] { 0.0 };
         }
 
         // --- Private methods ---------------------------------------------------------------

@@ -1,18 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using Models.PMF.Struct;
-
+// ----------------------------------------------------------------------
+// <copyright file="InternodeDemandFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions.DemandFunctions
 {
+    using Models.Core;
+    using Models.PMF.Struct;
+    using System;
+    using System.Diagnostics;
+
     /// <summary>
     /// # [Name]
     /// Calculate internode demand
     /// </summary>
     [Serializable]
     [Description("Internode demand is calculated fromm the product of change in node number, stem population and internode weight.")]
-    public class InternodeDemandFunction : Model, IFunction
+    public class InternodeDemandFunction : BaseFunction
     {
         /// <summary>The inter node wt</summary>
         [Link]
@@ -23,10 +27,11 @@ namespace Models.PMF.Functions.DemandFunctions
         Structure Structure = null;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values() 
         {
-            return Structure.DeltaTipNumber * Structure.TotalStemPopn * InterNodeWt.Value(arrayIndex);
+            double[] returnValue = new double[] { Structure.DeltaTipNumber * Structure.TotalStemPopn * InterNodeWt.Value() };
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue[0]);
+            return returnValue;
         }
     }
 }   

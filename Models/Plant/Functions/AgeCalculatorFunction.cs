@@ -1,15 +1,21 @@
-﻿using System;
-using Models.Core;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="AgeCalculatorFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using System;
+    using Models.Core;
+    using System.Diagnostics;
+
     /// <summary>
     /// # [Name]
     /// An age calculator function
     /// </summary>
     [Serializable]
     [Description("Returns the age (in years) of the crop")]
-    public class AgeCalculatorFunction : Model, IFunction
+    public class AgeCalculatorFunction : BaseFunction
     {
         private int _Age = 0;
 
@@ -23,9 +29,11 @@ namespace Models.PMF.Functions
         }
 
         /// <summary>Gets the value.</summary>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-           return _Age / 365.25;
+            double returnValue = _Age / 365.25;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
     }
 }

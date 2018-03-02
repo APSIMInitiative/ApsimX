@@ -1,16 +1,22 @@
-using Models.Core;
-using Models.PMF.Phen;
-using System;
-
+// ----------------------------------------------------------------------
+// <copyright file="PotentialSizeDemandFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions.DemandFunctions
 {
+    using Models.Core;
+    using Models.PMF.Phen;
+    using System;
+    using System.Diagnostics;
+
     /// <summary>
     /// # [Name]
     /// Potential size demand function
     /// </summary>
     [Serializable]
     [Description("Demand is calculated from the product of potential growth increment, organ number and thermal time.")]
-    public class PotentialSizeDemandFunction : Model, IFunction
+    public class PotentialSizeDemandFunction : BaseFunction
     {
         /// <summary>The start stage name</summary>
         public string StartStageName = "";
@@ -47,13 +53,13 @@ namespace Models.PMF.Functions.DemandFunctions
         }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-                if (Phenology.Between(StartStageName, EndStageName))
-                return PotentialGrowthIncrement.Value(arrayIndex) * OrganNumber.Value(arrayIndex) * ThermalTime.Value(arrayIndex);
-            else
-                return 0;
+            double returnValue = 0;
+            if (Phenology.Between(StartStageName, EndStageName))
+                returnValue = PotentialGrowthIncrement.Value() * OrganNumber.Value() * ThermalTime.Value();
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
 
     }

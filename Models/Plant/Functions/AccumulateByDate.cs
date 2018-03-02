@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using APSIM.Shared.Utilities;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="AccumulateByDate.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     /// <summary>
     /// A function that accumulates values from child functions
     /// </summary>
@@ -14,9 +18,8 @@ namespace Models.PMF.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateByDate : Model, IFunction
+    public class AccumulateByDate : BaseFunction
     {
-        //Class members
         /// <summary>The accumulated value</summary>
         private double AccumulatedValue = 0;
 
@@ -48,7 +51,7 @@ namespace Models.PMF.Functions
             AccumulatedValue = 0;
         }
 
-      /// <summary>Called at the start of each day</summary>
+        /// <summary>Called at the start of each day</summary>
         /// <param name="sender">Plant.cs</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("StartOfDay")]
@@ -70,16 +73,16 @@ namespace Models.PMF.Functions
             }
 
             //Zero value if today is reset date
-         if (DateUtilities.WithinDates(ResetDate, clock.Today, ResetDate))
-               AccumulatedValue = 0;
+            if (DateUtilities.WithinDates(ResetDate, clock.Today, ResetDate))
+                AccumulatedValue = 0;
         }
 
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            return AccumulatedValue;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + AccumulatedValue);
+            return new double[] { AccumulatedValue };
         }
 
 

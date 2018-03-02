@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using Models.Interfaces;
-
+﻿// ----------------------------------------------------------------------
+// <copyright file="RUECO2Function.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions.SupplyFunctions
 {
+    using Models.Core;
+    using Models.Interfaces;
+    using System;
+    using System.Diagnostics;
+
     /// <summary>
     /// # [Name]
     /// This model calculates CO2 Impact on RUE using the approach of [Reyenga1999].
@@ -16,12 +19,11 @@ namespace Models.PMF.Functions.SupplyFunctions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IFunction))]
-    public class RUECO2Function : Model, IFunction
+    public class RUECO2Function : BaseFunction
     {
         /// <summary>The photosynthetic pathway</summary>
         [Description("PhotosyntheticPathway")]
         public String PhotosyntheticPathway { get; set; }
-
 
         /// <summary>The met data</summary>
         [Link]
@@ -37,13 +39,12 @@ namespace Models.PMF.Functions.SupplyFunctions
         /// or
         /// Unknown photosynthetic pathway in RUECO2Function
         /// </exception>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
+            double returnValue = 0;
             if (PhotosyntheticPathway == "C3")
             {
-
                 double temp = (MetData.MaxT + MetData.MinT) / 2.0; // Average temperature
-
 
                 if (temp >= 50.0)
                     throw new Exception("Average daily temperature too high for RUE CO2 Function");
@@ -51,7 +52,7 @@ namespace Models.PMF.Functions.SupplyFunctions
                 if (MetData.CO2 < 350)
                     throw new Exception("CO2 concentration too low for RUE CO2 Function");
                 else if (MetData.CO2 == 350)
-                    return 1.0;
+                    returnValue = 1;
                 else
                 {
                     double CP;      //co2 compensation point (ppm)
@@ -62,15 +63,18 @@ namespace Models.PMF.Functions.SupplyFunctions
 
                     first = (MetData.CO2 - CP) * (350.0 + 2.0 * CP);
                     second = (MetData.CO2 + 2.0 * CP) * (350.0 - CP);
-                    return first / second;
+                    returnValue = first / second;
                 }
             }
             else if (PhotosyntheticPathway == "C4")
             {
-                return 0.000143 * MetData.CO2 + 0.95; //Mark Howden, personal communication
+                returnValue = 0.000143 * MetData.CO2 + 0.95; //Mark Howden, personal communication
             }
             else
                 throw new Exception("Unknown photosynthetic pathway in RUECO2Function");
+
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
     }
 }

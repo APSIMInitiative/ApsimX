@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Soils;
     using APSIM.Shared.Utilities;
     using Core;
     using PMF.Functions;
@@ -16,7 +15,7 @@ namespace Models.WaterModel
     /// Water table is the depth (in mm) below the ground surface of the first layer which is above saturation.
     /// </summary>
     [Serializable]
-    public class WaterTableModel : Model, IFunction
+    public class WaterTableModel : BaseFunction
     {
         /// <summary>The water movement model.</summary>
         [Link]
@@ -27,7 +26,7 @@ namespace Models.WaterModel
         public double Depth { get; private set; }
 
         /// <summary>Calculate water table depth.</summary>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             double[] Thickness = soil.Properties.Water.Thickness;
             double[] SW = soil.Water;
@@ -52,7 +51,7 @@ namespace Models.WaterModel
             {
                 //set the depth of watertable to the total depth of the soil profile
                 Depth = MathUtilities.Sum(Thickness);
-                return Depth;
+                return new double[] { Depth };
             }
 
             // Do the calculation of the water table if the fully saturated layer is not the top layer AND
@@ -79,7 +78,7 @@ namespace Models.WaterModel
                 Depth = bottom_depth; // DeanH modified. Bug in original FORTRAN code?
             }
 
-            return Depth;
+            return new double[] { Depth };
         }
 
         /// <summary>Calculate the saturated fraction for the specified layer index.</summary>

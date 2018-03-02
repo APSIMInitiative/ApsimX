@@ -1,10 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-
+﻿// ----------------------------------------------------------------------
+// <copyright file="SoilTemperatureDepthFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using System;
+    using System.Diagnostics;
+
     /// <summary>
     /// # [Name]
     /// Return soil temperature (oC) from a specified soil profile layer.
@@ -14,13 +18,11 @@ namespace Models.PMF.Functions
     [Description("Return soil temperature (oC) from a specified soil profile layer.  The source of soil temperature array can be either SoilN (st) or SoilTemp (ave_soil_temp) property")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SoilTemperatureDepthFunction : Model, IFunction
+    public class SoilTemperatureDepthFunction : BaseFunction
     {
-
         /// <summary>The soil</summary>
         [Link]
-        Soils.Soil Soil = null;
-
+        private Soils.Soil soilModel = null;
 
         /// <summary>The depth</summary>
         [Units("mm")]
@@ -28,15 +30,13 @@ namespace Models.PMF.Functions
         public double Depth { get; set; }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        /// <exception cref="System.Exception">
-        /// </exception>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            int Layer = LayerIndex(Depth, Soil.Thickness);
-
-            return Soil.Temperature[Layer];
+            int layer = LayerIndex(Depth, soilModel.Thickness);
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + soilModel.Temperature[layer]);
+            return new double[] { soilModel.Temperature[layer] };
         }
+
         /// <summary>Returns the soil layer index for a specified soil depth (mm)</summary>
         /// <param name="depth">Soil depth (mm)</param>
         /// <param name="dlayer">Array of soil layer depths in the profile (mm)</param>
@@ -44,16 +44,14 @@ namespace Models.PMF.Functions
         /// <exception cref="System.Exception"></exception>
         private int LayerIndex(double depth, double[] dlayer)
         {
-            double CumDepth = 0.0;
+            double cumDepth = 0.0;
             for (int i = 0; i < dlayer.Length; i++)
             {
-                CumDepth = CumDepth + dlayer[i];
-                if (CumDepth >= depth) { return i; }
+                cumDepth = cumDepth + dlayer[i];
+                if (cumDepth >= depth)
+                    return i;
             }
-            throw new Exception(Name + ": Specified soil depth of " + Depth.ToString() + " mm is greater than profile depth of " + CumDepth.ToString() + " mm");
+            throw new Exception(Name + ": Specified soil depth of " + Depth.ToString() + " mm is greater than profile depth of " + cumDepth.ToString() + " mm");
         }
-
-
-
     }
 }

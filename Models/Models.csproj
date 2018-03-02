@@ -38,7 +38,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;APSIMX</DefineConstants>
+    <DefineConstants>DEBUG;APSIMX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -51,7 +51,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\Bin\</OutputPath>
-    <DefineConstants>TRACE;APSIMX</DefineConstants>
+    <DefineConstants>APSIMX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -191,6 +191,9 @@
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
     <Compile Include="Plant\Functions\AccumulateByDate.cs" />
+    <Compile Include="Plant\Functions\BaseFunction.cs" />
+    <Compile Include="Plant\Functions\MathematicalBaseFunction.cs" />
+    <Compile Include="Plant\Functions\MultiplyFunction.cs" />
     <Compile Include="Plant\Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Plant\Functions\TrackerFunction.cs" />
     <Compile Include="Plant\Functions\ArrayFunction.cs" />
@@ -397,13 +400,11 @@
     <Compile Include="Plant\Functions\DivideFunction.cs" />
     <Compile Include="Plant\Functions\Exponential.cs" />
     <Compile Include="Plant\Functions\ExpressionFunction.cs" />
-    <Compile Include="Plant\Functions\ExternalVariable.cs" />
     <Compile Include="Plant\Functions\InPhaseTtFunction.cs" />
     <Compile Include="Plant\Functions\LessThanFunction.cs" />
     <Compile Include="Plant\Functions\LinearInterpolationFunction.cs" />
     <Compile Include="Plant\Functions\MaximumFunction.cs" />
     <Compile Include="Plant\Functions\MinimumFunction.cs" />
-    <Compile Include="Plant\Functions\MultiplyFunction.cs" />
     <Compile Include="Plant\Functions\OnEventFunction.cs" />
     <Compile Include="Plant\Functions\PhaseBasedSwitch.cs" />
     <Compile Include="Plant\Functions\PhaseLookup.cs" />
@@ -421,7 +422,7 @@
     <Compile Include="Plant\Functions\SubtractFunction.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUECO2Function.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUEModel.cs" />
-    <Compile Include="Plant\Functions\Variable.cs" />
+    <Compile Include="Plant\Functions\VariableReference.cs" />
     <Compile Include="Plant\Functions\WeightedTemperatureFunction.cs" />
     <Compile Include="Plant\Functions\XYPairs.cs" />
     <Compile Include="Plant\InterpolationSet.cs" />

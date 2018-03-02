@@ -1,11 +1,16 @@
-using System;
-using Models.Core;
-using Models.Interfaces;
-using Models.PMF.Organs;
-using Models.PMF.Struct;
-
+// ----------------------------------------------------------------------
+// <copyright file="InternodeCohortDemandFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions.DemandFunctions
 {
+    using Models.Core;
+    using Models.PMF.Organs;
+    using Models.PMF.Struct;
+    using System;
+    using System.Diagnostics;
+
     /// <summary>
     /// # [Name]
     /// Calculate individual internode demand base on age and maxSize
@@ -14,7 +19,7 @@ namespace Models.PMF.Functions.DemandFunctions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Calculate individual internode demand base on age and maxSize.")]
-    public class InternodeCohortDemandFunction : Model, IFunction
+    public class InternodeCohortDemandFunction : BaseFunction
     {
         /// <summary>YinBetaFunction Constructor</summary>
         public InternodeCohortDemandFunction()
@@ -42,8 +47,7 @@ namespace Models.PMF.Functions.DemandFunctions
         Structure Structure = null;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             double sinkStrength = 0;
             foreach (LeafCohort L in Leaf.Leaves)
@@ -67,7 +71,10 @@ namespace Models.PMF.Functions.DemandFunctions
                     }
                 } 
             }
-            return Structure.TotalStemPopn * sinkStrength;
+
+            double[] returnValue =  new double[] { Structure.TotalStemPopn * sinkStrength };
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue[0]);
+            return returnValue;
         }
     }
 }   

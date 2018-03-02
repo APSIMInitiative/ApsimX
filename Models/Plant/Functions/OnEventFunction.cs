@@ -1,21 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using Models.PMF.Phen;
-
+﻿// ----------------------------------------------------------------------
+// <copyright file="OnEventFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using Models.PMF.Phen;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     /// <summary>
     /// Returns the a value depending on whether an event has occurred.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class OnEventFunction : Model, IFunction, ICustomDocumentation
+    public class OnEventFunction : BaseFunction, ICustomDocumentation
     {
         /// <summary>The _ value</summary>
-        private double _Value = 0;
+        private double returnValue = 0;
+
+        /// <summary>The pre event value</summary>
+        [ChildLinkByName]
+        private IFunction preEventValue = null;
+
+        /// <summary>The post event value</summary>
+        [ChildLinkByName]
+        private IFunction postEventValue = null;
 
         /// <summary>The set event</summary>
         [Description("The event that triggers change from pre to post event value")]
@@ -25,21 +38,13 @@ namespace Models.PMF.Functions
         [Description("(optional) The event resets to pre event value")]
         public string ReSetEvent {get; set;}
 
-
-        /// <summary>The pre event value</summary>
-        [Link]
-        IFunction PreEventValue = null;
-        /// <summary>The post event value</summary>
-        [Link]
-        IFunction PostEventValue = null;
-
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            _Value = PreEventValue.Value();
+            returnValue = preEventValue.Value();
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -58,19 +63,20 @@ namespace Models.PMF.Functions
         /// <summary>Called when [re set event].</summary>
         public void OnReSetEvent()
         {
-            _Value = PreEventValue.Value();
+            returnValue = preEventValue.Value();
         }
 
         /// <summary>Called when [set event].</summary>
         public void OnSetEvent()
         {
-            _Value = PostEventValue.Value();
+            returnValue = postEventValue.Value();
         }
 
         /// <summary>Gets the value.</summary>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            return _Value;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
@@ -88,16 +94,16 @@ namespace Models.PMF.Functions
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                     AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
-                if (PreEventValue != null)
+                if (preEventValue != null)
                 {
                     tags.Add(new AutoDocumentation.Paragraph("Before " + SetEvent, indent));
-                    AutoDocumentation.DocumentModel(PreEventValue as IModel, tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(preEventValue as IModel, tags, -1, indent + 1);
                 }
 
-                if (PostEventValue != null)
+                if (postEventValue != null)
                 {
                     tags.Add(new AutoDocumentation.Paragraph("On " + SetEvent + " the value is set to:", indent));
-                    AutoDocumentation.DocumentModel(PostEventValue as IModel, tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(postEventValue as IModel, tags, -1, indent + 1);
                 }
             }
         }

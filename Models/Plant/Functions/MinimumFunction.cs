@@ -1,34 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
-using Models.Core;
-
+﻿// ----------------------------------------------------------------------
+// <copyright file="MinimumFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     /// <summary>Minimize the values of the children of this node</summary>
     /// \pre All children have to contain a public function "Value"
     /// \retval Minimum value of all children of this node. Return 999999999 if no child.
     [Serializable]
     [Description("Returns the Minimum value of all children functions")]
-    public class MinimumFunction : Model, IFunction, ICustomDocumentation
+    public class MinimumFunction : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        /// <summary>All child functions</summary>
+        [ChildLink]
+        private List<IFunction> childFunctions = null;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
-
-            double ReturnValue = 999999999;
-            foreach (IFunction F in ChildFunctions)
+            double[] returnValues = null;
+            foreach (IFunction child in childFunctions)
             {
-                ReturnValue = Math.Min(ReturnValue, F.Value(arrayIndex));
+                double[] values = child.Values();
+                if (returnValues == null)
+                    returnValues = values;
+                else
+                {
+                    if (returnValues.Length == 1 && values.Length > 1)
+                        returnValues = MathUtilities.CreateArrayOfValues(returnValues[0], values.Length);
+                    else if (values.Length == 1 && returnValues.Length > 1)
+                        values = MathUtilities.CreateArrayOfValues(values[0], returnValues.Length);
+                    else if (returnValues.Length > 1 && returnValues.Length != values.Length)
+                        throw new Exception("In function: " + Name + " cannot perform a minimum on different length arrays.");
+                    
+                    for (int i = 0; i < values.Length; i++)
+                        returnValues[i] = Math.Min(returnValues[i], values[i]);
+                }
             }
-            return ReturnValue;
+
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValues, "F3"));
+            return returnValues;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

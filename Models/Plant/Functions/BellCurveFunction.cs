@@ -1,15 +1,21 @@
-using System;
-using Models.Core;
-using Models.PMF.Struct;
-
+// -----------------------------------------------------------------------
+// <copyright file="BellCurveFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using System;
+    using Models.Core;
+    using Models.PMF.Struct;
+    using System.Diagnostics;
+
     /// <summary>
     /// # [Name]
     /// Calculates the maximum leaf size (mm2/leaf) given its node position (Elings, 2000 - Agronomy Journal 92, 436-444)
     /// </summary>
     [Serializable]
-    public class BellCurveFunction : Model, IFunction
+    public class BellCurveFunction : BaseFunction
     {
         /// <summary>The largest leaf position</summary>
         [Link] IFunction LargestLeafPosition = null; // Node position where the largest leaf occurs (e.g. 10 is the 10th leaf from bottom to top)
@@ -23,12 +29,14 @@ namespace Models.PMF.Functions
         [Link] Structure Structure = null;
 
         /// <summary>Gets the value.</summary>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             double LeafNo = Structure.LeafTipsAppeared;
 
-            return AreaMax.Value(arrayIndex) * Math.Exp(Breadth.Value(arrayIndex) * Math.Pow(LeafNo - LargestLeafPosition.Value(arrayIndex), 2.0)
-                                + Skewness.Value(arrayIndex) * (Math.Pow(LeafNo - LargestLeafPosition.Value(arrayIndex), 3.0)));
+            double returnValue =  AreaMax.Value() * Math.Exp(Breadth.Value() * Math.Pow(LeafNo - LargestLeafPosition.Value(), 2.0)
+                                + Skewness.Value() * (Math.Pow(LeafNo - LargestLeafPosition.Value(), 3.0)));
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
     }
 }

@@ -1,16 +1,22 @@
-using System;
-using System.Collections.Generic;
-using Models.Core;
-
+// -----------------------------------------------------------------------
+// <copyright file="Constant.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Core;
+    using System.Diagnostics;
+
     /// <summary>
     /// A constant value function
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Constant : Model, IFunction, ICustomDocumentation
+    public class Constant : BaseFunction, ICustomDocumentation
     {
         /// <summary>Gets the value.</summary>
         [Description("The value of the constant")]
@@ -21,9 +27,10 @@ namespace Models.PMF.Functions
         public string Units { get; set; }
 
         /// <summary>Gets the value of the function.</summary>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            return FixedValue;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + FixedValue);
+            return new double[] { FixedValue };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

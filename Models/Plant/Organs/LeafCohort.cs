@@ -907,9 +907,11 @@ namespace Models.PMF.Organs
 
             //Modify leaf area using tillering approach
             double totalf = ApexGroupSize[0];
-            for(int i=1; i< ApexGroupAge.Count;i++)
+            double[] ageMultipliers = leafCohortParameters.LeafSizeAgeMultiplier.Values();
+            for (int i=1; i< ApexGroupAge.Count;i++)
             {
-                double f = leafCohortParameters.LeafSizeAgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
+                int ageIndex = Math.Min((int)ApexGroupAge[i] - 1, ageMultipliers.Length - 1);
+                double f = ageMultipliers[ageIndex];
                 totalf += f * Leaf.ApexGroupSize[i];
             }
 
@@ -1076,6 +1078,8 @@ namespace Models.PMF.Organs
             double _lagDuration;
             double _senescenceDuration;
             double lsn = 0;
+            double[] lagDurationAgeMultipliers = leafCohortParameters.LagDurationAgeMultiplier.Values();
+            double[] senescenceDurationAgeMultipliers = leafCohortParameters.SenescenceDurationAgeMultiplier.Values();
             for (int i = 0; i < ApexGroupAge.Count; i++)
             {
                 if (i == 0)
@@ -1085,8 +1089,8 @@ namespace Models.PMF.Organs
                 }
                 else
                 {
-                    _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
-                    _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                    _lagDuration = LagDuration * lagDurationAgeMultipliers[(int)ApexGroupAge[i]];
+                    _senescenceDuration = SenescenceDuration * senescenceDurationAgeMultipliers[(int)ApexGroupAge[i]];
                 }
 
                 if (Age >= 0 & Age < _lagDuration + GrowthDuration + _senescenceDuration / 2) 
@@ -1113,6 +1117,8 @@ namespace Models.PMF.Organs
             double _lagDuration;
             double _senescenceDuration;
             double fracSenAge = 0;
+            double[] lagDurationAgeMultipliers = leafCohortParameters.LagDurationAgeMultiplier.Values();
+            double[] senescenceDurationAgeMultipliers = leafCohortParameters.SenescenceDurationAgeMultiplier.Values();
             for (int i = 0; i < ApexGroupAge.Count; i++)
             {
                 if (i == 0)
@@ -1121,8 +1127,14 @@ namespace Models.PMF.Organs
                     _senescenceDuration = SenescenceDuration;
                 } else
                 {
-                    _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
-                    _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                    if ((int)ApexGroupAge[i] >= lagDurationAgeMultipliers.Length)
+                        _lagDuration = LagDuration * lagDurationAgeMultipliers.Last();
+                    else
+                        _lagDuration = LagDuration * lagDurationAgeMultipliers[(int)ApexGroupAge[i]];
+                    if ((int)ApexGroupAge[i] >= senescenceDurationAgeMultipliers.Length)
+                        _senescenceDuration = SenescenceDuration * senescenceDurationAgeMultipliers.Last();
+                    else
+                        _senescenceDuration = SenescenceDuration * senescenceDurationAgeMultipliers[(int)ApexGroupAge[i]];
                 }
                 
                 double ttInSenPhase = Math.Max(0.0, Age + tt - _lagDuration - GrowthDuration);

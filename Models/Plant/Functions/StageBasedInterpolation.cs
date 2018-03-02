@@ -1,45 +1,41 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using Models.PMF.Phen;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
+// ----------------------------------------------------------------------
+// <copyright file="StageBasedInterpolation.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.PMF.Phen;
+    using System;
+    using System.Diagnostics;
+
     /// <summary>
     /// # [Name]
     /// A value is linearly interpolated between phenological growth stages
     /// </summary>
     [Serializable]
     [Description("A value is linearly interpolated between phenological growth stages")]
-    public class StageBasedInterpolation : Model, IFunction
+    public class StageBasedInterpolation : BaseFunction
     {
-        /// <summary>The _ proportional</summary>
-        private bool _Proportional = true;
-
         /// <summary>The phenology</summary>
         [Link]
-        Phenology Phenology = null;
+        Phenology phenologyModel = null;
 
-        // Parameters
-        /// <summary>Gets or sets the stages.</summary>
-        /// <value>The stages.</value>
-        public string[] Stages { get; set; }
-        /// <summary>Gets or sets the codes.</summary>
-        /// <value>The codes.</value>
-        public double[] Codes { get; set; }
-
-        // States
         /// <summary>The stage codes</summary>
-        private int[] StageCodes = null;
+        private int[] stageCodes = null;
+
+        /// <summary>Gets or sets the stages.</summary>
+        public string[] Stages { get; set; }
+
+        /// <summary>Gets or sets the codes.</summary>
+        public double[] Codes { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="StageBasedInterpolation"/> is proportional.
         /// </summary>
-        /// <value><c>true</c> if proportional; otherwise, <c>false</c>.</value>
-        public bool Proportional { get { return _Proportional; } set { _Proportional = value; } }
+        public bool Proportional { get; set; }
 
         /// <summary>Initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -47,54 +43,54 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            StageCodes = null;
+            stageCodes = null;
         }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        /// <exception cref="System.Exception">Something is a miss here.  Specifically, the number of values in your StageCode function don't match the number of stage names.  Sort it out numb nuts!!</exception>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            if (StageCodes == null)
+            if (stageCodes == null)
             {
-                StageCodes = new int[Stages.Length];
+                stageCodes = new int[Stages.Length];
                 for (int i = 0; i < Stages.Length; i++)
                 {
-                    Phase p = Phenology.PhaseStartingWith(Stages[i]);
-                    StageCodes[i] = Phenology.IndexOfPhase(p.Name) + 1;
+                    Phase p = phenologyModel.PhaseStartingWith(Stages[i]);
+                    stageCodes[i] = phenologyModel.IndexOfPhase(p.Name) + 1;
                 }
             }
 
-            //Fixme.  For some reason this error message won't cast properly??
-            if (Codes.Length != StageCodes.Length)
-            {
-                throw new Exception("Something is a miss here.  Specifically, the number of values in your StageCode function don't match the number of stage names.  Sort it out numb nuts!!");
-            }
+            if (Codes.Length != stageCodes.Length)
+                throw new Exception("The number of codes and stage codes does not match");
 
-            for (int i = 0; i < StageCodes.Length; i++)
+            for (int i = 0; i < stageCodes.Length; i++)
             {
-                if (Phenology.Stage <= StageCodes[i])
+                if (phenologyModel.Stage <= stageCodes[i])
                 {
+                    double returnValue;
                     if (i == 0)
-                        return Codes[0];
-                    if (Phenology.Stage == StageCodes[i])
-                        return Codes[i];
+                        returnValue = Codes[0];
+                    else if (phenologyModel.Stage == stageCodes[i])
+                        returnValue = Codes[i];
 
-                    if (Proportional)
+                    else if (Proportional)
                     {
                         double slope = MathUtilities.Divide(Codes[i] - Codes[i - 1],
-                                                            StageCodes[i] - StageCodes[i - 1],
+                                                            stageCodes[i] - stageCodes[i - 1],
                                                             Codes[i]);
-                        return Codes[i] + slope * (Phenology.Stage - StageCodes[i]);
+                        returnValue = Codes[i] + slope * (phenologyModel.Stage - stageCodes[i]);
                     }
                     else
                     {
                         // Simple lookup.
-                        return Codes[i - 1];
+                        returnValue = Codes[i - 1];
                     }
+
+                    Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+                    return new double[] { returnValue };
                 }
             }
-            return Codes[StageCodes.Length - 1];
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + Codes[stageCodes.Length - 1]);
+            return new double[] { Codes[stageCodes.Length - 1] };
         }
         
     }

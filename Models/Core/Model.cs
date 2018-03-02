@@ -175,7 +175,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.DivideFunction))]
         [XmlElement(typeof(Models.PMF.Functions.ExponentialFunction))]
         [XmlElement(typeof(Models.PMF.Functions.ExpressionFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.ExternalVariable))]
         [XmlElement(typeof(Models.PMF.Functions.HoldFunction))]
         [XmlElement(typeof(Models.PMF.Functions.InPhaseTtFunction))]
         [XmlElement(typeof(Models.PMF.Functions.LessThanFunction))]

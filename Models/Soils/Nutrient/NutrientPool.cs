@@ -37,13 +37,12 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            C = new double[soil.Thickness.Length];
-            for (int i = 0; i < C.Length; i++)
-                C[i] = InitialCarbon.Value(i);
-
-            N = new double[soil.Thickness.Length];
-            for (int i = 0; i < N.Length; i++)
-                N[i] = InitialNitrogen.Value(i);
+            C = InitialCarbon.Values();
+            if (C.Length == 1)
+                C = MathUtilities.CreateArrayOfValues(C[0], soil.Thickness.Length);
+            N = InitialNitrogen.Values();
+            if (N.Length == 1)
+                N = MathUtilities.CreateArrayOfValues(N[0], soil.Thickness.Length);
         }
         /// <summary>
         /// Add C and N into nutrient pool

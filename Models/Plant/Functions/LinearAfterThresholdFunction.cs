@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using APSIM.Shared.Utilities;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="LinearAfterThresholdFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     /// <summary>
     /// Function to return the value for a function with a trigger and slope from it
     ///                /
@@ -18,8 +22,12 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Use a linear function with a gradient after a trigger value is exceeded.")]
-    public class LinearAfterThresholdFunction : Model, IFunction, ICustomDocumentation
+    public class LinearAfterThresholdFunction : BaseFunction, ICustomDocumentation
     {
+        /// <summary>A locator object</summary>
+        [Link]
+        private ILocator locator = null;
+
         /// <summary>The x property</summary>
         [Description("XProperty")]
         public string XProperty { get; set; }
@@ -51,26 +59,40 @@ namespace Models.PMF.Functions
         /// <summary>
         /// Get the value of the function
         /// </summary>
-        /// <param name="arrayIndex"></param>
-        /// <returns></returns>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            string PropertyName = XProperty;
-            object v = Apsim.Get(this, PropertyName);
+            object v = locator.Get(XProperty);
             if (v == null)
                 throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
-            double XValue;
-            if (v is Array)
-                XValue = (double)(v as Array).GetValue(arrayIndex);
-            else if (v is IFunction)
-                XValue = (v as IFunction).Value(arrayIndex);
-            else
-                XValue = (double)v;
+            if (v is IFunction)
+                v = (v as IFunction).Values();
 
-            if (XValue <= XTrigger)
-                return 0;
+            double[] returnValue;
+            if (v is double[])
+            {
+                double[] array = v as double[];
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (array[i] <= XTrigger)
+                        array[i] = 0;
+                    else
+                        array[i] = Math.Max(0.0, (array[i] - XTrigger)) * Slope;
+                }
+                returnValue = array;
+            }
+            else if (v is double)
+            {
+                double xValue = (double)v;
+                if (xValue <= XTrigger)
+                    returnValue = new double[] { 0 };
+                else
+                    returnValue = new double[] { Math.Max(0.0, (xValue - XTrigger)) * Slope };
+            }
             else
-                return Math.Max(0.0, (XValue - XTrigger)) * Slope;
+                throw new Exception("Cannot do a linear interpolation on type: " + v.GetType().Name +
+                                    " in function: " + Name);
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValue, "F3"));
+            return returnValue;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

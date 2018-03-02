@@ -1,11 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using Models.PMF.Phen;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="HoldFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.PMF.Phen;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     /// <summary>
     /// Returns the a value which is updated daily until a given stage is reached, beyond which it is held constant
     /// </summary>
@@ -13,22 +19,22 @@ namespace Models.PMF.Functions
     [Description("Returns the ValueToHold which is updated daily until the WhenToHold stage is reached, beyond which it is held constant")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class HoldFunction : Model, IFunction, ICustomDocumentation
+    public class HoldFunction : BaseFunction, ICustomDocumentation
     {
-        /// <summary>The _ value</summary>
-        private double _Value = 0;
+        /// <summary>Value to return</summary>
+        private List<double> returnValues = new List<double>();
+
+        /// <summary>The value to hold after event</summary>
+        [ChildLink]
+        private IFunction valueToHold = null;
+
+        /// <summary>The phenology</summary>
+        [Link]
+        private Phenology phenologyModel = null;
 
         /// <summary>The set event</summary>
         [Description("Phenological stage at which value stops updating and is held constant")]
         public string WhenToHold { get; set; }
-
-        /// <summary>The value to hold after event</summary>
-        [ChildLink]
-        IFunction ValueToHold = null;
-
-        /// <summary>The phenology</summary>
-        [Link]
-        Phenology Phenology = null;
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -36,7 +42,8 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            _Value = ValueToHold.Value();
+            returnValues.Clear();
+            returnValues.AddRange(valueToHold.Values());
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
@@ -45,19 +52,23 @@ namespace Models.PMF.Functions
         [EventSubscribe("DoUpdate")]
         private void OnDoUpdate(object sender, EventArgs e)
         {
-            if (Phenology.Beyond(WhenToHold))
+            if (phenologyModel.Beyond(WhenToHold))
             {
                 //Do nothing, hold value constant
             }
             else
-                _Value = ValueToHold.Value();
+            {
+                returnValues.Clear();
+                returnValues.AddRange(valueToHold.Values());
+            }
         }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            return _Value;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValues.ToArray(), "F3"));
+            return returnValues.ToArray();
         }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
@@ -70,9 +81,9 @@ namespace Models.PMF.Functions
                 // add a heading.
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
                 // Describe the function
-                if (ValueToHold != null)
+                if (valueToHold != null)
                 {
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " is the same as " + (ValueToHold as IModel).Name + " until it reaches " + WhenToHold + " stage when it fixes its value", indent));
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " is the same as " + (valueToHold as IModel).Name + " until it reaches " + WhenToHold + " stage when it fixes its value", indent));
                 }
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))

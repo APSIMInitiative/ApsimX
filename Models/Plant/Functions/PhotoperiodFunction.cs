@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Interfaces;
-
+﻿// ----------------------------------------------------------------------
+// <copyright file="BaseFunction.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using Models.Core;
+    using Models.Interfaces;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     /// <summary>
     /// # [Name]
     /// Returns the value of today's photoperiod calculated using the specified latitude and twilight sun angle threshold.  If a variable called ClimateControl.PhotoPeriod is found in the simulation, it will be used instead.
@@ -20,16 +23,11 @@ namespace Models.PMF.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PhotoperiodFunction : Model, IFunction, ICustomDocumentation
+    public class PhotoperiodFunction : BaseFunction, ICustomDocumentation
     {
-
         /// <summary>The met data</summary>
         [Link]
-        protected IWeather MetData = null;
-
-        /// <summary>The clock</summary>
-        [Link]
-        protected Clock Clock = null;
+        private IWeather weatherData = null;
 
         /// <summary>The twilight</summary>
         [Description("Twilight angle")]
@@ -42,17 +40,17 @@ namespace Models.PMF.Functions
         public double DayLength { get; set; }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            return DayLength;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + DayLength);
+            return new double[] { DayLength };
         }
 
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
-            if (MetData != null)
-                DayLength = MetData.CalculateDayLength(Twilight);
+            if (weatherData != null)
+                DayLength = weatherData.CalculateDayLength(Twilight);
             else
                 DayLength = 0;
         }

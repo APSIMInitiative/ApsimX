@@ -1,13 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Interfaces;
-
+// ----------------------------------------------------------------------
+// <copyright file="RUEModel.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF.Functions.SupplyFunctions
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Interfaces;
+    using System;
+
     /// <summary>
     /// # [Name]
     /// Biomass accumulation is modeled as the product of intercepted radiation and its conversion efficiency, the radiation use efficiency (RUE) ([Monteith1977]).  
@@ -17,45 +19,39 @@ namespace Models.PMF.Functions.SupplyFunctions
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(ILeaf))]
-    public class RUEModel : Model, IFunction
+    public class RUEModel : BaseFunction
     {
         /// <summary>The rue</summary>
-        [Link]
-        IFunction RUE = null;
+        [ChildLinkByName]
+        private IFunction RUE = null;
 
         /// <summary>The fc o2</summary>
-        [Link]
-        IFunction FCO2 = null;
+        [ChildLinkByName]
+        private IFunction FCO2 = null;
 
         /// <summary>The function</summary>
-        [Link]
-        IFunction FN = null;
+        [ChildLinkByName]
+        private IFunction FN = null;
 
         /// <summary>The ft</summary>
-        [Link]
+        [ChildLinkByName]
         public IFunction FT = null;
 
         /// <summary>The fw</summary>
-        [Link]
-        IFunction FW = null;
+        [ChildLinkByName]
+        private IFunction FW = null;
 
         /// <summary>The FVPD</summary>
-        [Link]
+        [ChildLinkByName]
         public IFunction FVPD = null;
 
         /// <summary>The met data</summary>
         [Link]
-        IWeather MetData = null;
+        private IWeather MetData = null;
         
         /// <summary>The radiation interception data</summary>
         [Link]
         public IFunction RadnInt = null;
-        
-        #region Class Data Members
-        //[Input]
-        //public NewMetType MetData;
-
-        #endregion
 
         #region Associated variables
 
@@ -95,14 +91,15 @@ namespace Models.PMF.Functions.SupplyFunctions
         }
         /// <summary>Daily growth increment of total plant biomass</summary>
         /// <returns>g dry matter/m2 soil/day</returns>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            double radiationInterception = RadnInt.Value(arrayIndex);
+            double radiationInterception = RadnInt.Value();
             if (Double.IsNaN(radiationInterception))
                 throw new Exception("NaN Radiation interception value supplied to RUE model");
             if (radiationInterception < 0)
                 throw new Exception("Negative Radiation interception value supplied to RUE model");
-            return radiationInterception * RueAct;
+            double returnValue = radiationInterception * RueAct;
+            return new double[] { returnValue };
         }
         #endregion
     }

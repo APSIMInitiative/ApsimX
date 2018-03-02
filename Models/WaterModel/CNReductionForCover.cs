@@ -5,17 +5,15 @@ namespace Models.WaterModel
     using Core;
     using Interfaces;
     using Models.PMF.Functions;
-    using SurfaceOM;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>Implements the curve number reduction caused by cover.</summary>
     [Serializable]
-    public class CNReductionForCover : Model, IFunction
+    public class CNReductionForCover : BaseFunction
     {
-        // --- Links -------------------------------------------------------------------------
+        /// <summary>The value being returned</summary>
+        private double[] returnValue = new double[1];
 
         /// <summary>A multiplier to CoverTot to get effective cover for runoff.</summary>
         [Link]
@@ -55,7 +53,7 @@ namespace Models.WaterModel
         }
 
         /// <summary>Returns the value to subtract from curve number due to cover.</summary>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
             double cover_surface_runoff = CalcCoverForRunoff();
 
@@ -65,7 +63,8 @@ namespace Models.WaterModel
             double cover_fract = MathUtilities.Divide(cover_surface_runoff, CNCov, 0.0);
             cover_fract = MathUtilities.Bound(cover_fract, 0.0, 1.0);
             double cover_reduction = CNRed * cover_fract;
-            return cover_reduction;
+            returnValue[0] = cover_reduction;
+            return returnValue;
         }
 
         // --- Methods -----------------------------------------------------------------------
@@ -99,7 +98,7 @@ namespace Models.WaterModel
             double coverSurfaceCrop = 0.0;  // efective total cover (0-1)
             for (int canopy = 0; canopy < canopies.Count; canopy++)
             {
-                double effectiveCropCover = canopies[canopy].CoverTotal * EffectiveCoverMultiplier.Value(canopy);
+                double effectiveCropCover = canopies[canopy].CoverTotal * EffectiveCoverMultiplier.Value();
                 coverSurfaceCrop = addCover(coverSurfaceCrop, effectiveCropCover);
             }
 

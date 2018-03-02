@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 using Models.PMF.Phen;
+using System.Diagnostics;
 
 namespace Models.PMF.Functions
 {
@@ -14,9 +15,8 @@ namespace Models.PMF.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateByNumericPhase : Model, IFunction 
+    public class AccumulateByNumericPhase : BaseFunction 
     {
-        //Class members
         /// <summary>The accumulated value</summary>
         private double AccumulatedValue = 0;
         
@@ -96,10 +96,10 @@ namespace Models.PMF.Functions
         }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
+        public override double[] Values()
         {
-            return AccumulatedValue;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + AccumulatedValue);
+            return new double[] { AccumulatedValue };
         }
 
         /// <summary>Called when [cut].</summary>
