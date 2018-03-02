@@ -988,6 +988,94 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
                 <Name>PhotoPeriodAdjustment</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.PhotoPeriodAdjustment.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.PhotoPeriodAdjustment.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.PhotoPeriodAdjustment.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.PhotoPeriodAdjustment.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>10</double>
@@ -1024,6 +1112,50 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
                 <Name>FW</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.FW.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.FW.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>0.5</double>
@@ -1057,6 +1189,50 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
             <Name>PartitionFraction</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Lucerne.Leaf.DMDemandFunction.PartitionFraction.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Lucerne.Leaf.DMDemandFunction.PartitionFraction.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
@@ -1809,6 +1985,94 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
                       <LegendPosition>BottomRight</LegendPosition>
                       <DisabledSeries />
                     </Graph>
+                    <Graph>
+                      <Name>Graph</Name>
+                      <Series>
+                        <Name>Series</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Type>Scatter</Type>
+                        <XAxis>Bottom</XAxis>
+                        <YAxis>Left</YAxis>
+                        <ColourArgb>-65536</ColourArgb>
+                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                        <Marker>None</Marker>
+                        <MarkerSize>Normal</MarkerSize>
+                        <Line>Solid</Line>
+                        <LineThickness>Normal</LineThickness>
+                        <Checkpoint>Current</Checkpoint>
+                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.HeightFunction.DeltaHeight.Heightchron.Reproductive.Heightchron.XYPairs.X</XFieldName>
+                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.HeightFunction.DeltaHeight.Heightchron.Reproductive.Heightchron.XYPairs.Y</YFieldName>
+                        <ShowInLegend>false</ShowInLegend>
+                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                        <Cumulative>false</Cumulative>
+                        <CumulativeX>false</CumulativeX>
+                      </Series>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Axis>
+                        <Type>Left</Type>
+                        <Title>Y</Title>
+                        <Inverted>false</Inverted>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <Interval>NaN</Interval>
+                      </Axis>
+                      <Axis>
+                        <Type>Bottom</Type>
+                        <Title>X</Title>
+                        <Inverted>false</Inverted>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <Interval>NaN</Interval>
+                      </Axis>
+                      <LegendPosition>BottomRight</LegendPosition>
+                      <DisabledSeries />
+                    </Graph>
+                    <Graph>
+                      <Name>Graph</Name>
+                      <Series>
+                        <Name>Series</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Type>Scatter</Type>
+                        <XAxis>Bottom</XAxis>
+                        <YAxis>Left</YAxis>
+                        <ColourArgb>-65536</ColourArgb>
+                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                        <Marker>None</Marker>
+                        <MarkerSize>Normal</MarkerSize>
+                        <Line>Solid</Line>
+                        <LineThickness>Normal</LineThickness>
+                        <Checkpoint>Current</Checkpoint>
+                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.HeightFunction.DeltaHeight.Heightchron.Reproductive.Heightchron.XYPairs.X</XFieldName>
+                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.HeightFunction.DeltaHeight.Heightchron.Reproductive.Heightchron.XYPairs.Y</YFieldName>
+                        <ShowInLegend>false</ShowInLegend>
+                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                        <Cumulative>false</Cumulative>
+                        <CumulativeX>false</CumulativeX>
+                      </Series>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Axis>
+                        <Type>Left</Type>
+                        <Title>Y</Title>
+                        <Inverted>false</Inverted>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <Interval>NaN</Interval>
+                      </Axis>
+                      <Axis>
+                        <Type>Bottom</Type>
+                        <Title>X</Title>
+                        <Inverted>false</Inverted>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <Interval>NaN</Interval>
+                      </Axis>
+                      <LegendPosition>BottomRight</LegendPosition>
+                      <DisabledSeries />
+                    </Graph>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <X>
                       <double>12</double>
@@ -1816,7 +2080,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
                     </X>
                     <Y>
                       <double>8</double>
-                      <double>1</double>
+                      <double>1.25</double>
                     </Y>
                   </XYPairs>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -89480,5 +89744,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>282</ExplorerWidth>
 </Simulations>
