@@ -52,11 +52,35 @@ namespace Models.PostSimulationTools
         /// <value>The texture metadata.</value>
         public string[] FileNameMetadata { get; set; }
 
+        private string[] sheetNames;
+
         /// <summary>
         /// Gets or sets the list of EXCEL sheet names to read from.
         /// </summary>
         [Description("EXCEL sheet names (csv)")]
-        public string[] SheetNames { get; set; }
+        public string[] SheetNames
+        {
+            get
+            {
+                string[] formattedSheetNames = new string[sheetNames.Length];
+                for (int i = 0; i < sheetNames.Length; i++)
+                {
+                    if (Char.IsNumber(sheetNames[i][0]))
+                        formattedSheetNames[i] = "\"" + sheetNames[i] + "\"";
+                    else
+                        formattedSheetNames[i] = sheetNames[i];
+                }
+                return formattedSheetNames;
+            }
+            set
+            {
+                //foreach (string sheetName in value)
+                  //  if (Char.IsNumber(sheetName[0]))
+                    //    throw new ArgumentException("sheet names must not begin with a number.", sheetName);
+
+                sheetNames = value;
+            }
+        }
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
@@ -120,22 +144,13 @@ namespace Models.PostSimulationTools
                 // Write all sheets that are specified in 'SheetNames' to the data store
                 foreach (DataTable table in dataSet.Tables)
                 {
-                    if (Char.IsNumber(table.TableName[0]))
+                    bool keep = StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
+                    if (keep)
                     {
-                        // table/sheet names starting with a number are permitted by Excel, but will break APSIM
-                        // this should be probably reported to the user
-                        throw new Exception("Unable to input from Excel: sheet names must not start with a number.");
-                    }
-                    else
-                    {
-                        bool keep = StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
-                        if (keep)
-                        {
-                            TruncateDates(table);
+                        TruncateDates(table);
 
-                            dataStore.DeleteDataInTable(table.TableName);
-                            dataStore.WriteTable(table);
-                        }
+                        dataStore.DeleteDataInTable(table.TableName);
+                        dataStore.WriteTable(table);
                     }
                 }
 
