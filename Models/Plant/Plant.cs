@@ -417,10 +417,8 @@ namespace Models.PMF
                 Phenology.ReSetToStage(removalData.SetPhenologyStage);
 
             // Reduce plant and stem population if thinning proportion specified
-            if (removalData != null && removalData.SetThinningProportion != 0)
+            if (removalData != null && removalData.SetThinningProportion != 0 && Structure != null)
                 Structure.doThin(removalData.SetThinningProportion);
-
-
 
         }
 
