@@ -168,7 +168,9 @@ namespace UserInterface.Views
             }
             catch (Exception ex)
             {
-                (Owner.Owner as MainView).ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
+                var mainView = GetMainViewReference(this);
+                if (mainView != null)
+                    mainView.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
             }
         }
 
@@ -377,6 +379,8 @@ namespace UserInterface.Views
 
         private void ShowCompletionWindow()
         {
+            if (ContextItemsNeeded == null)
+                return;
             try
             {
                 caretLocation = (editControl as Entry).Position;
@@ -402,8 +406,24 @@ namespace UserInterface.Views
             }
             catch (Exception e)
             {
-                (Owner.Owner as MainView).ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+                var mainView = GetMainViewReference(this);
+                if (mainView != null)
+                    mainView.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
             }            
+        }
+
+        /// <summary>
+        /// Finds a reference to the main view, so that error messages can be displayed.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private MainView GetMainViewReference(ViewBase obj)
+        {
+            if (obj is MainView)
+                return obj as MainView;
+            if (obj.Owner == null)
+                return null;
+            return GetMainViewReference(obj.Owner);
         }
 
         /// <summary>
