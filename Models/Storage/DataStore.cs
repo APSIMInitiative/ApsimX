@@ -679,10 +679,11 @@
             }
             catch (Exception err)
             {
-                // Console.WriteLine(err.ToString());
                 string msg = "Error writing to database";
                 if (dataToWriteToDB != null)
                     msg += " \"" + dataToWriteToDB.Name + "\"";
+                if (Char.IsNumber(dataToWriteToDB.Name[0]))
+                    msg += ": sheet name must not begin with a number!";
                 throw new Exception(msg, err);
             }
 
