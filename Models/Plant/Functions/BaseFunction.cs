@@ -15,7 +15,11 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value of the function.</summary>
         public double Value()
         {
-            return Values()[0];
+            double[] returnValues = Values();
+            if (returnValues.Length > 0)
+                return returnValues[0];
+            else
+                return 0;
         }
 
         /// <summary>Gets the values of the function.</summary>
