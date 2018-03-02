@@ -65,23 +65,20 @@ namespace Models.PostSimulationTools
         {
             get
             {
-                string[] formattedSheetNames = new string[sheetNames.Length];
-                for (int i = 0; i < sheetNames.Length; i++)
-                {
-                    if (Char.IsNumber(sheetNames[i][0]))
-                        formattedSheetNames[i] = "\"" + sheetNames[i] + "\"";
-                    else
-                        formattedSheetNames[i] = sheetNames[i];
-                }
-                return formattedSheetNames;
+                return sheetNames;
             }
             set
             {
-                //foreach (string sheetName in value)
-                  //  if (Char.IsNumber(sheetName[0]))
-                    //    throw new ArgumentException("sheet names must not begin with a number.", sheetName);
+                string[] formattedSheetNames = new string[value.Length];
+                for (int i = 0; i < value.Length; i++)
+                {
+                    if (Char.IsNumber(value[i][0]))
+                        formattedSheetNames[i] = "\"" + value[i] + "\"";
+                    else
+                        formattedSheetNames[i] = value[i];
+                }
 
-                sheetNames = value;
+                sheetNames = formattedSheetNames;
             }
         }
 
