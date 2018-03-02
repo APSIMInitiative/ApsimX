@@ -8,6 +8,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -68,6 +69,7 @@ namespace Models.PMF.Functions
                     accumulationValue += referenceValues[i];
                     if (accumulationValue >= accumulationTarget)
                     {
+                        Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + variableValues[i]);
                         return new double[] { variableValues[i] };
                     }
                 }
@@ -75,6 +77,7 @@ namespace Models.PMF.Functions
             else
                 throw new Exception("Invalid statistic found in TrackerFunction: " + Statistic);
 
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:0");
             return new double[] { 0 };
         }
 

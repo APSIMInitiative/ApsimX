@@ -8,6 +8,7 @@ namespace Models.PMF.Functions.DemandFunctions
     using Models.Core;
     using Models.PMF.Phen;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -54,10 +55,11 @@ namespace Models.PMF.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
+            double returnValue = 0;
             if (Phenology.Between(StartStageName, EndStageName))
-                return new double[] { PotentialGrowthIncrement.Value() * OrganNumber.Value() * ThermalTime.Value() };
-            else
-                return new double[] { 0 };
+                returnValue = PotentialGrowthIncrement.Value() * OrganNumber.Value() * ThermalTime.Value();
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
 
     }

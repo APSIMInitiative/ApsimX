@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 using Models.PMF.Phen;
+using System.Diagnostics;
 
 namespace Models.PMF.Functions
 {
@@ -97,6 +98,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + AccumulatedValue);
             return new double[] { AccumulatedValue };
         }
 

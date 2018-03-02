@@ -5,6 +5,7 @@ namespace Models.PMF.Functions.DemandFunctions
     using Models.Core;
     using Models.Interfaces;
     using APSIM.Shared.Utilities;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -41,7 +42,9 @@ namespace Models.PMF.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            return new double[] { Photosynthesis.Value() / (TranspirationEfficiencyCoefficient.Value() / VPD / 0.001) };
+            double returnValue = Photosynthesis.Value() / (TranspirationEfficiencyCoefficient.Value() / VPD / 0.001);
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
 
     }

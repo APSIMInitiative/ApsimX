@@ -7,6 +7,7 @@ namespace Models.PMF.Functions.DemandFunctions
 {
     using Models.Core;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -27,10 +28,11 @@ namespace Models.PMF.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
+            double returnValue = 0;
             if (Arbitrator.DM != null)
-                return new double[] { Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value() };
-            else
-                return new double[] { 0 };
+                returnValue = Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value();
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
 
     }

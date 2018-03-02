@@ -7,6 +7,7 @@ namespace Models.PMF.Functions.DemandFunctions
 {
     using Models.Core;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -83,8 +84,9 @@ namespace Models.PMF.Functions.DemandFunctions
                 double Rate = MaximumOrganWt.Value() / GrowthDuration.Value();
                 Value = Rate * ThermalTimeToday * OrganPopulation.Value();
             }
-
-            return new double[] { Value * ExpansionStress.Value() };
+            double returnValue = Value * ExpansionStress.Value();
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
         
         [EventSubscribe("PlantSowing")]

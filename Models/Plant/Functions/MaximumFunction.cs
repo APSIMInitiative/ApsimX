@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>Maximize the values of the children of this node</summary>
     /// \pre All children have to contain a public function "Value"
@@ -44,6 +45,7 @@ namespace Models.PMF.Functions
                 }
             }
 
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValues, "F3"));
             return returnValues;
         }
 

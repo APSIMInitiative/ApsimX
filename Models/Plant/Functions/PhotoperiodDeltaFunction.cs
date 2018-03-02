@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using Models.Interfaces;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -38,6 +39,7 @@ namespace Models.PMF.Functions
             double photoperiodToday = MathUtilities.DayLength(clockModel.Today.DayOfYear, Twilight, weatherData.Latitude);
             double photoperiodYesterday = MathUtilities.DayLength(clockModel.Today.DayOfYear - 1, Twilight, weatherData.Latitude);
             double photoperiodDelta = photoperiodToday - photoperiodYesterday;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + photoperiodDelta);
             return new double[] { photoperiodDelta };
         }
     }

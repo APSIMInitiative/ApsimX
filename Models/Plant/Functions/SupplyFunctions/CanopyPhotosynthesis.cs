@@ -5,6 +5,7 @@ namespace Models.PMF.Functions.SupplyFunctions
     using Models.Core;
     using Models.Interfaces;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -207,6 +208,7 @@ namespace Models.PMF.Functions.SupplyFunctions
         /// <returns>g dry matter/m2 soil/day</returns>
         public override double[] Values()
         {
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + GrossPhotosynthesis);
             return new double[] { GrossPhotosynthesis };
         }
     }

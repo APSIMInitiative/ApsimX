@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
 
     /// <summary>
@@ -82,18 +83,21 @@ namespace Models.PMF.Functions
             if (v is IFunction)
                 v = (v as IFunction).Values();
 
+            double[] returnValue;
             if (v is double[])
             {
                 double[] array = v as double[];
                 for (int i = 0; i < array.Length; i++)
                     array[i] = xys.ValueIndexed(array[i]);
-                return array;
+                returnValue = array;
             }
             else if (v is double)
-                return new double[] { xys.ValueIndexed((double)v) };
+                returnValue = new double[] { xys.ValueIndexed((double)v) };
             else
                 throw new Exception("Cannot do a linear interpolation on type: " + v.GetType().Name + 
                                     " in function: " + Name);
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValue, "F3"));
+            return returnValue;
         }
 
         /// <summary>Values for x.</summary>

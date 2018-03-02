@@ -8,6 +8,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -42,7 +43,9 @@ namespace Models.PMF.Functions
             {
                 IFunction f = childFunctions[0];
                 IFunction p = childFunctions[1];
-                return new double[] { Math.Pow(f.Value(), p.Value()) };
+                double returnValue = Math.Pow(f.Value(), p.Value());
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+                return new double[] { returnValue };
             }
             else
                 throw new Exception("Invalid number of arguments for Power function");

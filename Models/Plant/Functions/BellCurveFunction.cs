@@ -8,6 +8,7 @@ namespace Models.PMF.Functions
     using System;
     using Models.Core;
     using Models.PMF.Struct;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -32,8 +33,10 @@ namespace Models.PMF.Functions
         {
             double LeafNo = Structure.LeafTipsAppeared;
 
-            return new double[] {  AreaMax.Value() * Math.Exp(Breadth.Value() * Math.Pow(LeafNo - LargestLeafPosition.Value(), 2.0)
-                                + Skewness.Value() * (Math.Pow(LeafNo - LargestLeafPosition.Value(), 3.0))) };
+            double returnValue =  AreaMax.Value() * Math.Exp(Breadth.Value() * Math.Pow(LeafNo - LargestLeafPosition.Value(), 2.0)
+                                + Skewness.Value() * (Math.Pow(LeafNo - LargestLeafPosition.Value(), 3.0)));
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
     }
 }

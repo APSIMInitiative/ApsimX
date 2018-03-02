@@ -10,6 +10,7 @@ namespace Models.PMF.Functions
     using Models.PMF.Phen;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// A function that accumulates values from child functions
@@ -101,7 +102,9 @@ namespace Models.PMF.Functions
         {
             if (NumberOfDays == 0)
                 throw new ApsimXException(this, "Number of days for moving average cannot be zero in function " + this.Name);
-            return new double[] { MathUtilities.Average(AccumulatedValues) };
+            double returnValue = MathUtilities.Average(AccumulatedValues);
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

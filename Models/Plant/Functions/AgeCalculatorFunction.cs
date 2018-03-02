@@ -7,6 +7,7 @@ namespace Models.PMF.Functions
 {
     using System;
     using Models.Core;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -30,7 +31,9 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            return new double[] { _Age / 365.25 };
+            double returnValue = _Age / 365.25;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
     }
 }

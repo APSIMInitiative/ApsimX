@@ -7,6 +7,7 @@ namespace Models.PMF.Functions
 {
     using Models.Core;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -32,6 +33,7 @@ namespace Models.PMF.Functions
         public override double[] Values()
         {
             int layer = LayerIndex(Depth, soilModel.Thickness);
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + soilModel.Temperature[layer]);
             return new double[] { soilModel.Temperature[layer] };
         }
 

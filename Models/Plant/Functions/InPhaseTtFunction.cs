@@ -8,6 +8,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using Models.PMF.Phen;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// Returns the thermal time accumulation from the current phase in phenology
@@ -23,6 +24,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + phenologyModel.CurrentPhase.TTinPhase);
             return new double[] { phenologyModel.CurrentPhase.TTinPhase };
         }
     }

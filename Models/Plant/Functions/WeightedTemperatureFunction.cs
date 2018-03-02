@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// This Function calculates a mean daily temperature from Max and Min weighted toward Max according to the specified MaximumTemperatureWeighting factor.  This is then passed into the XY matrix as the x property and the function returns the y value
@@ -34,6 +35,7 @@ namespace Models.PMF.Functions
         public override double[] Values()
         {
             double tav = MaximumTemperatureWeighting * weatherData.MaxT + (1 - MaximumTemperatureWeighting) * weatherData.MinT;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + xys.ValueIndexed(tav));
             return new double[] { xys.ValueIndexed(tav) };
         }
 

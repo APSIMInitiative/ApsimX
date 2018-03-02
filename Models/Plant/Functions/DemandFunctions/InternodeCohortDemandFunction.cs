@@ -9,6 +9,7 @@ namespace Models.PMF.Functions.DemandFunctions
     using Models.PMF.Organs;
     using Models.PMF.Struct;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -70,7 +71,10 @@ namespace Models.PMF.Functions.DemandFunctions
                     }
                 } 
             }
-            return new double[] { Structure.TotalStemPopn * sinkStrength };
+
+            double[] returnValue =  new double[] { Structure.TotalStemPopn * sinkStrength };
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue[0]);
+            return returnValue;
         }
     }
 }   

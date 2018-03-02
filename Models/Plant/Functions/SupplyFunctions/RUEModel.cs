@@ -98,7 +98,8 @@ namespace Models.PMF.Functions.SupplyFunctions
                 throw new Exception("NaN Radiation interception value supplied to RUE model");
             if (radiationInterception < 0)
                 throw new Exception("Negative Radiation interception value supplied to RUE model");
-            return new double[] { radiationInterception * RueAct };
+            double returnValue = radiationInterception * RueAct;
+            return new double[] { returnValue };
         }
         #endregion
     }

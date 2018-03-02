@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -69,7 +70,9 @@ namespace Models.PMF.Functions
         {
             if (NumberOfDays == 0)
                 throw new ApsimXException(this, "Number of days for moving sum cannot be zero in function " + this.Name);
-            return new double[] { MathUtilities.Sum(AccumulatedValues) };
+            double returnValue = MathUtilities.Sum(AccumulatedValues);
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

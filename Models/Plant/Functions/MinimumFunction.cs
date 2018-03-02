@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>Minimize the values of the children of this node</summary>
     /// \pre All children have to contain a public function "Value"
@@ -43,7 +44,8 @@ namespace Models.PMF.Functions
                         returnValues[i] = Math.Min(returnValues[i], values[i]);
                 }
             }
-            
+
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValues, "F3"));
             return returnValues;
         }
 

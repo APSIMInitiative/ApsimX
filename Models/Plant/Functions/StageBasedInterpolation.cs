@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using Models.PMF.Phen;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -84,9 +85,11 @@ namespace Models.PMF.Functions
                         returnValue = Codes[i - 1];
                     }
 
+                    Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
                     return new double[] { returnValue };
                 }
             }
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + Codes[stageCodes.Length - 1]);
             return new double[] { Codes[stageCodes.Length - 1] };
         }
         

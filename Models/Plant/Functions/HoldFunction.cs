@@ -5,10 +5,12 @@
 //-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.PMF.Phen;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// Returns the a value which is updated daily until a given stage is reached, beyond which it is held constant
@@ -20,7 +22,7 @@ namespace Models.PMF.Functions
     public class HoldFunction : BaseFunction, ICustomDocumentation
     {
         /// <summary>Value to return</summary>
-        private double[] returnValue;
+        private List<double> returnValues = new List<double>();
 
         /// <summary>The value to hold after event</summary>
         [ChildLink]
@@ -40,7 +42,8 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            returnValue = valueToHold.Values();
+            returnValues.Clear();
+            returnValues.AddRange(valueToHold.Values());
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
@@ -54,14 +57,18 @@ namespace Models.PMF.Functions
                 //Do nothing, hold value constant
             }
             else
-                returnValue = valueToHold.Values();
+            {
+                returnValues.Clear();
+                returnValues.AddRange(valueToHold.Values());
+            }
         }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public override double[] Values()
         {
-            return returnValue;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValues.ToArray(), "F3"));
+            return returnValues.ToArray();
         }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>

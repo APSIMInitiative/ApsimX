@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.PMF.Phen;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// A function that accumulates values from child functions
@@ -100,6 +101,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + AccumulatedValue);
             return new double[] { AccumulatedValue };
         }
 

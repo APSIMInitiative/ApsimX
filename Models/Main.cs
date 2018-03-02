@@ -25,6 +25,11 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
+#if TRACE
+            Trace.Listeners.Add(new ConsoleTraceListener());
+            Trace.AutoFlush = true;
+#endif
+
             string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
             Directory.CreateDirectory(tempFolder);
             Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);

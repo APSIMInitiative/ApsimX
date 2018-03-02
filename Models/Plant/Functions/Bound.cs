@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
@@ -49,6 +50,8 @@ namespace Models.PMF.Functions
 
                     for (int i = 0; i < values.Length; i++)
                         values[i] = Math.Max(Math.Min(upperValues[i], values[i]), lowerValues[i]);
+
+                    Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(values, "F3"));
                     return values;
                 }
             }

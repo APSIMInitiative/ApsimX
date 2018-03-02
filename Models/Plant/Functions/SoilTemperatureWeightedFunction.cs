@@ -7,6 +7,7 @@ namespace Models.PMF.Functions
 {
     using Models.Core;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -58,6 +59,7 @@ namespace Models.PMF.Functions
         public override double[] Values()
         {
             double weightedTemperature = 0.25 * dayBeforeYesterday + 0.5 * yesterday + 0.25 * today;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + xyPairs.ValueIndexed(weightedTemperature));
             return new double[] { xyPairs.ValueIndexed(weightedTemperature) };
         }
     }

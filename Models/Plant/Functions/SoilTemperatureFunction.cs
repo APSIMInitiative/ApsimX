@@ -8,6 +8,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// Returns the temperature of the surface soil layer
@@ -41,7 +42,9 @@ namespace Models.PMF.Functions
         public override double[] Values()
         {
             AirTemperatureFunction airtempfunction = new AirTemperatureFunction();
-            return new double[] { airtempfunction.Linint3hrlyTemp(maxt_soil_surface, mint_soil_surface, xyPairs) };
+            double returnValue = airtempfunction.Linint3hrlyTemp(maxt_soil_surface, mint_soil_surface, xyPairs);
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

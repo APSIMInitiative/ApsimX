@@ -8,6 +8,7 @@ namespace Models.PMF.Functions
     using System;
     using System.Collections.Generic;
     using Models.Core;
+    using System.Diagnostics;
 
     /// <summary>
     /// Returns the value at the given index. If the index is outside the array, the last value will be returned.
@@ -45,6 +46,7 @@ namespace Models.PMF.Functions
                     }
             }
 
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + ArrayValues);
             return str2dbl;
         }
 

@@ -8,6 +8,7 @@ namespace Models.PMF.Functions.SupplyFunctions
     using Models.Core;
     using Models.Interfaces;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -40,11 +41,10 @@ namespace Models.PMF.Functions.SupplyFunctions
         /// </exception>
         public override double[] Values()
         {
+            double returnValue = 0;
             if (PhotosyntheticPathway == "C3")
             {
-
                 double temp = (MetData.MaxT + MetData.MinT) / 2.0; // Average temperature
-
 
                 if (temp >= 50.0)
                     throw new Exception("Average daily temperature too high for RUE CO2 Function");
@@ -52,7 +52,7 @@ namespace Models.PMF.Functions.SupplyFunctions
                 if (MetData.CO2 < 350)
                     throw new Exception("CO2 concentration too low for RUE CO2 Function");
                 else if (MetData.CO2 == 350)
-                    return new double[] { 1.0 };
+                    returnValue = 1;
                 else
                 {
                     double CP;      //co2 compensation point (ppm)
@@ -63,15 +63,18 @@ namespace Models.PMF.Functions.SupplyFunctions
 
                     first = (MetData.CO2 - CP) * (350.0 + 2.0 * CP);
                     second = (MetData.CO2 + 2.0 * CP) * (350.0 - CP);
-                    return new double[] { first / second };
+                    returnValue = first / second;
                 }
             }
             else if (PhotosyntheticPathway == "C4")
             {
-                return new double[] { 0.000143 * MetData.CO2 + 0.95 }; //Mark Howden, personal communication
+                returnValue = 0.000143 * MetData.CO2 + 0.95; //Mark Howden, personal communication
             }
             else
                 throw new Exception("Unknown photosynthetic pathway in RUECO2Function");
+
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
     }
 }

@@ -57,7 +57,7 @@ namespace Models.CLEM
                         catch (Exception ex)
                         {
                             Summary.WriteWarning(this, ex.Message);
-                            //eat it... Or maybe Debug.Writeline(ex);
+                            //eat it... Or maybe Trace.WriteLine(ex);
                         }
                     }
                 }

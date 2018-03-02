@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.PMF.Phen;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -55,6 +56,7 @@ namespace Models.PMF.Functions
             else
                 returnValue = 0.0;
 
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
             return new double[] { returnValue };
         }
 

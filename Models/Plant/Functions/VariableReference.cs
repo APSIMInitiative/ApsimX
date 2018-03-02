@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
 
     /// <summary>
@@ -35,11 +36,19 @@ namespace Models.PMF.Functions
         {
             object o = locator.Get(VariableName.Trim());
             if (o is IFunction)
-                return (o as IFunction).Values();
-            else if (o is double[])
+                o = (o as IFunction).Values();
+
+            if (o is double[])
+            {
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(o as double[], "F3"));
                 return (double[])o;
+            }
             else
-                return new double[1] { Convert.ToDouble(o, CultureInfo.InvariantCulture) };
+            {
+                double value = Convert.ToDouble(o, CultureInfo.InvariantCulture);
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + value);
+                return new double[1] { value };
+            }
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>An abstract base class for performing a mathematic operation (e.g. multiply, divide)</summary>
@@ -41,6 +42,8 @@ namespace Models.PMF.Functions
                         returnValues[j] = PerformOperation(returnValues[j], values[j]);
                 }
             }
+
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValues, "F3"));
             return returnValues;
         }
 

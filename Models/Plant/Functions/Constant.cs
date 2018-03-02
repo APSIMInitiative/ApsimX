@@ -8,6 +8,7 @@ namespace Models.PMF.Functions
     using System;
     using System.Collections.Generic;
     using Models.Core;
+    using System.Diagnostics;
 
     /// <summary>
     /// A constant value function
@@ -28,6 +29,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value of the function.</summary>
         public override double[] Values()
         {
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + FixedValue);
             return new double[] { FixedValue };
         }
 

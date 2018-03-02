@@ -8,6 +8,7 @@ namespace Models.PMF.Functions.DemandFunctions
     using Models.Core;
     using Models.PMF.Phen;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -83,6 +84,7 @@ namespace Models.PMF.Functions.DemandFunctions
             else
                 returnValue[0] = 0;
 
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue[0]);
             return returnValue;
         }
 

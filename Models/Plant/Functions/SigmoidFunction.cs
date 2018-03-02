@@ -8,6 +8,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)
@@ -39,7 +40,9 @@ namespace Models.PMF.Functions
         {
             try
             {
-                return new double[] { Ymax.Value() * 1 / (1 + Math.Exp(-(XValue.Value() - Xo.Value()) / b.Value())) };
+                double returnValue = Ymax.Value() * 1 / (1 + Math.Exp(-(XValue.Value() - Xo.Value()) / b.Value()));
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+                return new double[] { returnValue };
             }
             catch (Exception)
             {

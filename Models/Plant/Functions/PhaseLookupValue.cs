@@ -5,10 +5,12 @@
 //-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.PMF.Phen;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.
@@ -55,10 +57,15 @@ namespace Models.PMF.Functions
             if (phenologyModel != null && phenologyModel.Between(Start, End) && childFunctions.Count > 0)
             {
                 IFunction Lookup = childFunctions[0] as IFunction;
-                return Lookup.Values();
+                double[] returnValues = Lookup.Values();
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValues, "F3"));
+                return returnValues;
             }
             else
+            {
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:0");
                 return zero;
+            }
         }
 
         /// <summary>Gets a value indicating whether [in phase].</summary>

@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using Models.Soils;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -47,6 +48,7 @@ namespace Models.PMF.Functions
                 }
             }
 
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(wfd, "F3"));
             return wfd;
         }
 

@@ -5,6 +5,7 @@ namespace Models.PMF.Functions.DemandFunctions
     using System;
     using Models.Core;
     using Models.PMF.Phen;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -46,7 +47,9 @@ namespace Models.PMF.Functions.DemandFunctions
                 StartWt = InitialWt;                                   //This is to initiate mass so relative growth rate can kick in
             double CurrentOrganWt = Math.Max(StartWt, Live.Wt / OrganNumber.Value());
             double OrganDemand = CurrentOrganWt * RelativeGrowthRate.Value();
-            return new double[] { OrganDemand * OrganNumber.Value() };
+            double returnValue = OrganDemand * OrganNumber.Value();
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
 
     }

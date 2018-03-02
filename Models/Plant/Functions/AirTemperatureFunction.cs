@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using System.Collections.Generic;
     using Models.Core;
     using Models.Interfaces;
+    using System.Diagnostics;
 
     /// <summary>
     /// A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.  
@@ -51,7 +52,9 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            return new double[] { Linint3hrlyTemp(MetData.MaxT, MetData.MinT, XYPairs) };
+            double returnValue = Linint3hrlyTemp(MetData.MaxT, MetData.MinT, XYPairs);
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
         /// <summary>Linint3hrlies the temporary.</summary>
         /// <param name="tmax">The tmax.</param>

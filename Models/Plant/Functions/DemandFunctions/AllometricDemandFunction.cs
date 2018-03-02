@@ -7,6 +7,7 @@ namespace Models.PMF.Functions.DemandFunctions
 {
     using Models.Core;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -52,7 +53,9 @@ namespace Models.PMF.Functions.DemandFunctions
 
 
             double Target = Const * Math.Pow((double)xValue, Power);
-            return new double[] { Math.Max(0.0, Target - (double)yValue) };
+            double[] returnValue = new double[] { Math.Max(0.0, Target - (double)yValue) };
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue[0]);
+            return returnValue;
         }
 
     }

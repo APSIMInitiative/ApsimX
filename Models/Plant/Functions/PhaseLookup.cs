@@ -5,9 +5,11 @@
 //-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// Look up a value based upon the current growth phase.
@@ -30,8 +32,13 @@ namespace Models.PMF.Functions
             {
                 PhaseLookupValue P = F as PhaseLookupValue;
                 if (P.InPhase)
-                    return P.Values();
+                {
+                    double[] returnValues = P.Values();
+                    Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValues, "F3"));
+                    return returnValues;
+                }
             }
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:0");
             return zero;  // Default value is zero
         }
 

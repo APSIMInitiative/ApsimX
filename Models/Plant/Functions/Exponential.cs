@@ -8,6 +8,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -50,7 +51,9 @@ namespace Models.PMF.Functions
             {
                 IFunction F = childFunctions[0] as IFunction;
 
-                return new double[] { A + B * Math.Exp(C * F.Value()) };
+                double returnValue = A + B * Math.Exp(C * F.Value());
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+                return new double[] { returnValue };
             }
             else
             {

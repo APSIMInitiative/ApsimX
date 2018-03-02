@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.PMF.Phen;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// This function returns the daily delta for its child function
@@ -55,7 +56,9 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            return new double[] { Integral.Value() - yesterdaysValue };
+            double returnValue = Integral.Value() - yesterdaysValue;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
 
         /// <summary>Called when [EndCrop].</summary>

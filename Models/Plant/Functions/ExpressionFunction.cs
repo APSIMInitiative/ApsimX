@@ -10,6 +10,7 @@ namespace Models.PMF.Functions
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// A mathematical expression is evaluated using variables exposed within the Plant Modelling Framework.
@@ -40,9 +41,15 @@ namespace Models.PMF.Functions
             FillVariableNames(fn, this);
             Evaluate(fn);
             if (fn.Results != null)
+            {
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(fn.Results, "F3"));
                 return fn.Results;
+            }
             else
+            {
+                Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + fn.Result);
                 return new double[] { fn.Result };
+            }
         }
 
         /// <summary>

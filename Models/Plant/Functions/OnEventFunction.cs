@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.PMF.Phen;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// Returns the a value depending on whether an event has occurred.
@@ -74,6 +75,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
             return new double[] { returnValue };
         }
 

@@ -8,6 +8,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>Value returned is determined according to given criteria</summary>
     [Serializable]
@@ -40,10 +41,14 @@ namespace Models.PMF.Functions
                     ifFalse = f.Value();
             }
 
+            double returnValue;
             if (testVariable < lessThanCriteria)
-                return new double[] { ifTrue };
+                returnValue =  ifTrue;
             else
-                return new double[] { ifFalse };
+                returnValue = ifFalse;
+
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

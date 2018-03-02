@@ -5,9 +5,11 @@
 //-----------------------------------------------------------------------
 namespace Models.PMF.Functions
 {
+    using APSIM.Shared.Utilities;
     using MathNet.Numerics.Interpolation;
     using Models.Core;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -47,19 +49,22 @@ namespace Models.PMF.Functions
             if (v is IFunction)
                 v = (v as IFunction).Values();
 
+            double[] returnValues;
             if (v is double[])
             {
                 double[] array = v as double[];
                 for (int i = 0; i < array.Length; i++)
                     array[i] = spline.Interpolate(array[i]);
-                return array;
+                returnValues = array;
             }
             else if (v is double)
-                return new double[] { spline.Interpolate((double)v) };
+                returnValues =  new double[] { spline.Interpolate((double)v) };
 
             else
                 throw new Exception("Cannot do a spline interpolation on type: " + v.GetType().Name +
                                     " in function: " + Name);
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValues, "F3"));
+            return returnValues;
         }
     }
 }

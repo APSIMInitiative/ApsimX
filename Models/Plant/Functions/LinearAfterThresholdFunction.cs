@@ -9,6 +9,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// Function to return the value for a function with a trigger and slope from it
@@ -66,6 +67,7 @@ namespace Models.PMF.Functions
             if (v is IFunction)
                 v = (v as IFunction).Values();
 
+            double[] returnValue;
             if (v is double[])
             {
                 double[] array = v as double[];
@@ -76,19 +78,21 @@ namespace Models.PMF.Functions
                     else
                         array[i] = Math.Max(0.0, (array[i] - XTrigger)) * Slope;
                 }
-                return array;
+                returnValue = array;
             }
             else if (v is double)
             {
                 double xValue = (double)v;
                 if (xValue <= XTrigger)
-                    return new double[] { 0 };
+                    returnValue = new double[] { 0 };
                 else
-                    return new double[] { Math.Max(0.0, (xValue - XTrigger)) * Slope };
+                    returnValue = new double[] { Math.Max(0.0, (xValue - XTrigger)) * Slope };
             }
             else
                 throw new Exception("Cannot do a linear interpolation on type: " + v.GetType().Name +
                                     " in function: " + Name);
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + StringUtilities.BuildString(returnValue, "F3"));
+            return returnValue;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

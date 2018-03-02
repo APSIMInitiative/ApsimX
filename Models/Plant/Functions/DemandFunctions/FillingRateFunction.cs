@@ -7,6 +7,7 @@ namespace Models.PMF.Functions.DemandFunctions
 {
     using Models.Core;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -36,7 +37,9 @@ namespace Models.PMF.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public override double[] Values()
         {
-            return new double[] { (PotentialSizeIncrement.Value() / FillingDuration.Value()) * ThermalTime.Value() * NumberFunction.Value() };
+            double[] returnValue = new double[] { (PotentialSizeIncrement.Value() / FillingDuration.Value()) * ThermalTime.Value() * NumberFunction.Value() };
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue[0]);
+            return returnValue;
         }
 
     }

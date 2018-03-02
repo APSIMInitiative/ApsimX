@@ -8,6 +8,7 @@ namespace Models.PMF.Functions.DemandFunctions
     using Models.Core;
     using Models.PMF.Struct;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -28,7 +29,9 @@ namespace Models.PMF.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public override double[] Values() 
         {
-            return new double[] { Structure.DeltaTipNumber * Structure.TotalStemPopn * InterNodeWt.Value() };
+            double[] returnValue = new double[] { Structure.DeltaTipNumber * Structure.TotalStemPopn * InterNodeWt.Value() };
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue[0]);
+            return returnValue;
         }
     }
 }   

@@ -8,6 +8,7 @@ namespace Models.PMF.Functions
     using Models.Core;
     using Models.Interfaces;
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// # [Name]
@@ -64,7 +65,9 @@ namespace Models.PMF.Functions
                 RelEffRefTemp = (2 * Math.Pow(RefTemp - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(RefTemp - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
             }
 
-            return new double[] { RelEff / RelEffRefTemp };
+            double returnValue = RelEff / RelEffRefTemp;
+            Trace.WriteLine("Name: " + Name + " Type: " + GetType().Name + " Value:" + returnValue);
+            return new double[] { returnValue };
         }
     }
 }
