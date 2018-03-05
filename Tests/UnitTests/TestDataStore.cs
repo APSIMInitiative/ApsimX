@@ -87,7 +87,8 @@
                 object[] arguments = new object[]
                 {
                     new string[] { "Sim1", "Sim2" }, // knownSimulationNames
-                };
+                    new string[] { "Sim1", "Sim2" }
+            };
 
                 Utilities.CallEvent(storage, "BeginRun", arguments);
 
@@ -116,8 +117,9 @@
                 object[] arguments = new object[]
                 {
                     new string[] { "Sim1", "Sim2" }, // knownSimulationNames
+                    new string[] { "Sim1" }
                 };
-
+            
                 Utilities.CallEvent(storage, "BeginRun", arguments);
 
                 string[] columnNames1 = new string[] { "Col1", "Col2" };
@@ -146,6 +148,7 @@
                 object[] arguments = new object[]
                 {
                     new string[] { "Sim1" }, // knownSimulationNames
+                    new string[] { "Sim1" }
                 };
 
                 Utilities.CallEvent(storage, "BeginRun", arguments);
@@ -189,6 +192,7 @@
                 object[] arguments = new object[]
                 {
                     new string[] { "Sim1" }, // knownSimulationNames
+                    new string[] { "Sim1" }
                 };
 
                 Utilities.CallEvent(storage, "BeginRun", arguments);
@@ -214,8 +218,9 @@
             {
                 // Create a database with 3 sims.
                 string[] knownSimulationNames = new string[] { "Sim1", "Sim2", "Sim3" };
+                string[] simulationNamesBeingRun = new string[] { "Sim1", "Sim2", "Sim3" };
 
-                Utilities.CallEvent(storage, "BeginRun", new object[] { knownSimulationNames });
+                Utilities.CallEvent(storage, "BeginRun", new object[] { knownSimulationNames, simulationNamesBeingRun });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { 1 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null }, new object[] { 2 });
                 storage.WriteRow("Sim3", "Report1", columnNames1, new string[] { null }, new object[] { 3 });
@@ -225,8 +230,9 @@
             {
                 // Now do it again this time deleting sim2 and sim3 and adding sim4
                 string[] knownSimulationNames = new string[] { "Sim1", "Sim4" };
+                string[] simulationNamesBeingRun = new string[] { "Sim1", "Sim2", "Sim3" };
 
-                Utilities.CallEvent(storage, "BeginRun", new object[] { knownSimulationNames });
+                Utilities.CallEvent(storage, "BeginRun", new object[] { knownSimulationNames, simulationNamesBeingRun });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { 5 });
                 storage.WriteRow("Sim4", "Report1", columnNames1, new string[] { null }, new object[] { 4 });
                 Utilities.CallEvent(storage, "EndRun");
@@ -243,12 +249,13 @@
         public void OnBeginRun_CleanupOldFieldNames()
         {
             string[] knownSimulationNames = new string[] { "Sim1" };
+            string[] simulationNamesBeingRun = new string[] { "Sim1" };
             using (DataStore storage = new DataStore(fileName))
             {
                 string[] oldColumnNames = new string[] { "OldCol" };
             
                 // Create a table with a column 'OldCol'
-                Utilities.CallEvent(storage, "BeginRun", new object[] { knownSimulationNames });
+                Utilities.CallEvent(storage, "BeginRun", new object[] { knownSimulationNames, simulationNamesBeingRun });
                 storage.WriteRow("Sim1", "Report1", oldColumnNames, new string[] { null }, new object[] { 1 });
                 storage.WriteRow("Sim1", "Report1", oldColumnNames, new string[] { null }, new object[] { 2 });
                 Utilities.CallEvent(storage, "EndRun");
@@ -258,7 +265,7 @@
                 string[] newColumnNames = new string[] { "NewCol" };
                 // Now do it again this time only to column 'NewCol'
 
-                Utilities.CallEvent(storage, "BeginRun", new object[] { knownSimulationNames });
+                Utilities.CallEvent(storage, "BeginRun", new object[] { knownSimulationNames, simulationNamesBeingRun });
                 storage.WriteRow("Sim1", "Report1", newColumnNames, new string[] { null }, new object[] { 3 });
                 storage.WriteRow("Sim1", "Report1", newColumnNames, new string[] { null }, new object[] { 4 });
                 Utilities.CallEvent(storage, "EndRun");
@@ -532,7 +539,8 @@
 
                 // Write some new current data.
                 // Create a database with 3 sims.
-                object[] arguments = new object[] { new string[] { "Sim1", "Sim2" } };
+                string[] simulationNamesBeingRun = new string[] { "Sim1" };
+                object[] arguments = new object[] { new string[] { "Sim1", "Sim2" }, simulationNamesBeingRun };
                 Utilities.CallEvent(storage, "BeginRun", arguments);
                 string[] columnNames1 = new string[] { "Col1", "Col2" };
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 3), 100.0 });
@@ -576,7 +584,8 @@
                 // Write new rows for sim2. Should get rid of old sim2 data and replace 
                 // with these 2 new rows.
                 string[] simulationNames = new string[] { "Sim1", "Sim2" };
-                Utilities.CallEvent(storage, "BeginRun", new object[] { simulationNames });
+                string[] simulationNamesBeingRun = new string[] { "Sim2" };
+                Utilities.CallEvent(storage, "BeginRun", new object[] { simulationNames, simulationNamesBeingRun });
                 string[] columnNames1 = new string[] { "Col1", "Col2" };
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 3.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 4.0 });
@@ -611,7 +620,8 @@
                 // Write new rows for sim2. Should get rid of old sim2 data and replace 
                 // with these 2 new rows.
                 string[] simulationNames = new string[] { "Sim1", "Sim2" };
-                Utilities.CallEvent(storage, "BeginRun", new object[] { simulationNames });
+                string[] simulationNamesBeingRun = new string[] { "Sim2" };
+                Utilities.CallEvent(storage, "BeginRun", new object[] { simulationNames, simulationNamesBeingRun });
                 string[] columnNames1 = new string[] { "Col1", "Col2" };
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 3.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 4.0 });
@@ -661,6 +671,7 @@
             object[] arguments = new object[]
             {
                     new string[] { "Sim1", "Sim2" }, // knownSimulationNames
+                    new string[] { "Sim1", "Sim2" }, // simulation names being run
             };
 
             Utilities.CallEvent(storage, "BeginRun", arguments);
