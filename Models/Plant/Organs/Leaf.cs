@@ -1015,6 +1015,7 @@ namespace Models.PMF.Organs
         protected void Clear()
         {
             Leaves = new List<LeafCohort>();
+            needToRecalculateLiveDead = true;
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
@@ -1719,7 +1720,6 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
             Structure.Germinated = false;
-            Structure.PrimaryBudNo = Plant.SowingData.BudNumber;
 
         }
 
@@ -1763,17 +1763,6 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
         }
         #endregion
-        /// <summary>
-        /// Document a specific function
-        /// </summary>
-        /// <param name="FunctName"></param>
-        /// <param name="indent"></param>
-        /// <param name="tags"></param>
-        public void DocumentFunction(string FunctName, List<AutoDocumentation.ITag> tags, int indent)
-        {
-            IModel Funct = Apsim.Child(this, FunctName);
-            AutoDocumentation.DocumentModel(Funct, tags, -1, indent);
-        }
 
     }
 }

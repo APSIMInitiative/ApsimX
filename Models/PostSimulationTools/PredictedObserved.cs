@@ -12,6 +12,7 @@ namespace Models.PostSimulationTools
     using System.Text;
 
     /// <summary>
+    /// # [Name]
     /// Reads the contents of a file (in apsim format) and stores into the DataStore.
     /// If the file has a column name of 'SimulationName' then this model will only input data for those rows
     /// where the data in column 'SimulationName' matches the name of the simulation under which
@@ -21,7 +22,7 @@ namespace Models.PostSimulationTools
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType=typeof(DataStore))]
+    [ValidParent(ParentType = typeof(DataStore))]
     [ValidParent(ParentType = typeof(Folder))]
     public class PredictedObserved : Model, IPostSimulationTool
     {
@@ -34,7 +35,7 @@ namespace Models.PostSimulationTools
         [Description("Observed table")]
         [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.TableName)]
         public string ObservedTableName { get; set; }
-        
+
         /// <summary>Gets or sets the field name used for match.</summary>
         [Description("Field name to use for matching predicted with observed data")]
         [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.FieldName)]
@@ -62,19 +63,19 @@ namespace Models.PostSimulationTools
             if (PredictedTableName != null && ObservedTableName != null)
             {
                 dataStore.DeleteDataInTable(this.Name);
-                
+
                 DataTable predictedDataNames = dataStore.RunQuery("PRAGMA table_info(" + PredictedTableName + ")");
-                DataTable observedDataNames  = dataStore.RunQuery("PRAGMA table_info(" + ObservedTableName + ")");
+                DataTable observedDataNames = dataStore.RunQuery("PRAGMA table_info(" + ObservedTableName + ")");
 
                 if (predictedDataNames == null)
                     throw new ApsimXException(this, "Could not find model data table: " + ObservedTableName);
-                
+
                 if (observedDataNames == null)
                     throw new ApsimXException(this, "Could not find observed data table: " + ObservedTableName);
 
                 IEnumerable<string> commonCols = from p in predictedDataNames.AsEnumerable()
-                                               join o in observedDataNames.AsEnumerable() on p["name"] equals o["name"]
-                                               select p["name"] as string;
+                                                 join o in observedDataNames.AsEnumerable() on p["name"] equals o["name"]
+                                                 select p["name"] as string;
 
                 StringBuilder query = new StringBuilder("SELECT ");
                 foreach (string s in commonCols)
@@ -130,7 +131,27 @@ namespace Models.PostSimulationTools
                 {
                     predictedObservedData.TableName = this.Name;
                     dataStore.WriteTable(predictedObservedData);
+
+                    List<string> unitFieldNames = new List<string>();
+                    List<string> unitNames = new List<string>();
+
+                    // write units to table.
+                    foreach (string fieldName in commonCols)
+                    {
+                        string units = dataStore.GetUnits(PredictedTableName, fieldName);
+                        if (units != null && units != "()")
+                        {
+                            string unitsMinusBrackets = units.Replace("(", "").Replace(")", "");
+                            unitFieldNames.Add("Predicted." + fieldName);
+                            unitNames.Add(unitsMinusBrackets);
+                            unitFieldNames.Add("Observed." + fieldName);
+                            unitNames.Add(unitsMinusBrackets);
+                        }
+                    }
+                    if (unitNames.Count > 0)
+                        dataStore.AddUnitsForTable(Name, unitFieldNames, unitNames);
                 }
+
                 else
                 {
                     // Determine what went wrong.

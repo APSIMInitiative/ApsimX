@@ -40,6 +40,7 @@ namespace Models.PMF.Phen
         /// <summary>fraction of bud burst in relation to bud number.</summary>
         [Link]
         public IFunction FractionOfBudBurst = null;
+
         /// <summary>
         /// This function increments thermal time accumulated in each phase 
         /// and returns a non-zero value if the phase target is met today so
@@ -53,7 +54,7 @@ namespace Models.PMF.Phen
 
             // Get the Target TT
             double Target = CalcTarget();
-
+            structure.PrimaryBudNo = plant.SowingData.BudNumber;
             if (DaysFromSowingToEndPhase > 0)
             {
                 if (phenology.DaysAfterSowing >= DaysFromSowingToEndPhase)
@@ -174,11 +175,11 @@ namespace Models.PMF.Phen
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                    AutoDocumentation.DocumentModel(child, tags, -1, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
     }
