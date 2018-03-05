@@ -461,8 +461,14 @@ namespace UserInterface.Presenters
                 {
                     this.explorerPresenter.MainPresenter.ShowMsgDialog("The value you entered was not valid for its datatype", "Invalid entry", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
                 }
-
-                this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
+                try
+                {
+                    this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
+                }
+                catch (Exception ex)
+                {
+                    explorerPresenter.MainPresenter.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
+                }
             }
             
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;

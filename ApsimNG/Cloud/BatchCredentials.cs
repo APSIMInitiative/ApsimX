@@ -17,9 +17,9 @@ namespace ApsimNG.Cloud
         {
             return new BatchCredentials
             {
-                Url = (string)Properties.Settings.Default["BatchUrl"],
-                Account = (string)Properties.Settings.Default["BatchAccount"],
-                Key = (string)Properties.Settings.Default["BatchKey"]
+                Url = (string)AzureSettings.Default["BatchUrl"],
+                Account = (string)AzureSettings.Default["BatchAccount"],
+                Key = (string)AzureSettings.Default["BatchKey"]
             };
         }
     }

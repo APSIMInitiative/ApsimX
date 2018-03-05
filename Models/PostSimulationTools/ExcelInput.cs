@@ -53,10 +53,34 @@ namespace Models.PostSimulationTools
         public string[] FileNameMetadata { get; set; }
 
         /// <summary>
+        /// List of Excel sheet names to read from.
+        /// </summary>
+        private string[] sheetNames;
+
+        /// <summary>
         /// Gets or sets the list of EXCEL sheet names to read from.
         /// </summary>
         [Description("EXCEL sheet names (csv)")]
-        public string[] SheetNames { get; set; }
+        public string[] SheetNames
+        {
+            get
+            {
+                return sheetNames;
+            }
+            set
+            {
+                string[] formattedSheetNames = new string[value.Length];
+                for (int i = 0; i < value.Length; i++)
+                {
+                    if (Char.IsNumber(value[i][0]))
+                        formattedSheetNames[i] = "\"" + value[i] + "\"";
+                    else
+                        formattedSheetNames[i] = value[i];
+                }
+
+                sheetNames = formattedSheetNames;
+            }
+        }
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()

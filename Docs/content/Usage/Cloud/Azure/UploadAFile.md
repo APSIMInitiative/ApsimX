@@ -8,9 +8,9 @@ Several types of files need to be uploaded in order for a job to run on Azure - 
 **1. Generate/Obtain storage credentials**
 
 For your Batch account you will require a name, a URL and a key. For your storage account you will need a name and a key.
-These details will be saved to `ApsimNG.Properties.Settings.Default` each time they are updated, but for the first time, they may be loaded from a .lic plain text file:
+These details will be saved to `ApsimNG.Cloud.AzureSettings.Default` each time they are updated, but for the first time, they may be loaded from a .lic plain text file:
 
-![Azure licence file format](/images/Usage.AzureLicenceFileFormat.png)
+![Azure licence file format](/images/Usage.AzureLicenceFileFormat.PNG)
 
 **2. Generate a reference to the storage account**
 

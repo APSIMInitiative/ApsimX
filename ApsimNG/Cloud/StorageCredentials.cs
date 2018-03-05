@@ -16,8 +16,8 @@ namespace ApsimNG.Cloud
         {
             return new StorageCredentials
             {
-                Account = (string)Properties.Settings.Default["StorageAccount"],
-                Key = (string)Properties.Settings.Default["StorageKey"]
+                Account = (string)AzureSettings.Default["StorageAccount"],
+                Key = (string)AzureSettings.Default["StorageKey"]
             };
         }
     }
