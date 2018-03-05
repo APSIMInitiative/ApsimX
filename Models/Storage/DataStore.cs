@@ -870,7 +870,7 @@
         {
             // Get a list of simulation names that are in the .db but we know nothing about them
             // i.e. they are old and no longer needed.
-            var unknownSimulationNames = simulationIDs.Keys.SkipWhile(simName => knownSimulationNames.Contains(simName));
+            var unknownSimulationNames = simulationIDs.Keys.Where(simName => !knownSimulationNames.Contains(simName));
 
             if (unknownSimulationNames.Count() > 0)
             {
