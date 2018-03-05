@@ -122,8 +122,10 @@
             
             AzureSettings.Default["OutputDir"] = jp.OutputDir;
             AzureSettings.Default.Save();
-            
-            submissionWorker.RunWorkerAsync(jp);
+            if (batchClient == null)
+                GetCredentials(null, null);
+            else
+                submissionWorker.RunWorkerAsync(jp);
         }
 
         /// <summary>
@@ -234,7 +236,7 @@
             string xml = "";
             foreach (Simulation sim in Runner.AllSimulations(model))
             {
-                path = jp.ModelPath + "\\" + sim.Name + ".apsimx";
+                path = Path.Combine(jp.ModelPath, sim.Name + ".apsimx");
                 // if weather file is not in the same directory as the .apsimx file, display an error then abort
                 foreach (var child in sim.Children)
                 {
@@ -650,7 +652,21 @@
                 storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
                 uploader = new FileUploader(storageAccount);
                 var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
-                batchClient = BatchClient.Open(sharedCredentials);
+                try
+                {
+                    batchClient = BatchClient.Open(sharedCredentials);
+                }
+                catch (UriFormatException err)
+                {
+                    ShowError("Error opening Azure Batch client: credentials are invalid.");
+                    AzureCredentialsSetup cred = new AzureCredentialsSetup();
+                    cred.Finished += GetCredentials;
+                }
+                catch (Exception ex)
+                {
+                    ShowError(ex.ToString());
+                }
+                
             } else
             {
                 // ask user for a credentials file
@@ -664,7 +680,8 @@
         /// </summary>
         public void CancelJobSubmission()
         {
-            submissionWorker.CancelAsync();
+            if (submissionWorker != null)
+                submissionWorker.CancelAsync();
             explorerPresenter.HideRightHandPanel();
         }
     }
