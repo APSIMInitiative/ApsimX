@@ -1734,8 +1734,7 @@ namespace Models.PMF.Organs
             needToRecalculateLiveDead = true;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
-            Structure.Germinated = false;
-            Structure.PrimaryBudNo = Plant.SowingData.BudNumber;
+            Structure.Germinated = false;            
 
         }
 
