@@ -76,5 +76,14 @@ namespace Models.Core
 
         /// <summary>Delete all tables</summary>
         void EmptyDataStore();
+
+        /// <summary>
+        /// Add units to table. Removes old units first.
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="columnNames">The column names to add</param>
+        /// <param name="columnUnits">The column units to add</param>
+        void AddUnitsForTable(string tableName, List<string> columnNames, List<string> columnUnits);
+
     }
 }

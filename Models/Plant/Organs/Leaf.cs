@@ -1015,6 +1015,7 @@ namespace Models.PMF.Organs
         protected void Clear()
         {
             Leaves = new List<LeafCohort>();
+            needToRecalculateLiveDead = true;
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
@@ -1719,7 +1720,6 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
             Structure.Germinated = false;
-            Structure.PrimaryBudNo = Plant.SowingData.BudNumber;
 
         }
 

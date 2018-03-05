@@ -58,8 +58,8 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
           <Name>ThermalTime</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MinTemp>4</MinTemp>
-          <OptTemp>25</OptTemp>
-          <MaxTemp>37</MaxTemp>
+          <OptTemp>28</OptTemp>
+          <MaxTemp>40</MaxTemp>
           <RefTemp>25</RefTemp>
           <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
         </WangEngelTempFunction>
@@ -75,6 +75,94 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <Name>ThermalTime</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Phenology.EndoDormancy.ThermalTime.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Phenology.EndoDormancy.ThermalTime.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Phenology.EndoDormancy.ThermalTime.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Phenology.EndoDormancy.ThermalTime.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
@@ -97,22 +185,70 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
         </GenericPhase>
         <BuddingPhase>
           <Name>Budding</Name>
-          <VariableReference>
+          <WangEngelTempFunction>
             <Name>ThermalTime</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
-          </VariableReference>
+            <MinTemp>0</MinTemp>
+            <OptTemp>22</OptTemp>
+            <MaxTemp>40</MaxTemp>
+            <RefTemp>25</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
           <MultiplyFunction>
             <Name>Target</Name>
             <Constant>
               <Name>Base</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>51</FixedValue>
+              <FixedValue>150</FixedValue>
             </Constant>
             <LinearInterpolationFunction>
               <Name>ChillingTadjustment</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.Target.ChillingTadjustment.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.Target.ChillingTadjustment.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>5</double>
@@ -153,7 +289,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
           <MultiplyFunction>
             <Name>FractionOfBudBurst</Name>
             <Constant>
-              <Name>CHOEffect</Name>
+              <Name>CaneDiameter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1</FixedValue>
             </Constant>
@@ -162,7 +298,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
               <VariableReference>
                 <Name>XValue</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[Structure].PrimaryBudNo.Value()</VariableName>
+                <VariableName>[Structure].PrimaryBudNo</VariableName>
               </VariableReference>
               <Constant>
                 <Name>Ymax</Name>
@@ -1709,6 +1845,94 @@ A function is used to capture the year of the current season as in the south hem
               <Name>AirTemperatureFunction</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.MeanTempInitiation.Temperature.AirTemperatureFunction.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.MeanTempInitiation.Temperature.AirTemperatureFunction.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.MeanTempInitiation.Temperature.AirTemperatureFunction.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.MeanTempInitiation.Temperature.AirTemperatureFunction.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
@@ -1817,33 +2041,6 @@ A function is used to capture the year of the current season as in the south hem
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </AirTemperatureFunction>
-            <AccumulateFunction>
-              <Name>Temperature</Name>
-              <AirTemperatureFunction>
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <X>
-                    <double>0</double>
-                    <double>40</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>40</double>
-                  </Y>
-                </XYPairs>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AirTemperatureFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <StartStageName>StartFlowering</StartStageName>
-              <EndStageName>FruitSet</EndStageName>
-              <ResetStageName>StartFlowering</ResetStageName>
-              <FractionRemovedOnCut>0</FractionRemovedOnCut>
-              <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
-              <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
-              <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
-            </AccumulateFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <StartStageName>StartFlowering</StartStageName>
             <EndStageName>FruitSet</EndStageName>
@@ -2114,6 +2311,50 @@ For simiplicity, right now, the CHO effect during bud burst is expressed as a fu
               <Name>CHOInitiation</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CHOInitiation.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CHOInitiation.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
@@ -2121,7 +2362,7 @@ For simiplicity, right now, the CHO effect during bud burst is expressed as a fu
                   <double>2</double>
                 </X>
                 <Y>
-                  <double>0</double>
+                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                 </Y>
@@ -2130,9 +2371,141 @@ For simiplicity, right now, the CHO effect during bud burst is expressed as a fu
               <XProperty>[Berry].MeanCHOInitiationY0.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
-              <Name>CHOBudBurst</Name>
+              <Name>RetainedBudNum</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CHOBudBurst.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CHOBudBurst.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.RetainedBudNum.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.RetainedBudNum.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.RetainedBudNum.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.RetainedBudNum.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
@@ -2141,14 +2514,163 @@ For simiplicity, right now, the CHO effect during bud burst is expressed as a fu
                   <double>108</double>
                 </X>
                 <Y>
-                  <double>0</double>
+                  <double>1</double>
                   <double>1</double>
                   <double>0.85</double>
                   <double>0.65</double>
                 </Y>
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Structure].MainStemPopn/0.23</XProperty>
+              <XProperty>[Structure].PrimaryBudNo</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>CaneDiameter</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CaneDiameter.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CaneDiameter.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CaneDiameter.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CaneDiameter.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CaneDiameter.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CaneDiameter.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>20</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Cordon].CaneDiameter.Value()</XProperty>
             </LinearInterpolationFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -2227,13 +2749,57 @@ Flowers per bunch is affected by the temperature and CHO during initiation, whic
             <Name>CHOInitiation</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Berry.FlowersPerBunch.CHOInitiation.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Berry.FlowersPerBunch.CHOInitiation.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
               </X>
               <Y>
-                <double>0</double>
+                <double>1</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -2244,13 +2810,57 @@ Flowers per bunch is affected by the temperature and CHO during initiation, whic
             <Name>CHOBudBurst</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Berry.FlowersPerBunch.CHOBudBurst.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Berry.FlowersPerBunch.CHOBudBurst.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
               </X>
               <Y>
-                <double>0</double>
+                <double>1</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -2278,6 +2888,138 @@ The minimum function was try to cap the maximum berry number and the predicted y
             <Name>TempFlowering</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.TempFlowering.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.TempFlowering.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.TempFlowering.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.TempFlowering.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.TempFlowering.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.TempFlowering.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>14</double>
@@ -2303,13 +3045,101 @@ The minimum function was try to cap the maximum berry number and the predicted y
             <Name>CHOFlowering</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.CHOFlowering.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.CHOFlowering.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.CHOFlowering.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.CHOFlowering.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
               </X>
               <Y>
-                <double>0</double>
+                <double>1</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -2317,29 +3147,67 @@ The minimum function was try to cap the maximum berry number and the predicted y
             <XProperty>[Berry].MeanCHOFlowering.Value()</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
-            <Name>flowerNum</Name>
+            <Name>FlowerNum</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.FlowerNum.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.FlowerNum.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
-                <double>14</double>
-                <double>15.5</double>
-                <double>15.8</double>
-                <double>16</double>
-                <double>16.2</double>
-                <double>20</double>
+                <double>200</double>
+                <double>300</double>
+                <double>400</double>
               </X>
               <Y>
-                <double>0.14</double>
-                <double>0.15</double>
-                <double>0.3</double>
-                <double>0.42</double>
-                <double>0.5</double>
-                <double>0.55</double>
+                <double>1</double>
+                <double>0.9</double>
+                <double>0.8</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Berry].MeanTempFlowering.Value()</XProperty>
+            <XProperty>[Berry].FlowersPerBunch.Value()</XProperty>
           </LinearInterpolationFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
@@ -2350,27 +3218,6 @@ The minimum function was try to cap the maximum berry number and the predicted y
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Structure].MainStemPopn</VariableName>
           </VariableReference>
-          <LinearInterpolationFunction>
-            <Name>PercentBudBurst</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>0</double>
-                <double>20</double>
-                <double>40</double>
-                <double>108</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-                <double>0.85</double>
-                <double>0.65</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Structure].MainStemPopn/0.23</XProperty>
-          </LinearInterpolationFunction>
           <VariableReference>
             <Name>BunchesPerShoot</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2918,6 +3765,10 @@ Pollination alone results in the development of small, hard green berries (live 
         <string>[Grapevine].Phenology.VeraisonDOY.Value()</string>
         <string>[Grapevine].Phenology.CurrentStageName</string>
         <string>[Grapevine].Phenology.Budding.AccChill.Value()</string>
+        <string>[Grapevine].Phenology.Budding.FractionOfBudBurst.Value()</string>
+        <string>[Grapevine].Structure.PrimaryBudNo</string>
+        <string>[Grapevine].Structure.MainStemPopn</string>
+        <string>[Grapevine].Structure.LeafTipsAppeared</string>
         <string>[Grapevine].Leaf.LAI</string>
         <string>[Grapevine].Leaf.InitialisedCohortNo</string>
         <string>[Grapevine].Leaf.DeadCohortNo</string>
@@ -2925,9 +3776,11 @@ Pollination alone results in the development of small, hard green berries (live 
         <string>[Grapevine].Leaf.CohortSize</string>
         <string>[Grapevine].Leaf.Fn</string>
         <string>[Grapevine].Leaf.Fw</string>
-        <string>[Grapevine].Root.Live.Wt</string>
-        <string>[Grapevine].Berry.Live.Wt</string>
         <string>[Grapevine].Shoot.Wt</string>
+        <string>[Grapevine].Root.Live.Wt</string>
+        <string>[Grapevine].Arbitrator.FDM</string>
+        <string>[Berry].Live.Wt</string>
+        <string>[Berry].BerryFreshWeight.Value()</string>
         <string>[Berry].MeanTempInitiationY0.Value()</string>
         <string>[Berry].MeanTempFlowering.Value()</string>
         <string>[Berry].BunchesPerShoot.Value()</string>
@@ -2935,11 +3788,6 @@ Pollination alone results in the development of small, hard green berries (live 
         <string>[Berry].BerriesPerBunch.Value()</string>
         <string>[Berry].NumberFunction.Value()</string>
         <string>[Berry].NumberFunction.Shoots.Value()</string>
-        <string>[Arbitrator].FDM</string>
-        <string>[Grapevine].Phenology.Budding.FractionOfBudBurst.Value()</string>
-        <string>[Structure].PrimaryBudNo</string>
-        <string>[Structure].LeafTipsAppeared</string>
-        <string>[Structure].PlantTotalNodeNo</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -4097,7 +4945,7 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
+          <YAxis>Right</YAxis>
           <ColourArgb>-1663232</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
@@ -4125,6 +4973,13 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -4232,7 +5087,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>TotalNumberPerM21</Name>
+          <Name>TotalNumberPerM2</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
@@ -4282,7 +5137,30 @@ namespace Models
       <Graph>
         <Name>BerryWT</Name>
         <Series>
-          <Name>dryMass</Name>
+          <Name>FreshMass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Berry.BerryFreshWeight.Value()</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>DryMass</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
@@ -4298,7 +5176,7 @@ namespace Models
           <Checkpoint>Current</Checkpoint>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Grapevine.Berry.Live.Wt</YFieldName>
+          <YFieldName>Berry.Live.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4314,6 +5192,13 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -4554,7 +5439,7 @@ namespace Models
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Arbitrator.FDM</YFieldName>
+        <YFieldName>Grapevine.Arbitrator.FDM</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4664,7 +5549,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Site1003.met</FileName>
+        <FileName>Site1001_BRA.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <Clock>
@@ -4683,6 +5568,11 @@ namespace Models
       </SoilArbitrator>
       <Zone>
         <Name>Vineyard</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[Double Guyôt-trained vines, pruned each year to retain 24 nodes were monitored. Vines were trained using vertical shoot positioning (VSP), with an exposed leaf area height of 1.2 m, and trimmed to maintain a compact canopy. Vines were planted 1.8 m apart within the row, and 2.4 m apart between rows. Average flowering date was determined by monitoring all the inflorescences on one cane on a vine in each plot on a regular basis throughout flowering. Likewise, regular berry samples (at least weekly) were taken from before the date of véraison until harvest at a soluble solids concentration value of 21.5 oBrix. ]]></MemoText>
+        </Memo>
         <Soil>
           <Name>Soil</Name>
           <Water>
@@ -5052,8 +5942,8 @@ namespace Models
           <Name>Operations</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
-            <Date>2005-05-13</Date>
-            <Action>[Grapevine].Sow(population: 0.1667, cultivar: "SauvignonBlanc", depth: 50, rowSpacing: 3100, budNumber:24);</Action>
+            <Date>2005-01-01</Date>
+            <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 150, rowSpacing: 2400, budNumber:24);</Action>
           </Operation>
         </Operations>
         <Report>
@@ -5072,7 +5962,7 @@ namespace Models
           <Name>Pruning</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <PruneDateString>15-May</PruneDateString>
+            <PruneDateString>1-March</PruneDateString>
           </Script>
           <Code><![CDATA[
 using System;
@@ -5214,16 +6104,16 @@ namespace Models
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
-          <Minimum>250</Minimum>
-          <Maximum>365</Maximum>
+          <Minimum>300</Minimum>
+          <Maximum>366</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Inverted>false</Inverted>
-          <Minimum>250</Minimum>
+          <Minimum>300</Minimum>
           <Maximum>365</Maximum>
-          <Interval>NaN</Interval>
+          <Interval>10</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
@@ -5290,14 +6180,14 @@ namespace Models
         <Name>EndoDormancy</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Specifications>
-          <string>[ParameterTest].Script.EndoTarget = 10, 11</string>
+          <string>[ParameterTest].Script.EndoTarget = 13</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>BudBurst</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Specifications>
-          <string>[ParameterTest].Script.BudBurstBase = 40,50</string>
+          <string>[ParameterTest].Script.BudBurstBase = 140,150</string>
         </Specifications>
       </Factor>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -5715,7 +6605,7 @@ namespace Models
           <Name>Pruning</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <PruneDateString>15-May</PruneDateString>
+            <PruneDateString>1-March</PruneDateString>
           </Script>
           <Code><![CDATA[
 using System;
@@ -5815,155 +6705,6 @@ namespace Models
       </Zone>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Simulation>
-    <Folder>
-      <Name>PhenoValidation</Name>
-      <Graph>
-        <Name>BudBurstPredic</Name>
-        <Series>
-          <Name>Series</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>true</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-990142</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Dash</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>PhenoPredObs</TableName>
-          <XFieldName>Observed.Grapevine.Phenology.BudBurstDOY.Value()</XFieldName>
-          <YFieldName>Predicted.Grapevine.Phenology.BudBurstDOY.Value()</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>200</Minimum>
-          <Maximum>365</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Inverted>false</Inverted>
-          <Minimum>200</Minimum>
-          <Maximum>365</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>FloweringPred</Name>
-        <Series>
-          <Name>Series</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>true</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>PhenoPredObs</TableName>
-          <XFieldName>Observed.Grapevine.Phenology.FloweringDOY.Value()</XFieldName>
-          <YFieldName>Predicted.Grapevine.Phenology.FloweringDOY.Value()</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>250</Minimum>
-          <Maximum>365</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Inverted>false</Inverted>
-          <Minimum>250</Minimum>
-          <Maximum>365</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>VeraisonPred</Name>
-        <Series>
-          <Name>Series</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>PhenoPredObs</TableName>
-          <XFieldName>Observed.Grapevine.Phenology.VeraisonDOY.Value()</XFieldName>
-          <YFieldName>Predicted.Grapevine.Phenology.VeraisonDOY.Value()</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ShowPageOfGraphs>true</ShowPageOfGraphs>
-    </Folder>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <DisabledSimNames />
   </Experiment>
