@@ -1210,7 +1210,7 @@ namespace Models.PMF.Organs
             {
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
             }

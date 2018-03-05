@@ -478,7 +478,7 @@ namespace Models.PMF
                 tags.Add(new AutoDocumentation.Table(tableData, indent));
 
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent, true);
             }
         }
     }

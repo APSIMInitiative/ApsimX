@@ -44,7 +44,7 @@ namespace Models.PMF.Functions
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // create a string to display 'child1 - child2 - child3...'
                 string msg = "";
