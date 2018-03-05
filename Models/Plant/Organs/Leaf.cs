@@ -1735,7 +1735,6 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
             Structure.Germinated = false;
-            Structure.PrimaryBudNo = Plant.SowingData.BudNumber;
 
         }
 
