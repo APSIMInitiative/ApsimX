@@ -77,7 +77,7 @@ namespace Models.PMF.Phen
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // get description of this class.
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);

@@ -175,11 +175,11 @@ namespace Models.PMF.Phen
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                    AutoDocumentation.DocumentModel(child, tags, -1, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
     }

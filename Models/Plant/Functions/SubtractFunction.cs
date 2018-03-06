@@ -66,7 +66,7 @@ namespace Models.PMF.Functions
 
             // write memos.
             foreach (IModel memo in Apsim.Children(function, typeof(Memo)))
-                AutoDocumentation.DocumentModel(memo, tags, -1, indent);
+                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
             // create a string to display 'child1 - child2 - child3...'
             string msg = string.Empty;
@@ -88,7 +88,7 @@ namespace Models.PMF.Functions
 
                 // write children.
                 foreach (IModel child in childrenToDocument)
-                    AutoDocumentation.DocumentModel(child, tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }
 

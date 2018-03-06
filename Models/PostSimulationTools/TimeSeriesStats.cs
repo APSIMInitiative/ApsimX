@@ -13,6 +13,7 @@ namespace Models.PostSimulationTools
     using Storage;
 
     /// <summary>
+    /// # [Name]
     /// A post processing model that produces time series stats.
     /// </summary>
     [ViewName("UserInterface.Views.GridView")]

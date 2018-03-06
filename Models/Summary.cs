@@ -337,7 +337,7 @@ namespace Models
                     string modelName = (string)row[5];
 
                     string col1Text;
-                    if (row[7].GetType() == typeof(DateTime))
+                    if (row[6].GetType() == typeof(DateTime))
                     {
                         DateTime date = (DateTime)row[6];
                         col1Text = date.ToString("yyyy-MM-dd") + " " + modelName;

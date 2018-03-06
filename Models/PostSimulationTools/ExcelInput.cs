@@ -16,6 +16,7 @@ namespace Models.PostSimulationTools
     using System.Collections.Generic;
 
     /// <summary>
+    /// # [Name]
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
     /// </summary>
     [Serializable]
@@ -119,7 +120,7 @@ namespace Models.PostSimulationTools
             if (fullFileName != null && File.Exists(fullFileName))
             {
                 // Open the file
-                FileStream stream = File.Open(fullFileName, FileMode.Open, FileAccess.Read);
+                FileStream stream = File.Open(fullFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
                 // Create a reader.
                 IExcelDataReader excelReader;

@@ -114,24 +114,18 @@ namespace Models.PMF.Organs
         public void Initialise(double depth, double initialDM, double population, double maxNConc)
         {
             Depth = depth;
-            double AccumulatedDepth = 0;
-            double InitialLayers = 0;
+            //distribute root biomass evenly through root depth
+            double[] fromLayer = new double[1] { depth };
+            double[] fromMass = new double[1] { initialDM };
+            double[] toMass = soil.Map(fromMass, fromLayer, soil.Thickness, Soil.MapType.Mass, 0.0);
+
             for (int layer = 0; layer < soil.Thickness.Length; layer++)
             {
-                if (AccumulatedDepth < Depth)
-                    InitialLayers += 1;
-                AccumulatedDepth += soil.Thickness[layer];
-            }
-            for (int layer = 0; layer < soil.Thickness.Length; layer++)
-            {
-                if (layer <= InitialLayers - 1)
-                {
-                    //distribute root biomass evenly through root depth
-                    LayerLive[layer].StructuralWt = initialDM / InitialLayers * population;
-                    LayerLive[layer].StructuralN = initialDM / InitialLayers * maxNConc * population;
-                }
+                LayerLive[layer].StructuralWt = toMass[layer] * population;
+                LayerLive[layer].StructuralN = LayerLive[layer].StructuralWt * maxNConc;
             }
         }
+
 
         /// <summary>Clears this instance.</summary>
         public void Clear()

@@ -64,7 +64,7 @@ namespace Models.Core
         /// <param name="headingLevel">The heading level to use.</param>
         /// <param name="indent">The indentation level.</param>
         /// <param name="documentAllChildren">Document all children?</param>
-        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = false)
+        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = true)
         {
             if (model.IncludeInDocumentation)
             {

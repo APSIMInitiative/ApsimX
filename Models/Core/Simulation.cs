@@ -14,6 +14,7 @@ using Models.Core.Runners;
 namespace Models.Core
 {
     /// <summary>
+    /// # [Name]
     /// A simulation model
     /// </summary>
     [ValidParent(ParentType = typeof(Simulations))]

@@ -506,17 +506,6 @@ namespace Models.PMF.Struct
         }
         #endregion
 
-        /// <summary>
-        /// Document a specific function
-        /// </summary>
-        /// <param name="FunctName"></param>
-        /// <param name="indent"></param>
-        /// <param name="tags"></param>
-        public void DocumentFunction(string FunctName, List<AutoDocumentation.ITag> tags, int indent)
-        {
-            IModel Funct = Apsim.Child(this, FunctName);
-            AutoDocumentation.DocumentModel(Funct, tags, -1, indent);
-        }
     }
 
 }
