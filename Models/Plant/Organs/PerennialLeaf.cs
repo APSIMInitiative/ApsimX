@@ -20,7 +20,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PerennialLeaf : Model, IOrgan, ICanopy, ILeaf, IArbitration, IHasWaterDemand
+    public class PerennialLeaf : Model, IOrgan, ICanopy, IArbitration, IHasWaterDemand
     {
         /// <summary>The met data</summary>
         [Link]
@@ -103,23 +103,6 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Detached { get; set; }
 
-        #region Leaf Interface
-        /// <summary></summary>
-        public bool CohortsInitialised { get; set; }
-        /// <summary></summary>
-        public int TipsAtEmergence { get; set; }
-        /// <summary></summary>
-        public int CohortsAtInitialisation { get; set; }
-        /// <summary></summary>
-        public double InitialisedCohortNo { get; set; }
-        /// <summary></summary>
-        public double AppearedCohortNo { get; set; }
-        /// <summary></summary>
-        public double PlantAppearedLeafNo { get; set; }
-        /// <summary></summary>
-        /// <param name="proprtionRemoved"></param>
-        public void DoThin(double proprtionRemoved) { }
-        #endregion
 
         #region Canopy interface
 

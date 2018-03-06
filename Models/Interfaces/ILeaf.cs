@@ -8,7 +8,7 @@ namespace Models.Interfaces
     using System;
 
     /// <summary>This interface describes interface for leaf interaction with Structure.</summary>
-    public interface ILeaf
+    public interface IHasStructure
     {
         /// <summary>
         /// 

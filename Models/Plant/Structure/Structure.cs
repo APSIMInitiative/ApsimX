@@ -74,7 +74,7 @@ namespace Models.PMF.Struct
         Plant Plant = null;
         /// <summary>The leaf</summary>
         [Link]
-        ILeaf Leaf = null;
+        IHasStructure Leaf = null;
         /// <summary> Phenology model</summary>
         [Link]
         Phenology Phenology = null;

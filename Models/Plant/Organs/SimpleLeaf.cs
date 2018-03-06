@@ -49,7 +49,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf, IHasWaterDemand
+    public class SimpleLeaf : GenericOrgan, ICanopy, IHasWaterDemand
     {
         /// <summary>The plant</summary>
         [Link]
@@ -58,43 +58,6 @@ namespace Models.PMF.Organs
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
-
-        #region Leaf Interface
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool CohortsInitialised { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int TipsAtEmergence { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int CohortsAtInitialisation { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public double InitialisedCohortNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public double AppearedCohortNo { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double PlantAppearedLeafNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="proprtionRemoved"></param>
-        public void DoThin(double proprtionRemoved) { }
-
-        /// <summary>Apex number by age</summary>
-        /// <param name="age">Threshold age</param>
-        public double ApexNumByAge(double age) { return 0; }
-        #endregion
 
         #region Canopy interface
 

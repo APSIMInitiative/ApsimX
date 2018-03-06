@@ -16,7 +16,7 @@ namespace Models.PMF.Functions.SupplyFunctions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(ILeaf))]
+    [ValidParent(ParentType = typeof(ICanopy))]
 
     public class CanopyPhotosynthesis : Model, IFunction
     {

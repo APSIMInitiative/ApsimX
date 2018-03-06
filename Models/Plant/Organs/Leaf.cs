@@ -32,7 +32,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration
+    public class Leaf : BaseOrgan, ICanopy, IHasStructure, IHasWaterDemand, IArbitration
     {
 
         /// <summary>The met data</summary>
