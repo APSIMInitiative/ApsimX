@@ -326,7 +326,21 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
+        public double RadIntTot
+        {
+            get
+            {
+                if (MicroClimatePresent)
+                {
+                    double TotalRadn = 0;
+                    for (int i = 0; i < LightProfile.Length; i++)
+                        TotalRadn += LightProfile[i].amount;
+                    return TotalRadn;
+                }
+                else
+                   return CoverGreen * MetData.Radn;
+            }
+        }
 
         /// <summary>Apex number by age</summary>
         /// <param name="age">Threshold age</param>
