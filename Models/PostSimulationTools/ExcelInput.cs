@@ -120,7 +120,7 @@ namespace Models.PostSimulationTools
             if (fullFileName != null && File.Exists(fullFileName))
             {
                 // Open the file
-                FileStream stream = File.Open(fullFileName, FileMode.Open, FileAccess.Read);
+                FileStream stream = File.Open(fullFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
                 // Create a reader.
                 IExcelDataReader excelReader;
