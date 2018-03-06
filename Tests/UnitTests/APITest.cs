@@ -208,19 +208,6 @@ namespace UnitTests
             clock = Apsim.Child(simulation, "Clock");
             Assert.NotNull(clock);
         }        
-        
-        /// <summary>
-        /// Tests for the various recursive Children methods
-        /// </summary>
-        [Test]
-        public void ChildrenRecursivelyTest()
-        {
-            List<IModel> allChildren = Apsim.ChildrenRecursively(simulation);
-            Assert.AreEqual(allChildren.Count, 24);
-
-            List<IModel> childZones = Apsim.ChildrenRecursively(simulation, typeof(Zone));
-            Assert.AreEqual(childZones.Count, 3);
-        }
 
         /// <summary>
         /// Tests for siblings method
