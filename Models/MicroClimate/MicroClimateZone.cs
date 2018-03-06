@@ -62,13 +62,15 @@ namespace Models
             /// <summary>Break the combined Canopy into layers</summary>
             private void DefineLayers()
             {
-                double[] nodes = new double[2 * Canopies.Count];
+                double[] nodes = new double[3 * Canopies.Count];
                 int numNodes = 1;
                 for (int compNo = 0; compNo <= Canopies.Count - 1; compNo++)
                 {
                     double HeightMetres = Math.Round(Canopies[compNo].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
                     double DepthMetres = Math.Round(Canopies[compNo].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
                     double canopyBase = HeightMetres - DepthMetres;
+                    double greenBase = HeightMetres - DepthMetres * MathUtilities.Divide(Canopies[compNo].Canopy.LAI, Canopies[compNo].Canopy.LAITotal, 0.0);
+
                     if (Array.IndexOf(nodes, HeightMetres) == -1)
                     {
                         nodes[numNodes] = HeightMetres;
@@ -79,6 +81,12 @@ namespace Models
                         nodes[numNodes] = canopyBase;
                         numNodes = numNodes + 1;
                     }
+                    if (Array.IndexOf(nodes, greenBase) == -1)
+                    {
+                        nodes[numNodes] = greenBase;
+                        numNodes = numNodes + 1;
+                    }
+
                 }
                 Array.Resize<double>(ref nodes, numNodes);
                 Array.Sort(nodes);
@@ -129,13 +137,27 @@ namespace Models
                         Array.Resize(ref Canopies[j].LAItot, numLayers);
                         double HeightMetres = Math.Round(Canopies[j].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
                         double DepthMetres = Math.Round(Canopies[j].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
-                        if ((HeightMetres > bottom) && (HeightMetres - DepthMetres < top))
+                        double canopyBase = HeightMetres - DepthMetres;
+                        double greenBase = HeightMetres - DepthMetres * MathUtilities.Divide(Canopies[j].Canopy.LAI, Canopies[j].Canopy.LAITotal, 0.0);
+
+                        if ((HeightMetres > bottom) && (greenBase < top))
                         {
-                            double Ld = MathUtilities.Divide(Canopies[j].Canopy.LAITotal, DepthMetres, 0.0);
-                            Canopies[j].LAItot[i] = Ld * DeltaZ[i];
-                            Canopies[j].LAI[i] = Canopies[j].LAItot[i] * MathUtilities.Divide(Canopies[j].Canopy.LAI, Canopies[j].Canopy.LAITotal, 0.0);
+                            // we are in the green layer for this canopy - all LAI is green
+                            double Ld = MathUtilities.Divide(Canopies[j].Canopy.LAI, DepthMetres, 0.0);
+                            Canopies[j].LAI[i] = Ld * DeltaZ[i];
+                            Canopies[j].LAItot[i] = Canopies[j].LAI[i];
                             LAItotsum[i] += Canopies[j].LAItot[i];
                         }
+
+                        if ((greenBase > bottom) && (canopyBase < top))
+                        {
+                            // we are in the dead layer for this canopy - all LAI is dead
+                            double Ld = MathUtilities.Divide(Canopies[j].Canopy.LAITotal, DepthMetres, 0.0);
+                            Canopies[j].LAItot[i] = Ld * DeltaZ[i];
+                            Canopies[j].LAI[i] = 0.0;
+                            LAItotsum[i] += Canopies[j].LAItot[i];
+                        }
+
                     }
                     // Calculate fractional contribution for layer i and component j
                     // ====================================================================
@@ -237,9 +259,12 @@ namespace Models
             /// </summary>
             public double RadnGreenFraction(int j)
             {
-                double klGreen = -Math.Log(1.0 - Canopies[j].Canopy.CoverGreen);
-                double klTot = -Math.Log(1.0 - Canopies[j].Canopy.CoverTotal);
-                return MathUtilities.Divide(klGreen, klTot, 0.0);
+                //double klGreen = -Math.Log(1.0 - Canopies[j].Canopy.CoverGreen);
+                //double klTot = -Math.Log(1.0 - Canopies[j].Canopy.CoverTotal);
+                //return MathUtilities.Divide(klGreen, klTot, 0.0);
+
+                return MathUtilities.Divide(Canopies[j].Canopy.CoverGreen, Canopies[j].Canopy.CoverTotal, 0.0);
+
             }
         }
     }
