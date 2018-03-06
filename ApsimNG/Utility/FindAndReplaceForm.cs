@@ -49,6 +49,9 @@ namespace Utility
             btnHighlightAll.Clicked += btnHighlightAll_Click;
             window1.DeleteEvent += Window1_DeleteEvent;
             window1.Destroyed += Window1_Destroyed;
+            AccelGroup agr = new AccelGroup();
+            btnCancel.AddAccelerator("activate", agr, new AccelKey(Gdk.Key.Escape, Gdk.ModifierType.None, AccelFlags.Visible));
+            window1.AddAccelGroup(agr);
         }
 
 

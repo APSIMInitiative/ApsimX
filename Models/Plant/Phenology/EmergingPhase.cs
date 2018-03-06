@@ -34,7 +34,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class EmergingPhase : GenericPhase
+    public class EmergingPhase : GenericPhase, ICustomDocumentation
     {
         /// <summary>The plant</summary>
         [Link]
@@ -67,7 +67,7 @@ namespace Models.PMF.Phen
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public new void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -87,12 +87,12 @@ namespace Models.PMF.Phen
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 tags.Add(new AutoDocumentation.Paragraph("Progress toward emergence is driven by Thermal time accumulation where thermal time is calculated as:", indent));
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                    child.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
     }

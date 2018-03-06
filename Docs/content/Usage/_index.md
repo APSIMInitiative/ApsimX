@@ -8,3 +8,4 @@ weight: 10
 * [Memo markdown cheatsheet](/usage/memo)
 * [Using an Excel file for weather data](/usage/usingexcelforweatherdata)
 * [Graph filters](/usage/graphfilters)
+* [Cloud Services](/usage/cloud)

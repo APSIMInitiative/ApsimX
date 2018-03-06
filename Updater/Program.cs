@@ -70,12 +70,25 @@ namespace Updater
 
             WaitForProcess("APSIMSetup");
 
-            // Write to the downloads database.
-
             // Run the user interface.
             string userInterface = Path.Combine(newInstallDirectory, "Bin", "ApsimNG.exe");
             if (!File.Exists(userInterface))
-                throw new Exception("Cannot find user interface: " + userInterface);
+            {
+                string progFilesDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+                string testPath = Path.Combine(progFilesDir, Path.GetFileName(newInstallDirectory), "Bin", "ApsimNG.exe");
+                if (File.Exists(testPath))
+                    userInterface = testPath;
+                else
+                {
+                    progFilesDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+                    testPath = Path.Combine(progFilesDir, Path.GetFileName(newInstallDirectory), "Bin", "ApsimNG.exe");
+                    if (File.Exists(testPath))
+                        userInterface = testPath;
+
+                }
+                if (!File.Exists(userInterface))
+                    throw new Exception("Cannot find user interface: " + userInterface);
+            }
             Process.Start(userInterface);
         }
 

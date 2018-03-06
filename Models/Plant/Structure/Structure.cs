@@ -12,15 +12,15 @@ using Models.PMF.Interfaces;
 namespace Models.PMF.Struct
 {
     /// <summary>
-    /// # Structure #
+    /// # Structure
     /// The structure model simulates morphological development of the plant to inform the Leaf class when 
     ///   and how many leaves appear and to provides a hight estimate for use in calculating potential transpiration.
-    /// ## Plant and Main-Stem Population ##
+    /// ## Plant and Main-Stem Population
     /// The *Plant.Population* is set at sowing with information sent from a manager script in the Sow method.    
     ///   The *PrimaryBudNumber* is also sent with the Sow method and the main-stem population (*MainStemPopn*) for the crop is calculated as:  
     ///   *MainStemPopn* = *Plant.Population* x *PrimaryBudNumber*
     ///   Primary bud number is > 1 for crops like potato and grape vine where there are more than one main-stem per plant
-    ///  ## Main-Stem leaf appearance ##
+    ///  ## Main-Stem leaf appearance
     ///  Each day the number of main-stem leaf tips appeared (*LeafTipsAppeared*) is calculated as:  
     ///    *LeafTipsAppeared* += *DeltaTips*
     ///  Where *DeltaTips* is calculated as:  
@@ -31,7 +31,7 @@ namespace Models.PMF.Struct
     /// [Document ThermalTime]
     /// *LeafTipsAppeared* continues to increase until *FinalLeafNumber* is reached where *FinalLeafNumber* is calculated as:  
     /// [Document FinalLeafNumber]
-    /// ##Branching and Branch Mortality##
+    /// ##Branching and Branch Mortality
     /// The total population of stems (*TotalStemPopn*) is calculated as:  
     ///   *TotalStemPopn* = *MainStemPopn* + *NewBranches* - *NewlyDeadBranches*   
     ///    Where *NewBranches* = *MainStemPopn* x *BranchingRate*  
@@ -41,7 +41,7 @@ namespace Models.PMF.Struct
     ///   *NewlyDeadBranches* = (*TotalStemPopn* - *MainStemPopn*) x *BranchMortality*  
     ///   where *BranchMortality* is given by:  
     /// [Document BranchMortality]
-    /// ##Height##
+    /// ##Height
     ///  The Height of the crop is calculated by the *HeightModel*:
     /// [Document HeightModel]
     /// </summary>
@@ -506,17 +506,6 @@ namespace Models.PMF.Struct
         }
         #endregion
 
-        /// <summary>
-        /// Document a specific function
-        /// </summary>
-        /// <param name="FunctName"></param>
-        /// <param name="indent"></param>
-        /// <param name="tags"></param>
-        public void DocumentFunction(string FunctName, List<AutoDocumentation.ITag> tags, int indent)
-        {
-            IModel Funct = Apsim.Child(this, FunctName);
-            Funct.Document(tags, -1, indent);
-        }
     }
 
 }

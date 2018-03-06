@@ -51,7 +51,7 @@ namespace UserInterface.Presenters
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
             AutoDocumentation.DocumentModel(this.model, tags, 1, 0);
 
-            StringBuilder contents = new StringBuilder("## " + this.model.Name + "\r\n");
+            StringBuilder contents = new StringBuilder();
             foreach (AutoDocumentation.ITag tag in tags)
             {
                 if (tag is AutoDocumentation.Heading)

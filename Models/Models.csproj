@@ -30,7 +30,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -84,15 +84,17 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Excel, Version=2.1.2.3, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\ExcelDataReader.2.1.2.3\lib\net45\Excel.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="ExcelDataReader, Version=3.4.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.4.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.4.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.4.0\lib\net45\ExcelDataReader.DataSet.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="MathNet.Numerics, Version=3.20.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MathNet.Numerics.3.20.0\lib\net40\MathNet.Numerics.dll</HintPath>
+    <Reference Include="MathNet.Numerics, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.0.0\lib\net40\MathNet.Numerics.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MigraDoc.DocumentObjectModel-gdi, Version=1.50.3638.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
@@ -116,9 +118,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -135,6 +139,22 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
+    <Compile Include="CLEM\Activities\BlankActivity.cs" />
+    <Compile Include="CLEM\FileSQLiteGRASP.cs" />
+    <Compile Include="CLEM\Groupings\RuminantDestockGroup.cs" />
+    <Compile Include="CLEM\IActivityPerformedNotifier.cs" />
+    <Compile Include="CLEM\IFileGRASP.cs" />
+    <Compile Include="CLEM\Old\RuminantActivityPredictiveStockingOrig.cs" />
+    <Compile Include="CLEM\Old\RuminantActivityPredictiveStockingENSOOrig.cs" />
+    <Compile Include="CLEM\Reporting\ReportActivitiesPerformed.cs" />
+    <Compile Include="CLEM\Reporting\ReportPasturePoolDetails.cs" />
+    <Compile Include="CLEM\Reporting\ReportResourceBalances.cs" />
+    <Compile Include="CLEM\Reporting\ReportResourceShortfalls.cs" />
+    <Compile Include="CLEM\Resources\Equipment.cs" />
+    <Compile Include="CLEM\Resources\EquipmentType.cs" />
+    <Compile Include="CLEM\Resources\RuminantConceptionAdvanced.cs" />
+    <Compile Include="CLEM\Resources\WaterType.cs" />
+    <Compile Include="CLEM\Resources\WaterStore.cs" />
     <Compile Include="Core\ApsimFile\ManagerConverter.cs" />
     <Compile Include="Core\ApsimFile\ConverterUtilities.cs" />
     <Compile Include="Core\ApsimFile\Converter.cs" />
@@ -142,6 +162,7 @@
     <Compile Include="Core\ApsimFile\Writer.cs" />
     <Compile Include="Core\Attributes\BriefLabelAttribute.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
+    <Compile Include="Core\Attributes\HelpUriAttribute.cs" />
     <Compile Include="Core\Attributes\ScopedModelAttribute.cs" />
     <Compile Include="Core\Attributes\SoluteAttribute.cs" />
     <Compile Include="Core\AutoDocumentation.cs" />
@@ -149,9 +170,11 @@
     <Compile Include="Core\EventArgs\LoadedEventArgs.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\ApsimFile\Format.cs" />
+    <Compile Include="Core\ICustomDocumentation.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Core\IStorageWriter.cs" />
+    <Compile Include="Core\IReferenceExternalFiles.cs" />
     <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobRunnerMultiProcess.cs" />
     <Compile Include="Core\Links.cs" />
@@ -167,6 +190,8 @@
     <Compile Include="Core\VariableMethod.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
+    <Compile Include="Plant\Functions\AccumulateByDate.cs" />
+    <Compile Include="Plant\Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Plant\Functions\TrackerFunction.cs" />
     <Compile Include="Plant\Functions\ArrayFunction.cs" />
     <Compile Include="Storage\DataStore.cs" />
@@ -477,89 +502,118 @@
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
-    <Compile Include="WholeFarm\Activities\ActivitiesHolder.cs" />
-    <Compile Include="WholeFarm\Activities\ActivityFolder.cs" />
-    <Compile Include="WholeFarm\Activities\ControlledMatingSettings.cs" />
-    <Compile Include="WholeFarm\Activities\FinanceActivityPayOverhead.cs" />
-    <Compile Include="WholeFarm\Activities\LabourActivityOffFarm.cs" />
-    <Compile Include="WholeFarm\Activities\OtherAnimalsActivityGrow.cs" />
-    <Compile Include="WholeFarm\Old\RuminantActivityFeed - Copy.cs" />
-    <Compile Include="WholeFarm\Groupings\ActivityLabourRequirement.cs" />
-    <Compile Include="WholeFarm\Groupings\ActivityLabourRequirementGroup.cs" />
-    <Compile Include="WholeFarm\Groupings\LabourFilterGroup.cs" />
-    <Compile Include="WholeFarm\Resources\AnimalFoodStore.cs" />
-    <Compile Include="WholeFarm\Resources\AnimalFoodStoreType.cs" />
-    <Compile Include="WholeFarm\Old\Arbitrators.cs" />
-    <Compile Include="WholeFarm\Common.cs" />
-    <Compile Include="WholeFarm\Activities\FinanceActivityCalculateInterest.cs" />
-    <Compile Include="WholeFarm\Old\EnterpriseOverhead.cs" />
-    <Compile Include="WholeFarm\Groupings\FilterOperators.cs" />
-    <Compile Include="WholeFarm\Resources\Finance.cs" />
-    <Compile Include="WholeFarm\Resources\FinanceType.cs" />
-    <Compile Include="WholeFarm\Groupings\FodderLimitsFilterGroup.cs" />
-    <Compile Include="WholeFarm\Resources\GrazeFoodStore.cs" />
-    <Compile Include="WholeFarm\Resources\GrazeFoodStorePool.cs" />
-    <Compile Include="WholeFarm\Resources\GrazeFoodStoreType.cs" />
-    <Compile Include="WholeFarm\Resources\HumanFoodStore.cs" />
-    <Compile Include="WholeFarm\Resources\HumanFoodStoreType.cs" />
-    <Compile Include="WholeFarm\Old\IFeedActivity.cs" />
-    <Compile Include="WholeFarm\Old\IFeedPurchaseType.cs" />
-    <Compile Include="WholeFarm\IFeedType.cs" />
-    <Compile Include="WholeFarm\ILabourFilterGroup.cs" />
-    <Compile Include="WholeFarm\Old\IResourceGroup.cs" />
-    <Compile Include="WholeFarm\IResourceWithTransactionType.cs" />
-    <Compile Include="WholeFarm\Old\LabourActivityOffFarmOld.cs" />
-    <Compile Include="WholeFarm\Groupings\LabourFilter.cs" />
-    <Compile Include="WholeFarm\Groupings\LabourDefineFilterGroup.cs" />
-    <Compile Include="WholeFarm\Old\LabourOffFarmFilterGroup.cs" />
-    <Compile Include="WholeFarm\Old\LabourRequest.cs" />
-    <Compile Include="WholeFarm\Activities\OtherAnimalsActivityBreed.cs" />
-    <Compile Include="WholeFarm\Groupings\OtherAnimalsFilter.cs" />
-    <Compile Include="WholeFarm\Groupings\OtherAnimalsFilterGroup.cs" />
-    <Compile Include="WholeFarm\Resources\OtherAnimals.cs" />
-    <Compile Include="WholeFarm\Activities\OtherAnimalsActivityFeed.cs" />
-    <Compile Include="WholeFarm\Resources\OtherAnimalsType.cs" />
-    <Compile Include="WholeFarm\Resources\OtherAnimalsTypeCohort.cs" />
-    <Compile Include="WholeFarm\Activities\PastureActivityManage.cs" />
-    <Compile Include="WholeFarm\Resources\ResourceBaseWithTransactions.cs" />
-    <Compile Include="WholeFarm\Resources\ResourcesHolder.cs" />
-    <Compile Include="WholeFarm\IResourceType.cs" />
-    <Compile Include="WholeFarm\Reporting\ResourceTransaction.cs" />
-    <Compile Include="WholeFarm\Resources\Ruminant.cs" />
-    <Compile Include="WholeFarm\Activities\RuminantActivityBreed.cs" />
-    <Compile Include="WholeFarm\Activities\RuminantActivityBuySell.cs" />
-    <Compile Include="WholeFarm\Activities\RuminantActivityFeed.cs" />
-    <Compile Include="WholeFarm\Activities\RuminantActivityGraze.cs" />
-    <Compile Include="WholeFarm\Activities\RuminantActivityGrow.cs" />
-    <Compile Include="WholeFarm\Activities\RuminantActivityManage.cs" />
-    <Compile Include="WholeFarm\Activities\RuminantActivityMuster.cs" />
-    <Compile Include="WholeFarm\Activities\RuminantActivityPredictiveStocking.cs" />
-    <Compile Include="WholeFarm\Activities\RuminantActivitySellDryBreeders.cs" />
-    <Compile Include="WholeFarm\Activities\RuminantActivityTrade.cs" />
-    <Compile Include="WholeFarm\Old\RuminantArbitratorFeed.cs" />
-    <Compile Include="WholeFarm\Old\RuminantFeedRequest.cs" />
-    <Compile Include="WholeFarm\Resources\RuminantFemale.cs" />
-    <Compile Include="WholeFarm\Groupings\RuminantFilter.cs" />
-    <Compile Include="WholeFarm\Groupings\RuminantFilterGroup.cs" />
-    <Compile Include="WholeFarm\Groupings\ListFilterExtensions.cs" />
-    <Compile Include="WholeFarm\Resources\RuminantMale.cs" />
-    <Compile Include="WholeFarm\Groupings\RuminantMusterGroup.cs" />
-    <Compile Include="WholeFarm\Resources\RuminantPricing.cs" />
-    <Compile Include="WholeFarm\Resources\RuminantTypeCohort.cs" />
-    <Compile Include="WholeFarm\Resources\RuminantType.cs" />
-    <Compile Include="WholeFarm\Resources\RuminantHerd.cs" />
-    <Compile Include="WholeFarm\Resources\LandType.cs" />
-    <Compile Include="WholeFarm\Resources\Land.cs" />
-    <Compile Include="WholeFarm\Resources\Labour.cs" />
-    <Compile Include="WholeFarm\Resources\LabourType.cs" />
-    <Compile Include="WholeFarm\Old\LabourHired.cs" />
-    <Compile Include="WholeFarm\Old\LabourHiredType.cs" />
-    <Compile Include="WholeFarm\Resources\RuminantValue.cs" />
-    <Compile Include="WholeFarm\Reporting\SummariseRuminantHerd.cs" />
-    <Compile Include="WholeFarm\Transmutation.cs" />
-    <Compile Include="WholeFarm\Activities\WFActivityBase.cs" />
-    <Compile Include="WholeFarm\WFModel.cs" />
-    <Compile Include="WholeFarm\WholeFarm.cs" />
+    <Compile Include="CLEM\Activities\ActivitiesHolder.cs" />
+    <Compile Include="CLEM\Activities\ActivityTimerCropHarvest.cs" />
+    <Compile Include="CLEM\Activities\ActivityTimerDateRange.cs" />
+    <Compile Include="CLEM\Activities\ActivityTimerMonthRange.cs" />
+    <Compile Include="CLEM\Activities\ActivityTimerInterval.cs" />
+    <Compile Include="CLEM\Activities\CropActivityManageCrop.cs" />
+    <Compile Include="CLEM\Activities\CropActivityManageProduct.cs" />
+    <Compile Include="CLEM\Activities\CropActivityTask.cs" />
+    <Compile Include="CLEM\Old\IATCropLand.cs" />
+    <Compile Include="CLEM\Old\IATGrowCropCost.cs" />
+    <Compile Include="CLEM\Activities\ActivityFolder.cs" />
+    <Compile Include="CLEM\Activities\FinanceActivityPayExpense.cs" />
+    <Compile Include="CLEM\Activities\GrazeBreedPoolLimit.cs" />
+    <Compile Include="CLEM\Old\IATGrowCrop.cs" />
+    <Compile Include="CLEM\Old\IATGrowCropCostAndLabour.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityOffFarm.cs" />
+    <Compile Include="CLEM\Activities\OtherAnimalsActivityGrow.cs" />
+    <Compile Include="CLEM\Activities\PastureActivityBurn.cs" />
+    <Compile Include="CLEM\Activities\Relationship.cs" />
+    <Compile Include="CLEM\Activities\ResourceActivitySell.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityCollectManureAll.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityCollectManurePaddock.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityGrazeAll.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityGrazePasture.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityGrazePastureHerd.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityHerdCost.cs" />
+    <Compile Include="CLEM\Old\IATGrowCropLabour.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityMilking.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityPredictiveStockingENSO.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityWean.cs" />
+    <Compile Include="CLEM\Activities\CropActivityFee.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityFee.cs" />
+    <Compile Include="CLEM\Activities\TruckingSettings.cs" />
+    <Compile Include="CLEM\Activities\CLEMRuminantActivityBase.cs" />
+    <Compile Include="CLEM\FileCrop.cs" />
+    <Compile Include="CLEM\Groupings\LabourFilterGroupSpecified.cs" />
+    <Compile Include="CLEM\Groupings\LabourFilterGroupUnit.cs" />
+    <Compile Include="CLEM\Groupings\RuminantFilterGroup.cs" />
+    <Compile Include="CLEM\Groupings\LabourFilterGroup.cs" />
+    <Compile Include="CLEM\FileGRASP.cs" />
+    <Compile Include="CLEM\IActivityTimer.cs" />
+    <Compile Include="CLEM\Reporting\EcolIndicatorsEventArgs.cs" />
+    <Compile Include="CLEM\Reporting\ReportRuminantHerd.cs" />
+    <Compile Include="CLEM\Resources\AnimalFoodStore.cs" />
+    <Compile Include="CLEM\Resources\AnimalFoodStoreType.cs" />
+    <Compile Include="CLEM\Common.cs" />
+    <Compile Include="CLEM\Activities\FinanceActivityCalculateInterest.cs" />
+    <Compile Include="CLEM\Groupings\FilterOperators.cs" />
+    <Compile Include="CLEM\Resources\EcologicalIndicators.cs" />
+    <Compile Include="CLEM\Resources\GreenhouseGases.cs" />
+    <Compile Include="CLEM\Resources\GreenhouseGasesType.cs" />
+    <Compile Include="CLEM\Resources\Finance.cs" />
+    <Compile Include="CLEM\Resources\FinanceType.cs" />
+    <Compile Include="CLEM\Groupings\FodderLimitsFilterGroup.cs" />
+    <Compile Include="CLEM\Resources\GrazeFoodStore.cs" />
+    <Compile Include="CLEM\Resources\GrazeFoodStorePool.cs" />
+    <Compile Include="CLEM\Resources\GrazeFoodStoreType.cs" />
+    <Compile Include="CLEM\Resources\HumanFoodStore.cs" />
+    <Compile Include="CLEM\Resources\HumanFoodStoreType.cs" />
+    <Compile Include="CLEM\IFeedType.cs" />
+    <Compile Include="CLEM\ILabourFilterGroup.cs" />
+    <Compile Include="CLEM\IResourceWithTransactionType.cs" />
+    <Compile Include="CLEM\Groupings\LabourFilter.cs" />
+    <Compile Include="CLEM\Groupings\LabourFilterGroupDefine.cs" />
+    <Compile Include="CLEM\Activities\OtherAnimalsActivityBreed.cs" />
+    <Compile Include="CLEM\Groupings\OtherAnimalsFilter.cs" />
+    <Compile Include="CLEM\Groupings\OtherAnimalsFilterGroup.cs" />
+    <Compile Include="CLEM\Resources\OtherAnimals.cs" />
+    <Compile Include="CLEM\Activities\OtherAnimalsActivityFeed.cs" />
+    <Compile Include="CLEM\Resources\OtherAnimalsType.cs" />
+    <Compile Include="CLEM\Resources\OtherAnimalsTypeCohort.cs" />
+    <Compile Include="CLEM\Activities\PastureActivityManage.cs" />
+    <Compile Include="CLEM\Resources\ProductStoreType.cs" />
+    <Compile Include="CLEM\Resources\ProductStore.cs" />
+    <Compile Include="CLEM\Resources\ProductStoreTypeManure.cs" />
+    <Compile Include="CLEM\Resources\ResourceBaseWithTransactions.cs" />
+    <Compile Include="CLEM\Resources\ResourceRequests.cs" />
+    <Compile Include="CLEM\Resources\ResourcesHolder.cs" />
+    <Compile Include="CLEM\IResourceType.cs" />
+    <Compile Include="CLEM\Reporting\ResourceTransaction.cs" />
+    <Compile Include="CLEM\Resources\Ruminant.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityBreed.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityBuySell.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityFeed.cs" />
+    <Compile Include="CLEM\Old\RuminantActivityGraze.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityGrow.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityManage.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityMuster.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityPredictiveStocking.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivitySellDryBreeders.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityTrade.cs" />
+    <Compile Include="CLEM\Resources\RuminantFemale.cs" />
+    <Compile Include="CLEM\Groupings\RuminantFilter.cs" />
+    <Compile Include="CLEM\Groupings\RuminantFeedGroup.cs" />
+    <Compile Include="CLEM\Groupings\ListFilterExtensions.cs" />
+    <Compile Include="CLEM\Resources\RuminantInitialCohorts.cs" />
+    <Compile Include="CLEM\Resources\RuminantMale.cs" />
+    <Compile Include="CLEM\Resources\AnimalPricing.cs" />
+    <Compile Include="CLEM\Resources\RuminantTypeCohort.cs" />
+    <Compile Include="CLEM\Resources\RuminantType.cs" />
+    <Compile Include="CLEM\Resources\RuminantHerd.cs" />
+    <Compile Include="CLEM\Resources\LandType.cs" />
+    <Compile Include="CLEM\Resources\Land.cs" />
+    <Compile Include="CLEM\Resources\Labour.cs" />
+    <Compile Include="CLEM\Resources\LabourType.cs" />
+    <Compile Include="CLEM\Resources\AnimalPriceValue.cs" />
+    <Compile Include="CLEM\Reporting\SummariseRuminantHerd.cs" />
+    <Compile Include="CLEM\Transmutation.cs" />
+    <Compile Include="CLEM\Activities\CLEMActivityBase.cs" />
+    <Compile Include="CLEM\Validation.cs" />
+    <Compile Include="CLEM\CLEMModel.cs" />
+    <Compile Include="CLEM\ZoneCLEM.cs" />
     <Compile Include="Zones\CircularZone.cs" />
     <Compile Include="Zones\RectangularZone.cs" />
   </ItemGroup>

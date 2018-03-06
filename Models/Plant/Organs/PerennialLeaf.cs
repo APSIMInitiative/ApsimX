@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 namespace Models.PMF.Organs
 {
     /// <summary>
+    /// # [Name]
     /// This plant organ is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It also calculates the growth, senescence and detachment of leaves.
     /// </summary>
     [Serializable]
@@ -100,7 +101,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The amount of biomass detached every day</summary>
         [XmlIgnore]
-        public Biomass Detached = new Biomass();
+        public Biomass Detached { get; set; }
 
         #region Leaf Interface
         /// <summary></summary>
@@ -234,6 +235,9 @@ namespace Models.PMF.Organs
         /// <summary>Leaf Residence Time</summary>
         [Link]
         IFunction LeafResidenceTime = null;
+        /// <summary>Leaf Development Rate</summary>
+        [Link]
+        IFunction LeafDevelopmentRate = null;
         /// <summary>Leaf Death</summary>
         [Link]
         IFunction LeafKillFraction = null;
@@ -322,7 +326,21 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
+        public double RadIntTot
+        {
+            get
+            {
+                if (MicroClimatePresent)
+                {
+                    double TotalRadn = 0;
+                    for (int i = 0; i < LightProfile.Length; i++)
+                        TotalRadn += LightProfile[i].amount;
+                    return TotalRadn;
+                }
+                else
+                   return CoverGreen * MetData.Radn;
+            }
+        }
 
         /// <summary>Apex number by age</summary>
         /// <param name="age">Threshold age</param>
@@ -434,6 +452,8 @@ namespace Models.PMF.Organs
             dryMatterSupply.Clear();
             nitrogenDemand.Clear();
             nitrogenSupply.Clear();
+            Detached = new Biomass();
+
         }
         #endregion
 
@@ -592,13 +612,14 @@ namespace Models.PMF.Organs
                 L.Area *= (1 - fraction);
             }
         }
-        private void DetachLeaves(out Biomass Detached)
+        private Biomass DetachLeaves()
         {
             Detached = new Biomass();
             foreach (PerrenialLeafCohort L in Leaves)
                 if (L.Age >= (LeafResidenceTime.Value() + LeafDetachmentTime.Value()))
                     Detached.Add(L.Dead);
             Leaves.RemoveAll(L => L.Age >= (LeafResidenceTime.Value() + LeafDetachmentTime.Value()));
+            return Detached;
         }
 
         #endregion
@@ -740,8 +761,9 @@ namespace Models.PMF.Organs
                                        StorageN: InitialWtFunction.Value() * (MaximumNConc.Value() - MinimumNConc.Value()),
                                        SLA: SpecificLeafAreaFunction.Value());
 
+                double LDR = LeafDevelopmentRate.Value();
                 foreach (PerrenialLeafCohort L in Leaves)
-                    L.Age++;
+                    L.Age+=LDR;
 
                 StartLive = Live;
                 StartNReallocationSupply = NSupply.Reallocation;
@@ -760,8 +782,8 @@ namespace Models.PMF.Organs
                 SenesceLeaves();
                 double LKF = Math.Max(0.0, Math.Min(LeafKillFraction.Value(), (1 - MinimumLAI.Value() / LAI)));
                 KillLeavesUniformly(LKF);
-                DetachLeaves(out Detached);
-
+                Detached = DetachLeaves();
+                
                 if (Detached.Wt > 0.0)
                     SurfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, Plant.CropType, Name);
 

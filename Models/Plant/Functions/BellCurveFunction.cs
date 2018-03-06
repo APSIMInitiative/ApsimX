@@ -5,6 +5,7 @@ using Models.PMF.Struct;
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// Calculates the maximum leaf size (mm2/leaf) given its node position (Elings, 2000 - Agronomy Journal 92, 436-444)
     /// </summary>
     [Serializable]

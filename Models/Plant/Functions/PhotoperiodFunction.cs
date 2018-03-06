@@ -8,7 +8,10 @@ using Models.Interfaces;
 
 namespace Models.PMF.Functions
 {
-    /// <summary>Returns the value of today's photoperiod calculated using the specified latitude and twilight sun angle threshold.  If a variable called ClimateControl.PhotoPeriod is found in the simulation, it will be used instead.</summary>
+    /// <summary>
+    /// # [Name]
+    /// Returns the value of today's photoperiod calculated using the specified latitude and twilight sun angle threshold.  If a variable called ClimateControl.PhotoPeriod is found in the simulation, it will be used instead.
+    /// </summary>
     /// <remarks>The day length is calculated with \ref MathUtilities.DayLength.</remarks>
     /// \pre A \ref Models.WeatherFile function has to exist.
     /// \pre A \ref Models.Clock function has to be existed to retrieve day of year
@@ -17,7 +20,7 @@ namespace Models.PMF.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PhotoperiodFunction : Model, IFunction
+    public class PhotoperiodFunction : Model, IFunction, ICustomDocumentation
     {
 
         /// <summary>The met data</summary>
@@ -59,7 +62,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -68,10 +71,10 @@ namespace Models.PMF.Functions
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // get description of this class.
-                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 tags.Add(new AutoDocumentation.Paragraph("<i>Twilight = " + Twilight.ToString() + " (degrees)</i>", indent));
             }

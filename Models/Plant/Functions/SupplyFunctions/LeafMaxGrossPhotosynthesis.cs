@@ -9,6 +9,7 @@ using Models.Interfaces;
 namespace Models.PMF.Functions.SupplyFunctions
 {
     /// <summary>
+    /// # [Name]
     /// Leaf gross photosynthesis rate is determined using an input gross photosynthesis rate at reference CO2 concentration (340~350ppm) and at optimal temperature of 27.5C, 
     /// together with the CO2 concentrartion in the air and the daily daytime temperature. 
     /// For C3 crop, the Ps-CO2 relationship used is from ORYZA2000 Bauman et al (2001)

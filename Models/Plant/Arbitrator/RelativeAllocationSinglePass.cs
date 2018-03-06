@@ -15,7 +15,7 @@ namespace Models.PMF
     /// Single Pass Relative allocation rules used to determine partitioning
     /// </summary>
     [Serializable]
-    public class RelativeAllocationSinglePass : Model,IArbitrationMethod
+    public class RelativeAllocationSinglePass : Model, IArbitrationMethod, ICustomDocumentation
     {
         /// <summary>Relatives the allocation.</summary>
         /// <param name="Organs">The organs.</param>
@@ -54,7 +54,7 @@ namespace Models.PMF
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -63,10 +63,10 @@ namespace Models.PMF
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // write description of this class.
-                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 string SinglePassDocString = "Arbitration is performed in a single pass for each of the biomass supply sources.  Biomass is partitioned between organs based on their relative demand in a single pass so non-structural demands compete dirrectly with structural demands.";
 

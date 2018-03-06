@@ -30,12 +30,13 @@ namespace APSIMRunner
                     string errorMessage = null;
                     string simulationName = null;
                     RunSimulation simulationRunner = null;
+                    StorageViaSockets storage = new StorageViaSockets();
                     try
                     {
                         simulationRunner = job.job as RunSimulation;
 
                         // Replace datastore with a socket writer
-                        simulationRunner.Services = new object[] { new StorageViaSockets() };
+                        simulationRunner.Services = new object[] { storage };
 
                         // Run simulation
                         simulationName = simulationRunner.simulationToRun.Name;
@@ -46,6 +47,9 @@ namespace APSIMRunner
                     {
                         errorMessage = err.ToString();
                     }
+
+                    // Signal we have completed writing data for this sim.
+                    storage.WriteAllData();
 
                     // Signal end of job.
                     JobRunnerMultiProcess.EndJobArguments endJobArguments = new JobRunnerMultiProcess.EndJobArguments();

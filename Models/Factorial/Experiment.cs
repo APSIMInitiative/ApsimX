@@ -7,15 +7,17 @@
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
+    using System.Linq;
 
     /// <summary>
-    /// Encapsulates a factorial experiment.f
+    /// # [Name]
+    /// Encapsulates a factorial experiment.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.MemoView")]
-    [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
+    [ViewName("UserInterface.Views.FactorControlView")]
+    [PresenterName("UserInterface.Presenters.FactorControlPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class Experiment : Model, ISimulationGenerator
+    public class Experiment : Model, ISimulationGenerator, ICustomDocumentation
     {
         [Link]
         IStorageReader storage = null;
@@ -23,6 +25,11 @@
         private List<List<FactorValue>> allCombinations;
         private Stream serialisedBase;
         private Simulations parentSimulations;
+
+        /// <summary>
+        /// List of names of the disabled simulations. Any simulation name not in this list is assumed to be enabled.
+        /// </summary>
+        public List<string> DisabledSimNames { get; set; }
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
@@ -32,13 +39,13 @@
         }
 
         /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun()
+        public Simulation NextSimulationToRun(bool fullFactorial = true)
         {
             if (allCombinations == null || allCombinations.Count == 0)
                 return null;
 
             if (serialisedBase == null)
-                Initialise();
+                Initialise(fullFactorial);
 
             var combination = allCombinations[0];
             allCombinations.RemoveAt(0);
@@ -68,11 +75,39 @@
             return newSimulation;
         }
 
+        /// <summary>
+        /// Generates an .apsimx file for each simulation in the experiment and returns an error message (if it fails).
+        /// </summary>
+        /// <param name="path">Full path including filename and extension.</param>
+        /// <returns>Empty string if successful, error message if it fails.</returns>
+        public string GenerateApsimXFile(string path)
+        {
+            if (allCombinations == null || allCombinations.Count < 1)
+                allCombinations = EnabledCombinations();
+            string err = "";
+            Simulation sim = NextSimulationToRun();
+            while (sim != null)
+            {
+                Simulations sims = Simulations.Create(new List<IModel> { sim, new Models.Storage.DataStore() });
+
+                string xml = Apsim.Serialise(sims);
+                try
+                {
+                    File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), xml);
+                }
+                catch (Exception e)
+                {
+                    err += e.ToString();
+                }
+                sim = NextSimulationToRun();
+            }
+            return err;
+        }
         /// <summary>Gets a list of simulation names</summary>
-        public IEnumerable<string> GetSimulationNames()
+        public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
             List<string> names = new List<string>();
-            allCombinations = AllCombinations();
+            allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
             foreach (List<FactorValue> combination in allCombinations)
             {
                 string newSimulationName = Name;
@@ -88,10 +123,10 @@
         /// <summary>
         /// Initialise the experiment ready for creating simulations.
         /// </summary>
-        private void Initialise()
-        {
-            allCombinations = AllCombinations();
+        private void Initialise(bool fullFactorial = false)
+        {            
             parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
             Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
             serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
         }
@@ -117,7 +152,7 @@
         /// <param name="factorValues">The factor value instances</param>
         /// <param name="names">The return list of factor names</param>
         /// <param name="values">The return list of factor values</param>
-        private static void GetFactorNamesAndValues(List<FactorValue> factorValues, List<string> names, List<string> values)
+        public static void GetFactorNamesAndValues(List<FactorValue> factorValues, List<string> names, List<string> values)
         {
             foreach (FactorValue factorValue in factorValues)
             {
@@ -254,11 +289,39 @@
             return null;
         }
 
+        /// <summary>
+        /// Generates a partial factorial list of lists of factor values, based on the list of enabled factor names.
+        /// If this list is empty, this function will return a full factorial list of simulations.
+        /// </summary>
+        /// <returns></returns>
+        public List<List<FactorValue>> EnabledCombinations()
+        {
+            if (DisabledSimNames == null || DisabledSimNames.Count < 1) return AllCombinations();
+
+            // easy but inefficient method (for testing purposes)
+            return AllCombinations().Where(x => (DisabledSimNames.IndexOf(GetName(x)) < 0)).ToList();
+        }
+
+        /// <summary>
+        /// Generates the name for a combination of FactorValues.
+        /// </summary>
+        /// <param name="factors"></param>
+        /// <returns></returns>
+        private string GetName(List<FactorValue> factors)
+        {
+            string str = Name;
+            foreach (FactorValue factor in factors)
+            {
+                str += factor.Name;
+            }
+            return str;
+        }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -268,7 +331,7 @@
                 foreach (IModel child in Children)
                 {
                     if (!(child is Simulation) && !(child is Factors))
-                        child.Document(tags, headingLevel + 1, indent);
+                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
                 }
             }
         }

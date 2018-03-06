@@ -5,6 +5,7 @@ using Models.Core;
 namespace Models.Lifecycle
 {
     /// <summary>
+    /// # [Name]
     /// A lifecycle that contains lifestages. 
     /// </summary>
     [Serializable]

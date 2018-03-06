@@ -13,6 +13,7 @@ namespace Models.PostSimulationTools
     using Storage;
 
     /// <summary>
+    /// # [Name]
     /// A post processing model that produces time series stats.
     /// </summary>
     [ViewName("UserInterface.Views.GridView")]
@@ -34,7 +35,7 @@ namespace Models.PostSimulationTools
         /// <param name="dataStore">The DataStore to work with</param>
         public void Run(IStorageReader dataStore)
         {
-            dataStore.DeleteTable(this.Name);
+            dataStore.DeleteDataInTable(this.Name);
 
             DataTable statsData = new DataTable();
             statsData.Columns.Add("SimulationName", typeof(string));
@@ -87,7 +88,7 @@ namespace Models.PostSimulationTools
 
                 // Write the stats data to the DataStore
                 statsData.TableName = this.Name;
-                dataStore.WriteTableRaw(statsData);
+                dataStore.WriteTable(statsData);
             }
         }
 

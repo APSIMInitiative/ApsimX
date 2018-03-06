@@ -86,7 +86,7 @@ namespace UserInterface.Views
             foreach (DGNode tmpNode in Nodes)
                 tmpNode.Paint(context);
 
-            ((IDisposable)context.GetTarget()).Dispose();
+            ((IDisposable)context.Target).Dispose();
             ((IDisposable)context).Dispose();
         }
 

@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class OnEventFunction : Model, IFunction
+    public class OnEventFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The _ value</summary>
         private double _Value = 0;
@@ -77,7 +77,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -86,18 +86,18 @@ namespace Models.PMF.Functions
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
                 if (PreEventValue != null)
                 {
                     tags.Add(new AutoDocumentation.Paragraph("Before " + SetEvent, indent));
-                    (PreEventValue as IModel).Document(tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(PreEventValue as IModel, tags, headingLevel + 1, indent + 1);
                 }
 
                 if (PostEventValue != null)
                 {
                     tags.Add(new AutoDocumentation.Paragraph("On " + SetEvent + " the value is set to:", indent));
-                    (PostEventValue as IModel).Document(tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(PostEventValue as IModel, tags, headingLevel + 1, indent + 1);
                 }
             }
         }

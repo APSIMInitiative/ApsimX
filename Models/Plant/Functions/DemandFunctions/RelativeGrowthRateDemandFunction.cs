@@ -5,6 +5,7 @@ using Models.PMF.Phen;
 namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
+    /// # [Name]
     /// Relative growth rate demand function
     /// </summary>
     [Serializable]

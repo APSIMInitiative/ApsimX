@@ -40,9 +40,8 @@
         public static RunOrganiser ForFile(string fileName, bool runTests)
         {
             if (!File.Exists(fileName))
-                throw new Exception("Cannot find file: " + fileName);
-
-            Simulations simulations = Simulations.Read(fileName);
+                throw new Exception("Cannot find file: " + fileName);            
+            Simulations simulations = Simulations.Read(fileName);            
             return ForSimulations(simulations, simulations, runTests);
         }
 
@@ -120,12 +119,12 @@
                     currentSimulation = null;
                     if (modelsToRun.Count > 0)
                     {
-                        currentSimulation = modelsToRun[0].NextSimulationToRun();
+                        currentSimulation = modelsToRun[0].NextSimulationToRun(false);
                         while (currentSimulation == null && modelsToRun.Count > 0)
                         {
                             modelsToRun.RemoveAt(0);
                             if (modelsToRun.Count > 0)
-                                currentSimulation = modelsToRun[0].NextSimulationToRun();
+                                currentSimulation = modelsToRun[0].NextSimulationToRun(false);
                         }
                     }
                     return currentSimulation != null;
@@ -148,7 +147,7 @@
 
                 // For each model, get a list of simulation names.
                 SimulationNamesBeingRun = new List<string>();
-                modelsToRun.ForEach(model => SimulationNamesBeingRun.AddRange(model.GetSimulationNames()));
+                modelsToRun.ForEach(model => SimulationNamesBeingRun.AddRange(model.GetSimulationNames(false)));
             }
         }
 

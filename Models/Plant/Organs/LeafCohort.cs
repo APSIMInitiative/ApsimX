@@ -44,7 +44,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class LeafCohort : Model
+    public class LeafCohort : Model, ICustomDocumentation
     {
         #region Paramater Input Classes
 
@@ -1204,13 +1204,13 @@ namespace Models.PMF.Organs
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
             }

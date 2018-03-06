@@ -8,20 +8,22 @@ namespace Models.PostSimulationTools
     using System;
     using System.Data;
     using System.IO;
-    using Excel;
+    using ExcelDataReader;
     using Models.Core;
     using System.Xml.Serialization;
     using APSIM.Shared.Utilities;
     using Storage;
+    using System.Collections.Generic;
 
     /// <summary>
+    /// # [Name]
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class ExcelInput : Model, IPostSimulationTool
+    public class ExcelInput : Model, IPostSimulationTool, IReferenceExternalFiles
     {
         private string _filename;
 
@@ -52,10 +54,40 @@ namespace Models.PostSimulationTools
         public string[] FileNameMetadata { get; set; }
 
         /// <summary>
+        /// List of Excel sheet names to read from.
+        /// </summary>
+        private string[] sheetNames;
+
+        /// <summary>
         /// Gets or sets the list of EXCEL sheet names to read from.
         /// </summary>
         [Description("EXCEL sheet names (csv)")]
-        public string[] SheetNames { get; set; }
+        public string[] SheetNames
+        {
+            get
+            {
+                return sheetNames;
+            }
+            set
+            {
+                string[] formattedSheetNames = new string[value.Length];
+                for (int i = 0; i < value.Length; i++)
+                {
+                    if (Char.IsNumber(value[i][0]))
+                        formattedSheetNames[i] = "\"" + value[i] + "\"";
+                    else
+                        formattedSheetNames[i] = value[i];
+                }
+
+                sheetNames = formattedSheetNames;
+            }
+        }
+
+        /// <summary>Return our input filenames</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return new string[] { FileName };
+        }
 
         /// <summary>
         /// Gets the parent simulation or null if not found
@@ -87,10 +119,8 @@ namespace Models.PostSimulationTools
             string fullFileName = AbsoluteFileName;
             if (fullFileName != null && File.Exists(fullFileName))
             {
-                dataStore.DeleteTable(this.Name);
-                
                 // Open the file
-                FileStream stream = File.Open(fullFileName, FileMode.Open, FileAccess.Read);
+                FileStream stream = File.Open(fullFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
                 // Create a reader.
                 IExcelDataReader excelReader;
@@ -103,8 +133,14 @@ namespace Models.PostSimulationTools
                 }
 
                 // Read all sheets from the EXCEL file as a data set
-                excelReader.IsFirstRowAsColumnNames = true;
-                DataSet dataSet = excelReader.AsDataSet();
+                // excelReader.IsFirstRowAsColumnNames = true;
+                DataSet dataSet = excelReader.AsDataSet(new ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                    {
+                        UseHeaderRow = true
+                    }
+                });
 
                 // Write all sheets that are specified in 'SheetNames' to the data store
                 foreach (DataTable table in dataSet.Tables)
@@ -113,7 +149,9 @@ namespace Models.PostSimulationTools
                     if (keep)
                     {
                         TruncateDates(table);
-                        dataStore.WriteTableRaw(table);
+
+                        dataStore.DeleteDataInTable(table.TableName);
+                        dataStore.WriteTable(table);
                     }
                 }
 
