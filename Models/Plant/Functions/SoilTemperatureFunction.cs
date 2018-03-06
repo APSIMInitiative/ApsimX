@@ -55,7 +55,7 @@ namespace Models.PMF.Functions
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // add graph and table.
                 if (XYPairs != null)

@@ -91,13 +91,13 @@ namespace Models.PMF.Functions
                 if (PreEventValue != null)
                 {
                     tags.Add(new AutoDocumentation.Paragraph("Before " + SetEvent, indent));
-                    AutoDocumentation.DocumentModel(PreEventValue as IModel, tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(PreEventValue as IModel, tags, headingLevel + 1, indent + 1);
                 }
 
                 if (PostEventValue != null)
                 {
                     tags.Add(new AutoDocumentation.Paragraph("On " + SetEvent + " the value is set to:", indent));
-                    AutoDocumentation.DocumentModel(PostEventValue as IModel, tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(PostEventValue as IModel, tags, headingLevel + 1, indent + 1);
                 }
             }
         }

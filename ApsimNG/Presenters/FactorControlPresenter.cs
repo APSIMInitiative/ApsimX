@@ -188,7 +188,7 @@ namespace UserInterface.Presenters
                 foreach (List<FactorValue> factors in model.AllCombinations())
                 {
                     if (!getAllData && i > maxSimsToDisplay) break;
-                    string name = "";
+                    string name = model.Name;
                     List<string> values = new List<string>();
                     List<string> names = new List<string>();
                     Experiment.GetFactorNamesAndValues(factors, names, values);

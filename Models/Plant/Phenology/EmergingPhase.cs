@@ -87,12 +87,12 @@ namespace Models.PMF.Phen
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 tags.Add(new AutoDocumentation.Paragraph("Progress toward emergence is driven by Thermal time accumulation where thermal time is calculated as:", indent));
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                    AutoDocumentation.DocumentModel(child, tags, -1, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
     }

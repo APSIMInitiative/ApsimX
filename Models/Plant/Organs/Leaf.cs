@@ -611,7 +611,21 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
+        public double RadIntTot
+        {
+            get
+            {
+                if (MicroClimatePresent)
+                {
+                    double TotalRadn = 0;
+                    for (int i = 0; i < LightProfile.Length; i++)
+                        TotalRadn += LightProfile[i].amount;
+                    return TotalRadn;                    
+                }
+                else
+                    return CoverGreen * MetData.Radn;
+            }
+        }
 
         /// <summary>Gets the specific area.</summary>
         [Units("mm^2/g")]
@@ -1719,7 +1733,7 @@ namespace Models.PMF.Organs
             needToRecalculateLiveDead = true;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
-            Structure.Germinated = false;
+            Structure.Germinated = false;            
 
         }
 
@@ -1763,17 +1777,6 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
         }
         #endregion
-        /// <summary>
-        /// Document a specific function
-        /// </summary>
-        /// <param name="FunctName"></param>
-        /// <param name="indent"></param>
-        /// <param name="tags"></param>
-        public void DocumentFunction(string FunctName, List<AutoDocumentation.ITag> tags, int indent)
-        {
-            IModel Funct = Apsim.Child(this, FunctName);
-            AutoDocumentation.DocumentModel(Funct, tags, -1, indent);
-        }
 
     }
 }

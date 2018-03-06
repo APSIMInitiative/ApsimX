@@ -3797,7 +3797,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <MicroClimatePresent>true</MicroClimatePresent>
-        <KDead>0.3</KDead>
+        <KDead>0.1</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>

@@ -97,7 +97,8 @@ namespace Models.Core
                 if (property.CanWrite && 
                     property.Name != "Name" && 
                     property.Name != "Children" && 
-                    property.Name != "IncludeInDocumentation")
+                    property.Name != "IncludeInDocumentation" &&
+                    property.Name != "ResourceName")
                     property.SetValue(this, property.GetValue(from));
             }
         }
