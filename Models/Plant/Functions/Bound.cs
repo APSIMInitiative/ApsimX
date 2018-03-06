@@ -43,19 +43,19 @@ namespace Models.PMF.Functions
             {
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
                 if (ChildFunctions == null)
                     ChildFunctions = Apsim.Children(this, typeof(IFunction));
                 foreach (IFunction child in ChildFunctions)
                     if (child != Lower && child != Upper)
                     {
                         tags.Add(new AutoDocumentation.Paragraph(Name + " is the value of " + (child as IModel).Name + " bound between a lower and upper bound where:", indent));
-                        AutoDocumentation.DocumentModel(child as IModel, tags, -1, indent + 1);
+                        AutoDocumentation.DocumentModel(child as IModel, tags, headingLevel + 1, indent + 1);
                     }
                 if (Lower != null)
-                    AutoDocumentation.DocumentModel(Lower as IModel, tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(Lower as IModel, tags, headingLevel + 1, indent + 1);
                 if (Upper != null)
-                    AutoDocumentation.DocumentModel(Upper as IModel, tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(Upper as IModel, tags, headingLevel + 1, indent + 1);
             }
         }
     }

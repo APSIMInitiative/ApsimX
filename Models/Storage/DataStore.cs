@@ -14,6 +14,7 @@
     using System.Xml.Serialization;
 
     /// <summary>
+    /// # [Name]
     /// A storage service for reading and writing to/from a SQLITE database.
     /// </summary>
     [Serializable]
