@@ -14,30 +14,30 @@
     using Models.Core;
 
     public class NewAzureJobPresenter : IPresenter, INewCloudJobPresenter
-    {        
+    {
         /// <summary>The new azure job view</summary>
         private NewAzureJobView view;
         
         /// <summary>The explorer presenter</summary>
-        private ExplorerPresenter explorerPresenter;        
+        private ExplorerPresenter presenter;
         private IModel model;
         private FileUploader uploader;
-        private BatchClient batchClient;
+        private BatchClient batchCli;
         private CloudStorageAccount storageAccount;
-        private StorageCredentials storageCredentials;
-        private BatchCredentials batchCredentials;
-        private PoolSettings poolSettings;
+        private StorageCredentials storageAuth;
+        private BatchCredentials batchAuth;
+        private PoolSettings poolOptions;
         private BackgroundWorker submissionWorker;
 
         private const string SETTINGS_FILENAME = "settings.txt";
 
         public NewAzureJobPresenter()
-        {            
+        {
         }
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.explorerPresenter = explorerPresenter;
+            this.presenter = explorerPresenter;
             this.view = (NewAzureJobView)view;
             
             this.view.Presenter = this;
@@ -122,10 +122,33 @@
             
             AzureSettings.Default["OutputDir"] = jp.OutputDir;
             AzureSettings.Default.Save();
-            if (batchClient == null)
+            if (batchCli == null)
                 GetCredentials(null, null);
             else
                 submissionWorker.RunWorkerAsync(jp);
+        }
+
+        /// <summary>
+        /// Cancels submission of a job and hides the right hand panel (which holds the new job view).
+        /// </summary>
+        public void CancelJobSubmission()
+        {
+            if (submissionWorker != null)
+                submissionWorker.CancelAsync();
+            presenter.HideRightHandPanel();
+        }
+
+        /// <summary>
+        /// Displays an error message to the user.
+        /// </summary>
+        /// <param name="msg">Message to be displayed.</param>
+        public void ShowError(string msg)
+        {
+            presenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
+        }
+
+        public void Detach()
+        {
         }
 
         /// <summary>
@@ -162,7 +185,7 @@
             // add current job to the list of jobs                        
 
             // TODO : do we actually need/use the APSIMJob class?
-            APSIMJob job = new APSIMJob(jp.JobDisplayName, "", jp.ApplicationPackagePath, jp.ApplicationPackageVersion, jp.Recipient, batchCredentials, storageCredentials, PoolSettings.FromConfiguration());
+            APSIMJob job = new APSIMJob(jp.JobDisplayName, "", jp.ApplicationPackagePath, jp.ApplicationPackageVersion, jp.Recipient, batchAuth, storageAuth, PoolSettings.FromConfiguration());
             job.PoolInfo.MaxTasksPerVM = jp.PoolMaxTasksPerVM;
             job.PoolInfo.VMCount = jp.PoolVMCount;
 
@@ -301,7 +324,7 @@
             // submit job
             try
             {
-                CloudJob cloudJob = batchClient.JobOperations.CreateJob(jp.JobId.ToString(), GetPoolInfo(job.PoolInfo));
+                CloudJob cloudJob = batchCli.JobOperations.CreateJob(jp.JobId.ToString(), GetPoolInfo(job.PoolInfo));
                 cloudJob.DisplayName = job.DisplayName;
                 cloudJob.JobPreparationTask = job.ToJobPreparationTask(jp.JobId, storageAccount.CreateCloudBlobClient());
                 cloudJob.JobReleaseTask = job.ToJobReleaseTask(jp.JobId, storageAccount.CreateCloudBlobClient());
@@ -486,16 +509,6 @@
             }
         }
 
-
-        /// <summary>
-        /// Displays an error message to the user.
-        /// </summary>
-        /// <param name="msg">Message to be displayed.</param>
-        public void ShowError(string msg)
-        {
-            explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
-        }
-
         /// <summary>
         /// Upload a file to Azure's cloud storage if it does not already exist.
         /// </summary>
@@ -630,10 +643,6 @@
             }
         } 
 
-        public void Detach()
-        {
-        }
-
         /// <summary>
         /// Initialises the uploader and batch client. Asks user for an Azure licence file and saves the credentials
         /// if the credentials have not previously been set.
@@ -645,18 +654,18 @@
             if (AzureCredentialsSetup.CredentialsExist())
             {
                 // store credentials
-                storageCredentials = StorageCredentials.FromConfiguration();
-                batchCredentials = BatchCredentials.FromConfiguration();
-                poolSettings = PoolSettings.FromConfiguration();
+                storageAuth = StorageCredentials.FromConfiguration();
+                batchAuth = BatchCredentials.FromConfiguration();
+                poolOptions = PoolSettings.FromConfiguration();
 
-                storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
+                storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageAuth.Account, storageAuth.Key), true);
                 uploader = new FileUploader(storageAccount);
-                var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
+                var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchAuth.Url, batchAuth.Account, batchAuth.Key);
                 try
                 {
-                    batchClient = BatchClient.Open(sharedCredentials);
+                    batchCli = BatchClient.Open(sharedCredentials);
                 }
-                catch (UriFormatException err)
+                catch (UriFormatException)
                 {
                     ShowError("Error opening Azure Batch client: credentials are invalid.");
                     AzureCredentialsSetup cred = new AzureCredentialsSetup();
@@ -673,16 +682,6 @@
                 AzureCredentialsSetup cred = new AzureCredentialsSetup();
                 cred.Finished += GetCredentials;
             }
-        }
-        
-        /// <summary>
-        /// Cancels submission of a job and hides the right hand panel (which holds the new job view).
-        /// </summary>
-        public void CancelJobSubmission()
-        {
-            if (submissionWorker != null)
-                submissionWorker.CancelAsync();
-            explorerPresenter.HideRightHandPanel();
         }
     }
 }

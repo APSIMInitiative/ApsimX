@@ -1,32 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Gtk;
 using System.IO;
 using System.ComponentModel;
-using UserInterface.Interfaces;
 using ApsimNG.Cloud;
 
 namespace UserInterface.Views
 {   
     public class NewAzureJobView : ViewBase
     {
-        public Presenters.INewCloudJobPresenter Presenter { get; set; }
-        public BackgroundWorker SubmitJob { get; set; }
-        public JobParameters jobParams { get; set; }             
-        public Button btnOK;
-        public Label lblStatus;
-
-        public string Status { get { return lblStatus.Text; }
-                               set {
-                                    Application.Invoke(delegate
-                                    {
-                                        lblStatus.Text = value;
-                                    });
-                               }
-                             }
+        // There are a lot of commented-out controls in this view which may be used at some point in the future.
         private Entry entryName;
         private RadioButton radioApsimDir;
         //private RadioButton radioBob;
@@ -46,8 +28,7 @@ namespace UserInterface.Views
         private CheckButton chkSaveModels;
         private Entry entryModelPath;
         private Button btnModelPath;
-
-
+        private Label lblStatus;
 
         public NewAzureJobView(ViewBase owner) : base(owner)
         {
@@ -112,10 +93,10 @@ namespace UserInterface.Views
             tblModel.RowSpacing = 10;
 
             chkSaveModels = new CheckButton("Save model files");
-            chkSaveModels.Toggled += chkSaveModels_Toggled;
+            chkSaveModels.Toggled += ChkSaveModels_Toggled;
             entryModelPath = new Entry();
             btnModelPath = new Button("...");
-            btnModelPath.Clicked += btnModelPath_Click;
+            btnModelPath.Clicked += BtnModelPath_Click;
             
             chkSaveModels.Active = true;
             chkSaveModels.Active = false;
@@ -164,11 +145,11 @@ namespace UserInterface.Views
             // use Apsim from a directory
 
             radioApsimDir = new RadioButton("Use APSIM Next Generation from a directory");
-            radioApsimDir.Toggled += new EventHandler(radioApsimDir_Changed);
+            radioApsimDir.Toggled += new EventHandler(RadioApsimDir_Changed);
             // populate this input field with the directory containing this executable		
             entryApsimDir = new Entry(Directory.GetParent(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)).ToString());
             btnApsimDir = new Button("...");
-            btnApsimDir.Clicked += new EventHandler(btnApsimDir_Click);
+            btnApsimDir.Clicked += new EventHandler(BtnApsimDir_Click);
             tblVersion.Attach(radioApsimDir, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             tblVersion.Attach(entryApsimDir, 1, 2, 0, 1, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
             tblVersion.Attach(btnApsimDir, 2, 3, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
@@ -176,10 +157,10 @@ namespace UserInterface.Views
             // use a zipped version of Apsim
 
             radioApsimZip = new RadioButton(radioApsimDir, "Use a zipped version of APSIM Next Generation");
-            radioApsimZip.Toggled += new EventHandler(radioApsimZip_Changed);
+            radioApsimZip.Toggled += new EventHandler(RadioApsimZip_Changed);
             entryApsimZip = new Entry();
             btnApsimZip = new Button("...");
-            btnApsimZip.Clicked += new EventHandler(btnApsimZip_Click);
+            btnApsimZip.Clicked += new EventHandler(BtnApsimZip_Click);
 
             tblVersion.Attach(radioApsimZip, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             tblVersion.Attach(entryApsimZip, 1, 2, 1, 2, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
@@ -238,7 +219,7 @@ namespace UserInterface.Views
             entryOutputDir = new Entry((string)ApsimNG.Properties.Settings.Default["OutputDir"]);
 
             Button btnOutputDir = new Button("...");
-            btnOutputDir.Clicked += new EventHandler(btnOutputDir_Click);
+            btnOutputDir.Clicked += new EventHandler(BtnOutputDir_Click);
 
             tblResults.Attach(lblOutputDir, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             tblResults.Attach(entryOutputDir, 1, 2, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
@@ -260,13 +241,13 @@ namespace UserInterface.Views
 
             // OK/Cancel buttons
             
-            btnOK = new Button("OK");
-            btnOK.Clicked += new EventHandler(btnOK_Click);
+            BtnOK = new Button("OK");
+            BtnOK.Clicked += new EventHandler(BtnOK_Click);
             Button btnCancel = new Button("Cancel");
-            btnCancel.Clicked += new EventHandler(btnCancel_Click);
+            btnCancel.Clicked += new EventHandler(BtnCancel_Click);
             HBox hbxButtons = new HBox(true, 0);
             hbxButtons.PackEnd(btnCancel, false, true, 0);
-            hbxButtons.PackEnd(btnOK, false, true, 0);
+            hbxButtons.PackEnd(BtnOK, false, true, 0);
             Alignment alignButtons = new Alignment(1f, 0f, 0.2f, 0f);            
             alignButtons.Add(hbxButtons);
             lblStatus = new Label("");
@@ -281,6 +262,26 @@ namespace UserInterface.Views
             // Add primary vbox to alignment
             primaryContainer.Add(vboxPrimary);
             _mainWidget = primaryContainer;            
+        }
+
+        public Presenters.INewCloudJobPresenter Presenter { get; set; }
+        public BackgroundWorker SubmitJob { get; set; }
+        public JobParameters JobParams { get; set; }
+        public Button BtnOK;        
+
+        public string Status
+        {
+            get
+            {
+                return lblStatus.Text;
+            }
+            set
+            {
+                Application.Invoke(delegate
+                {
+                    lblStatus.Text = value;
+                });
+            }
         }
 
         /// <summary>
@@ -301,7 +302,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void BtnCancel_Click(object sender, EventArgs e)
         {
             Presenter.CancelJobSubmission();
         }
@@ -311,11 +312,11 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnOK_Click(object sender, EventArgs e)
+        private void BtnOK_Click(object sender, EventArgs e)
         {
             string apsimPath = radioApsimDir.Active ? entryApsimDir.Text : entryApsimZip.Text;
 
-            jobParams = new JobParameters
+            JobParams = new JobParameters
             {
                 PoolVMCount = Int32.Parse(comboCoreCount.ActiveText) / 16,
                 JobDisplayName = entryName.Text,
@@ -329,7 +330,7 @@ namespace UserInterface.Views
                 ApplicationPackagePath = apsimPath
             };
 
-            Presenter.SubmitJob(jobParams);
+            Presenter.SubmitJob(JobParams);
         }
 
         /// <summary>
@@ -341,78 +342,7 @@ namespace UserInterface.Views
         {
              return "aeiou".IndexOf(st[0]) >= 0;
         }
-
-        /// <summary>
-        /// Opens a file chooser dialog so the user can choose a file with a specific extension.
-        /// </summary>
-        /// <param name="extensions">List of allowed file extensions. Extensions should not have a . in them, e.g. zip or tar or cs are valid but .cpp is not</param>
-        /// <param name="extName">Name of the file type</param>
-        /// <returns></returns>
-        public string GetFile(List<string> extensions, string extName = "")
-        {
-            string path = "";
-            string indefiniteArticle = StartsWithVowel(extName) ? "an" : "a"; // get that grammar correct
-            FileChooserDialog f = new FileChooserDialog("Choose " + indefiniteArticle + " " + extName + " file",
-                                                         null,
-                                                         FileChooserAction.Open,
-                                                         "Cancel", ResponseType.Cancel,
-                                                         "Select", ResponseType.Accept);
-            FileFilter filter = new FileFilter();
-            filter.Name = extName;
-            foreach (string extension in extensions)
-            {
-                filter.AddPattern("*." + extension);
-            }
-            f.AddFilter(filter);
-
-            try
-            {
-                if (f.Run() == (int)ResponseType.Accept)
-                {
-                    path = f.Filename;
-                }
-            }
-            catch (Exception e)
-            {
-                Presenter.ShowError(e.ToString());
-            }
-            f.Destroy();
-            return path;
-        }
         
-
-        /// <summary>Opens a file chooser dialog for the user to choose a .zip file.</summary>	
-        /// <return>The path of the chosen zip file</return>
-        public string GetZipFile()
-        {
-            string path = "";
-
-            FileChooserDialog f = new FileChooserDialog("Choose a zip file to open",
-                                                        null,
-                                                        FileChooserAction.Open,
-                                                        "Cancel", ResponseType.Cancel,
-                                                        "Select", ResponseType.Accept);
-            FileFilter zipFilter = new FileFilter();
-            zipFilter.Name = "ZIP File";
-            zipFilter.AddPattern("*.zip");
-            f.AddFilter(zipFilter);
-
-            try
-            {
-                if (f.Run() == (int)ResponseType.Accept)
-                {
-                    path = f.Filename;
-                }
-            }
-            catch (Exception ex)
-            {
-                Presenter.ShowError(ex.ToString());
-            }
-            f.Destroy();
-            return path;
-            
-        }
-
         /// <summary>Opens a file chooser dialog for the user to choose a directory.</summary>	
         /// <return>The path of the chosen directory</return>
         private string GetDirectory()
@@ -473,7 +403,7 @@ namespace UserInterface.Views
         /// Toggle Event handler for run ApsimX from a directory radio button.
         /// Greys out the input fields/buttons associated with the other radio buttons in this group.
         /// </summary>
-        private void radioApsimDir_Changed(object sender, EventArgs e)
+        private void RadioApsimDir_Changed(object sender, EventArgs e)
         {
             if (radioApsimDir.Active)
             {
@@ -500,7 +430,7 @@ namespace UserInterface.Views
         /// Toggle Event handler for run ApsimX from a zip file radio button.
         /// Greys out the input fields/buttons associated with the other radio buttons in this group.
         /// </summary>
-        private void radioApsimZip_Changed(object sender, EventArgs e)
+        private void RadioApsimZip_Changed(object sender, EventArgs e)
         {
             if (radioApsimZip.Active)
             {
@@ -524,34 +454,34 @@ namespace UserInterface.Views
             }
         }
 
-        private void btnBob_Click(object sender, EventArgs e)
+        private void BtnBob_Click(object sender, EventArgs e)
         {
             // just leaving this here in case we ever end up implementing the online source functionality
         }
 
-        private void btnApsimDir_Click(object sender, EventArgs e)
+        private void BtnApsimDir_Click(object sender, EventArgs e)
         {
             entryApsimDir.Text = GetDirectory();
         }
 
-        private void btnApsimZip_Click(object sender, EventArgs e)
+        private void BtnApsimZip_Click(object sender, EventArgs e)
         {
-            entryApsimZip.Text = GetZipFile();
+            entryApsimZip.Text = ViewBase.AskUserForFileName("Please select a zipped file", "Zip file (*.zip) | *.zip");
         }
 
-        private void btnOutputDir_Click(object sender, EventArgs e)
+        private void BtnOutputDir_Click(object sender, EventArgs e)
         {
             entryOutputDir.Text = GetDirectory();
         }        
 
-        private void chkSaveModels_Toggled(object sender, EventArgs e)
+        private void ChkSaveModels_Toggled(object sender, EventArgs e)
         {
             entryModelPath.IsEditable = chkSaveModels.Active;
             entryModelPath.Sensitive = chkSaveModels.Active;
             btnModelPath.Sensitive = chkSaveModels.Active;
         }
 
-        private void btnModelPath_Click(object sender, EventArgs e)
+        private void BtnModelPath_Click(object sender, EventArgs e)
         {
             entryModelPath.Text = GetDirectory();
         }

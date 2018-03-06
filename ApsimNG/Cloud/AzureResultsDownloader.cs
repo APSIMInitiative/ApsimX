@@ -77,7 +77,7 @@ namespace ApsimNG.Cloud
         /// <summary>
         /// Client for the user's batch account.
         /// </summary>
-        private BatchClient batchClient;
+        private BatchClient batchCli;
 
         /// <summary>
         /// Client for user's cloud storage.
@@ -169,7 +169,7 @@ namespace ApsimNG.Cloud
             BatchCredentials batchCredentials = BatchCredentials.FromConfiguration();
             storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
             var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
-            batchClient = BatchClient.Open(sharedCredentials);
+            batchCli = BatchClient.Open(sharedCredentials);
             blobClient = storageAccount.CreateCloudBlobClient();
             blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);        
         }
@@ -196,6 +196,111 @@ namespace ApsimNG.Cloud
                 Downloader_DoWork(null, null);
             }
             
+        }
+
+        /// <summary>
+        /// Summarises a directory of results into a single file.
+        /// </summary>        
+        /// <param name="includeFileNames">Whether or not to include the file names as a column</param>
+        /// <returns>An error code. -1 means unknown error, 0 means success, 1 means invalid simulation (no results).</returns>
+        public int SummariseResults(bool includeFileNames)
+        {
+            try
+            {
+                bool isClassic = false;
+                string fileSpec = ".db";
+                foreach (string f in Directory.GetFiles(rawResultsPath))
+                {
+                    if (Path.GetExtension(f) == ".out")
+                    {
+                        isClassic = true;
+                        fileSpec = ".out";
+                        break;
+                    }
+                }
+
+                string[] resultFiles = Directory.GetFiles(rawResultsPath, "*" + fileSpec);
+
+                // if there are no results (possibly a bad simulation?), no need to create an empty csv file.
+                if (resultFiles.Count() == 0) return 1;
+
+                int count = 0;
+                int lastComplete = -1;
+                bool printHeader = true;
+                bool csv = false;
+                string delim = ", ";
+                string sep = "";
+
+                StringBuilder output = new StringBuilder();
+                string csvPath = rawResultsPath + "\\" + name + ".csv";
+                Regex rx_name = DetectCommonChars(resultFiles);
+                using (StreamWriter file = new StreamWriter(csvPath, false))
+                {
+                    foreach (string currentFile in resultFiles)
+                    {
+                        int complete = (count * 100 / resultFiles.Count() * 100) / 100;
+                        if (complete != lastComplete)
+                        {
+                            lastComplete = complete;
+                        }
+
+                        if (isClassic)
+                        {
+                            using (StreamReader sr = new StreamReader(currentFile))
+                            {
+                                // read a couple of lines from the top
+                                for (int x = 0; x < 2; x++)
+                                {
+                                    string s = sr.ReadLine();
+                                    if (s.ToLower() == "format = csv")
+                                    {
+                                        sr.ReadLine();
+                                        csv = true;
+                                    }
+                                }
+
+                                if (count++ == 0)
+                                {
+                                    if (includeFileNames) output.Append(AddOutline("File " + sr.ReadLine(), "", delim));
+                                    else output.AppendLine(sr.ReadLine());
+                                }
+                                else
+                                {
+                                    sr.ReadLine();
+                                }
+                                sr.ReadLine();
+                                if (csv) sep = ",";
+                                if (includeFileNames)
+                                {
+                                    output.Append(AddOutline(sr.ReadToEnd(), rx_name.Replace(Path.GetFileName(currentFile), sep), delim));
+                                }
+                                else
+                                {
+                                    output.Append(sr.ReadToEnd());
+                                }
+                                sr.Close();
+                            }
+                            file.Write(output.ToString());
+                            output.Clear();
+                        }
+                        else // results are from apsim X
+                        {
+                            count++;
+                            var x = ReadSqliteDB(currentFile, printHeader, delim);
+                            if (x == "") return 4;
+                            file.Write(x);
+                        }
+                        printHeader = false;
+                    }
+                    file.Close();
+                }
+                return 0;
+            }
+            catch (Exception e)
+            {
+                presenter.ShowError(e.ToString());
+                return 2;
+            }
         }
 
         private void Downloader_DoWork(object sender, DoWorkEventArgs e)
@@ -351,108 +456,6 @@ namespace ApsimNG.Cloud
         }
 
         /// <summary>
-        /// Summarises a directory of results into a single file.
-        /// </summary>        
-        /// <param name="includeFileNames">Whether or not to include the file names as a column</param>
-        /// <returns>An error code. -1 means unknown error, 0 means success, 1 means invalid simulation (no results).</returns>
-        public int SummariseResults(bool includeFileNames)
-        {
-            try
-            {
-                bool isClassic = false;
-                string fileSpec = ".db";                
-                foreach (string f in Directory.GetFiles(rawResultsPath))
-                {
-                    if (Path.GetExtension(f) == ".out")
-                    {
-                        isClassic = true;
-                        fileSpec = ".out";
-                        break;
-                    }
-                }
-
-                string[] resultFiles = Directory.GetFiles(rawResultsPath, "*" + fileSpec);
-
-                // if there are no results (possibly a bad simulation?), no need to create an empty csv file.
-                if (resultFiles.Count() == 0) return 1;
-
-                int count = 0;
-                int lastComplete = -1;
-                bool printHeader = true;
-                bool csv = false;
-                string delim = ", ";
-                string sep = "";
-
-                StringBuilder output = new StringBuilder();
-                string csvPath = rawResultsPath + "\\" + name + ".csv";
-                Regex rx_name = detectCommonChars(resultFiles);
-                using (StreamWriter file = new StreamWriter(csvPath, false))
-                {
-                    foreach (string currentFile in resultFiles)
-                    {
-                        int complete = (count * 100 / resultFiles.Count() * 100) / 100;
-                        if (complete != lastComplete)
-                        {
-                            lastComplete = complete;
-                        }
-
-                        if (isClassic)
-                        {
-                            using (StreamReader sr = new StreamReader(currentFile))
-                            {
-                                // read a couple of lines from the top
-                                for (int x = 0; x < 2; x++)
-                                {
-                                    string s = sr.ReadLine();
-                                    if (s.ToLower() == "format = csv")
-                                    {
-                                        sr.ReadLine();
-                                        csv = true;
-                                    }
-                                }
-
-                                if (count++ == 0)
-                                {
-                                    if (includeFileNames) output.Append(AddOutline("File " + sr.ReadLine(), "", delim));
-                                    else output.AppendLine(sr.ReadLine());
-                                } else
-                                {
-                                    sr.ReadLine();
-                                }
-                                sr.ReadLine();
-                                if (csv) sep = ",";
-                                if (includeFileNames)
-                                {
-                                    output.Append(AddOutline(sr.ReadToEnd(), rx_name.Replace(Path.GetFileName(currentFile), sep), delim));
-                                } else
-                                {
-                                    output.Append(sr.ReadToEnd());
-                                }
-                                sr.Close();
-                            }
-                            file.Write(output.ToString());
-                            output.Clear();
-                        } else // results are from apsim X
-                        {
-                            count++;
-                            var x = ReadSqliteDB(currentFile, printHeader, delim);
-                            if (x == "") return 4;
-                            file.Write(x);
-                        }
-                        printHeader = false;
-                    }
-                    file.Close();
-                }
-                return 0;
-            }
-            catch (Exception e)
-            {
-                presenter.ShowError(e.ToString());
-                return 2;
-            }
-        }
-
-        /// <summary>
         /// Reads an apsimx .db result file and returns the results as a string.
         /// </summary>
         /// <param name="path">Directory containing the results</param>
@@ -584,7 +587,7 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private Regex detectCommonChars(string[] args)
+        private Regex DetectCommonChars(string[] args)
         {
             if (args.Count() < 2) return new Regex(".out");
 
@@ -686,8 +689,8 @@ namespace ApsimNG.Cloud
         {
             ODATADetailLevel detailLevel = new ODATADetailLevel { SelectClause = "id" };
             // This is how it was done in MARS. Not sure that both of these are necessary.
-            CloudJob tmpJob = batchClient.JobOperations.ListJobs(detailLevel).FirstOrDefault(j => string.Equals(jobId.ToString(), j.Id));
-            CloudJob job = tmpJob == null ? tmpJob : batchClient.JobOperations.GetJob(jobId.ToString());
+            CloudJob tmpJob = batchCli.JobOperations.ListJobs(detailLevel).FirstOrDefault(j => string.Equals(jobId.ToString(), j.Id));
+            CloudJob job = tmpJob == null ? tmpJob : batchCli.JobOperations.GetJob(jobId.ToString());
             return job == null || job.State == JobState.Completed || job.State == JobState.Disabled;
 
             // a simpler solution would be -
