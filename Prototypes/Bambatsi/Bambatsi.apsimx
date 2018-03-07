@@ -622,14 +622,9 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>ExtinctionCoefficientDead</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[Value of 0.57 from 
-Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees
-Author(s): Robin A. Harrington and James H. Fownes
-Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
-
-But their data suggests a value of 0.3]]></MemoText>
+            <MemoText><![CDATA[Assume a value lower than for green leaf]]></MemoText>
           </Memo>
-          <FixedValue>0.57</FixedValue>
+          <FixedValue>0.2</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>SpecificLeafAreaFunction</Name>
