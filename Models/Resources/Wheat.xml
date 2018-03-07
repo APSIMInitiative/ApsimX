@@ -853,8 +853,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
             <double>10</double>
             <double>200</double>
             <double>1000</double>
-            <double>1100</double>
-            <double>1200</double>
+            <double>1000</double>
+            <double>1000</double>
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4325,6 +4325,13 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
         <Command>[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Tybalt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+        <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+        <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </CultivarFolder>
