@@ -137,7 +137,34 @@ namespace UserInterface.Presenters
             view.Populate(simulations.GetRange(0, Math.Min(simulations.Count, maxSimsToDisplay)));
             view.NumSims = model.AllCombinations().Count.ToString();
         }
-        
+
+        /// <summary>
+        /// Runs a list of simulations.
+        /// </summary>
+        /// <param name="names">Names of the simulations to be run.</param>
+        public void RunSims(List<string> names)
+        {
+            try
+            {
+                Simulation sim;
+                List<Model> simulationList = new List<Model>();
+                foreach (string simName in names)
+                {
+                    sim = model.CreateSpecificSimulation(simName);
+                    simulationList.Add(sim);
+                }
+                Simulations simulationsToRun = Simulations.Create(simulationList);
+
+                Commands.RunCommand command = new Commands.RunCommand(simulationsToRun, explorerPresenter, false, null);
+                command.Do(null);
+
+            }
+            catch (Exception e)
+            {
+                explorerPresenter.MainPresenter.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+            }
+        }
+
         /// <summary>
         /// Gets the name of a simulation (list of factors levels).
         /// </summary>
@@ -349,7 +376,6 @@ namespace UserInterface.Presenters
         {
             explorerPresenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.ErrorLevel.Information);
         }
-
 
         public void Morris()
         {
