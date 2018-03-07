@@ -201,7 +201,7 @@ namespace Models.PMF.Organs
                 if (layer <= Soil.LayerIndexOfDepth(Depth, soil.Thickness))
                     if (LayerLive[layer].Wt > 0)
                     {
-                        RAw[layer] = Uptake[layer] / LayerLive[layer].Wt
+                        RAw[layer] = - Uptake[layer] / LayerLive[layer].Wt
                                    * soil.Thickness[layer]
                                    * Soil.ProportionThroughLayer(layer, Depth, soil.Thickness);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning

@@ -309,7 +309,7 @@
         /// <returns></returns>
         private string GetName(List<FactorValue> factors)
         {
-            string str = "";
+            string str = Name;
             foreach (FactorValue factor in factors)
             {
                 str += factor.Name;

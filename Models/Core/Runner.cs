@@ -81,7 +81,7 @@
             }
         }
 
-        /// <summary>An enumeratorfor creating simulations ready for running.</summary>
+        /// <summary>An enumerator for creating simulations ready for running.</summary>
         public class SimulationEnumerator : IEnumerator<Simulation>
         {
             private IModel relativeTo;
@@ -144,6 +144,10 @@
                 modelsToRun = Apsim.ChildrenRecursively(relativeTo, typeof(ISimulationGenerator)).Cast<ISimulationGenerator>().ToList();
                 if (relativeTo is ISimulationGenerator)
                     modelsToRun.Add(relativeTo as ISimulationGenerator);
+
+                // For each model, resolve any links.
+                Simulations sims = Apsim.Parent(relativeTo, typeof(Simulations)) as Simulations;
+                modelsToRun.ForEach(model => sims.Links.Resolve(model));
 
                 // For each model, get a list of simulation names.
                 SimulationNamesBeingRun = new List<string>();
