@@ -853,8 +853,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
             <double>10</double>
             <double>200</double>
             <double>1000</double>
-            <double>1100</double>
-            <double>1200</double>
+            <double>1000</double>
+            <double>1000</double>
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
