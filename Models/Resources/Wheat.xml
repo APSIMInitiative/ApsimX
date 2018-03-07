@@ -4326,6 +4326,13 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
         <Command>[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8</Command>
       </Cultivar>
+      <Cultivar>
+        <Name>Tybalt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+        <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+        <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+      </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </CultivarFolder>
     <CultivarFolder>
