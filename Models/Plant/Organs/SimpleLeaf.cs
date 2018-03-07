@@ -61,6 +61,18 @@ namespace Models.PMF.Organs
 
         #region Leaf Interface
         /// <summary>
+        /// Number of initiated cohorts that have not appeared yet
+        /// </summary>
+        public int ApicalCohortNo { get; set; }
+        /// <summary>
+        /// reset leaf numbers
+        /// </summary>
+        public void Reset() { }
+        /// <summary></summary>
+        public int InitialisedCohortNo { get; set; }
+        /// <summary></summary>
+        public void RemoveHighestLeaf() { }
+        /// <summary>
         /// 
         /// </summary>
         public bool CohortsInitialised { get; set; }
@@ -74,12 +86,8 @@ namespace Models.PMF.Organs
         public int CohortsAtInitialisation { get; set; }
         /// <summary>
         /// 
-        /// </summary>
-        public double InitialisedCohortNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public double AppearedCohortNo { get; set; }
+        ///</summary>
+        public int AppearedCohortNo { get; set; }
 
         /// <summary>
         /// 

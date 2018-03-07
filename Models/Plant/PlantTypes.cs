@@ -252,6 +252,11 @@
         public double SetPhenologyStage { get; set; }
 
         /// <summary>
+        /// The nunber of Main-stem nodes to remove
+        /// </summary>
+        public int NodesToRemove { get; set; }
+
+        /// <summary>
         /// Method to set the FractionToRemove for specified Organ
         ///</summary>
         public void SetFractionToRemove(string organName, double fraction, string biomassType = "live")
