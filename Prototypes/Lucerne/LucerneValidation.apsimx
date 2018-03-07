@@ -6950,7 +6950,7 @@ namespace Models
         public void Cut()
         {
             Remove.SetPhenologyStage = 4;
-            Remove.NodesToRemove = 40;
+            Remove.NodesToRemove = 10;
             Lucerne.RemoveBiomass("Cut", Remove);
         }
     }

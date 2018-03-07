@@ -527,22 +527,24 @@ namespace Models.PMF.Struct
             TipToAppear = Math.Max(TipToAppear+Leaf.CohortsAtInitialisation, 1);
             CohortToInitialise = Math.Max(CohortToInitialise, 1);
             //Reinitiate apical cohorts ready for regrowth
-            for (int i = 1; i <= Leaf.CohortsAtInitialisation; i++)
+            if (Leaf.InitialisedCohortNo > 0) //Sone cohorts remain after defoliation
             {
-                InitParams = new CohortInitParams();
-                CohortToInitialise += 1;
-                InitParams.Rank = CohortToInitialise;
-                if (AddLeafCohort != null)
-                    AddLeafCohort.Invoke(this, InitParams);
+                for (int i = 1; i <= Leaf.CohortsAtInitialisation; i++)
+                {
+                    InitParams = new CohortInitParams();
+                    CohortToInitialise += 1;
+                    InitParams.Rank = CohortToInitialise;
+                    if (AddLeafCohort != null)
+                        AddLeafCohort.Invoke(this, InitParams);
+                }
             }
-            //If all nodes have been removed initalise again
-            /* if (Leaf.InitialisedCohortNo == 0)
-             {
+            else   //If all nodes have been removed initalise again
+            {
                  Leaf.Reset();
                  InitialiseLeafCohorts.Invoke(this, args);
                  Initialised = true;
                  DoEmergence();
-             }*/
+             }
         }
         #endregion
 
