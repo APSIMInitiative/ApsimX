@@ -75,7 +75,9 @@ namespace Models.Soils
         {
             get
             {
-                if (double.IsNaN(this.fractionFull))
+                if (Soil == null)
+                    return 0;
+                else if (double.IsNaN(this.fractionFull))
                 {
                     // Get the plant available water (mm/mm)
                     double[] pawc;

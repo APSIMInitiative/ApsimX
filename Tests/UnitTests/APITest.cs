@@ -244,15 +244,10 @@ namespace UnitTests
         [Test]
         public void MoveUpDown()
         {
-            IExplorerView explorerView = new ExplorerView(null);
-            ExplorerPresenter explorerPresenter = new ExplorerPresenter(null);
             CommandHistory commandHistory = new CommandHistory();
-
-            explorerPresenter.Attach(simulations, explorerView, null);
-
             Model modelToMove = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;
 
-            MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true, explorerView);
+            MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true, null);
             moveCommand.Do(commandHistory);
 
             Model modelToMove2 = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;
