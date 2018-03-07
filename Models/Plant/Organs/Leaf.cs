@@ -32,7 +32,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration
+    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IOrgan
     {
 
         /// <summary>The met data</summary>
@@ -611,7 +611,21 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
+        public double RadIntTot
+        {
+            get
+            {
+                if (MicroClimatePresent)
+                {
+                    double TotalRadn = 0;
+                    for (int i = 0; i < LightProfile.Length; i++)
+                        TotalRadn += LightProfile[i].amount;
+                    return TotalRadn;                    
+                }
+                else
+                    return CoverGreen * MetData.Radn;
+            }
+        }
 
         /// <summary>Gets the specific area.</summary>
         [Units("mm^2/g")]
@@ -1019,6 +1033,7 @@ namespace Models.PMF.Organs
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
+            Structure.TipToAppear = 0;
             apexGroupAge.Clear();
             dryMatterSupply.Clear();
             dryMatterDemand.Clear();
@@ -1708,7 +1723,7 @@ namespace Models.PMF.Organs
         {
             Structure.PotLeafTipsAppeared = 0;
             Structure.CohortToInitialise = 0;
-            Structure.TipToAppear = 0;
+            Structure.TipToAppear =  0;
             Structure.Emerged = false;
             Structure.Clear();
             Structure.ResetStemPopn();
@@ -1719,7 +1734,7 @@ namespace Models.PMF.Organs
             needToRecalculateLiveDead = true;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
-            Structure.Germinated = false;
+            Structure.Germinated = false;            
 
         }
 
