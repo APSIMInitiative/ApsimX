@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="25">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="26">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -75,50 +75,6 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <Name>ThermalTime</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Series</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <Checkpoint>Current</Checkpoint>
-                  <XFieldName>.Simulations.Replacements.Grapevine.Phenology.EndoDormancy.ThermalTime.XYPairs.X</XFieldName>
-                  <YFieldName>.Simulations.Replacements.Grapevine.Phenology.EndoDormancy.ThermalTime.XYPairs.Y</YFieldName>
-                  <ShowInLegend>false</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-              </Graph>
               <Graph>
                 <Name>Graph</Name>
                 <Series>
@@ -249,6 +205,94 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
                   <LegendPosition>BottomRight</LegendPosition>
                   <DisabledSeries />
                 </Graph>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.Target.ChillingTadjustment.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.Target.ChillingTadjustment.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.Target.ChillingTadjustment.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.Target.ChillingTadjustment.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>5</double>
@@ -288,11 +332,6 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
           </AccumulateFunction>
           <MultiplyFunction>
             <Name>FractionOfBudBurst</Name>
-            <Constant>
-              <Name>CaneDiameter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>1</FixedValue>
-            </Constant>
             <SigmoidFunction>
               <Name>BudNumberEffect</Name>
               <VariableReference>
@@ -317,6 +356,245 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
               </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </SigmoidFunction>
+            <LinearInterpolationFunction>
+              <Name>CordonDiameterEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEff.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEff.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEff.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEff.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEff.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEff.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEffect.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEffect.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEffect.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEffect.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>12</double>
+                  <double>15</double>
+                </X>
+                <Y>
+                  <double>0.1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Grapevine].Cordon.CordonDiameter.Value()</XProperty>
+            </LinearInterpolationFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -594,27 +872,6 @@ A function is used to capture the year of the current season as in the south hem
           <FixedValue>24</FixedValue>
           <Units>number</Units>
         </Constant>
-        <LinearInterpolationFunction>
-          <Name>HeightModel</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <X>
-              <double>0</double>
-              <double>200</double>
-              <double>1200</double>
-              <double>4000</double>
-            </X>
-            <Y>
-              <double>1800</double>
-              <double>1800</double>
-              <double>1800</double>
-              <double>1800</double>
-            </Y>
-          </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Shoot].Live.Wt</XProperty>
-        </LinearInterpolationFunction>
         <MultiplyFunction>
           <Name>BranchingRate</Name>
           <LinearInterpolationFunction>
@@ -682,6 +939,204 @@ A function is used to capture the year of the current season as in the south hem
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
+        <HoldFunction>
+          <Name>HeightModel</Name>
+          <LinearInterpolationFunction>
+            <Name>LinearInterpolationFunction</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <X>
+                <double>0</double>
+                <double>1000</double>
+              </X>
+              <Y>
+                <double>1000</double>
+                <double>2000</double>
+              </Y>
+            </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <XProperty>[Grapevine].Phenology.AccumulatedEmergedTT</XProperty>
+          </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <WhenToHold>FruitSet</WhenToHold>
+        </HoldFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
@@ -1674,7 +2129,7 @@ A function is used to capture the year of the current season as in the south hem
           <FixedValue>0.4</FixedValue>
         </Constant>
         <Constant>
-          <Name>CaneDiameter</Name>
+          <Name>CordonDiameter</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>10</FixedValue>
         </Constant>
@@ -2524,7 +2979,7 @@ For simiplicity, right now, the CHO effect during bud burst is expressed as a fu
               <XProperty>[Structure].PrimaryBudNo</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
-              <Name>CaneDiameter</Name>
+              <Name>CordonDiameter</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <Graph>
@@ -2544,8 +2999,8 @@ For simiplicity, right now, the CHO effect during bud burst is expressed as a fu
                     <Line>Solid</Line>
                     <LineThickness>Normal</LineThickness>
                     <Checkpoint>Current</Checkpoint>
-                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CaneDiameter.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CaneDiameter.XYPairs.Y</YFieldName>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CordonDiameter.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CordonDiameter.XYPairs.Y</YFieldName>
                     <ShowInLegend>false</ShowInLegend>
                     <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -2588,8 +3043,8 @@ For simiplicity, right now, the CHO effect during bud burst is expressed as a fu
                     <Line>Solid</Line>
                     <LineThickness>Normal</LineThickness>
                     <Checkpoint>Current</Checkpoint>
-                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CaneDiameter.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CaneDiameter.XYPairs.Y</YFieldName>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CordonDiameter.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CordonDiameter.XYPairs.Y</YFieldName>
                     <ShowInLegend>false</ShowInLegend>
                     <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -2632,8 +3087,8 @@ For simiplicity, right now, the CHO effect during bud burst is expressed as a fu
                     <Line>Solid</Line>
                     <LineThickness>Normal</LineThickness>
                     <Checkpoint>Current</Checkpoint>
-                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CaneDiameter.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CaneDiameter.XYPairs.Y</YFieldName>
+                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CordonDiameter.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CordonDiameter.XYPairs.Y</YFieldName>
                     <ShowInLegend>false</ShowInLegend>
                     <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -2670,7 +3125,7 @@ For simiplicity, right now, the CHO effect during bud burst is expressed as a fu
                 </Y>
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Cordon].CaneDiameter.Value()</XProperty>
+              <XProperty>[Cordon].CordonDiameter.Value()</XProperty>
             </LinearInterpolationFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -2976,50 +3431,6 @@ The minimum function was try to cap the maximum berry number and the predicted y
                 <LegendPosition>BottomRight</LegendPosition>
                 <DisabledSeries />
               </Graph>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Series</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <Checkpoint>Current</Checkpoint>
-                  <XFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.TempFlowering.XYPairs.X</XFieldName>
-                  <YFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.TempFlowering.XYPairs.Y</YFieldName>
-                  <ShowInLegend>false</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-              </Graph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>14</double>
@@ -3045,50 +3456,6 @@ The minimum function was try to cap the maximum berry number and the predicted y
             <Name>CHOFlowering</Name>
             <XYPairs>
               <Name>XYPairs</Name>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Series</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <Checkpoint>Current</Checkpoint>
-                  <XFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.CHOFlowering.XYPairs.X</XFieldName>
-                  <YFieldName>.Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.CHOFlowering.XYPairs.Y</YFieldName>
-                  <ShowInLegend>false</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-              </Graph>
               <Graph>
                 <Name>Graph</Name>
                 <Series>
@@ -3880,6 +4247,107 @@ Pollination alone results in the development of small, hard green berries (live 
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Grapevine</CropType>
     </Plant>
+    <Folder>
+      <Name>Management</Name>
+      <Manager>
+        <Name>ExtraVariables</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Script>
+          <CordonDiameter>15</CordonDiameter>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Plant Grapevine;
+        [Link] Zone zone;
+
+        [Description("CordonDiameter_mm")]         
+        public double CordonDiameter { get; set; }  //mm
+        
+
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, EventArgs e)
+        {
+        	zone.Set("Grapevine.Cordon.CordonDiameter.FixedValue", CordonDiameter);      
+        }
+
+     }
+}
+]]></Code>
+      </Manager>
+      <Operations>
+        <Name>Operations</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Operation>
+          <Date>2005-01-01</Date>
+          <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 150, rowSpacing: 2400, budNumber:24);</Action>
+        </Operation>
+      </Operations>
+      <Manager>
+        <Name>Pruning</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Script>
+          <PruneDateString>1-May</PruneDateString>
+        </Script>
+        <Code><![CDATA[
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System.Xml.Serialization;
+
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant Grapevine;
+        [Link] Clock Clock;
+
+        [Description("Prune Date")]
+        public string PruneDateString { get; set; }
+        [XmlIgnore] private DateTime PruneDate { get; set; }
+        [XmlIgnore] private RemovalFractions Remove { get; set; }
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Remove = new RemovalFractions();
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.
+            PruneDate = DateTime.Parse(PruneDateString);
+                        
+            if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)
+            {
+                Remove.SetPhenologyStage = 1;
+                Grapevine.RemoveBiomass("Prune", Remove);
+            }
+        }
+    }
+}
+            
+                
+]]></Code>
+      </Manager>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
+    </Folder>
     <Report>
       <Name>Report</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3925,66 +4393,6 @@ Pollination alone results in the development of small, hard green berries (live 
         <string>[Clock].DoReport</string>
       </EventNames>
     </Report>
-    <Manager>
-      <Name>Pruning</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Script>
-        <PruneDateString>1-May</PruneDateString>
-      </Script>
-      <Code><![CDATA[
-using System;
-using System.Collections.Generic;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.Interfaces;
-using System.Xml.Serialization;
-
-namespace Models
-{
-    [Serializable] 
-    [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
-    {
-        [Link] Plant Grapevine;
-        [Link] Clock Clock;
-
-        [Description("Prune Date")]
-        public string PruneDateString { get; set; }
-        [XmlIgnore] private DateTime PruneDate { get; set; }
-        [XmlIgnore] private RemovalFractions Remove { get; set; }
-        
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Remove = new RemovalFractions();
-        }
-        
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.
-            PruneDate = DateTime.Parse(PruneDateString);
-                        
-            if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)
-            {
-                Remove.SetPhenologyStage = 1;
-                Grapevine.RemoveBiomass("Prune", Remove);
-            }
-        }
-    }
-}
-            
-                
-]]></Code>
-    </Manager>
-    <Operations>
-      <Name>Operations</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Operation>
-        <Date>2005-01-01</Date>
-        <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 150, rowSpacing: 2400, budNumber:24);</Action>
-      </Operation>
-    </Operations>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
   <DataStore>
@@ -4431,14 +4839,10 @@ namespace Models
         <ResourceName>Grapevine</ResourceName>
         <CropType>Grapevine</CropType>
       </Plant>
-      <Operations>
-        <Name>Operations</Name>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Operation>
-          <Date>2005-01-01</Date>
-          <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 1500, rowSpacing: 2400, budNumber:24);</Action>
-        </Operation>
-      </Operations>
+      </SoluteManager>
       <Report>
         <Name>Report</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4451,13 +4855,59 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
-      <Manager>
-        <Name>Pruning</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Script>
-          <PruneDateString>1-March</PruneDateString>
-        </Script>
-        <Code><![CDATA[
+      <Folder>
+        <Name>Management</Name>
+        <Manager>
+          <Name>ExtraVariables</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Script>
+            <CordonDiameter>10</CordonDiameter>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Plant Grapevine;
+        [Link] Zone zone;
+
+        [Description("CordonDiameter_mm")]         
+        public double CordonDiameter { get; set; }  //mm
+        
+
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, EventArgs e)
+        {
+        	zone.Set("Grapevine.Cordon.CordonDiameter.FixedValue", CordonDiameter);      
+        }
+
+     }
+}
+]]></Code>
+        </Manager>
+        <Operations>
+          <Name>Operations</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Operation>
+            <Date>2005-01-01</Date>
+            <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 150, rowSpacing: 2400, budNumber:24);</Action>
+          </Operation>
+        </Operations>
+        <Manager>
+          <Name>Pruning</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Script>
+            <PruneDateString>1-May</PruneDateString>
+          </Script>
+          <Code><![CDATA[
 using System;
 using System.Collections.Generic;
 using Models.Core;
@@ -4502,11 +4952,10 @@ namespace Models
             
                 
 ]]></Code>
-      </Manager>
-      <SoluteManager>
-        <Name>SoluteManager</Name>
+        </Manager>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-      </SoluteManager>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
@@ -6130,14 +6579,10 @@ namespace Models
           <ResourceName>Grapevine</ResourceName>
           <CropType>Grapevine</CropType>
         </Plant>
-        <Operations>
-          <Name>Operations</Name>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Operation>
-            <Date>2005-01-01</Date>
-            <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 150, rowSpacing: 2400, budNumber:24);</Action>
-          </Operation>
-        </Operations>
+        </SoluteManager>
         <Report>
           <Name>Report</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6150,13 +6595,59 @@ namespace Models
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
-        <Manager>
-          <Name>Pruning</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Script>
-            <PruneDateString>1-March</PruneDateString>
-          </Script>
-          <Code><![CDATA[
+        <Folder>
+          <Name>Management</Name>
+          <Manager>
+            <Name>ExtraVariables</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <CordonDiameter>10</CordonDiameter>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Plant Grapevine;
+        [Link] Zone zone;
+
+        [Description("CordonDiameter_mm")]         
+        public double CordonDiameter { get; set; }  //mm
+        
+
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, EventArgs e)
+        {
+        	zone.Set("Grapevine.Cordon.CordonDiameter.FixedValue", CordonDiameter);      
+        }
+
+     }
+}
+]]></Code>
+          </Manager>
+          <Operations>
+            <Name>Operations</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2005-01-01</Date>
+              <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 150, rowSpacing: 2400, budNumber:24);</Action>
+            </Operation>
+          </Operations>
+          <Manager>
+            <Name>Pruning</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <PruneDateString>1-May</PruneDateString>
+            </Script>
+            <Code><![CDATA[
 using System;
 using System.Collections.Generic;
 using Models.Core;
@@ -6201,11 +6692,10 @@ namespace Models
             
                 
 ]]></Code>
-        </Manager>
-        <SoluteManager>
-          <Name>SoluteManager</Name>
+          </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-        </SoluteManager>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
+        </Folder>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -6408,6 +6898,11 @@ namespace Models
       </SoilArbitrator>
       <Zone>
         <Name>Vineyard</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[Double Guyôt-trained vines, pruned each year to retain 24 nodes were monitored. Vines were trained using vertical shoot positioning (VSP), with an exposed leaf area height of 1.2 m, and trimmed to maintain a compact canopy. Vines were planted 1.8 m apart within the row, and 2.4 m apart between rows. Average flowering date was determined by monitoring all the inflorescences on one cane on a vine in each plot on a regular basis throughout flowering. Likewise, regular berry samples (at least weekly) were taken from before the date of véraison until harvest at a soluble solids concentration value of 21.5 oBrix. ]]></MemoText>
+        </Memo>
         <Soil>
           <Name>Soil</Name>
           <Water>
@@ -6417,8 +6912,8 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.13</double>
-                <double>0.23</double>
-                <double>0.16</double>
+                <double>0.13</double>
+                <double>0.1</double>
                 <double>0.15</double>
                 <double>0.3</double>
                 <double>0.3</double>
@@ -6773,14 +7268,10 @@ namespace Models
           <ResourceName>Grapevine</ResourceName>
           <CropType>Grapevine</CropType>
         </Plant>
-        <Operations>
-          <Name>Operations</Name>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Operation>
-            <Date>2005-05-13</Date>
-            <Action>[Grapevine].Sow(population: 0.1667, cultivar: "SauvignonBlanc", depth: 50, rowSpacing: 3100, budNumber:24);</Action>
-          </Operation>
-        </Operations>
+        </SoluteManager>
         <Report>
           <Name>Report</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6794,12 +7285,100 @@ namespace Models
           </EventNames>
         </Report>
         <Manager>
-          <Name>Pruning</Name>
+          <Name>ParameterTest</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <PruneDateString>1-March</PruneDateString>
+            <BudBurstBase>0</BudBurstBase>
+            <EndoTarget>0</EndoTarget>
           </Script>
           <Code><![CDATA[
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System.Xml.Serialization;
+
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+    	[Link] Zone zone;
+        [Link] Summary Summary;
+
+		[Description("BudBurstBase")]
+        public double BudBurstBase  {get; set;}
+        [Description("EndoTarget")]
+        public double EndoTarget  {get; set;}
+
+                
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, EventArgs e)
+        {
+        	zone.Set("Grapevine.Phenology.Budding.Target.Base.FixedValue", BudBurstBase);
+			zone.Set("Grapevine.Phenology.EndoDormancy.Target.FixedValue", EndoTarget);           
+        }
+    }
+}
+            
+                
+]]></Code>
+        </Manager>
+        <Folder>
+          <Name>Management</Name>
+          <Manager>
+            <Name>ExtraVariables</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <CordonDiameter>10</CordonDiameter>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Plant Grapevine;
+        [Link] Zone zone;
+
+        [Description("CordonDiameter_mm")]         
+        public double CordonDiameter { get; set; }  //mm
+        
+
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, EventArgs e)
+        {
+        	zone.Set("Grapevine.Cordon.CordonDiameter.FixedValue", CordonDiameter);      
+        }
+
+     }
+}
+]]></Code>
+          </Manager>
+          <Operations>
+            <Name>Operations</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2005-01-01</Date>
+              <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 150, rowSpacing: 2400, budNumber:24);</Action>
+            </Operation>
+          </Operations>
+          <Manager>
+            <Name>Pruning</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <PruneDateString>1-May</PruneDateString>
+            </Script>
+            <Code><![CDATA[
 using System;
 using System.Collections.Generic;
 using Models.Core;
@@ -6844,53 +7423,10 @@ namespace Models
             
                 
 ]]></Code>
-        </Manager>
-        <SoluteManager>
-          <Name>SoluteManager</Name>
+          </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-        </SoluteManager>
-        <Manager>
-          <Name>ParameterTest</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Script>
-            <BudBurstBase>0</BudBurstBase>
-            <EndoTarget>0</EndoTarget>
-          </Script>
-          <Code><![CDATA[
-using System;
-using System.Collections.Generic;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.Interfaces;
-using System.Xml.Serialization;
-
-namespace Models
-{
-    [Serializable] 
-    [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
-    {
-    	[Link] Zone zone;
-        [Link] Summary Summary;
-
-		[Description("BudBurstBase")]
-        public double BudBurstBase  {get; set;}
-        [Description("EndoTarget")]
-        public double EndoTarget  {get; set;}
-
-                
-        [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, EventArgs e)
-        {
-        	zone.Set("Grapevine.Phenology.Budding.Target.Base.FixedValue", BudBurstBase);
-			zone.Set("Grapevine.Phenology.EndoDormancy.Target.FixedValue", EndoTarget);           
-        }
-    }
-}
-            
-                
-]]></Code>
-        </Manager>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
+        </Folder>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -7367,21 +7903,100 @@ namespace Models
         <ResourceName>Grapevine</ResourceName>
         <CropType>Grapevine</CropType>
       </Plant>
-      <Operations>
-        <Name>Operations</Name>
+      <Report>
+        <Name>Report</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Operation>
-          <Date>2005-01-01</Date>
-          <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 150, rowSpacing: 2400, budNumber:24);</Action>
-        </Operation>
-      </Operations>
-      <Manager>
-        <Name>Pruning</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
+        <VariableNames>
+          <string />
+        </VariableNames>
+        <EventNames>
+          <string />
+        </EventNames>
+      </Report>
+      <Report>
+        <Name>Report1</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Script>
-          <PruneDateString>1-March</PruneDateString>
-        </Script>
-        <Code><![CDATA[
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[Clock].Today.Year</string>
+          <string>[Clock].Today.DayOfYear</string>
+          <string>[Grapevine].Root.Zones[1].LayerLive[1].Wt</string>
+          <string>[Grapevine].Root.Zones[1].LayerLive[2].Wt</string>
+          <string>[Grapevine].Root.Zones[1].LayerLive[3].Wt</string>
+          <string>[Grapevine].Root.Zones[1].LayerLive[4].Wt</string>
+          <string>[Grapevine].Root.Zones[1].LayerLive[5].Wt</string>
+          <string>[Grapevine].Root.Zones[1].LayerLive[6].Wt</string>
+          <string>[Grapevine].Root.Zones[2].LayerLive[1].Wt</string>
+          <string>[Grapevine].Root.Zones[2].LayerLive[2].Wt</string>
+          <string>[Grapevine].Root.Zones[2].LayerLive[3].Wt</string>
+          <string>[Grapevine].Root.Zones[2].LayerLive[4].Wt</string>
+          <string>[Grapevine].Root.Zones[2].LayerLive[5].Wt</string>
+          <string>[Grapevine].Root.Zones[2].LayerLive[6].Wt</string>
+          <string>[Soil].SoilWater.SWmm</string>
+          <string>[Root].Zones[1].Uptake</string>
+          <string>[Root].Zones[2].Uptake</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
+      <Folder>
+        <Name>Management</Name>
+        <Manager>
+          <Name>ExtraVariables</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Script>
+            <CordonDiameter>10</CordonDiameter>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Plant Grapevine;
+        [Link] Zone zone;
+
+        [Description("CordonDiameter_mm")]         
+        public double CordonDiameter { get; set; }  //mm
+        
+
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, EventArgs e)
+        {
+        	zone.Set("Grapevine.Cordon.CordonDiameter.FixedValue", CordonDiameter);      
+        }
+
+     }
+}
+]]></Code>
+        </Manager>
+        <Operations>
+          <Name>Operations</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Operation>
+            <Date>2005-01-01</Date>
+            <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 150, rowSpacing: 2400, budNumber:24);</Action>
+          </Operation>
+        </Operations>
+        <Manager>
+          <Name>Pruning</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Script>
+            <PruneDateString>1-May</PruneDateString>
+          </Script>
+          <Code><![CDATA[
 using System;
 using System.Collections.Generic;
 using Models.Core;
@@ -7426,48 +8041,10 @@ namespace Models
             
                 
 ]]></Code>
-      </Manager>
-      <Report>
-        <Name>Report</Name>
+        </Manager>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <ExperimentFactorNames />
-        <ExperimentFactorValues />
-        <VariableNames>
-          <string />
-        </VariableNames>
-        <EventNames>
-          <string />
-        </EventNames>
-      </Report>
-      <Report>
-        <Name>Report1</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <ExperimentFactorNames />
-        <ExperimentFactorValues />
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Clock].Today.Year</string>
-          <string>[Clock].Today.DayOfYear</string>
-          <string>[Grapevine].Root.Zones[1].LayerLive[1].Wt</string>
-          <string>[Grapevine].Root.Zones[1].LayerLive[2].Wt</string>
-          <string>[Grapevine].Root.Zones[1].LayerLive[3].Wt</string>
-          <string>[Grapevine].Root.Zones[1].LayerLive[4].Wt</string>
-          <string>[Grapevine].Root.Zones[1].LayerLive[5].Wt</string>
-          <string>[Grapevine].Root.Zones[1].LayerLive[6].Wt</string>
-          <string>[Grapevine].Root.Zones[2].LayerLive[1].Wt</string>
-          <string>[Grapevine].Root.Zones[2].LayerLive[2].Wt</string>
-          <string>[Grapevine].Root.Zones[2].LayerLive[3].Wt</string>
-          <string>[Grapevine].Root.Zones[2].LayerLive[4].Wt</string>
-          <string>[Grapevine].Root.Zones[2].LayerLive[5].Wt</string>
-          <string>[Grapevine].Root.Zones[2].LayerLive[6].Wt</string>
-          <string>[Soil].SoilWater.SWmm</string>
-          <string>[Root].Zones[1].Uptake</string>
-          <string>[Root].Zones[2].Uptake</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>0.001</Area>
       <Slope>0</Slope>
@@ -9831,5 +10408,5 @@ namespace Models
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>381</ExplorerWidth>
 </Simulations>
