@@ -7,9 +7,7 @@
     <MemoText><![CDATA[
 # APSIM Barley Model 
 
-_Khaembah E.N., Zyskowski, R.F. and Brown, H.E._
-
-The APSIM Barley Model has been developed using the Plant Modelling Framework (PMF) of Brown et al. (2014). This framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, Barley, sorghum) can be achieved by the model developer without additional coding.
+The APSIM Barley Model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, Barley, sorghum) can be achieved by the model developer without additional coding.
 
 The model consists of:
 
@@ -24,10 +22,7 @@ The model consists of:
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <MemoText><![CDATA[•	Alzueta I, Abeledo LG, Mignonea CM, Miralles DJ 2012. Differences between Barley and barley in leaf and tillering coordination under contrasting nitrogen and sulfur conditions. Europ. J. Agron 4: 92-102.
 
-•	Brown HE, Huth NI, Holzworth DP et al. 2014. "Plant Modelling Framework: Software for building and running crop models on the APSIM platform. Environ Modelling & Software 62: 385-398.
-
 •	De Ruiter JM 1999. Yield and quality of malting barley (Hordeum vulgare L. ‘Valetta') in response to irrigation and nitrogen fertilisation. NZ J. Crop and Hort.Sci 4: 307-317
-•	Goyne PJ, Hammer GL, Meinke H, Milroy SP, Hare JM 1996. Development and use of a barley crop simulation model to evaluate production management strategies in north-eastern Australia. Aust. J. Agric. Res. 47: 997-1015.
 
 •	Jamieson PD, Munro CA 1999. A simple method for the phenological evaluation of new cereal cultivars. Proceeding of the 29th Agronomy Society of New Zealand 29: 63-68.
 
@@ -1707,6 +1702,50 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>PotentialBranchingRate</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>1</double>
@@ -5147,7 +5186,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Keel</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
           </Cultivar>
           <Cultivar>
             <Name>Oxford</Name>
@@ -5345,7 +5384,7 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>AppearedLeaves</Name>
+        <Name>AppearedLeafTips</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -5369,6 +5408,56 @@ namespace Models
           <TableName>DailyObsPred</TableName>
           <XFieldName>Observed.Barley.Structure.LeafTipsAppeared</XFieldName>
           <YFieldName>Predicted.Barley.Structure.LeafTipsAppeared</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>HaunStage</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>DailyObsPred</TableName>
+          <XFieldName>Observed.Barley.Structure.HaunStage.Value()</XFieldName>
+          <YFieldName>Predicted.Barley.Structure.HaunStage.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6540,8 +6629,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Cultivar>Booma</Cultivar>
                   <InitialRootDepth>10</InitialRootDepth>
+                  <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -9548,8 +9637,8 @@ This was a cultivar evaluation trial conducted in Lincoln. Eight cultivars were 
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Cultivar>Dash</Cultivar>
                   <InitialRootDepth>40</InitialRootDepth>
+                  <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -11618,9 +11707,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
-                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -13949,9 +14038,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2014-10-15</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -25470,9 +25559,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>1999-05-28</SowingDate>
-                  <Popn>300</Popn>
                   <SowDepth>20</SowDepth>
+                  <Popn>300</Popn>
+                  <SowingDate>1999-05-28</SowingDate>
                   <CultivarName>Dash</CultivarName>
                 </Script>
                 <Code><![CDATA[using System;
@@ -27639,8 +27728,113 @@ namespace Models
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
       </Graph>
+      <Graph>
+        <Name>TotalWt</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>DailyObsPred</TableName>
+          <XFieldName>Observed.Barley.AboveGround.Wt</XFieldName>
+          <YFieldName>Predicted.Barley.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Leaf Area Index</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>DailyObsPred</TableName>
+          <XFieldName>Observed.Barley.Leaf.LAI</XFieldName>
+          <YFieldName>Predicted.Barley.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <Folder>
         <Name>MCVP</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This experiment was funded as part of the Australian Managing Climate Variability Program.  Barley cultivars were sown at two planting dates at three sites for the purpose of improving APSIM predictions of the phenology of commercial cultivars.  The locations included Gatton in Queensland (subtropical location), Birchip in Victoria (temperate inland location) and Tarlee in South Australia (temperate location).]]></MemoText>
+        </Memo>
         <Graph>
           <Name>Time To Flag Leaf</Name>
           <Series>
@@ -28359,30 +28553,6 @@ namespace Models
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter />
-            </Series>
-            <Series>
-              <Name>Photoperiod</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Right</YAxis>
-              <ColourArgb>-1663232</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>DailyReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Photoperiod</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -31432,6 +31602,11 @@ namespace Models
       </Folder>
       <Folder>
         <Name>HermitageRS</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This rain-out shelter experiment was undertaken at the Hermitage Research Station near Warwick, Queensland.  Treatments included 3 irrigation experiments to provide combinations of early and later water stress.  The experiment was described by [Goyne1996].]]></MemoText>
+        </Memo>
         <Experiment>
           <Name>HermitageRS</Name>
           <Factors>
@@ -32894,6 +33069,11 @@ namespace Models
       </Folder>
       <Folder>
         <Name>Wellcamp</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This experiment provides information on biomass accumulation, canopy development and final yield for Barley sown on the eastern Darling Downs.  The experiment is explained in [Goyne1996].]]></MemoText>
+        </Memo>
         <Experiment>
           <Name>Wellcamp</Name>
           <Factors>
@@ -33343,7 +33523,7 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Operation>
                     <Date>1993-06-29</Date>
-                    <Action>[Barley].Sow(population: 90, cultivar: Grimmett, depth: 30, rowSpacing: 500, budNumber: 1);</Action>
+                    <Action>[Barley].Sow(population: 106, cultivar: Grimmett, depth: 30, rowSpacing: 500, budNumber: 1);</Action>
                   </Operation>
                   <Operation>
                     <Date>1993-06-29</Date>
@@ -33853,6 +34033,11 @@ namespace Models
       </Folder>
       <Folder>
         <Name>Hermitage1990</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This experiment was conducted at Hermitage Research Station near Warwick, Queensland.  Three sowing dates were used to study changes in phenology, biomass accumulation and canopy development.  The experiment is explained in [Goyne1993].]]></MemoText>
+        </Memo>
         <Experiment>
           <Name>Hermitage1990</Name>
           <Factors>
@@ -34380,10 +34565,10 @@ namespace Models
                   <Script>
                     <SowDate>
                     </SowDate>
-                    <Population>120</Population>
                     <CultivarName>Grimmett</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -35003,6 +35188,11 @@ namespace Models
       </Folder>
       <Folder>
         <Name>Roma1988</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This sowing date x plant population experiment was undertaken near Roma, Queensland.  Measurements include biomass accumulation, leaf area development and final grain yield.  The experiment is explained in [Goyne1996].]]></MemoText>
+        </Memo>
         <Experiment>
           <Name>Roma1988</Name>
           <Memo>
@@ -35571,8 +35761,8 @@ namespace Models
                   <IncludeInDocumentation>false</IncludeInDocumentation>
                   <Script>
                     <TOS>1</TOS>
-                    <Population>120</Population>
                     <Cultivar>Grimmett</Cultivar>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[
 using System;
@@ -35601,10 +35791,10 @@ namespace Models
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (((Clock.Today.DayOfYear == 72) && (TOS == 1)) ||
+            if (((Clock.Today.DayOfYear == 90) && (TOS == 1)) ||
                 ((Clock.Today.DayOfYear == 111) && (TOS == 2)) ||
                 ((Clock.Today.DayOfYear == 131) && (TOS == 3)) ||
-                ((Clock.Today.DayOfYear == 131) && (TOS == 4)))
+                ((Clock.Today.DayOfYear == 159) && (TOS == 4)))
             {
                 Barley.Sow(population: Population, cultivar: Cultivar, depth: 30, rowSpacing: 250);
             }
@@ -36065,6 +36255,11 @@ namespace Models
       </Folder>
       <Folder>
         <Name>Gatton1984</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This nitrogen rate (0 to 200 kg N/ha) experiment was conducted in 1984 at Gatton, Queensland. The experiment is explained in [Birch1990].]]></MemoText>
+        </Memo>
         <Experiment>
           <Name>Gatton1984</Name>
           <Memo>
@@ -36655,10 +36850,10 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <SowDate>25-may</SowDate>
-                  <Population>120</Population>
                   <CultivarName>Grimmett</CultivarName>
                   <SowingDepth>30</SowingDepth>
                   <RowSpacing>250</RowSpacing>
+                  <Population>120</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -36699,40 +36894,6 @@ namespace Models
         
     }
 }
-]]></Code>
-              </Manager>
-              <Manager>
-                <Name>Harvesting</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Barley;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Barley.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Barley.Harvest();
-                Barley.EndCrop();
-            }
-        }
-    }
-}
-       
 ]]></Code>
               </Manager>
               <MicroClimate>
@@ -36779,6 +36940,18 @@ namespace Models
                 <Name>SoluteManager</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
               </SoluteManager>
+              <Operations>
+                <Name>Operations</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>1984-11-02</Date>
+                  <Action>[Barley].Harvest();</Action>
+                </Operation>
+                <Operation>
+                  <Date>1984-11-02</Date>
+                  <Action>[Barley].EndCrop();</Action>
+                </Operation>
+              </Operations>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Area>1</Area>
               <Slope>0</Slope>
@@ -36789,56 +36962,6 @@ namespace Models
             </SoilArbitrator>
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Simulation>
-          <Graph>
-            <Name>NStress</Name>
-            <Series>
-              <Name>Predicted</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>DailyReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Leaf.Fn</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>BottomLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
           <Folder>
             <Name>Biomass</Name>
             <Graph>
