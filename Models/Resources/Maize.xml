@@ -3054,6 +3054,27 @@ VShort duration variety released in New Zealand by Pioneer
       <Command>[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 1300</Command>
     </Cultivar>
     <Cultivar>
+      <Name>Atrium</Name>
+      <Memo>
+        <Name>memo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <MemoText>
+          <![CDATA[
+Maize variety used in trials at Wageningen University
+]]>
+        </MemoText>
+      </Memo>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Command>[Phenology].Juvenile.Target.FixedValue = 150</Command>
+      <Command>[Phenology].GrainFilling.Target.FixedValue = 500</Command>
+      <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+      <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
+      <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
+      <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 18</Command>
+      <Command>[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6</Command>
+      <Command>[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 2370</Command>
+    </Cultivar>
+    <Cultivar>
       <Name>Laila</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Command>[Phenology].Juvenile.Target.FixedValue = 211</Command>
