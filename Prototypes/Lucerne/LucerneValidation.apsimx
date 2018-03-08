@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="26">
   <Name>Simulations</Name>
   <DataStore>
@@ -7166,6 +7166,7 @@ namespace Models
         public void Cut()
         {
             Remove.SetPhenologyStage = 4;
+            Remove.NodesToRemove = 50;
             Lucerne.RemoveBiomass("Cut", Remove);
         }
     }
@@ -91467,5 +91468,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>282</ExplorerWidth>
 </Simulations>
