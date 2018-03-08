@@ -4527,11 +4527,11 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
-                <double>0.5</double>
+                <double>1.0</double>
                 <double>1.5</double>
               </X>
               <Y>
-                <double>1</double>
+                <double>0</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
