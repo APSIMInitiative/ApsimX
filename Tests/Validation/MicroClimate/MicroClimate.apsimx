@@ -364,6 +364,7 @@
         <string>[Maize].Phenology.CurrentStageName</string>
         <string>[Maize].AboveGround.Wt</string>
         <string>[Maize].AboveGround.N</string>
+        <string>[Maize].EarLive.Wt</string>
         <string>[Maize].Grain.Wt</string>
         <string>[Maize].Grain.Size</string>
         <string>[Maize].Grain.NumberFunction.Value()</string>
@@ -374,6 +375,7 @@
         <string>[Maize].Leaf.Transpiration</string>
         <string>[Maize].Leaf.CoverTotal</string>
         <string>[Maize].Structure.LeafTipsAppeared</string>
+        <string>[Maize].Leaf.ExpandedCohortNo</string>
         <string>[Maize].Structure.Height</string>
         <string>[Maize].Total.Wt</string>
         <string>sum([Soil].SoilWater.SWmm) as SWTot</string>
@@ -381,6 +383,7 @@
         <string>[Wheat].Phenology.CurrentStageName</string>
         <string>[Wheat].AboveGround.Wt</string>
         <string>[Wheat].AboveGround.N</string>
+        <string>[Wheat].Ear.Wt</string>
         <string>[Wheat].Grain.Total.Wt*10 as Yield</string>
         <string>[Wheat].Grain.Protein</string>
         <string>[Wheat].Grain.Size</string>
@@ -395,6 +398,7 @@
         <string>[Wheat].Leaf.Transpiration</string>
         <string>[Wheat].Leaf.CoverTotal</string>
         <string>[Wheat].Structure.LeafTipsAppeared</string>
+        <string>[Wheat].Leaf.ExpandedCohortNo</string>
         <string>[Wheat].Structure.Height</string>
         <string>[Soil].SoilWater.Drainage</string>
       </VariableNames>
@@ -49796,7 +49800,7 @@ namespace Models
     <Graph>
       <Name>Biomass</Name>
       <Series>
-        <Name>Maize</Name>
+        <Name>MaizeBiomass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
@@ -49804,7 +49808,7 @@ namespace Models
         <ColourArgb>-1663232</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -49819,7 +49823,30 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Wheat</Name>
+        <Name>MaizeEar</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Dash</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>WURReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Maize.EarLive.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>WheatBiomass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
@@ -49842,7 +49869,30 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>ObservedMaize</Name>
+        <Name>WheatEar</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Dash</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>WURReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Ear.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ObservedMaizeBiomass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
@@ -49865,7 +49915,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>ObservedWheat</Name>
+        <Name>ObservedWheatBiomass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
@@ -49882,6 +49932,52 @@ namespace Models
         <TableName>Observed</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ObservedMaizeEar</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>Circle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Maize.Ear.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ObservedWheatEar</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>Circle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Ear.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -49906,32 +50002,9 @@ namespace Models
       <DisabledSeries />
     </Graph>
     <Graph>
-      <Name>LeafTips</Name>
+      <Name>LeafAppearance</Name>
       <Series>
-        <Name>Maize</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-1663232</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <Checkpoint>Current</Checkpoint>
-        <TableName>WURReport</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Maize.Structure.LeafTipsAppeared</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Wheat</Name>
+        <Name>PreWheatTips</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
@@ -49948,6 +50021,167 @@ namespace Models
         <TableName>WURReport</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>PreWheatCollars</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Dash</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>WURReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ObsWheatTips</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ObsWheatCollars</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>Circle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>PreMaizeTips</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>WURReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Maize.Structure.LeafTipsAppeared</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>PreMaizeCollars</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Dash</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>WURReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Maize.Leaf.ExpandedCohortNo</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ObsMaizeTips</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Maize.Structure.LeafTipsAppeared</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ObsMaizeCollars</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>Circle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Maize.Leaf.ExpandedCohortNo</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -52013,32 +52247,9 @@ namespace Models
       <DisabledSeries />
     </Graph>
     <Graph>
-      <Name>LeafTips</Name>
+      <Name>LeafAppearance</Name>
       <Series>
-        <Name>Maize</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-1663232</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <Checkpoint>Current</Checkpoint>
-        <TableName>WURReport</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Maize.Structure.LeafTipsAppeared</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Wheat</Name>
+        <Name>PreWheatTips</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
@@ -52055,6 +52266,167 @@ namespace Models
         <TableName>WURReport</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>PreWheatCollars</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Dash</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>WURReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ObsWheatTips</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ObsWheatCollars</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>Circle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>PreMaizeTips</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>WURReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Maize.Structure.LeafTipsAppeared</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>PreMaizeCollars</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Dash</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>WURReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Maize.Leaf.ExpandedCohortNo</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ObsMaizeTips</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Maize.Structure.LeafTipsAppeared</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ObsMaizeCollars</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>Circle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Observed</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Maize.Leaf.ExpandedCohortNo</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
