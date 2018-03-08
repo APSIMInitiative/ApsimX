@@ -5177,7 +5177,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Triumph</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>[Phenology].PpSensitivity.FixedValue = 10</Command>
           </Cultivar>
           <Cultivar>
             <Name>Valetta</Name>
@@ -20288,8 +20288,8 @@ namespace Models
                   </KL>
                   <XF>
                     <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -20457,6 +20457,62 @@ namespace Models
 }
 ]]></Code>
               </Manager>
+              <Operations>
+                <Name>IrrigationEvents</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>1988-10-06</Date>
+                  <Action>[Irrigation].Apply(27);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1988-10-13</Date>
+                  <Action>[Irrigation].Apply(10);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1988-10-20</Date>
+                  <Action>[Irrigation].Apply(30);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1988-10-27</Date>
+                  <Action>[Irrigation].Apply(25);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1988-11-03</Date>
+                  <Action>[Irrigation].Apply(25);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1988-11-10</Date>
+                  <Action>[Irrigation].Apply(47);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1988-11-17</Date>
+                  <Action>[Irrigation].Apply(32);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1988-11-24</Date>
+                  <Action>[Irrigation].Apply(18);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1988-12-01</Date>
+                  <Action>[Irrigation].Apply(35);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1988-12-08</Date>
+                  <Action>[Irrigation].Apply(24);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1988-12-15</Date>
+                  <Action>[Irrigation].Apply(43);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1988-12-22</Date>
+                  <Action>[Irrigation].Apply(32);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1988-12-29</Date>
+                  <Action>[Irrigation].Apply(36);</Action>
+                </Operation>
+              </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[Water]</string>
@@ -20510,104 +20566,6 @@ namespace Models
                   <Action>[Irrigation].Apply(35);</Action>
                 </Operation>
               </Operations>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.06</double>
-                    <double>0.09</double>
-                    <double>0.07</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.16</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </AirDry>
-                <LL15>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </LL15>
-                <DUL>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.31145</double>
-                  <double>0.3079</double>
-                  <double>0.3007</double>
-                  <double>0.28705</double>
-                  <double>0.3117</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                </SAT>
-              </Water>
               <Sample>
                 <Name>InitialN</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -20706,74 +20664,20 @@ namespace Models
 }
 ]]></Code>
               </Manager>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Specifications>
-                <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialN]</string>
-                <string>[ClimateControl]</string>
-              </Specifications>
-            </Factor>
-            <Factor>
-              <Name>EarlyDrought2</Name>
-              <Operations>
-                <Name>IrrigationEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>1988-11-17</Date>
-                  <Action>[Irrigation].Apply(57);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-24</Date>
-                  <Action>[Irrigation].Apply(18);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-01</Date>
-                  <Action>[Irrigation].Apply(35);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-08</Date>
-                  <Action>[Irrigation].Apply(24);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-15</Date>
-                  <Action>[Irrigation].Apply(43);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-22</Date>
-                  <Action>[Irrigation].Apply(32);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-29</Date>
-                  <Action>[Irrigation].Apply(36);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1989-01-05</Date>
-                  <Action>[Irrigation].Apply(35);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1989-01-12</Date>
-                  <Action>[Irrigation].Apply(26);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1989-01-19</Date>
-                  <Action>[Irrigation].Apply(22);</Action>
-                </Operation>
-              </Operations>
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
                   <Name>BarleySoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
-                    <double>0.06</double>
-                    <double>0.09</double>
+                    <double>0.08</double>
                     <double>0.07</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
+                    <double>0.07</double>
+                    <double>0.09</double>
+                    <double>0.11</double>
                     <double>0.16</double>
                     <double>0.15</double>
-                    <double>0.16</double>
+                    <double>0.12</double>
                   </LL>
                   <KL>
                     <double>0.05</double>
@@ -20787,8 +20691,8 @@ namespace Models
                   </KL>
                   <XF>
                     <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -20818,390 +20722,46 @@ namespace Models
                   <double>1.3</double>
                 </BD>
                 <AirDry>
-                  <double>0.06</double>
-                  <double>0.09</double>
+                  <double>0.08</double>
                   <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
                   <double>0.16</double>
                   <double>0.15</double>
-                  <double>0.16</double>
+                  <double>0.12</double>
                 </AirDry>
                 <LL15>
-                  <double>0.06</double>
-                  <double>0.09</double>
+                  <double>0.08</double>
                   <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
                   <double>0.16</double>
                   <double>0.15</double>
-                  <double>0.16</double>
+                  <double>0.12</double>
                 </LL15>
                 <DUL>
-                  <double>0.31</double>
+                  <double>0.29</double>
                   <double>0.3</double>
                   <double>0.28</double>
-                  <double>0.31145</double>
-                  <double>0.3079</double>
-                  <double>0.3007</double>
-                  <double>0.28705</double>
-                  <double>0.3117</double>
+                  <double>0.26</double>
+                  <double>0.26</double>
+                  <double>0.28</double>
+                  <double>0.27</double>
+                  <double>0.22</double>
                 </DUL>
                 <SAT>
                   <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
                 </SAT>
               </Water>
-              <Manager>
-                <Name>ClimateControl</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script>
-                  <StartDate>1988-09-01</StartDate>
-                  <EndDate>1989-12-31</EndDate>
-                  <CCOnOff>True</CCOnOff>
-                </Script>
-                <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-
-
-
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-
-namespace Models
-{
-    [Serializable] 
-    [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
-    {
-        [Link] Weather Met;
-        [Link] Clock Clock;
-    
-        [Description("Start Date")]
-        public DateTime StartDate { get; set; }
-        
-        [Description("End Date")]
-        public DateTime EndDate { get; set; }
-
-        [Description("Turn on or off")]
-        public bool CCOnOff { get; set; }
- 
-        [EventSubscribe("PreparingNewWeatherData")]
-        private void OnPreparingNewWeatherData(object sender, EventArgs e)
-        {
-            if (CCOnOff == true)
-            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
-                Met.Rain = 0;        
-        }
-    }
-}
-]]></Code>
-              </Manager>
-              <Sample>
-                <Name>InitialN</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <NO3>
-                  <double>30</double>
-                  <double>15</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                </NO3>
-                <NH4>
-                  <double>5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Specifications>
-                <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialN]</string>
-                <string>[ClimateControl]</string>
-              </Specifications>
-            </Factor>
-            <Factor>
-              <Name>EarlyDrought3</Name>
-              <Operations>
-                <Name>IrrigationEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>1988-10-24</Date>
-                  <Action>[Irrigation].Apply(43);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-01</Date>
-                  <Action>[Irrigation].Apply(35);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-08</Date>
-                  <Action>[Irrigation].Apply(24);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-15</Date>
-                  <Action>[Irrigation].Apply(43);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-22</Date>
-                  <Action>[Irrigation].Apply(32);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-29</Date>
-                  <Action>[Irrigation].Apply(36);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1989-01-05</Date>
-                  <Action>[Irrigation].Apply(35);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1989-01-12</Date>
-                  <Action>[Irrigation].Apply(26);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1989-01-19</Date>
-                  <Action>[Irrigation].Apply(22);</Action>
-                </Operation>
-              </Operations>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.06</double>
-                    <double>0.09</double>
-                    <double>0.07</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.16</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </AirDry>
-                <LL15>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </LL15>
-                <DUL>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.31145</double>
-                  <double>0.3079</double>
-                  <double>0.3007</double>
-                  <double>0.28705</double>
-                  <double>0.3117</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                </SAT>
-              </Water>
-              <Manager>
-                <Name>ClimateControl</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script>
-                  <StartDate>1988-09-01</StartDate>
-                  <EndDate>1989-12-31</EndDate>
-                  <CCOnOff>True</CCOnOff>
-                </Script>
-                <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-
-
-
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-
-namespace Models
-{
-    [Serializable] 
-    [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
-    {
-        [Link] Weather Met;
-        [Link] Clock Clock;
-    
-        [Description("Start Date")]
-        public DateTime StartDate { get; set; }
-        
-        [Description("End Date")]
-        public DateTime EndDate { get; set; }
-
-        [Description("Turn on or off")]
-        public bool CCOnOff { get; set; }
- 
-        [EventSubscribe("PreparingNewWeatherData")]
-        private void OnPreparingNewWeatherData(object sender, EventArgs e)
-        {
-            if (CCOnOff == true)
-            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
-                Met.Rain = 0;        
-        }
-    }
-}
-]]></Code>
-              </Manager>
-              <Sample>
-                <Name>InitialN</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <NO3>
-                  <double>30</double>
-                  <double>15</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                </NO3>
-                <NH4>
-                  <double>5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
@@ -21260,104 +20820,6 @@ namespace Models
                   <Action>[Irrigation].Apply(15);</Action>
                 </Operation>
               </Operations>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.06</double>
-                    <double>0.09</double>
-                    <double>0.07</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.16</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </AirDry>
-                <LL15>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </LL15>
-                <DUL>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.31145</double>
-                  <double>0.3079</double>
-                  <double>0.3007</double>
-                  <double>0.28705</double>
-                  <double>0.3117</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                </SAT>
-              </Water>
               <Manager>
                 <Name>ClimateControl</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -21456,78 +20918,20 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Specifications>
-                <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialN]</string>
-                <string>[ClimateControl]</string>
-              </Specifications>
-            </Factor>
-            <Factor>
-              <Name>MiddleDrought1</Name>
-              <Operations>
-                <Name>IrrigationEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>1988-10-06</Date>
-                  <Action>[Irrigation].Apply(27);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-13</Date>
-                  <Action>[Irrigation].Apply(10);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-20</Date>
-                  <Action>[Irrigation].Apply(30);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-27</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-03</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-24</Date>
-                  <Action>[Irrigation].Apply(43);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-01</Date>
-                  <Action>[Irrigation].Apply(35);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-08</Date>
-                  <Action>[Irrigation].Apply(24);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-15</Date>
-                  <Action>[Irrigation].Apply(43);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-22</Date>
-                  <Action>[Irrigation].Apply(32);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-29</Date>
-                  <Action>[Irrigation].Apply(36);</Action>
-                </Operation>
-              </Operations>
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
                   <Name>BarleySoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
-                    <double>0.06</double>
-                    <double>0.09</double>
+                    <double>0.08</double>
                     <double>0.07</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
+                    <double>0.07</double>
+                    <double>0.09</double>
+                    <double>0.11</double>
                     <double>0.16</double>
                     <double>0.15</double>
-                    <double>0.16</double>
+                    <double>0.12</double>
                   </LL>
                   <KL>
                     <double>0.05</double>
@@ -21541,8 +20945,8 @@ namespace Models
                   </KL>
                   <XF>
                     <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -21572,652 +20976,46 @@ namespace Models
                   <double>1.3</double>
                 </BD>
                 <AirDry>
-                  <double>0.06</double>
-                  <double>0.09</double>
+                  <double>0.08</double>
                   <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
                   <double>0.16</double>
                   <double>0.15</double>
-                  <double>0.16</double>
+                  <double>0.12</double>
                 </AirDry>
                 <LL15>
-                  <double>0.06</double>
-                  <double>0.09</double>
+                  <double>0.08</double>
                   <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
                   <double>0.16</double>
                   <double>0.15</double>
-                  <double>0.16</double>
+                  <double>0.12</double>
                 </LL15>
                 <DUL>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.31145</double>
-                  <double>0.3079</double>
-                  <double>0.3007</double>
-                  <double>0.28705</double>
-                  <double>0.3117</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                </SAT>
-              </Water>
-              <Manager>
-                <Name>ClimateControl</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script>
-                  <StartDate>1988-09-01</StartDate>
-                  <EndDate>1989-12-31</EndDate>
-                  <CCOnOff>True</CCOnOff>
-                </Script>
-                <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-
-
-
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-
-namespace Models
-{
-    [Serializable] 
-    [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
-    {
-        [Link] Weather Met;
-        [Link] Clock Clock;
-    
-        [Description("Start Date")]
-        public DateTime StartDate { get; set; }
-        
-        [Description("End Date")]
-        public DateTime EndDate { get; set; }
-
-        [Description("Turn on or off")]
-        public bool CCOnOff { get; set; }
- 
-        [EventSubscribe("PreparingNewWeatherData")]
-        private void OnPreparingNewWeatherData(object sender, EventArgs e)
-        {
-            if (CCOnOff == true)
-            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
-                Met.Rain = 0;        
-        }
-    }
-}
-]]></Code>
-              </Manager>
-              <Sample>
-                <Name>InitialN</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <NO3>
-                  <double>30</double>
-                  <double>15</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                </NO3>
-                <NH4>
-                  <double>5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
                   <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Specifications>
-                <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialN]</string>
-                <string>[ClimateControl]</string>
-              </Specifications>
-            </Factor>
-            <Factor>
-              <Name>MiddleDrought2</Name>
-              <Operations>
-                <Name>IrrigationEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>1988-10-06</Date>
-                  <Action>[Irrigation].Apply(27);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-13</Date>
-                  <Action>[Irrigation].Apply(10);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-20</Date>
-                  <Action>[Irrigation].Apply(30);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-27</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-03</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-24</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-01</Date>
-                  <Action>[Irrigation].Apply(35);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-08</Date>
-                  <Action>[Irrigation].Apply(50);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-15</Date>
-                  <Action>[Irrigation].Apply(43);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-22</Date>
-                  <Action>[Irrigation].Apply(32);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-29</Date>
-                  <Action>[Irrigation].Apply(36);</Action>
-                </Operation>
-              </Operations>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.06</double>
-                    <double>0.09</double>
-                    <double>0.07</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.16</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </AirDry>
-                <LL15>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </LL15>
-                <DUL>
-                  <double>0.31</double>
                   <double>0.3</double>
                   <double>0.28</double>
-                  <double>0.31145</double>
-                  <double>0.3079</double>
-                  <double>0.3007</double>
-                  <double>0.28705</double>
-                  <double>0.3117</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                </SAT>
-              </Water>
-              <Manager>
-                <Name>ClimateControl</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script>
-                  <StartDate>1988-09-01</StartDate>
-                  <EndDate>1989-12-31</EndDate>
-                  <CCOnOff>True</CCOnOff>
-                </Script>
-                <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-
-
-
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-
-namespace Models
-{
-    [Serializable] 
-    [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
-    {
-        [Link] Weather Met;
-        [Link] Clock Clock;
-    
-        [Description("Start Date")]
-        public DateTime StartDate { get; set; }
-        
-        [Description("End Date")]
-        public DateTime EndDate { get; set; }
-
-        [Description("Turn on or off")]
-        public bool CCOnOff { get; set; }
- 
-        [EventSubscribe("PreparingNewWeatherData")]
-        private void OnPreparingNewWeatherData(object sender, EventArgs e)
-        {
-            if (CCOnOff == true)
-            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
-                Met.Rain = 0;        
-        }
-    }
-}
-]]></Code>
-              </Manager>
-              <Sample>
-                <Name>InitialN</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <NO3>
-                  <double>30</double>
-                  <double>15</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                </NO3>
-                <NH4>
-                  <double>5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Specifications>
-                <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialN]</string>
-                <string>[ClimateControl]</string>
-              </Specifications>
-            </Factor>
-            <Factor>
-              <Name>MiddleDrought3</Name>
-              <Operations>
-                <Name>IrrigationEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>1988-10-06</Date>
-                  <Action>[Irrigation].Apply(27);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-13</Date>
-                  <Action>[Irrigation].Apply(10);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-20</Date>
-                  <Action>[Irrigation].Apply(30);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-27</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-03</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-24</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-01</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-08</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-15</Date>
-                  <Action>[Irrigation].Apply(43);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-22</Date>
-                  <Action>[Irrigation].Apply(32);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-29</Date>
-                  <Action>[Irrigation].Apply(36);</Action>
-                </Operation>
-              </Operations>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.06</double>
-                    <double>0.09</double>
-                    <double>0.07</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.16</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </AirDry>
-                <LL15>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </LL15>
-                <DUL>
-                  <double>0.31</double>
-                  <double>0.3</double>
+                  <double>0.26</double>
+                  <double>0.26</double>
                   <double>0.28</double>
-                  <double>0.31145</double>
-                  <double>0.3079</double>
-                  <double>0.3007</double>
-                  <double>0.28705</double>
-                  <double>0.3117</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                </SAT>
-              </Water>
-              <Sample>
-                <Name>Initial water</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <NO3>
-                  <double>30</double>
-                  <double>15</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                </NO3>
-                <NH4>
-                  <double>5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.2655</double>
                   <double>0.27</double>
-                  <double>0.209</double>
-                  <double>0.31145</double>
-                  <double>0.3079</double>
-                  <double>0.3007</double>
-                  <double>0.28705</double>
-                  <double>0.3117</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
-              <Manager>
-                <Name>ClimateControl</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script>
-                  <StartDate>1988-09-01</StartDate>
-                  <EndDate>1989-12-31</EndDate>
-                  <CCOnOff>True</CCOnOff>
-                </Script>
-                <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-
-
-
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-
-namespace Models
-{
-    [Serializable] 
-    [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
-    {
-        [Link] Weather Met;
-        [Link] Clock Clock;
-    
-        [Description("Start Date")]
-        public DateTime StartDate { get; set; }
-        
-        [Description("End Date")]
-        public DateTime EndDate { get; set; }
-
-        [Description("Turn on or off")]
-        public bool CCOnOff { get; set; }
- 
-        [EventSubscribe("PreparingNewWeatherData")]
-        private void OnPreparingNewWeatherData(object sender, EventArgs e)
-        {
-            if (CCOnOff == true)
-            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
-                Met.Rain = 0;        
-        }
-    }
-}
-]]></Code>
-              </Manager>
+                  <double>0.22</double>
+                </DUL>
+                <SAT>
+                  <double>0.44</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                </SAT>
+              </Water>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
@@ -22276,104 +21074,6 @@ namespace Models
                   <Action>[Irrigation].Apply(0);</Action>
                 </Operation>
               </Operations>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.06</double>
-                    <double>0.09</double>
-                    <double>0.07</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.16</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </AirDry>
-                <LL15>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </LL15>
-                <DUL>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.31145</double>
-                  <double>0.3079</double>
-                  <double>0.3007</double>
-                  <double>0.28705</double>
-                  <double>0.3117</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                </SAT>
-              </Water>
               <Manager>
                 <Name>ClimateControl</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -22472,6 +21172,104 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <Water>
+                <Name>Water</Name>
+                <SoilCrop>
+                  <Name>BarleySoil</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <LL>
+                    <double>0.08</double>
+                    <double>0.07</double>
+                    <double>0.07</double>
+                    <double>0.09</double>
+                    <double>0.11</double>
+                    <double>0.16</double>
+                    <double>0.15</double>
+                    <double>0.12</double>
+                  </LL>
+                  <KL>
+                    <double>0.05</double>
+                    <double>0.03</double>
+                    <double>0.02</double>
+                    <double>0.03</double>
+                    <double>0.03</double>
+                    <double>0.03</double>
+                    <double>0.01</double>
+                    <double>0.01</double>
+                  </KL>
+                  <XF>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </XF>
+                </SoilCrop>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Thickness>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <BD>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                </BD>
+                <AirDry>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
+                  <double>0.16</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </AirDry>
+                <LL15>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
+                  <double>0.16</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </LL15>
+                <DUL>
+                  <double>0.29</double>
+                  <double>0.3</double>
+                  <double>0.28</double>
+                  <double>0.26</double>
+                  <double>0.26</double>
+                  <double>0.28</double>
+                  <double>0.27</double>
+                  <double>0.22</double>
+                </DUL>
+                <SAT>
+                  <double>0.44</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                </SAT>
+              </Water>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
@@ -22514,104 +21312,6 @@ namespace Models
                   <Action>[Irrigation].Apply(32);</Action>
                 </Operation>
               </Operations>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.06</double>
-                    <double>0.09</double>
-                    <double>0.07</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.16</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </AirDry>
-                <LL15>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </LL15>
-                <DUL>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.31145</double>
-                  <double>0.3079</double>
-                  <double>0.3007</double>
-                  <double>0.28705</double>
-                  <double>0.3117</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                </SAT>
-              </Water>
               <Manager>
                 <Name>ClimateControl</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -22710,66 +21410,20 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Specifications>
-                <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialN]</string>
-                <string>[ClimateControl]</string>
-              </Specifications>
-            </Factor>
-            <Factor>
-              <Name>LateDrought2</Name>
-              <Operations>
-                <Name>IrrigationEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>1988-10-06</Date>
-                  <Action>[Irrigation].Apply(27);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-13</Date>
-                  <Action>[Irrigation].Apply(10);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-20</Date>
-                  <Action>[Irrigation].Apply(30);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-10-27</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-03</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-10</Date>
-                  <Action>[Irrigation].Apply(47);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-17</Date>
-                  <Action>[Irrigation].Apply(32);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-24</Date>
-                  <Action>[Irrigation].Apply(18);</Action>
-                </Operation>
-              </Operations>
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
                   <Name>BarleySoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
-                    <double>0.06</double>
-                    <double>0.09</double>
+                    <double>0.08</double>
                     <double>0.07</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
+                    <double>0.07</double>
+                    <double>0.09</double>
+                    <double>0.11</double>
                     <double>0.16</double>
                     <double>0.15</double>
-                    <double>0.16</double>
+                    <double>0.12</double>
                   </LL>
                   <KL>
                     <double>0.05</double>
@@ -22783,8 +21437,8 @@ namespace Models
                   </KL>
                   <XF>
                     <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -22814,144 +21468,46 @@ namespace Models
                   <double>1.3</double>
                 </BD>
                 <AirDry>
-                  <double>0.06</double>
-                  <double>0.09</double>
+                  <double>0.08</double>
                   <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
                   <double>0.16</double>
                   <double>0.15</double>
-                  <double>0.16</double>
+                  <double>0.12</double>
                 </AirDry>
                 <LL15>
-                  <double>0.06</double>
-                  <double>0.09</double>
+                  <double>0.08</double>
                   <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
                   <double>0.16</double>
                   <double>0.15</double>
-                  <double>0.16</double>
+                  <double>0.12</double>
                 </LL15>
                 <DUL>
-                  <double>0.31</double>
+                  <double>0.29</double>
                   <double>0.3</double>
                   <double>0.28</double>
-                  <double>0.31145</double>
-                  <double>0.3079</double>
-                  <double>0.3007</double>
-                  <double>0.28705</double>
-                  <double>0.3117</double>
+                  <double>0.26</double>
+                  <double>0.26</double>
+                  <double>0.28</double>
+                  <double>0.27</double>
+                  <double>0.22</double>
                 </DUL>
                 <SAT>
                   <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
                 </SAT>
               </Water>
-              <Manager>
-                <Name>ClimateControl</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script>
-                  <StartDate>1988-09-01</StartDate>
-                  <EndDate>1989-12-31</EndDate>
-                  <CCOnOff>True</CCOnOff>
-                </Script>
-                <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-
-
-
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-
-namespace Models
-{
-    [Serializable] 
-    [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
-    {
-        [Link] Weather Met;
-        [Link] Clock Clock;
-    
-        [Description("Start Date")]
-        public DateTime StartDate { get; set; }
-        
-        [Description("End Date")]
-        public DateTime EndDate { get; set; }
-
-        [Description("Turn on or off")]
-        public bool CCOnOff { get; set; }
- 
-        [EventSubscribe("PreparingNewWeatherData")]
-        private void OnPreparingNewWeatherData(object sender, EventArgs e)
-        {
-            if (CCOnOff == true)
-            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
-                Met.Rain = 0;        
-        }
-    }
-}
-]]></Code>
-              </Manager>
-              <Sample>
-                <Name>InitialN</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <NO3>
-                  <double>30</double>
-                  <double>15</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                </NO3>
-                <NH4>
-                  <double>5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
@@ -23002,104 +21558,6 @@ namespace Models
                   <Action>[Irrigation].Apply(35);</Action>
                 </Operation>
               </Operations>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.06</double>
-                    <double>0.09</double>
-                    <double>0.07</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.16</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </AirDry>
-                <LL15>
-                  <double>0.06</double>
-                  <double>0.09</double>
-                  <double>0.07</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.16</double>
-                </LL15>
-                <DUL>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.31145</double>
-                  <double>0.3079</double>
-                  <double>0.3007</double>
-                  <double>0.28705</double>
-                  <double>0.3117</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                  <double>0.44</double>
-                </SAT>
-              </Water>
               <Manager>
                 <Name>ClimateControl</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -23198,6 +21656,104 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <Water>
+                <Name>Water</Name>
+                <SoilCrop>
+                  <Name>BarleySoil</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <LL>
+                    <double>0.08</double>
+                    <double>0.07</double>
+                    <double>0.07</double>
+                    <double>0.09</double>
+                    <double>0.11</double>
+                    <double>0.16</double>
+                    <double>0.15</double>
+                    <double>0.12</double>
+                  </LL>
+                  <KL>
+                    <double>0.05</double>
+                    <double>0.03</double>
+                    <double>0.02</double>
+                    <double>0.03</double>
+                    <double>0.03</double>
+                    <double>0.03</double>
+                    <double>0.01</double>
+                    <double>0.01</double>
+                  </KL>
+                  <XF>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </XF>
+                </SoilCrop>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Thickness>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <BD>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                </BD>
+                <AirDry>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
+                  <double>0.16</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </AirDry>
+                <LL15>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
+                  <double>0.16</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </LL15>
+                <DUL>
+                  <double>0.29</double>
+                  <double>0.3</double>
+                  <double>0.28</double>
+                  <double>0.26</double>
+                  <double>0.26</double>
+                  <double>0.28</double>
+                  <double>0.27</double>
+                  <double>0.22</double>
+                </DUL>
+                <SAT>
+                  <double>0.44</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                </SAT>
+              </Water>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
@@ -24885,6 +23441,50 @@ namespace Models
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ProfileWater</YFieldName>
             <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric soil water (mm)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SoilWaterProfile1</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Leaf.Fw</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -41478,5 +40078,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>235</ExplorerWidth>
+  <ExplorerWidth>283</ExplorerWidth>
 </Simulations>
