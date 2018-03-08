@@ -639,7 +639,8 @@ namespace UserInterface.Presenters
             {
                 newView = (ViewBase)Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
                 newPresenter = (IPresenter)Assembly.GetExecutingAssembly().CreateInstance(presenterName, false, BindingFlags.Default, null, new object[] { this }, null, null);
-            } catch (InvalidCastException e)
+            }
+            catch (InvalidCastException e)
             {
                 // viewName or presenterName does not define a class derived from ViewBase or IPresenter, respectively.
                 view.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);

@@ -406,7 +406,8 @@ namespace UserInterface.Presenters
                         sw.WriteLine(msg);
                         sw.Close();
                     }
-                } catch
+                }
+                catch
                 {
 
                 }
@@ -505,7 +506,8 @@ namespace UserInterface.Presenters
 
                     // remove the job from the locally stored list of jobs
                     jobList.RemoveAt(jobList.IndexOf(GetJob(id)));
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     ShowError(e.ToString());
                 }                

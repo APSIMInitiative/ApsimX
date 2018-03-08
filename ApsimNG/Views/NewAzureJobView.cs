@@ -267,7 +267,19 @@ namespace UserInterface.Views
         public Presenters.INewCloudJobPresenter Presenter { get; set; }
         public BackgroundWorker SubmitJob { get; set; }
         public JobParameters JobParams { get; set; }
-        public Button BtnOK;        
+        public Button BtnOK;
+
+        public string JobName
+        {
+            get
+            {
+                return entryName.Text;
+            }
+            set
+            {
+                entryName.Text = value;
+            }
+        }
 
         public string Status
         {
@@ -342,35 +354,7 @@ namespace UserInterface.Views
         {
              return "aeiou".IndexOf(st[0]) >= 0;
         }
-        
-        /// <summary>Opens a file chooser dialog for the user to choose a directory.</summary>	
-        /// <return>The path of the chosen directory</return>
-        private string GetDirectory()
-        {
-            
-            FileChooserDialog fc = new FileChooserDialog(
-                                        "Choose the file to open",
-                                        null,
-                                        FileChooserAction.SelectFolder,
-                                        "Cancel", ResponseType.Cancel,
-                                        "Select Folder", ResponseType.Accept);            
-            //FileChooserDialog fileChooser = new FileChooserDialog(prompt, null, action, "Cancel", ResponseType.Cancel, btnText, ResponseType.Accept);
-            string path = "";
 
-            try
-            {
-                if (fc.Run() == (int)ResponseType.Accept)
-                {
-                    path = fc.Filename;
-                }
-            }
-            catch (Exception ex)
-            {
-                Presenter.ShowError("Error: " + ex.Message);
-            }
-            fc.Destroy();
-            return path;            
-        }
         /*
         /// <summary>
         /// Toggle Event handler for online version of ApsimX radio button.
@@ -461,7 +445,7 @@ namespace UserInterface.Views
 
         private void BtnApsimDir_Click(object sender, EventArgs e)
         {
-            entryApsimDir.Text = GetDirectory();
+            entryApsimDir.Text = ViewBase.AskUserForDirectory("Select the ApsimX folder");
         }
 
         private void BtnApsimZip_Click(object sender, EventArgs e)
@@ -471,7 +455,7 @@ namespace UserInterface.Views
 
         private void BtnOutputDir_Click(object sender, EventArgs e)
         {
-            entryOutputDir.Text = GetDirectory();
+            entryOutputDir.Text = ViewBase.AskUserForDirectory("Select an output folder");
         }        
 
         private void ChkSaveModels_Toggled(object sender, EventArgs e)
@@ -483,12 +467,7 @@ namespace UserInterface.Views
 
         private void BtnModelPath_Click(object sender, EventArgs e)
         {
-            entryModelPath.Text = GetDirectory();
-        }
-
-        public void SetDefaultJobName(string st)
-        {
-            entryName.Text = st;
+            entryModelPath.Text = ViewBase.AskUserForDirectory("Select an output folder");
         }
     }
 }

@@ -132,14 +132,14 @@ namespace ApsimNG.Cloud
         /// <summary>
         /// Constructor. Requires Azure credentials to already be set in ApsimNG.Properties.Settings. 
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="jobName"></param>
-        /// <param name="path"></param>
-        /// <param name="explorer"></param>
-        /// <param name="export"></param>
-        /// <param name="includeDebugFiles"></param>
-        /// <param name="keepOutputFiles"></param>
-        public AzureResultsDownloader(Guid id, string jobName, string path, AzureJobDisplayPresenter explorer, bool export, bool includeDebugFiles, bool keepOutputFiles, bool unzipResultFiles)
+        /// <param name="id">Job ID.</param>
+        /// <param name="jobName">Job Name.</param>
+        /// <param name="path">Path which auto-downloaded results will be saved to.</param>
+        /// <param name="azurePresenter">The presenter.</param>
+        /// <param name="export">Whether or not results should be exported to a single .csv file.</param>
+        /// <param name="includeDebugFiles">Whether or not 'debug' (.stdout) files should be downloaded.</param>
+        /// <param name="keepOutputFiles">Whether or not output .db files should be kept after exporting a CSV.</param>
+        public AzureResultsDownloader(Guid id, string jobName, string path, AzureJobDisplayPresenter azurePresenter, bool export, bool includeDebugFiles, bool keepOutputFiles, bool unzipResultFiles)
         {
             numBlobsComplete = 0;
             jobId = id;
@@ -147,11 +147,11 @@ namespace ApsimNG.Cloud
             saveDebugFiles = includeDebugFiles;
             saveRawOutputFiles = keepOutputFiles;
             outputPath = path;
-            rawResultsPath = outputPath + "\\" + jobName.ToString() + "_Results";
-            tempPath = Path.GetTempPath() + "\\" + jobId;
+            rawResultsPath = Path.Combine(outputPath, jobName.ToString() + "_Results");
+            tempPath = Path.Combine(Path.GetTempPath(), jobId.ToString());
             progressMutex = new object();
             dbMutex = new object();
-            presenter = explorer;
+            presenter = azurePresenter;
             unzipResults = unzipResultFiles;
             try
             {
@@ -232,7 +232,7 @@ namespace ApsimNG.Cloud
                 string sep = "";
 
                 StringBuilder output = new StringBuilder();
-                string csvPath = rawResultsPath + "\\" + name + ".csv";
+                string csvPath = Path.Combine(rawResultsPath, name + ".csv");
                 Regex rx_name = DetectCommonChars(resultFiles);
                 using (StreamWriter file = new StreamWriter(csvPath, false))
                 {
@@ -365,7 +365,8 @@ namespace ApsimNG.Cloud
                             try
                             {
                                 File.Delete(archive);
-                            } catch
+                            }
+                            catch
                             {
 
                             }                            
@@ -391,7 +392,8 @@ namespace ApsimNG.Cloud
                             try
                             {
                                 File.Delete(resultFile);
-                            } catch (Exception ex)
+                            }
+                            catch (Exception ex)
                             {
                                 presenter.ShowError("Unable to delete " + resultFile + ": " + ex.ToString());
                             }
@@ -426,7 +428,8 @@ namespace ApsimNG.Cloud
                                  try
                                  {
                                      blob.DownloadToFile(filename, FileMode.Create);
-                                 } catch
+                                 }
+                                 catch
                                  {
 
                                  }
@@ -474,7 +477,8 @@ namespace ApsimNG.Cloud
                 try
                 {
                     m_dbConnection.Open();                    
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     presenter.ShowError("Failed to open db at " + path + ": " + e.ToString());
                     // No point continuing if unable to open the database
@@ -510,7 +514,8 @@ namespace ApsimNG.Cloud
                     while (reader.Read()) tables.Add(reader[0].ToString());
                     command.Dispose();
                     reader.Close();
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     presenter.ShowError("Error reading table names: " + e.ToString());
                 }
@@ -624,6 +629,7 @@ namespace ApsimNG.Cloud
             return new Regex(strResult);
 
         }
+
         /// <summary>
         /// Cancels a download in progress.
         /// </summary>
@@ -671,6 +677,10 @@ namespace ApsimNG.Cloud
             return new HashSet<string>(Directory.EnumerateFiles(rawResultsPath).Select(f => Path.GetFileName(f)));
         }
 
+        /// <summary>
+        /// Lists the output files inside the storage container.
+        /// </summary>
+        /// <returns></returns>
         private IEnumerable<CloudBlockBlob> ListJobOutputsFromStorage()
         {
             var containerRef = blobClient.GetContainerReference(StorageConstants.GetJobOutputContainer(jobId));

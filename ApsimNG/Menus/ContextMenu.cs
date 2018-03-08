@@ -16,7 +16,6 @@ namespace UserInterface.Presenters
     using Models.Factorial;
     using Models.Soils;
     using APSIM.Shared.Utilities;
-    using Models.Graph;
     using Models.Storage;
     using Models.Report;
 

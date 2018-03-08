@@ -1,18 +1,18 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Text;
-    using Views;
-    using System.ComponentModel;
-    using System.IO;
-    using System.IO.Compression;
-    using Microsoft.Azure.Batch;
-    using Microsoft.WindowsAzure.Storage;
-    using System.Security.Cryptography;
-    using ApsimNG.Cloud;
-    using Microsoft.Azure.Batch.Common;
-    using Models.Core;
+﻿using System;
+using System.Text;
+using System.ComponentModel;
+using System.IO;
+using System.IO.Compression;
+using UserInterface.Views;
+using Microsoft.Azure.Batch;
+using Microsoft.WindowsAzure.Storage;
+using System.Security.Cryptography;
+using ApsimNG.Cloud;
+using Microsoft.Azure.Batch.Common;
+using Models.Core;
 
+namespace UserInterface.Presenters
+{
     public class NewAzureJobPresenter : IPresenter, INewCloudJobPresenter
     {
         /// <summary>The new azure job view</summary>
@@ -20,32 +20,77 @@
         
         /// <summary>The explorer presenter</summary>
         private ExplorerPresenter presenter;
+
+        /// <summary>
+        /// The node which we want to run on Azure.
+        /// </summary>
         private IModel model;
+
+        /// <summary>
+        /// The file uploader client.
+        /// </summary>
         private FileUploader uploader;
+
+        /// <summary>
+        /// The Azure Batch client.
+        /// </summary>
         private BatchClient batchCli;
+
+        /// <summary>
+        /// The Azure Storage account.
+        /// </summary>
         private CloudStorageAccount storageAccount;
+
+        /// <summary>
+        /// The Azure Storage credentials (account name + key).
+        /// </summary>
         private StorageCredentials storageAuth;
+
+        /// <summary>
+        /// The Azure Batch credentials (account name + key).
+        /// </summary>
         private BatchCredentials batchAuth;
+
+        /// <summary>
+        /// The pool settings for the Azure VM pool.
+        /// </summary>
         private PoolSettings poolOptions;
+
+        /// <summary>
+        /// The worker which will submit the job.
+        /// </summary>
         private BackgroundWorker submissionWorker;
 
-        private const string SETTINGS_FILENAME = "settings.txt";
+        /// <summary>
+        /// The settings file name. This is uploaded to Azure, and stores some information
+        /// used by the Azure APSIM job manager (azure-apsim.exe).
+        /// </summary>
+        private const string settingsFileName = "settings.txt";
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public NewAzureJobPresenter()
         {
         }
 
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        /// <summary>
+        /// Attaches this presenter to a view.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="view"></param>
+        /// <param name="parentPresenter"></param>
+        public void Attach(object model, object view, ExplorerPresenter parentPresenter)
         {
-            this.presenter = explorerPresenter;
+            this.presenter = parentPresenter;
             this.view = (NewAzureJobView)view;
             
             this.view.Presenter = this;
             
             GetCredentials(null, null);
-
-            this.view.SetDefaultJobName( (model as IModel).Name );
             this.model = (IModel)model;
+            this.view.JobName = this.model.Name;
+            
 
             submissionWorker = new BackgroundWorker();
             submissionWorker.DoWork += SubmitJob_DoWork;
@@ -92,7 +137,8 @@
                 try
                 {
                     Directory.CreateDirectory(jp.ModelPath);
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     ShowError(e.ToString());
                     return;
@@ -212,7 +258,7 @@
                 {
                     // Store a config file into the job directory that has the e-mail config
 
-                    string tmpConfig = Path.Combine(Path.GetTempPath(), SETTINGS_FILENAME);
+                    string tmpConfig = Path.Combine(Path.GetTempPath(), settingsFileName);
                     using (StreamWriter file = new StreamWriter(tmpConfig))
                     {
                         file.WriteLine("EmailRecipient=" + jp.Recipient);
@@ -222,7 +268,6 @@
 
                     UploadFileIfNeeded("job-" + jp.JobId, tmpConfig);
                     File.Delete(tmpConfig);
-                    
                 }
                 catch (Exception ex)
                 {
@@ -331,7 +376,8 @@
                 cloudJob.JobManagerTask = job.ToJobManagerTask(jp.JobId, storageAccount.CreateCloudBlobClient(), jp.JobManagerShouldSubmitTasks, jp.AutoScale);
 
                 cloudJob.Commit();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 ShowError(ex.ToString());
             }
@@ -378,7 +424,8 @@
             try
             {
                 Directory.CreateDirectory(path);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 ShowError("Error: creation of simulation directory " + path + " failed: " + e.ToString());
                 return 1;
@@ -493,7 +540,8 @@
                         try
                         {
                             AzureSettings.Default[key] = val;
-                        } catch // key does not exist in AzureSettings
+                        }
+                        catch // key does not exist in AzureSettings
                         {
                             return false;
                         }                        

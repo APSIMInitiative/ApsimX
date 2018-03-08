@@ -1,40 +1,91 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Gtk;
 
 namespace ApsimNG.Cloud
 {
+    /// <summary>
+    /// View to ask user for some options regarding the download of files from a cloud platform.
+    /// Once the user has chosen their options and pressed download, this class will pass the user's
+    /// preferences into its presenter's DownloadResults method.
+    /// </summary>
     class DownloadWindow : Window
     {
         /// <summary>
         /// Whether or not the result files should be unzipped.
         /// </summary>
         private bool unzipResultFiles;
+
+        /// <summary>
+        /// Whether the results should be downloaded.
+        /// </summary>
         private bool downloadResults;
+
+        /// <summary>
+        /// Whether the results should be combined into a .csv file.
+        /// </summary>
         private bool collateResults;
 
+        /// <summary>
+        /// Whether 'debug' (.stdout) files should be downloaded.
+        /// </summary>
         private CheckButton includeDebugFiles;
+
+        /// <summary>
+        /// Wether results should be unzipped.
+        /// </summary>
         private CheckButton unzipResults;
+
+        /// <summary>
+        /// Whether results should be saved after being combined into a .csv file.
+        /// </summary>
         private CheckButton keepRawOutputs;
+
+        /// <summary>
+        /// Whether the results should be combined into a .csv file.
+        /// </summary>
         private CheckButton generateCsv;
+
+        /// <summary>
+        /// Whether the download should occur in a separate thread.
+        /// </summary>
         private CheckButton runAsync;
+
+        /// <summary>
+        /// Whether results should be downloaded.
+        /// </summary>
         private CheckButton chkDownloadResults;
+
+        /// <summary>
+        /// Button to initiate the download.
+        /// </summary>
         private Button btnDownload;
+
+        /// <summary>
+        /// Button to change the download directory.
+        /// </summary>
         private Button btnChangeOutputDir;
 
-        private ProgressBar currentFileProgress;
-        private ProgressBar overallProgress;
-
+        /// <summary>
+        /// Input field to show/edit the download directory.
+        /// </summary>
         private Entry entryOutputDir;
 
+        /// <summary>
+        /// Primary container, which holds all other controls in the window.
+        /// </summary>
         private VBox vboxPrimary;
 
+        /// <summary>
+        /// List of jobs to be downloaded.
+        /// </summary>
         private List<string> jobs;
 
+        /// <summary>
+        /// Reference to the presenter, which will have a method to download results.
+        /// </summary>
         private UserInterface.Interfaces.ICloudJobPresenter presenter;
+
         /// <summary>
         /// Default constructor. Unused.
         /// </summary>
@@ -116,9 +167,6 @@ namespace ApsimNG.Cloud
             downloadDirectoryContainer.PackStart(new Label("Output Directory: "), false, false, 0);
             downloadDirectoryContainer.PackStart(entryOutputDir, true, true, 0);
             downloadDirectoryContainer.PackStart(btnChangeOutputDir, false, false, 0);
-
-            currentFileProgress = new ProgressBar(new Adjustment(0, 0, 1, 0.01, 0.01, 0.01));            
-            overallProgress = new ProgressBar(new Adjustment(0, 0, 1, 0.01, 0.01, 0.01));
             
             // Put all form controls into the primary vbox
             vboxPrimary.PackStart(includeDebugFiles);
@@ -128,18 +176,16 @@ namespace ApsimNG.Cloud
             vboxPrimary.PackStart(generateCsv);
             vboxPrimary.PackStart(keepRawOutputs);
             vboxPrimary.PackStart(downloadDirectoryContainer);            
+
+            // This empty label will put a gap between the controls above it and below it.
             vboxPrimary.PackStart(new Label(""));
 
-            vboxPrimary.PackEnd(new Label(""));
             vboxPrimary.PackEnd(btnDownload, false, false, 0);
 
             Frame primaryContainer = new Frame("Download Settings");
             primaryContainer.Add(vboxPrimary);
             Add(primaryContainer);
             ShowAll();
-            
-            currentFileProgress.HideAll();
-            overallProgress.HideAll();
         }
 
         /// <summary>
@@ -162,7 +208,7 @@ namespace ApsimNG.Cloud
         /// <param name="e"></param>
         private void ChangeOutputDir(object sender, EventArgs e)
         {
-            string dir = GetDirectory();
+            string dir = UserInterface.ViewBase.AskUserForDirectory("Choose a download folder");
             if (dir != "")
             {
                 entryOutputDir.Text = dir;
@@ -170,40 +216,7 @@ namespace ApsimNG.Cloud
                 AzureSettings.Default.Save();                
             }
         }
-
-        /// <summary>Opens a file chooser dialog for the user to choose a directory.</summary>	
-        /// <return>
-        /// The path of the chosen directory, or an empty string if the user pressed cancel or 
-        /// selected a nonexistent directory.
-        /// </return>
-        private string GetDirectory()
-        {
-            // In theory this method should work cross-platform. In practice it may be less buggy to 
-            // check the OS and use a reliable method for each OS (as in ViewBase.cs)
-
-            FileChooserDialog fc = new FileChooserDialog(
-                                        "Choose the file to open",
-                                        null,
-                                        FileChooserAction.SelectFolder,
-                                        "Cancel", ResponseType.Cancel,
-                                        "Select Folder", ResponseType.Accept);
-            string path = "";
-
-            try
-            {
-                if (fc.Run() == (int)ResponseType.Accept)
-                {
-                    path = fc.Filename;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-            fc.Destroy();
-            return path;
-        }
-
+        
         /// <summary>
         /// Event handler for toggling the generate CSV checkbox. Disables the keep raw outputs checkbox.
         /// </summary>
