@@ -81,31 +81,37 @@ namespace Models.Factorial
                         allValues.Add(localValues);
                 }
             }
-         
-            // Look for child Factor models.
-            foreach (Factor childFactor in Apsim.Children(this, typeof(Factor)))
+
+            if (allValues.Count > 0 && Specifications.Count == allValues[0].Count)
             {
-                foreach (FactorValue childFactorValue in childFactor.CreateValues())
+                FactorValue factorValue = new FactorValue(this, Name, Specifications, Children.ToList<object>());
+                factorValues.Add(factorValue);
+            }
+            else
+            {
+                // Look for child Factor models.
+                foreach (Factor childFactor in Apsim.Children(this, typeof(Factor)))
                 {
-                    childFactorValue.Name = Name + childFactorValue.Name;
-                    factorValues.Add(childFactorValue);
+                    foreach (FactorValue childFactorValue in childFactor.CreateValues())
+                    {
+                        childFactorValue.Name = Name + childFactorValue.Name;
+                        factorValues.Add(childFactorValue);
+                    }
+                }
+
+                if (allValues.Count == 0)
+                {
+                    PathValuesPairToFactorValue(factorValues, fixedValues, null);
+                }
+
+                List<List<PathValuesPair>> allCombinations = MathUtilities.AllCombinationsOf<PathValuesPair>(allValues.ToArray());
+
+                if (allCombinations != null)
+                {
+                    foreach (List<PathValuesPair> combination in allCombinations)
+                        PathValuesPairToFactorValue(factorValues, fixedValues, combination);
                 }
             }
-
-
-            if (allValues.Count == 0)
-            {
-                PathValuesPairToFactorValue(factorValues, fixedValues, null);
-            }
-
-            List<List<PathValuesPair>> allCombinations = MathUtilities.AllCombinationsOf<PathValuesPair>(allValues.ToArray());
-
-            if (allCombinations != null)
-            {
-                foreach (List<PathValuesPair> combination in allCombinations)
-                    PathValuesPairToFactorValue(factorValues, fixedValues, combination);
-            }
-
             return factorValues;
         }
 

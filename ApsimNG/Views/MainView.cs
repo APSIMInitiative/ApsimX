@@ -335,8 +335,20 @@ namespace UserInterface.Views
         /// <param name="askToSave">Flag to turn on the request to save</param>
         public void Close(bool askToSave)
         {
+            if (askToSave && AllowClose != null)
+            {
+                AllowCloseArgs args = new AllowCloseArgs();
+                AllowClose.Invoke(this, args);
+                if (!args.AllowClose)
+                    return;
+            }
             _mainWidget.Destroy();
-            Application.Quit();
+            // If we're running a script passed as a command line argument, 
+            // we've never called Application.Run, so we don't want to call
+            // Application.Quit. We test this by seeing whether the event 
+            // loop is active.
+            if (Application.CurrentEvent != null)
+                Application.Quit();
         }
 
         /// <summary>
