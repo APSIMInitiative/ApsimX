@@ -12,6 +12,7 @@
     using ApsimNG.Cloud;
     using Microsoft.Azure.Batch.Common;
     using Models.Core;
+    using System.Linq;
 
     public class NewAzureJobPresenter : IPresenter, INewCloudJobPresenter
     {        
@@ -242,15 +243,15 @@
                 {
                     if (child is Models.Weather)
                     {
-                        string childPath = ((Models.Weather)sim.Children[0]).FileName;                        
+                        string childPath = sim.Children.OfType<Models.Weather>().ToList()[0].FileName;
                         if (Path.GetDirectoryName(childPath) != "")
                         {
-                            ShowError(childPath + " must be in the same directory as the .apsimx file" + sim.FileName != null ? " (" + Path.GetDirectoryName(sim.FileName) + ")" : "");
+                            ShowError(childPath + " must be in the same directory as the .apsimx file" + (sim.FileName != null ? " (" + Path.GetDirectoryName(sim.FileName) + ")" : ""));
                             view.Status = "Cancelled";
                             return;
                         }
-                        string sourcePath = ((Models.Weather)sim.Children[0]).FullFileName;
-                        string destPath = Path.Combine(jp.ModelPath, ((Models.Weather)sim.Children[0]).FileName);
+                        string sourcePath = sim.Children.OfType<Models.Weather>().ToList()[0].FullFileName;
+                        string destPath = Path.Combine(jp.ModelPath, sim.Children.OfType<Models.Weather>().ToList()[0].FileName);
                         if (!File.Exists(destPath)) File.Copy(sourcePath, destPath);
                     }
                 }                
