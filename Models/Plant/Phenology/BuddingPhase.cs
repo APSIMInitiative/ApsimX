@@ -80,7 +80,6 @@ namespace Models.PMF.Phen
                 double BudNumberBurst = plant.SowingData.BudNumber * FractionOfBudBurst.Value();
 
                 structure.PrimaryBudNo = BudNumberBurst;
-                structure.ApexNum = structure.PrimaryBudNo;
                 structure.TotalStemPopn = structure.MainStemPopn;
             }
 
