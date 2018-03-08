@@ -83,11 +83,16 @@ namespace Models.PMF
 
         #region Main outputs
 
-        /// <summary>Gets the n supply relative to N demand.</summary>
-        /// <value>The n supply.</value>
+        /// <summary>Gets the dry mass supply relative to dry mass demand.</summary>
+        /// <value>The dry mass supply.</value>
         [XmlIgnore]
         public double FDM { get { return DM == null ? 0 : MathUtilities.Divide(DM.TotalPlantSupply, DM.TotalPlantDemand, 0); } }
 
+        /// <summary>Gets the dry mass supply relative to dry structural demand plus metabolic demand.</summary>
+        /// <value>The dry mass supply.</value>
+        [XmlIgnore]
+        public double StructuralCarbonSupplyDemand { get { return DM == null ? 0 : MathUtilities.Divide(DM.TotalPlantSupply, (DM.TotalStructuralDemand+DM.TotalMetabolicDemand), 0); } }
+        
         /// <summary>Gets the delta wt.</summary>
         /// <value>The delta wt.</value>
         public double DeltaWt { get { return DM == null ? 0 : (DM.End - DM.Start); } }
