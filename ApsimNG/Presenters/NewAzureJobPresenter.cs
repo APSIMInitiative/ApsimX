@@ -383,12 +383,12 @@ namespace UserInterface.Presenters
             }
 
             view.Status = "Job Successfully submitted";
-
-            // in theory, instantiating an AzureResultsDownloader here and passing in this job's ID and name, then calling its DownloadResults() method would allow 
-            // for automatic job downloading as soon as the job is finished. The trouble is it needs an AzureJobDisplayPresenter (for progress bar updating, etc).
-
-            // explorerPresenter.MainPresenter.ShowMessage("Job Successfully submitted", Simulation.ErrorLevel.Information);            
-            // AzureResultsDownloader dl = new AzureResultsDownloader(jp.JobId, jp.JobDisplayName, jp.OutputDir, this.explorerPresenter, true, false, false);
+            
+            if (jp.AutoDownload)
+            {
+                AzureResultsDownloader dl = new AzureResultsDownloader(jp.JobId, jp.JobDisplayName, jp.OutputDir, null, true, jp.Summarise, true, true, true);
+                dl.DownloadResults(true);
+            }
         }
 
         /// <summary>
@@ -612,9 +612,9 @@ namespace UserInterface.Presenters
                     using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
                     {
                         ZipArchiveEntry f;
-                        f = archive.CreateEntryFromFile(srcPath + "\\Bin\\APSIM.Shared.dll", "APSIM.Shared.dll");
-                        f = archive.CreateEntryFromFile(srcPath + "\\Bin\\Models.exe", "Models.exe");
-                        f = archive.CreateEntryFromFile(srcPath + "\\Bin\\sqlite3.dll", "sqlite3.dll");
+                        f = archive.CreateEntryFromFile(Path.Combine(srcPath, "Bin", "APSIM.Shared.dll"), "APSIM.Shared.dll");
+                        f = archive.CreateEntryFromFile(Path.Combine(srcPath, "Bin", "Models.exe"), "Models.exe");
+                        f = archive.CreateEntryFromFile(Path.Combine(srcPath, "Bin", "sqlite3.dll"), "sqlite3.dll");
                     }
                 }
                 return 0;
@@ -643,9 +643,9 @@ namespace UserInterface.Presenters
                     {
                         ZipArchiveEntry f;
 
-                        f = archive.CreateEntryFromFile(srcPath + "\\Apsim.xml", "Apsim.xml");
-                        ZipAddDir(srcPath + "\\Model", srcPath + "\\", archive);  // note trailing \\
-                        ZipAddDir(srcPath + "\\UserInterface", srcPath + "\\", archive);  // note trailing \\
+                        f = archive.CreateEntryFromFile(Path.Combine(srcPath, "Apsim.xml"), "Apsim.xml");
+                        ZipAddDir(Path.Combine(srcPath, "Model"), srcPath, archive);
+                        ZipAddDir(Path.Combine(srcPath, "UserInterface"), srcPath, archive);
                     }
                 }
                 return 0;

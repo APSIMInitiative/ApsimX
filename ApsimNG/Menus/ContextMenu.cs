@@ -445,7 +445,7 @@ namespace UserInterface.Presenters
             }
         }
 
-        [ContextMenu(MenuName = "Run on cloud (In development - DO NOT USE)",
+        [ContextMenu(MenuName = "Run on cloud",
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),
                                               typeof(Experiment),

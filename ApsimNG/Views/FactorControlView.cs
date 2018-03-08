@@ -160,7 +160,7 @@ namespace UserInterface.Views
             disableButtonContainer.PackStart(btnDisable, true, true, 0);
 
             btnExportCsv = new Button("Generate CSV");
-            btnExportCsv.Clicked += (sender, e) => { Presenter.GenerateCsv(AskUserForFileName("Export to CSV", "CSV file | .csv", Gtk.FileChooserAction.Save, (string)ApsimNG.Properties.Settings.Default["OutputDir"])); };
+            btnExportCsv.Clicked += (sender, e) => { Presenter.GenerateCsv(AskUserForFileName("Export to CSV", "CSV file | .csv", Gtk.FileChooserAction.Save, (string)ApsimNG.Cloud.AzureSettings.Default["OutputDir"])); };
             HBox csvExportButtonContainer = new HBox();
             csvExportButtonContainer.PackStart(btnExportCsv, true, true, 0);
 

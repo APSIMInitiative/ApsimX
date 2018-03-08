@@ -50,6 +50,11 @@ namespace ApsimNG.Cloud
         private string name;
 
         /// <summary>
+        /// Whether or not the results will actually be downloaded.
+        /// </summary>
+        private bool downloadResults;
+
+        /// <summary>
         /// Whether or not results should be combined and exported to a .csv file.
         /// </summary>
         private bool exportToCsv;
@@ -136,13 +141,16 @@ namespace ApsimNG.Cloud
         /// <param name="jobName">Job Name.</param>
         /// <param name="path">Path which auto-downloaded results will be saved to.</param>
         /// <param name="azurePresenter">The presenter.</param>
+        /// <param name="download">Whether or not results should be downloaded.</param>
         /// <param name="export">Whether or not results should be exported to a single .csv file.</param>
         /// <param name="includeDebugFiles">Whether or not 'debug' (.stdout) files should be downloaded.</param>
         /// <param name="keepOutputFiles">Whether or not output .db files should be kept after exporting a CSV.</param>
-        public AzureResultsDownloader(Guid id, string jobName, string path, AzureJobDisplayPresenter azurePresenter, bool export, bool includeDebugFiles, bool keepOutputFiles, bool unzipResultFiles)
+        /// <param name="unzipResultFiles">Whether or not results should be unzipped.</param>
+        public AzureResultsDownloader(Guid id, string jobName, string path, AzureJobDisplayPresenter azurePresenter, bool download, bool export, bool includeDebugFiles, bool keepOutputFiles, bool unzipResultFiles)
         {
             numBlobsComplete = 0;
             jobId = id;
+            downloadResults = download;
             exportToCsv = export;
             saveDebugFiles = includeDebugFiles;
             saveRawOutputFiles = keepOutputFiles;
@@ -160,7 +168,7 @@ namespace ApsimNG.Cloud
             }
             catch (Exception ex)
             {
-                presenter.ShowError(ex.ToString());
+                presenter?.ShowError(ex.ToString());
                 return;
             }
             
@@ -298,7 +306,7 @@ namespace ApsimNG.Cloud
             }
             catch (Exception e)
             {
-                presenter.ShowError(e.ToString());
+                presenter?.ShowError(e.ToString());
                 return 2;
             }
         }
@@ -327,7 +335,7 @@ namespace ApsimNG.Cloud
                 }
                 catch (Exception ex)
                 {
-                    presenter.ShowError(ex.ToString());
+                    presenter?.ShowError(ex.ToString());
                     success = 3;
                 }
 
@@ -335,7 +343,7 @@ namespace ApsimNG.Cloud
                 List<CloudBlockBlob> outputs = ListJobOutputsFromStorage().ToList();
                 if (outputs == null || outputs.Count < 1)
                 {
-                    presenter.ShowError("No files in output container.");
+                    presenter?.ShowError("No files in output container.");
                     return;
                 }
 
@@ -344,9 +352,8 @@ namespace ApsimNG.Cloud
                     List<CloudBlockBlob> debugBlobs = outputs.Where(blob => debugFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
                     Download(debugBlobs, rawResultsPath, ref ct);
                 }
-
-                // Only download the results if the user wants a CSV or the result files themselves
-                if (saveRawOutputFiles || exportToCsv)
+                
+                if (downloadResults)
                 {                    
                     List<CloudBlockBlob> zipBlobs = outputs.Where(blob => zipFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))).ToList();
                     if (zipBlobs != null && zipBlobs.Count > 0) // if the result file are nicely zipped up for us
@@ -355,8 +362,8 @@ namespace ApsimNG.Cloud
                         if (!unzipResults)
                         {
                             // if user doesn't want to extract the results, we're done
-                            presenter.DownloadComplete(jobId);
-                            presenter.DisplayFinishedDownloadStatus(name, 0, outputPath);
+                            presenter?.DownloadComplete(jobId);
+                            presenter?.DisplayFinishedDownloadStatus(name, 0, outputPath);
                             return;
                         }
                         foreach (string archive in localZipFiles)
@@ -383,8 +390,8 @@ namespace ApsimNG.Cloud
                         success = SummariseResults(true);
                     }
 
-                    // Delete the output files if the user doesn't want to keep them
-                    if (!saveRawOutputFiles)
+                    // If we've already exported to CSV, delete the output files if the user doesn't want to keep them
+                    if (exportToCsv && !saveRawOutputFiles)
                     {
                         // this will delete all .db and .out files in the output directory
                         foreach (string resultFile in Directory.EnumerateFiles(rawResultsPath).Where(file => resultFileFormats.Contains(Path.GetExtension(file))))
@@ -395,7 +402,7 @@ namespace ApsimNG.Cloud
                             }
                             catch (Exception ex)
                             {
-                                presenter.ShowError("Unable to delete " + resultFile + ": " + ex.ToString());
+                                presenter?.ShowError("Unable to delete " + resultFile + ": " + ex.ToString());
                             }
                         }
                     }
@@ -403,12 +410,12 @@ namespace ApsimNG.Cloud
             }
             catch (AggregateException ae)
             {
-                presenter.ShowError(ae.InnerException.ToString());
+                presenter?.ShowError(ae.InnerException.ToString());
             }
             
             
-            presenter.DownloadComplete(jobId);
-            presenter.DisplayFinishedDownloadStatus(name, success, outputPath);
+            presenter?.DownloadComplete(jobId);
+            presenter?.DisplayFinishedDownloadStatus(name, success, outputPath);
         }
 
         /// <summary>
@@ -455,7 +462,7 @@ namespace ApsimNG.Cloud
             string jobName = e.UserState.ToString();
             numBlobsComplete++;
             double progress = 1.0 * numBlobsComplete / numBlobs;
-            presenter.UpdateDownloadProgress(progress);
+            presenter?.UpdateDownloadProgress(progress);
         }
 
         /// <summary>
@@ -480,7 +487,7 @@ namespace ApsimNG.Cloud
                 }
                 catch (Exception e)
                 {
-                    presenter.ShowError("Failed to open db at " + path + ": " + e.ToString());
+                    presenter?.ShowError("Failed to open db at " + path + ": " + e.ToString());
                     // No point continuing if unable to open the database
                     return "";
                 }
@@ -501,7 +508,7 @@ namespace ApsimNG.Cloud
                 }
                 catch (Exception e)
                 {
-                    presenter.ShowError("Error enumerating simulation names: " + e.ToString());
+                    presenter?.ShowError("Error enumerating simulation names: " + e.ToString());
                 }
 
                 // Enumerate the table names
@@ -517,7 +524,7 @@ namespace ApsimNG.Cloud
                 }
                 catch (Exception e)
                 {
-                    presenter.ShowError("Error reading table names: " + e.ToString());
+                    presenter?.ShowError("Error reading table names: " + e.ToString());
                 }
 
                 // Read data from each 'report' table (any table whose name doesn't start with an underscore)
@@ -542,7 +549,7 @@ namespace ApsimNG.Cloud
                 }
                 catch (Exception e)
                 {
-                    presenter.ShowError("Error reading or merging table: " + e.ToString());
+                    presenter?.ShowError("Error reading or merging table: " + e.ToString());
                 }
                 m_dbConnection.Close();
                 // Generate the CSV file data                
@@ -739,7 +746,7 @@ namespace ApsimNG.Cloud
                     }
                     catch (Exception e)
                     {
-                        presenter.ShowError(e.ToString());
+                        presenter?.ShowError(e.ToString());
                     }
                 }
             }

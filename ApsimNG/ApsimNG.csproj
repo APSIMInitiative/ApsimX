@@ -116,10 +116,6 @@
     <EmbeddedResource Include="Resources\Glade\ReportActivityLedgerView.glade" />
     <EmbeddedResource Include="Resources\Glade\InputNextBackView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Report.xshd" />
@@ -254,11 +250,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Utility\ColourPickerCell.cs" />
     <Compile Include="Utility\ColumnXYSeries.cs" />

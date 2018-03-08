@@ -161,7 +161,7 @@ namespace ApsimNG.Cloud
             btnChangeOutputDir = new Button("...");
             btnChangeOutputDir.Clicked += ChangeOutputDir;
 
-            entryOutputDir = new Entry((string)Properties.Settings.Default["OutputDir"]) { Sensitive = false };
+            entryOutputDir = new Entry((string)AzureSettings.Default["OutputDir"]) { Sensitive = false };
             entryOutputDir.WidthChars = entryOutputDir.Text.Length;
 
             downloadDirectoryContainer.PackStart(new Label("Output Directory: "), false, false, 0);
@@ -198,7 +198,7 @@ namespace ApsimNG.Cloud
             btnDownload.Clicked -= Download;
             btnChangeOutputDir.Clicked -= ChangeOutputDir;
             Destroy();
-            presenter.DownloadResults(jobs, generateCsv.Active, includeDebugFiles.Active, keepRawOutputs.Active, unzipResults.Active, runAsync.Active);
+            presenter.DownloadResults(jobs, chkDownloadResults.Active, generateCsv.Active, includeDebugFiles.Active, keepRawOutputs.Active, unzipResults.Active, runAsync.Active);
         }
 
         /// <summary>

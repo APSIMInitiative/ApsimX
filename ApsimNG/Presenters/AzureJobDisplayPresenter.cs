@@ -190,7 +190,7 @@ namespace UserInterface.Presenters
         /// <param name="saveToCsv">If true, results will be combined into a csv file.</param>
         /// <param name="includeDebugFiles">If true, debug files will be downloaded.</param>
         /// <param name="keepOutputFiles">If true, the raw .db output files will be saved.</param>
-        public void DownloadResults(List<string> jobsToDownload, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles, bool unzipResults, bool async = false)
+        public void DownloadResults(List<string> jobsToDownload, bool downloadResults, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles, bool unzipResults, bool async = false)
         {
             Presenter.ShowMessage("", Simulation.ErrorLevel.Information);
             view.DownloadStatus = "";            
@@ -205,9 +205,7 @@ namespace UserInterface.Presenters
                 ShowMessage("Unable to download jobs - no jobs are selected.");
                 return;
             }
-            FetchJobs.CancelAsync();
-
-            //view.HideLoadingProgressBar();
+            
             view.ShowDownloadProgressBar();
             ShowMessage("");
             string path = (string)AzureSettings.Default["OutputDir"];
@@ -227,9 +225,9 @@ namespace UserInterface.Presenters
                 view.DownloadProgress = 0;
 
                 // if output directory already exists and warning has not already been given, display a warning
-                if (Directory.Exists((string)AzureSettings.Default["OutputDir"] + "\\" + jobName) && !ignoreWarning && saveToCsv)
+                if (Directory.Exists(Path.Combine((string)AzureSettings.Default["OutputDir"], jobName)) && !ignoreWarning && saveToCsv)
                 {
-                    if (!view.AskQuestion("Files detected in output directory (" + (string)AzureSettings.Default["OutputDir"] + "\\" + jobName + "). Results will be collated from ALL files in this directory. Are you certain you wish to continue?"))
+                    if (!view.AskQuestion("Files detected in output directory (" + Path.Combine((string)AzureSettings.Default["OutputDir"], jobName) + "). Results will be collated from ALL files in this directory. Are you certain you wish to continue?"))
                     {
                         // if user has chosen to cancel the download
                         view.HideDownloadProgressBar();
@@ -246,11 +244,9 @@ namespace UserInterface.Presenters
                     continue;
                 }
 
-                dl = new AzureResultsDownloader(jobId, GetJob(id).DisplayName, path, this, saveToCsv, includeDebugFiles, keepOutputFiles, unzipResults);                
+                dl = new AzureResultsDownloader(jobId, GetJob(id).DisplayName, path, this, downloadResults, saveToCsv, includeDebugFiles, keepOutputFiles, unzipResults);                
                 dl.DownloadResults(async);
             }
-            while (FetchJobs.IsBusy) ;
-            FetchJobs.RunWorkerAsync();
         }        
 
         /// <summary>
@@ -394,7 +390,7 @@ namespace UserInterface.Presenters
                     msg += "Download unsuccessful.";
                     break;
             }
-            string logFile = path + "\\download.log";
+            string logFile = Path.Combine(path, "download.log");
             view.DownloadStatus = "One or more downloads encountered an error. See " + logFile + " for more details.";
             lock (logFileMutex)
             {

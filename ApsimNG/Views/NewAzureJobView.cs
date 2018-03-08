@@ -24,6 +24,7 @@ namespace UserInterface.Views
         private ComboBox comboCoreCount;
         private CheckButton chkEmail;
         private Entry entryEmail;
+        private CheckButton chkDownload;
         private CheckButton chkSummarise;
         private CheckButton chkSaveModels;
         private Entry entryModelPath;
@@ -206,7 +207,7 @@ namespace UserInterface.Views
 
 
             // Auto download results
-            CheckButton chkDownload = new CheckButton("Automatically download results once complete");
+            chkDownload = new CheckButton("Automatically download results once complete");
             chkSummarise = new CheckButton("Summarise Results");
 
             tblResults.Attach(chkDownload, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
@@ -216,7 +217,7 @@ namespace UserInterface.Views
 
             Label lblOutputDir = new Label("Output Directory:");
             lblOutputDir.Xalign = 0;
-            entryOutputDir = new Entry((string)ApsimNG.Properties.Settings.Default["OutputDir"]);
+            entryOutputDir = new Entry((string)AzureSettings.Default["OutputDir"]);
 
             Button btnOutputDir = new Button("...");
             btnOutputDir.Clicked += new EventHandler(BtnOutputDir_Click);
@@ -337,6 +338,7 @@ namespace UserInterface.Views
                 SaveModelFiles = chkSaveModels.Active,
                 ApsimFromDir = radioApsimDir.Active,
                 OutputDir = entryOutputDir.Text,
+                AutoDownload = chkDownload.Active,
                 Summarise = chkSummarise.Active,
                 ApplicationPackageVersion = Path.GetFileName(apsimPath).Substring(Path.GetFileName(apsimPath).IndexOf('-') + 1),
                 ApplicationPackagePath = apsimPath

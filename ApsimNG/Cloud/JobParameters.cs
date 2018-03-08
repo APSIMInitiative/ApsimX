@@ -70,12 +70,16 @@ namespace ApsimNG.Cloud
         public int PoolMaxTasksPerVM { get; set; }
 
         /// <summary>
+        /// If true, results will automatically be downloaded once the job is finished.
+        /// </summary>
+        public bool AutoDownload { get; set; }
+        /// <summary>
         /// If true, model files will be saved after they are generated.
         /// </summary>
         public bool SaveModelFiles { get; set; }
 
         /// <summary>
-        /// If true, the job manager should submit the tasks.
+        /// If true, the job manager will submit the tasks.
         /// </summary>
         public bool JobManagerShouldSubmitTasks { get; set; }
 
