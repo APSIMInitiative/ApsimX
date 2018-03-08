@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="25">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="26">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1878,6 +1878,57 @@ Simulation results for the combined datasets from the various countries are show
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
       </Graph>
+      <Graph>
+        <Name>DailyBiomass</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>DailyObsPred</TableName>
+          <XFieldName>Observed.Wheat.AboveGround.Wt</XFieldName>
+          <YFieldName>Predicted.Wheat.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
@@ -2021,13 +2072,12 @@ Simulation results for the combined datasets from the various countries are show
           </SoilArbitrator>
           <Zone>
             <Name>paddock</Name>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Soil>
               <Name>APS26Field</Name>
               <Water>
@@ -5120,13 +5170,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Operations>
               <Name>ApplyFertiliser</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -7332,13 +7381,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Operations>
               <Name>IrrigationSchedule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -7963,6 +8011,14 @@ namespace Models
                 <Date>1991-11-08</Date>
                 <Action> [Irrigation].Apply(amount:50, depth:0,efficiency:1, willRunoff:false);</Action>
               </Operation>
+              <Operation>
+                <Date>1991-10-19</Date>
+                <Action> [Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-10-19</Date>
+                <Action> [Wheat].EndCrop();</Action>
+              </Operation>
             </Operations>
             <Operations>
               <Name>2</Name>
@@ -8038,6 +8094,14 @@ namespace Models
               <Operation>
                 <Date>1991-11-08</Date>
                 <Action> [Irrigation].Apply(amount:50, depth:0,efficiency:1, willRunoff:false);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-11-13</Date>
+                <Action> [Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-11-13</Date>
+                <Action> [Wheat].EndCrop();</Action>
               </Operation>
             </Operations>
             <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -8451,13 +8515,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -8498,40 +8561,6 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-            </Manager>
             <Manager>
               <Name>MaxLeafSize</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -9179,6 +9208,14 @@ namespace Models
                 <Date>2011-08-15</Date>
                 <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.UreaN);</Action>
               </Operation>
+              <Operation>
+                <Date>2011-11-05</Date>
+                <Action>[Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>2011-11-05</Date>
+                <Action>[Wheat].EndCrop();</Action>
+              </Operation>
             </Operations>
             <Operations>
               <Name>50cm</Name>
@@ -9191,6 +9228,14 @@ namespace Models
                 <Date>2011-08-15</Date>
                 <Action>[Fertiliser].Apply(Amount: 100, Type: Fertiliser.Types.UreaN);</Action>
               </Operation>
+              <Operation>
+                <Date>2011-11-05</Date>
+                <Action>[Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>2011-11-05</Date>
+                <Action>[Wheat].EndCrop();</Action>
+              </Operation>
             </Operations>
             <Operations>
               <Name>N0</Name>
@@ -9198,6 +9243,14 @@ namespace Models
               <Operation>
                 <Date>2011-06-15</Date>
                 <Action>[Wheat].Sow(population:160, cultivar:"Hartog", depth:30, rowSpacing:250);</Action>
+              </Operation>
+              <Operation>
+                <Date>2011-11-05</Date>
+                <Action>[Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>2011-11-05</Date>
+                <Action>[Wheat].EndCrop();</Action>
               </Operation>
             </Operations>
             <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -9244,6 +9297,14 @@ namespace Models
               <Operation>
                 <Date>2011-06-15</Date>
                 <Action>[Wheat].Sow(population:160, cultivar:"Hartog", depth:30, rowSpacing:250);</Action>
+              </Operation>
+              <Operation>
+                <Date>2011-11-05</Date>
+                <Action>[Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>2011-11-05</Date>
+                <Action>[Wheat].EndCrop();</Action>
               </Operation>
             </Operations>
             <Soil>
@@ -9576,13 +9637,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -9721,40 +9781,6 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "ReadyForHarvesting")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-            </Manager>
             <SoluteManager>
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -10862,13 +10888,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -11649,13 +11674,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -12322,13 +12346,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -13851,13 +13874,12 @@ namespace Models
                 <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
                 <FractionFaecesAdded>0.5</FractionFaecesAdded>
               </SurfaceOrganicMatter>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <MicroClimate>
                 <Name>MicroClimate</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -14599,13 +14621,12 @@ namespace Models
                 <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
                 <FractionFaecesAdded>0.5</FractionFaecesAdded>
               </SurfaceOrganicMatter>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <MicroClimate>
                 <Name>MicroClimate</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -15347,13 +15368,12 @@ namespace Models
                 <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
                 <FractionFaecesAdded>0.5</FractionFaecesAdded>
               </SurfaceOrganicMatter>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <MicroClimate>
                 <Name>MicroClimate</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -16479,13 +16499,12 @@ namespace Models
                 <Action>[Wheat].Sow(population:149, cultivar:"Gutha", depth:30, rowSpacing:250); </Action>
               </Operation>
             </Operations>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -17431,13 +17450,12 @@ namespace Models
                 <Action>[Wheat].Sow(population:100, cultivar:"Gamenya", depth:30, rowSpacing:250); </Action>
               </Operation>
             </Operations>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -18711,13 +18729,12 @@ namespace Models
               <Name>Fertiliser</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Fertiliser>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Operations>
               <Name>IrrigationSchedule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -19744,7 +19761,7 @@ namespace Models
             <Name>Clock</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <StartDate>1983-06-13T00:00:00</StartDate>
-            <EndDate>1983-11-30T00:00:00</EndDate>
+            <EndDate>1983-12-01T00:00:00</EndDate>
           </Clock>
           <Summary>
             <Name>summaryfile</Name>
@@ -20241,13 +20258,12 @@ namespace Models
               <Name>Fertiliser</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Fertiliser>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -20268,8 +20284,16 @@ namespace Models
               <Name>SowingSchedule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Operation>
-                <Date>1983-06-14T00:00:00</Date>
+                <Date>1983-06-14</Date>
                 <Action>[Wheat].Sow(population:159, cultivar:"gamenya", depth:80, rowSpacing:250);</Action>
+              </Operation>
+              <Operation>
+                <Date>1983-12-01</Date>
+                <Action>[Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>1983-12-01</Date>
+                <Action>[Wheat].EndCrop();</Action>
               </Operation>
             </Operations>
             <Manager>
@@ -20497,40 +20521,6 @@ private void OnDoManagement(object sender, EventArgs e)
                 <string />
               </EventNames>
             </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-            </Manager>
             <SoluteManager>
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -21693,13 +21683,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Operations>
               <Name>CropSchedule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -21714,6 +21703,14 @@ namespace Models
               <Operation>
                 <Date>2010-02-01</Date>
                 <Action>[Fertiliser].Apply(Amount: 80, Type: Fertiliser.Types.UreaN);</Action>
+              </Operation>
+              <Operation>
+                <Date>2010-07-14</Date>
+                <Action>[Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>2010-07-14</Date>
+                <Action>[Wheat].EndCrop();</Action>
               </Operation>
             </Operations>
             <Operations>
@@ -22107,40 +22104,6 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-            </Manager>
             <SoluteManager>
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -23199,13 +23162,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Operations>
               <Name>CropSchedule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -23220,6 +23182,14 @@ namespace Models
               <Operation>
                 <Date>2012-02-01</Date>
                 <Action>[Fertiliser].Apply(Amount: 80, Type: Fertiliser.Types.UreaN);</Action>
+              </Operation>
+              <Operation>
+                <Date>2012-07-16</Date>
+                <Action>[Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>2012-07-16</Date>
+                <Action>[Wheat].EndCrop();</Action>
               </Operation>
             </Operations>
             <Operations>
@@ -23613,40 +23583,6 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-            </Manager>
             <SoluteManager>
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -25498,6 +25434,18 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                   <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
                 </Operation>
               </Operations>
+              <Operations>
+                <Name>HarvestOperations</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Operation>
+                  <Date>1992-01-21</Date>
+                  <Action>[Wheat].Harvest();</Action>
+                </Operation>
+                <Operation>
+                  <Date>1992-01-21</Date>
+                  <Action>[Wheat].EndCrop();</Action>
+                </Operation>
+              </Operations>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
             </Folder>
@@ -25918,13 +25866,12 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <emissivity>0.96</emissivity>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Manager>
               <Name>ResetSW</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -26031,40 +25978,6 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-            </Manager>
             <SoluteManager>
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -28005,6 +27918,18 @@ namespace Models
 }
 ]]></Code>
               </Manager>
+              <Operations>
+                <Name>HarvestOperations</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Operation>
+                  <Date>1993-03-03</Date>
+                  <Action>[Wheat].Harvest();</Action>
+                </Operation>
+                <Operation>
+                  <Date>1993-03-03</Date>
+                  <Action>[Wheat].EndCrop();</Action>
+                </Operation>
+              </Operations>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
             </Folder>
@@ -28405,13 +28330,12 @@ namespace Models
               <emissivity>0.96</emissivity>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Report>
               <Name>DailyReport</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -28436,40 +28360,6 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-            </Manager>
             <Report>
               <Name>SupReport</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -31655,13 +31545,12 @@ namespace Models
               <emissivity>0.96</emissivity>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Report>
               <Name>DailyReport</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -31686,40 +31575,6 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-            </Manager>
             <Report>
               <Name>SupReport</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -32095,6 +31950,18 @@ namespace Models
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </SoluteManager>
+            <Operations>
+              <Name>HarvestOperations</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Operation>
+                <Date>2011-02-11</Date>
+                <Action>[Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>2011-02-11</Date>
+                <Action>[Wheat].EndCrop();</Action>
+              </Operation>
+            </Operations>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -32332,7 +32199,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -32355,7 +32222,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -32399,7 +32266,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -32422,7 +32289,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -32466,7 +32333,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -32489,7 +32356,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -32533,7 +32400,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -32556,7 +32423,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -32601,7 +32468,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -32624,7 +32491,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -32669,7 +32536,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -32692,7 +32559,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -35616,13 +35483,12 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
               <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
             </Soil>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Folder>
               <Name>Manager folder</Name>
               <Operations>
@@ -35631,6 +35497,14 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                 <Operation>
                   <Date>2013-03-25</Date>
                   <Action>[Wheat].Sow(population:165, cultivar:"Wakanui", depth:30, rowSpacing:130);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2014-01-26</Date>
+                  <Action>[Wheat].Harvest();</Action>
+                </Operation>
+                <Operation>
+                  <Date>2014-01-26</Date>
+                  <Action>[Wheat].EndCrop();</Action>
                 </Operation>
               </Operations>
               <Operations>
@@ -35905,40 +35779,6 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-            </Manager>
             <Manager>
               <Name>MaxLeafSize</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -39669,10 +39509,10 @@ Considerable canopy decay was observed during the winter for the early sown trea
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Script>
                   <SowDate>24-Jul</SowDate>
-                  <Population>150</Population>
                   <CultivarName>Wakanui</CultivarName>
                   <SowingDepth>50</SowingDepth>
                   <RowSpacing>150</RowSpacing>
+                  <Population>150</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -40223,13 +40063,12 @@ namespace Models
               <emissivity>0.96</emissivity>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Report>
               <Name>DailyReport</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -42796,13 +42635,12 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
               <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
               <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
             </Soil>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <SoluteManager>
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -48499,13 +48337,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -49106,13 +48943,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -49658,13 +49494,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -50595,13 +50430,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -51147,13 +50981,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -51808,13 +51641,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -52360,13 +52192,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -52912,13 +52743,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -53464,13 +53294,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -54016,13 +53845,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -54568,13 +54396,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -55120,13 +54947,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -55672,13 +55498,12 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Report>
                 <Name>HarvestReport</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -56176,13 +56001,12 @@ namespace Models
                 <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
                 <FractionFaecesAdded>0.5</FractionFaecesAdded>
               </SurfaceOrganicMatter>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Operations>
                 <Name>CropSchedule</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -57685,13 +57509,12 @@ namespace Models
                 <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
                 <FractionFaecesAdded>0.5</FractionFaecesAdded>
               </SurfaceOrganicMatter>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Operations>
                 <Name>CropSchedule</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -57706,6 +57529,14 @@ namespace Models
                 <Operation>
                   <Date>1991-11-20</Date>
                   <Action>[Irrigation].Apply(amount:28);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1991-12-21</Date>
+                  <Action>[Wheat].Harvest();</Action>
+                </Operation>
+                <Operation>
+                  <Date>1991-12-21</Date>
+                  <Action>[Wheat].EndCrop();</Action>
                 </Operation>
               </Operations>
               <Operations>
@@ -58347,40 +58178,6 @@ namespace Models
                   <string />
                 </EventNames>
               </Report>
-              <Manager>
-                <Name>Harvesting</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-              </Manager>
               <SoluteManager>
                 <Name>SoluteManager</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -59508,13 +59305,12 @@ namespace Models
                 <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
                 <FractionFaecesAdded>0.5</FractionFaecesAdded>
               </SurfaceOrganicMatter>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Operations>
                 <Name>CropSchedule</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -60246,13 +60042,12 @@ namespace Models
                 <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
                 <FractionFaecesAdded>0.5</FractionFaecesAdded>
               </SurfaceOrganicMatter>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <Operations>
                 <Name>CropSchedule</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -61575,13 +61370,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -63701,13 +63495,12 @@ namespace Models
               <Name>Fertiliser</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Fertiliser>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Operations>
               <Name>IrrigationSchedule</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -64836,13 +64629,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -65624,13 +65416,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -66412,13 +66203,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -67160,13 +66950,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -67635,13 +67424,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -68789,13 +68577,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -69879,24 +69666,32 @@ namespace Models
               <Name>CropManagement</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Operation>
-                <Date>2004-10-14T00:00:00</Date>
+                <Date>2004-10-14</Date>
                 <Action>[Wheat].Sow(population:100, cultivar:"Dekan", depth:30, rowSpacing:250);</Action>
               </Operation>
               <Operation>
-                <Date>2005-03-22T00:00:00</Date>
+                <Date>2005-03-22</Date>
                 <Action>[Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
               </Operation>
               <Operation>
-                <Date>2005-04-12T00:00:00</Date>
+                <Date>2005-04-12</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.NO3N);</Action>
               </Operation>
               <Operation>
-                <Date>2005-05-12T00:00:00</Date>
+                <Date>2005-05-12</Date>
                 <Action>[Fertiliser].Apply(Amount: 40.5, Type: Fertiliser.Types.NO3N);</Action>
               </Operation>
               <Operation>
-                <Date>2005-05-30T00:00:00</Date>
+                <Date>2005-05-30</Date>
                 <Action>[Fertiliser].Apply(Amount: 80, Type: Fertiliser.Types.NO3N);</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-08-04</Date>
+                <Action>[Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-08-04</Date>
+                <Action>[Wheat].EndCrop();</Action>
               </Operation>
             </Operations>
             <SurfaceOrganicMatter>
@@ -69936,13 +69731,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -70468,40 +70262,6 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-            </Manager>
             <SoluteManager>
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -70547,20 +70307,28 @@ namespace Models
               <Name>CropManagement</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Operation>
-                <Date>2006-10-13T00:00:00</Date>
+                <Date>2006-10-13</Date>
                 <Action>[Wheat].Sow(population:100, cultivar:"Rosario", depth:30, rowSpacing:250);</Action>
               </Operation>
               <Operation>
-                <Date>2007-03-17T00:00:00</Date>
+                <Date>2007-03-17</Date>
                 <Action>[Fertiliser].Apply(Amount: 40, Type: Fertiliser.Types.NO3N);</Action>
               </Operation>
               <Operation>
-                <Date>2007-04-12T00:00:00</Date>
+                <Date>2007-04-12</Date>
                 <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N);</Action>
               </Operation>
               <Operation>
-                <Date>2007-05-08T00:00:00</Date>
+                <Date>2007-05-08</Date>
                 <Action>[Fertiliser].Apply(Amount: 94.5, Type: Fertiliser.Types.NO3N);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-08-06</Date>
+                <Action>[Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-08-06</Date>
+                <Action>[Wheat].EndCrop();</Action>
               </Operation>
             </Operations>
             <SurfaceOrganicMatter>
@@ -70600,13 +70368,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -71132,40 +70899,6 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-            </Manager>
             <SoluteManager>
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -71211,20 +70944,28 @@ namespace Models
               <Name>CropManagement</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Operation>
-                <Date>2008-11-13T00:00:00</Date>
+                <Date>2008-11-13</Date>
                 <Action>[Wheat].Sow(population:100, cultivar:"Ararat", depth:30, rowSpacing:250);</Action>
               </Operation>
               <Operation>
-                <Date>2009-03-18T00:00:00</Date>
+                <Date>2009-03-18</Date>
                 <Action>[Fertiliser].Apply(Amount: 80, Type: Fertiliser.Types.NO3N);</Action>
               </Operation>
               <Operation>
-                <Date>2009-04-24T00:00:00</Date>
+                <Date>2009-04-24</Date>
                 <Action>[Fertiliser].Apply(Amount: 40, Type: Fertiliser.Types.NO3N);</Action>
               </Operation>
               <Operation>
-                <Date>2009-05-28T00:00:00</Date>
+                <Date>2009-05-28</Date>
                 <Action>[Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+              </Operation>
+              <Operation>
+                <Date>2009-08-08</Date>
+                <Action>[Wheat].Harvest();</Action>
+              </Operation>
+              <Operation>
+                <Date>2009-08-08</Date>
+                <Action>[Wheat].EndCrop();</Action>
               </Operation>
             </Operations>
             <SurfaceOrganicMatter>
@@ -71264,13 +71005,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -71796,40 +71536,6 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-            </Manager>
             <SoluteManager>
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -73076,6 +72782,14 @@ namespace Models
                   <Date>1993-04-05</Date>
                   <Action> [Fertiliser].Apply(Amount: 81, Type: Fertiliser.Types.NO3N);</Action>
                 </Operation>
+                <Operation>
+                  <Date>1993-05-20</Date>
+                  <Action> [Wheat].Harvest();</Action>
+                </Operation>
+                <Operation>
+                  <Date>1993-05-20</Date>
+                  <Action> [Wheat].EndCrop();</Action>
+                </Operation>
               </Operations>
               <SurfaceOrganicMatter>
                 <Name>SurfaceOrganicMatter</Name>
@@ -73114,13 +72828,12 @@ namespace Models
                 <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
                 <FractionFaecesAdded>0.5</FractionFaecesAdded>
               </SurfaceOrganicMatter>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <MicroClimate>
                 <Name>MicroClimate</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -73165,40 +72878,6 @@ namespace Models
                   <string />
                 </EventNames>
               </Report>
-              <Manager>
-                <Name>Harvesting</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-              </Manager>
               <Manager>
                 <Name>SetCO2</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -74317,7 +73996,7 @@ namespace Models
               <Name>Clock</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <StartDate>1993-12-07T00:00:00</StartDate>
-              <EndDate>1994-05-30T00:00:00</EndDate>
+              <EndDate>1994-05-31T00:00:00</EndDate>
             </Clock>
             <Summary>
               <Name>summaryfile</Name>
@@ -74873,6 +74552,14 @@ namespace Models
                   <Date>1994-04-08</Date>
                   <Action> [Fertiliser].Apply(Amount: 46, Type: Fertiliser.Types.NO3N);</Action>
                 </Operation>
+                <Operation>
+                  <Date>1994-05-31</Date>
+                  <Action> [Wheat].Harvest();</Action>
+                </Operation>
+                <Operation>
+                  <Date>1994-05-31</Date>
+                  <Action> [Wheat].EndCrop();</Action>
+                </Operation>
               </Operations>
               <SurfaceOrganicMatter>
                 <Name>SurfaceOrganicMatter</Name>
@@ -74911,13 +74598,12 @@ namespace Models
                 <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
                 <FractionFaecesAdded>0.5</FractionFaecesAdded>
               </SurfaceOrganicMatter>
-	          <Plant>
-	            <Name>Wheat</Name>
-	            <IncludeInDocumentation>false</IncludeInDocumentation>
-	            <ResourceName>Wheat</ResourceName>
-	            <CropType>Wheat</CropType>
-	            <SowingDate>0001-01-01T00:00:00</SowingDate>
-	          </Plant>
+              <Plant>
+                <Name>Wheat</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <ResourceName>Wheat</ResourceName>
+                <CropType>Wheat</CropType>
+              </Plant>
               <MicroClimate>
                 <Name>MicroClimate</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -74966,40 +74652,6 @@ namespace Models
                   <string />
                 </EventNames>
               </Report>
-              <Manager>
-                <Name>Harvesting</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Wheat;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-            {
-                Wheat.Harvest();
-                Wheat.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-              </Manager>
               <Manager>
                 <Name>ClimateControl</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -76031,13 +75683,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -76713,13 +76364,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -77395,13 +77045,12 @@ namespace Models
               <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
               <FractionFaecesAdded>0.5</FractionFaecesAdded>
             </SurfaceOrganicMatter>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <MicroClimate>
               <Name>MicroClimate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -78505,13 +78154,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-	      <Plant>
-	        <Name>Wheat</Name>
-	        <IncludeInDocumentation>false</IncludeInDocumentation>
-	        <ResourceName>Wheat</ResourceName>
-	        <CropType>Wheat</CropType>
-	        <SowingDate>0001-01-01T00:00:00</SowingDate>
-	      </Plant>
+          <Plant>
+            <Name>Wheat</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <ResourceName>Wheat</ResourceName>
+            <CropType>Wheat</CropType>
+          </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -79851,13 +79499,12 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
             </Soil>
-	        <Plant>
-	          <Name>Wheat</Name>
-	          <IncludeInDocumentation>false</IncludeInDocumentation>
-	          <ResourceName>Wheat</ResourceName>
-	          <CropType>Wheat</CropType>
-	          <SowingDate>0001-01-01T00:00:00</SowingDate>
-	        </Plant>
+            <Plant>
+              <Name>Wheat</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ResourceName>Wheat</ResourceName>
+              <CropType>Wheat</CropType>
+            </Plant>
             <Report>
               <Name>DailyReport</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -83561,7 +83208,7 @@ namespace Models
             <Name>TillageOperations</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Script>
-              <Crop>wheat</Crop>
+              <Crop>Wheat</Crop>
               <TillDate>16-may</TillDate>
               <IncorpFraction>0.95</IncorpFraction>
             </Script>
@@ -83676,14 +83323,13 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-	      <Plant>
-	        <Name>Wheat</Name>
-	        <IncludeInDocumentation>false</IncludeInDocumentation>
-	        <ResourceName>Wheat</ResourceName>
-	        <CropType>Wheat</CropType>
-	        <SowingDate>0001-01-01T00:00:00</SowingDate>
-	      </Plant>
-	      <MicroClimate>
+          <Plant>
+            <Name>Wheat</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <ResourceName>Wheat</ResourceName>
+            <CropType>Wheat</CropType>
+          </Plant>
+          <MicroClimate>
             <Name>MicroClimate</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <a_interception>0</a_interception>
@@ -83703,7 +83349,7 @@ namespace Models
             <Name>Harvesting</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Script>
-              <Crop>wheat</Crop>
+              <Crop>Wheat</Crop>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
