@@ -334,16 +334,16 @@ namespace Models
                 foreach (DataRow row in messages.Rows)
                 {
                     // Work out the column 1 text.
-                    string modelName = (string)row[4];
+                    string modelName = (string)row["ComponentName"];
 
                     string col1Text;
-                    if (row[6].GetType() == typeof(DateTime))
+                    if (row["Date"].GetType() == typeof(DateTime))
                     {
-                        DateTime date = (DateTime)row[5];
+                        DateTime date = (DateTime)row["Date"];
                         col1Text = date.ToString("yyyy-MM-dd") + " " + modelName;
                     }
                     else
-                        col1Text = row[6].ToString();
+                        col1Text = row["Date"].ToString();
 
                     // If the date and model name have changed then write a row.
                     if (col1Text != previousCol1Text)
@@ -361,8 +361,8 @@ namespace Models
                         col1Text = null;
                     }
 
-                    string message = (string)row[6];
-                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row[7].ToString());
+                    string message = (string)row["Message"];
+                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row["MessageType"].ToString());
 
                     if (errorLevel == Simulation.ErrorLevel.Error)
                     {

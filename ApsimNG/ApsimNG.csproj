@@ -182,6 +182,7 @@
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\HoverPointArgs.cs" />
+    <Compile Include="EventArguments\IntellisenseItemSelectedArgs.cs" />
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
@@ -293,6 +294,7 @@
     <Compile Include="Views\InitialWaterView.cs" />
     <Compile Include="Views\CLEMFileCropView.cs" />
     <Compile Include="Views\InputView.cs" />
+    <Compile Include="Views\IntellisenseView.cs" />
     <Compile Include="Views\LegendView.cs" />
     <Compile Include="Views\ListBoxView.cs" />
     <Compile Include="Views\ListButtonView.cs" />
@@ -723,6 +725,10 @@
     </Reference>
     <Reference Include="ExcelNumberFormat, Version=1.0.3.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelNumberFormat.1.0.3\lib\net20\ExcelNumberFormat.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FastMember.Signed, Version=1.0.0.9, Culture=neutral, PublicKeyToken=9e8f22703bef9a29, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.Signed.1.1.0\lib\net40\FastMember.Signed.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">

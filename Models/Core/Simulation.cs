@@ -14,6 +14,7 @@ using Models.Core.Runners;
 namespace Models.Core
 {
     /// <summary>
+    /// # [Name]
     /// A simulation model
     /// </summary>
     [ValidParent(ParentType = typeof(Simulations))]
@@ -127,7 +128,7 @@ namespace Models.Core
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null)
+        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
             hasRun = false;
         }

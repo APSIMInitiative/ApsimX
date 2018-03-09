@@ -16,7 +16,7 @@ namespace Models.Storage
         public class Column
         {
             public string Name { get; private set; }
-            public string Units { get; private set; }
+            public string Units { get; set; }
             public string SQLiteDataType { get; set; }
 
             /// <summary>Constructor</summary>
@@ -39,9 +39,6 @@ namespace Models.Storage
 
         /// <summary>A set of column names for quickly checking if columns exist in this table.</summary>
         private SortedSet<string> sortedColumnNames = new SortedSet<string>();
-
-        /// <summary>A list of simulations that we have already written data for</summary>
-        private List<int> simulationsWithDataWritten = new List<int>();
 
         /// <summary>Have we checked for a simulation ID column?</summary>
         private bool haveCheckedForSimulationIDColumn = false;
@@ -68,13 +65,6 @@ namespace Models.Storage
             Name = tableName;
             Columns = new List<Column>();
             Columns.Add(new Column("CheckpointID", null, "integer"));
-        }
-
-
-        /// <summary>Simulations are about to start running</summary>
-        public void BeginRun()
-        {
-            simulationsWithDataWritten.Clear();
         }
 
         /// <summary>Add a row to our list of rows to write</summary>
@@ -191,8 +181,8 @@ namespace Models.Storage
             {
                 List<string> columnNames = new List<string>();
                 List<object[]> values = new List<object[]>();
-                // If the table exists, make sure it has the required columns, otherwise create the table
 
+                // If the table exists, make sure it has the required columns, otherwise create the table
                 lock (lockObject)
                 {
                     int numRows = RowsToWrite.Count;
@@ -206,25 +196,8 @@ namespace Models.Storage
                     RowsToWrite.RemoveRange(0, numRows);
                 }
 
-                // If this is the first time we've written data for this collection of simulations then clear old data
-                var uniqueSimulationIDs = GetValuesFromRows(values, "SimulationID");
-                var simulationIDsWithOldData = uniqueSimulationIDs.Except(simulationsWithDataWritten);
-                if (simulationIDsWithOldData.Count() > 0)
-                {
-                    int checkpointID = GetValueFromRow(values[0], "CheckpointID");
-                    if (checkpointID > 0)
-                    {
-                        string queryString = "(" + StringUtilities.Build(simulationIDsWithOldData, ",") + ")";
-                        connection.ExecuteNonQuery("DELETE FROM " + Name +
-                                                   " WHERE SimulationID IN " + queryString +
-                                                   " AND CheckpointID = " + checkpointID);
-                        simulationsWithDataWritten.AddRange(simulationIDsWithOldData);
-                    }
-                }
-
                 // Create an insert query
                 preparedInsertQuery = CreateInsertQuery(connection, columnNames);
-
                 for (int rowIndex = 0; rowIndex < values.Count; rowIndex++)
                     connection.BindParametersAndRunQuery(preparedInsertQuery, values[rowIndex]);
             }
@@ -240,8 +213,14 @@ namespace Models.Storage
         {
             foreach (Column column in table.Columns)
             {
-                if (Columns.Find(c => c.Name == column.Name) == null)
+                Column foundColumn = Columns.Find(c => c.Name == column.Name);
+                if (foundColumn == null)
                     Columns.Add(column);
+                else
+                {
+                    foundColumn.Units = column.Units;
+                    foundColumn.SQLiteDataType = column.SQLiteDataType;
+                }
             }
         }
 
