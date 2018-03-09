@@ -361,6 +361,7 @@
       <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today</string>
+        <string>[Maize].Phenology.Photoperiod.Value()</string>
         <string>[Maize].Phenology.CurrentStageName</string>
         <string>[Maize].AboveGround.Wt</string>
         <string>[Maize].AboveGround.N</string>
@@ -50187,6 +50188,29 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <Series>
+        <Name>Photoperiod</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-990142</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>WURReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Maize.Phenology.Photoperiod.Value()</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
@@ -53014,5 +53038,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>283</ExplorerWidth>
 </Simulations>
