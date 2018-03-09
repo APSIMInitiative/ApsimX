@@ -615,6 +615,7 @@
     <Compile Include="CLEM\CLEMModel.cs" />
     <Compile Include="CLEM\ZoneCLEM.cs" />
     <Compile Include="Zones\CircularZone.cs" />
+    <Compile Include="Zones\StripCropZone.cs" />
     <Compile Include="Zones\RectangularZone.cs" />
   </ItemGroup>
   <ItemGroup>

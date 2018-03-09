@@ -12,6 +12,7 @@
     using ApsimNG.Cloud;
     using Microsoft.Azure.Batch.Common;
     using Models.Core;
+    using System.Linq;
 
     public class NewAzureJobPresenter : IPresenter, INewCloudJobPresenter
     {        
@@ -122,8 +123,10 @@
             
             AzureSettings.Default["OutputDir"] = jp.OutputDir;
             AzureSettings.Default.Save();
-            
-            submissionWorker.RunWorkerAsync(jp);
+            if (batchClient == null)
+                GetCredentials(null, null);
+            else
+                submissionWorker.RunWorkerAsync(jp);
         }
 
         /// <summary>
@@ -234,21 +237,21 @@
             string xml = "";
             foreach (Simulation sim in Runner.AllSimulations(model))
             {
-                path = jp.ModelPath + "\\" + sim.Name + ".apsimx";
+                path = Path.Combine(jp.ModelPath, sim.Name + ".apsimx");
                 // if weather file is not in the same directory as the .apsimx file, display an error then abort
                 foreach (var child in sim.Children)
                 {
                     if (child is Models.Weather)
                     {
-                        string childPath = ((Models.Weather)sim.Children[0]).FileName;                        
+                        string childPath = sim.Children.OfType<Models.Weather>().ToList()[0].FileName;
                         if (Path.GetDirectoryName(childPath) != "")
                         {
-                            ShowError(childPath + " must be in the same directory as the .apsimx file" + sim.FileName != null ? " (" + Path.GetDirectoryName(sim.FileName) + ")" : "");
+                            ShowError(childPath + " must be in the same directory as the .apsimx file" + (sim.FileName != null ? " (" + Path.GetDirectoryName(sim.FileName) + ")" : ""));
                             view.Status = "Cancelled";
                             return;
                         }
-                        string sourcePath = ((Models.Weather)sim.Children[0]).FullFileName;
-                        string destPath = Path.Combine(jp.ModelPath, ((Models.Weather)sim.Children[0]).FileName);
+                        string sourcePath = sim.Children.OfType<Models.Weather>().ToList()[0].FullFileName;
+                        string destPath = Path.Combine(jp.ModelPath, sim.Children.OfType<Models.Weather>().ToList()[0].FileName);
                         if (!File.Exists(destPath)) File.Copy(sourcePath, destPath);
                     }
                 }                
@@ -650,7 +653,21 @@
                 storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
                 uploader = new FileUploader(storageAccount);
                 var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
-                batchClient = BatchClient.Open(sharedCredentials);
+                try
+                {
+                    batchClient = BatchClient.Open(sharedCredentials);
+                }
+                catch (UriFormatException err)
+                {
+                    ShowError("Error opening Azure Batch client: credentials are invalid.");
+                    AzureCredentialsSetup cred = new AzureCredentialsSetup();
+                    cred.Finished += GetCredentials;
+                }
+                catch (Exception ex)
+                {
+                    ShowError(ex.ToString());
+                }
+                
             } else
             {
                 // ask user for a credentials file
@@ -664,7 +681,8 @@
         /// </summary>
         public void CancelJobSubmission()
         {
-            submissionWorker.CancelAsync();
+            if (submissionWorker != null)
+                submissionWorker.CancelAsync();
             explorerPresenter.HideRightHandPanel();
         }
     }

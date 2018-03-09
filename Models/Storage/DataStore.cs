@@ -14,6 +14,7 @@
     using System.Xml.Serialization;
 
     /// <summary>
+    /// # [Name]
     /// A storage service for reading and writing to/from a SQLITE database.
     /// </summary>
     [Serializable]
@@ -173,16 +174,14 @@
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null)
+        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null,
+                                IEnumerable<string> simulationNamesBeingRun = null)
         {
-            // Tell all tables we're about to begin simulation runs.
-            tables.ForEach(table => table.BeginRun());
-
             stoppingWriteToDB = false;
             if (knownSimulationNames != null)
             {
                 Open(readOnly: false);
-                CleanupDB(knownSimulationNames);
+                CleanupDB(knownSimulationNames, simulationNamesBeingRun);
             }
             StartDBWriteThread();
         }
@@ -193,7 +192,6 @@
         {
             StopDBWriteThread();
 
-            WriteUnitsTable();
             Open(readOnly: true);
 
             // Cleanup unused fields.
@@ -320,6 +318,40 @@
                     return "(" + column.Units + ")";
             }
             return null;
+        }
+
+        /// <summary>
+        /// Add units to table. Removes old units first.
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="columnNames">The column names to add</param>
+        /// <param name="columnUnits">The column units to add</param>
+        public void AddUnitsForTable(string tableName, List<string> columnNames, List<string> columnUnits)
+        {
+            Table foundTable = tables.Find(t => t.Name == tableName);
+            if (foundTable != null)
+            {
+                for (int i = 0; i < columnNames.Count; i++)
+                {
+                    Table.Column column = foundTable.Columns.Find(c => c.Name == columnNames[i]);
+                    if (column != null)
+                        column.Units = columnUnits[i];
+                }
+            }
+
+            connection.ExecuteNonQuery("DELETE FROM _Units WHERE TableName = '" + tableName + "'");
+
+            string sql = "INSERT INTO _Units (TableName, ColumnHeading, Units) " +
+                           "VALUES (?, ?, ?)";
+            IntPtr statement = connection.Prepare(sql);
+            for (int i = 0; i < columnNames.Count; i++)
+            {
+                connection.BindParametersAndRunQuery(statement, new object[] {
+                                                     tableName,
+                                                     columnNames[i],
+                                                     columnUnits[i]});
+            }
+            connection.Finalize(statement);
         }
 
         /// <summary>
@@ -679,12 +711,15 @@
             }
             catch (Exception err)
             {
-                // Console.WriteLine(err.ToString());
                 string msg = "Error writing to database";
                 if (dataToWriteToDB != null)
                     msg += " \"" + dataToWriteToDB.Name + "\"";
+                if (Char.IsNumber(dataToWriteToDB.Name[0]))
+                    msg += ": sheet name must not begin with a number!";
                 throw new Exception(msg, err);
             }
+
+            WriteUnitsTable();
 
             foreach (Table table in dataToWrite)
             {
@@ -702,10 +737,10 @@
         private void WriteUnitsTable()
         {
             connection.ExecuteNonQuery("BEGIN");
-
-            connection.ExecuteQuery("DELETE FROM _Units");
             foreach (Table table in dataToWrite)
             {
+                connection.ExecuteQuery("DELETE FROM _Units WHERE TableName = '" + table.Name + "'");
+
                 foreach (Table.Column column in table.Columns)
                 {
                     if (column.Units != null)
@@ -831,22 +866,28 @@
 
         /// <summary>Remove all simulations from the database that don't exist in 'simulationsToKeep'</summary>
         /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file</param>
-        private void CleanupDB(IEnumerable<string> knownSimulationNames)
+        /// <param name="simulationNamesBeingRun">The names of the simulations about to be run</param>
+        private void CleanupDB(IEnumerable<string> knownSimulationNames, IEnumerable<string> simulationNamesBeingRun = null)
         {
             // Get a list of simulation names that are in the .db but we know nothing about them
             // i.e. they are old and no longer needed.
-            var unknownSimulationNames = simulationIDs.Keys.SkipWhile(simName => knownSimulationNames.Contains(simName));
+            var unknownSimulationNames = simulationIDs.Keys.Where(simName => !knownSimulationNames.Contains(simName));
 
-            // Delete the unknown simulation names from the simulations table.
             if (unknownSimulationNames.Count() > 0)
             {
+                // Delete the unknown simulation names from the simulations table.
                 ExecuteDeleteQuery("DELETE FROM _Simulations WHERE [Name] IN (", unknownSimulationNames, ")");
 
-                // Delete the unknown simulation data from all data tables 
+                // Delete all data for simulations we know nothing about - even from checkpoints
                 foreach (Table table in tables)
                     if (table.Columns.Find(c => c.Name == "SimulationID") != null)
                         ExecuteDeleteQueryUsingIDs("DELETE FROM " + table.Name + " WHERE [SimulationID] IN (", unknownSimulationNames, ")");
             }
+            // Delete all data that we are about to run,
+            int currentCheckpointID = checkpointIDs["Current"];
+            foreach (Table table in tables)
+                if (table.Columns.Find(c => c.Name == "SimulationID") != null)
+                    ExecuteDeleteQueryUsingIDs("DELETE FROM " + table.Name + " WHERE [SimulationID] IN (", simulationNamesBeingRun, ") AND CheckpointID=" + currentCheckpointID);
 
             // Make sure each known simulation name has an ID in the simulations table in the .db
             ExecuteInsertQuery("_Simulations", "Name", knownSimulationNames);

@@ -33,7 +33,7 @@
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null)
+        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
             Initialise();
         }
@@ -309,7 +309,7 @@
         /// <returns></returns>
         private string GetName(List<FactorValue> factors)
         {
-            string str = "";
+            string str = Name;
             foreach (FactorValue factor in factors)
             {
                 str += factor.Name;

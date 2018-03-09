@@ -18,10 +18,10 @@ namespace ApsimNG.Cloud
 
         public static PoolSettings FromConfiguration()
         {
-            object maxTasks = Properties.Settings.Default["PoolMaxTasksPerVM"];
-            object name = Properties.Settings.Default["PoolName"];
-            object vmCount = Properties.Settings.Default["PoolVMCount"];
-            object size = Properties.Settings.Default["PoolVMSize"];
+            object maxTasks = AzureSettings.Default["PoolMaxTasksPerVM"];
+            object name = AzureSettings.Default["PoolName"];
+            object vmCount = AzureSettings.Default["PoolVMCount"];
+            object size = AzureSettings.Default["PoolVMSize"];
 
             return new PoolSettings
             {
