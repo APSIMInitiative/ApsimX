@@ -211,9 +211,9 @@ namespace UserInterface.Views
             if ((y + completionForm.HeightRequest) > yres)
                 // We are very close to the bottom of the screen
                 // Move the popup one line higher as well, to room allow for the input box in the popup.
-                y -= (completionForm.HeightRequest + lineHeight);
+                y -= completionForm.HeightRequest + lineHeight;
 
-            return showAtCoordinates(x, y);
+            return showAtCoordinates(Math.Max(0, x), Math.Max(0, y));
         }
 
         /// <summary>

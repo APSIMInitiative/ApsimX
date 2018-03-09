@@ -224,7 +224,7 @@ namespace UserInterface.Presenters
         /// <param name="askToSave">Prompt to save</param>
         public void Close(bool askToSave)
         {
-            this.view.Close();
+            this.view.Close(askToSave);
         }
 
         /// <summary>Ask the user a question</summary>

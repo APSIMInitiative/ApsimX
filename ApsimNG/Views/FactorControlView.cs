@@ -98,6 +98,16 @@ namespace UserInterface.Views
         private Button btnMaxSims;
 
         /// <summary>
+        /// Context menu that appears after the user right clicks on a simulation.
+        /// </summary>
+        private Menu contextMenu;
+
+        /// <summary>
+        /// Context menu option to run the currently selected simulations.
+        /// </summary>
+        private MenuItem run;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="owner"></param>
@@ -124,6 +134,7 @@ namespace UserInterface.Views
 
             Type[] types = new Type[columnNames.Count];
             tree = new TreeView();
+            tree.ButtonPressEvent += TreeClicked;
             columns = new List<TreeViewColumn>();
             cells = new List<CellRendererText>();
 
@@ -224,7 +235,11 @@ namespace UserInterface.Views
                 
                 primaryContainer.ShowAll();
             });
-            
+
+            contextMenu = new Menu();
+            run = new MenuItem("Run this simulation");
+            run.ButtonPressEvent += RunSim;
+            contextMenu.Add(run);
         }
 
         /// <summary>
@@ -257,6 +272,22 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Gets a list of names of all currently selected simulations (rows) in the TreeView.
+        /// </summary>
+        /// <returns></returns>
+        private List<string> GetSelectedSimNames()
+        {
+            List<string> sims = new List<string>();
+            TreeIter iter;
+            foreach(TreePath path in tree.Selection.GetSelectedRows())
+            {
+                tree.Model.GetIter(out iter, path);
+                sims.Add((string)tree.Model.GetValue(iter, 0));
+            }
+            return sims;
+        }
+
+        /// <summary>
         /// Event handler for Enable button's click event. 
         /// Passes the names of the currently selected rows to the presenter, and asks it to change their status to enabled.
         /// </summary>
@@ -277,6 +308,11 @@ namespace UserInterface.Views
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
         private void ColWidthChange(object sender, EventArgs e)
         {
             TreeViewColumn col = sender as TreeViewColumn;
@@ -289,9 +325,71 @@ namespace UserInterface.Views
             });
         }
 
+        /// <summary>
+        /// Sets the maximum number of simulations to be displayed in the table.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
         private void BtnMaxSims_Click(object sender, EventArgs e)
         {
             Presenter.SetMaxNumSims(entryMaxSims.Text);
+        }
+
+        /// <summary>
+        /// Event handler for clicking on the TreeView. 
+        /// Shows the context menu (if and only if the click is a right click).
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
+        [GLib.ConnectBefore]
+        private void TreeClicked(object sender, ButtonPressEventArgs e)
+        {
+            if (e.Event.Button == 3) // right click
+            {
+                contextMenu.Remove(run);
+                string txt = "";
+
+                TreePath path;
+                tree.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path);
+
+                // By default, Gtk will un-select the selected rows when a normal (non-shift/ctrl) click is registered.
+                // Setting e.Retval to true will stop the default Gtk ButtonPress event handler from being called after 
+                // we return from this handler, which in turn means that the rows will not be deselected.
+                e.RetVal = tree.Selection.GetSelectedRows().Contains(path);
+                    
+                // Get the grammar right
+                if (tree.Selection.CountSelectedRows() == 1 || !(bool)e.RetVal)
+                {
+                    txt = "Run this simulation";
+                }
+                else
+                {
+                    txt = "Run these simulations";
+                }
+
+                run = new MenuItem(txt);
+                run.ButtonPressEvent += RunSim;
+                contextMenu.Add(run);
+                contextMenu.ShowAll();
+                contextMenu.Popup();
+                
+            }
+        }
+
+        /// <summary>
+        /// Event handler for selecting 'run this simulation' from the context menu.
+        /// Runs the selected simulations.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [GLib.ConnectBefore]
+        private void RunSim(object sender, ButtonPressEventArgs e)
+        {
+            contextMenu.HideAll();
+            // process everything in the Gtk event queue so the context menu disappears immediately.
+            while (GLib.MainContext.Iteration()) ;
+            List<string> names = GetSelectedSimNames();
+            Presenter.RunSims(names);
         }
     }
 }

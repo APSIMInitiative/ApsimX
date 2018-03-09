@@ -152,7 +152,7 @@ namespace ApsimNG.Cloud
         /// <param name="e"></param>
         private void LoadCredentialsFromFile(object sender, EventArgs e)
         {
-            string path = UserInterface.ViewBase.AskUserForFileName("Select a licence file", "Azure Licence file (*.lic) | *.lic", FileChooserAction.Open);            
+            string path = UserInterface.ViewBase.AskUserForFileName("Select a licence file", "Azure Licence file (*.lic) | *.lic", FileChooserAction.Open, (string)AzureSettings.Default["AzureLicenceFilePath"]);
             if (path != "" && path != null)
             {
                 AzureSettings.Default["AzureLicenceFilePath"] = path;
