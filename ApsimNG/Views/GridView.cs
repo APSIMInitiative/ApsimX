@@ -163,8 +163,8 @@ namespace UserInterface.Views
                 GetCurrentCell.Value = beforeCaret + e.ItemSelected + afterCaret;
                 gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), gridview.GetColumn(GetCurrentCell.ColumnIndex), true);
                 (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
-
                 while (GLib.MainContext.Iteration()) ;
+                valueBeforeEdit = string.Empty;
             }
             catch (Exception ex)
             {

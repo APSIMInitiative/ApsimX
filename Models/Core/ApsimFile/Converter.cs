@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 26; } }
+        public static int LastestVersion { get { return 27; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -799,6 +799,27 @@ namespace Models.Core.ApsimFile
         {
             foreach (XmlNode perennialLeaf in XmlUtilities.FindAllRecursivelyByType(node, "PerennialLeaf"))
                 ConverterUtilities.AddConstantFuntionIfNotExists(perennialLeaf, "LeafDevelopmentRate", "1.0");
+        }
+
+
+        /// <summary>
+        /// Upgrades to version 27. Some variables in Leaf became ints rather than doubles. Need to add
+        /// convert.ToDouble();
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion27(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                string replacePattern = @"Convert.ToDouble(zone.Get(${variable}))";
+                string[] variableNames = new string[] { "ExpandedCohortNo", "AppearedCohortNo", "GreenCohortNo", "SenescingCohortNo" };
+                foreach (string variableName in variableNames)
+                {
+                    string pattern = @"\(double\)zone.Get\((?<variable>\"".+\.Leaf\." + variableName + @"\"")\)";
+                    ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, pattern, replacePattern, null);
+                }
+            }
         }
     }
 }
