@@ -101,9 +101,17 @@ namespace Models.PMF.Organs
 
         /// <summary>The amount of biomass detached every day</summary>
         [XmlIgnore]
-        public Biomass Detached { get; set; }
+        public Biomass Detached = new Biomass();
 
         #region Leaf Interface
+        /// <summary>
+        /// Number of initiated cohorts that have not appeared yet
+        /// </summary>
+        public int ApicalCohortNo { get; set; }
+        /// <summary>
+        /// reset leaf numbers
+        /// </summary>
+        public void Reset() { }
         /// <summary></summary>
         public bool CohortsInitialised { get; set; }
         /// <summary></summary>
@@ -111,14 +119,16 @@ namespace Models.PMF.Organs
         /// <summary></summary>
         public int CohortsAtInitialisation { get; set; }
         /// <summary></summary>
-        public double InitialisedCohortNo { get; set; }
-        /// <summary></summary>
-        public double AppearedCohortNo { get; set; }
+        public int AppearedCohortNo { get; set; }
         /// <summary></summary>
         public double PlantAppearedLeafNo { get; set; }
         /// <summary></summary>
         /// <param name="proprtionRemoved"></param>
         public void DoThin(double proprtionRemoved) { }
+        /// <summary></summary>
+        public int InitialisedCohortNo { get; set; }
+        /// <summary></summary>
+        public void RemoveHighestLeaf() { }
         #endregion
 
         #region Canopy interface
