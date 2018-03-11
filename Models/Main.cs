@@ -11,12 +11,18 @@ namespace Models
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>Class to hold a static main entry point.</summary>
     public class Program
     {
         private static string errors = string.Empty;
+
+        /// <summary>
+        /// List of files to be run.
+        /// </summary>
+        private static List<string> files = new List<string>();
 
         /// <summary>
         /// Main program entry point.
@@ -40,7 +46,7 @@ namespace Models
                     fileName = args[0];
 
                 if (args.Length < 1 || args.Length > 4)
-                    throw new Exception("Usage: ApsimX ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests]");
+                    throw new Exception("Usage: ApsimX ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv]");
 
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
@@ -59,6 +65,17 @@ namespace Models
                     jobRunner = new JobRunnerSync();
                 else
                     jobRunner = new JobRunnerAsync();
+                if (args.Select(arg => arg.ToLower()).Contains("/csv"))
+                {
+                    string dir = Path.GetDirectoryName(fileName);
+                    if (dir == "")
+                        dir = Directory.GetCurrentDirectory();
+                    files = Directory.GetFiles(
+                        dir,
+                        Path.GetFileName(fileName),
+                        args.Contains("/Recurse") ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToList();
+                    jobRunner.AllJobsCompleted += GenerateCsvFiles;
+                }
                 jobRunner.JobCompleted += OnJobCompleted;
                 jobRunner.AllJobsCompleted += OnAllJobsCompleted;
                 jobRunner.Run(job, wait: true);
@@ -83,6 +100,23 @@ namespace Models
             }
 
             return exitCode;
+        }
+
+        /// <summary>
+        /// Generates a .csv file for each .apsimx file that has been run.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void GenerateCsvFiles(object sender, AllCompletedArgs e)
+        {
+            foreach (string file in files)
+            {
+                string fileName = Path.ChangeExtension(file, ".db");
+                Storage.DataStore storage = new Storage.DataStore(fileName);
+                storage.Open(true);
+                Report.Report.WriteAllTables(storage, fileName);
+                Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
+            }
         }
 
         /// <summary>Job has completed</summary>

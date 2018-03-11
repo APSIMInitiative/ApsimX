@@ -764,7 +764,7 @@
         /// <summary>Open the SQLite database.</summary>
         /// <param name="readOnly">Open for readonly access?</param>
         /// <returns>True if file was successfully opened</returns>
-        private bool Open(bool readOnly)
+        public bool Open(bool readOnly)
         {
             if (connection != null && !connection.IsOpen)
                 connection = null;
