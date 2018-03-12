@@ -5182,7 +5182,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Valetta</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command />
+            <Command>[Phenology].PpSensitivity.FixedValue = 1</Command>
           </Cultivar>
           <Cultivar>
             <Name>Vortex</Name>
@@ -11201,8 +11201,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>10</InitialRootDepth>
                   <Cultivar>Booma</Cultivar>
+                  <InitialRootDepth>10</InitialRootDepth>
                   <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -14183,8 +14183,8 @@ This was a cultivar evaluation trial conducted in Lincoln. Eight cultivars were 
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2010-08-26</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -16227,9 +16227,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
+                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -18535,9 +18535,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2014-10-15</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -20359,55 +20359,6 @@ namespace Models
                   <double>0.38</double>
                 </SAT>
               </Water>
-              <Sample>
-                <Name>InitialN</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <NO3>
-                  <double>30</double>
-                  <double>15</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                </NO3>
-                <NH4>
-                  <double>5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.27</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.25</double>
-                  <double>0.24</double>
-                  <double>0.27</double>
-                  <double>0.27</double>
-                  <double>0.21</double>
-                </SW>
-                <NO3Units>kgha</NO3Units>
-                <NH4Units>kgha</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <Manager>
                 <Name>ClimateControl</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -20513,10 +20464,39 @@ namespace Models
                   <Action>[Irrigation].Apply(36);</Action>
                 </Operation>
               </Operations>
+              <Sample>
+                <Name>InitialWater</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Thickness>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <SW>
+                  <double>0.32</double>
+                  <double>0.3</double>
+                  <double>0.29</double>
+                  <double>0.33</double>
+                  <double>0.31</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.23</double>
+                </SW>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[Water]</string>
-                <string>[InitialN]</string>
+                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -20566,55 +20546,6 @@ namespace Models
                   <Action>[Irrigation].Apply(35);</Action>
                 </Operation>
               </Operations>
-              <Sample>
-                <Name>InitialN</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <NO3>
-                  <double>30</double>
-                  <double>15</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                </NO3>
-                <NH4>
-                  <double>5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <Manager>
                 <Name>ClimateControl</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -20762,11 +20693,40 @@ namespace Models
                   <double>0.38</double>
                 </SAT>
               </Water>
+              <Sample>
+                <Name>InitialWater</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Thickness>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <SW>
+                  <double>0.32</double>
+                  <double>0.3</double>
+                  <double>0.29</double>
+                  <double>0.33</double>
+                  <double>0.31</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.23</double>
+                </SW>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
                 <string>[Water]</string>
-                <string>[InitialN]</string>
+                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -20869,55 +20829,6 @@ namespace Models
 }
 ]]></Code>
               </Manager>
-              <Sample>
-                <Name>InitialN</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <NO3>
-                  <double>30</double>
-                  <double>15</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                </NO3>
-                <NH4>
-                  <double>5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
@@ -21016,11 +20927,40 @@ namespace Models
                   <double>0.38</double>
                 </SAT>
               </Water>
+              <Sample>
+                <Name>InitialWater</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Thickness>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <SW>
+                  <double>0.32</double>
+                  <double>0.3</double>
+                  <double>0.29</double>
+                  <double>0.33</double>
+                  <double>0.31</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.23</double>
+                </SW>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
                 <string>[Water]</string>
-                <string>[InitialN]</string>
+                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -21123,55 +21063,6 @@ namespace Models
 }
 ]]></Code>
               </Manager>
-              <Sample>
-                <Name>InitialN</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <NO3>
-                  <double>30</double>
-                  <double>15</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                </NO3>
-                <NH4>
-                  <double>5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
@@ -21270,11 +21161,40 @@ namespace Models
                   <double>0.38</double>
                 </SAT>
               </Water>
+              <Sample>
+                <Name>InitialWater</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Thickness>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <SW>
+                  <double>0.32</double>
+                  <double>0.3</double>
+                  <double>0.29</double>
+                  <double>0.33</double>
+                  <double>0.31</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.23</double>
+                </SW>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
                 <string>[Water]</string>
-                <string>[InitialN]</string>
+                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -21361,55 +21281,6 @@ namespace Models
 }
 ]]></Code>
               </Manager>
-              <Sample>
-                <Name>InitialN</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <NO3>
-                  <double>30</double>
-                  <double>15</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                </NO3>
-                <NH4>
-                  <double>5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
@@ -21508,11 +21379,40 @@ namespace Models
                   <double>0.38</double>
                 </SAT>
               </Water>
+              <Sample>
+                <Name>InitialWater</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Thickness>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <SW>
+                  <double>0.32</double>
+                  <double>0.3</double>
+                  <double>0.29</double>
+                  <double>0.33</double>
+                  <double>0.31</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.23</double>
+                </SW>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
                 <string>[Water]</string>
-                <string>[InitialN]</string>
+                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -21607,55 +21507,6 @@ namespace Models
 }
 ]]></Code>
               </Manager>
-              <Sample>
-                <Name>InitialN</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <NO3>
-                  <double>30</double>
-                  <double>15</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                  <double>5</double>
-                </NO3>
-                <NH4>
-                  <double>5</double>
-                  <double>0.5</double>
-                  <double>0.5</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
@@ -21754,11 +21605,40 @@ namespace Models
                   <double>0.38</double>
                 </SAT>
               </Water>
+              <Sample>
+                <Name>InitialWater</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Thickness>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <SW>
+                  <double>0.32</double>
+                  <double>0.3</double>
+                  <double>0.29</double>
+                  <double>0.33</double>
+                  <double>0.31</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.23</double>
+                </SW>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
                 <string>[Water]</string>
-                <string>[InitialN]</string>
+                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -21821,40 +21701,6 @@ namespace Models
               </Analysis>
               <Water>
                 <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.157</double>
-                    <double>0.173</double>
-                    <double>0.173</double>
-                    <double>0.165</double>
-                    <double>0.165</double>
-                    <double>0.115</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
                   <double>100</double>
@@ -22087,16 +21933,6 @@ namespace Models
                   <double>0</double>
                   <double>0</double>
                 </NH4>
-                <SW>
-                  <double>0.27</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.25</double>
-                  <double>0.24</double>
-                  <double>0.27</double>
-                  <double>0.27</double>
-                  <double>0.21</double>
-                </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>kgha</NH4Units>
                 <SWUnits>Volumetric</SWUnits>
@@ -22107,6 +21943,16 @@ namespace Models
                 <Name>CERESSoilTemperature</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </CERESSoilTemperature>
+              <Sample>
+                <Name>InitialWater</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Thickness />
+                <NO3Units>kgha</NO3Units>
+                <NH4Units>kgha</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <RecordNumber>0</RecordNumber>
               <Site>-</Site>
@@ -22926,7 +22772,7 @@ namespace Models
         <Folder>
           <Name>SoilWater</Name>
           <Graph>
-            <Name>0_15cm</Name>
+            <Name>0_20cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -22993,7 +22839,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>15_30cm</Name>
+            <Name>20_40cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -23060,7 +22906,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>30_60cm</Name>
+            <Name>40_60cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -23127,7 +22973,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>60_90cm</Name>
+            <Name>60_80cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -23194,7 +23040,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>90_120cm</Name>
+            <Name>80_100cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -23261,7 +23107,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>120_150cm</Name>
+            <Name>100_120cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -23328,7 +23174,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>150_180cm</Name>
+            <Name>120_140cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -23370,6 +23216,73 @@ namespace Models
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Volumetric soil water (mm)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>140_160cm</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -23586,8 +23499,8 @@ This is a water response trial conducted inside and outside the rain shelter at 
                   <double>200</double>
                 </Thickness>
                 <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
+                  <double>1</double>
+                  <double>1.15</double>
                   <double>1.3</double>
                   <double>1.3</double>
                   <double>1.3</double>
@@ -23637,7 +23550,7 @@ This is a water response trial conducted inside and outside the rain shelter at 
                 </SAT>
               </Water>
               <Sample>
-                <Name>InitialN</Name>
+                <Name>InitialWater</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
                   <double>100</double>
@@ -23649,26 +23562,6 @@ This is a water response trial conducted inside and outside the rain shelter at 
                   <double>100</double>
                   <double>300</double>
                 </Thickness>
-                <NO3>
-                  <double>23</double>
-                  <double>18</double>
-                  <double>15</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1</double>
-                </NO3>
-                <NH4>
-                  <double>2.2</double>
-                  <double>2</double>
-                  <double>1.8</double>
-                  <double>1.4</double>
-                  <double>1</double>
-                  <double>0.9</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                </NH4>
                 <SW>
                   <double>0.27</double>
                   <double>0.3</double>
@@ -23688,7 +23581,7 @@ This is a water response trial conducted inside and outside the rain shelter at 
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[Water]</string>
-                <string>[InitialN]</string>
+                <string>[InitialWater]</string>
               </Specifications>
             </Factor>
             <Factor>
@@ -23809,8 +23702,8 @@ This is a water response trial conducted inside and outside the rain shelter at 
                   <double>200</double>
                 </Thickness>
                 <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
+                  <double>1</double>
+                  <double>1.15</double>
                   <double>1.3</double>
                   <double>1.3</double>
                   <double>1.3</double>
@@ -23909,7 +23802,7 @@ namespace Models
 ]]></Code>
               </Manager>
               <Sample>
-                <Name>InitialN</Name>
+                <Name>InitialWater</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
                   <double>100</double>
@@ -23921,35 +23814,15 @@ namespace Models
                   <double>100</double>
                   <double>300</double>
                 </Thickness>
-                <NO3>
-                  <double>23</double>
-                  <double>18</double>
-                  <double>15</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1</double>
-                </NO3>
-                <NH4>
-                  <double>2.2</double>
-                  <double>2</double>
-                  <double>1.8</double>
-                  <double>1.4</double>
-                  <double>1</double>
-                  <double>0.9</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                </NH4>
                 <SW>
-                  <double>0.28</double>
                   <double>0.27</double>
-                  <double>0.25</double>
-                  <double>0.27</double>
-                  <double>0.31</double>
-                  <double>0.25</double>
+                  <double>0.3</double>
                   <double>0.28</double>
-                  <double>0.14</double>
+                  <double>0.25</double>
+                  <double>0.24</double>
+                  <double>0.27</double>
+                  <double>0.27</double>
+                  <double>0.21</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>kgha</NH4Units>
@@ -23961,7 +23834,7 @@ namespace Models
               <Specifications>
                 <string>[IrrigationEvents]</string>
                 <string>[Water]</string>
-                <string>[InitialN]</string>
+                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -24083,8 +23956,8 @@ namespace Models
                   <double>200</double>
                 </Thickness>
                 <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
+                  <double>1</double>
+                  <double>1.15</double>
                   <double>1.3</double>
                   <double>1.3</double>
                   <double>1.3</double>
@@ -24183,7 +24056,7 @@ namespace Models
 ]]></Code>
               </Manager>
               <Sample>
-                <Name>InitialN</Name>
+                <Name>InitialWater</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
                   <double>100</double>
@@ -24195,35 +24068,15 @@ namespace Models
                   <double>100</double>
                   <double>300</double>
                 </Thickness>
-                <NO3>
-                  <double>23</double>
-                  <double>18</double>
-                  <double>15</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1</double>
-                </NO3>
-                <NH4>
-                  <double>2.2</double>
-                  <double>2</double>
-                  <double>1.8</double>
-                  <double>1.4</double>
-                  <double>1</double>
-                  <double>0.9</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                </NH4>
                 <SW>
+                  <double>0.27</double>
+                  <double>0.3</double>
+                  <double>0.28</double>
+                  <double>0.25</double>
+                  <double>0.24</double>
                   <double>0.27</double>
                   <double>0.27</double>
                   <double>0.21</double>
-                  <double>0.31</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.31</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>kgha</NH4Units>
@@ -24235,7 +24088,7 @@ namespace Models
               <Specifications>
                 <string>[IrrigationEvents]</string>
                 <string>[Water]</string>
-                <string>[InitialN]</string>
+                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -24357,8 +24210,8 @@ namespace Models
                   <double>200</double>
                 </Thickness>
                 <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
+                  <double>1</double>
+                  <double>1.15</double>
                   <double>1.3</double>
                   <double>1.3</double>
                   <double>1.3</double>
@@ -24457,7 +24310,7 @@ namespace Models
 ]]></Code>
               </Manager>
               <Sample>
-                <Name>InitialN</Name>
+                <Name>InitialWater</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
                   <double>100</double>
@@ -24469,35 +24322,15 @@ namespace Models
                   <double>100</double>
                   <double>300</double>
                 </Thickness>
-                <NO3>
-                  <double>23</double>
-                  <double>18</double>
-                  <double>15</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1</double>
-                </NO3>
-                <NH4>
-                  <double>2.2</double>
-                  <double>2</double>
-                  <double>1.8</double>
-                  <double>1.4</double>
-                  <double>1</double>
-                  <double>0.9</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                </NH4>
                 <SW>
-                  <double>0.28</double>
-                  <double>0.28</double>
                   <double>0.27</double>
                   <double>0.3</double>
-                  <double>0.23</double>
+                  <double>0.28</double>
                   <double>0.25</double>
-                  <double>0.2</double>
-                  <double>0.31</double>
+                  <double>0.24</double>
+                  <double>0.27</double>
+                  <double>0.27</double>
+                  <double>0.21</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>kgha</NH4Units>
@@ -24509,7 +24342,7 @@ namespace Models
               <Specifications>
                 <string>[IrrigationEvents]</string>
                 <string>[Water]</string>
-                <string>[InitialN]</string>
+                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -24587,8 +24420,8 @@ namespace Models
                   <double>200</double>
                 </Thickness>
                 <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
+                  <double>1</double>
+                  <double>1.15</double>
                   <double>1.3</double>
                   <double>1.3</double>
                   <double>1.3</double>
@@ -24687,7 +24520,7 @@ namespace Models
 ]]></Code>
               </Manager>
               <Sample>
-                <Name>InitialN</Name>
+                <Name>InitialWater</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
                   <double>100</double>
@@ -24699,35 +24532,15 @@ namespace Models
                   <double>100</double>
                   <double>300</double>
                 </Thickness>
-                <NO3>
-                  <double>23</double>
-                  <double>18</double>
-                  <double>15</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1</double>
-                </NO3>
-                <NH4>
-                  <double>2.2</double>
-                  <double>2</double>
-                  <double>1.8</double>
-                  <double>1.4</double>
-                  <double>1</double>
-                  <double>0.9</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                </NH4>
                 <SW>
-                  <double>0.28</double>
                   <double>0.27</double>
+                  <double>0.3</double>
+                  <double>0.28</double>
                   <double>0.25</double>
                   <double>0.24</double>
-                  <double>0.26</double>
-                  <double>0.28</double>
-                  <double>0.34</double>
-                  <double>0.2</double>
+                  <double>0.27</double>
+                  <double>0.27</double>
+                  <double>0.21</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>kgha</NH4Units>
@@ -24739,7 +24552,7 @@ namespace Models
               <Specifications>
                 <string>[IrrigationEvents]</string>
                 <string>[Water]</string>
-                <string>[InitialN]</string>
+                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -25147,6 +24960,49 @@ namespace Models
                 <Name>InitialN</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>100</double>
+                  <double>300</double>
+                </Thickness>
+                <NO3>
+                  <double>3.0081300813008132</double>
+                  <double>1.7479674796747968</double>
+                  <double>0.84905660377358494</double>
+                  <double>0.47770700636942676</double>
+                  <double>0.95541401273885351</double>
+                  <double>0.34700315457413256</double>
+                  <double>0.625</double>
+                  <double>0.20833333333333334</double>
+                </NO3>
+                <NH4>
+                  <double>5.2</double>
+                  <double>5.8</double>
+                  <double>5.3</double>
+                  <double>0.446</double>
+                  <double>0.63694267515923564</double>
+                  <double>0.28391167192429023</double>
+                  <double>0.0625</double>
+                  <double>0.020833333333333332</double>
+                </NH4>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </CERESSoilTemperature>
+              <Sample>
+                <Name>InitialWater</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Thickness>
                   <double>100</double>
                   <double>200</double>
                   <double>300</double>
@@ -25156,46 +25012,12 @@ namespace Models
                   <double>100</double>
                   <double>300</double>
                 </Thickness>
-                <NO3>
-                  <double>23</double>
-                  <double>18</double>
-                  <double>15</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1.1</double>
-                  <double>1</double>
-                  <double>1</double>
-                </NO3>
-                <NH4>
-                  <double>2.2</double>
-                  <double>2</double>
-                  <double>1.8</double>
-                  <double>1.4</double>
-                  <double>1</double>
-                  <double>0.9</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                </NH4>
-                <SW>
-                  <double>0.31</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.2</double>
-                  <double>0.2</double>
-                  <double>0.2</double>
-                  <double>0.2</double>
-                </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>kgha</NH4Units>
                 <SWUnits>Volumetric</SWUnits>
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </CERESSoilTemperature>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <RecordNumber>0</RecordNumber>
               <SoilType>NZ_sedementary</SoilType>
@@ -25283,7 +25105,7 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>1995-10-20</Date>
-                  <Action>[Barley].Sow(population:280, cultivar:"Valetta", depth:40, rowSpacing:150);</Action>
+                  <Action>[Barley].Sow(population:235, cultivar:"Valetta", depth:40, rowSpacing:150);</Action>
                 </Operation>
               </Operations>
               <Operations>
@@ -28510,9 +28332,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowDepth>20</SowDepth>
-                  <Popn>300</Popn>
                   <SowingDate>1999-05-28</SowingDate>
+                  <Popn>300</Popn>
+                  <SowDepth>20</SowDepth>
                   <CultivarName>Dash</CultivarName>
                 </Script>
                 <Code><![CDATA[using System;
@@ -38705,8 +38527,8 @@ namespace Models
                   <IncludeInDocumentation>false</IncludeInDocumentation>
                   <Script>
                     <TOS>1</TOS>
-                    <Cultivar>Grimmett</Cultivar>
                     <Population>120</Population>
+                    <Cultivar>Grimmett</Cultivar>
                   </Script>
                   <Code><![CDATA[
 using System;
