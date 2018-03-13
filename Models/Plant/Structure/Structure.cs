@@ -357,7 +357,7 @@ namespace Models.PMF.Struct
                     }
 
                     //Each time main-stem node number increases by one appear another cohort until all cohorts have appeared
-                    if (TimeForAnotherLeaf && (AllLeavesAppeared == false))
+                     if (TimeForAnotherLeaf && (AllLeavesAppeared == false))
                     {
                         int i = 1;
                         for (i = 1; i <= LeavesToAppear; i++)
@@ -503,6 +503,48 @@ namespace Models.PMF.Struct
             Plant.Population *= (1-ProportionRemoved);
             TotalStemPopn *= (1-ProportionRemoved);
             Leaf.DoThin(ProportionRemoved);
+        }
+
+        /// <summary>
+        /// Removes nodes from main-stem in defoliation event
+        /// </summary>
+        /// <param name="NodesToRemove"></param>
+        public void doNodeRemoval(int NodesToRemove)
+        {
+            //Remove nodes from Structure properties
+            LeafTipsAppeared = Math.Max(LeafTipsAppeared - NodesToRemove, 0);
+            PotLeafTipsAppeared = Math.Max(PotLeafTipsAppeared - NodesToRemove, 0);
+
+            //Remove corresponding cohorts from leaf
+            int NodesStillToRemove = Math.Min(NodesToRemove + Leaf.ApicalCohortNo, Leaf.InitialisedCohortNo) ;
+            while (NodesStillToRemove > 0)
+            {
+                TipToAppear -= 1;
+                CohortToInitialise -= 1;
+                Leaf.RemoveHighestLeaf();
+                NodesStillToRemove -= 1;
+            }
+            TipToAppear = Math.Max(TipToAppear+Leaf.CohortsAtInitialisation, 1);
+            CohortToInitialise = Math.Max(CohortToInitialise, 1);
+            //Reinitiate apical cohorts ready for regrowth
+            if (Leaf.InitialisedCohortNo > 0) //Sone cohorts remain after defoliation
+            {
+                for (int i = 1; i <= Leaf.CohortsAtInitialisation; i++)
+                {
+                    InitParams = new CohortInitParams();
+                    CohortToInitialise += 1;
+                    InitParams.Rank = CohortToInitialise;
+                    if (AddLeafCohort != null)
+                        AddLeafCohort.Invoke(this, InitParams);
+                }
+            }
+            else   //If all nodes have been removed initalise again
+            {
+                 Leaf.Reset();
+                 InitialiseLeafCohorts.Invoke(this, args);
+                 Initialised = true;
+                 DoEmergence();
+             }
         }
         #endregion
 
