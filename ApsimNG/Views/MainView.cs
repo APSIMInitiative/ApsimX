@@ -343,12 +343,22 @@ namespace UserInterface.Views
                     return;
             }
             _mainWidget.Destroy();
+
+            // Let all the destruction stuff be carried out, just in 
+            // case we've got any unmanaged resources that should be 
+            // cleaned up.
+            while (GLib.MainContext.Iteration())
+                ;
+
             // If we're running a script passed as a command line argument, 
             // we've never called Application.Run, so we don't want to call
             // Application.Quit. We test this by seeing whether the event 
-            // loop is active.
+            // loop is active. If we're not running the Application loop,
+            // call Exit instead.
             if (Application.CurrentEvent != null)
                 Application.Quit();
+            else
+                Environment.Exit(0);
         }
 
         /// <summary>
