@@ -1703,16 +1703,60 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                     <LegendPosition>BottomRight</LegendPosition>
                     <DisabledSeries />
                   </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>1</double>
-                    <double>2.99</double>
+                    <double>1.99</double>
+                    <double>2</double>
                     <double>3</double>
                     <double>4</double>
                     <double>5</double>
                     <double>6</double>
                     <double>7</double>
-                    <double>8</double>
                   </X>
                   <Y>
                     <double>0</double>
@@ -1895,6 +1939,50 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>MortalityPerDegDay</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <Graph>
                     <Name>Graph</Name>
                     <Series>
@@ -5354,11 +5442,13 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Name>Triumph</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].PpSensitivity.FixedValue = 10</Command>
+            <Command>[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Valetta</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].PpSensitivity.FixedValue = 1</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
           </Cultivar>
           <Cultivar>
             <Name>Vortex</Name>
@@ -11377,8 +11467,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Cultivar>Booma</Cultivar>
                   <InitialRootDepth>10</InitialRootDepth>
+                  <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -14359,8 +14449,8 @@ This was a cultivar evaluation trial conducted in Lincoln. Eight cultivars were 
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Cultivar>Dash</Cultivar>
                   <InitialRootDepth>40</InitialRootDepth>
+                  <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -16403,9 +16493,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
-                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -18711,9 +18801,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2014-10-15</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -20453,9 +20543,9 @@ namespace Models
                     <double>0.12</double>
                   </LL>
                   <KL>
+                    <double>0.1</double>
+                    <double>0.07</double>
                     <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
                     <double>0.03</double>
                     <double>0.03</double>
                     <double>0.03</double>
@@ -23643,9 +23733,9 @@ This is a water response trial conducted inside and outside the rain shelter at 
                     <double>0.12</double>
                   </LL>
                   <KL>
+                    <double>0.1</double>
+                    <double>0.07</double>
                     <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
                     <double>0.03</double>
                     <double>0.03</double>
                     <double>0.03</double>
@@ -23666,7 +23756,7 @@ This is a water response trial conducted inside and outside the rain shelter at 
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
                   <double>200</double>
-                  <double>200</double>
+                  <double>100</double>
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
@@ -23846,9 +23936,9 @@ This is a water response trial conducted inside and outside the rain shelter at 
                     <double>0.08</double>
                   </LL>
                   <KL>
+                    <double>0.1</double>
+                    <double>0.07</double>
                     <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
                     <double>0.03</double>
                     <double>0.03</double>
                     <double>0.03</double>
@@ -24100,9 +24190,9 @@ namespace Models
                     <double>0.16</double>
                   </LL>
                   <KL>
+                    <double>0.1</double>
+                    <double>0.07</double>
                     <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
                     <double>0.03</double>
                     <double>0.03</double>
                     <double>0.03</double>
@@ -24354,9 +24444,9 @@ namespace Models
                     <double>0.08</double>
                   </LL>
                   <KL>
+                    <double>0.1</double>
+                    <double>0.07</double>
                     <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
                     <double>0.03</double>
                     <double>0.03</double>
                     <double>0.03</double>
@@ -24564,9 +24654,9 @@ namespace Models
                     <double>0.08</double>
                   </LL>
                   <KL>
+                    <double>0.1</double>
+                    <double>0.07</double>
                     <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
                     <double>0.03</double>
                     <double>0.03</double>
                     <double>0.03</double>
@@ -25281,7 +25371,7 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>1995-10-20</Date>
-                  <Action>[Barley].Sow(population:235, cultivar:"Valetta", depth:40, rowSpacing:150);</Action>
+                  <Action>[Barley].Sow(population:200, cultivar:"Valetta", depth:40, rowSpacing:150);</Action>
                 </Operation>
               </Operations>
               <Operations>
@@ -26039,9 +26129,9 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -26062,8 +26152,8 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
@@ -26571,6 +26661,50 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
+        <Graph>
+          <Name>SoilWaterProfile1</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Leaf.Fw</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric soil water (mm)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <DisabledSimNames />
       </Experiment>
@@ -28508,9 +28642,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>1999-05-28</SowingDate>
-                  <Popn>300</Popn>
                   <SowDepth>20</SowDepth>
+                  <Popn>300</Popn>
+                  <SowingDate>1999-05-28</SowingDate>
                   <CultivarName>Dash</CultivarName>
                 </Script>
                 <Code><![CDATA[using System;
@@ -38703,8 +38837,8 @@ namespace Models
                   <IncludeInDocumentation>false</IncludeInDocumentation>
                   <Script>
                     <TOS>1</TOS>
-                    <Population>120</Population>
                     <Cultivar>Grimmett</Cultivar>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[
 using System;
