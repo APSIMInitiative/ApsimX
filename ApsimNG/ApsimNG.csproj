@@ -283,6 +283,7 @@
     <Compile Include="Views\DropDownView.cs" />
     <Compile Include="Views\EditBoxView.cs" />
     <Compile Include="Views\EditorView.cs" />
+    <Compile Include="Views\ErrorView.cs" />
     <Compile Include="Views\ExplorerView.cs" />
     <Compile Include="Views\FactorControlView.cs" />
     <Compile Include="Views\FolderView.cs" />

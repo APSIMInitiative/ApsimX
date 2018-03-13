@@ -11,6 +11,8 @@ namespace UserInterface.Views
     using Gtk;
     using System.Reflection;
     using Models.Core;
+    using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -79,8 +81,20 @@ namespace UserInterface.Views
         /// <summary>
         /// Add a status message. A message of null will clear the status message.
         /// </summary>
-        /// <param name="Message"></param>
-        void ShowMessage(string Message, Simulation.ErrorLevel errorLevel);
+        /// <param name="Message">Message to be displayed.</param>
+        /// <param name="errorLevel">Error level of the message. Affects the colour of message text.</param>
+        /// <param name="fromStart">
+        /// If true, all existing messages will be overridden.
+        /// If false, message will be appended to the status window.
+        /// </param>
+        void ShowMessage(string Message, Simulation.ErrorLevel errorLevel, bool fromStart = true);
+
+        /// <summary>
+        /// Shows a list of status messages. A null list will clear the status messages.
+        /// </summary>
+        /// <param name="messages">List of messages to display.</param>
+        /// <param name="errorLevel">Error level. Applies to all messages</param>
+        void ShowMessage(List<string> messages, Simulation.ErrorLevel errorLevel);
 
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
@@ -124,6 +138,8 @@ namespace UserInterface.Views
 
         /// <summary>Invoked when application tries to close</summary>
         event EventHandler<EventArgs> StopSimulation;
+
+        event EventHandler<EventArgs> OnShowDetailedError;
     }
 
     /// <summary>
@@ -148,6 +164,8 @@ namespace UserInterface.Views
 
         /// <summary>Invoked when application tries to close</summary>
         public event EventHandler<EventArgs> StopSimulation;
+
+        public event EventHandler<EventArgs> OnShowDetailedError;
 
         public int StatusPanelHeight
         {
@@ -207,6 +225,7 @@ namespace UserInterface.Views
             notebook1.SetMenuLabel(vbox1, new Label(indexTabText));
             notebook2.SetMenuLabel(vbox2, new Label(indexTabText));
             hbox1.HeightRequest = 20;
+            
 
             TextTag tag = new TextTag("error");
             tag.Foreground = "red";
@@ -602,12 +621,15 @@ namespace UserInterface.Views
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
-        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel)
+        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel, bool fromStart = true)
         {
             Gtk.Application.Invoke(delegate
             {
-                StatusWindow.Visible = message != null;
-                StatusWindow.Buffer.Clear();
+                if (fromStart)
+                {
+                    StatusWindow.Visible = message != null;
+                    StatusWindow.Buffer.Clear();
+                }
 
                 if (message != null)
                 {
@@ -625,17 +647,49 @@ namespace UserInterface.Views
                     {
                         tagName = "normal";
                     }
-                    message = message.TrimEnd("\n".ToCharArray());
-                    message = message.Replace("\n", "\n                      ");
-                    message += "\n";
-                    TextIter insertIter = StatusWindow.Buffer.StartIter;
+                    message = message.TrimEnd(Environment.NewLine.ToCharArray());
+                    //message = message.Replace("\n", "\n                      ");
+                    message += Environment.NewLine;
+                    TextIter insertIter;
+                    if (fromStart)
+                        insertIter = StatusWindow.Buffer.StartIter;
+                    else
+                        insertIter = StatusWindow.Buffer.EndIter;
+
                     StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
+                    if (errorLevel == Simulation.ErrorLevel.Error)
+                    {
+                        EventBox box = new EventBox();
+                        Button moreInfo = new Button("More Information");
+                        moreInfo.Clicked += ShowDetailedErrorMessage;
+                        box.Add(moreInfo);
+                        TextChildAnchor anchor = StatusWindow.Buffer.CreateChildAnchor(ref insertIter);
+                        StatusWindow.AddChildAtAnchor(box, anchor);
+                        box.ShowAll();
+                        box.Realize();
+                        moreInfo.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Hand1);
+                    }
                 }
 
                 //this.toolTip1.SetToolTip(this.StatusWindow, message);
                 progressBar.Visible = false;
                 stopButton.Visible = false;
             });
+            while (GLib.MainContext.Iteration()) ;
+        }
+
+        public void ShowMessage(List<string> messages, Simulation.ErrorLevel errorLevel)
+        {
+            foreach (string msg in messages)
+            {
+                ShowMessage(msg + Environment.NewLine + "----------------------------------------------" + Environment.NewLine, Simulation.ErrorLevel.Error, false);                
+            }
+        }
+
+        [GLib.ConnectBefore]
+        private void ShowDetailedErrorMessage(object sender, EventArgs args)
+        {
+            OnShowDetailedError?.Invoke(this, null);
         }
 
         /// <summary>Show a message in a dialog box</summary>

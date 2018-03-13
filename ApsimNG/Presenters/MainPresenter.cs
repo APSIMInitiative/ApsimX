@@ -39,6 +39,11 @@ namespace UserInterface.Presenters
         /// <summary>A list of presenters for tabs on the right.</summary>
         private List<IPresenter> presenters2 = new List<IPresenter>();
 
+        /// <summary>
+        /// The most recent exception that has been thrown.
+        /// </summary>
+        public List<string> LastError { get; private set; }
+
         /// <summary>Attach this presenter with a view. Can throw if there are errors during startup.</summary>
         /// <param name="view">The view to attach</param>
         /// <param name="commandLineArguments">Optional command line arguments - can be null</param>
@@ -74,6 +79,7 @@ namespace UserInterface.Presenters
             this.view.StartPage1.List.DoubleClicked += this.OnFileDoubleClicked;
             this.view.StartPage2.List.DoubleClicked += this.OnFileDoubleClicked;
             this.view.TabClosing += this.OnTabClosing;
+            this.view.OnShowDetailedError += this.ShowDetailedErrorMessage;
             this.view.Show();
             if (Utility.Configuration.Settings.StatusPanelHeight > 0.5 * this.view.WindowSize.Height)
                 this.view.StatusPanelHeight = 20;
@@ -164,6 +170,25 @@ namespace UserInterface.Presenters
         public void ShowMessage(string message, Simulation.ErrorLevel errorLevel)
         {
             this.view.ShowMessage(message, errorLevel);
+        }
+
+        public void ShowError(Exception error)
+        {
+            LastError = new List<string> { error.ToString() };
+            view.ShowMessage(error.Message, Simulation.ErrorLevel.Error);
+        }
+
+        public void ShowError(List<Exception> errors)
+        {
+            view.ShowMessage(errors.Select(err => err.Message).ToList(), Simulation.ErrorLevel.Error);
+            LastError = errors.Select(err => err.Message).ToList();
+        }
+
+        private void ShowDetailedErrorMessage(object sender, EventArgs e)
+        {
+            string messageData = "";
+            ErrorView err = new ErrorView(messageData, view as MainView);
+            err.Show();
         }
 
         /// <summary>Show a message in a dialog box</summary>

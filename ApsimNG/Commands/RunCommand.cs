@@ -108,7 +108,8 @@
                 string errorMessage = null;
                 errors.ForEach(error => errorMessage += error.ToString() + Environment.NewLine
                                                      +  "----------------------------------------------" + Environment.NewLine);
-                explorerPresenter.MainPresenter.ShowMessage(errorMessage, Simulation.ErrorLevel.Error);
+                //explorerPresenter.MainPresenter.ShowMessage(errorMessage, Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(errors);
             }
 
             SoundPlayer player = new SoundPlayer();

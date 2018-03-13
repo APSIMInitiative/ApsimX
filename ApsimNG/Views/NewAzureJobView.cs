@@ -23,7 +23,9 @@ namespace UserInterface.Views
                                set {
                                     Application.Invoke(delegate
                                     {
-                                        lblStatus.Text = value;
+                                        lblStatus.UseMarkup = true;
+                                        lblStatus.Markup = "<span foreground=\"blue\" underline=\"single\">" + value + "</span>";
+                                        //lblStatus.Text = value;
                                     });
                                }
                              }
