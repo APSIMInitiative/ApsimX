@@ -139,6 +139,7 @@
     </Compile>
     <Compile Include="Attributes\ContextMenuAttribute.cs" />
     <Compile Include="Attributes\MainMenuAttribute.cs" />
+    <Compile Include="Classes\CustomButton.cs" />
     <Compile Include="Classes\DirectedGraph\BezierCurve.cs" />
     <Compile Include="Classes\DirectedGraph\DGArc.cs" />
     <Compile Include="Classes\DirectedGraph\DGNode.cs" />

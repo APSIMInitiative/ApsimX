@@ -79,7 +79,7 @@ namespace UserInterface.Presenters
             this.view.StartPage1.List.DoubleClicked += this.OnFileDoubleClicked;
             this.view.StartPage2.List.DoubleClicked += this.OnFileDoubleClicked;
             this.view.TabClosing += this.OnTabClosing;
-            this.view.OnShowDetailedError += this.ShowDetailedErrorMessage;
+            this.view.ShowDetailedError += this.ShowDetailedErrorMessage;
             this.view.Show();
             if (Utility.Configuration.Settings.StatusPanelHeight > 0.5 * this.view.WindowSize.Height)
                 this.view.StatusPanelHeight = 20;
@@ -180,15 +180,21 @@ namespace UserInterface.Presenters
 
         public void ShowError(List<Exception> errors)
         {
-            view.ShowMessage(errors.Select(err => err.Message).ToList(), Simulation.ErrorLevel.Error);
-            LastError = errors.Select(err => err.Message).ToList();
+            string x = "x";
+            for (int i = 0; i < Math.Pow(10, 3); i++)
+                x += "x";
+            LastError = errors.Select(err => err.ToString() + x).ToList();
+            view.ShowMessages(errors.Select(err => err.Message).ToList(), Simulation.ErrorLevel.Error);
+            
         }
 
         private void ShowDetailedErrorMessage(object sender, EventArgs e)
         {
-            string messageData = "";
-            ErrorView err = new ErrorView(messageData, view as MainView);
-            err.Show();
+            if (sender is ApsimNG.Classes.CustomButton)
+            {
+                ErrorView err = new ErrorView(LastError[(sender as ApsimNG.Classes.CustomButton).ID], view as MainView);
+                err.Show();
+            }
         }
 
         /// <summary>Show a message in a dialog box</summary>

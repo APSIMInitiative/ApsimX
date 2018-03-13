@@ -44,8 +44,7 @@ namespace UserInterface.Views
             
             textArea = new TextView()
             {
-                Editable = false,
-                BorderWidth = 20
+                Editable = false,                
             };
 
             Error = information;
@@ -70,11 +69,14 @@ namespace UserInterface.Views
 
             VBox primaryContainer = new VBox()
             {
-                Name = "primaryContainer"
+                Name = "primaryContainer",
+                BorderWidth = 20
             };
             primaryContainer.PackStart(textArea, true, true, 0);
             primaryContainer.PackStart(buttonContainer, false, false, 0);
-            
+
+            ScrolledWindow scroll = new ScrolledWindow();
+            scroll.Add(primaryContainer);
             errorWindow.Add(primaryContainer);
         }
 

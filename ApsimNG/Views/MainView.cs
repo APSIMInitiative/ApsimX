@@ -83,18 +83,18 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="Message">Message to be displayed.</param>
         /// <param name="errorLevel">Error level of the message. Affects the colour of message text.</param>
-        /// <param name="fromStart">
-        /// If true, all existing messages will be overridden.
-        /// If false, message will be appended to the status window.
+        /// <param name="append">
+        /// If true, message will be appended to the status window.
+        /// If false, all existing messages will be overridden.
         /// </param>
-        void ShowMessage(string Message, Simulation.ErrorLevel errorLevel, bool fromStart = true);
+        void ShowMessage(string Message, Simulation.ErrorLevel errorLevel, bool append = true);
 
         /// <summary>
         /// Shows a list of status messages. A null list will clear the status messages.
         /// </summary>
         /// <param name="messages">List of messages to display.</param>
         /// <param name="errorLevel">Error level. Applies to all messages</param>
-        void ShowMessage(List<string> messages, Simulation.ErrorLevel errorLevel);
+        void ShowMessages(List<string> messages, Simulation.ErrorLevel errorLevel);
 
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
@@ -139,7 +139,7 @@ namespace UserInterface.Views
         /// <summary>Invoked when application tries to close</summary>
         event EventHandler<EventArgs> StopSimulation;
 
-        event EventHandler<EventArgs> OnShowDetailedError;
+        event EventHandler ShowDetailedError;
     }
 
     /// <summary>
@@ -164,8 +164,8 @@ namespace UserInterface.Views
 
         /// <summary>Invoked when application tries to close</summary>
         public event EventHandler<EventArgs> StopSimulation;
-
-        public event EventHandler<EventArgs> OnShowDetailedError;
+                
+        public event EventHandler ShowDetailedError;    
 
         public int StatusPanelHeight
         {
@@ -625,11 +625,10 @@ namespace UserInterface.Views
         {
             Gtk.Application.Invoke(delegate
             {
+                StatusWindow.Visible = message != null;
                 if (fromStart)
-                {
-                    StatusWindow.Visible = message != null;
                     StatusWindow.Buffer.Clear();
-                }
+                
 
                 if (message != null)
                 {
@@ -657,18 +656,6 @@ namespace UserInterface.Views
                         insertIter = StatusWindow.Buffer.EndIter;
 
                     StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
-                    if (errorLevel == Simulation.ErrorLevel.Error)
-                    {
-                        EventBox box = new EventBox();
-                        Button moreInfo = new Button("More Information");
-                        moreInfo.Clicked += ShowDetailedErrorMessage;
-                        box.Add(moreInfo);
-                        TextChildAnchor anchor = StatusWindow.Buffer.CreateChildAnchor(ref insertIter);
-                        StatusWindow.AddChildAtAnchor(box, anchor);
-                        box.ShowAll();
-                        box.Realize();
-                        moreInfo.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Hand1);
-                    }
                 }
 
                 //this.toolTip1.SetToolTip(this.StatusWindow, message);
@@ -678,18 +665,39 @@ namespace UserInterface.Views
             while (GLib.MainContext.Iteration()) ;
         }
 
-        public void ShowMessage(List<string> messages, Simulation.ErrorLevel errorLevel)
+        public void ShowMessages(List<string> messages, Simulation.ErrorLevel errorLevel)
         {
-            foreach (string msg in messages)
+            ShowMessage("", Simulation.ErrorLevel.Information, true);
+            for (int i = 0; i < messages.Count; i++)
             {
-                ShowMessage(msg + Environment.NewLine + "----------------------------------------------" + Environment.NewLine, Simulation.ErrorLevel.Error, false);                
+                ShowMessage(messages[i], errorLevel, false);                
+                AddButtonToStatusWindow("More Information", i);
+                ShowMessage(Environment.NewLine + "----------------------------------------------" + Environment.NewLine, errorLevel, false);
             }
+        }
+
+        private void AddButtonToStatusWindow(string buttonName, int buttonID)
+        {
+            Gtk.Application.Invoke(delegate
+            {
+                TextIter iter = StatusWindow.Buffer.EndIter;
+                TextChildAnchor anchor = StatusWindow.Buffer.CreateChildAnchor(ref iter);
+                EventBox box = new EventBox();
+                ApsimNG.Classes.CustomButton moreInfo = new ApsimNG.Classes.CustomButton(buttonName, buttonID);
+                moreInfo.Clicked += ShowDetailedErrorMessage;
+                box.Add(moreInfo);
+                StatusWindow.AddChildAtAnchor(box, anchor);
+                box.ShowAll();
+                box.Realize();
+                box.ShowAll();
+                moreInfo.ParentWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Hand1);
+            });
         }
 
         [GLib.ConnectBefore]
         private void ShowDetailedErrorMessage(object sender, EventArgs args)
         {
-            OnShowDetailedError?.Invoke(this, null);
+            ShowDetailedError?.Invoke(sender, args);
         }
 
         /// <summary>Show a message in a dialog box</summary>
