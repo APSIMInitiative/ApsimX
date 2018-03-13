@@ -1615,16 +1615,104 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                     <LegendPosition>BottomRight</LegendPosition>
                     <DisabledSeries />
                   </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>1</double>
-                    <double>1.99</double>
-                    <double>2</double>
+                    <double>2.99</double>
                     <double>3</double>
                     <double>4</double>
                     <double>5</double>
                     <double>6</double>
                     <double>7</double>
+                    <double>8</double>
                   </X>
                   <Y>
                     <double>0</double>
@@ -1807,13 +1895,101 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>MortalityPerDegDay</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>0</double>
                     <double>0.005</double>
                   </X>
                   <Y>
-                    <double>0.002</double>
+                    <double>0.004</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -1828,7 +2004,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </MultiplyFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>FlagLeaf</Start>
+            <Start>TerminalSpikelet</Start>
             <End>Flowering</End>
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
