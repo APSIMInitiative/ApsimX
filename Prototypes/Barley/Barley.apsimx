@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="26">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="27">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -2939,6 +2939,50 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>AgeFactor</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Root.DMDemandFunction.PartitionFraction.PreFlowering.AgeFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Root.DMDemandFunction.PartitionFraction.PreFlowering.AgeFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>3</double>
@@ -3093,12 +3137,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Constant>
             <Name>DMReallocationFactor</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0</FixedValue>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0</FixedValue>
+            <FixedValue>0.03</FixedValue>
           </Constant>
           <MinimumFunction>
             <Name>CellDivisionStress</Name>
@@ -4429,7 +4473,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Constant>
             <Name>StructuralFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.5</FixedValue>
+            <FixedValue>0.1</FixedValue>
           </Constant>
           <Constant>
             <Name>StorageFraction</Name>
@@ -11082,8 +11126,8 @@ namespace Models
                   <Name>BarleySoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
-                    <double>0.14</double>
-                    <double>0.14</double>
+                    <double>0.1</double>
+                    <double>0.1</double>
                     <double>0.08</double>
                     <double>0.13</double>
                     <double>0.2</double>
@@ -11124,18 +11168,18 @@ namespace Models
                   <double>200</double>
                 </Thickness>
                 <BD>
-                  <double>1.2</double>
-                  <double>1.2</double>
+                  <double>1.1</double>
+                  <double>1.1</double>
                   <double>1.3</double>
-                  <double>1.4</double>
-                  <double>1.5</double>
-                  <double>1.5</double>
-                  <double>1.4</double>
-                  <double>1.4</double>
+                  <double>1.2</double>
+                  <double>1.2</double>
+                  <double>1.2</double>
+                  <double>1.2</double>
+                  <double>1.2</double>
                 </BD>
                 <AirDry>
-                  <double>0.14</double>
-                  <double>0.14</double>
+                  <double>0.05</double>
+                  <double>0.1</double>
                   <double>0.08</double>
                   <double>0.13</double>
                   <double>0.2</double>
@@ -11144,8 +11188,8 @@ namespace Models
                   <double>0.19</double>
                 </AirDry>
                 <LL15>
-                  <double>0.14</double>
-                  <double>0.14</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
                   <double>0.08</double>
                   <double>0.13</double>
                   <double>0.2</double>
@@ -11155,7 +11199,7 @@ namespace Models
                 </LL15>
                 <DUL>
                   <double>0.33</double>
-                  <double>0.33</double>
+                  <double>0.28</double>
                   <double>0.26</double>
                   <double>0.27</double>
                   <double>0.28</double>
@@ -11269,7 +11313,7 @@ namespace Models
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <RootCN>20</RootCN>
-                <RootWt>3000</RootWt>
+                <RootWt>1000</RootWt>
                 <SoilCN>11</SoilCN>
                 <EnrACoeff>7.4</EnrACoeff>
                 <EnrBCoeff>0.2</EnrBCoeff>
@@ -11327,18 +11371,18 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>14.6</double>
-                  <double>17.8</double>
-                  <double>6.8</double>
+                  <double>14.599999999999998</double>
+                  <double>17.800000000000004</double>
+                  <double>6.8000000000000016</double>
                   <double>7.6</double>
                   <double>10.2</double>
-                  <double>11.2</double>
+                  <double>11.199999999999998</double>
                 </NO3>
                 <NH4>
                   <double>1.8</double>
                   <double>1.9</double>
                   <double>1.5</double>
-                  <double>1.3</double>
+                  <double>1.3000000000000003</double>
                   <double>1.3</double>
                   <double>0.9</double>
                 </NH4>
@@ -11367,7 +11411,7 @@ namespace Models
                 </Thickness>
                 <SW>
                   <double>0.31</double>
-                  <double>0.31</double>
+                  <double>0.28</double>
                   <double>0.26</double>
                   <double>0.27</double>
                   <double>0.28</double>
@@ -11467,8 +11511,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>10</InitialRootDepth>
                   <Cultivar>Booma</Cultivar>
+                  <InitialRootDepth>10</InitialRootDepth>
                   <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -11572,56 +11616,6 @@ namespace Models
                   <Action>[Fertiliser].Apply(150, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
               </Operations>
-              <Manager>
-                <Name>SetSoilParams</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Soils.Soil Soil;
-
-        [EventSubscribe("DoInitialSummary")]
-        private void OnDoInitialSummary(object sender, EventArgs e)
-        {
-            //Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
-            //Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
-            //Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
-            //Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
-            //Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
-            //Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
-            //Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
-            //Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
-
-            Soil.SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };
-            Soil.SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };
-            Soil.SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };
-            Soil.SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };
-            Soil.SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };
-            Soil.SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };
-            Soil.SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };
-            Soil.SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };
-            //Soil.SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; 
-            //Soil.SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
-        }
-            
-    }
-}
-    
-]]></Code>
-              </Manager>
               <Operations>
                 <Name>Harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -13329,7 +13323,7 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -16464,22 +16458,22 @@ namespace Models
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            ExpandedLeafNoYesterday = (double)zone.Get("Barley.Leaf.ExpandedCohortNo");
-            AppearedLeafNoYesterday = (double)zone.Get("Barley.Leaf.AppearedCohortNo");
+            ExpandedLeafNoYesterday = Convert.ToDouble(zone.Get("Barley.Leaf.ExpandedCohortNo"));
+            AppearedLeafNoYesterday = Convert.ToDouble(zone.Get("Barley.Leaf.AppearedCohortNo"));
         }
         
         [EventSubscribe("DoManagementCalculations")]
         private void OnDoManagementCalculations(object sender, EventArgs e)
         {
-            if ((double)zone.Get("Barley.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
+            if (Convert.ToDouble(zone.Get("Barley.Leaf.ExpandedCohortNo")) > ExpandedLeafNoYesterday)
             {
-                LeafExpandedPosition = (double)zone.Get("Barley.Leaf.ExpandedCohortNo");
+                LeafExpandedPosition = Convert.ToDouble(zone.Get("Barley.Leaf.ExpandedCohortNo"));
                 MostRecentlyExpandedLeafSize = (double)zone.Get("Barley.Leaf.CohortSize[" + (int)LeafExpandedPosition + "]");
             }
             
-            if ((double)zone.Get("Barley.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday)
+            if (Convert.ToDouble(zone.Get("Barley.Leaf.AppearedCohortNo")) > AppearedLeafNoYesterday)
             {
-                LeafAppearedPosition = (double)zone.Get("Barley.Leaf.AppearedCohortNo");
+                LeafAppearedPosition = Convert.ToDouble(zone.Get("Barley.Leaf.AppearedCohortNo"));
                 MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Barley.Leaf.CohortParameters.MaxArea.Value()");
             }
             
@@ -20784,7 +20778,7 @@ namespace Models
                   <Action>[Irrigation].Apply(32);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1988-10-24</Date>
+                  <Date>1988-11-24</Date>
                   <Action>[Irrigation].Apply(18);</Action>
                 </Operation>
                 <Operation>
@@ -21231,7 +21225,7 @@ namespace Models
               </Specifications>
             </Factor>
             <Factor>
-              <Name>MiddleDrought4</Name>
+              <Name>MiddleDrought3</Name>
               <Operations>
                 <Name>IrrigationEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -21252,32 +21246,16 @@ namespace Models
                   <Action>[Irrigation].Apply(25);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1988-11-03</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-24</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-01</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-12-08</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                </Operation>
-                <Operation>
                   <Date>1988-12-15</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
+                  <Action>[Irrigation].Apply(43);</Action>
                 </Operation>
                 <Operation>
                   <Date>1988-12-22</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
+                  <Action>[Irrigation].Apply(32);</Action>
                 </Operation>
                 <Operation>
                   <Date>1988-12-29</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
+                  <Action>[Irrigation].Apply(46);</Action>
                 </Operation>
               </Operations>
               <Manager>
@@ -21488,14 +21466,6 @@ namespace Models
                 <Operation>
                   <Date>1988-11-03</Date>
                   <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-10</Date>
-                  <Action>[Irrigation].Apply(47);</Action>
-                </Operation>
-                <Operation>
-                  <Date>1988-11-17</Date>
-                  <Action>[Irrigation].Apply(32);</Action>
                 </Operation>
               </Operations>
               <Manager>
@@ -22302,10 +22272,15 @@ namespace Models
               <Name>Manager folder</Name>
               <Operations>
                 <Name>SowingEvent</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <MemoText><![CDATA[Crop was sown on 9th of september and emerged on the 20th.  Have set sowing depth to 50cm to achieve the observed sowing date.  Plant population at establishement was 291 plants/m2]]></MemoText>
+                </Memo>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>1988-09-07</Date>
-                  <Action>[Barley].Sow(population:100, cultivar:"Triumph", depth:15, rowSpacing:150);</Action>
+                  <Action>[Barley].Sow(population:291, cultivar:"Triumph", depth:50, rowSpacing:150);</Action>
                 </Operation>
               </Operations>
               <Operations>
@@ -23844,10 +23819,127 @@ This is a water response trial conducted inside and outside the rain shelter at 
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <Manager>
+                <Name>ClimateControl</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script>
+                  <StartDate>1995-10-20</StartDate>
+                  <EndDate>1996-04-01</EndDate>
+                  <CCOnOff>False</CCOnOff>
+                </Script>
+                <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+
+
+
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Weather Met;
+        [Link] Clock Clock;
+    
+        [Description("Start Date")]
+        public DateTime StartDate { get; set; }
+        
+        [Description("End Date")]
+        public DateTime EndDate { get; set; }
+
+        [Description("Turn on or off")]
+        public bool CCOnOff { get; set; }
+ 
+        [EventSubscribe("PreparingNewWeatherData")]
+        private void OnPreparingNewWeatherData(object sender, EventArgs e)
+        {
+            if (CCOnOff == true)
+            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
+                Met.Rain = 0;        
+        }
+    }
+}
+]]></Code>
+              </Manager>
+              <Operations>
+                <Name>IrrigationEvents</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>1995-10-28</Date>
+                  <Action>[Irrigation].Apply(2);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1995-11-04</Date>
+                  <Action>[Irrigation].Apply(3.8);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1995-11-15</Date>
+                  <Action>[Irrigation].Apply(5.2);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1995-11-28</Date>
+                  <Action>[Irrigation].Apply(49.3);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1995-12-05</Date>
+                  <Action>[Irrigation].Apply(5.3);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1995-12-12</Date>
+                  <Action>[Irrigation].Apply(32);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1995-12-18</Date>
+                  <Action>[Irrigation].Apply(5);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1995-12-19</Date>
+                  <Action>[Irrigation].Apply(40.3);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1995-12-27</Date>
+                  <Action>[Irrigation].Apply(5.3);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1996-01-03</Date>
+                  <Action>[Irrigation].Apply(80);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1996-01-09</Date>
+                  <Action>[Irrigation].Apply(50.3);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1996-01-16</Date>
+                  <Action>[Irrigation].Apply(36);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1996-01-23</Date>
+                  <Action>[Irrigation].Apply(24.8);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1996-01-30</Date>
+                  <Action>[Irrigation].Apply(21.4);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1996-02-07</Date>
+                  <Action>[Irrigation].Apply(15.9);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1996-02-12</Date>
+                  <Action>[Irrigation].Apply(11.3);</Action>
+                </Operation>
+              </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[Water]</string>
-                <string>[InitialWater]</string>
+                <string>[IrrigationEvents]</string>
+                <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
             <Factor>
@@ -24099,8 +24191,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -24353,8 +24443,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -24607,8 +24695,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -24817,8 +24903,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -24835,7 +24919,7 @@ namespace Models
               <Name>50</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
-                <Date>1995-10-28</Date>
+                <Date>1995-10-20</Date>
                 <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
               </Operation>
             </Operations>
@@ -24843,11 +24927,11 @@ namespace Models
               <Name>100</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
-                <Date>1995-10-28</Date>
+                <Date>1995-10-20</Date>
                 <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
               </Operation>
               <Operation>
-                <Date>1995-12-05</Date>
+                <Date>1995-11-08</Date>
                 <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
               </Operation>
             </Operations>
@@ -24855,15 +24939,15 @@ namespace Models
               <Name>150</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
-                <Date>1995-10-28</Date>
+                <Date>1995-10-20</Date>
+                <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-11-08</Date>
                 <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
               </Operation>
               <Operation>
                 <Date>1995-12-05</Date>
-                <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1995-12-18</Date>
                 <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
               </Operation>
             </Operations>
@@ -24974,25 +25058,31 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
                     <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.157</double>
-                    <double>0.173</double>
-                    <double>0.173</double>
-                    <double>0.165</double>
-                    <double>0.165</double>
-                    <double>0.115</double>
+                    <double>0.11</double>
+                    <double>0.11</double>
+                    <double>0.11</double>
+                    <double>0.17</double>
+                    <double>0.17</double>
+                    <double>0.17</double>
+                    <double>0.17</double>
+                    <double>0.17</double>
+                    <double>0.17</double>
                   </LL>
                   <KL>
                     <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
+                    <double>0.07</double>
+                    <double>0.06</double>
+                    <double>0.05</double>
+                    <double>0.03</double>
+                    <double>0.03</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
+                    <double>0.01</double>
+                    <double>0.01</double>
                   </KL>
                   <XF>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -25006,49 +25096,59 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
                   <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>300</double>
+                  <double>300</double>
                 </Thickness>
                 <BD>
-                  <double>1.23</double>
-                  <double>1.23</double>
-                  <double>1.59</double>
-                  <double>1.57</double>
-                  <double>1.57</double>
-                  <double>1.6</double>
-                  <double>1.6</double>
-                  <double>1.6</double>
+                  <double>1</double>
+                  <double>1.15</double>
+                  <double>1.15</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
                 </BD>
                 <AirDry>
                   <double>0.05</double>
-                  <double>0.05</double>
-                  <double>0.16</double>
-                  <double>0.17</double>
-                  <double>0.17</double>
-                  <double>0.17</double>
-                  <double>0.17</double>
-                  <double>0.12</double>
-                </AirDry>
-                <LL15>
-                  <double>0.14</double>
-                  <double>0.14</double>
-                  <double>0.13</double>
+                  <double>0.11</double>
+                  <double>0.11</double>
                   <double>0.11</double>
                   <double>0.17</double>
                   <double>0.17</double>
                   <double>0.17</double>
-                  <double>0.12</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                </AirDry>
+                <LL15>
+                  <double>0.1</double>
+                  <double>0.11</double>
+                  <double>0.11</double>
+                  <double>0.11</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
                 </LL15>
                 <DUL>
-                  <double>0.33</double>
-                  <double>0.33</double>
-                  <double>0.29</double>
+                  <double>0.3</double>
                   <double>0.28</double>
+                  <double>0.27</double>
+                  <double>0.27</double>
+                  <double>0.27</double>
+                  <double>0.3</double>
                   <double>0.3</double>
                   <double>0.3</double>
                   <double>0.3</double>
@@ -25062,17 +25162,21 @@ namespace Models
                   <double>0.37</double>
                   <double>0.36</double>
                   <double>0.36</double>
-                  <double>0.32</double>
+                  <double>0.36</double>
+                  <double>0.36</double>
+                  <double>0.36</double>
                 </SAT>
                 <KS>
                   <double>4832.039</double>
                   <double>389.229</double>
-                  <double>16.362</double>
+                  <double>97</double>
                   <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
+                  <double>97</double>
+                  <double>97</double>
                 </KS>
               </Water>
               <SoilWater>
@@ -25106,10 +25210,10 @@ namespace Models
                 </Thickness>
                 <SWCON>
                   <double>0.9</double>
-                  <double>0.6</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
+                  <double>0.9</double>
+                  <double>0.9</double>
+                  <double>0.9</double>
+                  <double>0.9</double>
                   <double>0.9</double>
                   <double>0.9</double>
                   <double>0.9</double>
@@ -25239,21 +25343,21 @@ namespace Models
                   <double>3.0081300813008132</double>
                   <double>1.7479674796747968</double>
                   <double>0.84905660377358494</double>
-                  <double>0.47770700636942676</double>
-                  <double>0.95541401273885351</double>
-                  <double>0.34700315457413256</double>
-                  <double>0.625</double>
-                  <double>0.20833333333333334</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
                 </NO3>
                 <NH4>
                   <double>5.2</double>
                   <double>5.8</double>
                   <double>5.3</double>
-                  <double>0.446</double>
-                  <double>0.63694267515923564</double>
-                  <double>0.28391167192429023</double>
-                  <double>0.0625</double>
-                  <double>0.020833333333333332</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.1</double>
                 </NH4>
                 <NO3Units>ppm</NO3Units>
                 <NH4Units>ppm</NH4Units>
@@ -25269,15 +25373,29 @@ namespace Models
                 <Name>InitialWater</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
-                  <double>100</double>
                   <double>200</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
                   <double>300</double>
-                  <double>200</double>
-                  <double>100</double>
-                  <double>200</double>
-                  <double>100</double>
                   <double>300</double>
                 </Thickness>
+                <SW>
+                  <double>0.3</double>
+                  <double>0.28</double>
+                  <double>0.27</double>
+                  <double>0.27</double>
+                  <double>0.27</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>kgha</NH4Units>
                 <SWUnits>Volumetric</SWUnits>
@@ -25458,56 +25576,6 @@ namespace Models
                   <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
                 </Operation>
               </Operations>
-              <Manager>
-                <Name>SetSoilParams</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Soils.Soil Soil;
-
-        [EventSubscribe("DoInitialSummary")]
-        private void OnDoInitialSummary(object sender, EventArgs e)
-        {
-            //Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
-            //Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
-            //Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
-            //Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
-            //Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
-            //Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
-            //Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
-            //Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
-
-            Soil.SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };
-            Soil.SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };
-            Soil.SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };
-            Soil.SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };
-            Soil.SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };
-            Soil.SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };
-            Soil.SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };
-            Soil.SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };
-            //Soil.SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; 
-            //Soil.SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
-        }
-            
-    }
-}
-    
-]]></Code>
-              </Manager>
               <Operations>
                 <Name>Harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -25696,6 +25764,19 @@ namespace Models
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </SoluteManager>
+            <Report>
+              <Name>ProfileWaterReport</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater_0_90</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Clock].DoReport</string>
+              </EventNames>
+            </Report>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -26137,9 +26218,9 @@ namespace Models
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
-            <TableName>DailyReport</TableName>
+            <TableName>ProfileWaterReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>ProfileWater</YFieldName>
+            <YFieldName>ProfileWater_0_90</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -26190,7 +26271,7 @@ namespace Models
         <Folder>
           <Name>SoilWater</Name>
           <Graph>
-            <Name>0_15cm</Name>
+            <Name>0_20cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -26198,9 +26279,9 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -26257,7 +26338,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>15_30cm</Name>
+            <Name>20_30cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -26265,9 +26346,9 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -26288,8 +26369,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -26324,7 +26405,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>30_60cm</Name>
+            <Name>30_40cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -26332,9 +26413,9 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -26355,8 +26436,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -26391,7 +26472,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>60_90cm</Name>
+            <Name>40_50cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -26399,9 +26480,9 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -26422,8 +26503,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -26458,7 +26539,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>90_120cm</Name>
+            <Name>50_60cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -26466,9 +26547,9 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -26489,8 +26570,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -26525,7 +26606,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>120_150cm</Name>
+            <Name>60_70cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -26533,9 +26614,9 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -26556,8 +26637,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -26592,7 +26673,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>150_180cm</Name>
+            <Name>70_80cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -26600,9 +26681,9 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -26634,6 +26715,73 @@ namespace Models
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Volumetric soil water (mm)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>80_90cm</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -26672,7 +26820,7 @@ namespace Models
             <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -26681,6 +26829,50 @@ namespace Models
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Barley.Leaf.Fw</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric soil water (mm)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SoilNProfile</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>ProfileN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -28613,22 +28805,22 @@ namespace Models
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            ExpandedLeafNoYesterday = (double)zone.Get("Barley.Leaf.ExpandedCohortNo");
-            AppearedLeafNoYesterday = (double)zone.Get("Barley.Leaf.AppearedCohortNo");
+            ExpandedLeafNoYesterday = Convert.ToDouble(zone.Get("Barley.Leaf.ExpandedCohortNo"));
+            AppearedLeafNoYesterday = Convert.ToDouble(zone.Get("Barley.Leaf.AppearedCohortNo"));
         }
         
         [EventSubscribe("DoManagementCalculations")]
         private void OnDoManagementCalculations(object sender, EventArgs e)
         {
-            if ((double)zone.Get("Barley.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
+            if (Convert.ToDouble(zone.Get("Barley.Leaf.ExpandedCohortNo")) > ExpandedLeafNoYesterday)
             {
-                LeafExpandedPosition = (double)zone.Get("Barley.Leaf.ExpandedCohortNo");
+                LeafExpandedPosition = Convert.ToDouble(zone.Get("Barley.Leaf.ExpandedCohortNo"));
                 MostRecentlyExpandedLeafSize = (double)zone.Get("Barley.Leaf.CohortSize[" + (int)LeafExpandedPosition + "]");
             }
             
-            if ((double)zone.Get("Barley.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday)
+            if (Convert.ToDouble(zone.Get("Barley.Leaf.AppearedCohortNo")) > AppearedLeafNoYesterday)
             {
-                LeafAppearedPosition = (double)zone.Get("Barley.Leaf.AppearedCohortNo");
+                LeafAppearedPosition = Convert.ToDouble(zone.Get("Barley.Leaf.AppearedCohortNo"));
                 MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Barley.Leaf.CohortParameters.MaxArea.Value()");
             }
             
@@ -40210,5 +40402,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>283</ExplorerWidth>
+  <ExplorerWidth>336</ExplorerWidth>
 </Simulations>
