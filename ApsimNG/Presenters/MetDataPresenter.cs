@@ -201,7 +201,7 @@ namespace UserInterface.Presenters
                     try
                     {
                         this.weatherData.ExcelWorkSheetName = sheetName;
-                        this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+                        explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(weatherData, "FullFileName", PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName)));
 
                         using (DataTable data = this.weatherData.GetAllData())
                         {
