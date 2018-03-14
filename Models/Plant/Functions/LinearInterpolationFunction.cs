@@ -87,7 +87,7 @@ namespace Models.PMF.Functions
             else if (v is IFunction)
                 XValue = (v as IFunction).Value(arrayIndex);
             else
-                XValue = (double)v;
+                XValue = Convert.ToDouble(v, System.Globalization.CultureInfo.InvariantCulture);
             return XYPairs.ValueIndexed(XValue);
         }
 
