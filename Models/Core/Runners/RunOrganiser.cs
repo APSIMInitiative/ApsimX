@@ -23,7 +23,7 @@
             {
                 List<string> AllSimulationNames = new List<string>();
                 List<ISimulationGenerator> allModels = Apsim.ChildrenRecursively(simulations, typeof(ISimulationGenerator)).Cast<ISimulationGenerator>().ToList();
-                allModels.ForEach(model => AllSimulationNames.AddRange(model.GetSimulationNames()));
+                allModels.ForEach(model => AllSimulationNames.AddRange(model.GetSimulationNames(false)));
                 return AllSimulationNames;
             }
         }
@@ -46,6 +46,7 @@
             // First time through there. Get a list of things to run.
             if (simulationEnumerator == null)
             {
+                
                 Runner.SimulationEnumerator enumerator= new Runner.SimulationEnumerator(modelSelectedByUser);
                 simulationEnumerator = enumerator;
                 SimulationNamesBeingRun = enumerator.SimulationNamesBeingRun;

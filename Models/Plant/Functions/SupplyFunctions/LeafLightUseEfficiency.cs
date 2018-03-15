@@ -9,6 +9,7 @@ using Models.Interfaces;
 namespace Models.PMF.Functions.SupplyFunctions
 {
     /// <summary>
+    /// # [Name]
     /// This function calculate the light use efficiency (LUE) of leaf at low light (Eff).
     /// For C3 crops, LUE increases with CO2 concentration while decreases with rising temperature.
     /// For C4 crops, LUE does not change with CO2 concentration and temperature.

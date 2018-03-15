@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Bounds the child function between lower and upper bounds")]
-    public class BoundFunction : Model, IFunction
+    public class BoundFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
@@ -37,25 +37,25 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
                 if (ChildFunctions == null)
                     ChildFunctions = Apsim.Children(this, typeof(IFunction));
                 foreach (IFunction child in ChildFunctions)
                     if (child != Lower && child != Upper)
                     {
                         tags.Add(new AutoDocumentation.Paragraph(Name + " is the value of " + (child as IModel).Name + " bound between a lower and upper bound where:", indent));
-                        (child as IModel).Document(tags, -1, indent + 1);
+                        AutoDocumentation.DocumentModel(child as IModel, tags, headingLevel + 1, indent + 1);
                     }
                 if (Lower != null)
-                    (Lower as IModel).Document(tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(Lower as IModel, tags, headingLevel + 1, indent + 1);
                 if (Upper != null)
-                    (Upper as IModel).Document(tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(Upper as IModel, tags, headingLevel + 1, indent + 1);
             }
         }
     }

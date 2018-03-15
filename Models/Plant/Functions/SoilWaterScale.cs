@@ -7,6 +7,7 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// A simple scale to convert soil water content into a value between 0 and 2
     /// </summary>
     [Serializable]

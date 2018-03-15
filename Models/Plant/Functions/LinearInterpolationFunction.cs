@@ -16,7 +16,7 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("A value is returned via linear interpolation of a given set of XY pairs")]
-    public class LinearInterpolationFunction : Model, IFunction
+    public class LinearInterpolationFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The ys are all the same</summary>
         private bool YsAreAllTheSame = false;
@@ -87,7 +87,7 @@ namespace Models.PMF.Functions
             else if (v is IFunction)
                 XValue = (v as IFunction).Value(arrayIndex);
             else
-                XValue = (double)v;
+                XValue = Convert.ToDouble(v, System.Globalization.CultureInfo.InvariantCulture);
             return XYPairs.ValueIndexed(XValue);
         }
 
@@ -103,7 +103,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -112,7 +112,7 @@ namespace Models.PMF.Functions
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel+1, indent);
 
                 // add graph and table.
                 if (XYPairs != null)

@@ -51,7 +51,6 @@
             this.jobName = model.Name;
             this.explorerPresenter = presenter;
             this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
-
             jobManager = Runner.ForSimulations(explorerPresenter.ApsimXFile, model, false);
 
             if (multiProcess)
@@ -103,13 +102,13 @@
             Stop();
             if (errors.Count == 0)
                 explorerPresenter.MainPresenter.ShowMessage(jobName + " complete "
-                        + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Simulation.ErrorLevel.Information);
+                        + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Simulation.MessageType.Information);
             else
             {
                 string errorMessage = null;
                 errors.ForEach(error => errorMessage += error.ToString() + Environment.NewLine
                                                      +  "----------------------------------------------" + Environment.NewLine);
-                explorerPresenter.MainPresenter.ShowMessage(errorMessage, Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(errors);
             }
 
             SoundPlayer player = new SoundPlayer();
@@ -130,14 +129,10 @@
             Stop();
             string msg = jobName + " aborted";
             if (errors.Count == 0)
-                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.MessageType.Information);
             else
             {
-                string errorMessage = null;
-                errors.ForEach(error => errorMessage += error.ToString() + Environment.NewLine);
-                explorerPresenter.MainPresenter.ShowMessage(errorMessage, Simulation.ErrorLevel.Error);
-                msg += Environment.NewLine + errorMessage;
-                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(errors);
             }
         }
 
@@ -172,7 +167,7 @@
             {
                 explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
                          numSimulationsRun + " of " +
-                         (numSimulations) + " completed)", Simulation.ErrorLevel.Information);
+                         (numSimulations) + " completed)", Simulation.MessageType.Information);
 
                 explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(percentComplete));
             }

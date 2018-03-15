@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
     /// This presenter connects an instance of a Model with a 
     /// UserInterface.Views.DrawingView
     /// </summary>
-    public class DirectedGraphPresenter : IPresenter
+    public class DirectedGraphPresenter : IPresenter, IExportable
     {
         /// <summary>The view object</summary>
         private IVisualiseAsDirectedGraph model;

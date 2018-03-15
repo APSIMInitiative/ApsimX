@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using APSIM.Shared.Utilities;
+using System;
 using System.Diagnostics;
-
-using System.Collections;
-using System.Reflection;
-using Models.Core;
-using APSIM.Shared.Utilities;
+using System.IO;
 
 namespace Models.PMF
 {
     class Util
     {
         public static StreamWriter Dbg = null;
-        
+
+        /// <summary>Tolerance for biomass comparisons</summary>
+        public static double BiomassToleranceValue = 0.0000000001;   // 10E-10
+
         [Conditional("DEBUGOUTPUT")]
         public static void Debug(string format, object value)
         {

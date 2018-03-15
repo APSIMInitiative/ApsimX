@@ -95,7 +95,7 @@ namespace UserInterface.Presenters
                 }
                 catch (SQLiteException e)
                 {
-                    explorerPresenter.MainPresenter.ShowMessage("Error obtaining data from database: " + e.Message, Simulation.ErrorLevel.Error);
+                    explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
                 }
 
                 foreach (SeriesDefinition definition in seriesDefinitions)
@@ -143,31 +143,9 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Export the contents of this graph to the specified file.</summary>
-        /// <param name="folder">The folder name</param>
-        /// <returns>The html string</returns>
-        public string ConvertToHtml(string folder)
-        {
-            Rectangle r = new Rectangle(0, 0, 800, 500);
-            Bitmap img = new Bitmap(r.Width, r.Height);
-
-            graphView.Export(ref img, r, true);
-
-            string fileName = Path.Combine(folder, graph.Name + ".png");
-            img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
-
-            string html = "<img class=\"graph\" src=\"" + fileName + "\"/>";
-            if (this.graph.Caption != null)
-            {
-                html += "<p>" + this.graph.Caption + "</p>";
-            }
-
-            return html;
-        }
-
-        /// <summary>Export the contents of this graph to the specified file.</summary>
         /// <param name="folder">The folder.</param>
         /// <returns>The file name</returns>
-        public string ExportToPDF(string folder)
+        public string ExportToPNG(string folder)
         {
             // The rectange numbers below are optimised for generation of PDF document
             // on a computer that has its display settings at 100%.

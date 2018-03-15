@@ -10,6 +10,7 @@
     using System.Reflection;
     using System.Linq;
     using Models.Core;
+    using Models;
 
     [TestFixture]
     public class TestDataStore
@@ -36,10 +37,10 @@
             string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             while (directory != null)
             {
-                string[] directories = Directory.GetDirectories(directory, "Bin");
-                if (directories.Length == 1)
+                string[] directories = Directory.GetDirectories(directory, "Bin", SearchOption.AllDirectories);
+                foreach (string dir in directories)
                 {
-                    string[] files = Directory.GetFiles(directories[0], "sqlite3.dll");
+                    string[] files = Directory.GetFiles(dir, "sqlite3.dll");
                     if (files.Length == 1)
                     {
                         return files[0];
@@ -49,7 +50,7 @@
                 directory = Path.GetDirectoryName(directory); // parent directory
             }
 
-            throw new Exception("Cannot find apsimx bin directory");
+            throw new Exception("Cannot find sqlite3 dll directory");
         }
 
         /// <summary>Initialisation code for all unit tests in this class</summary>
@@ -66,7 +67,7 @@
             sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
             if (!File.Exists(sqliteFileName))
             {
-                File.Copy(sqliteSourceFileName, sqliteFileName);
+                File.Copy(sqliteSourceFileName, sqliteFileName, overwrite:true);
             }
         }
 
@@ -86,8 +87,8 @@
                 object[] arguments = new object[]
                 {
                     new string[] { "Sim1", "Sim2" }, // knownSimulationNames
-                    new string[] { "Sim1", "Sim2" }  // simulationNamesBeingRun
-                };
+                    new string[] { "Sim1", "Sim2" }
+            };
 
                 Utilities.CallEvent(storage, "BeginRun", arguments);
 
@@ -96,17 +97,15 @@
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 2.0, 12.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 3.0, 13.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 4.0, 14.0 });
-                storage.CompletedWritingSimulationData("Sim1");
-                storage.CompletedWritingSimulationData("Sim2");
                 Utilities.CallEvent(storage, "EndRun");
             }
 
             Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
-                           "SimulationID, Col1,  Col2\r\n" +
-                           "           1,1.000,11.000\r\n" +
-                           "           1,2.000,12.000\r\n" +
-                           "           2,3.000,13.000\r\n" +
-                           "           2,4.000,14.000\r\n");
+                           "CheckpointID,SimulationID, Col1,  Col2\r\n" +
+                           "           1,           1,1.000,11.000\r\n" +
+                           "           1,           1,2.000,12.000\r\n" +
+                           "           1,           2,3.000,13.000\r\n" +
+                           "           1,           2,4.000,14.000\r\n");
         }
 
         /// <summary>Write data for 2 simulations, each with different columns, into one table. Ensure data was written correctly</summary>
@@ -118,9 +117,9 @@
                 object[] arguments = new object[]
                 {
                     new string[] { "Sim1", "Sim2" }, // knownSimulationNames
-                    new string[] { "Sim1", "Sim2" }  // simulationNamesBeingRun
+                    new string[] { "Sim1" }
                 };
-
+            
                 Utilities.CallEvent(storage, "BeginRun", arguments);
 
                 string[] columnNames1 = new string[] { "Col1", "Col2" };
@@ -129,17 +128,15 @@
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 2.0, 12.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames2, new string[] { null, "(g)" }, new object[] { 3.0, 13.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames2, new string[] { null, "(g)" }, new object[] { 4.0, 14.0 });
-                storage.CompletedWritingSimulationData("Sim1");
-                storage.CompletedWritingSimulationData("Sim2");
                 Utilities.CallEvent(storage, "EndRun");
             }
 
             Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
-                           "SimulationID, Col1,  Col2, Col3,  Col4\r\n" +
-                           "           1,1.000,11.000,     ,      \r\n" +
-                           "           1,2.000,12.000,     ,      \r\n" +
-                           "           2,     ,      ,3.000,13.000\r\n" +
-                           "           2,     ,      ,4.000,14.000\r\n");
+                           "CheckpointID,SimulationID, Col1,  Col2, Col3,  Col4\r\n" +
+                           "           1,           1,1.000,11.000,     ,      \r\n" +
+                           "           1,           1,2.000,12.000,     ,      \r\n" +
+                           "           1,           2,     ,      ,3.000,13.000\r\n" +
+                           "           1,           2,     ,      ,4.000,14.000\r\n");
         }
 
         /// <summary>Write array data that changes size into a table. Ensure data was written correctly</summary>
@@ -151,7 +148,7 @@
                 object[] arguments = new object[]
                 {
                     new string[] { "Sim1" }, // knownSimulationNames
-                    new string[] { "Sim1" }  // simulationNamesBeingRun
+                    new string[] { "Sim1" }
                 };
 
                 Utilities.CallEvent(storage, "BeginRun", arguments);
@@ -160,15 +157,14 @@
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 1.0 } });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 2.0, 2.1} });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 3.0, 3.1, 3.2} });
-                storage.CompletedWritingSimulationData("Sim1");
                 Utilities.CallEvent(storage, "EndRun");
             }
 
             Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
-                           "SimulationID,Col(1),Col(2),Col(3)\r\n" +
-                           "           1, 1.000,      ,      \r\n" +
-                           "           1, 2.000, 2.100,      \r\n" +
-                           "           1, 3.000, 3.100, 3.200\r\n");
+                           "CheckpointID,SimulationID,Col(1),Col(2),Col(3)\r\n" +
+                           "           1,           1, 1.000,      ,      \r\n" +
+                           "           1,           1, 2.000, 2.100,      \r\n" +
+                           "           1,           1, 3.000, 3.100, 3.200\r\n");
         }
 
         /// <summary>Write array of structure data into a table. Ensure data was written correctly</summary>
@@ -196,7 +192,7 @@
                 object[] arguments = new object[]
                 {
                     new string[] { "Sim1" }, // knownSimulationNames
-                    new string[] { "Sim1" }  // simulationNamesBeingRun
+                    new string[] { "Sim1" }
                 };
 
                 Utilities.CallEvent(storage, "BeginRun", arguments);
@@ -204,14 +200,13 @@
                 string[] columnNames1 = new string[] { "Col" };
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { record1 });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { record2 });
-                storage.CompletedWritingSimulationData("Sim1");
                 Utilities.CallEvent(storage, "EndRun");
             }
 
             Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
-                            "SimulationID,     Col.c,Col.d(1),Col.d(2),Col.e(1).a,Col.e(1).b,Col.e(2).a,Col.e(2).b,Col.e(3).a,Col.e(3).b\r\n" +
-                            "           1,2017-01-01, 100.000, 101.000,        10,        11,        12,        13,          ,          \r\n" +
-                            "           1,2017-01-02, 102.000, 103.000,        16,        17,        18,        19,        20,        21\r\n");
+                            "CheckpointID,SimulationID,     Col.c,Col.d(1),Col.d(2),Col.e(1).a,Col.e(1).b,Col.e(2).a,Col.e(2).b,Col.e(3).a,Col.e(3).b\r\n" +
+                            "           1,           1,2017-01-01, 100.000, 101.000,        10,        11,        12,        13,          ,          \r\n" +
+                            "           1,           1,2017-01-02, 102.000, 103.000,        16,        17,        18,        19,        20,        21\r\n");
         }
 
         /// <summary>Ensure that begin writing method does cleanup</summary>
@@ -222,42 +217,65 @@
             using (DataStore storage = new DataStore(fileName))
             {
                 // Create a database with 3 sims.
-                object[] arguments = new object[]
-                {
-                    new string[] { "Sim1", "Sim2", "Sim3" }, // knownSimulationNames
-                    new string[] { "Sim1" }  // simulationNamesBeingRun
-                };
+                string[] knownSimulationNames = new string[] { "Sim1", "Sim2", "Sim3" };
+                string[] simulationNamesBeingRun = new string[] { "Sim1", "Sim2", "Sim3" };
 
-                Utilities.CallEvent(storage, "BeginRun", arguments);
-
+                Utilities.CallEvent(storage, "BeginRun", new object[] { knownSimulationNames, simulationNamesBeingRun });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { 1 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null }, new object[] { 2 });
                 storage.WriteRow("Sim3", "Report1", columnNames1, new string[] { null }, new object[] { 3 });
-                storage.CompletedWritingSimulationData("Sim1");
-                storage.CompletedWritingSimulationData("Sim2");
-                storage.CompletedWritingSimulationData("Sim3");
                 Utilities.CallEvent(storage, "EndRun");
             }
             using (DataStore storage = new DataStore(fileName))
             {
-                // Now do it again this time with another sim.
-                // Create a database with 3 sims.
-                object[] arguments = new object[]
-                {
-                    new string[] { "Sim1", "Sim4" }, // knownSimulationNames
-                    new string[] { "Sim4" }  // simulationNamesBeingRun
-                };
-                Utilities.CallEvent(storage, "BeginRun", arguments);
+                // Now do it again this time deleting sim2 and sim3 and adding sim4
+                string[] knownSimulationNames = new string[] { "Sim1", "Sim4" };
+                string[] simulationNamesBeingRun = new string[] { "Sim1", "Sim2", "Sim3" };
 
+                Utilities.CallEvent(storage, "BeginRun", new object[] { knownSimulationNames, simulationNamesBeingRun });
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { 5 });
                 storage.WriteRow("Sim4", "Report1", columnNames1, new string[] { null }, new object[] { 4 });
-                storage.CompletedWritingSimulationData("Sim4");
                 Utilities.CallEvent(storage, "EndRun");
             }
 
             Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
-                           "SimulationID,Col\r\n" +
-                           "           1,  1\r\n" +
-                           "           2,  4\r\n");
+                           "CheckpointID,SimulationID,Col\r\n" +
+                           "           1,           1,  5\r\n" +
+                           "           1,           2,  4\r\n");
+        }
+
+        /// <summary>Ensure that datastore cleanup gets rid of old fields</summary>
+        [Test]
+        public void OnBeginRun_CleanupOldFieldNames()
+        {
+            string[] knownSimulationNames = new string[] { "Sim1" };
+            string[] simulationNamesBeingRun = new string[] { "Sim1" };
+            using (DataStore storage = new DataStore(fileName))
+            {
+                string[] oldColumnNames = new string[] { "OldCol" };
+            
+                // Create a table with a column 'OldCol'
+                Utilities.CallEvent(storage, "BeginRun", new object[] { knownSimulationNames, simulationNamesBeingRun });
+                storage.WriteRow("Sim1", "Report1", oldColumnNames, new string[] { null }, new object[] { 1 });
+                storage.WriteRow("Sim1", "Report1", oldColumnNames, new string[] { null }, new object[] { 2 });
+                Utilities.CallEvent(storage, "EndRun");
+            }
+            using (DataStore storage = new DataStore(fileName))
+            {
+                string[] newColumnNames = new string[] { "NewCol" };
+                // Now do it again this time only to column 'NewCol'
+
+                Utilities.CallEvent(storage, "BeginRun", new object[] { knownSimulationNames, simulationNamesBeingRun });
+                storage.WriteRow("Sim1", "Report1", newColumnNames, new string[] { null }, new object[] { 3 });
+                storage.WriteRow("Sim1", "Report1", newColumnNames, new string[] { null }, new object[] { 4 });
+                Utilities.CallEvent(storage, "EndRun");
+            }
+
+            // Make sure OldCol is gone from the table.
+            Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
+                           "CheckpointID,SimulationID,NewCol\r\n" +
+                           "           1,           1,     3\r\n" +
+                           "           1,           1,     4\r\n");
         }
 
         /// <summary>Ensure that GetData when passed a table name returns data for the correct table</summary>
@@ -268,11 +286,11 @@
             {
                 CreateTable(storage);
                 Assert.AreEqual(Utilities.TableToString(storage.GetData("Report2")),
-                                "SimulationName,SimulationID,      Col1,  Col2\r\n" +
-                                "          Sim1,           1,2017-01-01,21.000\r\n" +
-                                "          Sim1,           1,2017-01-02,22.000\r\n" +
-                                "          Sim2,           2,2017-01-01,31.000\r\n" +
-                                "          Sim2,           2,2017-01-02,32.000\r\n");
+                                "CheckpointName,CheckpointID,SimulationName,SimulationID,      Col1,  Col2\r\n" +
+                                "       Current,           1,          Sim1,           1,2017-01-01,21.000\r\n" +
+                                "       Current,           1,          Sim1,           1,2017-01-02,22.000\r\n" +
+                                "       Current,           1,          Sim2,           2,2017-01-01,31.000\r\n" +
+                                "       Current,           1,          Sim2,           2,2017-01-02,32.000\r\n");
             }
         }
 
@@ -286,9 +304,9 @@
                 DataTable data = storage.GetData(tableName:"Report2",
                                                  simulationName: "Sim1");
                 Assert.AreEqual(Utilities.TableToString(data),
-                                "SimulationName,SimulationID,      Col1,  Col2\r\n" +
-                                "          Sim1,           1,2017-01-01,21.000\r\n" +
-                                "          Sim1,           1,2017-01-02,22.000\r\n");
+                                "CheckpointName,CheckpointID,SimulationName,SimulationID,      Col1,  Col2\r\n" +
+                                "       Current,           1,          Sim1,           1,2017-01-01,21.000\r\n" +
+                                "       Current,           1,          Sim1,           1,2017-01-02,22.000\r\n");
             }
         }
 
@@ -303,9 +321,9 @@
                                                  simulationName: "Sim1",
                                                  fieldNames: new string[] { "Col2" });
                 Assert.AreEqual(Utilities.TableToString(data),
-                                "SimulationName,SimulationID,  Col2\r\n" +
-                                "          Sim1,           1,21.000\r\n" +
-                                "          Sim1,           1,22.000\r\n");
+                                "CheckpointName,CheckpointID,SimulationName,SimulationID,  Col2\r\n" +
+                                "       Current,           1,          Sim1,           1,21.000\r\n" +
+                                "       Current,           1,          Sim1,           1,22.000\r\n");
             }
         }
 
@@ -324,8 +342,8 @@
                                                  fieldNames: new string[] { "Col2" },
                                                  filter: "Col2=22");
                 Assert.AreEqual(Utilities.TableToString(data),
-                                "SimulationName,SimulationID,  Col2\r\n" +
-                                "          Sim1,           1,22.000\r\n");
+                                "CheckpointName,CheckpointID,SimulationName,SimulationID,  Col2\r\n" +
+                                "       Current,           1,          Sim1,           1,22.000\r\n");
             }
         }
 
@@ -361,11 +379,11 @@
                 row["Col1"] = 11;
                 row["Col2"] = 21;
                 data.Rows.Add(row);
-                storage.WriteTableRaw(data);
+                storage.WriteTable(data);
                 Assert.AreEqual(Utilities.TableToString(fileName, "Test"),
-                                           "Col1,Col2\r\n" +
-                                           "  10,  20\r\n" +
-                                           "  11,  21\r\n");
+                                           "CheckpointID,Col1,Col2\r\n" +
+                                           "           1,  10,  20\r\n" +
+                                           "           1,  11,  21\r\n");
             }
         }
         
@@ -376,16 +394,10 @@
             using (DataStore storage = new DataStore(fileName))
             {
                 CreateTable(storage);
-                storage.DeleteTable("Report1");
-                Assert.IsFalse(storage.TableNames.Contains("Report1"));
-            }
+                storage.DeleteDataInTable("Report1");
 
-            SQLite database = new SQLite();
-            database.OpenDatabase(fileName, true);
-            DataTable tableData = database.ExecuteQuery("SELECT * FROM sqlite_master");
-            database.CloseDatabase();
-            string[] tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name");
-            Assert.AreEqual(Array.IndexOf(tableNames, "Report1"), -1);
+                Assert.AreEqual(storage.GetData("Report1").Rows.Count, 0);
+            }
         }
 
         /// <summary>Call DeleteTable with a valid table name. Ensure table is deleted</summary>
@@ -406,7 +418,7 @@
             using (DataStore storage = new DataStore(fileName))
             {
                 CreateTable(storage);
-                Assert.AreEqual(storage.ColumnNames("Report1").ToArray(), new string[] { "SimulationID", "Col1", "Col2" });
+                Assert.AreEqual(storage.ColumnNames("Report1").ToArray(), new string[] { "CheckpointID", "SimulationID", "Col1", "Col2" });
             }
         }
 
@@ -429,6 +441,229 @@
                                            "2017-01-02\r\n");
         }
 
+        /// <summary>Add a checkpoint</summary>
+        [Test]
+        public void AddCheckpoint()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+
+                // Add a checkpoint
+                storage.AddCheckpoint("checkpoint1");
+            }
+
+            Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
+                           "CheckpointID,SimulationID,      Col1,  Col2\r\n" +
+                           "           1,           1,2017-01-01, 1.000\r\n" +
+                           "           1,           1,2017-01-02, 2.000\r\n" +
+                           "           1,           2,2017-01-01,11.000\r\n" +
+                           "           1,           2,2017-01-02,12.000\r\n" +
+                           "           2,           1,2017-01-01, 1.000\r\n" +
+                           "           2,           1,2017-01-02, 2.000\r\n" +
+                           "           2,           2,2017-01-01,11.000\r\n" +
+                           "           2,           2,2017-01-02,12.000\r\n");
+
+            Assert.AreEqual(Utilities.TableToString(fileName, "_Checkpoints", new string[] { "ID", "Name" }),
+                            "ID,       Name\r\n" +
+                            " 1,    Current\r\n" +
+                            " 2,checkpoint1\r\n");
+
+            File.Delete("Temp.apsimx");
+        }
+
+        /// <summary>Get all checkpoint files</summary>
+        [Test]
+        public void GetCheckpointFiles()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+
+                // Add a checkpoint
+                File.WriteAllText("Dummy.txt", "abcde");
+                storage.AddCheckpoint("checkpoint1", new string[] { "Dummy.txt" });
+                var files = storage.GetCheckpointFiles("checkpoint1");
+                Assert.AreEqual(files.Count(), 1);
+                Assert.AreEqual(files.ElementAt(0).fileName, "Dummy.txt");
+                Assert.AreEqual(System.Text.Encoding.UTF8.GetString(files.ElementAt(0).contents), "abcde");
+            }
+
+            File.Delete("Dummy.txt");
+        }
+
+        /// <summary>Delete a checkpoint</summary>
+        [Test]
+        public void DeleteCheckpoint()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+
+                // Add a checkpoint with some files
+                File.WriteAllText("Dummy.txt", "abcde");
+                storage.AddCheckpoint("checkpoint1", new string[] { "Dummy.txt" });
+
+                // Delete a checkpoint
+                storage.DeleteCheckpoint("checkpoint1");
+            }
+
+            Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
+                           "CheckpointID,SimulationID,      Col1,  Col2\r\n" +
+                           "           1,           1,2017-01-01, 1.000\r\n" +
+                           "           1,           1,2017-01-02, 2.000\r\n" +
+                           "           1,           2,2017-01-01,11.000\r\n" +
+                           "           1,           2,2017-01-02,12.000\r\n");
+            Assert.AreEqual(Utilities.TableToString(fileName, "_Checkpoints"),
+                "ID,   Name,Version,Date\r\n" +
+                " 1,Current,       ,    \r\n");
+
+            Assert.AreEqual(Utilities.TableToString(fileName, "_CheckpointFiles"),
+                "\r\n");
+        }
+
+        /// <summary>Revert a checkpoint</summary>
+        [Test]
+        public void RevertCheckpoint()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+
+                // Add a checkpoint with some files
+                File.WriteAllText("Dummy.txt", "abcde");
+                storage.AddCheckpoint("checkpoint1", new string[] { "Dummy.txt" });
+
+                // Change contents of our file.
+                File.WriteAllText("Dummy.txt", "qwerty");
+
+                // Write some new current data.
+                // Create a database with 3 sims.
+                string[] simulationNamesBeingRun = new string[] { "Sim1" };
+                object[] arguments = new object[] { new string[] { "Sim1", "Sim2" }, simulationNamesBeingRun };
+                Utilities.CallEvent(storage, "BeginRun", arguments);
+                string[] columnNames1 = new string[] { "Col1", "Col2" };
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 3), 100.0 });
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 4), 200.0 });
+                Utilities.CallEvent(storage, "EndRun");
+
+                // Now revert back to checkpoint1
+                storage.RevertCheckpoint("checkpoint1");
+            }
+
+            Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
+                           "CheckpointID,SimulationID,      Col1,  Col2\r\n" +
+                           "           1,           1,2017-01-01, 1.000\r\n" +
+                           "           1,           1,2017-01-02, 2.000\r\n" +
+                           "           1,           2,2017-01-01,11.000\r\n" +
+                           "           1,           2,2017-01-02,12.000\r\n" +
+                           "           2,           1,2017-01-01, 1.000\r\n" +
+                           "           2,           1,2017-01-02, 2.000\r\n" +
+                           "           2,           2,2017-01-01,11.000\r\n" +
+                           "           2,           2,2017-01-02,12.000\r\n");
+
+            Assert.AreEqual(Utilities.TableToString(fileName, "_Checkpoints", new string[] { "ID", "Name" }),
+                            "ID,       Name\r\n" +
+                            " 1,    Current\r\n" +
+                            " 2,checkpoint1\r\n");
+        }
+
+        /// <summary>Add a checkpoint and then write some new rows</summary>
+        [Test]
+        public void AddCheckpointThenWriteNewRows()
+        {
+            DataTable data = null;
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+                data = storage.RunQuery("SELECT Col1 FROM Report1");
+
+                // Add a checkpoint
+                storage.AddCheckpoint("checkpoint1");
+
+                // Write new rows for sim2. Should get rid of old sim2 data and replace 
+                // with these 2 new rows.
+                string[] simulationNames = new string[] { "Sim1", "Sim2" };
+                string[] simulationNamesBeingRun = new string[] { "Sim2" };
+                Utilities.CallEvent(storage, "BeginRun", new object[] { simulationNames, simulationNamesBeingRun });
+                string[] columnNames1 = new string[] { "Col1", "Col2" };
+                storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 3.0 });
+                storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 4.0 });
+                Utilities.CallEvent(storage, "EndRun");
+            }
+
+            Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
+                            "CheckpointID,SimulationID,      Col1,  Col2\r\n" +
+                            "           1,           1,2017-01-01, 1.000\r\n" +
+                            "           1,           1,2017-01-02, 2.000\r\n" +
+                            "           1,           2,2017-01-01, 3.000\r\n" +
+                            "           1,           2,2017-01-02, 4.000\r\n" +
+                            "           2,           1,2017-01-01, 1.000\r\n" +
+                            "           2,           1,2017-01-02, 2.000\r\n" +
+                            "           2,           2,2017-01-01,11.000\r\n" +
+                            "           2,           2,2017-01-02,12.000\r\n");
+        }
+
+        /// <summary>Overwrite an existing checkpoint</summary>
+        [Test]
+        public void OverwriteExistingCheckpoint()
+        {
+            DataTable data = null;
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+                data = storage.RunQuery("SELECT Col1 FROM Report1");
+
+                // Add a checkpoint
+                storage.AddCheckpoint("checkpoint1");
+
+                // Write new rows for sim2. Should get rid of old sim2 data and replace 
+                // with these 2 new rows.
+                string[] simulationNames = new string[] { "Sim1", "Sim2" };
+                string[] simulationNamesBeingRun = new string[] { "Sim2" };
+                Utilities.CallEvent(storage, "BeginRun", new object[] { simulationNames, simulationNamesBeingRun });
+                string[] columnNames1 = new string[] { "Col1", "Col2" };
+                storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 3.0 });
+                storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 4.0 });
+                Utilities.CallEvent(storage, "EndRun");
+
+                // Add a checkpoint - overwrite existing one.
+                storage.AddCheckpoint("checkpoint1");
+            }
+
+            Assert.AreEqual(Utilities.TableToString(fileName, "Report1"),
+                            "CheckpointID,SimulationID,      Col1, Col2\r\n" +
+                            "           1,           1,2017-01-01,1.000\r\n" +
+                            "           1,           1,2017-01-02,2.000\r\n" +
+                            "           1,           2,2017-01-01,3.000\r\n" +
+                            "           1,           2,2017-01-02,4.000\r\n" +
+                            "           2,           1,2017-01-01,1.000\r\n" +
+                            "           2,           1,2017-01-02,2.000\r\n" +
+                            "           2,           2,2017-01-01,3.000\r\n" +
+                            "           2,           2,2017-01-02,4.000\r\n");
+        }
+
+        /// <summary>List names of checkpoint</summary>
+        [Test]
+        public void ListCheckpoints()
+        {
+            DataTable data = null;
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+                data = storage.RunQuery("SELECT Col1 FROM Report1");
+
+                // Add a checkpoint
+                storage.AddCheckpoint("checkpoint1");
+
+                // Add a checkpoint 
+                storage.AddCheckpoint("checkpoint2");
+
+                Assert.AreEqual(storage.Checkpoints(),
+                                new string[] { "Current", "checkpoint1", "checkpoint2" });
+            }
+        }
+
         /// <summary>Create a table that we can test</summary>
         private static void CreateTable(DataStore storage)
         {
@@ -436,7 +671,7 @@
             object[] arguments = new object[]
             {
                     new string[] { "Sim1", "Sim2" }, // knownSimulationNames
-                    new string[] { "Sim1", "Sim2" }  // simulationNamesBeingRun
+                    new string[] { "Sim1", "Sim2" }, // simulation names being run
             };
 
             Utilities.CallEvent(storage, "BeginRun", arguments);
@@ -450,10 +685,7 @@
             storage.WriteRow("Sim1", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 2), 22.0 });
             storage.WriteRow("Sim2", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 1), 31.0 });
             storage.WriteRow("Sim2", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 2), 32.0 });
-            storage.CompletedWritingSimulationData("Sim1");
-            storage.CompletedWritingSimulationData("Sim2");
             Utilities.CallEvent(storage, "EndRun");
         }
-        
     }
 }

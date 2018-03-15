@@ -19,7 +19,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(PostSimulationTools.PredictedObserved))]
-    public class Tests : Model, ITestable
+    public class Tests : Model, ITestable, ICustomDocumentation
     {
         /// <summary>
         /// data table
@@ -74,6 +74,7 @@ namespace Models
             for (int i = 0; i < columnNames.Count; i++)
                 columnNames[i] = columnNames[i].Replace("Observed.", "");
             columnNames.Sort(); //ensure column names are always in the same order
+            columnNames.Remove("CheckpointID");
             stats = new MathUtilities.RegrStats[columnNames.Count];
             List<double> x = new List<double>();
             List<double> y = new List<double>();
@@ -248,7 +249,7 @@ namespace Models
         /// <param name="tags"></param>
         /// <param name="headingLevel"></param>
         /// <param name="indent"></param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {

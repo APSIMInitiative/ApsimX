@@ -16,6 +16,9 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Views;
+    using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
@@ -26,7 +29,7 @@ namespace UserInterface.Presenters
     public class MainPresenter
     {
         /// <summary>A list of presenters for tabs on the left.</summary>
-        public List<ExplorerPresenter> presenters1 = new List<ExplorerPresenter>();
+        public List<IPresenter> presenters1 = new List<IPresenter>();
 
         /// <summary>A private reference to the view this presenter will talk to.</summary>
         private IMainView view;
@@ -35,7 +38,12 @@ namespace UserInterface.Presenters
         private string lastExamplesPath;
 
         /// <summary>A list of presenters for tabs on the right.</summary>
-        private List<ExplorerPresenter> presenters2 = new List<ExplorerPresenter>();
+        private List<IPresenter> presenters2 = new List<IPresenter>();
+
+        /// <summary>
+        /// The most recent exception that has been thrown.
+        /// </summary>
+        public List<string> LastError { get; private set; }
 
         /// <summary>Attach this presenter with a view. Can throw if there are errors during startup.</summary>
         /// <param name="view">The view to attach</param>
@@ -72,8 +80,12 @@ namespace UserInterface.Presenters
             this.view.StartPage1.List.DoubleClicked += this.OnFileDoubleClicked;
             this.view.StartPage2.List.DoubleClicked += this.OnFileDoubleClicked;
             this.view.TabClosing += this.OnTabClosing;
+            this.view.ShowDetailedError += this.ShowDetailedErrorMessage;
             this.view.Show();
-
+            if (Utility.Configuration.Settings.StatusPanelHeight > 0.5 * this.view.WindowSize.Height)
+                this.view.StatusPanelHeight = 20;
+            else
+                this.view.StatusPanelHeight = Utility.Configuration.Settings.StatusPanelHeight;
             // Process command line.
             this.ProcessCommandLineArguments(commandLineArguments);
         }
@@ -94,12 +106,12 @@ namespace UserInterface.Presenters
         {
             bool ok = true;
 
-            foreach (ExplorerPresenter presenter in this.presenters1)
+            foreach (ExplorerPresenter presenter in this.presenters1.OfType<ExplorerPresenter>())
             {
                 ok = presenter.SaveIfChanged() && ok;
             }
 
-            foreach (ExplorerPresenter presenter in this.presenters2)
+            foreach (ExplorerPresenter presenter in this.presenters2.OfType<ExplorerPresenter>())
             {
                 ok = presenter.SaveIfChanged() && ok;
             }
@@ -153,12 +165,107 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Add a status message. A message of null will clear the status message.
+        /// For error messages, use <see cref="ShowError(Exception)"/>.
         /// </summary>
         /// <param name="message">The message test</param>
         /// <param name="errorLevel">The error level value</param>
-        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel)
+        public void ShowMessage(string message, Simulation.MessageType messageType)
         {
-            this.view.ShowMessage(message, errorLevel);
+            Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
+
+            if (messageType == Simulation.MessageType.Information)
+                errorType = Simulation.ErrorLevel.Information;
+            else if (messageType == Simulation.MessageType.Warning)
+                errorType = Simulation.ErrorLevel.Warning;
+
+            this.view.ShowMessage(message, errorType);
+        }
+        
+        /// <summary>
+        /// Displays several messages, with a separator between them. 
+        /// For error messages, use <see cref="ShowError(List{Exception})"/>.
+        /// </summary>
+        /// <param name="messages">Messages to be displayed.</param>
+        /// <param name="messageType"></param>
+        public void ShowMessage(List<string> messages, Simulation.MessageType messageType)
+        {
+            Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
+
+            if (messageType == Simulation.MessageType.Information)
+                errorType = Simulation.ErrorLevel.Information;
+            else if (messageType == Simulation.MessageType.Warning)
+                errorType = Simulation.ErrorLevel.Warning;
+
+            foreach (string msg in messages)
+            {
+                view.ShowMessage(msg, errorType, false, true, false);
+            }
+        }
+
+        /// <summary>
+        /// Displays a simple error message in the status bar, without a 'more information' button.
+        /// If you've just caught an exception, <see cref="ShowError(Exception)"/> is probably a better method to use.
+        /// </summary>
+        /// <param name="error"></param>
+        public void ShowError(string error)
+        {
+            LastError = new List<string>();
+            view.ShowMessage(error, Simulation.ErrorLevel.Error, withButton : false);
+        }
+
+        /// <summary>
+        /// Displays an error message in the status bar, along with a button which brings up more info.
+        /// </summary>
+        /// <param name="error">The error to be displayed.</param>
+        public void ShowError(Exception error)
+        {
+            if (error != null)
+            {
+                LastError = new List<string> { error.ToString() };
+                view.ShowMessage(error.Message, Simulation.ErrorLevel.Error);
+            }
+            else
+            {
+                LastError = new List<string>();
+                ShowError(new NullReferenceException("Attempted to display a null error"));
+            }
+        }
+
+        /// <summary>
+        /// Displays several error messages in the status bar. Each error will have an associated 
+        /// </summary>
+        /// <param name="errors"></param>
+        public void ShowError(List<Exception> errors)
+        {
+            // if the list contains at least 1 null exception, display none of them
+            if (errors != null && !errors.Contains(null))
+            {
+                LastError = errors.Select(err => err.ToString()).ToList();
+                for (int i = 0; i < errors.Count; i++)
+                {
+                    // only overwrite other messages the first time through the loop
+                    view.ShowMessage(errors[i].Message, Simulation.ErrorLevel.Error, i == 0, true);
+                }
+            }
+            else
+            {
+                LastError = new List<string>();
+                ShowError(new NullReferenceException("Attempted to display a null error"));
+            }
+        }
+
+        /// <summary>
+        /// Shows a window which contains detailed error information (such as stack trace).
+        /// </summary>
+        /// <param name="sender">Sender object. Must be an <see cref="ApsimNG.Classes.CustomButton"/></param>
+        /// <param name="e">Event Arguments.</param>
+        private void ShowDetailedErrorMessage(object sender, EventArgs e)
+        {
+            if (sender is ApsimNG.Classes.CustomButton)
+            {
+                ErrorView err = new ErrorView(LastError[(sender as ApsimNG.Classes.CustomButton).ID], view as ViewBase);
+                err.Show();
+            }
         }
 
         /// <summary>Show a message in a dialog box</summary>
@@ -176,9 +283,9 @@ namespace UserInterface.Presenters
         /// Show progress bar with the specified percent.
         /// </summary>
         /// <param name="percent">The progress</param>
-        public void ShowProgress(int percent)
+        public void ShowProgress(int percent, bool showStopButton = true)
         {
-            this.view.ShowProgress(percent);
+            this.view.ShowProgress(percent, showStopButton);
         }
 
         /// <summary>
@@ -219,7 +326,7 @@ namespace UserInterface.Presenters
         /// <param name="askToSave">Prompt to save</param>
         public void Close(bool askToSave)
         {
-            this.view.Close();
+            this.view.Close(askToSave);
         }
 
         /// <summary>Ask the user a question</summary>
@@ -270,13 +377,10 @@ namespace UserInterface.Presenters
                 try
                 {
                     Simulations simulations = Simulations.Read(fileName);
-                    presenter = this.CreateNewTab(fileName, simulations, onLeftTabControl);
+                    presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
                     if (simulations.LoadErrors.Count > 0)
                     {
-                        foreach (Exception error in simulations.LoadErrors)
-                        {
-                            this.view.ShowMessage(error.ToString(), Simulation.ErrorLevel.Error);
-                        }
+                        ShowError(simulations.LoadErrors);
                     }
 
                     // Add to MRU list and update display
@@ -285,7 +389,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    this.view.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                    ShowError(err);
                 }
 
                 this.view.ShowWaitCursor(false);
@@ -368,6 +472,10 @@ namespace UserInterface.Presenters
                                 "Upgrade",
                                         new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
                                         this.OnUpgrade);
+            startPage.AddButton(
+                                "View Cloud Jobs",
+                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
+                                        this.OnViewCloudJobs);
             
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
@@ -490,9 +598,9 @@ namespace UserInterface.Presenters
                         Utility.Configuration.Settings.RenameMruFile(fileName, newName);
                         this.UpdateMRUDisplay();
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        this.view.ShowMessage("Error renaming file!", Simulation.ErrorLevel.Error);
+                        ShowError(new Exception("Error renaming file!", e));
                     }
                 }
             }
@@ -519,9 +627,9 @@ namespace UserInterface.Presenters
                         Utility.Configuration.Settings.AddMruFile(copyName);
                         this.UpdateMRUDisplay();
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        this.view.ShowMessage("Error creating copy of file!", Simulation.ErrorLevel.Error);
+                        ShowError(new Exception("Error creating copy of file!", e));
                     }
                 }
             }
@@ -545,9 +653,9 @@ namespace UserInterface.Presenters
                         Utility.Configuration.Settings.DelMruFile(fileName);
                         this.UpdateMRUDisplay();
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        this.view.ShowMessage("Error deleting file!", Simulation.ErrorLevel.Error);
+                        ShowError(new Exception("Error deleting file!", e));
                     }
                 }
             }
@@ -583,8 +691,8 @@ namespace UserInterface.Presenters
         /// <param name="onLeftTabControl">If true, search the left screen, else search the right</param>
         /// <returns>The explorer presenter</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
-        {
-            List<ExplorerPresenter> presenters = onLeftTabControl ? this.presenters1 : this.presenters2;
+        {            
+            List<ExplorerPresenter> presenters = onLeftTabControl ? this.presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
             foreach (ExplorerPresenter presenter in presenters)
             {
                 if (presenter.ApsimXFile.FileName == fileName)
@@ -605,44 +713,61 @@ namespace UserInterface.Presenters
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(contents);
             Simulations simulations = Simulations.Read(doc.DocumentElement);
-            this.CreateNewTab(name, simulations, onLeftTabControl);
+            this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
         /// <summary>Create a new tab.</summary>
         /// <param name="name">Name of the simulation</param>
         /// <param name="simulations">The simulations object to add to tab.</param>
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
+        /// <param name="viewName">Name of the view to create.</param>
+        /// <param name="presenterName">Name of the presenter to create.</param>
         /// <returns>The explorer presenter</returns>
-        private ExplorerPresenter CreateNewTab(string name, Simulations simulations, bool onLeftTabControl)
+        private IPresenter CreateNewTab(string name, Simulations simulations, bool onLeftTabControl, string viewName, string presenterName)
         {
             this.view.ShowMessage(" ", Simulation.ErrorLevel.Information); // Clear the message window
-            ExplorerView explorerView = new ExplorerView(null);
-            ExplorerPresenter presenter = new ExplorerPresenter(this);
+            ViewBase newView;
+            IPresenter newPresenter;
+            try
+            {
+                newView = (ViewBase)Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
+                newPresenter = (IPresenter)Assembly.GetExecutingAssembly().CreateInstance(presenterName, false, BindingFlags.Default, null, new object[] { this }, null, null);
+            } catch (InvalidCastException e)
+            {
+                // viewName or presenterName does not define a class derived from ViewBase or IPresenter, respectively.
+                ShowError(e);
+                return null;
+            }
+            
+            //ExplorerView explorerView = new ExplorerView(null);
+            //ExplorerPresenter presenter = new ExplorerPresenter(this);
             if (onLeftTabControl)
             {
-                this.presenters1.Add(presenter);
+                this.presenters1.Add(newPresenter);
             }
             else
             {
-                this.presenters2.Add(presenter);
+                this.presenters2.Add(newPresenter);
             }
 
             XmlDocument doc = new XmlDocument();
-            presenter.Attach(simulations, explorerView, null);
+            newPresenter.Attach(simulations, newView, null);
 
-            this.view.AddTab(name, null, explorerView.MainWidget, onLeftTabControl);
+            this.view.AddTab(name, null, newView.MainWidget, onLeftTabControl);
 
             // restore the simulation tree width on the form
-            if (simulations.ExplorerWidth == 0)
+            if (newPresenter.GetType() == typeof(ExplorerPresenter))
             {
-                presenter.TreeWidth = 250;
+                if (simulations.ExplorerWidth == 0)
+                {
+                    ((ExplorerPresenter)newPresenter).TreeWidth = 250;
+                }
+                else
+                {
+                    ((ExplorerPresenter)newPresenter).TreeWidth = simulations.ExplorerWidth;
+                }
             }
-            else
-            {
-                presenter.TreeWidth = simulations.ExplorerWidth;
-            }
-
-            return presenter;
+            return newPresenter;
         }
 
         /// <summary>
@@ -686,19 +811,23 @@ namespace UserInterface.Presenters
         {
             if (e.LeftTabControl)
             {
-                e.AllowClose = this.presenters1[e.Index - 1].SaveIfChanged();
+                IPresenter presenter = presenters1[e.Index - 1];
+                e.AllowClose = true;
+                if (presenter.GetType() == typeof(ExplorerPresenter)) e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();
                 if (e.AllowClose)
                 {
-                    this.presenters1[e.Index - 1].Detach();
+                    presenter.Detach();
                     this.presenters1.RemoveAt(e.Index - 1);
                 }
             }
             else
             {
-                e.AllowClose = this.presenters2[e.Index - 1].SaveIfChanged();
+                IPresenter presenter = presenters2[e.Index - 1];
+                e.AllowClose = true;
+                if (presenter.GetType() == typeof(ExplorerPresenter)) e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();                
                 if (e.AllowClose)
                 {
-                    this.presenters2[e.Index - 1].Detach();
+                    presenter.Detach();
                     this.presenters2.RemoveAt(e.Index - 1);
                 }
             }
@@ -743,7 +872,7 @@ namespace UserInterface.Presenters
                     message += "\r\n" + err.InnerException.Message;
                 }
 
-                this.view.ShowMessage(message, Simulation.ErrorLevel.Error);
+                ShowError(err);
             }
         }
 
@@ -777,6 +906,26 @@ namespace UserInterface.Presenters
             {
                 throw new Exception("Failed import: " + exp.Message);
             }
+        }
+
+        /// <summary>
+        /// Open a tab which shows a list of jobs submitted to the cloud.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event Arguments</param>
+        public void OnViewCloudJobs(object sender, EventArgs e)
+        {
+            bool onLeftTabControl = view.IsControlOnLeft(sender);            
+            // Clear the message window
+            view.ShowMessage(" ", Simulation.ErrorLevel.Information);
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "UserInterface.Views.CloudJobDisplayView", "UserInterface.Presenters.AzureJobDisplayPresenter");
+            } else
+            {
+                ShowError("Microsoft Azure functionality is currently only available under Windows.");
+            }
+            
         }
 
         /// <summary>
@@ -827,7 +976,7 @@ namespace UserInterface.Presenters
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             if (version.Revision == 0)
             {
-                this.view.ShowMessage("You are on a custom build. You cannot upgrade.", Simulation.ErrorLevel.Error);
+                ShowError("You are on a custom build. You cannot upgrade.");
             }
             else
             {
@@ -850,6 +999,7 @@ namespace UserInterface.Presenters
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
+                Utility.Configuration.Settings.StatusPanelHeight = this.view.StatusPanelHeight;
             }
         }
     }

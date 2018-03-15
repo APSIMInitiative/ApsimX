@@ -7,12 +7,14 @@
     using System.Data;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml.Serialization;
 
     /// <summary>
+    /// # [Name]
     /// A storage service for reading and writing to/from a SQLITE database.
     /// </summary>
     [Serializable]
@@ -31,8 +33,11 @@
         /// <summary>Data that needs writing</summary>
         private List<Table> dataToWrite = new List<Table>();
 
-        /// <summary>The simulations table in the .db</summary>
+        /// <summary>The IDS for all simulations</summary>
         private Dictionary<string, int> simulationIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>The IDs for all checkpoints</summary>
+        private Dictionary<string, int> checkpointIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>Are we stopping writing to the DB?</summary>
         private bool stoppingWriteToDB;
@@ -148,7 +153,13 @@
         public void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
         {
             Table t;
-            int simulationID = simulationIDs[simulationName];
+            int checkpointID = checkpointIDs["Current"];
+            int simulationID = -1;
+            if (simulationName != null)
+            {
+                if (!simulationIDs.TryGetValue(simulationName, out simulationID))
+                    simulationID = 0;  // Denotes a simulation name was supplied but it isn't one we know about.
+            }
             lock (dataToWrite)
             {
                 t = dataToWrite.Find(table => table.Name == tableName);
@@ -158,44 +169,33 @@
                     dataToWrite.Add(t);
                 }
             }
-            t.AddRow(simulationID, columnNames, columnUnits, valuesToWrite);
-        }
-
-        /// <summary>Completed writing data for simulation</summary>
-        /// <param name="simulationName"></param>
-        public void CompletedWritingSimulationData(string simulationName)
-        {
-            //int simulationID = simulationIDs[simulationName];
-            //lock (dataToWrite)
-            //{
-            //    simData = dataToWrite.Find(s => s.simulationID == simulationID);
-            //}
-            //if (simData != null)
-            //    simData.complete = true;
+            t.AddRow(checkpointID, simulationID, columnNames, columnUnits, valuesToWrite);
         }
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null,
+                                IEnumerable<string> simulationNamesBeingRun = null)
         {
             stoppingWriteToDB = false;
-            if (knownSimulationNames != null && simulationNamesBeingRun != null)
+            if (knownSimulationNames != null)
             {
                 Open(readOnly: false);
                 CleanupDB(knownSimulationNames, simulationNamesBeingRun);
             }
-            writeTask = Task.Run(() => WriteDBWorker(knownSimulationNames, simulationNamesBeingRun));
+            StartDBWriteThread();
         }
 
         /// <summary>Finish writing to DB file</summary>
         [EventSubscribe("EndRun")]
         private void OnEndRun(object sender, EventArgs e)
         {
-            //foreach (SimulationData data in dataToWrite)
-            //    data.complete = true;
+            StopDBWriteThread();
 
-            stoppingWriteToDB = true;
-            writeTask.Wait();
+            Open(readOnly: true);
+
+            // Cleanup unused fields.
+            CleanupUnusedFields();
 
             // Call the all completed event in all models
             if (Parent != null)
@@ -210,6 +210,7 @@
         /// Return all data from the specified simulation and table name. If simulationName = "*"
         /// the all simulation data will be returned.
         /// </summary>
+        /// <param name="checkpointName">Name of the checkpoint.</param>
         /// <param name="simulationName">Name of the simulation.</param>
         /// <param name="tableName">Name of the table.</param>
         /// <param name="fieldNames">Optional column names to retrieve from storage</param>
@@ -217,7 +218,7 @@
         /// <param name="from">Optional start index. Only used when 'count' specified. The record number to offset.</param>
         /// <param name="count">Optional number of records to return or all if 0.</param>
         /// <returns></returns>
-        public DataTable GetData(string tableName, string simulationName = null, IEnumerable<string> fieldNames = null,
+        public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null,
                                  string filter = null,
                                  int from = 0, int count = 0)
         {
@@ -232,7 +233,7 @@
             bool hasToday = false;
 
             // Write SELECT clause
-            sql.Append("SELECT S.Name AS SimulationName,S.ID AS SimulationID");
+            sql.Append("SELECT C.Name AS CheckpointName, C.ID AS CheckpointID, S.Name AS SimulationName,S.ID AS SimulationID");
             List<string> fieldList = null;
             if (fieldNames == null)
                 fieldList = table.Columns.Select(col => col.Name).ToList();
@@ -240,32 +241,43 @@
             {
                 fieldList = fieldNames.ToList();
             }
+            fieldList.Remove("CheckpointID");
             fieldList.Remove("SimulationName");
             fieldList.Remove("SimulationID");
             
             foreach (string fieldName in fieldList)
             {
-                sql.Append(",T.");
-                sql.Append("[");
-                sql.Append(fieldName);
-                sql.Append(']');
-                if (fieldName == "Clock.Today")
-                    hasToday = true;
+                if (table.HasColumn(fieldName))
+                {
+                    sql.Append(",T.");
+                    sql.Append("[");
+                    sql.Append(fieldName);
+                    sql.Append(']');
+                    if (fieldName == "Clock.Today")
+                        hasToday = true;
+                }
             }
 
             // Write FROM clause
-            sql.Append(" FROM _Simulations S, ");
+            sql.Append(" FROM _Checkpoints C, _Simulations S, ");
             sql.Append(tableName);
             sql.Append(" T ");
 
             // Write WHERE clause
-            sql.Append("WHERE SimulationID = ID");
+            sql.Append("WHERE CheckpointID = C.ID AND SimulationID = S.ID");
             if (simulationName != null)
             {
                 sql.Append(" AND S.Name = '");
                 sql.Append(simulationName);
                 sql.Append('\'');
             }
+
+            // Write checkpoint name
+            if (checkpointName == null)
+                sql.Append(" AND C.Name = 'Current'");
+            else
+                sql.Append(" AND C.Name = '" + checkpointName + "'");
+
             if (filter != null)
             {
                 sql.Append(" AND (");
@@ -309,17 +321,49 @@
         }
 
         /// <summary>
+        /// Add units to table. Removes old units first.
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="columnNames">The column names to add</param>
+        /// <param name="columnUnits">The column units to add</param>
+        public void AddUnitsForTable(string tableName, List<string> columnNames, List<string> columnUnits)
+        {
+            Table foundTable = tables.Find(t => t.Name == tableName);
+            if (foundTable != null)
+            {
+                for (int i = 0; i < columnNames.Count; i++)
+                {
+                    Table.Column column = foundTable.Columns.Find(c => c.Name == columnNames[i]);
+                    if (column != null)
+                        column.Units = columnUnits[i];
+                }
+            }
+
+            connection.ExecuteNonQuery("DELETE FROM _Units WHERE TableName = '" + tableName + "'");
+
+            string sql = "INSERT INTO _Units (TableName, ColumnHeading, Units) " +
+                           "VALUES (?, ?, ?)";
+            IntPtr statement = connection.Prepare(sql);
+            for (int i = 0; i < columnNames.Count; i++)
+            {
+                connection.BindParametersAndRunQuery(statement, new object[] {
+                                                     tableName,
+                                                     columnNames[i],
+                                                     columnUnits[i]});
+            }
+            connection.Finalize(statement);
+        }
+
+        /// <summary>
         /// Create a table in the database based on the specified data. If a 'SimulationName'
         /// column is found a corresponding 'SimulationID' column will be created.
         /// </summary>
         /// <param name="data">The data to write</param>
         public void WriteTable(DataTable data)
         {
+            Open(readOnly: false);
             SortedSet<string> simulationNames = new SortedSet<string>();
 
-            bool startWriteThread = writeTask == null || writeTask.IsCompleted;
-            if (startWriteThread)
-                OnBeginRun(null, null);
 
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in data.Columns)
@@ -338,88 +382,25 @@
                 simulationNames.Add(simulationName);
             }
 
+
+            bool startWriteThread = writeTask == null || writeTask.IsCompleted;
             if (startWriteThread)
             {
-                foreach (string simulationName in simulationNames)
-                    if (simulationName != null && simulationName != string.Empty)
-                        CompletedWritingSimulationData(simulationName);
-                OnEndRun(null, null);
-            }
-        }
-
-        /// <summary>Create a table in the database based on the specified one.</summary>
-        /// <param name="table">The table.</param>
-        public void WriteTableRaw(DataTable table)
-        {
-            if (table.Columns.Count > 0)
-            {
-                // Open the .db for writing.
-                Open(readOnly: false);
-
-                if (table.Columns.Contains("SimulationName"))
-                    AddSimulationIDColumnToTable(table);
-
-                // Get a list of all names and datatypes for each field in this table.
-                List<string> names = new List<string>();
-                List<Type> types = new List<Type>();
-
-                // Go through all columns for this table and add to 'names' and 'types'
-                foreach (DataColumn column in table.Columns)
-                {
-                    names.Add(column.ColumnName);
-                    types.Add(column.DataType);
-                }
-
-                // Create the table.
-                CreateTable(table.TableName, names, types);
-
-                // Prepare the insert query sql
-                IntPtr query = PrepareInsertIntoTable(connection, table.TableName, names);
-
-                // Tell SQLite that we're beginning a transaction.
-                connection.ExecuteNonQuery("BEGIN");
-
-                try
-                {
-                    // Write each row to the .db
-                    if (table != null)
-                    {
-                        object[] values = new object[names.Count];
-                        foreach (DataRow row in table.Rows)
-                        {
-                            for (int i = 0; i < names.Count; i++)
-                                if (table.Columns.Contains(names[i]))
-                                    values[i] = row[names[i]];
-
-                            // Write the row to the .db
-                            connection.BindParametersAndRunQuery(query, values);
-                        }
-                    }
-                }
-                finally
-                {
-                    // tell SQLite we're ending our transaction.
-                    connection.ExecuteNonQuery("END");
-
-                    // finalise our query.
-                    connection.Finalize(query);
-                }
+                StartDBWriteThread();
+                StopDBWriteThread();
             }
         }
 
         /// <summary>Delete the specified table.</summary>
         /// <param name="tableName">Name of the table.</param>
-        public void DeleteTable(string tableName)
+        public void DeleteDataInTable(string tableName)
         {
             Open(readOnly: false);
 
-            Table tableToDelete = tables.Find(t => t.Name == tableName);
-            if (tableToDelete != null)
-            {
-                string sql = "DROP TABLE " + tableName;
-                connection.ExecuteNonQuery(sql);
-                tables.Remove(tableToDelete);
-            }
+            int checkpointID = checkpointIDs["Current"];
+
+            if (tables.Find(table => table.Name == tableName) != null)
+                connection.ExecuteNonQuery("DELETE FROM " + tableName + " WHERE CheckpointID = " + checkpointID);
         }
 
         /// <summary>Return all data from the specified simulation and table name.</summary>
@@ -449,13 +430,20 @@
         }
 
         /// <summary>Delete all tables</summary>
-        public void DeleteAllTables()
+        public void EmptyDataStore()
         {
             bool openForReadOnly = true;
             if (connection != null)
                 openForReadOnly = connection.IsReadOnly;
-            Close();
-            File.Delete(FileName);
+
+            // Don't iterate through the table or TableNames properties directly,
+            // since the deletion operation can mess up the iterator.
+            string[] tableNames = TableNames.ToArray();
+            foreach (string tableName in tableNames)
+            {
+                DeleteDataInTable(tableName);
+            }
+
             Open(openForReadOnly);
         }
 
@@ -468,6 +456,179 @@
             if (simulationIDs.TryGetValue(simulationName, out id))
                 return id;
             return -1;
+        }
+
+        /// <summary>Get a checkpoint ID for the specified checkpoint name</summary>
+        /// <param name="checkpointName">The simulation name to look for</param>
+        /// <returns>The database ID or -1 if not found</returns>
+        public int GetCheckpointID(string checkpointName)
+        {
+            int id;
+            if (checkpointIDs.TryGetValue(checkpointName, out id))
+                return id;
+            return -1;
+        }
+
+        /// <summary>
+        /// Return list of checkpoints.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> Checkpoints()
+        {
+            Open(readOnly: false);
+            return checkpointIDs.Keys.ToList();
+        }
+
+        /// <summary>Add a checkpoint</summary>
+        /// <param name="name">Name of checkpoint</param>
+        /// <param name="filesToCheckpoint">Files to checkpoint</param>
+        public void AddCheckpoint(string name, IEnumerable<string> filesToCheckpoint = null)
+        {
+            if (checkpointIDs.ContainsKey(name))
+                DeleteCheckpoint(name);
+
+            Open(readOnly: false);
+            connection.ExecuteNonQuery("BEGIN");
+
+            int checkpointID = checkpointIDs["Current"];
+            int newCheckpointID = checkpointIDs.Values.Max() + 1;
+
+            foreach (Table t in tables)
+            {
+                List<string> columnNames = t.Columns.Select(column => column.Name).ToList();
+                if (t.Name != "_CheckpointFiles" && columnNames.Contains("CheckpointID"))
+                { 
+                    columnNames.Remove("CheckpointID");
+
+                    string csvFieldNames = null;
+                    foreach (string columnName in columnNames)
+                    {
+                        if (csvFieldNames != null)
+                            csvFieldNames += ",";
+                        csvFieldNames += "[" + columnName + "]";
+                    }
+
+                    connection.ExecuteNonQuery("INSERT INTO " + t.Name + " (" + "CheckpointID," + csvFieldNames + ")" +
+                                               " SELECT " + newCheckpointID + "," + csvFieldNames +
+                                               " FROM " + t.Name +
+                                               " WHERE CheckpointID = " + checkpointID);
+                }
+            }
+            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string now = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
+            connection.ExecuteNonQuery("INSERT INTO _Checkpoints (ID, Name, Version, Date) VALUES (" + newCheckpointID + ", '" + name + "', '" + version + "', '" + now + "')");
+
+            if (filesToCheckpoint != null)
+            {
+                IntPtr insertQuery = connection.Prepare("INSERT INTO _CheckpointFiles (CheckpointID, FileName, Contents) VALUES (?, ?, ?)");
+
+                // Add in all referenced files.
+                Simulations sims = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                object[] values = new object[3];
+                values[0] = newCheckpointID;
+                foreach (string fileName in filesToCheckpoint)
+                {
+                    if (File.Exists(fileName))
+                    {
+                        values[1] = fileName;
+                        values[2] = File.ReadAllBytes(fileName);
+                        connection.BindParametersAndRunQuery(insertQuery, values);
+                    }
+                }
+                connection.Finalize(insertQuery);
+            }
+
+            connection.ExecuteNonQuery("END");
+            Open(readOnly: true);
+
+            checkpointIDs.Add(name, newCheckpointID);
+        }
+
+        /// <summary>Delete a checkpoint</summary>
+        /// <param name="name">Name of checkpoint</param>
+        public void DeleteCheckpoint(string name)
+        {
+            if (!checkpointIDs.ContainsKey(name))
+                throw new Exception("Cannot find checkpoint: " + name);
+
+            connection.ExecuteNonQuery("BEGIN");
+            int checkpointID = checkpointIDs[name];
+            foreach (Table t in tables)
+            {
+                List<string> columnNames = t.Columns.Select(column => column.Name).ToList();
+                if (columnNames.Contains("CheckpointID"))
+                    connection.ExecuteNonQuery("DELETE FROM " + t.Name +
+                                               " WHERE CheckpointID = " + checkpointID);
+            }
+            connection.ExecuteNonQuery("DELETE FROM _Checkpoints" +
+                                        " WHERE ID = " + checkpointID);
+            connection.ExecuteNonQuery("END");
+            checkpointIDs.Remove(name);
+        }
+
+        /// <summary>Revert a checkpoint</summary>
+        /// <param name="name">Name of checkpoint</param>
+        public void RevertCheckpoint(string name)
+        {
+            if (!checkpointIDs.ContainsKey(name))
+                throw new Exception("Cannot find checkpoint: " + name);
+
+            // Revert all files.
+            var files = GetCheckpointFiles(name);
+            foreach (DataStore.CheckpointFile checkpointFile in files)
+                File.WriteAllBytes(checkpointFile.fileName, checkpointFile.contents);
+
+            // Revert data
+            connection.ExecuteNonQuery("BEGIN");
+            int checkpointID = checkpointIDs[name];
+            int currentID = checkpointIDs["Current"];
+            foreach (Table t in tables)
+            {
+                List<string> columnNames = t.Columns.Select(column => column.Name).ToList();
+
+                if (t.Name != "_CheckpointFiles" && columnNames.Contains("CheckpointID"))
+                {
+                    // Get a comma separated list of column names.
+                    string csvFieldNames = null;
+                    foreach (string columnName in columnNames)
+                    {
+                        if (csvFieldNames != null)
+                            csvFieldNames += ",";
+                        csvFieldNames += "[" + columnName + "]";
+                    }
+
+                    // Delete old current values.
+                    connection.ExecuteNonQuery("DELETE FROM " + t.Name +
+                                               " WHERE CheckpointID = " + currentID);
+
+                    // Copy checkpoint values to current values.
+                    connection.ExecuteNonQuery("INSERT INTO " + t.Name + " (" + "CheckpointID," + csvFieldNames + ")" +
+                                               " SELECT " + currentID + "," + csvFieldNames +
+                                               " FROM " + t.Name +
+                                               " WHERE CheckpointID = " + checkpointID);
+                }
+            }
+            connection.ExecuteNonQuery("END");
+        }
+
+        /// <summary>Return a list of checkpoint files</summary>
+        /// <param name="name">Name of checkpoint</param>
+        public IEnumerable<CheckpointFile> GetCheckpointFiles(string name)
+        {
+            List<CheckpointFile> files = new List<CheckpointFile>();
+            int checkpointID = GetCheckpointID(name);
+            if (checkpointID != -1)
+            {
+                DataTable data = connection.ExecuteQuery("SELECT * FROM _CheckpointFiles WHERE CheckpointID = " + checkpointID);
+                foreach (DataRow row in data.Rows)
+                {
+                    CheckpointFile file = new CheckpointFile();
+                    file.fileName = row["FileName"] as string;
+                    file.contents = row["Contents"] as byte[];
+                    files.Add(file);
+                }
+            }
+            return files;
         }
 
         /// <summary>Wait for all records to be written.</summary>
@@ -490,10 +651,22 @@
             return false;
         }
 
+        /// <summary>Start the thread that writes to the .db</summary>
+        private void StartDBWriteThread()
+        {
+            stoppingWriteToDB = false;
+            writeTask = Task.Run(() => WriteDBWorker());
+        }
+
+        /// <summary>Stop the thread that writes to the .db</summary>
+        private void StopDBWriteThread()
+        {
+            stoppingWriteToDB = true;
+            writeTask.Wait();
+        }
+
         /// <summary>Worker method for writing to the .db file. This runs in own thread.</summary>
-        /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file</param>
-        /// <param name="simulationNamesBeingRun">Collection of simulation names being run</param>
-        private void WriteDBWorker(IEnumerable<string> knownSimulationNames, IEnumerable<string> simulationNamesBeingRun)
+        private void WriteDBWorker()
         {
             Table dataToWriteToDB = null;
             try
@@ -538,25 +711,15 @@
             }
             catch (Exception err)
             {
-                // Console.WriteLine(err.ToString());
                 string msg = "Error writing to database";
                 if (dataToWriteToDB != null)
                     msg += " \"" + dataToWriteToDB.Name + "\"";
+                if (Char.IsNumber(dataToWriteToDB.Name[0]))
+                    msg += ": sheet name must not begin with a number!";
                 throw new Exception(msg, err);
             }
-            finally
-            {
-                connection.ExecuteNonQuery("BEGIN");
-                try
-                {
-                    WriteUnitsTable();
-                }
-                finally
-                {
-                    connection.ExecuteNonQuery("END");
-                }
-                Open(readOnly: true);
-            }
+
+            WriteUnitsTable();
 
             foreach (Table table in dataToWrite)
             {
@@ -573,9 +736,11 @@
         /// <summary>Write a _units table to .db</summary>
         private void WriteUnitsTable()
         {
-            connection.ExecuteQuery("DELETE FROM _Units");
+            connection.ExecuteNonQuery("BEGIN");
             foreach (Table table in dataToWrite)
             {
+                connection.ExecuteQuery("DELETE FROM _Units WHERE TableName = '" + table.Name + "'");
+
                 foreach (Table.Column column in table.Columns)
                 {
                     if (column.Units != null)
@@ -592,13 +757,17 @@
                     }
                 }
             }
+            connection.ExecuteNonQuery("END");
+
         }
 
         /// <summary>Open the SQLite database.</summary>
         /// <param name="readOnly">Open for readonly access?</param>
         /// <returns>True if file was successfully opened</returns>
-        private bool Open(bool readOnly)
+        public bool Open(bool readOnly)
         {
+            if (connection != null && !connection.IsOpen)
+                connection = null;
             if (connection != null && readOnly == connection.IsReadOnly)
                 return true;  // already open.
 
@@ -619,9 +788,12 @@
             if (!File.Exists(FileName))
             {
                 connection.OpenDatabase(FileName, readOnly: false);
-                connection.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS _Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
-                connection.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS _Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
-                connection.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS _Units (TableName TEXT, ColumnHeading TEXT, Units TEXT)");
+                connection.ExecuteNonQuery("CREATE TABLE _Checkpoints (ID INTEGER PRIMARY KEY ASC, Name TEXT, Version TEXT, Date TEXT)");
+                connection.ExecuteNonQuery("CREATE TABLE _CheckpointFiles (CheckpointID INTEGER, FileName TEXT, Contents BLOB)");
+                connection.ExecuteNonQuery("CREATE TABLE _Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
+                connection.ExecuteNonQuery("CREATE TABLE _Messages (CheckpointID INTEGER, ComponentID INTEGER, SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
+                connection.ExecuteNonQuery("CREATE TABLE _Units (TableName TEXT, ColumnHeading TEXT, Units TEXT)");
+                connection.ExecuteNonQuery("INSERT INTO [_Checkpoints] (Name) VALUES (\"Current\")");
                 connection.CloseDatabase();
             }
 
@@ -639,6 +811,7 @@
             {
                 tables.Clear();
                 simulationIDs.Clear();
+                checkpointIDs.Clear();
                 connection.CloseDatabase();
                 connection = null;
             }
@@ -674,41 +847,79 @@
                         simulationIDs.Add(name, Convert.ToInt32(row["ID"]));
                 }
             }
+
+            // Get a list of checkpoint names
+            checkpointIDs.Clear();
+
+            bool haveCheckpointTable = tables.Find(table => table.Name == "_Checkpoints") != null;
+            if (haveCheckpointTable)
+            {
+                DataTable checkpointTable = connection.ExecuteQuery("SELECT ID, Name FROM _Checkpoints ORDER BY Name");
+                foreach (DataRow row in checkpointTable.Rows)
+                {
+                    string name = row["Name"].ToString();
+                    if (!checkpointIDs.ContainsKey(name))
+                        checkpointIDs.Add(name, Convert.ToInt32(row["ID"]));
+                }
+            }
         }
 
         /// <summary>Remove all simulations from the database that don't exist in 'simulationsToKeep'</summary>
         /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file</param>
-        /// <param name="simulationNamesToBeRun">The simulation names about to be run.</param>
-        private void CleanupDB(IEnumerable<string> knownSimulationNames, IEnumerable<string> simulationNamesToBeRun)
+        /// <param name="simulationNamesBeingRun">The names of the simulations about to be run</param>
+        private void CleanupDB(IEnumerable<string> knownSimulationNames, IEnumerable<string> simulationNamesBeingRun = null)
         {
-            // Delete all tables in .db when all sims are being run. 
-            if (knownSimulationNames.SequenceEqual(simulationNamesToBeRun))
-                DeleteAllTables();
-            else
+            // Get a list of simulation names that are in the .db but we know nothing about them
+            // i.e. they are old and no longer needed.
+            var unknownSimulationNames = simulationIDs.Keys.Where(simName => !knownSimulationNames.Contains(simName));
+
+            if (unknownSimulationNames.Count() > 0)
             {
-                // Get a list of simulation names that are in the .db but we know nothing about them
-                // i.e. they are old and no longer needed.
-                // Then delete the unknown simulation names from the simulations table.
-                string[] simulationNamesInDB = simulationIDs.Keys.ToArray();
-                List<string> unknownSimulationNames = new List<string>();
-                foreach (string simulationNameInDB in simulationNamesInDB)
-                    if (!knownSimulationNames.Contains(simulationNameInDB))
-                        unknownSimulationNames.Add(simulationNameInDB);
+                // Delete the unknown simulation names from the simulations table.
                 ExecuteDeleteQuery("DELETE FROM _Simulations WHERE [Name] IN (", unknownSimulationNames, ")");
 
-                // Delete all data that we are about to run, plus all data from simulations we
-                // know nothing about, from all tables except Simulations and Units 
-                unknownSimulationNames.AddRange(simulationNamesToBeRun);
+                // Delete all data for simulations we know nothing about - even from checkpoints
                 foreach (Table table in tables)
                     if (table.Columns.Find(c => c.Name == "SimulationID") != null)
                         ExecuteDeleteQueryUsingIDs("DELETE FROM " + table.Name + " WHERE [SimulationID] IN (", unknownSimulationNames, ")");
             }
+            // Delete all data that we are about to run,
+            int currentCheckpointID = checkpointIDs["Current"];
+            foreach (Table table in tables)
+                if (table.Columns.Find(c => c.Name == "SimulationID") != null)
+                    ExecuteDeleteQueryUsingIDs("DELETE FROM " + table.Name + " WHERE [SimulationID] IN (", simulationNamesBeingRun, ") AND CheckpointID=" + currentCheckpointID);
 
             // Make sure each known simulation name has an ID in the simulations table in the .db
             ExecuteInsertQuery("_Simulations", "Name", knownSimulationNames);
 
             // Refresh our simulation table in memory now that we have removed unwanted ones.
             Refresh();
+        }
+
+        /// <summary>
+        /// Cleanup all null fields in all tables.
+        /// </summary>
+        private void CleanupUnusedFields()
+        {
+            foreach (Table table in tables)
+            {
+                if (!table.Name.StartsWith("_"))
+                {
+                    var columnsToRemove = new List<string>();
+                    foreach (Table.Column column in table.Columns)
+                    {
+                        string bracketedColumnName = "[" + column.Name + "]";
+                        DataTable data = connection.ExecuteQuery("SELECT " + bracketedColumnName + " FROM " + table.Name + " WHERE " + bracketedColumnName + " IS NOT NULL LIMIT 1");
+                        if (data.Rows.Count == 0)
+                            columnsToRemove.Add(column.Name);
+                    }
+                    if (columnsToRemove.Count > 0)
+                    {
+                        table.Columns.RemoveAll(column => columnsToRemove.Contains(column.Name));
+                        connection.DropColumns(table.Name, columnsToRemove);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -795,84 +1006,6 @@
             }
         }
 
-        /// <summary>Go create a table in the DataStore with the specified field names and types.</summary>
-        /// <param name="tableName">Name of the table.</param>
-        /// <param name="names">The names.</param>
-        /// <param name="types">The types.</param>
-        private void CreateTable(string tableName, List<string> names, List<Type> types)
-        {
-            DeleteTable(tableName);
-            string cmd = "CREATE TABLE " + tableName + "(";
-
-            for (int i = 0; i < names.Count; i++)
-            {
-                string columnType = null;
-                columnType = GetSQLColumnType(types[i]);
-
-                if (i != 0)
-                    cmd += ",";
-                cmd += "[" + names[i] + "] " + columnType;
-            }
-            cmd += ")";
-
-            connection.ExecuteNonQuery(cmd);
-
-            tables.RemoveAll(table => table.Name == tableName);
-
-            Table newTable = new Table(tableName);
-            foreach (string columnName in names)
-            {
-                if (columnName != "SimulationID")
-                    newTable.Columns.Add(new Table.Column(columnName, null, null));
-            }
-            tables.Add(newTable);
-        }
-
-        /// <summary>Convert the specified type to a SQL type.</summary>
-        /// <param name="type">The type.</param>
-        private static string GetSQLColumnType(Type type)
-        {
-            if (type == null)
-                return "integer";
-            else if (type.ToString() == "System.DateTime")
-                return "date";
-            else if (type.ToString() == "System.Int32")
-                return "integer";
-            else if (type.ToString() == "System.Single")
-                return "real";
-            else if (type.ToString() == "System.Double")
-                return "real";
-            else
-                return "char(50)";
-        }
-
-        /// <summary>Go prepare an insert into query and return the query.</summary>
-        /// <param name="Connection">The connection.</param>
-        /// <param name="tableName">Name of the table.</param>
-        /// <param name="names">The names.</param>
-        /// <returns></returns>
-        private static IntPtr PrepareInsertIntoTable(SQLite Connection, string tableName, List<string> names)
-        {
-            string Cmd = "INSERT INTO " + tableName + "(";
-
-            for (int i = 0; i < names.Count; i++)
-            {
-                if (i > 0)
-                    Cmd += ",";
-                Cmd += "[" + names[i] + "]";
-            }
-            Cmd += ") VALUES (";
-
-            for (int i = 0; i < names.Count; i++)
-            {
-                if (i > 0)
-                    Cmd += ",";
-                Cmd += "?";
-            }
-            Cmd += ")";
-            return Connection.Prepare(Cmd);
-        }
-
         /// <summary>
         /// Using the SimulationName column in the specified 'table', add a
         /// SimulationID column.
@@ -880,9 +1013,12 @@
         /// <param name="table">The table.</param>
         private void AddSimulationIDColumnToTable(DataTable table)
         {
+            table.Columns.Add("CheckpointID", typeof(int)).SetOrdinal(0);
             table.Columns.Add("SimulationID", typeof(int)).SetOrdinal(0);
+            int checkpointID = checkpointIDs["Current"];
             foreach (DataRow row in table.Rows)
             {
+                row["CheckpointID"] = checkpointID;
                 string simulationName = row["SimulationName"].ToString();
                 if (simulationName != null)
                 {
@@ -894,5 +1030,14 @@
             }
         }
 
+        /// <summary>Encapsulates a file that has been checkpointed</summary>
+        public struct CheckpointFile
+        {
+            /// <summary>Name of file</summary>
+            public string fileName;
+
+            /// <summary>Contents of file</summary>
+            public byte[] contents;
+        }
     }
 }

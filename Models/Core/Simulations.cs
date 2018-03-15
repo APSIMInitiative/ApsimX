@@ -10,10 +10,12 @@ using APSIM.Shared.Utilities;
 using System.Linq;
 using Models.Core.Interfaces;
 using Models.Core.Runners;
+using Models.Storage;
 
 namespace Models.Core
 {
     /// <summary>
+    /// # [Name]
     /// Encapsulates a collection of simulations. It is responsible for creating this collection,
     /// changing the structure of the components within the simulations, renaming components, adding
     /// new ones, deleting components. The user interface talks to an instance of this class.
@@ -86,7 +88,7 @@ namespace Models.Core
         /// <summary>Constructor</summary>
         private Simulations()
         {
-            Version = APSIMFileConverter.LastestVersion;
+            Version = ApsimFile.Converter.LastestVersion;
             LoadErrors = new List<Exception>();
         }
 
@@ -119,6 +121,33 @@ namespace Models.Core
             return newSimulations;
         }
 
+        /// <summary>
+        /// Checkpoint the simulation.
+        /// </summary>
+        /// <param name="checkpointName">Name of checkpoint</param>
+        public void AddCheckpoint(string checkpointName)
+        {
+            List<string> filesReferenced = new List<string>();
+            filesReferenced.Add(FileName);
+            filesReferenced.AddRange(FindAllReferencedFiles());
+            DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            if (storage != null)
+                storage.AddCheckpoint(checkpointName, filesReferenced);
+        }
+
+        /// <summary>
+        /// Revert this object to a previous one.
+        /// </summary>
+        /// <param name="checkpointName">Name of checkpoint</param>
+        /// <returns>A new simulations object that represents the file on disk</returns>
+        public Simulations RevertCheckpoint(string checkpointName)
+        {
+            DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            if (storage != null)
+                storage.RevertCheckpoint(checkpointName);
+            return Read(FileName);
+        }
+
         /// <summary>Create a simulations object by reading the specified filename</summary>
         /// <param name="FileName">Name of the file.</param>
         /// <returns></returns>
@@ -126,7 +155,7 @@ namespace Models.Core
         public static Simulations Read(string FileName)
         {
             // Run the converter.
-            APSIMFileConverter.ConvertToLatestVersion(FileName);
+            ApsimFile.Converter.ConvertToLatestVersion(FileName);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(FileName, Assembly.GetExecutingAssembly()) as Simulations;
@@ -166,7 +195,7 @@ namespace Models.Core
         public static Simulations Read(XmlNode node)
         {
             // Run the converter.
-            APSIMFileConverter.ConvertToLatestVersion(node, null);
+            ApsimFile.Converter.ConvertToLatestVersion(node, null);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;
@@ -241,7 +270,7 @@ namespace Models.Core
         /// <param name="FileName">Name of the file.</param>
         public void Write(string FileName)
         {
-            string tempFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(FileName));
+            string tempFileName = Path.GetTempFileName();
             StreamWriter Out = new StreamWriter(tempFileName);
             Write(Out);
             Out.Close();
@@ -358,6 +387,17 @@ namespace Models.Core
             ClearChildLists();
         }
 
+        /// <summary>Find all referenced files from all models.</summary>
+        public IEnumerable<string> FindAllReferencedFiles()
+        {
+            SortedSet<string> fileNames = new SortedSet<string>();
+            foreach (IReferenceExternalFiles model in Apsim.ChildrenRecursively(this, typeof(IReferenceExternalFiles)))
+                foreach (string fileName in model.GetReferencedFileNames())
+                    fileNames.Add(PathUtilities.GetAbsolutePath(fileName, FileName));
+            
+            return fileNames;
+        }
+
         /// <summary>Documents the specified model.</summary>
         /// <param name="modelNameToDocument">The model name to document.</param>
         /// <param name="tags">The auto doc tags.</param>
@@ -407,12 +447,13 @@ namespace Models.Core
                         child.IncludeInDocumentation = true;
 
                     // Document the model.
-                    modelToDocument.Document(tags, headingLevel, 0);
+                    AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
 
                     // Unresolve links.
                     Links.Unresolve(clonedSimulation);
                 }
             }
         }
+
     }
 }

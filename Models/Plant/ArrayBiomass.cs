@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 namespace Models.PMF
 {
     /// <summary>
+    /// # [Name]
     /// This class encapsulates an array of biomass objects
     /// </summary>
     [Serializable]

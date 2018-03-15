@@ -33,6 +33,9 @@ namespace Utility
         /// <summary>The previous folder where a file was opened or saved</summary>
         public string PreviousFolder { get; set; }
 
+        /// <summary>The previous height of the status panel</summary>
+        public int StatusPanelHeight { get; set; }
+
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName
         {

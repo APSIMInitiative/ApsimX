@@ -73,7 +73,9 @@ namespace UserInterface.Presenters
             if (model != null)
             {
                 // Set the clipboard text.
-                this.explorerPresenter.SetClipboardText(Apsim.Serialise(model));
+                string xml = Apsim.Serialise(model);
+                this.explorerPresenter.SetClipboardText(xml, "_APSIM_MODEL");
+                this.explorerPresenter.SetClipboardText(xml, "CLIPBOARD");
             }
         }
 
@@ -85,7 +87,29 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Paste", ShortcutKey = "Ctrl+V")]
         public void OnPasteClick(object sender, EventArgs e)
         {
-            this.explorerPresenter.Add(this.explorerPresenter.GetClipboardText(), this.explorerPresenter.CurrentNodePath);
+            string internalCBText = this.explorerPresenter.GetClipboardText("_APSIM_MODEL");
+            string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
+
+            if (externalCBText == null || externalCBText == "")
+                this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);                
+            else
+            {
+                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                try
+                {
+                    doc.LoadXml(externalCBText);
+                    this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
+                }
+                catch (System.Xml.XmlException)
+                {
+                    // External clipboard does not contain valid xml
+                    this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
+                }
+                catch (Exception ex)
+                {
+                    this.explorerPresenter.MainPresenter.ShowError(ex);
+                }
+            }
         }
 
         /// <summary>
@@ -159,6 +183,18 @@ namespace UserInterface.Presenters
             RunAPSIMInternal(multiProcessRunner: true);
         }
 
+        [ContextMenu(MenuName = "Copy path to node",
+                     ShortcutKey = "Ctrl+Shift+C")]
+        public void CopyPathToNode(object sender, EventArgs e)
+        {
+            string nodePath = explorerPresenter.CurrentNodePath;            
+            if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is Models.PMF.Functions.IFunction)
+            {
+                nodePath += ".Value()";
+            }
+            explorerPresenter.SetClipboardText(Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName) + nodePath, "CLIPBOARD");
+        }
+
         /// <summary>Run APSIM.</summary>
         /// <param name="multiProcessRunner">Use the multi-process runner?</param>
         private void RunAPSIMInternal(bool multiProcessRunner)
@@ -169,7 +205,7 @@ namespace UserInterface.Presenters
                 if (duplicates.Count > 0)
                 {
                     string errorMessage = "Duplicate simulation names found " + StringUtilities.BuildString(duplicates.ToArray(), ", ");
-                    explorerPresenter.MainPresenter.ShowMessage(errorMessage, Simulation.ErrorLevel.Error);
+                    explorerPresenter.MainPresenter.ShowError(errorMessage);
                 }
                 else
                 {
@@ -209,7 +245,7 @@ namespace UserInterface.Presenters
                 string errorMessages = currentSoil.Check(false);
                 if (errorMessages != string.Empty)
                 {
-                    this.explorerPresenter.MainPresenter.ShowMessage(errorMessages, Simulation.ErrorLevel.Error);
+                    this.explorerPresenter.MainPresenter.ShowError(errorMessages);
                 }
             }
         }
@@ -235,7 +271,7 @@ namespace UserInterface.Presenters
             }
             catch (ApsimXException ex)
             {
-                this.explorerPresenter.MainPresenter.ShowMessage(ex.Message, Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(ex);
             }
             finally
             {
@@ -271,11 +307,11 @@ namespace UserInterface.Presenters
                 // Run all child model post processors.
                 foreach (IPostSimulationTool tool in Apsim.Children(storage as Model, typeof(IPostSimulationTool)))
                     tool.Run(storage);
-                this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.ErrorLevel.Information);
+                this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
             catch (Exception err)
             {
-                this.explorerPresenter.MainPresenter.ShowMessage("Error: " + err.Message, Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -288,7 +324,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void EmptyDataStore(object sender, EventArgs e)
         {
-            storage.DeleteAllTables();
+            storage.EmptyDataStore();
         }
 
         /// <summary>
@@ -314,7 +350,7 @@ namespace UserInterface.Presenters
             {
                 string fileName = Path.ChangeExtension(storage.FileName, ".xlsx");
                 Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
-                explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, Simulation.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, Simulation.MessageType.Information);
             }
             finally
             {
@@ -337,11 +373,11 @@ namespace UserInterface.Presenters
             {
                 Report.WriteAllTables(storage, explorerPresenter.ApsimXFile.FileName);
                 string folder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-                explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, Simulation.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, Simulation.MessageType.Information);
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
             finally
             {
@@ -363,11 +399,11 @@ namespace UserInterface.Presenters
             {
                 string summaryFleName = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".sum");
                 Summary.WriteSummaryToTextFiles(storage, summaryFleName);
-                explorerPresenter.MainPresenter.ShowMessage("Summary file written: " + summaryFleName, Simulation.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowMessage("Summary file written: " + summaryFleName, Simulation.MessageType.Information);
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
             finally
             {
@@ -388,19 +424,19 @@ namespace UserInterface.Presenters
                 string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
                 if (destinationFolder != null)
                 {
-                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.ErrorLevel.Information);
+                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                     explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
                     try
                     {
                         ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
                         this.explorerPresenter.CommandHistory.Add(command, true);
-                        explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", Simulation.ErrorLevel.Information);
+                        explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", Simulation.MessageType.Information);
                         Process.Start(command.FileNameWritten);
                     }
                     catch (Exception err)
                     {
-                        explorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                        explorerPresenter.MainPresenter.ShowError(err);
                     }
                     finally
                     {
@@ -408,6 +444,91 @@ namespace UserInterface.Presenters
                     }
                 }
             }
+        }
+
+        [ContextMenu(MenuName = "Run on cloud (In development - DO NOT USE)",
+                     AppliesTo = new Type[] { typeof(Simulation),
+                                              typeof(Simulations),
+                                              typeof(Experiment),
+                                              typeof(Folder)
+                                            }            
+                    )
+        ]
+        /// <summary>
+        /// Event handler for the run on cloud action
+        /// </summary>        
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        public void RunOnCloud(object sender, EventArgs e)
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowInRightHandPanel(model,
+                                                       "UserInterface.Views.NewAzureJobView",
+                                                       "UserInterface.Presenters.NewAzureJobPresenter");
+            } else
+            {
+                explorerPresenter.MainPresenter.ShowError("Microsoft Azure functionality is currently only available under Windows.");
+            }
+            
+        }
+
+        /// <summary>
+        /// Event handler for generate .apsimx files option.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Generate .apsimx files",
+             AppliesTo = new Type[] {   typeof(Folder),
+                                        typeof(Simulations),
+                                        typeof(Simulation),
+                                        typeof(Experiment),
+                                    }
+            )
+        ]
+        public void OnGenerateApsimXFiles(object sender, EventArgs e)
+        {
+            IModel node = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+
+            List<IModel> children;
+            if (node is Experiment)
+            {
+                children = new List<IModel> { node };
+            }
+            else
+            {
+                children = Apsim.ChildrenRecursively(node, typeof(Experiment));
+            }
+
+            string outDir = ViewBase.AskUserForDirectory("Select a directory to save model files to.");
+            if (outDir == null)                
+                return;
+            if (!Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
+            List<Exception> errors = new List<Exception>();
+            int i = 0;            
+            children.ForEach(expt => 
+            {
+                explorerPresenter.MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
+                explorerPresenter.MainPresenter.ShowProgress(100 * i / children.Count, false);                
+                while (GLib.MainContext.Iteration()) ;
+                try
+                {
+                    (expt as Experiment).GenerateApsimXFile(outDir);
+                }
+                catch (Exception err)
+                {
+                    errors.Add(err);
+                }
+                
+                i++;
+            });            
+            if (errors.Count < 1)
+                explorerPresenter.MainPresenter.ShowMessage("Successfully generated .apsimx files under " + outDir + ".", Simulation.MessageType.Information);
+            else
+                explorerPresenter.MainPresenter.ShowError(errors);
         }
 
         /// <summary>
@@ -456,7 +577,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -479,7 +600,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -517,5 +638,19 @@ namespace UserInterface.Presenters
             return (folder != null) ? folder.ShowPageOfGraphs : false;
         }
 
+        /// <summary>
+        /// Event handler for 'Checkpoints' menu item
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Checkpoints", IsToggle = true,
+                     AppliesTo = new Type[] { typeof(Simulations) })]
+        public void ShowCheckpoints(object sender, EventArgs e)
+        {
+            explorerPresenter.HideRightHandPanel();
+            explorerPresenter.ShowInRightHandPanel(explorerPresenter.ApsimXFile,
+                                                   "UserInterface.Views.ListButtonView",
+                                                   "UserInterface.Presenters.CheckpointsPresenter");
+        }
     }
 }

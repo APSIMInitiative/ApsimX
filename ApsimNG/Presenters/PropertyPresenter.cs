@@ -79,6 +79,7 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.grid = view as IGridView;
+            this.grid.ContextItemsNeeded += GetContextItems;
             this.model = model as Model;
             this.explorerPresenter = explorerPresenter;
 
@@ -252,10 +253,15 @@ namespace UserInterface.Presenters
             }
         }
         
+        private void GetContextItems(object o, NeedContextItemsArgs e)
+        {
+            e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(model, e.ObjectName, true, true, false));
+        }
+
         /// <summary>
-                 /// Fill the specified table with columns and rows based on this.Properties
-                 /// </summary>
-                 /// <param name="table">The table that needs to be filled</param>
+        /// Fill the specified table with columns and rows based on this.Properties
+        /// </summary>
+        /// <param name="table">The table that needs to be filled</param>
         private void FillTable(DataTable table)
         {
             foreach (VariableProperty property in this.properties)
@@ -403,11 +409,12 @@ namespace UserInterface.Presenters
                     IGridCell cell = this.grid.GetCell(1, i);
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
                     {
-                        DataTable data = this.storage.RunQuery("SELECT * FROM " + cell.Value.ToString() + " LIMIT 1");
+                        string tableName = cell.Value.ToString();
+                        DataTable data = null;
+                        if (storage.TableNames.Contains(tableName))
+                            data = this.storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
                         if (data != null)
-                        {
                             fieldNames = DataTableUtilities.GetColumnNames(data);
-                        }
                     }
                 }
             }
@@ -454,8 +461,14 @@ namespace UserInterface.Presenters
                 {
                     this.explorerPresenter.MainPresenter.ShowMsgDialog("The value you entered was not valid for its datatype", "Invalid entry", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
                 }
-
-                this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
+                try
+                {
+                    this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
+                }
+                catch (Exception ex)
+                {
+                    explorerPresenter.MainPresenter.ShowError(ex);
+                }
             }
             
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;

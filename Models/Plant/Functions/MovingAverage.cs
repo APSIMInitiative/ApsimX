@@ -15,7 +15,7 @@ namespace Models.PMF.Functions
     [Description("Maintains a moving average of a given value for a user-specified number of simulation days")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class MovingAverageFunction : Model, IFunction
+    public class MovingAverageFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The number of days over which to calculate the moving average</summary>
         [Description("Number of Days")]
@@ -106,7 +106,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -117,7 +117,7 @@ namespace Models.PMF.Functions
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                    child.Document(tags, headingLevel + 1, indent + 1);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }
     }

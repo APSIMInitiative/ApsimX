@@ -15,7 +15,7 @@ namespace Models.PMF
     /// Relative allocation rules used to determine partitioning
     /// </summary>
     [Serializable]
-    public class RelativeAllocation : Model,IArbitrationMethod
+    public class RelativeAllocation : Model, IArbitrationMethod, ICustomDocumentation
     {
         /// <summary>Relatives the allocation.</summary>
         /// <param name="Organs">The organs.</param>
@@ -62,7 +62,7 @@ namespace Models.PMF
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -71,10 +71,10 @@ namespace Models.PMF
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // write description of this class.
-                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 string RelativeDocString = "Arbitration is performed in two passes for each of the supply sources.  On the first pass, biomass or nutrient supply is allocated to structural and metabolic pools of each organ based on their demand relative to the demand from all organs.  On the second pass any remaining supply is allocated to non-structural pool based on the organ's relative demand.";
 

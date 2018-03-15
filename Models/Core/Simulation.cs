@@ -14,6 +14,7 @@ using Models.Core.Runners;
 namespace Models.Core
 {
     /// <summary>
+    /// # [Name]
     /// A simulation model
     /// </summary>
     [ValidParent(ParentType = typeof(Simulations))]
@@ -41,6 +42,18 @@ namespace Models.Core
 
             /// <summary>Error</summary>
             Error
+        };
+
+        /// <summary>
+        /// An enum that is used to indicate message severity when writing messages to the status window.
+        /// </summary>
+        public enum MessageType
+        {
+            /// <summary>Information</summary>
+            Information,
+
+            /// <summary>Warning</summary>
+            Warning
         };
 
         /// <summary>Returns the object responsible for scoping rules.</summary>
@@ -133,7 +146,7 @@ namespace Models.Core
         }
 
         /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun()
+        public Simulation NextSimulationToRun(bool doFullFactorial = true)
         {
             if (Parent is ISimulationGenerator || hasRun)
                 return null;
@@ -152,7 +165,7 @@ namespace Models.Core
         }
 
         /// <summary>Gets a list of simulation names</summary>
-        public IEnumerable<string> GetSimulationNames()
+        public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
             if (Parent is ISimulationGenerator)
                 return new string[0];

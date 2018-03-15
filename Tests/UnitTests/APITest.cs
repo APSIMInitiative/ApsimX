@@ -208,19 +208,6 @@ namespace UnitTests
             clock = Apsim.Child(simulation, "Clock");
             Assert.NotNull(clock);
         }        
-        
-        /// <summary>
-        /// Tests for the various recursive Children methods
-        /// </summary>
-        [Test]
-        public void ChildrenRecursivelyTest()
-        {
-            List<IModel> allChildren = Apsim.ChildrenRecursively(simulation);
-            Assert.AreEqual(allChildren.Count, 24);
-
-            List<IModel> childZones = Apsim.ChildrenRecursively(simulation, typeof(Zone));
-            Assert.AreEqual(childZones.Count, 3);
-        }
 
         /// <summary>
         /// Tests for siblings method
@@ -257,15 +244,10 @@ namespace UnitTests
         [Test]
         public void MoveUpDown()
         {
-            IExplorerView explorerView = new ExplorerView(null);
-            ExplorerPresenter explorerPresenter = new ExplorerPresenter(null);
             CommandHistory commandHistory = new CommandHistory();
-
-            explorerPresenter.Attach(simulations, explorerView, null);
-
             Model modelToMove = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;
 
-            MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true, explorerView);
+            MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true, null);
             moveCommand.Do(commandHistory);
 
             Model modelToMove2 = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;

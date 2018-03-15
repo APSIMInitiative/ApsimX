@@ -214,7 +214,7 @@ namespace UserInterface.Presenters
                     this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", code));
                 }
 
-                this.explorerPresenter.MainPresenter.ShowMessage("\"" + this.manager.Name + "\" compiled successfully", Simulation.ErrorLevel.Information);
+                this.explorerPresenter.MainPresenter.ShowMessage("\"" + this.manager.Name + "\" compiled successfully", Simulation.MessageType.Information);
             }
             catch (Exception err)
             {
@@ -224,7 +224,7 @@ namespace UserInterface.Presenters
                     msg += " ---> " + err.InnerException.Message;
                 }
 
-                this.explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
+                this.explorerPresenter.MainPresenter.ShowError(err);
             }
 
             this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;

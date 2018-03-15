@@ -47,6 +47,17 @@ namespace Models.Core
         }
     }
 
+    /// <summary>
+    /// When applied to a field, the infrastructure will locate an object that matches the 
+    /// related field and path and store a reference to it in the field (dependency injection). 
+    /// If no matching model is found then an will be thrown. 
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field)]
+    public class LinkByPathAttribute : LinkAttribute
+    {
+        /// <summary>The path to use to find a link match.</summary>
+        public string Path { get; set; }
+    }
 
     /// <summary>
     /// When applied to a field, the infrastructure will locate an object in scope of the 

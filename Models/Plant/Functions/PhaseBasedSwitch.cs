@@ -7,12 +7,13 @@ using Models.PMF.Phen;
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// Returns a value of 1 if phenology is between start and end phases and otherwise a value of 0.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PhaseBasedSwitch : Model, IFunction
+    public class PhaseBasedSwitch : Model, IFunction, ICustomDocumentation
     {
         //Fixme.  This can be removed an phase lookup returnig a constant of 1 if in phase.
 
@@ -55,7 +56,7 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -66,7 +67,7 @@ namespace Models.PMF.Functions
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
             }
         }
     }

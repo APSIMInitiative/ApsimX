@@ -40,9 +40,8 @@
         public static RunOrganiser ForFile(string fileName, bool runTests)
         {
             if (!File.Exists(fileName))
-                throw new Exception("Cannot find file: " + fileName);
-
-            Simulations simulations =Simulations.Read(fileName);
+                throw new Exception("Cannot find file: " + fileName);            
+            Simulations simulations = Simulations.Read(fileName);            
             return ForSimulations(simulations, simulations, runTests);
         }
 
@@ -82,7 +81,7 @@
             }
         }
 
-        /// <summary>An enumeratorfor creating simulations ready for running.</summary>
+        /// <summary>An enumerator for creating simulations ready for running.</summary>
         public class SimulationEnumerator : IEnumerator<Simulation>
         {
             private IModel relativeTo;
@@ -101,7 +100,7 @@
             }
 
             /// <summary>Return the current simulation</summary>
-            Simulation IEnumerator<Simulation>.Current {  get { return currentSimulation; } }
+            Simulation IEnumerator<Simulation>.Current { get { return currentSimulation; } }
 
             /// <summary>Return the current simulation</summary>
             object IEnumerator.Current { get { return currentSimulation; } }
@@ -110,21 +109,24 @@
             void IDisposable.Dispose() { }
 
             /// <summary>Move to next simulation</summary>
-            bool IEnumerator.MoveNext() 
+            bool IEnumerator.MoveNext()
             {
                 if (modelsToRun == null)
                     return false;
                 else
                 {
                     // Iterate through all jobs and return the next one.
-                    currentSimulation = modelsToRun[0].NextSimulationToRun();
-                    while (currentSimulation == null && modelsToRun.Count > 0)
+                    currentSimulation = null;
+                    if (modelsToRun.Count > 0)
                     {
-                        modelsToRun.RemoveAt(0);
-                        if (modelsToRun.Count > 0)
-                            currentSimulation = modelsToRun[0].NextSimulationToRun();
+                        currentSimulation = modelsToRun[0].NextSimulationToRun(false);
+                        while (currentSimulation == null && modelsToRun.Count > 0)
+                        {
+                            modelsToRun.RemoveAt(0);
+                            if (modelsToRun.Count > 0)
+                                currentSimulation = modelsToRun[0].NextSimulationToRun(false);
+                        }
                     }
-
                     return currentSimulation != null;
                 }
             }
@@ -143,9 +145,13 @@
                 if (relativeTo is ISimulationGenerator)
                     modelsToRun.Add(relativeTo as ISimulationGenerator);
 
+                // For each model, resolve any links.
+                Simulations sims = Apsim.Parent(relativeTo, typeof(Simulations)) as Simulations;
+                modelsToRun.ForEach(model => sims.Links.Resolve(model));
+
                 // For each model, get a list of simulation names.
                 SimulationNamesBeingRun = new List<string>();
-                modelsToRun.ForEach(model => SimulationNamesBeingRun.AddRange(model.GetSimulationNames()));
+                modelsToRun.ForEach(model => SimulationNamesBeingRun.AddRange(model.GetSimulationNames(false)));
             }
         }
 
