@@ -140,7 +140,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                this.explorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                this.explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -158,7 +158,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                this.explorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                this.explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -176,7 +176,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                this.explorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                this.explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 

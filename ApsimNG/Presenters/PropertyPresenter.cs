@@ -467,7 +467,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception ex)
                 {
-                    explorerPresenter.MainPresenter.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
+                    explorerPresenter.MainPresenter.ShowError(ex);
                 }
             }
             

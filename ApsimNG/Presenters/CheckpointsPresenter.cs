@@ -82,11 +82,11 @@ namespace UserInterface.Presenters
                         explorerPresenter.ApsimXFile.AddCheckpoint(checkpointName);
                         PopulateList();
                         explorerPresenter.MainPresenter.ShowWaitCursor(false);
-                        explorerPresenter.MainPresenter.ShowMessage("Checkpoint created: " + checkpointName, Simulation.ErrorLevel.Information);
+                        explorerPresenter.MainPresenter.ShowMessage("Checkpoint created: " + checkpointName, Simulation.MessageType.Information);
                     }
                     catch (Exception err)
                     {
-                        explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                        explorerPresenter.MainPresenter.ShowError(err);
                     }
                 }
             }
@@ -106,11 +106,11 @@ namespace UserInterface.Presenters
                     {
                         storage.DeleteCheckpoint(checkpointName);
                         PopulateList();
-                        explorerPresenter.MainPresenter.ShowMessage("Checkpoint deleted", Simulation.ErrorLevel.Information);
+                        explorerPresenter.MainPresenter.ShowMessage("Checkpoint deleted", Simulation.MessageType.Information);
                     }
                     catch (Exception err)
                     {
-                        explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                        explorerPresenter.MainPresenter.ShowError(err);
                     }
                 }
             }
@@ -132,12 +132,12 @@ namespace UserInterface.Presenters
                         Simulations newSimulations = explorerPresenter.ApsimXFile.RevertCheckpoint(checkpointName);
                         explorerPresenter.ApsimXFile = newSimulations;
                         explorerPresenter.Refresh();
-                        explorerPresenter.MainPresenter.ShowMessage("Reverted to checkpoint: " + checkpointName, Simulation.ErrorLevel.Information);
+                        explorerPresenter.MainPresenter.ShowMessage("Reverted to checkpoint: " + checkpointName, Simulation.MessageType.Information);
                         explorerPresenter.MainPresenter.ShowWaitCursor(false);
                     }
                     catch (Exception err)
                     {
-                        explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                        explorerPresenter.MainPresenter.ShowError(err);
                     }
                 }
             }

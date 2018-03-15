@@ -139,6 +139,7 @@
     </Compile>
     <Compile Include="Attributes\ContextMenuAttribute.cs" />
     <Compile Include="Attributes\MainMenuAttribute.cs" />
+    <Compile Include="Classes\CustomButton.cs" />
     <Compile Include="Classes\DirectedGraph\BezierCurve.cs" />
     <Compile Include="Classes\DirectedGraph\DGArc.cs" />
     <Compile Include="Classes\DirectedGraph\DGNode.cs" />
@@ -283,6 +284,7 @@
     <Compile Include="Views\DropDownView.cs" />
     <Compile Include="Views\EditBoxView.cs" />
     <Compile Include="Views\EditorView.cs" />
+    <Compile Include="Views\ErrorView.cs" />
     <Compile Include="Views\ExplorerView.cs" />
     <Compile Include="Views\FactorControlView.cs" />
     <Compile Include="Views\FolderView.cs" />
