@@ -158,9 +158,9 @@ namespace ApsimNG.Cloud
                 // if we need to save files, create a directory under the output directory
                 if ((saveDebugFiles|| saveRawOutputFiles || exportToCsv) && !Directory.Exists(rawResultsPath)) Directory.CreateDirectory(rawResultsPath);
             }
-            catch (Exception ex)
+            catch (Exception err)
             {
-                presenter.ShowError(ex.ToString());
+                presenter.ShowError(err);
                 return;
             }
             
@@ -220,9 +220,9 @@ namespace ApsimNG.Cloud
                     if (Directory.Exists(tempPath)) Directory.Delete(tempPath, true);
                     Directory.CreateDirectory(tempPath);
                 }
-                catch (Exception ex)
+                catch (Exception err)
                 {
-                    presenter.ShowError(ex.ToString());
+                    presenter.ShowError(err);
                     success = 3;
                 }
 
@@ -230,7 +230,7 @@ namespace ApsimNG.Cloud
                 List<CloudBlockBlob> outputs = ListJobOutputsFromStorage().ToList();
                 if (outputs == null || outputs.Count < 1)
                 {
-                    presenter.ShowError("No files in output container.");
+                    presenter.ShowErrorMessage("No files in output container.");
                     return;
                 }
 
@@ -286,17 +286,17 @@ namespace ApsimNG.Cloud
                             try
                             {
                                 File.Delete(resultFile);
-                            } catch (Exception ex)
+                            } catch (Exception err)
                             {
-                                presenter.ShowError("Unable to delete " + resultFile + ": " + ex.ToString());
+                                presenter.ShowError(new Exception("Unable to delete " + resultFile + ": ", err));
                             }
                         }
                     }
                 }
             }
-            catch (AggregateException ae)
+            catch (AggregateException err)
             {
-                presenter.ShowError(ae.InnerException.ToString());
+                presenter.ShowError(err);
             }
             
             
@@ -445,9 +445,9 @@ namespace ApsimNG.Cloud
                 }
                 return 0;
             }
-            catch (Exception e)
+            catch (Exception err)
             {
-                presenter.ShowError(e.ToString());
+                presenter.ShowError(err);
                 return 2;
             }
         }
@@ -471,9 +471,9 @@ namespace ApsimNG.Cloud
                 try
                 {
                     m_dbConnection.Open();                    
-                } catch (Exception e)
+                } catch (Exception err)
                 {
-                    presenter.ShowError("Failed to open db at " + path + ": " + e.ToString());
+                    presenter.ShowError(new Exception("Failed to open db at " + path + ": ", err));
                     // No point continuing if unable to open the database
                     return "";
                 }
@@ -492,9 +492,9 @@ namespace ApsimNG.Cloud
                     command.Dispose();
                     reader.Close();
                 }
-                catch (Exception e)
+                catch (Exception err)
                 {
-                    presenter.ShowError("Error enumerating simulation names: " + e.ToString());
+                    presenter.ShowError(new Exception("Error enumerating simulation names: ", err));
                 }
 
                 // Enumerate the table names
@@ -507,9 +507,9 @@ namespace ApsimNG.Cloud
                     while (reader.Read()) tables.Add(reader[0].ToString());
                     command.Dispose();
                     reader.Close();
-                } catch (Exception e)
+                } catch (Exception err)
                 {
-                    presenter.ShowError("Error reading table names: " + e.ToString());
+                    presenter.ShowError(new Exception("Error reading table names: ", err));
                 }
 
                 // Read data from each 'report' table (any table whose name doesn't start with an underscore)
@@ -532,9 +532,9 @@ namespace ApsimNG.Cloud
                         reader.Close();
                     }
                 }
-                catch (Exception e)
+                catch (Exception err)
                 {
-                    presenter.ShowError("Error reading or merging table: " + e.ToString());
+                    presenter.ShowError(new Exception("Error reading or merging table: ", err));
                 }
                 m_dbConnection.Close();
                 // Generate the CSV file data                
@@ -724,9 +724,9 @@ namespace ApsimNG.Cloud
 
                         file.ExtractToFile(filePath, true);
                     }
-                    catch (Exception e)
+                    catch (Exception err)
                     {
-                        presenter.ShowError(e.ToString());
+                        presenter.ShowError(err);
                     }
                 }
             }

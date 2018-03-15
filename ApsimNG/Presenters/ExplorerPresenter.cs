@@ -206,7 +206,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, Simulation.ErrorLevel.Error);
+                MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
                 result = false;
             }
 
@@ -236,7 +236,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                this.MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, Simulation.ErrorLevel.Error);
+                this.MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
             }
             finally
             {
@@ -266,7 +266,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    this.MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, Simulation.ErrorLevel.Error);
+                    this.MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
                 }
             }
 
@@ -390,9 +390,9 @@ namespace UserInterface.Presenters
                 {
                     document.LoadXml(xml);
                 }
-                catch (XmlException)
+                catch (XmlException err)
                 {
-                    MainPresenter.ShowMessage("Invalid XML. Are you sure you're trying to paste an APSIM model?", Simulation.ErrorLevel.Error);
+                    MainPresenter.ShowError(new Exception("Invalid XML. Are you sure you're trying to paste an APSIM model?", err));
                 }
 
                 object newModel = XmlUtilities.Deserialise(document.DocumentElement, this.ApsimXFile.GetType().Assembly);
@@ -451,9 +451,9 @@ namespace UserInterface.Presenters
                     this.CommandHistory.Add(command, true);
                 }
             }
-            catch (Exception exception)
+            catch (Exception err)
             {
-                this.MainPresenter.ShowMessage(exception.Message, Simulation.ErrorLevel.Error);
+                this.MainPresenter.ShowError(err);
             }
         }
 
@@ -583,7 +583,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                    MainPresenter.ShowError(err);
                 }
             }
 
@@ -656,7 +656,7 @@ namespace UserInterface.Presenters
 
                 string message = err.Message;
                 message += "\r\n" + err.StackTrace;
-                MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
+                MainPresenter.ShowError(err);
             }
         }
 
@@ -822,7 +822,7 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    MainPresenter.ShowMessage("Use alpha numeric characters only!", Simulation.ErrorLevel.Error);
+                    MainPresenter.ShowError("Use alpha numeric characters only!");
                     e.CancelEdit = true;
                 }
             }
@@ -873,30 +873,7 @@ namespace UserInterface.Presenters
         {
             if (this.ApsimXFile.LoadErrors != null)
             {
-                foreach (Exception err in this.ApsimXFile.LoadErrors)
-                {
-                    string message = string.Empty;
-                    if (err is ApsimXException)
-                    {
-                        message = string.Format("[{0}]: {1}", (err as ApsimXException).model, err.Message);
-                    }
-                    else
-                    {
-                        if (!string.IsNullOrEmpty(err.Source) && err.Source != "mscorlib")
-                        {
-                            message = "[" + err.Source + "]: ";
-                        }
-
-                        message += string.Format("{0}", err.Message + "\r\n" + err.StackTrace);
-                    }
-
-                    if (err.InnerException != null)
-                    {
-                        message += "\r\n" + err.InnerException.Message;
-                    }
-
-                    MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
-                }
+                MainPresenter.ShowError(ApsimXFile.LoadErrors);
             }
         }
 
