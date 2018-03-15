@@ -97,7 +97,7 @@
                     err = (err as System.Reflection.TargetInvocationException).InnerException;
                 string message = err.Message;
                 message += "\r\n" + err.StackTrace;
-                ExplorerPresenter.MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
+                ExplorerPresenter.MainPresenter.ShowError(err);
             }
         }
 

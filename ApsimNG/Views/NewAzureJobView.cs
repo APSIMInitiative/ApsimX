@@ -376,7 +376,7 @@ namespace UserInterface.Views
             }
             catch (Exception e)
             {
-                Presenter.ShowError(e.ToString());
+                Presenter.ShowError(e);
             }
             f.Destroy();
             return path;
@@ -406,9 +406,9 @@ namespace UserInterface.Views
                     path = f.Filename;
                 }
             }
-            catch (Exception ex)
+            catch (Exception err)
             {
-                Presenter.ShowError(ex.ToString());
+                Presenter.ShowError(err);
             }
             f.Destroy();
             return path;
@@ -436,9 +436,9 @@ namespace UserInterface.Views
                     path = fc.Filename;
                 }
             }
-            catch (Exception ex)
+            catch (Exception err)
             {
-                Presenter.ShowError("Error: " + ex.Message);
+                Presenter.ShowError(err);
             }
             fc.Destroy();
             return path;            

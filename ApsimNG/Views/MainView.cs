@@ -83,19 +83,17 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="Message">Message to be displayed.</param>
         /// <param name="errorLevel">Error level of the message. Affects the colour of message text.</param>
-        /// <param name="append">
-        /// If true, message will be appended to the status window.
-        /// If false, all existing messages will be overridden.
+        /// <param name="overwrite">
+        /// If true, all existing messages will be overridden.
+        /// If false, message will be appended to the status window.
         /// </param>
-        void ShowMessage(string Message, Simulation.ErrorLevel errorLevel, bool append = true);
-
-        /// <summary>
-        /// Shows a list of status messages. A null list will clear the status messages.
-        /// </summary>
-        /// <param name="messages">List of messages to display.</param>
-        /// <param name="errorLevel">Error level. Applies to all messages</param>
-        void ShowMessages(List<string> messages, Simulation.ErrorLevel errorLevel);
-
+        /// <param name="addSeparator">If true, a 'separator' (several dashes) will also be written to the status window.</param>
+        /// <param name="withButton">
+        /// Whether or not a 'more info' button should be drawn under the message. 
+        /// If the message is not an error, this parameter has no effect.
+        /// </param>
+        void ShowMessage(string Message, Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true);
+        
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
@@ -178,6 +176,7 @@ namespace UserInterface.Views
                 hbox1.HeightRequest = value;                
             }
         }
+        private int numberOfButtons;
         private Views.ListButtonView listButtonView1;
         private Views.ListButtonView listButtonView2;
 
@@ -195,6 +194,7 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
+            numberOfButtons = 0;
             if ((uint)Environment.OSVersion.Platform <= 3)
             {
                 Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
@@ -621,14 +621,16 @@ namespace UserInterface.Views
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
-        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel, bool fromStart = true)
+        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true)
         {
             Gtk.Application.Invoke(delegate
             {
                 StatusWindow.Visible = message != null;
-                if (fromStart)
+                if (overwrite || message == null)
+                {
+                    numberOfButtons = 0;
                     StatusWindow.Buffer.Clear();
-                
+                }
 
                 if (message != null)
                 {
@@ -650,12 +652,19 @@ namespace UserInterface.Views
                     //message = message.Replace("\n", "\n                      ");
                     message += Environment.NewLine;
                     TextIter insertIter;
-                    if (fromStart)
+                    if (overwrite)
                         insertIter = StatusWindow.Buffer.StartIter;
                     else
                         insertIter = StatusWindow.Buffer.EndIter;
 
                     StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
+                    if (errorLevel == Simulation.ErrorLevel.Error && withButton)
+                        AddButtonToStatusWindow("More Information", numberOfButtons++);
+                    if (addSeparator)
+                    {
+                        insertIter = StatusWindow.Buffer.EndIter;
+                        StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, Environment.NewLine + "----------------------------------------------" + Environment.NewLine, tagName);
+                    }
                 }
 
                 //this.toolTip1.SetToolTip(this.StatusWindow, message);
@@ -665,33 +674,19 @@ namespace UserInterface.Views
             while (GLib.MainContext.Iteration()) ;
         }
 
-        public void ShowMessages(List<string> messages, Simulation.ErrorLevel errorLevel)
-        {
-            ShowMessage("", Simulation.ErrorLevel.Information, true);
-            for (int i = 0; i < messages.Count; i++)
-            {
-                ShowMessage(messages[i], errorLevel, false);                
-                AddButtonToStatusWindow("More Information", i);
-                ShowMessage(Environment.NewLine + "----------------------------------------------" + Environment.NewLine, errorLevel, false);
-            }
-        }
-
         private void AddButtonToStatusWindow(string buttonName, int buttonID)
         {
-            Gtk.Application.Invoke(delegate
-            {
-                TextIter iter = StatusWindow.Buffer.EndIter;
-                TextChildAnchor anchor = StatusWindow.Buffer.CreateChildAnchor(ref iter);
-                EventBox box = new EventBox();
-                ApsimNG.Classes.CustomButton moreInfo = new ApsimNG.Classes.CustomButton(buttonName, buttonID);
-                moreInfo.Clicked += ShowDetailedErrorMessage;
-                box.Add(moreInfo);
-                StatusWindow.AddChildAtAnchor(box, anchor);
-                box.ShowAll();
-                box.Realize();
-                box.ShowAll();
-                moreInfo.ParentWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Hand1);
-            });
+            TextIter iter = StatusWindow.Buffer.EndIter;
+            TextChildAnchor anchor = StatusWindow.Buffer.CreateChildAnchor(ref iter);
+            EventBox box = new EventBox();
+            ApsimNG.Classes.CustomButton moreInfo = new ApsimNG.Classes.CustomButton(buttonName, buttonID);
+            moreInfo.Clicked += ShowDetailedErrorMessage;
+            box.Add(moreInfo);
+            StatusWindow.AddChildAtAnchor(box, anchor);
+            box.ShowAll();
+            box.Realize();
+            box.ShowAll();
+            moreInfo.ParentWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Arrow);
         }
 
         [GLib.ConnectBefore]

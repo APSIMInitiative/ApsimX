@@ -38,8 +38,17 @@ namespace UserInterface.Views
             errorWindow = new Window("Error Information")
             {
                 TransientFor = owner.MainWidget.Toplevel as Window,
-                WindowPosition = WindowPosition.CenterAlways
+                WindowPosition = WindowPosition.CenterAlways,
+                // Set a default size of 1280x480. 
+                // Without a default size, the window will resize to fit all of the text in the TextView, which is 
+                // a bad thing if the text is very long (the window may be bigger than the screen).
+                // If we put the text in a ScrolledWindow, we get around this issue, but the window will be tiny.
+                // The best solution seems to be a compromise: put the text in a ScrolledWindow, 
+                // but also set a minimum size for the window.
+                WidthRequest = 1280,
+                HeightRequest = 480
             };
+            // Capture Keypress events, so the user can close the form via the escape key
             errorWindow.KeyPressEvent += OnKeyPress;
             
             textArea = new TextView()
@@ -47,6 +56,12 @@ namespace UserInterface.Views
                 Editable = false,                
             };
 
+            ScrolledWindow scroll = new ScrolledWindow()
+            {
+                HscrollbarPolicy = PolicyType.Automatic,
+                VscrollbarPolicy = PolicyType.Automatic,
+            };
+            scroll.Add(textArea);
             Error = information;
 
             BtnClose = new Button("Close");
@@ -72,11 +87,9 @@ namespace UserInterface.Views
                 Name = "primaryContainer",
                 BorderWidth = 20
             };
-            primaryContainer.PackStart(textArea, true, true, 0);
+            primaryContainer.PackStart(scroll, true, true, 0);
             primaryContainer.PackStart(buttonContainer, false, false, 0);
-
-            ScrolledWindow scroll = new ScrolledWindow();
-            scroll.Add(primaryContainer);
+            
             errorWindow.Add(primaryContainer);
         }
 

@@ -173,7 +173,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception e)
                 {
-                    this.explorerPresenter.MainPresenter.ShowMessage("Error reading data tables." + Environment.NewLine + e.ToString(), Simulation.ErrorLevel.Error);
+                    this.explorerPresenter.MainPresenter.ShowError(new Exception("Error reading data tables.", e));
                 }
             }
             else
