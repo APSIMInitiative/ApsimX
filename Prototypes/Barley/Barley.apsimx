@@ -3190,6 +3190,50 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>WaterStressEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.ExpansionStress.WaterStressEffect.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.ExpansionStress.WaterStressEffect.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0.1</double>
@@ -4379,13 +4423,409 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>StressFactor</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>0</double>
-                    <double>0.5</double>
+                    <double>1</double>
                   </X>
                   <Y>
-                    <double>0.5</double>
+                    <double>1</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -4414,13 +4854,277 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>StressFactor</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>0</double>
-                    <double>0.5</double>
+                    <double>1</double>
                   </X>
                   <Y>
-                    <double>0.5</double>
+                    <double>1</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -4497,6 +5201,50 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>CoverEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.ShadeInducedSenescenceRate.CoverEffect.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.ShadeInducedSenescenceRate.CoverEffect.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
                 <Graph>
                   <Name>Graph</Name>
                   <Series>
@@ -4644,10 +5392,54 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>FW</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <Graph>
+                <Name>Graph</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <XFieldName>.Simulations.Replacements.Barley.Leaf.Photosynthesis.FW.XYPairs.X</XFieldName>
+                  <YFieldName>.Simulations.Replacements.Barley.Leaf.Photosynthesis.FW.XYPairs.Y</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>BottomRight</LegendPosition>
+                <DisabledSeries />
+              </Graph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
-                <double>1</double>
+                <double>0.7</double>
                 <double>1</double>
               </X>
               <Y>
@@ -5507,46 +6299,55 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Name>Baudin</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
+            <Command>[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Buloke</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
+            <Command>[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Capstan</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
+            <Command>[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Commander</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].PpSensitivity.FixedValue = 6</Command>
+            <Command>[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Fleet</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
+            <Command>[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Grimmett</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
+            <Command>[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Hindmarsh</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
+            <Command>[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Keel</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Oxford</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
+            <Command>[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0</Command>
           </Cultivar>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </CultivarFolder>
@@ -7383,6 +8184,50 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>WaterStressEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <Checkpoint>Current</Checkpoint>
+                    <XFieldName>.Simulations.Replacements.Wheat.Leaf.CohortParameters.ExpansionStress.WaterStressEffect.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Wheat.Leaf.CohortParameters.ExpansionStress.WaterStressEffect.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                </Graph>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0.1</double>
@@ -7665,6 +8510,138 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>StressFactor</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Wheat.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Wheat.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Wheat.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Wheat.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Wheat.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Wheat.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>0</double>
@@ -7700,6 +8677,50 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>StressFactor</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Series>
+                      <Name>Series</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                      <Marker>None</Marker>
+                      <MarkerSize>Normal</MarkerSize>
+                      <Line>Solid</Line>
+                      <LineThickness>Normal</LineThickness>
+                      <Checkpoint>Current</Checkpoint>
+                      <XFieldName>.Simulations.Replacements.Wheat.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X</XFieldName>
+                      <YFieldName>.Simulations.Replacements.Wheat.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y</YFieldName>
+                      <ShowInLegend>false</ShowInLegend>
+                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                      <Cumulative>false</Cumulative>
+                      <CumulativeX>false</CumulativeX>
+                    </Series>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <DisabledSeries />
+                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>0</double>
@@ -10380,6 +11401,56 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <DisabledSeries />
       </Graph>
       <Graph>
+        <Name>Harvest Yield</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HarvestObsPred</TableName>
+          <XFieldName>Observed.Barley.Grain.Wt</XFieldName>
+          <YFieldName>Predicted.Barley.Grain.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
         <Name>Grain Number</Name>
         <Series>
           <Name>Series 0</Name>
@@ -10393,7 +11464,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -10414,8 +11485,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Type>Bottom</Type>
           <Title />
           <Inverted>false</Inverted>
-          <Minimum>0</Minimum>
-          <Maximum>30000</Maximum>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
@@ -10464,16 +11535,16 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Type>Bottom</Type>
           <Title />
           <Inverted>false</Inverted>
-          <Minimum>0</Minimum>
-          <Maximum>0.05</Maximum>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title />
           <Inverted>false</Inverted>
-          <Minimum>0</Minimum>
-          <Maximum>0.05</Maximum>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
@@ -10530,56 +11601,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>Harvest Yield</Name>
-        <Series>
-          <Name>Predicted</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>HarvestObsPred</TableName>
-          <XFieldName>Observed.Barley.Grain.Wt</XFieldName>
-          <YFieldName>Predicted.Barley.Grain.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
         <Name>Harvest Biomass N</Name>
         <Series>
           <Name>Series 0</Name>
@@ -10593,7 +11614,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -10643,7 +11664,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -10654,7 +11675,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <TableName>HarvestObsPred</TableName>
           <XFieldName>Observed.Barley.Grain.N</XFieldName>
           <YFieldName>Predicted.Barley.Grain.N</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -10693,7 +11714,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -10727,142 +11748,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>StemTimeSeries</Name>
-        <Series>
-          <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>9</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Small</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>DailyObsPred</TableName>
-          <XFieldName>Predicted.Barley.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Predicted.Barley.Stem.Wt</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Predicted1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>DailyObsPred</TableName>
-          <XFieldName>Predicted.Barley.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Observed.Barley.Stem.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>LAITimeSeries</Name>
-        <Series>
-          <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>9</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Small</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>DailyObsPred</TableName>
-          <XFieldName>Predicted.Barley.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Predicted.Barley.Leaf.LAI</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Predicted1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>DailyObsPred</TableName>
-          <XFieldName>Predicted.Barley.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>Observed.Barley.Leaf.LAI</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -10923,46 +11808,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <Operations>
                 <Name>IrrigationEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2009-11-11</Date>
-                  <Action>[Irrigation].Apply(0); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2009-11-19</Date>
-                  <Action>[Irrigation].Apply(0); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2009-11-26</Date>
-                  <Action>[Irrigation].Apply(0); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2009-12-11</Date>
-                  <Action>[Irrigation].Apply(0); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2009-12-21</Date>
-                  <Action>[Irrigation].Apply(0); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2009-12-29</Date>
-                  <Action>[Irrigation].Apply(0); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2010-01-05</Date>
-                  <Action>[Irrigation].Apply(0); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2010-01-13</Date>
-                  <Action>[Irrigation].Apply(0); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2010-03-02</Date>
-                  <Action>[Irrigation].Apply(0); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2010-03-03</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
@@ -10999,20 +11844,12 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
                   <Action>[Irrigation].Apply(40); </Action>
                 </Operation>
                 <Operation>
-                  <Date>2010-01-05</Date>
+                  <Date>2010-01-07</Date>
                   <Action>[Irrigation].Apply(35); </Action>
                 </Operation>
                 <Operation>
                   <Date>2010-01-13</Date>
                   <Action>[Irrigation].Apply(30); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2010-03-02</Date>
-                  <Action>[Irrigation].Apply(40); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2010-03-03</Date>
-                  <Action>[Irrigation].Apply(40);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -11129,21 +11966,21 @@ namespace Models
                     <double>0.1</double>
                     <double>0.1</double>
                     <double>0.08</double>
-                    <double>0.13</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.18</double>
-                    <double>0.19</double>
+                    <double>0.1</double>
+                    <double>0.12</double>
+                    <double>0.12</double>
+                    <double>0.12</double>
+                    <double>0.12</double>
                   </LL>
                   <KL>
                     <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
+                    <double>0.07</double>
+                    <double>0.06</double>
+                    <double>0.05</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
                   </KL>
                   <XF>
                     <double>1</double>
@@ -11181,21 +12018,21 @@ namespace Models
                   <double>0.05</double>
                   <double>0.1</double>
                   <double>0.08</double>
-                  <double>0.13</double>
-                  <double>0.2</double>
-                  <double>0.2</double>
-                  <double>0.18</double>
-                  <double>0.19</double>
+                  <double>0.1</double>
+                  <double>0.12</double>
+                  <double>0.12</double>
+                  <double>0.12</double>
+                  <double>0.12</double>
                 </AirDry>
                 <LL15>
                   <double>0.1</double>
                   <double>0.1</double>
                   <double>0.08</double>
-                  <double>0.13</double>
-                  <double>0.2</double>
-                  <double>0.2</double>
-                  <double>0.18</double>
-                  <double>0.19</double>
+                  <double>0.1</double>
+                  <double>0.12</double>
+                  <double>0.12</double>
+                  <double>0.12</double>
+                  <double>0.12</double>
                 </LL15>
                 <DUL>
                   <double>0.33</double>
@@ -11220,7 +12057,7 @@ namespace Models
                 <KS>
                   <double>4832.039</double>
                   <double>389.229</double>
-                  <double>16.362</double>
+                  <double>97</double>
                   <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
@@ -11257,10 +12094,10 @@ namespace Models
                 </Thickness>
                 <SWCON>
                   <double>0.9</double>
-                  <double>0.6</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
+                  <double>0.9</double>
+                  <double>0.9</double>
+                  <double>0.9</double>
+                  <double>0.9</double>
                   <double>0.9</double>
                 </SWCON>
                 <KLAT>
@@ -11511,8 +12348,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Cultivar>Booma</Cultivar>
                   <InitialRootDepth>10</InitialRootDepth>
+                  <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -20521,104 +21358,6 @@ namespace Models
             <Name>Irr</Name>
             <Factor>
               <Name>Control</Name>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.08</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.09</double>
-                    <double>0.11</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.12</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.07</double>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </AirDry>
-                <LL15>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </LL15>
-                <DUL>
-                  <double>0.29</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.26</double>
-                  <double>0.26</double>
-                  <double>0.28</double>
-                  <double>0.27</double>
-                  <double>0.22</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                </SAT>
-              </Water>
               <Manager>
                 <Name>ClimateControl</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -20724,40 +21463,10 @@ namespace Models
                   <Action>[Irrigation].Apply(36);</Action>
                 </Operation>
               </Operations>
-              <Sample>
-                <Name>InitialWater</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[Water]</string>
-                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
+                <string>[IrrigationEvents]</string>
               </Specifications>
             </Factor>
             <Factor>
@@ -20855,138 +21564,9 @@ namespace Models
 }
 ]]></Code>
               </Manager>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.08</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.09</double>
-                    <double>0.11</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.12</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </AirDry>
-                <LL15>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </LL15>
-                <DUL>
-                  <double>0.29</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.26</double>
-                  <double>0.26</double>
-                  <double>0.28</double>
-                  <double>0.27</double>
-                  <double>0.22</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                </SAT>
-              </Water>
-              <Sample>
-                <Name>InitialWater</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -21089,138 +21669,9 @@ namespace Models
 }
 ]]></Code>
               </Manager>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.08</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.09</double>
-                    <double>0.11</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.12</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </AirDry>
-                <LL15>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </LL15>
-                <DUL>
-                  <double>0.29</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.26</double>
-                  <double>0.26</double>
-                  <double>0.28</double>
-                  <double>0.27</double>
-                  <double>0.22</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                </SAT>
-              </Water>
-              <Sample>
-                <Name>InitialWater</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -21307,138 +21758,9 @@ namespace Models
 }
 ]]></Code>
               </Manager>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.08</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.09</double>
-                    <double>0.11</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.12</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </AirDry>
-                <LL15>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </LL15>
-                <DUL>
-                  <double>0.29</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.26</double>
-                  <double>0.26</double>
-                  <double>0.28</double>
-                  <double>0.27</double>
-                  <double>0.22</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                </SAT>
-              </Water>
-              <Sample>
-                <Name>InitialWater</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -21517,138 +21839,9 @@ namespace Models
 }
 ]]></Code>
               </Manager>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.08</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.09</double>
-                    <double>0.11</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.12</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </AirDry>
-                <LL15>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </LL15>
-                <DUL>
-                  <double>0.29</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.26</double>
-                  <double>0.26</double>
-                  <double>0.28</double>
-                  <double>0.27</double>
-                  <double>0.22</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                </SAT>
-              </Water>
-              <Sample>
-                <Name>InitialWater</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -21743,138 +21936,9 @@ namespace Models
 }
 ]]></Code>
               </Manager>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>BarleySoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.08</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.09</double>
-                    <double>0.11</double>
-                    <double>0.16</double>
-                    <double>0.15</double>
-                    <double>0.12</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <BD>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                  <double>1.3</double>
-                </BD>
-                <AirDry>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </AirDry>
-                <LL15>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </LL15>
-                <DUL>
-                  <double>0.29</double>
-                  <double>0.3</double>
-                  <double>0.28</double>
-                  <double>0.26</double>
-                  <double>0.26</double>
-                  <double>0.28</double>
-                  <double>0.27</double>
-                  <double>0.22</double>
-                </DUL>
-                <SAT>
-                  <double>0.44</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                  <double>0.38</double>
-                </SAT>
-              </Water>
-              <Sample>
-                <Name>InitialWater</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                </Thickness>
-                <SW>
-                  <double>0.32</double>
-                  <double>0.3</double>
-                  <double>0.29</double>
-                  <double>0.33</double>
-                  <double>0.31</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.23</double>
-                </SW>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
                 <string>[IrrigationEvents]</string>
-                <string>[Water]</string>
-                <string>[InitialWater]</string>
                 <string>[ClimateControl]</string>
               </Specifications>
             </Factor>
@@ -21937,16 +22001,50 @@ namespace Models
               </Analysis>
               <Water>
                 <Name>Water</Name>
+                <SoilCrop>
+                  <Name>BarleySoil</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <LL>
+                    <double>0.09</double>
+                    <double>0.13</double>
+                    <double>0.13</double>
+                    <double>0.17</double>
+                    <double>0.22</double>
+                    <double>0.17</double>
+                    <double>0.2</double>
+                    <double>0.2</double>
+                  </LL>
+                  <KL>
+                    <double>0.1</double>
+                    <double>0.07</double>
+                    <double>0.05</double>
+                    <double>0.03</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
+                    <double>0.01</double>
+                    <double>0.01</double>
+                  </KL>
+                  <XF>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </XF>
+                </SoilCrop>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
-                  <double>100</double>
                   <double>200</double>
-                  <double>300</double>
                   <double>200</double>
-                  <double>100</double>
                   <double>200</double>
-                  <double>100</double>
-                  <double>300</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
                 </Thickness>
                 <BD>
                   <double>1.23</double>
@@ -21959,34 +22057,34 @@ namespace Models
                   <double>1.601</double>
                 </BD>
                 <AirDry>
-                  <double>0.05</double>
-                  <double>0.05</double>
-                  <double>0.157</double>
-                  <double>0.173</double>
-                  <double>0.173</double>
-                  <double>0.165</double>
-                  <double>0.165</double>
-                  <double>0.115</double>
+                  <double>0.09</double>
+                  <double>0.13</double>
+                  <double>0.13</double>
+                  <double>0.17</double>
+                  <double>0.22</double>
+                  <double>0.17</double>
+                  <double>0.2</double>
+                  <double>0.2</double>
                 </AirDry>
                 <LL15>
-                  <double>0.14</double>
-                  <double>0.14</double>
+                  <double>0.09</double>
                   <double>0.13</double>
-                  <double>0.11</double>
-                  <double>0.173</double>
-                  <double>0.165</double>
-                  <double>0.165</double>
-                  <double>0.115</double>
+                  <double>0.13</double>
+                  <double>0.17</double>
+                  <double>0.22</double>
+                  <double>0.17</double>
+                  <double>0.2</double>
+                  <double>0.2</double>
                 </LL15>
                 <DUL>
-                  <double>0.33</double>
-                  <double>0.33</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
                   <double>0.29</double>
-                  <double>0.28</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
+                  <double>0.22</double>
+                  <double>0.27</double>
+                  <double>0.2</double>
+                  <double>0.25</double>
+                  <double>0.22</double>
                 </DUL>
                 <SAT>
                   <double>0.48</double>
@@ -22179,16 +22277,13 @@ namespace Models
                 <Name>CERESSoilTemperature</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </CERESSoilTemperature>
-              <Sample>
+              <InitialWater>
                 <Name>InitialWater</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Thickness />
-                <NO3Units>kgha</NO3Units>
-                <NH4Units>kgha</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
+                <PercentMethod>FilledFromTop</PercentMethod>
+                <FractionFull>2.9220779220779223</FractionFull>
+                <DepthWetSoil>NaN</DepthWetSoil>
+              </InitialWater>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <RecordNumber>0</RecordNumber>
               <Site>-</Site>
@@ -22454,7 +22549,7 @@ namespace Models
                 <Name>Harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>1998-02-06</Date>
+                  <Date>1989-02-06</Date>
                   <Action>[Barley].Harvest();</Action>
                 </Operation>
               </Operations>
@@ -24916,26 +25011,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Operations>
             <Operations>
-              <Name>50</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Operation>
-                <Date>1995-10-20</Date>
-                <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>100</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Operation>
-                <Date>1995-10-20</Date>
-                <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1995-11-08</Date>
-                <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
               <Name>150</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
@@ -25057,8 +25132,8 @@ namespace Models
                   <Name>BarleySoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
-                    <double>0.1</double>
-                    <double>0.11</double>
+                    <double>0.09</double>
+                    <double>0.09</double>
                     <double>0.11</double>
                     <double>0.11</double>
                     <double>0.17</double>
@@ -25119,8 +25194,8 @@ namespace Models
                   <double>1.3</double>
                 </BD>
                 <AirDry>
-                  <double>0.05</double>
-                  <double>0.11</double>
+                  <double>0.09</double>
+                  <double>0.09</double>
                   <double>0.11</double>
                   <double>0.11</double>
                   <double>0.17</double>
@@ -25131,8 +25206,8 @@ namespace Models
                   <double>0.17</double>
                 </AirDry>
                 <LL15>
-                  <double>0.1</double>
-                  <double>0.11</double>
+                  <double>0.09</double>
+                  <double>0.09</double>
                   <double>0.11</double>
                   <double>0.11</double>
                   <double>0.17</double>
@@ -26302,8 +26377,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -26704,8 +26779,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -26897,6 +26972,106 @@ namespace Models
           <LegendPosition>BottomLeft</LegendPosition>
           <DisabledSeries />
         </Graph>
+        <Graph>
+          <Name>Harvest Biomass</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>HarvestObsPred</TableName>
+            <XFieldName>Observed.Barley.AboveGround.Wt</XFieldName>
+            <YFieldName>Predicted.Barley.AboveGround.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Harvest Yield</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>HarvestObsPred</TableName>
+            <XFieldName>Observed.Barley.Grain.Wt</XFieldName>
+            <YFieldName>Predicted.Barley.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <DisabledSimNames />
       </Experiment>
@@ -27063,7 +27238,7 @@ This is the mineral nitrogen (N) validation trial conducted at the Lincoln Unive
           <Weather>
             <Name>Weather</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FileName>Lincoln15-17.met</FileName>
+            <FileName>lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <Clock>
@@ -27193,12 +27368,12 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <BD>
-                  <double>1.23</double>
-                  <double>1.23</double>
-                  <double>1.59</double>
-                  <double>1.57</double>
-                  <double>1.57</double>
-                  <double>1.6</double>
+                  <double>1</double>
+                  <double>1.1</double>
+                  <double>1.2</double>
+                  <double>1.2</double>
+                  <double>1.3</double>
+                  <double>1.3</double>
                 </BD>
                 <AirDry>
                   <double>0.05</double>
@@ -27325,8 +27500,8 @@ namespace Models
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <RootCN>31.5</RootCN>
-                <RootWt>1500</RootWt>
+                <RootCN>15</RootCN>
+                <RootWt>4000</RootWt>
                 <SoilCN>11</SoilCN>
                 <EnrACoeff>7.4</EnrACoeff>
                 <EnrBCoeff>0.2</EnrBCoeff>
@@ -27347,9 +27522,9 @@ namespace Models
                   <string>120-150</string>
                 </Depth>
                 <OC>
-                  <double>5</double>
-                  <double>3.5</double>
-                  <double>2</double>
+                  <double>2.5</double>
+                  <double>1.8</double>
+                  <double>1.1</double>
                   <double>0.38</double>
                   <double>0.24</double>
                   <double>0.24</double>
@@ -27363,9 +27538,9 @@ namespace Models
                   <double>0.01</double>
                 </FBiom>
                 <FInert>
-                  <double>0.2</double>
-                  <double>0.4</double>
+                  <double>0.45</double>
                   <double>0.6</double>
+                  <double>0.7</double>
                   <double>0.9</double>
                   <double>0.96</double>
                   <double>0.96</double>
@@ -27384,31 +27559,23 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>18.4</double>
-                  <double>21.6</double>
-                  <double>20</double>
-                  <double>21</double>
-                  <double>9</double>
-                  <double>3</double>
+                  <double>4.3</double>
+                  <double>2.9</double>
+                  <double>1.5</double>
+                  <double>1.7</double>
+                  <double>1.4</double>
+                  <double>0.7</double>
                 </NO3>
                 <NH4>
-                  <double>2</double>
-                  <double>0.6</double>
-                  <double>0.8</double>
-                  <double>0.3</double>
-                  <double>0.2</double>
-                  <double>0.4</double>
+                  <double>2.7</double>
+                  <double>4.1</double>
+                  <double>1.6</double>
+                  <double>1.4</double>
+                  <double>0.9</double>
+                  <double>0.1</double>
                 </NH4>
-                <SW>
-                  <double>0.31</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.2</double>
-                  <double>0.2</double>
-                </SW>
-                <NO3Units>kgha</NO3Units>
-                <NH4Units>kgha</NH4Units>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
                 <SWUnits>Volumetric</SWUnits>
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
@@ -27429,12 +27596,12 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <SW>
-                  <double>0.31</double>
-                  <double>0.31</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.2</double>
-                  <double>0.2</double>
+                  <double>0.33</double>
+                  <double>0.33</double>
+                  <double>0.29</double>
+                  <double>0.28</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>kgha</NH4Units>
@@ -27471,20 +27638,20 @@ namespace Models
               </ResidueTypes>
               <Pools>
                 <Pool>
-                  <PoolName>Barley_stubble</PoolName>
-                  <ResidueType>Barley</ResidueType>
-                  <Mass>1500</Mass>
-                  <CNRatio>80</CNRatio>
+                  <PoolName>pasture_residual</PoolName>
+                  <ResidueType>pasture</ResidueType>
+                  <Mass>2500</Mass>
+                  <CNRatio>15</CNRatio>
                   <CPRatio>NaN</CPRatio>
                   <StandingFraction>0</StandingFraction>
                 </Pool>
               </Pools>
-              <PoolName>Barley_stubble</PoolName>
-              <type>Barley</type>
-              <mass>1500</mass>
+              <PoolName>pasture_residual</PoolName>
+              <type>pasture</type>
+              <mass>2500</mass>
               <standing_fraction>0</standing_fraction>
               <cpr />
-              <cnr>80</cnr>
+              <cnr>15</cnr>
               <CriticalResidueWeight>2000</CriticalResidueWeight>
               <OptimumDecompTemp>20</OptimumDecompTemp>
               <MaxCumulativeEOS>20</MaxCumulativeEOS>
@@ -27529,7 +27696,7 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>2015-09-28</Date>
-                  <Action>[Barley].Sow(population:280, cultivar:"Bumpa", depth:40, rowSpacing:150);</Action>
+                  <Action>[Barley].Sow(population:180, cultivar:"Bumpa", depth:40, rowSpacing:150);</Action>
                 </Operation>
               </Operations>
               <Operations>
@@ -27537,19 +27704,19 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>2015-10-19</Date>
-                  <Action>[Irrigation].Apply(30); </Action>
+                  <Action>[Irrigation].Apply(25); </Action>
                 </Operation>
                 <Operation>
                   <Date>2015-11-26</Date>
-                  <Action>[Irrigation].Apply(30); </Action>
+                  <Action>[Irrigation].Apply(0); </Action>
                 </Operation>
                 <Operation>
                   <Date>2015-12-01</Date>
-                  <Action>[Irrigation].Apply(30); </Action>
+                  <Action>[Irrigation].Apply(25); </Action>
                 </Operation>
                 <Operation>
                   <Date>2015-12-10</Date>
-                  <Action>[Irrigation].Apply(30); </Action>
+                  <Action>[Irrigation].Apply(25); </Action>
                 </Operation>
               </Operations>
               <Operations>
@@ -27785,6 +27952,19 @@ namespace Models
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </SoluteManager>
+            <Report>
+              <Name>ProfileWaterReport</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>sum([Soil].SoilNitrogen.mineral_n[1:3]) as ProfileN_0_60</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Clock].DoReport</string>
+              </EventNames>
+            </Report>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -27797,6 +27977,11 @@ namespace Models
             <Name>TotalWt</Name>
             <Series>
               <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -28183,6 +28368,117 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
+        <Graph>
+          <Name>SoilWaterProfile1</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Leaf.Fw</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric soil water (mm)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SoilNProfile</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>ProfileWaterReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>ProfileN_0_60</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>ProfileN</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Volumetric soil water (mm)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <DisabledSimNames />
       </Experiment>
@@ -40402,5 +40698,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>336</ExplorerWidth>
+  <ExplorerWidth>269</ExplorerWidth>
 </Simulations>
