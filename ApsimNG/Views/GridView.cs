@@ -90,6 +90,10 @@ namespace UserInterface.Views
         private bool selfCursorMove = false;
 
         /// <summary>
+        /// Flag to keep track of whether the calendar dialog is currently visible.
+        /// </summary>
+        private bool calendarVisible = false;
+        /// <summary>
         /// A value storing the caret location when the user activates intellisense.
         /// </summary>
         private int caretLocation;
@@ -1323,47 +1327,72 @@ namespace UserInterface.Views
             }
             this.valueBeforeEdit = this.DataSource.Rows[where.RowIndex][where.ColumnIndex];
             Type dataType = this.valueBeforeEdit.GetType();
-            if (dataType == typeof(DateTime))
+            if (dataType == typeof(DateTime) && !calendarVisible)
             {
-                Dialog dialog = new Dialog("Select date", gridview.Toplevel as Window, DialogFlags.DestroyWithParent);
+                Window dialog = new Window("Select date")
+                {
+                    TransientFor = gridview.Toplevel as Window,
+                    SkipPagerHint = true,
+                    SkipTaskbarHint = true,
+                    KeepBelow = true
+                };
+                dialog.KeyPressEvent += new KeyPressEventHandler((o, eArgs) => 
+                {
+                    if (eArgs.Event.Key == Gdk.Key.Escape) dialog.Destroy();
+                });
                 dialog.SetPosition(WindowPosition.None);
-                VBox topArea = dialog.VBox;
+                VBox topArea = new VBox();
                 topArea.PackStart(new HBox());
                 Calendar calendar = new Calendar();
                 calendar.DisplayOptions = CalendarDisplayOptions.ShowHeading |
                                      CalendarDisplayOptions.ShowDayNames |
                                      CalendarDisplayOptions.ShowWeekNumbers;
                 calendar.Date = (DateTime)this.valueBeforeEdit;
+
                 topArea.PackStart(calendar, true, true, 0);
+                dialog.Add(topArea);
                 dialog.ShowAll();
-                dialog.Run();
-                // What SHOULD we do here? For now, assume that if the user modified the date in the calendar dialog,
-                // the resulting date is what they want. Otherwise, keep the text-editing (Entry) widget active, and
-                // let the user enter a value manually.
-                if (calendar.Date != (DateTime)this.valueBeforeEdit)
+                calendarVisible = true;
+                calendar.DaySelectedDoubleClick += new EventHandler((_, __) =>
                 {
-                    DateTime date = calendar.GetDate();
-                    this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = date;
-                    CellRendererText render = sender as CellRendererText;
-                    if (render != null)
+                    // What SHOULD we do here? For now, assume that if the user modified the date in the calendar dialog,
+                    // the resulting date is what they want. Otherwise, keep the text-editing (Entry) widget active, and
+                    // let the user enter a value manually.
+                    if (calendar.Date != (DateTime)this.valueBeforeEdit)
                     {
-                        render.Text = String.Format("{0:d}", date);
-                        if (e.Editable is Entry)
+                        DateTime date = calendar.GetDate();
+                        this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = date;
+                        CellRendererText render = sender as CellRendererText;
+                        if (render != null)
                         {
-                            (e.Editable as Entry).Text = render.Text;
-                            (e.Editable as Entry).Destroy();
-                            this.userEditingCell = false;
-                            if (this.CellsChanged != null)
+                            render.Text = String.Format("{0:d}", date);
+                            if (e.Editable is Entry)
                             {
-                                GridCellsChangedArgs args = new GridCellsChangedArgs();
-                                args.ChangedCells = new List<IGridCell>();
-                                args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
-                                this.CellsChanged(this, args);
+                                (e.Editable as Entry).Text = render.Text;
+                                (e.Editable as Entry).Destroy();
+                                this.userEditingCell = false;
+                                if (this.CellsChanged != null)
+                                {
+                                    GridCellsChangedArgs args = new GridCellsChangedArgs();
+                                    args.ChangedCells = new List<IGridCell>();
+                                    args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
+                                    this.CellsChanged(this, args);
+                                }
                             }
                         }
                     }
-                }
-                dialog.Destroy();
+                    dialog.Destroy();
+                });
+
+                dialog.Destroyed += new EventHandler((_, __) => {
+                    calendarVisible = false;
+                });
+                //while (GLib.MainContext.Iteration()) ;
+                (gridview.Toplevel as Window).Present();
+                gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), gridview.GetColumn(GetCurrentCell.ColumnIndex), true);
+                while (GLib.MainContext.Iteration()) ;
+                (editControl as Entry).Position = GetCurrentCell.Value.ToString().Length;
+                //userEditingCell = true;
             }
         }
 
