@@ -11845,6 +11845,14 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <Name>NewZealand</Name>
       <Experiment>
         <Name>MCPD09_10</Name>
+        <Memo>
+          <Name>Experimental details</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This experiment was conducted in A Block near Lincoln, New Zealand to determine if there were any differences in the water use efficiency of different commercial varieties of barley.  The results are un-published to date.
+
+Four cultivars of Barley ('Omaka', 'Dash', 'Sherwood' and 'Booma') were sown on the 1st of October 2009 in a randomised complete block design with 4 replicates and two other factors, Irrigation and Nitrogen.  The irrigation treatments consisted of full irrigation (to replace measured evapotranspiration) or nil irrigation (recieving only rainfall).  The nitrogen treatments were 150 kg N broadcast in the early vegetative stage or nil fertiliser.  
+Biomass accumulation, organ N content, Leaf area index, radiation interception and soil water content were measured at regular frequencies throughout the experiment.]]></MemoText>
+        </Memo>
         <Factors>
           <Name>Factors</Name>
           <Factor>
@@ -12436,8 +12444,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Cultivar>Booma</Cultivar>
                   <InitialRootDepth>10</InitialRootDepth>
+                  <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -14905,12 +14913,14 @@ namespace Models
       <Experiment>
         <Name>MCPD10_11</Name>
         <Memo>
-          <Name>Trial details</Name>
+          <Name>Experimental details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
-This was a cultivar evaluation trial conducted in Lincoln. Eight cultivars were evaluated.
+Following on from MCPD09_10, this experiment was conducted in A Block near Lincoln, New Zealand to test a wider range of barley genotypes for differences in water use efficiency.  The results are un-published to date.
 
-]]></MemoText>
+Treatments were simply 8 commercially available varieties of barley ('Booma','County','Dash','Hooded','Omaka','Optic','Quench' and 'Retriever')
+
+Biomass accumulation, Leaf area index, radiation interception and soil water content were measured at regular frequencies throughout the experiment.]]></MemoText>
         </Memo>
         <Factors>
           <Name>Factors</Name>
@@ -15368,8 +15378,8 @@ This was a cultivar evaluation trial conducted in Lincoln. Eight cultivars were 
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Cultivar>Dash</Cultivar>
                   <InitialRootDepth>40</InitialRootDepth>
+                  <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -16799,13 +16809,14 @@ namespace Models
       <Experiment>
         <Name>MCPD11_12</Name>
         <Memo>
-          <Name>Trial details</Name>
+          <Name>Experimental details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
-This was a nitrogen*irrigation trial conducted at Lincoln
-•	Two water treatments; Rainfed (nil irrigation) and irrigated (310 mm)
-•	Two fertiliser N treatments; 0N (no fertiliser) and 150N (150 kg N/ha)
-]]></MemoText>
+Following on from MCPD10_11, this experiment was conducted in A Block near Lincoln, New Zealand to test the effects of sowing time on apparent water use efficiency of three varieties of Barley.  The results are un-published to date.
+
+Treatments were simply 3 commercially available varieties of barley ('Booma','Dash' and 'Omaka') sown on three different sowing dates (13 Aug, 9 Sep and 15 Nov).  
+
+Biomass accumulation, Leaf appearance, leaf size, radiation interception and soil water content were measured at regular frequencies throughout the experiment.]]></MemoText>
         </Memo>
         <Factors>
           <Name>Factors</Name>
@@ -17412,9 +17423,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
-                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -19066,17 +19077,20 @@ namespace Models
       <Experiment>
         <Name>RS2014_15</Name>
         <Memo>
-          <Name>Experiment</Name>
+          <Name>Experimental details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[This was a field experiment established at the New Zealand Institute for Plant & Food Research Limited rain-out shelter in October 2014. Barley cultivars cv Dash and cv Omaka, differing canopy characteristics and water extraction capabilities were established with a range of irrigation treatments aimed at producing a range of soil moisture deficits.
-•	High =Full replacement irrigation: replace weekly, measured crop water use;
-•	Mid =Intermediate replacement with reduced frequency and higher volume e.g. monthly application of ½ measured crop water use;
-•	Low =Nil (or near nil) irrigation, e.g.  irrigated once at anthesis.
+
+- High =Full replacement irrigation: replace weekly, measured crop water use;
+- Mid =Intermediate replacement with reduced frequency and higher volume e.g. monthly application of ½ measured crop water use;
+- Low =Nil (or near nil) irrigation, e.g.  irrigated once at anthesis.
+
 The treatments were monitored for:
-•	Soil water - this was measured continuously using auto logging TDR and weekly using a neutron probe;
-•	Canopy light interception;
-•	Biomass - quantified four times during crop growth;
-•	Leaf area.
+
+- Soil water - this was measured continuously using auto logging TDR and weekly using a neutron probe;
+- Canopy light interception;
+- Biomass - quantified four times during crop growth and at final harvest
+- Leaf area index
 
 
 
@@ -19694,9 +19708,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2014-10-15</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -21399,18 +21413,18 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[This experiment was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand. The objective was to evaluate the effect of drought on the yield of barley crops. The experiment is fully described by Jamieson et al. (1995).  Briefly, 'Triumph' barley was sown at 188kg/ha on 07 September 1988. This sowing rate resulted in a population of 291 ± 6 plants/m2.  Plants were evaluated for their response to drought of varying duration. The treatments were:
 
-•	Full irrigation – measured ET replaced weekly (06 October to 29 December) 
-•	Early Drought 1 – irrigated from 03 November to 05 January
-•	Early Drought 2 – irrigated from 17 November to 19 January
-•	Early Drought 3 – irrigated from 24 November to 19 January
-•	Early Drought 3 – irrigated from 01 December to 09 February
-•	Middle Drought 1 – irrigated (06/10/1988 to 03/11/1988) and (24/11/1988 to 29/12/1989)
-•	Middle Drought 2 – irrigated (06/10/1988 to 03/11/1988) and (01/12/1988 to 29/12/1989)
-•	Middle Drought 3 – irrigated (06/10/1988 to 03/11/1988) and (15/12/1988 to 29/12/1989)
-•	Middle Drought 3 – irrigated (06/10/1988 to 03/11/1988) 
-•	Late Drought 1 – irrigated (06/10/1988 to 17/11/1988)
-•	Late Drought 2 – irrigated (06/10/1988 to 24/11/1988) 
-•	Late Drought 3 – irrigated (06/10/1988 to 01/12/1989)
+- Full irrigation – measured ET replaced weekly (06 October to 29 December) 
+- Early Drought 1 – irrigated from 03 November to 05 January
+- Early Drought 2 – irrigated from 17 November to 19 January
+- Early Drought 3 – irrigated from 24 November to 19 January
+- Early Drought 3 – irrigated from 01 December to 09 February
+- Middle Drought 1 – irrigated (06/10/1988 to 03/11/1988) and (24/11/1988 to 29/12/1989)
+- Middle Drought 2 – irrigated (06/10/1988 to 03/11/1988) and (01/12/1988 to 29/12/1989)
+- Middle Drought 3 – irrigated (06/10/1988 to 03/11/1988) and (15/12/1988 to 29/12/1989)
+- Middle Drought 3 – irrigated (06/10/1988 to 03/11/1988) 
+- Late Drought 1 – irrigated (06/10/1988 to 17/11/1988)
+- Late Drought 2 – irrigated (06/10/1988 to 24/11/1988) 
+- Late Drought 3 – irrigated (06/10/1988 to 01/12/1989)
 
 ]]></MemoText>
         </Memo>
@@ -23830,15 +23844,11 @@ namespace Models
           <MemoText><![CDATA[
 This is a water response trial conducted inside and outside the rain shelter at the New Zealand Institute for Plant & Food Research in Lincoln and described in De Ruiter et al (1999). Briefly, a vernalisation insensitive barley, variety "Valetta", was sown at 280 plant/m^2^ on 20 October 1995 and subjected to five water treatments as follows:  
 
-•	Full drought (in rain shelter) – was not irrigated except for 17 mm rainfall as a result of shelter failure 42 days after sowing;
-
-•	Early drought (in rain shelter) – also receive 17 mm rainfall and the drought was fully relieved at the onset stem elongation;
-
-•	Late drought (in rain shelter) – fully irrigated (i.e. net crop water use + soil water evaporation) up to stem elongation and nil irrigation thereafter; 
-
-•	Rain-fed (outside the rain shelter) – received all the rain but no irrigation;
-
-•	Full irrigation (located outside the rain shelter) – received all the rain and irrigation to replace ET.
+- Full drought (in rain shelter) – was not irrigated except for 17 mm rainfall as a result of shelter failure 42 days after sowing;
+- Early drought (in rain shelter) – also receive 17 mm rainfall and the drought was fully relieved at the onset stem elongation;
+- Late drought (in rain shelter) – fully irrigated (i.e. net crop water use + soil water evaporation) up to stem elongation and nil irrigation thereafter; 
+- Rain-fed (outside the rain shelter) – received all the rain but no irrigation;
+- Full irrigation (located outside the rain shelter) – received all the rain and irrigation to replace ET.
 
 
 ]]></MemoText>
@@ -27140,15 +27150,16 @@ namespace Models
       <Experiment>
         <Name>LUDF2015_16</Name>
         <Memo>
-          <Name>Trial details</Name>
+          <Name>Experimental Details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
 This is the mineral nitrogen (N) validation trial conducted at the Lincoln University Dairy Farm on a deep well-drained Templeton silt loam soil. The trial ran from September 2015 to February 2016. Five N fertiliser treatments were evaluated:
-•	Nil (0%) N - the crop did not get any fertiliser N 
-•	50% N - the crop received 50% of the required fertiliser N 
-•	75% N - the crop received 75% of the required fertiliser N 
-•	100% N - the crop received the required fertiliser N as estimated by the fertiliser calculator
-•	125% N - the crop received 25% fertiliser N above the requirement.
+
+- Nil (0%) N - the crop did not get any fertiliser N 
+- 50% N - the crop received 50% of the required fertiliser N 
+- 75% N - the crop received 75% of the required fertiliser N 
+- 100% N - the crop received the required fertiliser N as estimated by the fertiliser calculator
+- 125% N - the crop received 25% fertiliser N above the requirement.
 ]]></MemoText>
         </Memo>
         <Factors>
@@ -28477,12 +28488,13 @@ namespace Models
       <Experiment>
         <Name>ABlock99_00</Name>
         <Memo>
-          <Name>Trial details</Name>
+          <Name>Experimental Details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
-This was a nitrogen*irrigation trial conducted at Lincoln
-•	Two water treatments; Rainfed (nil irrigation) and irrigated (310 mm)
-•	Two fertiliser N treatments; 0N (no fertiliser) and 150N (150 kg N/ha)
+This was a sowing date by irrigation trial conducted at Lincoln
+
+- Two water treatments; Rainfed (nil irrigation) and irrigated (310 mm)
+- Two fertiliser N treatments; 0N (no fertiliser) and 150N (150 kg N/ha)
 ]]></MemoText>
         </Memo>
         <Factors>
@@ -29050,9 +29062,9 @@ This was a nitrogen*irrigation trial conducted at Lincoln
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>1999-05-28</SowingDate>
-                  <Popn>300</Popn>
                   <SowDepth>20</SowDepth>
+                  <Popn>300</Popn>
+                  <SowingDate>1999-05-28</SowingDate>
                   <CultivarName>Dash</CultivarName>
                 </Script>
                 <Code><![CDATA[using System;
@@ -39226,8 +39238,8 @@ namespace Models
                   <IncludeInDocumentation>false</IncludeInDocumentation>
                   <Script>
                     <TOS>1</TOS>
-                    <Population>120</Population>
                     <Cultivar>Grimmett</Cultivar>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[
 using System;
@@ -40599,5 +40611,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>323</ExplorerWidth>
 </Simulations>
