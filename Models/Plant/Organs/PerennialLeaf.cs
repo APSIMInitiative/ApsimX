@@ -99,9 +99,9 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Removed = new Biomass();
 
-        /// <summary>The amount of biomass detached every day</summary>
+        /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
-        public Biomass Detached = new Biomass();
+        public Biomass Detached { get; set; }
 
         #region Leaf Interface
         /// <summary>
@@ -462,7 +462,7 @@ namespace Models.PMF.Organs
             dryMatterSupply.Clear();
             nitrogenDemand.Clear();
             nitrogenSupply.Clear();
-            Detached = new Biomass();
+            Detached.Clear();
 
         }
         #endregion
@@ -723,6 +723,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Detached = new Biomass();
             Clear();
         }
 
