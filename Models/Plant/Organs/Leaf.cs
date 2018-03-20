@@ -663,17 +663,20 @@ namespace Models.PMF.Organs
         /// <summary>Gets the DeltaPotentialArea</summary>
         [XmlIgnore]
         [Units("mm2")]
-        public double DeltaPotentialArea
+        public double[] DeltaPotentialArea
         {
             get
-            { 
-                double value = 0;
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
                 foreach (LeafCohort L in Leaves)
                 {
                     if (L.IsGrowing)
-                        value += L.DeltaPotentialArea;
+                        values[i] = L.DeltaPotentialArea;
+                    else values[i] = 0;
+                    i++;
                 }
-                return value;
+                return values;
             }
         }
 
@@ -681,38 +684,106 @@ namespace Models.PMF.Organs
         /// <summary>Gets the DeltaStressConstrainedArea</summary>
         [XmlIgnore]
         [Units("mm2")]
-        public double DeltaStressConstrainedArea
+        public double [] DeltaStressConstrainedArea
         {
             get
             {
-                double value = 0;
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
                 foreach (LeafCohort L in Leaves)
                 {
                     if (L.IsGrowing)
-                        value += L.DeltaStressConstrainedArea;
+                        values[i] += L.DeltaStressConstrainedArea;
+                    else values[i] = 0;
+                    i++;
                 }
-                return value;
+                return values;
             }
         }
 
         /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
         [XmlIgnore]
         [Units("mm2")]
-        public double DeltaCarbonConstrainedArea
+        public double [] DeltaCarbonConstrainedArea
         {
             get
             {
-                double value = 0;
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
                 foreach (LeafCohort L in Leaves)
                 {
                     if (L.IsGrowing)
-                        value += L.DeltaCarbonConstrainedArea;
+                        values[i] += L.DeltaCarbonConstrainedArea;
+                    else values[i] = 0;
+                    i++;
                 }
-                return value;
+                return values;
             }
         }
 
 
+
+
+        /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double[] CohortStructuralDMDemand
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        values[i] += L.StructuralDMDemand;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+        /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double[] CohortMetabolicDMDemand
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        values[i] += L.MetabolicDMDemand;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+        /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double[] CohortStorageDMDemand
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        values[i] += L.StorageDMDemand;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
 
         /// <summary>Gets the cohort population.</summary>
         [XmlIgnore]
@@ -862,6 +933,25 @@ namespace Models.PMF.Organs
                 foreach (LeafCohort L in Leaves)
                 {
                     values[i] = L.MaxArea;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+        
+        /// <summary>Gets the cohort Wt.</summary> 
+        [Units("mm2")]
+        public double[] CohortLiveWt
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.Live.Wt;
                     i++;
                 }
                 return values;
