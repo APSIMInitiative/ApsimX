@@ -11137,108 +11137,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
     <Folder>
       <Name>Combined Results</Name>
       <Graph>
-        <Name>Flag Leaf Date</Name>
-        <Series>
-          <Name>Predicted</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>HarvestObsPred</TableName>
-          <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
-          <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-          <Filter />
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Observed</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Predicted</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>Flowering Date</Name>
-        <Series>
-          <Name>Predicted</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>HarvestObsPred</TableName>
-          <XFieldName>Observed.Barley.Phenology.FloweringDAS.Value()</XFieldName>
-          <YFieldName>Predicted.Barley.Phenology.FloweringDAS.Value()</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-          <Filter />
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Observed</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Predicted</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
         <Name>AppearedLeafTips</Name>
         <Series>
           <Name>Predicted</Name>
@@ -11319,56 +11217,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>Leaf Size</Name>
-        <Series>
-          <Name>Series 0</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>LeafSizeObsPred</TableName>
-          <XFieldName>Observed.LeafSize.Script.MostRecentlyExpandedLeafSize</XFieldName>
-          <YFieldName>Predicted.LeafSize.Script.MostRecentlyExpandedLeafSize</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -11838,6 +11686,107 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
       </Graph>
+      <Graph>
+        <Name>Leaf Size</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>LeafSizeObsPred</TableName>
+          <XFieldName>Observed.LeafSize.Script.MostRecentlyExpandedLeafSize</XFieldName>
+          <YFieldName>Predicted.LeafSize.Script.MostRecentlyExpandedLeafSize</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Flowering Date</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HarvestObsPred</TableName>
+          <XFieldName>Observed.Barley.Phenology.FloweringDAS.Value()</XFieldName>
+          <YFieldName>Predicted.Barley.Phenology.FloweringDAS.Value()</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Observed</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Predicted</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
@@ -12059,10 +12008,11 @@ namespace Models
                   <Name>BarleySoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
-                    <double>0.1</double>
+                    <double>0.07</double>
                     <double>0.1</double>
                     <double>0.08</double>
                     <double>0.1</double>
+                    <double>0.12</double>
                     <double>0.12</double>
                     <double>0.12</double>
                     <double>0.12</double>
@@ -12077,8 +12027,10 @@ namespace Models
                     <double>0.02</double>
                     <double>0.02</double>
                     <double>0.02</double>
+                    <double>0.02</double>
                   </KL>
                   <XF>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -12099,11 +12051,13 @@ namespace Models
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <BD>
                   <double>1.1</double>
                   <double>1.1</double>
                   <double>1.3</double>
+                  <double>1.2</double>
                   <double>1.2</double>
                   <double>1.2</double>
                   <double>1.2</double>
@@ -12119,12 +12073,14 @@ namespace Models
                   <double>0.12</double>
                   <double>0.12</double>
                   <double>0.12</double>
+                  <double>0.12</double>
                 </AirDry>
                 <LL15>
-                  <double>0.1</double>
+                  <double>0.07</double>
                   <double>0.1</double>
                   <double>0.08</double>
                   <double>0.1</double>
+                  <double>0.12</double>
                   <double>0.12</double>
                   <double>0.12</double>
                   <double>0.12</double>
@@ -12139,6 +12095,7 @@ namespace Models
                   <double>0.28</double>
                   <double>0.26</double>
                   <double>0.25</double>
+                  <double>0.25</double>
                 </DUL>
                 <SAT>
                   <double>0.48</double>
@@ -12146,6 +12103,7 @@ namespace Models
                   <double>0.4</double>
                   <double>0.38</double>
                   <double>0.37</double>
+                  <double>0.36</double>
                   <double>0.36</double>
                   <double>0.36</double>
                   <double>0.36</double>
@@ -12157,6 +12115,7 @@ namespace Models
                   <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
+                  <double>98</double>
                   <double>98</double>
                   <double>98</double>
                 </KS>
@@ -12341,6 +12300,7 @@ namespace Models
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <SW>
                   <double>0.31</double>
@@ -12350,6 +12310,7 @@ namespace Models
                   <double>0.28</double>
                   <double>0.28</double>
                   <double>0.26</double>
+                  <double>0.25</double>
                   <double>0.25</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
@@ -20893,8 +20854,8 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledDiamond</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -40611,5 +40572,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>323</ExplorerWidth>
+  <ExplorerWidth>256</ExplorerWidth>
 </Simulations>
