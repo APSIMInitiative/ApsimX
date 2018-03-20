@@ -13027,7 +13027,6 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SDSwitch>0</SDSwitch>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
@@ -13036,6 +13035,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
+                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -13969,7 +13969,6 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SDSwitch>0</SDSwitch>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
@@ -13978,6 +13977,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
+                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -15452,8 +15452,8 @@ namespace Models
                 <Name>TreatmentSpecificActions</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <NitFactor>0</NitFactor>
                   <IrrFactor>False</IrrFactor>
+                  <NitFactor>0</NitFactor>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -18015,6 +18015,72 @@ Layer  Depth (cm)
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>ProfileN</Name>
+            <Series>
+              <Name>Pred</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>EnviroReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>TotalSoilN</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Obs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Soil.SoilNitrogen.ProfileMineralN</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries />
           </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -28968,9 +29034,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <SowDate>02-Feb</SowDate>
                   <CultivarName>
                   </CultivarName>
-                  <SowDate>02-Feb</SowDate>
                   <SowingDepth>30</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -37820,5 +37886,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>553</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
