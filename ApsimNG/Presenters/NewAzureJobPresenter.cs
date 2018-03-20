@@ -12,6 +12,7 @@
     using ApsimNG.Cloud;
     using Microsoft.Azure.Batch.Common;
     using Models.Core;
+    using System.Linq;
 
     public class NewAzureJobPresenter : IPresenter, INewCloudJobPresenter
     {        
@@ -60,7 +61,7 @@
         {
             if (jp.JobDisplayName.Length < 1)
             {
-                ShowError("A description is required");
+                ShowErrorMessage("A description is required");
                 return;
             }
 
@@ -72,19 +73,19 @@
 
             if (! (Directory.Exists(jp.ApplicationPackagePath) || File.Exists(jp.ApplicationPackagePath)) )
             {
-                ShowError("File or Directory not found: " + jp.ApplicationPackagePath);
+                ShowErrorMessage("File or Directory not found: " + jp.ApplicationPackagePath);
                 return;
             }
 
             if (jp.CoresPerProcess.ToString().Length < 1)
             {
-                ShowError("Number of cores per CPU is a required field");
+                ShowErrorMessage("Number of cores per CPU is a required field");
                 return;
             }
 
             if (jp.SaveModelFiles && jp.ModelPath.Length < 0)
             {
-                ShowError("Invalid model output directory: " + jp.ModelPath);
+                ShowErrorMessage("Invalid model output directory: " + jp.ModelPath);
                 return;
             }
             if (!Directory.Exists(jp.ModelPath))
@@ -92,16 +93,16 @@
                 try
                 {
                     Directory.CreateDirectory(jp.ModelPath);
-                } catch (Exception e)
+                } catch (Exception err)
                 {
-                    ShowError(e.ToString());
+                    ShowError(err);
                     return;
                 }                
             }
 
             if (jp.OutputDir.Length < 1)
             {
-                ShowError("Invalid output directory.");
+                ShowErrorMessage("Invalid output directory.");
                 return;
             }
 
@@ -111,9 +112,9 @@
                 {
                     Directory.CreateDirectory(jp.OutputDir);
                 }
-                catch (Exception e)
+                catch (Exception err)
                 {
-                    ShowError(e.ToString());
+                    ShowError(err);
                     return;
                 }
             }
@@ -153,7 +154,11 @@
                 tmpZip = Path.Combine(Path.GetTempPath(), "Apsim-tmp-X-" + Environment.UserName.ToLower() + ".zip");
                 if (File.Exists(tmpZip)) File.Delete(tmpZip);
 
-                if (createApsimXZip(jp.ApplicationPackagePath, tmpZip) > 0) ShowError("Error zipping up Apsim");
+                if (createApsimXZip(jp.ApplicationPackagePath, tmpZip) > 0)
+                {
+                    view.Status = "Cancelled";
+                    return;
+                }
 
                 jp.ApplicationPackagePath = tmpZip;
                 jp.ApplicationPackageVersion = Path.GetFileName(tmpZip).Substring(Path.GetFileName(tmpZip).IndexOf('-') + 1);
@@ -175,7 +180,7 @@
             string toolsDir = Path.Combine(executableDirectory, "tools");
             if (!Directory.Exists(toolsDir))
             {
-                ShowError("Tools Directory not found: " + toolsDir);
+                ShowErrorMessage("Tools Directory not found: " + toolsDir);
             }
             
             foreach (string filePath in Directory.EnumerateFiles(toolsDir))
@@ -201,9 +206,9 @@
                     File.Delete(tmpConfig);
                     
                 }
-                catch (Exception ex)
+                catch (Exception err)
                 {
-                    ShowError("Error writing to settings file; you may not receive an email upon job completion: " + ex.ToString());
+                    ShowError(new Exception("Error writing to settings file; you may not receive an email upon job completion: ", err));
                 }
             }
 
@@ -242,15 +247,15 @@
                 {
                     if (child is Models.Weather)
                     {
-                        string childPath = ((Models.Weather)sim.Children[0]).FileName;                        
+                        string childPath = sim.Children.OfType<Models.Weather>().ToList()[0].FileName;
                         if (Path.GetDirectoryName(childPath) != "")
                         {
-                            ShowError(childPath + " must be in the same directory as the .apsimx file" + sim.FileName != null ? " (" + Path.GetDirectoryName(sim.FileName) + ")" : "");
+                            ShowErrorMessage(childPath + " must be in the same directory as the .apsimx file" + (sim.FileName != null ? " (" + Path.GetDirectoryName(sim.FileName) + ")" : ""));
                             view.Status = "Cancelled";
                             return;
                         }
-                        string sourcePath = ((Models.Weather)sim.Children[0]).FullFileName;
-                        string destPath = Path.Combine(jp.ModelPath, ((Models.Weather)sim.Children[0]).FileName);
+                        string sourcePath = sim.Children.OfType<Models.Weather>().ToList()[0].FullFileName;
+                        string destPath = Path.Combine(jp.ModelPath, sim.Children.OfType<Models.Weather>().ToList()[0].FileName);
                         if (!File.Exists(destPath)) File.Copy(sourcePath, destPath);
                     }
                 }                
@@ -308,9 +313,9 @@
                 cloudJob.JobManagerTask = job.ToJobManagerTask(jp.JobId, storageAccount.CreateCloudBlobClient(), jp.JobManagerShouldSubmitTasks, jp.AutoScale);
 
                 cloudJob.Commit();
-            } catch (Exception ex)
+            } catch (Exception err)
             {
-                ShowError(ex.ToString());
+                ShowError(err);
             }
 
             view.Status = "Job Successfully submitted";
@@ -344,7 +349,7 @@
             {
                 if (Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly).Length > 0)
                 {
-                    ShowError("There are already files in the output directory");                    
+                    ShowErrorMessage("There are already files in the output directory");                    
                 }
             }
             return 0;
@@ -355,9 +360,9 @@
             try
             {
                 Directory.CreateDirectory(path);
-            } catch (Exception e)
+            } catch (Exception err)
             {
-                ShowError("Error: creation of simulation directory " + path + " failed: " + e.ToString());
+                ShowError(new Exception("Error: creation of simulation directory " + path + " failed: ", err));
                 return 1;
             }
             return 0;
@@ -412,11 +417,11 @@
                     if (removeFile) File.Delete(fileName);
                     return fileName;
                 }
-                catch (IOException e)
+                catch (IOException err)
                 {
                     if (++attempt == 10)
                     {
-                       ShowError("No unique temporary file name is available: " + e.ToString());
+                       ShowError(new Exception("No unique temporary file name is available: ", err));
                     }
                 }
             }
@@ -443,9 +448,9 @@
                 containerRef.Metadata.Add(key, val);
                 containerRef.SetMetadata();
             }
-            catch (Exception e)
+            catch (Exception err)
             {                
-                ShowError(e.ToString());
+                ShowError(err);
             }
         }
 
@@ -491,9 +496,14 @@
         /// Displays an error message to the user.
         /// </summary>
         /// <param name="msg">Message to be displayed.</param>
-        public void ShowError(string msg)
+        public void ShowErrorMessage(string msg)
         {
-            explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
+            explorerPresenter.MainPresenter.ShowError(msg);
+        }
+
+        public void ShowError(Exception err)
+        {
+            explorerPresenter.MainPresenter.ShowError(err);
         }
 
         /// <summary>
@@ -558,9 +568,9 @@
                 }
                 return 0;
             }
-            catch (Exception e)
+            catch (Exception err)
             {
-                ShowError(e.ToString());
+                ShowError(new Exception("Error zipping up APSIM: ", err));
                 return 1;
             }
         }
@@ -589,9 +599,9 @@
                 }
                 return 0;
             }
-            catch (Exception e)
+            catch (Exception err)
             {
-                ShowError(e.ToString());
+                ShowError(err);
                 return 1;
             }
         }
@@ -624,9 +634,9 @@
                     ZipAddDir(d, baseDir, za);
                 }
             }
-            catch (Exception e)
+            catch (Exception err)
             {
-                ShowError(e.ToString());
+                ShowError(err);
             }
         } 
 
@@ -656,15 +666,15 @@
                 {
                     batchClient = BatchClient.Open(sharedCredentials);
                 }
-                catch (UriFormatException err)
+                catch (UriFormatException)
                 {
-                    ShowError("Error opening Azure Batch client: credentials are invalid.");
+                    ShowErrorMessage("Error opening Azure Batch client: credentials are invalid.");
                     AzureCredentialsSetup cred = new AzureCredentialsSetup();
                     cred.Finished += GetCredentials;
                 }
                 catch (Exception ex)
                 {
-                    ShowError(ex.ToString());
+                    ShowError(ex);
                 }
                 
             } else

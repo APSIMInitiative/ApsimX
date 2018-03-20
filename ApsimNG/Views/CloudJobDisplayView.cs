@@ -648,7 +648,7 @@ namespace UserInterface.Views
             // In this case though, we check here to prevent the download pop-up from appearing if nothing is selected.
             if (jobIds.Count < 1)
             {
-                (Owner as MainView).ShowMessage("Unable to download jobs: no jobs are selected", Models.Core.Simulation.ErrorLevel.Information);
+                Presenter.ShowMessage("Unable to download jobs: no jobs are selected", Models.Core.Simulation.MessageType.Information);
                 return;
             }
             DownloadWindow dl = new DownloadWindow(Presenter, jobIds);

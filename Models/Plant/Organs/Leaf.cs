@@ -501,29 +501,33 @@ namespace Models.PMF.Organs
         [Units("max units")]
         public double MaxCover;
 
+        /// <summary>The number of cohorts initiated that have not yet emerged</summary>
+        [Description("The number of cohorts initiated that have not yet emerged")]
+        public int ApicalCohortNo { get { return InitialisedCohortNo - AppearedCohortNo; } }
+        
         /// <summary>Gets the initialised cohort no.</summary>
         [Description("Number of leaf cohort objects that have been initialised")]
-        public double InitialisedCohortNo { get { return CohortCounter("IsInitialised"); } }
+        public int InitialisedCohortNo { get { return CohortCounter("IsInitialised"); } }
 
         /// <summary>Gets the appeared cohort no.</summary>
         [Description("Number of leaf cohort that have appeared")]
-        public double AppearedCohortNo { get { return CohortCounter("IsAppeared"); } }
+        public int AppearedCohortNo { get { return CohortCounter("IsAppeared"); } }
 
         /// <summary>Gets the expanding cohort no.</summary>
         [Description("Number of leaf cohorts that have appeared but not yet fully expanded")]
-        public double ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
+        public int ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
 
         /// <summary>Gets the expanded cohort no.</summary>
         [Description("Number of leaf cohorts that are fully expanded")]
-        public double ExpandedCohortNo { get { return CohortCounter("IsFullyExpanded"); } }
+        public int ExpandedCohortNo { get { return CohortCounter("IsFullyExpanded"); } }
 
         /// <summary>Gets the green cohort no.</summary>
         [Description("Number of leaf cohorts that are have expanded but not yet fully senesced")]
-        public double GreenCohortNo { get { return CohortCounter("IsGreen"); } }
+        public int GreenCohortNo { get { return CohortCounter("IsGreen"); } }
 
         /// <summary>Gets the senescing cohort no.</summary>
         [Description("Number of leaf cohorts that are Senescing")]
-        public double SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
+        public int SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
 
         /// <summary>Gets the dead cohort no.</summary>
         [Description("Number of leaf cohorts that have fully Senesced")]
@@ -1026,13 +1030,14 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Clears this instance.</summary>
-        protected void Clear()
+        public void Reset()
         {
             Leaves = new List<LeafCohort>();
             needToRecalculateLiveDead = true;
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
+            Structure.TipToAppear = 0;
             apexGroupAge.Clear();
             dryMatterSupply.Clear();
             dryMatterDemand.Clear();
@@ -1205,6 +1210,17 @@ namespace Models.PMF.Organs
         {
             foreach (LeafCohort leaf in Leaves)
                 leaf.CohortPopulation *= 1 - ProportionRemoved;
+        }
+
+        /// <summary>
+        /// Called when defoliation calls for removal of main-stem nodes
+        /// </summary>
+        public void RemoveHighestLeaf()
+        {
+            Leaves.RemoveAt(InitialisedCohortNo-1);
+            needToRecalculateLiveDead = true;
+            
+            
         }
         #endregion
 
@@ -1693,7 +1709,7 @@ namespace Models.PMF.Organs
             if (data.Plant == Plant)
             {
                 MicroClimatePresent = false;
-                Clear();
+                Reset();
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
@@ -1722,7 +1738,7 @@ namespace Models.PMF.Organs
         {
             Structure.PotLeafTipsAppeared = 0;
             Structure.CohortToInitialise = 0;
-            Structure.TipToAppear = 0;
+            Structure.TipToAppear =  0;
             Structure.Emerged = false;
             Structure.Clear();
             Structure.ResetStemPopn();
@@ -1764,7 +1780,7 @@ namespace Models.PMF.Organs
                 SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
             }
 
-            Clear();
+            Reset();
             CohortsAtInitialisation = 0;
         }
 

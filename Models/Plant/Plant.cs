@@ -420,6 +420,12 @@ namespace Models.PMF
             if (removalData != null && removalData.SetThinningProportion != 0 && Structure != null)
                 Structure.doThin(removalData.SetThinningProportion);
 
+            // Remove nodes from the main-stem
+            if (removalData != null && removalData.NodesToRemove > 0)
+                Structure.doNodeRemoval(removalData.NodesToRemove);
+
+
+
         }
 
         /// <summary>End the crop.</summary>

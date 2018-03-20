@@ -128,8 +128,17 @@ namespace UserInterface.Presenters
         {
             while (!FetchJobs.CancellationPending) // this check is performed regularly inside the ListJobs() function as well.
             {
-                // update the list of jobs. this will take a bit of time                
-                var newJobs = ListJobs();
+                // update the list of jobs. this will take a bit of time  
+                List<JobDetails> newJobs;
+                try
+                {
+                    newJobs = ListJobs();
+                }
+                catch (Exception err)
+                {
+                    ShowError(err);
+                    newJobs = new List<JobDetails>();
+                }
                 
                 if (FetchJobs.CancellationPending) return;
                 if (newJobs == null) return;
@@ -196,9 +205,9 @@ namespace UserInterface.Presenters
             {                
                 return 1;
             }
-            catch (Exception e)
+            catch (Exception err)
             {
-                ShowError(e.ToString());
+                ShowError(err);
                 return 2;
             }
             return 0;
@@ -217,9 +226,9 @@ namespace UserInterface.Presenters
             } catch (NullReferenceException)
             {
                 return null;
-            } catch (Exception e)
+            } catch (Exception err)
             {
-                ShowError(e.ToString());
+                ShowError(err);
             }
             
             List<JobDetails> jobs = new List<JobDetails>();
@@ -236,11 +245,11 @@ namespace UserInterface.Presenters
                 {
                     cloudJobs = batchClient.JobOperations.ListJobs(jobDetailLevel);
                 }
-                catch (Exception e)
+                catch (Exception err)
                 {
                     if (numTries >= 3)
                     {
-                        ShowError("Unable to retrieve job list: " + e.ToString());
+                        ShowError(new Exception("Unable to retrieve job list: ", err));
                         return new List<JobDetails>();
                     }
                 } finally
@@ -263,9 +272,9 @@ namespace UserInterface.Presenters
                 } catch (NullReferenceException)
                 {
                     return null;
-                } catch (Exception e)
+                } catch (Exception err)
                 {
-                    ShowError(e.ToString());
+                    ShowError(err);
                 }
                 
                 string owner = GetAzureMetaData("job-" + cloudJob.Id, "Owner");
@@ -278,11 +287,11 @@ namespace UserInterface.Presenters
                     numTasks = tasks.Active + tasks.Running + tasks.Completed;
                     // if there are no tasks, set progress to 100%
                     jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
-                } catch (Exception e)
+                } catch (Exception err)
                 {
                     // sometimes an exception is thrown when retrieving the task counts
                     // could be due to the job not being submitted correctly
-                    ShowError(e.ToString());
+                    ShowError(err);
 
                     numTasks = -1;
                     jobProgress = 100;
@@ -334,9 +343,9 @@ namespace UserInterface.Presenters
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception err)
             {                
-                ShowError(e.ToString());
+                ShowError(err);
             }
             return "";
         }
@@ -404,24 +413,24 @@ namespace UserInterface.Presenters
         /// <param name="keepOutputFiles">If true, the raw .db output files will be saved.</param>
         public void DownloadResults(List<string> jobsToDownload, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles, bool unzipResults, bool async = false)
         {
-            MainPresenter.ShowMessage("", Simulation.ErrorLevel.Information);
+            MainPresenter.ShowMessage("", Simulation.MessageType.Information);
             view.DownloadStatus = "";            
             if (currentlyDownloading.Count > 0)
             {
-                ShowError("Unable to start a new batch of downloads - one or more downloads are already ongoing.");
+                ShowErrorMessage("Unable to start a new batch of downloads - one or more downloads are already ongoing.");
                 return;
             }
 
             if (jobsToDownload.Count < 1)
             {
-                ShowMessage("Unable to download jobs - no jobs are selected.");
+                ShowMessage("Unable to download jobs - no jobs are selected.", Simulation.MessageType.Information);
                 return;
             }
             FetchJobs.CancelAsync();
 
             //view.HideLoadingProgressBar();
             view.ShowDownloadProgressBar();
-            ShowMessage("");
+            ShowMessage("", Simulation.MessageType.Information);
             string path = (string)AzureSettings.Default["OutputDir"];
             AzureResultsDownloader dl;
 
@@ -454,7 +463,7 @@ namespace UserInterface.Presenters
                 // if job has not finished, skip to the next job in the list
                 if (GetJob(id).State.ToString().ToLower() != "completed")
                 {
-                    ShowError("Unable to download " + GetJob(id).DisplayName.ToString() + ": Job has not finished running");
+                    ShowErrorMessage("Unable to download " + GetJob(id).DisplayName.ToString() + ": Job has not finished running");
                     continue;
                 }
 
@@ -480,18 +489,27 @@ namespace UserInterface.Presenters
         /// Displays an error message.
         /// </summary>
         /// <param name="msg">Message to be displayed.</param>
-        public void ShowError(string msg)
+        public void ShowErrorMessage(string msg)
         {
-            MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);             
+            MainPresenter.ShowError(msg);
+        }
+
+        /// <summary>
+        /// Displays an error in the status bar.
+        /// </summary>
+        /// <param name="err">Error to be displayed.</param>
+        public void ShowError(Exception err)
+        {
+            MainPresenter.ShowError(err);
         }
 
         /// <summary>
         /// Displays a message to the user.
         /// </summary>
         /// <param name="msg"></param>
-        public void ShowMessage(string msg)
+        public void ShowMessage(string msg, Simulation.MessageType errorLevel)
         {
-            MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Information);
+            MainPresenter.ShowMessage(msg, errorLevel);
         }
 
         /// <summary>
@@ -509,7 +527,7 @@ namespace UserInterface.Presenters
             }
             else
             {
-                ShowError("Directory " + dir + " does not exist.");
+                ShowErrorMessage("Directory " + dir + " does not exist.");
             }
         }
 
@@ -568,9 +586,9 @@ namespace UserInterface.Presenters
 
                 return new DateTime(year, month, day, hour, minute, second);
             }
-            catch (Exception e)
+            catch (Exception err)
             {
-                ShowError(e.ToString());
+                ShowError(err);
             }
             return new DateTime();
         }
@@ -584,7 +602,7 @@ namespace UserInterface.Presenters
             view.HideDownloadProgressBar();
             if (code == 0)
             {
-                ShowMessage("Download successful.");
+                ShowMessage("Download successful.", Simulation.MessageType.Information);
                 return;
             }
             string msg = DateTime.Now.ToLongTimeString().Split(' ')[0] + ": " +  name + ": ";
@@ -634,7 +652,7 @@ namespace UserInterface.Presenters
             // ask user once for confirmation
             if (jobIds.Count < 1)
             {
-                MainPresenter.ShowMessage("Unable to stop jobs: no jobs are selected", Simulation.ErrorLevel.Information);
+                MainPresenter.ShowMessage("Unable to stop jobs: no jobs are selected", Simulation.MessageType.Information);
                 return;
             }
             // get the grammar right when asking for confirmation
@@ -662,9 +680,9 @@ namespace UserInterface.Presenters
             {
                 batchClient.JobOperations.TerminateJob(id);
             }
-            catch (Exception e)
+            catch (Exception err)
             {
-                ShowError(e.ToString());
+                ShowError(err);
             }
         }
 
@@ -676,7 +694,7 @@ namespace UserInterface.Presenters
         {
             if (jobIds.Count < 1)
             {
-                MainPresenter.ShowMessage("Unable to delete jobs: no jobs are selected.", Simulation.ErrorLevel.Information);
+                MainPresenter.ShowMessage("Unable to delete jobs: no jobs are selected.", Simulation.MessageType.Information);
                 return;
             }
 
@@ -717,9 +735,9 @@ namespace UserInterface.Presenters
 
                     // remove the job from the locally stored list of jobs
                     jobList.RemoveAt(jobList.IndexOf(GetJob(id)));
-                } catch (Exception e)
+                } catch (Exception err)
                 {
-                    ShowError(e.ToString());
+                    ShowError(err);
                 }                
             }
             // refresh the tree view

@@ -23,6 +23,12 @@ namespace UserInterface.Presenters
         /// Displays an error message.
         /// </summary>
         /// <param name="msg">Message to be displayed.</param>
-        void ShowError(string msg);
+        void ShowErrorMessage(string msg);
+
+        /// <summary>
+        /// Displays an error.
+        /// </summary>
+        /// <param name="err">Error to be displayed.</param>
+        void ShowError(Exception err);
     }
 }

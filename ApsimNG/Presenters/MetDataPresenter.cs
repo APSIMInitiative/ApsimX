@@ -201,7 +201,7 @@ namespace UserInterface.Presenters
                     try
                     {
                         this.weatherData.ExcelWorkSheetName = sheetName;
-                        this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+                        explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(weatherData, "FullFileName", PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName)));
 
                         using (DataTable data = this.weatherData.GetAllData())
                         {
@@ -212,7 +212,7 @@ namespace UserInterface.Presenters
                             this.DisplayDetailedGraphs(data);
                         }
 
-                        this.explorerPresenter.MainPresenter.ShowMessage(" ", Simulation.ErrorLevel.Information);
+                        this.explorerPresenter.MainPresenter.ShowMessage(" ", Simulation.MessageType.Information);
                     }
                     finally
                     {
@@ -225,7 +225,7 @@ namespace UserInterface.Presenters
                     string message = err.Message;
                     message += "\r\n" + err.StackTrace;
                     this.weatherDataView.Summarylabel = err.Message;
-                    this.explorerPresenter.MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
+                    this.explorerPresenter.MainPresenter.ShowError(err);
                 }
             }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace UserInterface.Interfaces
 {
@@ -61,5 +62,9 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="dir">Path to the directory.</param>
         void SetDownloadDirectory(string dir);
+
+        void ShowError(Exception err);
+
+        void ShowMessage(string msg, Models.Core.Simulation.MessageType errorLevel);
     }
 }

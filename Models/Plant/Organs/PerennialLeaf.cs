@@ -99,11 +99,19 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Removed = new Biomass();
 
-        /// <summary>The amount of biomass detached every day</summary>
+        /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
         public Biomass Detached { get; set; }
 
         #region Leaf Interface
+        /// <summary>
+        /// Number of initiated cohorts that have not appeared yet
+        /// </summary>
+        public int ApicalCohortNo { get; set; }
+        /// <summary>
+        /// reset leaf numbers
+        /// </summary>
+        public void Reset() { }
         /// <summary></summary>
         public bool CohortsInitialised { get; set; }
         /// <summary></summary>
@@ -111,14 +119,16 @@ namespace Models.PMF.Organs
         /// <summary></summary>
         public int CohortsAtInitialisation { get; set; }
         /// <summary></summary>
-        public double InitialisedCohortNo { get; set; }
-        /// <summary></summary>
-        public double AppearedCohortNo { get; set; }
+        public int AppearedCohortNo { get; set; }
         /// <summary></summary>
         public double PlantAppearedLeafNo { get; set; }
         /// <summary></summary>
         /// <param name="proprtionRemoved"></param>
         public void DoThin(double proprtionRemoved) { }
+        /// <summary></summary>
+        public int InitialisedCohortNo { get; set; }
+        /// <summary></summary>
+        public void RemoveHighestLeaf() { }
         #endregion
 
         #region Canopy interface
@@ -452,7 +462,7 @@ namespace Models.PMF.Organs
             dryMatterSupply.Clear();
             nitrogenDemand.Clear();
             nitrogenSupply.Clear();
-            Detached = new Biomass();
+            Detached.Clear();
 
         }
         #endregion
@@ -713,6 +723,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Detached = new Biomass();
             Clear();
         }
 
