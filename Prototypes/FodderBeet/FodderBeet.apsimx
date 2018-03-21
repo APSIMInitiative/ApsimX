@@ -5148,27 +5148,27 @@ date of Experiment 4 is assumed here.]]></MemoText>
                 <Name>Sample</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Thickness>
-                  <double>100</double>
-                  <double>200</double>
+                  <double>150</double>
+                  <double>150</double>
                   <double>300</double>
                   <double>300</double>
                   <double>300</double>
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>27.3</double>
-                  <double>22.8</double>
-                  <double>1.2</double>
-                  <double>9.2</double>
-                  <double>9.2</double>
+                  <double>21.38</double>
+                  <double>26.72</double>
+                  <double>5.37</double>
+                  <double>9.5</double>
+                  <double>8.2</double>
                   <double>1</double>
                 </NO3>
                 <NH4>
-                  <double>4.3</double>
-                  <double>7.6</double>
-                  <double>4.1</double>
-                  <double>2.7</double>
-                  <double>2.4</double>
+                  <double>3.3</double>
+                  <double>2</double>
+                  <double>1</double>
+                  <double>0.06</double>
+                  <double>0.02</double>
                   <double>0.1</double>
                 </NH4>
                 <NO3Units>kgha</NO3Units>
@@ -10215,10 +10215,10 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>5</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
                   <SowingDate>2014-10-17</SowingDate>
-                  <InitialRootDepth>5</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -10878,9 +10878,9 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -10901,8 +10901,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
