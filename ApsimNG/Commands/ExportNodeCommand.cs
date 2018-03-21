@@ -145,6 +145,9 @@ namespace UserInterface.Commands
             }
             section.AddImage(png1);
 
+            Paragraph version = new Paragraph();
+            version.AddText(ExplorerPresenter.ApsimXFile.ApsimVersion);
+            section.Add(version);
             // Convert all models in file to tags.
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
             foreach (IModel child in ExplorerPresenter.ApsimXFile.Children)
