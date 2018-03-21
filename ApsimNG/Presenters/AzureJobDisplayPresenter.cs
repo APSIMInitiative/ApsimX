@@ -26,19 +26,14 @@ namespace UserInterface.Presenters
         private CloudJobDisplayView view;
 
         /// <summary>
-        /// The parent presenter.
-        /// </summary>
-        public MainPresenter MainPresenter { get; set; }
-
-        /// <summary>
         /// ADT to hold Azure storage credentials.
         /// </summary>
-        private StorageCredentials storageCredentials;
+        private StorageCredentials storageAuth;
 
         /// <summary>
         /// ADT to hold Azure batch credentials.
         /// </summary>
-        private BatchCredentials batchCredentials;
+        private BatchCredentials batchAuth;
 
         /// <summary>
         /// Interface to the Azure storage account.
@@ -48,12 +43,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Interface to the Azure batch client.
         /// </summary>
-        private BatchClient batchClient;
+        private BatchClient batchCli;
 
         /// <summary>
         /// Interface to the Azure blob client.
         /// </summary>
-        private CloudBlobClient blobClient;
+        private CloudBlobClient blobCli;
 
         /// <summary>
         /// This worker repeatedly fetches information about all Azure jobs on the batch account.
@@ -73,18 +68,25 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="mainPresenter"></param>
-        public AzureJobDisplayPresenter(MainPresenter mainPresenter)
+        /// <param name="primaryPresenter"></param>
+        public AzureJobDisplayPresenter(MainPresenter primaryPresenter)
         {
-            MainPresenter = mainPresenter;
+            Presenter = primaryPresenter;
             jobList = new List<JobDetails>();
             logFileMutex = new object();            
             currentlyDownloading = new List<Guid>();
 
-            FetchJobs = new BackgroundWorker();
-            FetchJobs.WorkerSupportsCancellation = true;
+            FetchJobs = new BackgroundWorker()
+            {
+                WorkerSupportsCancellation = true
+            };
             FetchJobs.DoWork += FetchJobs_DoWork;
         }
+
+        /// <summary>
+        /// The parent presenter.
+        /// </summary>
+        public MainPresenter Presenter { get; set; }
 
         /// <summary>
         /// Attach the view to this presenter.
@@ -100,15 +102,8 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Asks the user a question, allowing them to choose yes or no. Returns true if they clicked yes, returns false otherwise.
+        /// Detach the view from this presenter.
         /// </summary>
-        /// <param name="msg">Message/question to be displayed.</param>
-        /// <returns></returns>
-        private bool AskQuestion(string msg)
-        {
-            return MainPresenter.AskQuestion(msg) == QuestionResponseEnum.Yes;
-        }
-        
         public void Detach()
         {
             FetchJobs.CancelAsync();
@@ -122,51 +117,6 @@ namespace UserInterface.Presenters
         public void UpdateDownloadProgress(double progress)
         {
             view.DownloadProgress = progress;
-        }
-
-        private void FetchJobs_DoWork(object sender, DoWorkEventArgs args)
-        {
-            while (!FetchJobs.CancellationPending) // this check is performed regularly inside the ListJobs() function as well.
-            {
-                // update the list of jobs. this will take a bit of time  
-                List<JobDetails> newJobs;
-                try
-                {
-                    newJobs = ListJobs();
-                }
-                catch (Exception err)
-                {
-                    ShowError(err);
-                    newJobs = new List<JobDetails>();
-                }
-                
-                if (FetchJobs.CancellationPending) return;
-                if (newJobs == null) return;
-
-                if (newJobs.Count > 0)
-                {
-                    // if the new job list is different, update the tree view
-                    if (newJobs.Count() != jobList.Count())
-                    {
-                        jobList = newJobs;
-                        if (UpdateDisplay() == 1) return;
-                    } else
-                    {
-                        for (int i = 0; i < newJobs.Count(); i++)
-                        {
-                            if (!IsEqual(newJobs[i], jobList[i]))
-                            {
-                                jobList = newJobs;
-                                if (UpdateDisplay() == 1) return;
-                                break;
-                            }
-                        }
-                        jobList = newJobs;
-                    }
-                }
-                // Refresh job list every 10 seconds
-                System.Threading.Thread.Sleep(10000);
-            }            
         }
 
         /// <summary>
@@ -191,166 +141,6 @@ namespace UserInterface.Presenters
             return withOwner ? job.DisplayName + " (" + job.Owner + ")" : job.DisplayName;
         }
 
-        /// <summary>
-        /// Asks the view to update the tree view.
-        /// </summary>
-        /// <returns>0 if the operation is successful, 1 if a NullRefEx. occurs, 2 if another exception is generated.</returns>
-        private int UpdateDisplay()
-        {
-            try
-            {
-                view.UpdateJobTable(jobList);
-            }
-            catch (NullReferenceException)
-            {                
-                return 1;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-                return 2;
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// Gets the list of jobs submitted to Azure.
-        /// </summary>
-        /// <returns>List of Jobs. Null if the thread is asked to cancel, or if unable to update the progress bar.</returns>
-        private List<JobDetails> ListJobs()
-        {
-            try
-            {
-                view.ShowLoadingProgressBar();
-                view.JobLoadProgress = 0;
-            } catch (NullReferenceException)
-            {
-                return null;
-            } catch (Exception err)
-            {
-                ShowError(err);
-            }
-            
-            List<JobDetails> jobs = new List<JobDetails>();
-            var pools = batchClient.PoolOperations.ListPools();
-            var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
-
-            IPagedEnumerable<CloudJob> cloudJobs = null;
-            
-            // Attempt to download raw job list. If this fails more than 3 times, return.
-            int numTries = 0;
-            while (numTries < 4 && cloudJobs == null)
-            {
-                try
-                {
-                    cloudJobs = batchClient.JobOperations.ListJobs(jobDetailLevel);
-                }
-                catch (Exception err)
-                {
-                    if (numTries >= 3)
-                    {
-                        ShowError(new Exception("Unable to retrieve job list: ", err));
-                        return new List<JobDetails>();
-                    }
-                } finally
-                {
-                    numTries++;
-                }
-            }
-            
-            // Parse jobs into a list of JobDetails objects.            
-
-            var length = cloudJobs.Count();
-            int i = 0;
-
-            foreach (var cloudJob in cloudJobs)
-            {
-                if (FetchJobs.CancellationPending) return null;
-                try
-                {
-                    view.JobLoadProgress = 100.0 * i / length;
-                } catch (NullReferenceException)
-                {
-                    return null;
-                } catch (Exception err)
-                {
-                    ShowError(err);
-                }
-                
-                string owner = GetAzureMetaData("job-" + cloudJob.Id, "Owner");
-                                
-                long numTasks = 1;
-                double jobProgress = 0;
-                try
-                {
-                    TaskCounts tasks = batchClient.JobOperations.GetJobTaskCounts(cloudJob.Id);
-                    numTasks = tasks.Active + tasks.Running + tasks.Completed;
-                    // if there are no tasks, set progress to 100%
-                    jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
-                } catch (Exception err)
-                {
-                    // sometimes an exception is thrown when retrieving the task counts
-                    // could be due to the job not being submitted correctly
-                    ShowError(err);
-
-                    numTasks = -1;
-                    jobProgress = 100;
-                }
-                
-                // if cpu time is unavailable, set this field to 0
-                TimeSpan cpu = cloudJob.Statistics == null ? TimeSpan.Zero : cloudJob.Statistics.KernelCpuTime + cloudJob.Statistics.UserCpuTime;
-                var job = new JobDetails
-                {
-                    Id = cloudJob.Id,
-                    DisplayName = cloudJob.DisplayName,
-                    State = cloudJob.State.ToString(),
-                    Owner = owner,
-                    NumSims = numTasks - 1, // subtract one because one of these is the job manager
-                    Progress = jobProgress,
-                    CpuTime = cpu
-                };
-
-                if (cloudJob.ExecutionInformation != null)
-                {
-                    job.StartTime = cloudJob.ExecutionInformation.StartTime;
-                    job.EndTime = cloudJob.ExecutionInformation.EndTime;
-                }
-                jobs.Add(job);
-                i++;
-            }
-            view.HideLoadingProgressBar();
-            if (jobs == null) return new List<JobDetails>();
-            return jobs;
-        }
-
-        /// <summary>
-        /// Gets a value of particular metadata associated with a job.
-        /// </summary>
-        /// <param name="containerName">Container the job is stored in.</param>
-        /// <param name="key">Metadata key (e.g. owner).</param>
-        /// <returns></returns>
-        private string GetAzureMetaData(string containerName, string key)
-        {
-            try
-            {                
-                var containerRef = storageAccount.CreateCloudBlobClient().GetContainerReference(containerName);
-                if (containerRef.Exists())
-                {
-                    containerRef.FetchAttributes();
-                    if (containerRef.Metadata.ContainsKey(key))
-                    {
-                        return containerRef.Metadata[key];
-                    }
-                }
-            }
-            catch (Exception err)
-            {                
-                ShowError(err);
-            }
-            return "";
-        }
-
-        /// <summary>
         /// Initialises the Azure credentials, batch client and blob client. Asks user for an Azure 
         /// licence file and saves the credentials if the credentials have not previously been set.
         /// Once credentials are saved, it starts the job load worker.
@@ -362,15 +152,15 @@ namespace UserInterface.Presenters
             if (AzureCredentialsSetup.CredentialsExist())
             {
                 // store credentials
-                storageCredentials = StorageCredentials.FromConfiguration();
-                batchCredentials = BatchCredentials.FromConfiguration();
+                storageAuth = StorageCredentials.FromConfiguration();
+                batchAuth = BatchCredentials.FromConfiguration();
 
-                storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
-                var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
-                batchClient = BatchClient.Open(sharedCredentials);
+                storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageAuth.Account, storageAuth.Key), true);
+                var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchAuth.Url, batchAuth.Account, batchAuth.Key);
+                batchCli = BatchClient.Open(sharedCredentials);
 
-                blobClient = storageAccount.CreateCloudBlobClient();
-                blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);
+                blobCli = storageAccount.CreateCloudBlobClient();
+                blobCli.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);
 
                 if (!FetchJobs.IsBusy) FetchJobs.RunWorkerAsync();
             }
@@ -380,18 +170,6 @@ namespace UserInterface.Presenters
                 AzureCredentialsSetup cred = new AzureCredentialsSetup();
                 cred.Finished += (sender, e) => GetCredentials();
             }
-        }
-
-
-        /// <summary>
-        /// Tests if two jobs are equal.
-        /// </summary>
-        /// <param name="a">The first job.</param>
-        /// <param name="b">The second job.</param>
-        /// <returns>True if the jobs have the same ID and they are in the same state.</returns>
-        private bool IsEqual(JobDetails a, JobDetails b)
-        {
-            return (a.Id == b.Id && a.State == b.State && a.Progress == b.Progress);
         }
 
         /// <summary>
@@ -411,9 +189,10 @@ namespace UserInterface.Presenters
         /// <param name="saveToCsv">If true, results will be combined into a csv file.</param>
         /// <param name="includeDebugFiles">If true, debug files will be downloaded.</param>
         /// <param name="keepOutputFiles">If true, the raw .db output files will be saved.</param>
-        public void DownloadResults(List<string> jobsToDownload, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles, bool unzipResults, bool async = false)
+        public void DownloadResults(List<string> jobsToDownload, bool downloadResults, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles, bool unzipResults, bool async = false)
         {
-            MainPresenter.ShowMessage("", Simulation.MessageType.Information);
+            Presenter.ShowMessage("", Simulation.ErrorLevel.Information);
+
             view.DownloadStatus = "";            
             if (currentlyDownloading.Count > 0)
             {
@@ -426,9 +205,7 @@ namespace UserInterface.Presenters
                 ShowMessage("Unable to download jobs - no jobs are selected.", Simulation.MessageType.Information);
                 return;
             }
-            FetchJobs.CancelAsync();
-
-            //view.HideLoadingProgressBar();
+            
             view.ShowDownloadProgressBar();
             ShowMessage("", Simulation.MessageType.Information);
             string path = (string)AzureSettings.Default["OutputDir"];
@@ -448,9 +225,9 @@ namespace UserInterface.Presenters
                 view.DownloadProgress = 0;
 
                 // if output directory already exists and warning has not already been given, display a warning
-                if (Directory.Exists((string)AzureSettings.Default["OutputDir"] + "\\" + jobName) && !ignoreWarning && saveToCsv)
+                if (Directory.Exists(Path.Combine((string)AzureSettings.Default["OutputDir"], jobName)) && !ignoreWarning && saveToCsv)
                 {
-                    if (!view.AskQuestion("Files detected in output directory (" + (string)AzureSettings.Default["OutputDir"] + "\\" + jobName + "). Results will be collated from ALL files in this directory. Are you certain you wish to continue?"))
+                    if (!view.AskQuestion("Files detected in output directory (" + Path.Combine((string)AzureSettings.Default["OutputDir"], jobName) + "). Results will be collated from ALL files in this directory. Are you certain you wish to continue?"))
                     {
                         // if user has chosen to cancel the download
                         view.HideDownloadProgressBar();
@@ -467,11 +244,9 @@ namespace UserInterface.Presenters
                     continue;
                 }
 
-                dl = new AzureResultsDownloader(jobId, GetJob(id).DisplayName, path, this, saveToCsv, includeDebugFiles, keepOutputFiles, unzipResults);                
+                dl = new AzureResultsDownloader(jobId, GetJob(id).DisplayName, path, this, downloadResults, saveToCsv, includeDebugFiles, keepOutputFiles, unzipResults);                
                 dl.DownloadResults(async);
             }
-            while (FetchJobs.IsBusy) ;
-            FetchJobs.RunWorkerAsync();
         }        
 
         /// <summary>
@@ -491,7 +266,7 @@ namespace UserInterface.Presenters
         /// <param name="msg">Message to be displayed.</param>
         public void ShowErrorMessage(string msg)
         {
-            MainPresenter.ShowError(msg);
+            Presenter.ShowError(msg);
         }
 
         /// <summary>
@@ -500,7 +275,7 @@ namespace UserInterface.Presenters
         /// <param name="err">Error to be displayed.</param>
         public void ShowError(Exception err)
         {
-            MainPresenter.ShowError(err);
+            Presenter.ShowError(err);
         }
 
         /// <summary>
@@ -509,7 +284,7 @@ namespace UserInterface.Presenters
         /// <param name="msg"></param>
         public void ShowMessage(string msg, Simulation.MessageType errorLevel)
         {
-            MainPresenter.ShowMessage(msg, errorLevel);
+            Presenter.ShowMessage(msg, errorLevel);
         }
 
         /// <summary>
@@ -624,7 +399,7 @@ namespace UserInterface.Presenters
                     msg += "Download unsuccessful.";
                     break;
             }
-            string logFile = path + "\\download.log";
+            string logFile = Path.Combine(path, "download.log");
             view.DownloadStatus = "One or more downloads encountered an error. See " + logFile + " for more details.";
             lock (logFileMutex)
             {
@@ -636,7 +411,8 @@ namespace UserInterface.Presenters
                         sw.WriteLine(msg);
                         sw.Close();
                     }
-                } catch
+                }
+                catch
                 {
 
                 }
@@ -652,7 +428,7 @@ namespace UserInterface.Presenters
             // ask user once for confirmation
             if (jobIds.Count < 1)
             {
-                MainPresenter.ShowMessage("Unable to stop jobs: no jobs are selected", Simulation.MessageType.Information);
+                Presenter.ShowMessage("Unable to stop jobs: no jobs are selected", Simulation.MessageType.Information);
                 return;
             }
             // get the grammar right when asking for confirmation
@@ -678,7 +454,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                batchClient.JobOperations.TerminateJob(id);
+                batchCli.JobOperations.TerminateJob(id);
             }
             catch (Exception err)
             {
@@ -694,7 +470,7 @@ namespace UserInterface.Presenters
         {
             if (jobIds.Count < 1)
             {
-                MainPresenter.ShowMessage("Unable to delete jobs: no jobs are selected.", Simulation.MessageType.Information);
+                Presenter.ShowMessage("Unable to delete jobs: no jobs are selected.", Simulation.MessageType.Information);
                 return;
             }
 
@@ -721,21 +497,22 @@ namespace UserInterface.Presenters
                     // delete the job from Azure
                     CloudBlobContainer containerRef;
 
-                    containerRef = blobClient.GetContainerReference(StorageConstants.GetJobOutputContainer(parsedId));
+                    containerRef = blobCli.GetContainerReference(StorageConstants.GetJobOutputContainer(parsedId));
                     if (containerRef.Exists()) containerRef.Delete();
 
-                    containerRef = blobClient.GetContainerReference(StorageConstants.GetJobContainer(parsedId));
+                    containerRef = blobCli.GetContainerReference(StorageConstants.GetJobContainer(parsedId));
                     if (containerRef.Exists()) containerRef.Delete();
 
-                    containerRef = blobClient.GetContainerReference(parsedId.ToString());
+                    containerRef = blobCli.GetContainerReference(parsedId.ToString());
                     if (containerRef.Exists()) containerRef.Delete();
 
                     var job = GetJob(id);
-                    if (job != null) batchClient.JobOperations.DeleteJob(id);
+                    if (job != null) batchCli.JobOperations.DeleteJob(id);
 
                     // remove the job from the locally stored list of jobs
                     jobList.RemoveAt(jobList.IndexOf(GetJob(id)));
-                } catch (Exception err)
+                }
+                catch (Exception err)
                 {
                     ShowError(err);
                 }                
@@ -745,6 +522,229 @@ namespace UserInterface.Presenters
 
             // restart the fetch jobs worker
             if (restart) FetchJobs.RunWorkerAsync();
+        }
+
+        /// <summary>
+        /// Asks the user a question, allowing them to choose yes or no. Returns true if they clicked yes, returns false otherwise.
+        /// </summary>
+        /// <param name="msg">Message/question to be displayed.</param>
+        /// <returns></returns>
+        private bool AskQuestion(string msg)
+        {
+            return Presenter.AskQuestion(msg) == QuestionResponseEnum.Yes;
+        }
+
+        private void FetchJobs_DoWork(object sender, DoWorkEventArgs args)
+        {
+            while (!FetchJobs.CancellationPending) // this check is performed regularly inside the ListJobs() function as well.
+            {
+                // update the list of jobs. this will take a bit of time                
+                var newJobs = ListJobs();
+
+                if (FetchJobs.CancellationPending) return;
+                if (newJobs == null) return;
+
+                if (newJobs.Count > 0)
+                {
+                    // if the new job list is different, update the tree view
+                    if (newJobs.Count() != jobList.Count())
+                    {
+                        jobList = newJobs;
+                        if (UpdateDisplay() == 1) return;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < newJobs.Count(); i++)
+                        {
+                            if (!IsEqual(newJobs[i], jobList[i]))
+                            {
+                                jobList = newJobs;
+                                if (UpdateDisplay() == 1) return;
+                                break;
+                            }
+                        }
+                        jobList = newJobs;
+                    }
+                }
+                // Refresh job list every 10 seconds
+                System.Threading.Thread.Sleep(10000);
+            }
+        }
+
+        /// <summary>
+        /// Asks the view to update the tree view.
+        /// </summary>
+        /// <returns>0 if the operation is successful, 1 if a NullRefEx. occurs, 2 if another exception is generated.</returns>
+        private int UpdateDisplay()
+        {
+            try
+            {
+                view.UpdateJobTable(jobList);
+            }
+            catch (NullReferenceException)
+            {
+                return 1;
+            }
+            catch (Exception e)
+            {
+                ShowError(e.ToString());
+                return 2;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Gets the list of jobs submitted to Azure.
+        /// </summary>
+        /// <returns>List of Jobs. Null if the thread is asked to cancel, or if unable to update the progress bar.</returns>
+        private List<JobDetails> ListJobs()
+        {
+            try
+            {
+                view.ShowLoadingProgressBar();
+                view.JobLoadProgress = 0;
+            }
+            catch (NullReferenceException)
+            {
+                return null;
+            }
+            catch (Exception e)
+            {
+                ShowError(e.ToString());
+            }
+
+            List<JobDetails> jobs = new List<JobDetails>();
+            var pools = batchCli.PoolOperations.ListPools();
+            var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
+
+            IPagedEnumerable<CloudJob> cloudJobs = null;
+
+            // Attempt to download raw job list. If this fails more than 3 times, return.
+            int numTries = 0;
+            while (numTries < 4 && cloudJobs == null)
+            {
+                try
+                {
+                    cloudJobs = batchCli.JobOperations.ListJobs(jobDetailLevel);
+                }
+                catch (Exception e)
+                {
+                    if (numTries >= 3)
+                    {
+                        ShowError("Unable to retrieve job list: " + e.ToString());
+                        return new List<JobDetails>();
+                    }
+                }
+                finally
+                {
+                    numTries++;
+                }
+            }
+
+            // Parse jobs into a list of JobDetails objects.            
+
+            var length = cloudJobs.Count();
+            int i = 0;
+
+            foreach (var cloudJob in cloudJobs)
+            {
+                if (FetchJobs.CancellationPending) return null;
+                try
+                {
+                    view.JobLoadProgress = 100.0 * i / length;
+                }
+                catch (NullReferenceException)
+                {
+                    return null;
+                }
+                catch (Exception e)
+                {
+                    ShowError(e.ToString());
+                }
+
+                string owner = GetAzureMetaData("job-" + cloudJob.Id, "Owner");
+
+                long numTasks = 1;
+                double jobProgress = 0;
+                try
+                {
+                    TaskCounts tasks = batchCli.JobOperations.GetJobTaskCounts(cloudJob.Id);
+                    numTasks = tasks.Active + tasks.Running + tasks.Completed;
+                    // if there are no tasks, set progress to 100%
+                    jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
+                }
+                catch (Exception e)
+                {
+                    // sometimes an exception is thrown when retrieving the task counts
+                    // could be due to the job not being submitted correctly
+                    ShowError(e.ToString());
+
+                    numTasks = -1;
+                    jobProgress = 100;
+                }
+
+                // if cpu time is unavailable, set this field to 0
+                TimeSpan cpu = cloudJob.Statistics == null ? TimeSpan.Zero : cloudJob.Statistics.KernelCpuTime + cloudJob.Statistics.UserCpuTime;
+                var job = new JobDetails
+                {
+                    Id = cloudJob.Id,
+                    DisplayName = cloudJob.DisplayName,
+                    State = cloudJob.State.ToString(),
+                    Owner = owner,
+                    NumSims = numTasks - 1, // subtract one because one of these is the job manager
+                    Progress = jobProgress,
+                    CpuTime = cpu
+                };
+
+                if (cloudJob.ExecutionInformation != null)
+                {
+                    job.StartTime = cloudJob.ExecutionInformation.StartTime;
+                    job.EndTime = cloudJob.ExecutionInformation.EndTime;
+                }
+                jobs.Add(job);
+                i++;
+            }
+            view.HideLoadingProgressBar();
+            if (jobs == null) return new List<JobDetails>();
+            return jobs;
+        }
+
+        /// <summary>
+        /// Gets a value of particular metadata associated with a job.
+        /// </summary>
+        /// <param name="containerName">Container the job is stored in.</param>
+        /// <param name="key">Metadata key (e.g. owner).</param>
+        /// <returns></returns>
+        private string GetAzureMetaData(string containerName, string key)
+        {
+            try
+            {
+                var containerRef = storageAccount.CreateCloudBlobClient().GetContainerReference(containerName);
+                if (containerRef.Exists())
+                {
+                    containerRef.FetchAttributes();
+                    if (containerRef.Metadata.ContainsKey(key))
+                    {
+                        return containerRef.Metadata[key];
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ShowError(e.ToString());
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// Tests if two jobs are equal.
+        /// </summary>
+        /// <param name="a">The first job.</param>
+        /// <param name="b">The second job.</param>
+        /// <returns>True if the jobs have the same ID and they are in the same state.</returns>
+        private bool IsEqual(JobDetails a, JobDetails b)
+        {
+            return (a.Id == b.Id && a.State == b.State && a.Progress == b.Progress);
         }
     }
 }

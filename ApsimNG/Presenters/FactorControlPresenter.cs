@@ -229,13 +229,13 @@ namespace UserInterface.Presenters
                     i++;
                 }
                 return sims;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 explorerPresenter.MainPresenter.ShowError(e);
                 return new List<Tuple<string, List<string>, bool>>();
             }
         }
-
 
         /// <summary>
         /// Generates a list of 'simulations', where each simulation is a list of factor values.
@@ -317,8 +317,9 @@ namespace UserInterface.Presenters
             try
             {
                 File.WriteAllText(path, csv.ToString());
-                explorerPresenter.MainPresenter.ShowMessage("Successfully generated " + path + ".", Simulation.MessageType.Information);
-            } catch (Exception e)
+                explorerPresenter.MainPresenter.ShowMessage("Successfully generated " + path + ".", Simulation.ErrorLevel.Information);
+            }
+            catch (Exception e)
             {
                 explorerPresenter.MainPresenter.ShowError(e);
             }

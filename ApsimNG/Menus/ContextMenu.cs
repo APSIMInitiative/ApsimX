@@ -16,7 +16,6 @@ namespace UserInterface.Presenters
     using Models.Factorial;
     using Models.Soils;
     using APSIM.Shared.Utilities;
-    using Models.Graph;
     using Models.Storage;
     using Models.Report;
 
@@ -446,7 +445,7 @@ namespace UserInterface.Presenters
             }
         }
 
-        [ContextMenu(MenuName = "Run on cloud (In development - DO NOT USE)",
+        [ContextMenu(MenuName = "Run on cloud",
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),
                                               typeof(Experiment),
