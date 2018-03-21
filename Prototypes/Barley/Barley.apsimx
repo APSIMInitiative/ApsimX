@@ -17,40 +17,6 @@ The model consists of:
 * An arbitrator to allocate resources (N, biomass) to various plant organs.  
 ]]></MemoText>
   </Memo>
-  <Memo>
-    <Name>References</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <MemoText><![CDATA[•	Alzueta I, Abeledo LG, Mignonea CM, Miralles DJ 2012. Differences between Barley and barley in leaf and tillering coordination under contrasting nitrogen and sulfur conditions. Europ. J. Agron 4: 92-102.
-
-•	De Ruiter JM 1999. Yield and quality of malting barley (Hordeum vulgare L. ‘Valetta') in response to irrigation and nitrogen fertilisation. NZ J. Crop and Hort.Sci 4: 307-317
-
-•	Jamieson PD, Munro CA 1999. A simple method for the phenological evaluation of new cereal cultivars. Proceeding of the 29th Agronomy Society of New Zealand 29: 63-68.
-
-•	Jamieson PD, Martin RJ, Francis GS 1995. Drought influences on grain yield of barley, Barley, and maize. New Zealand Journal of Crop and Horticultural Science 23: 55-66
-
-•	Jamieson PD, Francis GS, Wilson DR, Martin RJ 1994. Effects of water deficits on evapotranspiration from barley. Agricultural and Forest Meteorology 76 (1995) 41-58
-
-•	Jamieson PD, Martin RJ, Francis GS, Wilson DR 1995. Drought effects on biomass production and radiation use efficiency in barley. Field Crops Research 43: 77-86
-
-•	Juskiw PE, Jame YW, Kryzanowski L 2001. Phenological development of spring barley in a short-season growing area. Agronomy Journal 93: 370-379.
-
-•	Kirby EJM 1995. Factors affecting rate of leaf emergence in barley and Barley. Crop Science 35: 11-19.
-
-•	Mirschel W, Wenkel K, Schultz A, Pommerening J, Verch G 2005. Dynamic phenological model for winter rye and winter barley.  Europ. J. Agron 23: 123-135.
-
-•	Sonego M, Jamieson PD, Moot DJ, Martin RJ 1997. Phenological development of oat crops in response to sowing dates. Proceedings Agronomy Society of NZ. Pp. 115-118.
-
-
-
-
-
-
-
-
-
-
-]]></MemoText>
-  </Memo>
   <Replacements>
     <Name>Replacements</Name>
     <Report>
@@ -12405,8 +12371,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>10</InitialRootDepth>
                   <Cultivar>Booma</Cultivar>
+                  <InitialRootDepth>10</InitialRootDepth>
                   <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -15339,8 +15305,8 @@ Biomass accumulation, Leaf area index, radiation interception and soil water con
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2010-08-26</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -17384,9 +17350,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
+                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -19669,9 +19635,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2014-10-15</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -21372,7 +21338,7 @@ namespace Models
         <Memo>
           <Name>Trial details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[This experiment was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand. The objective was to evaluate the effect of drought on the yield of barley crops. The experiment is fully described by Jamieson et al. (1995).  Briefly, 'Triumph' barley was sown at 188kg/ha on 07 September 1988. This sowing rate resulted in a population of 291 ± 6 plants/m2.  Plants were evaluated for their response to drought of varying duration. The treatments were:
+          <MemoText><![CDATA[This experiment was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand. The objective was to evaluate the effect of drought on the yield of barley crops. The experiment is fully described by [Jamieson1995].  Briefly, 'Triumph' barley was sown at 188kg/ha on 07 September 1988. This sowing rate resulted in a population of 291 ± 6 plants/m2.  Plants were evaluated for their response to drought of varying duration. The treatments were:
 
 - Full irrigation – measured ET replaced weekly (06 October to 29 December) 
 - Early Drought 1 – irrigated from 03 November to 05 January
@@ -23803,7 +23769,7 @@ namespace Models
           <Name>Trial details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
-This is a water response trial conducted inside and outside the rain shelter at the New Zealand Institute for Plant & Food Research in Lincoln and described in De Ruiter et al (1999). Briefly, a vernalisation insensitive barley, variety "Valetta", was sown at 280 plant/m^2^ on 20 October 1995 and subjected to five water treatments as follows:  
+This is a water response trial conducted inside and outside the rain shelter at the New Zealand Institute for Plant & Food Research in Lincoln and described in [DeRuiter1999]. Briefly, a vernalisation insensitive barley, variety "Valetta", was sown at 280 plant/m^2^ on 20 October 1995 and subjected to five water treatments as follows:  
 
 - Full drought (in rain shelter) – was not irrigated except for 17 mm rainfall as a result of shelter failure 42 days after sowing;
 - Early drought (in rain shelter) – also receive 17 mm rainfall and the drought was fully relieved at the onset stem elongation;
@@ -27114,7 +27080,7 @@ namespace Models
           <Name>Experimental Details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
-This is the mineral nitrogen (N) validation trial conducted at the Lincoln University Dairy Farm on a deep well-drained Templeton silt loam soil. The trial ran from September 2015 to February 2016. Five N fertiliser treatments were evaluated:
+This is the mineral nitrogen (N) validation trial conducted by the New Zealannd Institure for Plant & Food Research from September 2015 to February 2016. The experiment was established at the Lincoln University Dairy Farm on a deep well-drained Templeton silt loam soil. Five N fertiliser treatments were evaluated:
 
 - Nil (0%) N - the crop did not get any fertiliser N 
 - 50% N - the crop received 50% of the required fertiliser N 
@@ -28452,7 +28418,7 @@ namespace Models
           <Name>Experimental Details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
-This was a sowing date by irrigation trial conducted at Lincoln
+This was a sowing date by irrigation trial conducted at Lincoln. The following were evaluated:
 
 - Two water treatments; Rainfed (nil irrigation) and irrigated (310 mm)
 - Two fertiliser N treatments; 0N (no fertiliser) and 150N (150 kg N/ha)
@@ -29023,9 +28989,9 @@ This was a sowing date by irrigation trial conducted at Lincoln
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowDepth>20</SowDepth>
-                  <Popn>300</Popn>
                   <SowingDate>1999-05-28</SowingDate>
+                  <Popn>300</Popn>
+                  <SowDepth>20</SowDepth>
                   <CultivarName>Dash</CultivarName>
                 </Script>
                 <Code><![CDATA[using System;
@@ -31063,16 +31029,6 @@ namespace Models
     </Folder>
     <Folder>
       <Name>Australia</Name>
-      <Memo>
-        <Name>Trial details</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[•	These simulations are inherited from barley validation (Path = Apsim\Tests\Validation\Barley) & modified for ApsimX.
-•	HRS = Hermitage Research Station (28" l8/S, 152"06/E, altitude 480 m), near Warwick, Queensland) - see Goyne et al. (1996).
-•	This reference indicates plant population of 90/m2 and row spacing of 0.5 m (adopted here as a place holder).
-•	Roma Research Station (R?) – see Table 1 in Goyne et al. (1996).
-•	Kingsthorpe (Kthpe?) – see Table 1 in Goyne et al. (1996).
-]]></MemoText>
-      </Memo>
       <Graph>
         <Name>Harvest Biomass</Name>
         <Series>
@@ -39199,8 +39155,8 @@ namespace Models
                   <IncludeInDocumentation>false</IncludeInDocumentation>
                   <Script>
                     <TOS>1</TOS>
-                    <Cultivar>Grimmett</Cultivar>
                     <Population>120</Population>
+                    <Cultivar>Grimmett</Cultivar>
                   </Script>
                   <Code><![CDATA[
 using System;
