@@ -191,7 +191,7 @@ namespace UserInterface.Presenters
         /// <param name="keepOutputFiles">If true, the raw .db output files will be saved.</param>
         public void DownloadResults(List<string> jobsToDownload, bool downloadResults, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles, bool unzipResults, bool async = false)
         {
-            Presenter.ShowMessage("", Simulation.ErrorLevel.Information);
+            Presenter.ShowMessage("", Simulation.MessageType.Information);
 
             view.DownloadStatus = "";            
             if (currentlyDownloading.Count > 0)
@@ -521,7 +521,15 @@ namespace UserInterface.Presenters
             view.UpdateJobTable(jobList);
 
             // restart the fetch jobs worker
-            if (restart) FetchJobs.RunWorkerAsync();
+            try
+            {
+                if (restart)
+                    FetchJobs.RunWorkerAsync();
+            }
+            catch
+            {
+                Presenter.ShowMessage("Unable to restart job fetcher. Current job list will not be updated.", Simulation.MessageType.Warning);
+            }
         }
 
         /// <summary>
@@ -585,9 +593,9 @@ namespace UserInterface.Presenters
             {
                 return 1;
             }
-            catch (Exception e)
+            catch (Exception err)
             {
-                ShowError(e.ToString());
+                ShowError(err);
                 return 2;
             }
             return 0;
@@ -608,9 +616,9 @@ namespace UserInterface.Presenters
             {
                 return null;
             }
-            catch (Exception e)
+            catch (Exception err)
             {
-                ShowError(e.ToString());
+                ShowError(err);
             }
 
             List<JobDetails> jobs = new List<JobDetails>();
@@ -627,11 +635,11 @@ namespace UserInterface.Presenters
                 {
                     cloudJobs = batchCli.JobOperations.ListJobs(jobDetailLevel);
                 }
-                catch (Exception e)
+                catch (Exception err)
                 {
                     if (numTries >= 3)
                     {
-                        ShowError("Unable to retrieve job list: " + e.ToString());
+                        ShowError(new Exception("Unable to retrieve job list: ", err));
                         return new List<JobDetails>();
                     }
                 }
@@ -657,9 +665,9 @@ namespace UserInterface.Presenters
                 {
                     return null;
                 }
-                catch (Exception e)
+                catch (Exception err)
                 {
-                    ShowError(e.ToString());
+                    ShowError(err);
                 }
 
                 string owner = GetAzureMetaData("job-" + cloudJob.Id, "Owner");
@@ -673,11 +681,11 @@ namespace UserInterface.Presenters
                     // if there are no tasks, set progress to 100%
                     jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
                 }
-                catch (Exception e)
+                catch (Exception err)
                 {
                     // sometimes an exception is thrown when retrieving the task counts
                     // could be due to the job not being submitted correctly
-                    ShowError(e.ToString());
+                    ShowError(err);
 
                     numTasks = -1;
                     jobProgress = 100;
@@ -729,9 +737,9 @@ namespace UserInterface.Presenters
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception err)
             {
-                ShowError(e.ToString());
+                ShowError(err);
             }
             return "";
         }

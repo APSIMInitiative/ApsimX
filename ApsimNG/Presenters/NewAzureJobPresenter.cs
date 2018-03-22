@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using ApsimNG.Cloud;
 using Microsoft.Azure.Batch.Common;
 using Models.Core;
+using System.Linq;
 
 namespace UserInterface.Presenters
 {
@@ -199,7 +200,7 @@ namespace UserInterface.Presenters
         /// <param name="msg">Message to be displayed.</param>
         public void ShowErrorMessage(string msg)
         {
-            explorerPresenter.MainPresenter.ShowError(msg);
+            presenter.MainPresenter.ShowError(msg);
         }
 
         public void Detach()
@@ -231,7 +232,7 @@ namespace UserInterface.Presenters
                 tmpZip = Path.Combine(Path.GetTempPath(), "Apsim-tmp-X-" + Environment.UserName.ToLower() + ".zip");
                 if (File.Exists(tmpZip)) File.Delete(tmpZip);
 
-                if (createApsimXZip(jp.ApplicationPackagePath, tmpZip) > 0)
+                if (CreateApsimXZip(jp.ApplicationPackagePath, tmpZip) > 0)
                 {
                     view.Status = "Cancelled";
                     return;
@@ -297,61 +298,44 @@ namespace UserInterface.Presenters
             view.Status = "Uploading APSIM Next Generation";
 
             UploadFileIfNeeded("apsim", jp.ApplicationPackagePath);
-
-
-            // create models
-
-            // TODO : show error message if other files already exist in model output directory?
-            //        may be necessary if using  a user-selected directory
-                     
-            string path = "";
-
-
+            
 
             // generate model files
 
             view.Status = "Generating model files";
             if (!Directory.Exists(jp.ModelPath)) Directory.CreateDirectory(jp.ModelPath);
 
-            // generate xml
-            string xml = "";
-            foreach (Simulation sim in Runner.AllSimulations(model))
+            try
             {
-                path = Path.Combine(jp.ModelPath, sim.Name + ".apsimx");
-                // if weather file is not in the same directory as the .apsimx file, display an error then abort
-                foreach (var child in sim.Children)
+                // copy weather files to models directory to be zipped up
+                foreach (Models.Weather child in Apsim.ChildrenRecursively(model).OfType<Models.Weather>())
                 {
-                    if (child is Models.Weather)
+                    if (Path.GetDirectoryName(child.FullFileName) != Path.GetDirectoryName(presenter.ApsimXFile.FileName))
                     {
-                        string childPath = ((Models.Weather)sim.Children[0]).FileName;                        
-                        if (Path.GetDirectoryName(childPath) != "")
-                        {
-                            ShowErrorMessage(childPath + " must be in the same directory as the .apsimx file" + (sim.FileName != null ? " (" + Path.GetDirectoryName(sim.FileName) + ")" : ""));
-                            view.Status = "Cancelled";
-                            return;
-                        }
-                        string sourcePath = ((Models.Weather)sim.Children[0]).FullFileName;
-                        string destPath = Path.Combine(jp.ModelPath, ((Models.Weather)sim.Children[0]).FileName);
-                        if (!File.Exists(destPath)) File.Copy(sourcePath, destPath);
+                        presenter.MainPresenter.ShowError("Weather file must be in the same directory as .apsimx file: " + child.FullFileName);
+                        view.Status = "Cancelled";
+                        return;
                     }
-                }                
-                xml = Apsim.Serialise(sim);
-                // delete model file if it already exists
-                if (File.Exists(path)) File.Delete(path);
-                string pattern = @"<\?xml[^<>]+>";
-                System.Text.RegularExpressions.Regex rx = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-                var matches = rx.Matches(xml);
-                xml = "<Simulations xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Version=\"23\">\r\n<Name>" + sim.Name + "</Name>\r\n" + xml.Replace(matches[0].ToString(), "") + "<DataStore><Name>DataStore</Name><AutoExport>false</AutoExport><MaximumResultsPerPage>0</MaximumResultsPerPage></DataStore><ExplorerWidth>296</ExplorerWidth></Simulations>";
-                // write xml to file
-                using (FileStream fs = File.Create(path))
-                {
-                    Byte[] info = new UTF8Encoding(true).GetBytes(xml);
-                    fs.Write(info, 0, info.Length);
+                    string sourceFile = child.FullFileName;
+                    string destFile = Path.Combine(jp.ModelPath, child.FileName);
+                    if (!File.Exists(destFile))
+                        File.Copy(sourceFile, destFile); ;
                 }
-            }         
+                // Generate .apsimx files, and if any errors are encountered, abort the job submission process.
+                if (!presenter.GenerateApsimXFiles(model, jp.ModelPath))
+                {
+                    view.Status = "Cancelled";
+                    return;
+                }
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+                return;
+            }
 
             tmpZip = "";
-            
+
             // zip up models directory
             if (Directory.Exists(jp.ModelPath)) // this test may be unnecessary
             {
@@ -458,7 +442,11 @@ namespace UserInterface.Presenters
                         PoolSpecification = new PoolSpecification
                         {
                             MaxTasksPerComputeNode = settings.MaxTasksPerVM,
-                            CloudServiceConfiguration = new CloudServiceConfiguration("4"),
+
+                            // This specifies the OS that our VM will be running.
+                            // OS Family 5 means .NET 4.6 will be installed.
+                            // For more info see https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-guestos-update-matrix#releases
+                            CloudServiceConfiguration = new CloudServiceConfiguration("5"),
                             ResizeTimeout = TimeSpan.FromMinutes(15),
                             TargetDedicatedComputeNodes = settings.VMCount,
                             VirtualMachineSize = settings.VMSize,
@@ -616,7 +604,7 @@ namespace UserInterface.Presenters
         /// <param name="srcPath">Path of the ApsimX directory</param>
         /// <param name="zipPath">Path to which the zip file will be saved</param>
         /// <returns>0 if successful, 1 otherwise</returns>
-        private int createApsimXZip(string srcPath, string zipPath)
+        private int CreateApsimXZip(string srcPath, string zipPath)
         {
             try
             {

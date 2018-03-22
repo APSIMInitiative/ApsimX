@@ -317,7 +317,7 @@ namespace UserInterface.Presenters
             try
             {
                 File.WriteAllText(path, csv.ToString());
-                explorerPresenter.MainPresenter.ShowMessage("Successfully generated " + path + ".", Simulation.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowMessage("Successfully generated " + path + ".", Simulation.MessageType.Information);
             }
             catch (Exception e)
             {
