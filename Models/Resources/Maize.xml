@@ -302,6 +302,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
     </DivideFunction>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <DaysAfterSowing>0</DaysAfterSowing>
+	<BBCH>
+     <Name>BBCH</Name>
+     <IncludeInDocumentation>true</IncludeInDocumentation>
+    </BBCH>
   </Phenology>
   <Structure>
     <Name>Structure</Name>
