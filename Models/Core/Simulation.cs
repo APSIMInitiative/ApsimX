@@ -44,6 +44,18 @@ namespace Models.Core
             Error
         };
 
+        /// <summary>
+        /// An enum that is used to indicate message severity when writing messages to the status window.
+        /// </summary>
+        public enum MessageType
+        {
+            /// <summary>Information</summary>
+            Information,
+
+            /// <summary>Warning</summary>
+            Warning
+        };
+
         /// <summary>Returns the object responsible for scoping rules.</summary>
         public ScopingRules Scope
         {

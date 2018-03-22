@@ -95,7 +95,7 @@ namespace UserInterface.Presenters
                 }
                 catch (SQLiteException e)
                 {
-                    explorerPresenter.MainPresenter.ShowMessage("Error obtaining data from database: " + e.Message, Simulation.ErrorLevel.Error);
+                    explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
                 }
 
                 foreach (SeriesDefinition definition in seriesDefinitions)
