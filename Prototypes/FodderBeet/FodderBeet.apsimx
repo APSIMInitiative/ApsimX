@@ -718,7 +718,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <Constant>
               <Name>AreaLargestLeaf</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>50000</FixedValue>
+              <FixedValue>30000</FixedValue>
               <Units>mm^2</Units>
             </Constant>
             <LinearInterpolationFunction>
@@ -2514,7 +2514,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <Units>0-1</Units>
           </Constant>
           <LinearInterpolationFunction>
-            <Name>MaxArea</Name>
+            <Name>MaxAreaPlatau</Name>
             <Memo>
               <Name>Memo</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2593,6 +2593,51 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
+          <MultiplyFunction>
+            <Name>MaxArea</Name>
+            <Constant>
+              <Name>AreaLargestLeaf</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>30000</FixedValue>
+              <Units>mm^2</Units>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>AgeFactor</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>1</double>
+                  <double>6</double>
+                  <double>11</double>
+                  <double>15</double>
+                  <double>21</double>
+                  <double>35</double>
+                  <double>45</double>
+                  <double>50</double>
+                </X>
+                <Y>
+                  <double>0.16</double>
+                  <double>0.2</double>
+                  <double>0.8</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0.6</double>
+                  <double>0.4</double>
+                  <double>0.3</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Structure].LeafTipsAppeared</XProperty>
+            </LinearInterpolationFunction>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The pattern is assumed to be similar to that of maize (Teixeira et al 2011).
+]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
           <LinearInterpolationFunction>
             <Name>GrowthDuration</Name>
             <XYPairs>
@@ -2776,7 +2821,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Constant>
             <Name>SpecificLeafAreaMin</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>14000</FixedValue>
+            <FixedValue>10000</FixedValue>
           </Constant>
           <Constant>
             <Name>SpecificLeafAreaMax</Name>
@@ -2818,7 +2863,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Constant>
             <Name>MaximumNConc</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.05</FixedValue>
+            <FixedValue>0.04</FixedValue>
           </Constant>
           <Constant>
             <Name>NReallocationFactor</Name>
@@ -2828,12 +2873,12 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Constant>
             <Name>NRetranslocationFactor</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.05</FixedValue>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.95</FixedValue>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>DMReallocationFactor</Name>
@@ -3437,7 +3482,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <Constant>
           <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.04</FixedValue>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -3914,6 +3959,14 @@ date of Experiment 4 is assumed here.]]></MemoText>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
+    <ExcelInput>
+      <Name>ObservedData</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>0bserved.xlsx</FileName>
+      <SheetNames>
+        <string>ObservedData</string>
+      </SheetNames>
+    </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
       <Tests>
@@ -4153,14 +4206,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
       <ObservedTableName>ObservedData</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
-    <ExcelInput>
-      <Name>ObservedData</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>0bserved.xlsx</FileName>
-      <SheetNames>
-        <string>ObservedData</string>
-      </SheetNames>
-    </ExcelInput>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </DataStore>
   <Folder>
@@ -8097,6 +8142,79 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Folder>
+            <Name>Phenology</Name>
+            <Graph>
+              <Name>Stage</Name>
+              <Series>
+                <Name>Simulated</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.Phenology.Stage</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Obs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledDiamond</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>ObservedData</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.Phenology.Stage</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Stage of development (3 = emergence)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>5</Maximum>
+                <Interval>1</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>Date</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ShowPageOfGraphs>true</ShowPageOfGraphs>
+          </Folder>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Simulation>
         <Folder>
@@ -8783,7 +8901,7 @@ namespace Models
               <Title>Leaf_N (g/m2)</Title>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
-              <Maximum>12</Maximum>
+              <Maximum>NaN</Maximum>
               <Interval>2</Interval>
             </Axis>
             <Axis>
@@ -14491,7 +14609,7 @@ namespace Models
               <Title>Petiole (g/m2)</Title>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
-              <Maximum>6</Maximum>
+              <Maximum>NaN</Maximum>
               <Interval>2</Interval>
             </Axis>
             <Axis>
@@ -21468,7 +21586,7 @@ namespace Models
                 <Title>Bulb_N (g/m2)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>NaN</Minimum>
-                <Maximum>30</Maximum>
+                <Maximum>NaN</Maximum>
                 <Interval>NaN</Interval>
               </Axis>
               <Axis>
@@ -21536,7 +21654,7 @@ namespace Models
                 <Title>Leaf_N (g/m2)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>NaN</Minimum>
-                <Maximum>12</Maximum>
+                <Maximum>NaN</Maximum>
                 <Interval>2</Interval>
               </Axis>
               <Axis>
@@ -21604,7 +21722,7 @@ namespace Models
                 <Title>Petiole (g/m2)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>NaN</Minimum>
-                <Maximum>6</Maximum>
+                <Maximum>NaN</Maximum>
                 <Interval>2</Interval>
               </Axis>
               <Axis>
