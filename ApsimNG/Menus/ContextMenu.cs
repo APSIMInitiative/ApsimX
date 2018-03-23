@@ -16,7 +16,6 @@ namespace UserInterface.Presenters
     using Models.Factorial;
     using Models.Soils;
     using APSIM.Shared.Utilities;
-    using Models.Graph;
     using Models.Storage;
     using Models.Report;
 
@@ -446,7 +445,7 @@ namespace UserInterface.Presenters
             }
         }
 
-        [ContextMenu(MenuName = "Run on cloud (In development - DO NOT USE)",
+        [ContextMenu(MenuName = "Run on cloud",
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),
                                               typeof(Experiment),
@@ -490,45 +489,7 @@ namespace UserInterface.Presenters
         ]
         public void OnGenerateApsimXFiles(object sender, EventArgs e)
         {
-            IModel node = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
-
-            List<IModel> children;
-            if (node is Experiment)
-            {
-                children = new List<IModel> { node };
-            }
-            else
-            {
-                children = Apsim.ChildrenRecursively(node, typeof(Experiment));
-            }
-
-            string outDir = ViewBase.AskUserForDirectory("Select a directory to save model files to.");
-            if (outDir == null)                
-                return;
-            if (!Directory.Exists(outDir))
-                Directory.CreateDirectory(outDir);
-            List<Exception> errors = new List<Exception>();
-            int i = 0;            
-            children.ForEach(expt => 
-            {
-                explorerPresenter.MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
-                explorerPresenter.MainPresenter.ShowProgress(100 * i / children.Count, false);                
-                while (GLib.MainContext.Iteration()) ;
-                try
-                {
-                    (expt as Experiment).GenerateApsimXFile(outDir);
-                }
-                catch (Exception err)
-                {
-                    errors.Add(err);
-                }
-                
-                i++;
-            });            
-            if (errors.Count < 1)
-                explorerPresenter.MainPresenter.ShowMessage("Successfully generated .apsimx files under " + outDir + ".", Simulation.MessageType.Information);
-            else
-                explorerPresenter.MainPresenter.ShowError(errors);
+            explorerPresenter.GenerateApsimXFiles(Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel); ;
         }
 
         /// <summary>

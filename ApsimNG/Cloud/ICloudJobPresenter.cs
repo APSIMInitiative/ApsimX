@@ -50,7 +50,7 @@ namespace UserInterface.Interfaces
         /// <param name="saveToCsv">If true, results will be combined into a single CSV file.</param>
         /// <param name="includeDebugFiles">If true, debugging files will be saved.</param>
         /// <param name="keepOutputFiles">If true, raw (.db) output files will be saved.</param>
-        void DownloadResults(List<string> jobIds, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles, bool unzipResults, bool async);
+        void DownloadResults(List<string> jobIds, bool downloadResults, bool saveToCsv, bool includeDebugFiles, bool keepOutputFiles, bool unzipResults, bool async);
 
         /// <summary>
         /// Opens a dialog box which asks the user for credentials.

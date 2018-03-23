@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ApsimNG.Cloud
 {
@@ -38,16 +34,10 @@ namespace ApsimNG.Cloud
         /// </summary>
         public string ModelPath { get; set; }
 
-
         /// <summary>
         /// If true, ApplicationPackagePath points to a directory. If false, it points to a .zip file.
         /// </summary>
         public bool ApsimFromDir { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string ApplicationPackage { get; set; }
 
         /// <summary>
         /// Directory or zip file containing ApsimX to be uploaded.
@@ -55,7 +45,7 @@ namespace ApsimNG.Cloud
         public string ApplicationPackagePath { get; set; }
 
         /// <summary>
-        /// 
+        /// Version of APSIM to be uploaded.
         /// </summary>
         public string ApplicationPackageVersion { get; set; }
 
@@ -80,17 +70,20 @@ namespace ApsimNG.Cloud
         public int PoolMaxTasksPerVM { get; set; }
 
         /// <summary>
+        /// If true, results will automatically be downloaded once the job is finished.
+        /// </summary>
+        public bool AutoDownload { get; set; }
+        /// <summary>
         /// If true, model files will be saved after they are generated.
         /// </summary>
         public bool SaveModelFiles { get; set; }
 
-
+        /// <summary>
+        /// If true, the job manager will submit the tasks.
+        /// </summary>
         public bool JobManagerShouldSubmitTasks { get; set; }
 
 
         public bool AutoScale { get; set; }
-
-
-        public bool NoWait { get; set; }
     }
 }

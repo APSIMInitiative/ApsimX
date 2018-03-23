@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace ApsimNG.Cloud
 {
@@ -20,27 +17,27 @@ namespace ApsimNG.Cloud
 
         public static string GetModelPath(Guid jobId)
         {
-            return string.Format("{0}\\Model", GetJobInputPath(jobId));
+            return Path.Combine(GetJobInputPath(jobId), "Model");
         }
 
         public static string GetApsimExe(Guid jobId)
         {
-            return string.Format("{0}\\Apsim\\Model\\ApsimModel.exe", GetJobInputPath(jobId));
+            return Path.Combine(GetJobInputPath(jobId), "Apsim", "Model", "ApsimModel.exe");
         }
 
         public static string GetApsimPath(Guid jobId)
         {
-            return string.Format("{0}\\Apsim", GetJobInputPath(jobId));
+            return Path.Combine(GetJobInputPath(jobId), "Apsim");
         }
 
         public static string Get7ZipExe(Guid jobId)
         {
-            return string.Format("{0}\\7za.exe", GetJobInputPath(jobId));
+            return Path.Combine(GetJobInputPath(jobId), "7za.exe");
         }
 
         public static string GetAzCopyExe(Guid jobId)
         {
-            return string.Format("{0}\\AzCopy.exe", GetJobInputPath(jobId));
+            return Path.Combine(GetJobInputPath(jobId), "AzCopy.exe");
         }
 
         public static string GetJobManagerPath(Guid jobId)
