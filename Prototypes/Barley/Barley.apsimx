@@ -11137,108 +11137,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
     <Folder>
       <Name>Combined Results</Name>
       <Graph>
-        <Name>Flag Leaf Date</Name>
-        <Series>
-          <Name>Predicted</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>HarvestObsPred</TableName>
-          <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
-          <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-          <Filter />
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Observed</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Predicted</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>Flowering Date</Name>
-        <Series>
-          <Name>Predicted</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>HarvestObsPred</TableName>
-          <XFieldName>Observed.Barley.Phenology.FloweringDAS.Value()</XFieldName>
-          <YFieldName>Predicted.Barley.Phenology.FloweringDAS.Value()</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-          <Filter />
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Observed</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Predicted</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
         <Name>AppearedLeafTips</Name>
         <Series>
           <Name>Predicted</Name>
@@ -11319,56 +11217,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>Leaf Size</Name>
-        <Series>
-          <Name>Series 0</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>LeafSizeObsPred</TableName>
-          <XFieldName>Observed.LeafSize.Script.MostRecentlyExpandedLeafSize</XFieldName>
-          <YFieldName>Predicted.LeafSize.Script.MostRecentlyExpandedLeafSize</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -11838,6 +11686,107 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
       </Graph>
+      <Graph>
+        <Name>Leaf Size</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>LeafSizeObsPred</TableName>
+          <XFieldName>Observed.LeafSize.Script.MostRecentlyExpandedLeafSize</XFieldName>
+          <YFieldName>Predicted.LeafSize.Script.MostRecentlyExpandedLeafSize</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Flowering Date</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HarvestObsPred</TableName>
+          <XFieldName>Observed.Barley.Phenology.FloweringDAS.Value()</XFieldName>
+          <YFieldName>Predicted.Barley.Phenology.FloweringDAS.Value()</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Observed</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Predicted</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
@@ -11845,6 +11794,14 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <Name>NewZealand</Name>
       <Experiment>
         <Name>MCPD09_10</Name>
+        <Memo>
+          <Name>Experimental details</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This experiment was conducted in A Block near Lincoln, New Zealand to determine if there were any differences in the water use efficiency of different commercial varieties of barley.  The results are un-published to date.
+
+Four cultivars of Barley ('Omaka', 'Dash', 'Sherwood' and 'Booma') were sown on the 1st of October 2009 in a randomised complete block design with 4 replicates and two other factors, Irrigation and Nitrogen.  The irrigation treatments consisted of full irrigation (to replace measured evapotranspiration) or nil irrigation (recieving only rainfall).  The nitrogen treatments were 150 kg N broadcast in the early vegetative stage or nil fertiliser.  
+Biomass accumulation, organ N content, Leaf area index, radiation interception and soil water content were measured at regular frequencies throughout the experiment.]]></MemoText>
+        </Memo>
         <Factors>
           <Name>Factors</Name>
           <Factor>
@@ -12051,10 +12008,11 @@ namespace Models
                   <Name>BarleySoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
-                    <double>0.1</double>
+                    <double>0.07</double>
                     <double>0.1</double>
                     <double>0.08</double>
                     <double>0.1</double>
+                    <double>0.12</double>
                     <double>0.12</double>
                     <double>0.12</double>
                     <double>0.12</double>
@@ -12069,8 +12027,10 @@ namespace Models
                     <double>0.02</double>
                     <double>0.02</double>
                     <double>0.02</double>
+                    <double>0.02</double>
                   </KL>
                   <XF>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -12091,11 +12051,13 @@ namespace Models
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <BD>
                   <double>1.1</double>
                   <double>1.1</double>
                   <double>1.3</double>
+                  <double>1.2</double>
                   <double>1.2</double>
                   <double>1.2</double>
                   <double>1.2</double>
@@ -12111,12 +12073,14 @@ namespace Models
                   <double>0.12</double>
                   <double>0.12</double>
                   <double>0.12</double>
+                  <double>0.12</double>
                 </AirDry>
                 <LL15>
-                  <double>0.1</double>
+                  <double>0.07</double>
                   <double>0.1</double>
                   <double>0.08</double>
                   <double>0.1</double>
+                  <double>0.12</double>
                   <double>0.12</double>
                   <double>0.12</double>
                   <double>0.12</double>
@@ -12131,6 +12095,7 @@ namespace Models
                   <double>0.28</double>
                   <double>0.26</double>
                   <double>0.25</double>
+                  <double>0.25</double>
                 </DUL>
                 <SAT>
                   <double>0.48</double>
@@ -12138,6 +12103,7 @@ namespace Models
                   <double>0.4</double>
                   <double>0.38</double>
                   <double>0.37</double>
+                  <double>0.36</double>
                   <double>0.36</double>
                   <double>0.36</double>
                   <double>0.36</double>
@@ -12149,6 +12115,7 @@ namespace Models
                   <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
+                  <double>98</double>
                   <double>98</double>
                   <double>98</double>
                 </KS>
@@ -12333,6 +12300,7 @@ namespace Models
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <SW>
                   <double>0.31</double>
@@ -12342,6 +12310,7 @@ namespace Models
                   <double>0.28</double>
                   <double>0.28</double>
                   <double>0.26</double>
+                  <double>0.25</double>
                   <double>0.25</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
@@ -12545,7 +12514,7 @@ namespace Models
                 <Name>Harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2010-02-22</Date>
+                  <Date>2010-02-23</Date>
                   <Action>[Barley].Harvest();</Action>
                 </Operation>
               </Operations>
@@ -14905,12 +14874,14 @@ namespace Models
       <Experiment>
         <Name>MCPD10_11</Name>
         <Memo>
-          <Name>Trial details</Name>
+          <Name>Experimental details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
-This was a cultivar evaluation trial conducted in Lincoln. Eight cultivars were evaluated.
+Following on from MCPD09_10, this experiment was conducted in A Block near Lincoln, New Zealand to test a wider range of barley genotypes for differences in water use efficiency.  The results are un-published to date.
 
-]]></MemoText>
+Treatments were simply 8 commercially available varieties of barley ('Booma','County','Dash','Hooded','Omaka','Optic','Quench' and 'Retriever')
+
+Biomass accumulation, Leaf area index, radiation interception and soil water content were measured at regular frequencies throughout the experiment.]]></MemoText>
         </Memo>
         <Factors>
           <Name>Factors</Name>
@@ -15513,7 +15484,7 @@ namespace Models
                 <Name>Harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2011-01-17</Date>
+                  <Date>2011-01-18</Date>
                   <Action>[Barley].Harvest();</Action>
                 </Operation>
               </Operations>
@@ -16799,13 +16770,14 @@ namespace Models
       <Experiment>
         <Name>MCPD11_12</Name>
         <Memo>
-          <Name>Trial details</Name>
+          <Name>Experimental details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
-This was a nitrogen*irrigation trial conducted at Lincoln
-•	Two water treatments; Rainfed (nil irrigation) and irrigated (310 mm)
-•	Two fertiliser N treatments; 0N (no fertiliser) and 150N (150 kg N/ha)
-]]></MemoText>
+Following on from MCPD10_11, this experiment was conducted in A Block near Lincoln, New Zealand to test the effects of sowing time on apparent water use efficiency of three varieties of Barley.  The results are un-published to date.
+
+Treatments were simply 3 commercially available varieties of barley ('Booma','Dash' and 'Omaka') sown on three different sowing dates (13 Aug, 9 Sep and 15 Nov).  
+
+Biomass accumulation, Leaf appearance, leaf size, radiation interception and soil water content were measured at regular frequencies throughout the experiment.]]></MemoText>
         </Memo>
         <Factors>
           <Name>Factors</Name>
@@ -17467,40 +17439,6 @@ namespace Models
         
 ]]></Code>
               </Manager>
-              <Manager>
-                <Name>Harvesting</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Barley;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
-            {
-                Barley.Harvest();
-                Barley.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-              </Manager>
               <Operations>
                 <Name>IrrigationEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -17595,6 +17533,14 @@ namespace Models
     
 ]]></Code>
               </Manager>
+              <Operations>
+                <Name>Harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>2012-03-16</Date>
+                  <Action>[Barley].Harvest()</Action>
+                </Operation>
+              </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
             </Folder>
@@ -19092,17 +19038,20 @@ namespace Models
       <Experiment>
         <Name>RS2014_15</Name>
         <Memo>
-          <Name>Experiment</Name>
+          <Name>Experimental details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[This was a field experiment established at the New Zealand Institute for Plant & Food Research Limited rain-out shelter in October 2014. Barley cultivars cv Dash and cv Omaka, differing canopy characteristics and water extraction capabilities were established with a range of irrigation treatments aimed at producing a range of soil moisture deficits.
-•	High =Full replacement irrigation: replace weekly, measured crop water use;
-•	Mid =Intermediate replacement with reduced frequency and higher volume e.g. monthly application of ½ measured crop water use;
-•	Low =Nil (or near nil) irrigation, e.g.  irrigated once at anthesis.
+
+- High =Full replacement irrigation: replace weekly, measured crop water use;
+- Mid =Intermediate replacement with reduced frequency and higher volume e.g. monthly application of ½ measured crop water use;
+- Low =Nil (or near nil) irrigation, e.g.  irrigated once at anthesis.
+
 The treatments were monitored for:
-•	Soil water - this was measured continuously using auto logging TDR and weekly using a neutron probe;
-•	Canopy light interception;
-•	Biomass - quantified four times during crop growth;
-•	Leaf area.
+
+- Soil water - this was measured continuously using auto logging TDR and weekly using a neutron probe;
+- Canopy light interception;
+- Biomass - quantified four times during crop growth and at final harvest
+- Leaf area index
 
 
 
@@ -19848,7 +19797,7 @@ namespace Models
                 <Name>Harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2015-02-11</Date>
+                  <Date>2015-02-13</Date>
                   <Action>[Barley].Harvest();</Action>
                 </Operation>
               </Operations>
@@ -20905,8 +20854,8 @@ namespace Models
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledDiamond</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -21425,18 +21374,18 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[This experiment was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand. The objective was to evaluate the effect of drought on the yield of barley crops. The experiment is fully described by Jamieson et al. (1995).  Briefly, 'Triumph' barley was sown at 188kg/ha on 07 September 1988. This sowing rate resulted in a population of 291 ± 6 plants/m2.  Plants were evaluated for their response to drought of varying duration. The treatments were:
 
-•	Full irrigation – measured ET replaced weekly (06 October to 29 December) 
-•	Early Drought 1 – irrigated from 03 November to 05 January
-•	Early Drought 2 – irrigated from 17 November to 19 January
-•	Early Drought 3 – irrigated from 24 November to 19 January
-•	Early Drought 3 – irrigated from 01 December to 09 February
-•	Middle Drought 1 – irrigated (06/10/1988 to 03/11/1988) and (24/11/1988 to 29/12/1989)
-•	Middle Drought 2 – irrigated (06/10/1988 to 03/11/1988) and (01/12/1988 to 29/12/1989)
-•	Middle Drought 3 – irrigated (06/10/1988 to 03/11/1988) and (15/12/1988 to 29/12/1989)
-•	Middle Drought 3 – irrigated (06/10/1988 to 03/11/1988) 
-•	Late Drought 1 – irrigated (06/10/1988 to 17/11/1988)
-•	Late Drought 2 – irrigated (06/10/1988 to 24/11/1988) 
-•	Late Drought 3 – irrigated (06/10/1988 to 01/12/1989)
+- Full irrigation – measured ET replaced weekly (06 October to 29 December) 
+- Early Drought 1 – irrigated from 03 November to 05 January
+- Early Drought 2 – irrigated from 17 November to 19 January
+- Early Drought 3 – irrigated from 24 November to 19 January
+- Early Drought 3 – irrigated from 01 December to 09 February
+- Middle Drought 1 – irrigated (06/10/1988 to 03/11/1988) and (24/11/1988 to 29/12/1989)
+- Middle Drought 2 – irrigated (06/10/1988 to 03/11/1988) and (01/12/1988 to 29/12/1989)
+- Middle Drought 3 – irrigated (06/10/1988 to 03/11/1988) and (15/12/1988 to 29/12/1989)
+- Middle Drought 3 – irrigated (06/10/1988 to 03/11/1988) 
+- Late Drought 1 – irrigated (06/10/1988 to 17/11/1988)
+- Late Drought 2 – irrigated (06/10/1988 to 24/11/1988) 
+- Late Drought 3 – irrigated (06/10/1988 to 01/12/1989)
 
 ]]></MemoText>
         </Memo>
@@ -22637,7 +22586,7 @@ namespace Models
                 <Name>Harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>1989-02-06</Date>
+                  <Date>1989-02-07</Date>
                   <Action>[Barley].Harvest();</Action>
                 </Operation>
               </Operations>
@@ -23856,15 +23805,11 @@ namespace Models
           <MemoText><![CDATA[
 This is a water response trial conducted inside and outside the rain shelter at the New Zealand Institute for Plant & Food Research in Lincoln and described in De Ruiter et al (1999). Briefly, a vernalisation insensitive barley, variety "Valetta", was sown at 280 plant/m^2^ on 20 October 1995 and subjected to five water treatments as follows:  
 
-•	Full drought (in rain shelter) – was not irrigated except for 17 mm rainfall as a result of shelter failure 42 days after sowing;
-
-•	Early drought (in rain shelter) – also receive 17 mm rainfall and the drought was fully relieved at the onset stem elongation;
-
-•	Late drought (in rain shelter) – fully irrigated (i.e. net crop water use + soil water evaporation) up to stem elongation and nil irrigation thereafter; 
-
-•	Rain-fed (outside the rain shelter) – received all the rain but no irrigation;
-
-•	Full irrigation (located outside the rain shelter) – received all the rain and irrigation to replace ET.
+- Full drought (in rain shelter) – was not irrigated except for 17 mm rainfall as a result of shelter failure 42 days after sowing;
+- Early drought (in rain shelter) – also receive 17 mm rainfall and the drought was fully relieved at the onset stem elongation;
+- Late drought (in rain shelter) – fully irrigated (i.e. net crop water use + soil water evaporation) up to stem elongation and nil irrigation thereafter; 
+- Rain-fed (outside the rain shelter) – received all the rain but no irrigation;
+- Full irrigation (located outside the rain shelter) – received all the rain and irrigation to replace ET.
 
 
 ]]></MemoText>
@@ -25743,7 +25688,7 @@ namespace Models
                 <Name>Harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>1996-02-12</Date>
+                  <Date>1996-02-13</Date>
                   <Action>[Barley].Harvest();</Action>
                 </Operation>
               </Operations>
@@ -27166,15 +27111,16 @@ namespace Models
       <Experiment>
         <Name>LUDF2015_16</Name>
         <Memo>
-          <Name>Trial details</Name>
+          <Name>Experimental Details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
 This is the mineral nitrogen (N) validation trial conducted at the Lincoln University Dairy Farm on a deep well-drained Templeton silt loam soil. The trial ran from September 2015 to February 2016. Five N fertiliser treatments were evaluated:
-•	Nil (0%) N - the crop did not get any fertiliser N 
-•	50% N - the crop received 50% of the required fertiliser N 
-•	75% N - the crop received 75% of the required fertiliser N 
-•	100% N - the crop received the required fertiliser N as estimated by the fertiliser calculator
-•	125% N - the crop received 25% fertiliser N above the requirement.
+
+- Nil (0%) N - the crop did not get any fertiliser N 
+- 50% N - the crop received 50% of the required fertiliser N 
+- 75% N - the crop received 75% of the required fertiliser N 
+- 100% N - the crop received the required fertiliser N as estimated by the fertiliser calculator
+- 125% N - the crop received 25% fertiliser N above the requirement.
 ]]></MemoText>
         </Memo>
         <Factors>
@@ -27828,40 +27774,6 @@ namespace Models
                 </Operation>
               </Operations>
               <Manager>
-                <Name>Harvesting</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Barley;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
-            {
-                Barley.Harvest();
-                Barley.EndCrop();
-            }
-        }
-    }
-}
-       
-]]></Code>
-              </Manager>
-              <Manager>
                 <Name>SetSoilParams</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script />
@@ -27911,6 +27823,14 @@ namespace Models
     
 ]]></Code>
               </Manager>
+              <Operations>
+                <Name>Harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>2016-02-11</Date>
+                  <Action>[Barley].Harvest();</Action>
+                </Operation>
+              </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
             </Folder>
@@ -28457,50 +28377,6 @@ namespace Models
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
         <Graph>
-          <Name>SoilWaterProfile1</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <Checkpoint>Current</Checkpoint>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Leaf.Fw</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Volumetric soil water (mm)</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>BottomLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
           <Name>SoilNProfile</Name>
           <Series>
             <Name>Predicted</Name>
@@ -28573,12 +28449,13 @@ namespace Models
       <Experiment>
         <Name>ABlock99_00</Name>
         <Memo>
-          <Name>Trial details</Name>
+          <Name>Experimental Details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
-This was a nitrogen*irrigation trial conducted at Lincoln
-•	Two water treatments; Rainfed (nil irrigation) and irrigated (310 mm)
-•	Two fertiliser N treatments; 0N (no fertiliser) and 150N (150 kg N/ha)
+This was a sowing date by irrigation trial conducted at Lincoln
+
+- Two water treatments; Rainfed (nil irrigation) and irrigated (310 mm)
+- Two fertiliser N treatments; 0N (no fertiliser) and 150N (150 kg N/ha)
 ]]></MemoText>
         </Memo>
         <Factors>
@@ -29143,78 +29020,6 @@ This was a nitrogen*irrigation trial conducted at Lincoln
             <Folder>
               <Name>Manager folder</Name>
               <Manager>
-                <Name>LeafSize</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Clock Clock;
-        [Link] Plant Barley;
-        [Link] Zone zone;
-                    
-        [XmlIgnore] public bool InitialDay { get; set; }
-        
-        [XmlIgnore] public double LeafExpandedPosition { get; set; }
-        [XmlIgnore] public double LeafAppearedPosition { get; set; }
-        [XmlIgnore] public double ExpandedLeafNoYesterday { get; set; }
-        [XmlIgnore] public double AppearedLeafNoYesterday { get; set; }
-        [XmlIgnore] public double MostRecentlyExpandedLeafSize { get; set; }
-        [XmlIgnore] public double MostRecentlyAppearedLeafMaxSize { get; set; }
-        
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            InitialDay = true;
-            LeafExpandedPosition = 0;
-            LeafAppearedPosition = 0;
-            ExpandedLeafNoYesterday = 0;
-            AppearedLeafNoYesterday = 0;
-            MostRecentlyExpandedLeafSize = 0;
-            MostRecentlyAppearedLeafMaxSize = 0;
-        }
-        
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            ExpandedLeafNoYesterday = Convert.ToDouble(zone.Get("Barley.Leaf.ExpandedCohortNo"));
-            AppearedLeafNoYesterday = Convert.ToDouble(zone.Get("Barley.Leaf.AppearedCohortNo"));
-        }
-        
-        [EventSubscribe("DoManagementCalculations")]
-        private void OnDoManagementCalculations(object sender, EventArgs e)
-        {
-            if (Convert.ToDouble(zone.Get("Barley.Leaf.ExpandedCohortNo")) > ExpandedLeafNoYesterday)
-            {
-                LeafExpandedPosition = Convert.ToDouble(zone.Get("Barley.Leaf.ExpandedCohortNo"));
-                MostRecentlyExpandedLeafSize = (double)zone.Get("Barley.Leaf.CohortSize[" + (int)LeafExpandedPosition + "]");
-            }
-            
-            if (Convert.ToDouble(zone.Get("Barley.Leaf.AppearedCohortNo")) > AppearedLeafNoYesterday)
-            {
-                LeafAppearedPosition = Convert.ToDouble(zone.Get("Barley.Leaf.AppearedCohortNo"));
-                MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Barley.Leaf.CohortParameters.MaxArea.Value()");
-            }
-            
-        }
-    }
-}
-       
-]]></Code>
-              </Manager>
-              <Manager>
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
@@ -29267,40 +29072,6 @@ namespace Models
                 
     
         
-]]></Code>
-              </Manager>
-              <Manager>
-                <Name>Harvesting</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-    [Serializable] 
-    public class Script : Model
-    {
-        [Link] Plant Barley;
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
-            {
-                Barley.Harvest();
-                Barley.EndCrop();
-            }
-        }
-    }
-}
-       
 ]]></Code>
               </Manager>
               <Operations>
@@ -29361,6 +29132,14 @@ namespace Models
     
 ]]></Code>
               </Manager>
+              <Operations>
+                <Name>Harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>2000-03-18</Date>
+                  <Action>[Barley].Harvest();</Action>
+                </Operation>
+              </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
             </Folder>
@@ -30936,7 +30715,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -30986,7 +30765,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -31036,7 +30815,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -31136,7 +30915,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -31186,7 +30965,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -31236,7 +31015,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -31272,6 +31051,13 @@ namespace Models
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
       </Graph>
+      <PredictedObserved>
+        <Name>NewZealandHarvestObsPred</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <PredictedTableName>HarvestReport</PredictedTableName>
+        <ObservedTableName>Observed</ObservedTableName>
+        <FieldNameUsedForMatch>Barley.Phenology.CurrentStageName</FieldNameUsedForMatch>
+      </PredictedObserved>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
@@ -40786,5 +40572,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>269</ExplorerWidth>
+  <ExplorerWidth>256</ExplorerWidth>
 </Simulations>

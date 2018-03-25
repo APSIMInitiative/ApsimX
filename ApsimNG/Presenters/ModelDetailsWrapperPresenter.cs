@@ -103,6 +103,8 @@
 
         public void Detach()
         {
+            if (currentLowerPresenter != null)
+                currentLowerPresenter.Detach();
             return;
         }
     }
