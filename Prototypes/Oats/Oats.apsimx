@@ -9026,10 +9026,10 @@ late drought increased screenings.
                     <double>0.04</double>
                     <double>0.04</double>
                     <double>0.05</double>
+                    <double>0.04</double>
                     <double>0.03</double>
                     <double>0.02</double>
                     <double>0.01</double>
-                    <double>0.05</double>
                   </KL>
                   <XF>
                     <double>1</double>
@@ -9064,7 +9064,7 @@ late drought increased screenings.
                   <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
-                  <double>1.6</double>
+                  <double>1.601</double>
                 </BD>
                 <AirDry>
                   <double>0.07</double>
@@ -9095,9 +9095,9 @@ late drought increased screenings.
                   <double>0.24</double>
                   <double>0.23</double>
                   <double>0.23</double>
-                  <double>0.13</double>
+                  <double>0.25</double>
+                  <double>0.25</double>
                   <double>0.17</double>
-                  <double>0.27</double>
                 </DUL>
                 <SAT>
                   <double>0.42</double>
@@ -9108,7 +9108,7 @@ late drought increased screenings.
                   <double>0.34</double>
                   <double>0.31</double>
                   <double>0.31</double>
-                  <double>0.309</double>
+                  <double>0.31</double>
                 </SAT>
                 <KS>
                   <double>4832.039</double>
@@ -9271,7 +9271,7 @@ late drought increased screenings.
                     <double>0.02</double>
                     <double>0.02</double>
                     <double>0.01</double>
-                    <double>0.05</double>
+                    <double>0.01</double>
                   </KL>
                   <XF>
                     <double>1</double>
@@ -9306,7 +9306,7 @@ late drought increased screenings.
                   <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
-                  <double>1.6</double>
+                  <double>1.601</double>
                 </BD>
                 <AirDry>
                   <double>0.05</double>
@@ -9339,7 +9339,7 @@ late drought increased screenings.
                   <double>0.28</double>
                   <double>0.107</double>
                   <double>0.122</double>
-                  <double>0.27</double>
+                  <double>0.17</double>
                 </DUL>
                 <SAT>
                   <double>0.419</double>
@@ -9350,7 +9350,7 @@ late drought increased screenings.
                   <double>0.342</double>
                   <double>0.307</double>
                   <double>1.31</double>
-                  <double>0.309</double>
+                  <double>0.31</double>
                 </SAT>
                 <KS>
                   <double>4832.039</double>
@@ -9454,7 +9454,7 @@ late drought increased screenings.
                     <double>0.03</double>
                     <double>0.02</double>
                     <double>0.01</double>
-                    <double>0.05</double>
+                    <double>0.01</double>
                   </KL>
                   <XF>
                     <double>1</double>
@@ -9489,7 +9489,7 @@ late drought increased screenings.
                   <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
-                  <double>1.6</double>
+                  <double>1.601</double>
                 </BD>
                 <AirDry>
                   <double>0.05</double>
@@ -9522,7 +9522,7 @@ late drought increased screenings.
                   <double>0.28</double>
                   <double>0.2</double>
                   <double>0.22</double>
-                  <double>0.27</double>
+                  <double>0.17</double>
                 </DUL>
                 <SAT>
                   <double>0.42</double>
@@ -9533,7 +9533,7 @@ late drought increased screenings.
                   <double>0.34</double>
                   <double>0.31</double>
                   <double>0.31</double>
-                  <double>0.309</double>
+                  <double>0.31</double>
                 </SAT>
                 <KS>
                   <double>4800</double>
@@ -9652,7 +9652,7 @@ late drought increased screenings.
                     <double>0.02</double>
                     <double>0.02</double>
                     <double>0.01</double>
-                    <double>0.05</double>
+                    <double>0.01</double>
                   </KL>
                   <XF>
                     <double>1</double>
@@ -9687,7 +9687,7 @@ late drought increased screenings.
                   <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
-                  <double>1.6</double>
+                  <double>1.601</double>
                 </BD>
                 <AirDry>
                   <double>0.05</double>
@@ -9720,7 +9720,7 @@ late drought increased screenings.
                   <double>0.23</double>
                   <double>0.15</double>
                   <double>0.2</double>
-                  <double>0.27</double>
+                  <double>0.17</double>
                 </DUL>
                 <SAT>
                   <double>0.42</double>
@@ -9731,7 +9731,7 @@ late drought increased screenings.
                   <double>0.34</double>
                   <double>0.31</double>
                   <double>0.31</double>
-                  <double>0.309</double>
+                  <double>0.31</double>
                 </SAT>
                 <KS>
                   <double>4832.039</double>
@@ -9886,7 +9886,7 @@ late drought increased screenings.
                     <double>0.02</double>
                     <double>0.02</double>
                     <double>0.01</double>
-                    <double>0.05</double>
+                    <double>0.01</double>
                   </KL>
                   <XF>
                     <double>1</double>
@@ -9921,7 +9921,7 @@ late drought increased screenings.
                   <double>1.6</double>
                   <double>1.6</double>
                   <double>1.6</double>
-                  <double>1.6</double>
+                  <double>1.601</double>
                 </BD>
                 <AirDry>
                   <double>0.05</double>
@@ -9954,7 +9954,7 @@ late drought increased screenings.
                   <double>0.25</double>
                   <double>0.19</double>
                   <double>0.17</double>
-                  <double>0.27</double>
+                  <double>0.17</double>
                 </DUL>
                 <SAT>
                   <double>0.42</double>
@@ -9965,7 +9965,7 @@ late drought increased screenings.
                   <double>0.34</double>
                   <double>0.31</double>
                   <double>0.31</double>
-                  <double>0.309</double>
+                  <double>0.31</double>
                 </SAT>
                 <KS>
                   <double>4832.039</double>
@@ -10749,6 +10749,49 @@ namespace Models
                 <string>[Clock].DoReport</string>
               </EventNames>
             </Report>
+            <Manager>
+              <Name>WaterTable</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Script>
+                <WaterTableRate>1600</WaterTableRate>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Soil ThisSoil; 
+                    
+        [Description("WaterTable")]
+        public double WaterTableRate { get; set; }
+
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            ThisSoil.SoilWater.SetWaterTable(WaterTableRate);
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+        ThisSoil.SoilWater.SetWaterTable(WaterTableRate);
+        }
+        
+    }
+}
+       
+]]></Code>
+            </Manager>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -10866,7 +10909,7 @@ namespace Models
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
-            <TableName>DailyReport</TableName>
+            <TableName>SupReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ProfileWater</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -13117,6 +13160,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <SDSwitch>0</SDSwitch>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
@@ -13125,7 +13169,6 @@ Grazing winter forage crops is an important management strategy for profitable l
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -14059,6 +14102,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <SDSwitch>0</SDSwitch>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
@@ -14067,7 +14111,6 @@ Grazing winter forage crops is an important management strategy for profitable l
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -15542,8 +15585,8 @@ namespace Models
                 <Name>TreatmentSpecificActions</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <IrrFactor>False</IrrFactor>
                   <NitFactor>0</NitFactor>
+                  <IrrFactor>False</IrrFactor>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -29124,9 +29167,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowDate>02-Feb</SowDate>
                   <CultivarName>
                   </CultivarName>
+                  <SowDate>02-Feb</SowDate>
                   <SowingDepth>30</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
