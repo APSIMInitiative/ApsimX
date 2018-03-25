@@ -6465,9 +6465,9 @@ namespace Models
     <PredictedObserved>
       <Name>LeafSizeObsPred</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <PredictedTableName>SupReport</PredictedTableName>
+      <PredictedTableName>MaxLeafSizeReport</PredictedTableName>
       <ObservedTableName>LeafSize</ObservedTableName>
-      <FieldNameUsedForMatch>LeafSize.Script.LeafExpandedPosition</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>MaxLeafSize.Script.LeafPosition</FieldNameUsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </DataStore>
@@ -7048,8 +7048,8 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
           <TableName>LeafSizeObsPred</TableName>
-          <XFieldName>Observed.LeafSize.Script.MostRecentlyExpandedLeafSize</XFieldName>
-          <YFieldName>Predicted.LeafSize.Script.MostRecentlyExpandedLeafSize</YFieldName>
+          <XFieldName>Observed.MaxLeafSize.Script.MaxLeafSize</XFieldName>
+          <YFieldName>Predicted.MaxLeafSize.Script.MaxLeafSize</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7744,8 +7744,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Cultivar>Booma</Cultivar>
                   <InitialRootDepth>10</InitialRootDepth>
+                  <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -10678,8 +10678,8 @@ Biomass accumulation, Leaf area index, radiation interception and soil water con
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Cultivar>Dash</Cultivar>
                   <InitialRootDepth>40</InitialRootDepth>
+                  <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -12648,18 +12648,19 @@ Biomass accumulation, Leaf appearance, leaf size, radiation interception and soi
             <Folder>
               <Name>Manager folder</Name>
               <Manager>
-                <Name>LeafSize</Name>
+                <Name>MaxLeafSize</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Script />
                 <Code><![CDATA[using System;
-using Models.Core;
 using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
 using System.Xml.Serialization;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF;
+using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
+
+
 
 namespace Models
 {
@@ -12668,64 +12669,32 @@ namespace Models
     {
         [Link] Clock Clock;
         [Link] Plant Barley;
-        [Link] Zone zone;
-                    
-        [XmlIgnore] public bool InitialDay { get; set; }
         
-        [XmlIgnore] public double LeafExpandedPosition { get; set; }
-        [XmlIgnore] public double LeafAppearedPosition { get; set; }
-        [XmlIgnore] public double ExpandedLeafNoYesterday { get; set; }
-        [XmlIgnore] public double AppearedLeafNoYesterday { get; set; }
-        [XmlIgnore] public double MostRecentlyExpandedLeafSize { get; set; }
-        [XmlIgnore] public double MostRecentlyAppearedLeafMaxSize { get; set; }
+        public event EventHandler LeafReport;
         
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            InitialDay = true;
-            LeafExpandedPosition = 0;
-            LeafAppearedPosition = 0;
-            ExpandedLeafNoYesterday = 0;
-            AppearedLeafNoYesterday = 0;
-            MostRecentlyExpandedLeafSize = 0;
-            MostRecentlyAppearedLeafMaxSize = 0;
-        }
+        [XmlIgnore] public int LeafPosition { get; set; }
+        [XmlIgnore] public double MaxLeafSize { get; set; }
         
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            ExpandedLeafNoYesterday = Convert.ToDouble(zone.Get("Barley.Leaf.ExpandedCohortNo"));
-            AppearedLeafNoYesterday = Convert.ToDouble(zone.Get("Barley.Leaf.AppearedCohortNo"));
-        }
-        
-        [EventSubscribe("DoManagementCalculations")]
-        private void OnDoManagementCalculations(object sender, EventArgs e)
-        {
-            if (Convert.ToDouble(zone.Get("Barley.Leaf.ExpandedCohortNo")) > ExpandedLeafNoYesterday)
+            if ((Barley.Leaf.ExpandedCohortNo > LeafPosition) & (Barley.Structure.NextLeafProportion == 1))
             {
-                LeafExpandedPosition = Convert.ToDouble(zone.Get("Barley.Leaf.ExpandedCohortNo"));
-                MostRecentlyExpandedLeafSize = (double)zone.Get("Barley.Leaf.CohortSize[" + (int)LeafExpandedPosition + "]");
+                LeafPosition = (int)Barley.Leaf.ExpandedCohortNo;
+                MaxLeafSize = Barley.Leaf.CohortSize[LeafPosition - 1];
+                LeafReport.Invoke(this, new EventArgs());
             }
-            
-            if (Convert.ToDouble(zone.Get("Barley.Leaf.AppearedCohortNo")) > AppearedLeafNoYesterday)
-            {
-                LeafAppearedPosition = Convert.ToDouble(zone.Get("Barley.Leaf.AppearedCohortNo"));
-                MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Barley.Leaf.CohortParameters.MaxArea.Value()");
-            }
-            
         }
     }
-}
-       
-]]></Code>
+}]]></Code>
               </Manager>
               <Manager>
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
-                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -13028,6 +12997,19 @@ namespace Models
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
+              </EventNames>
+            </Report>
+            <Report>
+              <Name>MaxLeafSizeReport</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[MaxLeafSize].Script.MaxLeafSize</string>
+                <string>[MaxLeafSize].Script.LeafPosition</string>
+              </VariableNames>
+              <EventNames>
+                <string>[MaxLeafSize].Script.LeafReport</string>
               </EventNames>
             </Report>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -13546,13 +13528,8 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
           </Graph>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ShowPageOfGraphs>true</ShowPageOfGraphs>
-        </Folder>
-        <Folder>
-          <Name>LeafSize</Name>
           <Graph>
-            <Name>SD1</Name>
+            <Name>LeafSize</Name>
             <Series>
               <Name>PredLeafSize</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -13568,33 +13545,9 @@ namespace Models
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
               <Checkpoint>Current</Checkpoint>
-              <TableName>SupReport</TableName>
-              <XFieldName>LeafSize.Script.LeafExpandedPosition</XFieldName>
-              <YFieldName>LeafSize.Script.MostRecentlyExpandedLeafSize</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter>[SD]=1</Filter>
-            </Series>
-            <Series>
-              <Name>ModelMaxLeafSize</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-2793984</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>Star</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Dot</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>SupReport</TableName>
-              <XFieldName>LeafSize.Script.LeafAppearedPosition</XFieldName>
-              <YFieldName>LeafSize.Script.MostRecentlyAppearedLeafMaxSize</YFieldName>
+              <TableName>MaxLeafSizeReport</TableName>
+              <XFieldName>MaxLeafSize.Script.LeafPosition</XFieldName>
+              <YFieldName>MaxLeafSize.Script.MaxLeafSize</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -13617,197 +13570,13 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <Checkpoint>Current</Checkpoint>
               <TableName>LeafSize</TableName>
-              <XFieldName>LeafSize.Script.LeafExpandedPosition</XFieldName>
-              <YFieldName>LeafSize.Script.MostRecentlyExpandedLeafSize</YFieldName>
+              <XFieldName>MaxLeafSize.Script.LeafPosition</XFieldName>
+              <YFieldName>MaxLeafSize.Script.MaxLeafSize</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
               <Filter>[SD]=1</Filter>
-            </Series>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>SD2</Name>
-            <Series>
-              <Name>PredLeafSize</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>SupReport</TableName>
-              <XFieldName>LeafSize.Script.LeafExpandedPosition</XFieldName>
-              <YFieldName>LeafSize.Script.MostRecentlyExpandedLeafSize</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter>[SD]=2</Filter>
-            </Series>
-            <Series>
-              <Name>ModelMaxLeafSize</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-2793984</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>Star</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Dot</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>SupReport</TableName>
-              <XFieldName>LeafSize.Script.LeafAppearedPosition</XFieldName>
-              <YFieldName>LeafSize.Script.MostRecentlyAppearedLeafMaxSize</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter>[SD]=2</Filter>
-            </Series>
-            <Series>
-              <Name>ObsLeafSize</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-2793984</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledCircle</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>LeafSize</TableName>
-              <XFieldName>LeafSize.Script.LeafExpandedPosition</XFieldName>
-              <YFieldName>LeafSize.Script.MostRecentlyExpandedLeafSize</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter>[SD]=2</Filter>
-            </Series>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>SD3</Name>
-            <Series>
-              <Name>PredLeafSize</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>SupReport</TableName>
-              <XFieldName>LeafSize.Script.LeafExpandedPosition</XFieldName>
-              <YFieldName>LeafSize.Script.MostRecentlyExpandedLeafSize</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter>[SD]=3</Filter>
-            </Series>
-            <Series>
-              <Name>ModelMaxLeafSize</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-2793984</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>Star</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Dot</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>SupReport</TableName>
-              <XFieldName>LeafSize.Script.LeafAppearedPosition</XFieldName>
-              <YFieldName>LeafSize.Script.MostRecentlyAppearedLeafMaxSize</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter>[SD]=3</Filter>
-            </Series>
-            <Series>
-              <Name>ObsLeafSize</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-2793984</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledCircle</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>LeafSize</TableName>
-              <XFieldName>LeafSize.Script.LeafExpandedPosition</XFieldName>
-              <YFieldName>LeafSize.Script.MostRecentlyExpandedLeafSize</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter>[SD]=3</Filter>
             </Series>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Axis>
@@ -15008,9 +14777,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <SowingDate>2014-10-15</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -24362,9 +24131,9 @@ This was a sowing date by irrigation trial conducted at Lincoln. The following w
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>1999-05-28</SowingDate>
-                  <Popn>300</Popn>
                   <SowDepth>20</SowDepth>
+                  <Popn>300</Popn>
+                  <SowingDate>1999-05-28</SowingDate>
                   <CultivarName>Dash</CultivarName>
                 </Script>
                 <Code><![CDATA[using System;
@@ -34528,8 +34297,8 @@ namespace Models
                   <IncludeInDocumentation>false</IncludeInDocumentation>
                   <Script>
                     <TOS>1</TOS>
-                    <Population>120</Population>
                     <Cultivar>Grimmett</Cultivar>
+                    <Population>120</Population>
                   </Script>
                   <Code><![CDATA[
 using System;
