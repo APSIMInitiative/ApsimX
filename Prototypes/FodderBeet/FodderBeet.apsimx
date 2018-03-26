@@ -2300,7 +2300,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
               <Y>
                 <double>100</double>
                 <double>100</double>
-                <double>60</double>
+                <double>50</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2590,27 +2590,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
-          <WeightedTemperatureFunction>
-            <Name>FT</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>0</double>
-                <double>18</double>
-                <double>26</double>
-                <double>45</double>
-              </X>
-              <Y>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>0.1</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MaximumTemperatureWeighting>1</MaximumTemperatureWeighting>
-          </WeightedTemperatureFunction>
           <LinearInterpolationFunction>
             <Name>FW</Name>
             <XYPairs>
@@ -2630,6 +2609,27 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
+          <WeightedTemperatureFunction>
+            <Name>FT</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <X>
+                <double>0</double>
+                <double>18</double>
+                <double>26</double>
+                <double>45</double>
+              </X>
+              <Y>
+                <double>0.1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0.1</double>
+              </Y>
+            </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
+          </WeightedTemperatureFunction>
           <RUECO2Function>
             <Name>FCO2</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6007,7 +6007,7 @@ namespace Models
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
-              <Maximum>300</Maximum>
+              <Maximum>NaN</Maximum>
               <Interval>NaN</Interval>
             </Axis>
             <Axis>
@@ -6426,7 +6426,7 @@ namespace Models
               <Title>Leaf_N (g/m2)</Title>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
-              <Maximum>12</Maximum>
+              <Maximum>NaN</Maximum>
               <Interval>2</Interval>
             </Axis>
             <Axis>
@@ -14197,7 +14197,7 @@ namespace Models
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
-              <Maximum>2500</Maximum>
+              <Maximum>NaN</Maximum>
               <Interval>500</Interval>
             </Axis>
             <Axis>
@@ -22776,7 +22776,7 @@ namespace Models
                 <Title>Crop Biomass (g/m2)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>NaN</Minimum>
-                <Maximum>300</Maximum>
+                <Maximum>NaN</Maximum>
                 <Interval>NaN</Interval>
               </Axis>
               <Axis>
