@@ -2394,7 +2394,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.086</FixedValue>
+          <FixedValue>0.05</FixedValue>
           <Units>g</Units>
         </Constant>
         <PhaseLookup>
@@ -6263,7 +6263,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Name>Dash</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Leaf].ExtinctionCoeff.FixedValue  = 0.5</Command>
-            <Command>[Root].RootFrontVelocity.PotentialRootFrontVelocity.PostEmergence.Value.FixedValue = 15</Command>
+            <Command>[Root].RootFrontVelocity.PotentialRootFrontVelocity.PostEmergence.Value.FixedValue = 20</Command>
           </Cultivar>
           <Cultivar>
             <Name>Doyen</Name>
@@ -7362,10 +7362,10 @@ namespace Models
                     <double>0.07</double>
                     <double>0.06</double>
                     <double>0.05</double>
-                    <double>0.02</double>
-                    <double>0.02</double>
-                    <double>0.02</double>
-                    <double>0.02</double>
+                    <double>0.04</double>
+                    <double>0.03</double>
+                    <double>0.03</double>
+                    <double>0.03</double>
                     <double>0.02</double>
                   </KL>
                   <XF>
@@ -7744,8 +7744,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>10</InitialRootDepth>
                   <Cultivar>Booma</Cultivar>
+                  <InitialRootDepth>10</InitialRootDepth>
                   <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -7986,6 +7986,19 @@ namespace Models
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </SoluteManager>
+            <Report>
+              <Name>SupReport</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Clock].DoReport</string>
+              </EventNames>
+            </Report>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -9092,7 +9105,7 @@ namespace Models
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
-            <TableName>DailyReport</TableName>
+            <TableName>SupReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ProfileWater</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -35670,5 +35683,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>256</ExplorerWidth>
+  <ExplorerWidth>283</ExplorerWidth>
 </Simulations>
