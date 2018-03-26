@@ -558,11 +558,23 @@ namespace UserInterface.Presenters
                 foreach (IModel child in Apsim.ChildrenRecursively(model))
                     child.IncludeInDocumentation = model.IncludeInDocumentation;
                 explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+                explorerPresenter.Refresh();
             }
             catch (Exception err)
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
+
+        [ContextMenu(MenuName = "Show documentation status", IsToggle = true)]
+        public void ShowIncludeInDocumentation(object sender, EventArgs e)
+        {
+            explorerPresenter.ShowIncludeInDocumentation = !explorerPresenter.ShowIncludeInDocumentation;
+        }
+
+        public bool ShowIncludeInDocumentationChecked()
+        {
+            return explorerPresenter != null ? explorerPresenter.ShowIncludeInDocumentation : false;
         }
 
         /// <summary>

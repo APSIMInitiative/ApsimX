@@ -23,6 +23,8 @@ namespace UserInterface.Interfaces
         public string ResourceNameForImage;
         /// <summary>The children</summary>
         public List<NodeDescriptionArgs> Children = new List<NodeDescriptionArgs>();
+        /// <summary>Whether this node will be included in auto-docs.</summary>
+        public bool IncludeInDocumentation { get; set; }
     }
 
     /// <summary>A class for holding info about a collection of menu items.</summary>
@@ -167,6 +169,11 @@ namespace UserInterface.Interfaces
         /// <summary>Gets or sets the shortcut keys.</summary>
         /// <value>The shortcut keys.</value>
         string[] ShortcutKeys { get; set; }
+
+        /// <summary>
+        /// If true, a small tick will be displayed beside nodes which are to be included in auto-docs.
+        /// </summary>
+        bool ShowIncludeInDocumentation { get; set; }
 
         /// <summary>Populate the main menu tool strip.</summary>
         /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
