@@ -42,6 +42,8 @@ namespace UserInterface.Presenters
         /// <summary>Using advanced mode</summary>
         private bool advancedMode = false;
 
+        private bool showDocumentationStatus;
+
         /// <summary>Initializes a new instance of the <see cref="ExplorerPresenter" /> class</summary>
         /// <param name="mainPresenter">The presenter for the main window</param>
         public ExplorerPresenter(MainPresenter mainPresenter)
@@ -49,6 +51,22 @@ namespace UserInterface.Presenters
             this.MainPresenter = mainPresenter;
         }
 
+        /// <summary>
+        /// Gets or sets whether graphical ticks should be displayed next to nodes that
+        /// are to be included in auto documentation.
+        /// </summary>
+        public bool ShowIncludeInDocumentation
+        {
+            get
+            {
+                return view.ShowIncludeInDocumentation;
+            }
+            set
+            {
+                view.ShowIncludeInDocumentation = value;
+                Refresh();
+            }
+        }
         /// <summary>Gets or sets the command history for this presenter</summary>
         /// <value>The command history.</value>
         public CommandHistory CommandHistory { get; set; }
@@ -976,7 +994,7 @@ namespace UserInterface.Presenters
                     description.Children.Add(this.GetNodeDescription(child));
                 }
             }
-
+            description.IncludeInDocumentation = model.IncludeInDocumentation;
             return description;
         }
 
