@@ -60,6 +60,11 @@
         /// Gets the current line number
         /// </summary>
         int CurrentLineNumber { get; }
+
+        /// <summary>
+        /// Get the current location of the caret (column and line)
+        /// </summary>
+        System.Drawing.Rectangle Location { get; set; }
     }
 
     /// <summary>
@@ -96,6 +101,8 @@
         private Mono.TextEditor.MonoTextEditor textEditor;        
         private Menu Popup = new Menu();
         private AccelGroup accel = new AccelGroup();
+        private int hScrollPos = -1;
+        private int vScrollPos = -1;
 
         /// <summary>
         /// Default constructor that configures the Completion form.
@@ -116,6 +123,8 @@
             textEditor.TextArea.FocusInEvent += OnTextBoxEnter;
             textEditor.TextArea.FocusOutEvent += OnTextBoxLeave;
             textEditor.TextArea.KeyPressEvent += OnKeyPress;
+            scroller.Hadjustment.Changed += Hadjustment_Changed;
+            scroller.Vadjustment.Changed += Vadjustment_Changed;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
 
             AddContextActionWithAccel("Cut", OnCut, "Ctrl+X");
@@ -140,9 +149,11 @@
             textEditor.Document.LineChanged -= OnTextHasChanged;
             textEditor.TextArea.FocusInEvent -= OnTextBoxEnter;
             textEditor.TextArea.FocusOutEvent -= OnTextBoxLeave;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
             textEditor.TextArea.KeyPressEvent -= OnKeyPress;
-            
+            scroller.Hadjustment.Changed -= Hadjustment_Changed;
+            scroller.Vadjustment.Changed -= Vadjustment_Changed;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+
             intellisense.ContextItemsNeeded -= ContextItemsNeeded;
             intellisense.ItemSelected -= InsertCompletionItemIntoTextBox;
             intellisense.LoseFocus -= HideCompletionWindow;
@@ -193,6 +204,7 @@
                 textEditor.Text = value;
                 textEditor.Document.MimeType = "text/x-csharp";
                 textEditor.Options.EnableSyntaxHighlighting = true;
+                textEditor.Options.HighlightMatchingBracket = true;
             }
         }
 
@@ -235,6 +247,50 @@
             get
             {
                 return textEditor.Caret.Line;
+            }
+        }
+
+        /// <summary>
+        /// Get the current location of the caret (column and line) and the current scrolling position
+        /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
+        /// way to store these values.
+        /// </summary>
+        public System.Drawing.Rectangle Location
+        {
+            get
+            {
+                DocumentLocation loc = textEditor.Caret.Location;
+                return new System.Drawing.Rectangle(loc.Column, loc.Line, Convert.ToInt32(scroller.Hadjustment.Value), Convert.ToInt32(scroller.Vadjustment.Value));
+            }
+            set
+            {
+                textEditor.Caret.Location = new DocumentLocation(value.Y, value.X);
+                hScrollPos = value.Width;
+                vScrollPos = value.Height;
+                // Unfortunately, we often can't set the scroller adjustments immediately, as they may not have been set up yet
+                // We make these calls to set the position if we can, but otherwise we'll just hold on to the values until the scrollers are ready
+                Hadjustment_Changed(this, null);
+                Vadjustment_Changed(this, null);
+            }
+        }
+
+        private void Vadjustment_Changed(object sender, EventArgs e)
+        {
+            if (vScrollPos > 0 && vScrollPos < scroller.Vadjustment.Upper)
+            {
+                scroller.Vadjustment.Value = vScrollPos;
+                scroller.Vadjustment.ChangeValue();
+                vScrollPos = -1;
+            }
+        }
+
+        private void Hadjustment_Changed(object sender, EventArgs e)
+        {
+            if (hScrollPos > 0 && hScrollPos < scroller.Hadjustment.Upper)
+            {
+                scroller.Hadjustment.Value = hScrollPos;
+                scroller.Hadjustment.ChangeValue();
+                hScrollPos = -1;
             }
         }
 

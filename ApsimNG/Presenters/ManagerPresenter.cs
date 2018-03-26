@@ -63,6 +63,7 @@ namespace UserInterface.Presenters
             this.managerView.Editor.AddContextSeparator();
             this.managerView.Editor.AddContextActionWithAccel("Test compile", this.OnDoCompile, "Ctrl+T");
             this.managerView.Editor.AddContextActionWithAccel("Reformat", this.OnDoReformat, "Ctrl+R");
+            this.managerView.Editor.Location = manager.Location;
             this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
         }
 
@@ -201,6 +202,7 @@ namespace UserInterface.Presenters
 
             try
             {
+                this.manager.Location = this.managerView.Editor.Location;
                 string code = this.managerView.Editor.Text;
 
                 // set the code property manually first so that compile error can be trapped via
