@@ -6235,7 +6235,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>C:\Program Files\APSIM2018.03.09.2457\Examples\WeatherFiles\lincoln.met</FileName>
+          <FileName>C:\Program Files (x86)\APSIM2017.10.02.2025\Examples\WeatherFiles\lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <SoilArbitrator>
@@ -6529,11 +6529,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1996-10-31</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>450</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>1996-10-31</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -11243,11 +11243,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2000-10-24</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>100</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2000-10-24</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -14773,11 +14773,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2000-10-24</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2000-10-24</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -18772,11 +18772,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2000-10-24</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>100</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2000-10-24</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -22682,11 +22682,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2000-10-24</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>100</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2000-10-24</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -26818,11 +26818,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2014-10-08</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>100</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2014-10-08</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -30619,11 +30619,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1995-06-01</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>1995-06-01</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -34477,11 +34477,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1999-08-01</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>1999-08-01</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -39514,11 +39514,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1994-05-05</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>1994-05-05</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -42916,11 +42916,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1998-06-09</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>1998-06-09</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -46013,11 +46013,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1979-04-30</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>1979-04-30</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -49257,11 +49257,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1998-08-17</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>300</SowingRate>
               <CultivarName>Sceptre</CultivarName>
-              <SowingDate>1998-08-17</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -52807,11 +52807,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>0001-01-01</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>100</SowingRate>
               <CultivarName>Sceptre</CultivarName>
-              <SowingDate>0001-01-01</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -55989,11 +55989,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1988-05-26</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>300</SowingRate>
               <CultivarName>Trifecta</CultivarName>
-              <SowingDate>1988-05-26</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -63466,11 +63466,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1993-09-27</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>70</SowingRate>
               <CultivarName>Sceptre</CultivarName>
-              <SowingDate>1993-09-27</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -67351,11 +67351,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1990-10-11</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>southern_special</CultivarName>
-              <SowingDate>1990-10-11</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -75790,11 +75790,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1998-08-26</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>30</SowingRate>
               <CultivarName>Sceptre</CultivarName>
-              <SowingDate>1998-08-26</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -79333,11 +79333,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2010-04-19</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2010-04-19</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -82282,11 +82282,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2012-10-18</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>WL611</CultivarName>
-              <SowingDate>2012-10-18</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -85264,11 +85264,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2010-03-29</SowingDate>
               <RowSpacing>175</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>250</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2010-03-29</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -88250,11 +88250,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2010-05-15</SowingDate>
               <RowSpacing>175</RowSpacing>
               <SowingDepth>15</SowingDepth>
               <SowingRate>350</SowingRate>
               <CultivarName>Sceptre</CultivarName>
-              <SowingDate>2010-05-15</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -90927,5 +90927,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>282</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
