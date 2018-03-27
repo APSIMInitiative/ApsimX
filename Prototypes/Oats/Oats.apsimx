@@ -6390,7 +6390,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
-                <double>0.5</double>
+                <double>1</double>
                 <double>1</double>
               </X>
               <Y>
@@ -9018,6 +9018,7 @@ late drought increased screenings.
                     <double>0.16</double>
                     <double>0.09</double>
                     <double>0.06</double>
+                    <double>0.06</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
@@ -9025,11 +9026,13 @@ late drought increased screenings.
                     <double>0.04</double>
                     <double>0.04</double>
                     <double>0.05</double>
+                    <double>0.04</double>
                     <double>0.03</double>
                     <double>0.02</double>
                     <double>0.01</double>
                   </KL>
                   <XF>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -9050,11 +9053,13 @@ late drought increased screenings.
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <BD>
                   <double>1.311</double>
                   <double>1.524</double>
                   <double>1.65</double>
+                  <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
@@ -9070,6 +9075,7 @@ late drought increased screenings.
                   <double>0.16</double>
                   <double>0.09</double>
                   <double>0.06</double>
+                  <double>0.06</double>
                 </AirDry>
                 <LL15>
                   <double>0.12</double>
@@ -9080,6 +9086,7 @@ late drought increased screenings.
                   <double>0.16</double>
                   <double>0.09</double>
                   <double>0.06</double>
+                  <double>0.06</double>
                 </LL15>
                 <DUL>
                   <double>0.32</double>
@@ -9088,7 +9095,8 @@ late drought increased screenings.
                   <double>0.24</double>
                   <double>0.23</double>
                   <double>0.23</double>
-                  <double>0.13</double>
+                  <double>0.25</double>
+                  <double>0.25</double>
                   <double>0.17</double>
                 </DUL>
                 <SAT>
@@ -9100,11 +9108,13 @@ late drought increased screenings.
                   <double>0.34</double>
                   <double>0.31</double>
                   <double>0.31</double>
+                  <double>0.31</double>
                 </SAT>
                 <KS>
                   <double>4832.039</double>
                   <double>389.229</double>
                   <double>16.362</double>
+                  <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
@@ -9124,6 +9134,7 @@ late drought increased screenings.
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <SW>
                   <double>0.32</double>
@@ -9134,6 +9145,7 @@ late drought increased screenings.
                   <double>0.23</double>
                   <double>0.13</double>
                   <double>0.17</double>
+                  <double>0.27</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>ppm</NH4Units>
@@ -9248,6 +9260,7 @@ late drought increased screenings.
                     <double>0.149</double>
                     <double>0.053</double>
                     <double>0.061</double>
+                    <double>0.06</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
@@ -9257,9 +9270,11 @@ late drought increased screenings.
                     <double>0.05</double>
                     <double>0.02</double>
                     <double>0.02</double>
-                    <double>0</double>
+                    <double>0.01</double>
+                    <double>0.01</double>
                   </KL>
                   <XF>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -9280,11 +9295,13 @@ late drought increased screenings.
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <BD>
                   <double>1.311</double>
                   <double>1.524</double>
                   <double>1.65</double>
+                  <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
@@ -9300,6 +9317,7 @@ late drought increased screenings.
                   <double>0.149</double>
                   <double>0.053</double>
                   <double>0.061</double>
+                  <double>0.06</double>
                 </AirDry>
                 <LL15>
                   <double>0.1</double>
@@ -9310,6 +9328,7 @@ late drought increased screenings.
                   <double>0.149</double>
                   <double>0.053</double>
                   <double>0.061</double>
+                  <double>0.06</double>
                 </LL15>
                 <DUL>
                   <double>0.3</double>
@@ -9320,6 +9339,7 @@ late drought increased screenings.
                   <double>0.28</double>
                   <double>0.107</double>
                   <double>0.122</double>
+                  <double>0.17</double>
                 </DUL>
                 <SAT>
                   <double>0.419</double>
@@ -9330,6 +9350,7 @@ late drought increased screenings.
                   <double>0.342</double>
                   <double>0.307</double>
                   <double>1.31</double>
+                  <double>0.31</double>
                 </SAT>
                 <KS>
                   <double>4832.039</double>
@@ -9339,14 +9360,8 @@ late drought increased screenings.
                   <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
-                  <double>0.05</double>
-                  <double>0.05</double>
-                  <double>0.15</double>
-                  <double>0.13</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.05</double>
-                  <double>0.06</double>
+                  <double>97</double>
+                  <double>97.995</double>
                 </KS>
               </Water>
               <Memo>
@@ -9366,6 +9381,7 @@ late drought increased screenings.
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <SW>
                   <double>0.3</double>
@@ -9376,6 +9392,7 @@ late drought increased screenings.
                   <double>0.28</double>
                   <double>0.11</double>
                   <double>0.12</double>
+                  <double>0.27</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>ppm</NH4Units>
@@ -9426,6 +9443,7 @@ late drought increased screenings.
                     <double>0.18</double>
                     <double>0.053</double>
                     <double>0.061</double>
+                    <double>0.06</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
@@ -9436,8 +9454,10 @@ late drought increased screenings.
                     <double>0.03</double>
                     <double>0.02</double>
                     <double>0.01</double>
+                    <double>0.01</double>
                   </KL>
                   <XF>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -9458,11 +9478,13 @@ late drought increased screenings.
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <BD>
                   <double>1.311</double>
                   <double>1.524</double>
                   <double>1.65</double>
+                  <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
@@ -9478,6 +9500,7 @@ late drought increased screenings.
                   <double>0.18</double>
                   <double>0.05</double>
                   <double>0.06</double>
+                  <double>0.06</double>
                 </AirDry>
                 <LL15>
                   <double>0.1</double>
@@ -9487,6 +9510,7 @@ late drought increased screenings.
                   <double>0.17</double>
                   <double>0.18</double>
                   <double>0.05</double>
+                  <double>0.06</double>
                   <double>0.06</double>
                 </LL15>
                 <DUL>
@@ -9498,6 +9522,7 @@ late drought increased screenings.
                   <double>0.28</double>
                   <double>0.2</double>
                   <double>0.22</double>
+                  <double>0.17</double>
                 </DUL>
                 <SAT>
                   <double>0.42</double>
@@ -9508,7 +9533,19 @@ late drought increased screenings.
                   <double>0.34</double>
                   <double>0.31</double>
                   <double>0.31</double>
+                  <double>0.31</double>
                 </SAT>
+                <KS>
+                  <double>4800</double>
+                  <double>390</double>
+                  <double>16</double>
+                  <double>98</double>
+                  <double>97</double>
+                  <double>97</double>
+                  <double>97</double>
+                  <double>97</double>
+                  <double>97.995</double>
+                </KS>
               </Water>
               <Sample>
                 <Name>Initial water</Name>
@@ -9522,6 +9559,7 @@ late drought increased screenings.
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <SW>
                   <double>0.28</double>
@@ -9532,6 +9570,7 @@ late drought increased screenings.
                   <double>0.28</double>
                   <double>0.2</double>
                   <double>0.22</double>
+                  <double>0.27</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>ppm</NH4Units>
@@ -9602,6 +9641,7 @@ late drought increased screenings.
                     <double>0.16</double>
                     <double>0.08</double>
                     <double>0.061</double>
+                    <double>0.06</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
@@ -9612,8 +9652,10 @@ late drought increased screenings.
                     <double>0.02</double>
                     <double>0.02</double>
                     <double>0.01</double>
+                    <double>0.01</double>
                   </KL>
                   <XF>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -9634,11 +9676,13 @@ late drought increased screenings.
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <BD>
                   <double>1.311</double>
                   <double>1.524</double>
                   <double>1.65</double>
+                  <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
@@ -9654,6 +9698,7 @@ late drought increased screenings.
                   <double>0.16</double>
                   <double>0.08</double>
                   <double>0.06</double>
+                  <double>0.06</double>
                 </AirDry>
                 <LL15>
                   <double>0.1</double>
@@ -9663,6 +9708,7 @@ late drought increased screenings.
                   <double>0.16</double>
                   <double>0.16</double>
                   <double>0.08</double>
+                  <double>0.06</double>
                   <double>0.06</double>
                 </LL15>
                 <DUL>
@@ -9674,6 +9720,7 @@ late drought increased screenings.
                   <double>0.23</double>
                   <double>0.15</double>
                   <double>0.2</double>
+                  <double>0.17</double>
                 </DUL>
                 <SAT>
                   <double>0.42</double>
@@ -9684,11 +9731,13 @@ late drought increased screenings.
                   <double>0.34</double>
                   <double>0.31</double>
                   <double>0.31</double>
+                  <double>0.31</double>
                 </SAT>
                 <KS>
                   <double>4832.039</double>
                   <double>389.229</double>
                   <double>16.362</double>
+                  <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
@@ -9708,6 +9757,7 @@ late drought increased screenings.
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <SW>
                   <double>0.32</double>
@@ -9718,6 +9768,7 @@ late drought increased screenings.
                   <double>0.21</double>
                   <double>0.13</double>
                   <double>0.2</double>
+                  <double>0.27</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>ppm</NH4Units>
@@ -9824,6 +9875,7 @@ late drought increased screenings.
                     <double>0.149</double>
                     <double>0.1</double>
                     <double>0.06</double>
+                    <double>0.06</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
@@ -9833,9 +9885,11 @@ late drought increased screenings.
                     <double>0.05</double>
                     <double>0.02</double>
                     <double>0.02</double>
-                    <double>0</double>
+                    <double>0.01</double>
+                    <double>0.01</double>
                   </KL>
                   <XF>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -9856,6 +9910,7 @@ late drought increased screenings.
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <BD>
                   <double>1.31</double>
@@ -9866,6 +9921,7 @@ late drought increased screenings.
                   <double>1.6</double>
                   <double>1.6</double>
                   <double>1.6</double>
+                  <double>1.601</double>
                 </BD>
                 <AirDry>
                   <double>0.05</double>
@@ -9875,6 +9931,7 @@ late drought increased screenings.
                   <double>0.15</double>
                   <double>0.15</double>
                   <double>0.1</double>
+                  <double>0.06</double>
                   <double>0.06</double>
                 </AirDry>
                 <LL15>
@@ -9886,6 +9943,7 @@ late drought increased screenings.
                   <double>0.15</double>
                   <double>0.1</double>
                   <double>0.06</double>
+                  <double>0.06</double>
                 </LL15>
                 <DUL>
                   <double>0.25</double>
@@ -9895,6 +9953,7 @@ late drought increased screenings.
                   <double>0.2</double>
                   <double>0.25</double>
                   <double>0.19</double>
+                  <double>0.17</double>
                   <double>0.17</double>
                 </DUL>
                 <SAT>
@@ -9906,11 +9965,13 @@ late drought increased screenings.
                   <double>0.34</double>
                   <double>0.31</double>
                   <double>0.31</double>
+                  <double>0.31</double>
                 </SAT>
                 <KS>
                   <double>4832.039</double>
                   <double>389.229</double>
                   <double>16.362</double>
+                  <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
@@ -9930,6 +9991,7 @@ late drought increased screenings.
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <SW>
                   <double>0.25</double>
@@ -9940,6 +10002,7 @@ late drought increased screenings.
                   <double>0.25</double>
                   <double>0.19</double>
                   <double>0.17</double>
+                  <double>0.27</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>ppm</NH4Units>
@@ -10010,40 +10073,6 @@ late drought increased screenings.
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
-                  <Name>WheatSoil</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.08</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                  </LL>
-                  <KL>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.04</double>
-                    <double>0.025</double>
-                    <double>0.01</double>
-                    <double>0.005</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
                   <Name>OatsSoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
@@ -10055,6 +10084,7 @@ late drought increased screenings.
                     <double>0.149</double>
                     <double>0.1</double>
                     <double>0.06</double>
+                    <double>0.06</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
@@ -10064,11 +10094,13 @@ late drought increased screenings.
                     <double>0.05</double>
                     <double>0.02</double>
                     <double>0.02</double>
-                    <double>0</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
                   </KL>
                   <XF>
                     <double>1</double>
                     <double>0.2</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -10087,6 +10119,7 @@ late drought increased screenings.
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <BD>
                   <double>1.311</double>
@@ -10097,6 +10130,7 @@ late drought increased screenings.
                   <double>1.601</double>
                   <double>1.601</double>
                   <double>1.601</double>
+                  <double>1.6</double>
                 </BD>
                 <AirDry>
                   <double>0.05</double>
@@ -10106,6 +10140,7 @@ late drought increased screenings.
                   <double>0.15</double>
                   <double>0.149</double>
                   <double>0.1</double>
+                  <double>0.06</double>
                   <double>0.06</double>
                 </AirDry>
                 <LL15>
@@ -10117,6 +10152,7 @@ late drought increased screenings.
                   <double>0.149</double>
                   <double>0.1</double>
                   <double>0.06</double>
+                  <double>0.06</double>
                 </LL15>
                 <DUL>
                   <double>0.25</double>
@@ -10126,6 +10162,7 @@ late drought increased screenings.
                   <double>0.2</double>
                   <double>0.25</double>
                   <double>0.19</double>
+                  <double>0.17</double>
                   <double>0.17</double>
                 </DUL>
                 <SAT>
@@ -10137,11 +10174,13 @@ late drought increased screenings.
                   <double>0.342</double>
                   <double>0.307</double>
                   <double>0.309</double>
+                  <double>0.309</double>
                 </SAT>
                 <KS>
                   <double>4832.039</double>
                   <double>389.229</double>
                   <double>16.362</double>
+                  <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
                   <double>97.995</double>
@@ -10177,6 +10216,7 @@ late drought increased screenings.
                   <double>200</double>
                   <double>200</double>
                   <double>200</double>
+                  <double>400</double>
                 </Thickness>
                 <SWCON>
                   <double>0.7</double>
@@ -10187,8 +10227,10 @@ late drought increased screenings.
                   <double>0.95</double>
                   <double>0.95</double>
                   <double>0.95</double>
+                  <double>0.95</double>
                 </SWCON>
                 <KLAT>
+                  <double>0</double>
                   <double>0</double>
                   <double>0</double>
                   <double>0</double>
@@ -10707,6 +10749,49 @@ namespace Models
                 <string>[Clock].DoReport</string>
               </EventNames>
             </Report>
+            <Manager>
+              <Name>WaterTable</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Script>
+                <WaterTableRate>1600</WaterTableRate>
+              </Script>
+              <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Soil ThisSoil; 
+                    
+        [Description("WaterTable")]
+        public double WaterTableRate { get; set; }
+
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            ThisSoil.SoilWater.SetWaterTable(WaterTableRate);
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+        ThisSoil.SoilWater.SetWaterTable(WaterTableRate);
+        }
+        
+    }
+}
+       
+]]></Code>
+            </Manager>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -10717,6 +10802,11 @@ namespace Models
           <Name>AboveGroundWt</Name>
           <Series>
             <Name>Pred</Name>
+            <EventNamesOnGraph>
+              <Name>EventNamesOnGraph</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ColumnName>Oats.Phenology.CurrentStageName</ColumnName>
+            </EventNamesOnGraph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -10819,7 +10909,7 @@ namespace Models
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
-            <TableName>DailyReport</TableName>
+            <TableName>SupReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ProfileWater</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -12433,6 +12523,49 @@ namespace Models
               <TableName>Observed</TableName>
               <XFieldName>Clock.today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>160_200cm</Name>
+            <Series>
+              <Name>Pre</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16736653</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Soil.SoilWater.SW(9)</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -18015,6 +18148,72 @@ Layer  Depth (cm)
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>ProfileN</Name>
+            <Series>
+              <Name>Pred</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>EnviroReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>TotalSoilN</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Obs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Soil.SoilNitrogen.ProfileMineralN</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries />
           </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -37820,5 +38019,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>553</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
