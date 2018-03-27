@@ -3912,6 +3912,14 @@ date of Experiment 4 is assumed here.]]></MemoText>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
+    <ExcelInput>
+      <Name>ObservedData</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>0bserved.xlsx</FileName>
+      <SheetNames>
+        <string>ObservedData</string>
+      </SheetNames>
+    </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
       <Tests>
@@ -4151,14 +4159,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
       <ObservedTableName>ObservedData</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
-    <ExcelInput>
-      <Name>ExcelInput</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>0bserved.xlsx</FileName>
-      <SheetNames>
-        <string>ObservedData</string>
-      </SheetNames>
-    </ExcelInput>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </DataStore>
   <Folder>
@@ -10239,10 +10239,10 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>5</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
                   <SowingDate>2014-10-17</SowingDate>
-                  <InitialRootDepth>5</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -20735,8 +20735,8 @@ namespace Models
                   <Name>NitTreatments</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <NitAmount>0</NitAmount>
                     <SplitFactor>0</SplitFactor>
+                    <NitAmount>0</NitAmount>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -21609,5 +21609,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>283</ExplorerWidth>
+  <ExplorerWidth>655</ExplorerWidth>
 </Simulations>
