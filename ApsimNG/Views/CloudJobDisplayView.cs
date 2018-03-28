@@ -8,53 +8,6 @@ namespace UserInterface.Views
 {
     public class CloudJobDisplayView : ViewBase
     {
-        public Interfaces.ICloudJobPresenter Presenter { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the job download status.
-        /// </summary>
-        public string DownloadStatus
-        {
-            get { return lblDownloadStatus.Text; }
-            set
-            {
-                Invoke(delegate
-                {
-                    lblDownloadStatus.Text = value;
-                });
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the job load progress bar.
-        /// </summary>
-        public double JobLoadProgress
-        {
-            get { return loadingProgress.Adjustment.Value; }
-            set
-            {
-                // If the job load progress bar starts causing issues (e.g. not (dis)appearing correctly), 
-                // try using this class' Invoke() method rather than Gtk.Application.Invoke here.
-                Application.Invoke(delegate
-                {
-                    loadingProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), loadingProgress.Adjustment.Upper);
-                });
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the download progress bar.
-        /// </summary>
-        public double DownloadProgress
-        {
-            get { return downloadProgress.Adjustment.Value; }
-            set
-            {
-                // Set progresss bar to whichever is smaller - the value being passed in, or the maximum value the progress bar can take.
-                Invoke(delegate { downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper); });
-            }
-        }
-
         /// <summary>
         /// Whether or not only the jobs submitted by the user should be displayed.
         /// </summary>
@@ -322,6 +275,56 @@ namespace UserInterface.Views
             HideLoadingProgressBar();
         }
 
+        public Interfaces.ICloudJobPresenter Presenter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of the job download status.
+        /// </summary>
+        public string DownloadStatus
+        {
+            get { return lblDownloadStatus.Text; }
+            set
+            {
+                Invoke(delegate
+                {
+                    lblDownloadStatus.Text = value;
+                });
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the job load progress bar.
+        /// </summary>
+        public double JobLoadProgress
+        {
+            get { return loadingProgress.Adjustment.Value; }
+            set
+            {
+                // If the job load progress bar starts causing issues (e.g. not (dis)appearing correctly), 
+                // try using this class' Invoke() method rather than Gtk.Application.Invoke here.
+                Application.Invoke(delegate
+                {
+                    loadingProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), loadingProgress.Adjustment.Upper);
+                });
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the download progress bar.
+        /// </summary>
+        public double DownloadProgress
+        {
+            get { return downloadProgress.Adjustment.Value; }
+            set
+            {
+                // Set progresss bar to whichever is smaller - the value being passed in, or the maximum value the progress bar can take.
+                Invoke(delegate { downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper); });
+            }
+        }
+
+        /// <summary>
+        /// Unbinds the event handlers.
+        /// </summary>
         public void Detach()
         {
             RemoveEventHandlers();
@@ -648,7 +651,7 @@ namespace UserInterface.Views
             // In this case though, we check here to prevent the download pop-up from appearing if nothing is selected.
             if (jobIds.Count < 1)
             {
-                (Owner as MainView).ShowMessage("Unable to download jobs: no jobs are selected", Models.Core.Simulation.ErrorLevel.Information);
+                Presenter.ShowMessage("Unable to download jobs: no jobs are selected", Models.Core.Simulation.MessageType.Information);
                 return;
             }
             DownloadWindow dl = new DownloadWindow(Presenter, jobIds);

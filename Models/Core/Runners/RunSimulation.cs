@@ -121,15 +121,15 @@
                 string errorMessage = "ERROR in file: " + fileName + "\r\n" +
                                       "Simulation name: " + simulationToRun.Name + "\r\n";
                 if (err.InnerException == null)
-                    errorMessage += err.ToString();
+                    errorMessage += err.Message;
                 else
-                    errorMessage += err.InnerException.ToString();
-
+                    errorMessage += err.InnerException.Message;
+                
                 ISummary summary = Apsim.Find(simulationToRun, typeof(Summary)) as ISummary;
                 if (summary != null)
                     summary.WriteMessage(simulationToRun, errorMessage);
-
-                throw new Exception(errorMessage);
+                
+                throw new Exception(errorMessage, err);
             }
             finally
             {
