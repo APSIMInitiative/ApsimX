@@ -59,6 +59,12 @@ namespace UserInterface.Views
         public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
 
         /// <summary>
+        /// Invoked when the columns need to be reset to their default colours.
+        /// If this event handler is null, the default colours are assumed to be white.
+        /// </summary>
+        public event EventHandler<EventArgs> FormatColumns;
+
+        /// <summary>
         /// Is the user currently editing a cell?
         /// </summary>
         private bool userEditingCell = false;
@@ -693,9 +699,16 @@ namespace UserInterface.Views
                 mainWindow.Cursor = null;
         }
 
+        /// <summary>
+        /// Event handler for when the user clicks on a column header.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
         [GLib.ConnectBefore]
         private void HeaderClicked(object sender, ButtonPressEventArgs e)
         {
+            if (activeCol == null)
+                activeCol = new List<int>();
             if (e.Event.Button == 1)
             {
                 gridview.Selection.UnselectAll();
@@ -725,39 +738,17 @@ namespace UserInterface.Views
                 {
                     activeCol = new List<int> { colNo };
                 }
-
-                Gdk.Color bgColour, fgColour;
-                var style = Rc.GetStyle(gridview);
-                for (int i = 0; i < gridview.Columns.Length; i++)
-                {
-                    //bgColour = activeCol.Contains(i) ? new Gdk.Color(0, 0, 255) : new Gdk.Color(255, 255, 255);
-                    bgColour = activeCol.Contains(i) ? style.Backgrounds[3] : new Gdk.Color(255, 255, 255);
-                    fgColour = activeCol.Contains(i) ? new Gdk.Color(255, 255, 255) : new Gdk.Color(0, 0, 0);
-                    gridview.Columns[i].Cells.OfType<CellRendererText>().ToList().ForEach(cell =>
-                    {
-                        cell.BackgroundGdk = bgColour;
-                        cell.ForegroundGdk = fgColour;
-                    });
-                }
-
-                gridview.HideAll();
-                gridview.ShowAll();
-                while (GLib.MainContext.Iteration()) ;
+                HighlightColumns();
             }
-            else if (e.Event.Button == 3)
+            if (e.Event.Button == 3 && activeCol.Count >= 1)
             {
                 Menu headerMenu = new Menu();
-                Gdk.Key hotkey;
                 MenuItem copy = new MenuItem("Copy");
-                hotkey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), "C", false);
-                //copy.AddAccelerator("activate", accel, (uint)hotkey, Gdk.ModifierType.ControlMask, AccelFlags.Visible);
                 copy.Activated += CopyColumn;
                 copy.ShowAll();
                 headerMenu.Append(copy);
 
                 MenuItem paste = new MenuItem("Paste");
-                hotkey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), "V", false);
-                //paste.AddAccelerator("activate", accel, (uint)hotkey, Gdk.ModifierType.ControlMask, AccelFlags.Visible);
                 paste.Activated += PasteColumn;
                 paste.ShowAll();
                 headerMenu.Append(paste);
@@ -766,6 +757,44 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Highlights all selected columns and un-highlights all other columns.
+        /// </summary>
+        private void HighlightColumns()
+        {
+            // Reset all columns to default colour.
+            FormatColumns?.Invoke(this, new EventArgs());
+
+            Gdk.Color bgColour, fgColour;
+            foreach (int n in activeCol)
+            {
+                try
+                {
+                    // Attempt to get default highlighting colour from the user's selected theme.
+                    bgColour = gridview.Style.Base(StateType.Selected);
+                }
+                catch
+                {
+                    // Last resort - use the default highlighting colour in the theme packaged with Apsim.
+                    bgColour = new Gdk.Color(0, 120, 215);
+                }
+                fgColour = new Gdk.Color(255, 255, 255);
+
+                gridview.Columns[n].Cells.OfType<CellRendererText>().ToList().ForEach(cell =>
+                {
+                    cell.BackgroundGdk = bgColour;
+                    cell.ForegroundGdk = fgColour;
+                });
+            }
+            
+            gridview.QueueDraw();
+        }
+
+        /// <summary>
+        /// Calculates the index of the column which a given x-coordinate falls indside.
+        /// </summary>
+        /// <param name="x">x-coordinate relative to the <see cref="gridview"/>.</param>
+        /// <returns></returns>
         private int GetColumn(double x)
         {
             int width = 0;
@@ -779,16 +808,24 @@ namespace UserInterface.Views
             return i;
         }
 
+        /// <summary>
+        /// Copies data from all selected columns to the clipboard.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
         private void CopyColumn(object sender, EventArgs e)
         {
+            if (activeCol.Count < 1)
+                return;
             activeCol.Sort();
             StringBuilder buffer = new StringBuilder();
             for (int i = 0; i < DataSource.Rows.Count; i++)
             {
-                foreach (int j in activeCol)
+                buffer.Append(AsString(DataSource.Rows[i][activeCol[0]]));
+                for (int j = 1; j < activeCol.Count; j++)
                 {
-                    buffer.Append(AsString(DataSource.Rows[i][j]));
                     buffer.Append('\t');
+                    buffer.Append(AsString(DataSource.Rows[i][activeCol[j]]));
                 }
                 buffer.Append('\n');
             }
@@ -796,8 +833,16 @@ namespace UserInterface.Views
             cb.Text = buffer.ToString();
         }
 
+        /// <summary>
+        /// Pastes data from the clipboard into the selected column(s).
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
         private void PasteColumn(object sender, EventArgs e)
         {
+            if (activeCol == null || activeCol.Count < 1)
+                return;
+
             List<IGridCell> cellsChanged = new List<IGridCell>();
             activeCol.Sort();
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
@@ -806,38 +851,35 @@ namespace UserInterface.Views
             {
                 string[] lines = text.Split(Environment.NewLine.ToCharArray());
                 string[] firstLine = lines[0].Split('\t');
+
+                // The indices of the columns of the gridview which we will paste the data into.
                 List<int> columnIndices = new List<int>();
+
                 if (firstLine.Length == activeCol.Count)
                 {
                     columnIndices = activeCol;
                 }
                 else if (gridview.Columns.Length - activeCol.Aggregate((x, y) => Math.Min(x, y)) - 1 > firstLine.Length)
                 {
-                    // paste into contiguous columns starting at earliest selected column
+                    // Paste into contiguous columns starting at earliest selected column.
                     columnIndices = Enumerable.Range(activeCol.Aggregate((x, y) => Math.Min(x, y)), firstLine.Length).ToList();
                 }
                 else if (firstLine.Length < gridview.Columns.Length - 1)
                 {
-                    columnIndices = Enumerable.Range(0, gridview.Columns.Length).ToList();
+                    // Paste into contiguous columns starting from the first column in the gridview.
+                    columnIndices = Enumerable.Range(0, firstLine.Length).ToList();
                 }
                 else
                 {
                     throw new Exception("Unable to paste " + firstLine.Length + " columns of data into a grid with " + gridview.Columns.Length + " columns.");
                 }
+
                 for (int i = 0; i < lines.Length; i++)
                 {
                     if (i < this.RowCount && lines[i].Length > 0)
                     {
                         string[] words = lines[i].Split('\t');
-                            // if number of columns selected == number of columns being pasted:
-                                // paste into the selected columns
-                            // else if number of columns being pasted > number of selected columns
-                                // if we can fit the data in the grid:
-                                    // paste them in contiguous columns starting at the first selected column
-                                // if we can't fit the data in the grid:
-                                    // paste in as much as possible?
-                            // if number of columns being pasted < number of selected columns:
-                                // paste them in contiguous columns starting at the first selected column
+                        
                         for (int j = 0; j < columnIndices.Count; j++)
                         {
                             // Make sure there are enough rows in the data source.
@@ -845,7 +887,7 @@ namespace UserInterface.Views
                             {
                                 this.DataSource.Rows.Add(this.DataSource.NewRow());
                             }
-
+                            
                             IGridCell cell = this.GetCell(columnIndices[j], i);
                             IGridColumn column = this.GetColumn(columnIndices[j]);
                             if (!column.ReadOnly)
@@ -2037,6 +2079,8 @@ namespace UserInterface.Views
         [GLib.ConnectBefore] 
         private void OnButtonDown(object sender, ButtonPressEventArgs e)
         {
+            activeCol = new List<int>();
+            HighlightColumns();
             if (e.Event.Button == 3)
             {
                 if (this.ColumnHeaderClicked != null)
