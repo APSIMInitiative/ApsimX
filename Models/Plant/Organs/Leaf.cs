@@ -1188,19 +1188,27 @@ namespace Models.PMF.Organs
                 apexGroupAge.Add(1);
             }
 
-            while (apexGroupSize.Sum() > Structure.ApexNum)
+            if (apexGroupSize.Count > 1)
             {
-                double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
-                double remainingRemoveApex = removeApex;
-                for (int i = apexGroupSize.Count - 1; i > 0; i--)
+                while (apexGroupSize.Sum() > Structure.ApexNum)
                 {
-                    double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
-                    apexGroupSize[i] -= remove;
-                    remainingRemoveApex -= remove;
-                    if (remainingRemoveApex <= 0)
-                        break;
+                    double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
+                    double remainingRemoveApex = removeApex;
+                    for (int i = apexGroupSize.Count - 1; i > 0; i--)
+                    {
+                        double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
+                        apexGroupSize[i] -= remove;
+                        remainingRemoveApex -= remove;
+                        if (remainingRemoveApex <= 0)
+                            break;
+                    }
                 }
             }
+            else
+            {
+                // not sure what to do here as the while loop would not have exited.... ever!
+            }
+            
             NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
             NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
         }
