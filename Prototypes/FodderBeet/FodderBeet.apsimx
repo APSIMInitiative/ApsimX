@@ -2512,163 +2512,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
-      <GenericOrgan>
-        <Name>Petiole</Name>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.5</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.02</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.01</FixedValue>
-        </Constant>
-        <PhaseBasedSwitch>
-          <Name>NitrogenDemandSwitch</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Germination</Start>
-          <End>Maturity</End>
-        </PhaseBasedSwitch>
-        <Constant>
-          <Name>NRetranslocationFactor</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.005</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>DMRetranslocationFactor</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.0025</FixedValue>
-        </Constant>
-        <MaximumFunction>
-          <Name>DMDemandFunction</Name>
-          <Constant>
-            <Name>Constant1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0</FixedValue>
-          </Constant>
-          <MultiplyFunction>
-            <Name>MultiplyFunction</Name>
-            <Constant>
-              <Name>Constant</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>1</FixedValue>
-            </Constant>
-            <SubtractFunction>
-              <Name>SubtractFunction</Name>
-              <VariableReference>
-                <Name>leafwt</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[FodderBeet].Leaf.Live.Wt</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>Petiolewt</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[FodderBeet].Petiole.Wt</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </SubtractFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </MultiplyFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </MaximumFunction>
-        <VariableReference>
-          <Name>SenescenceRate</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Leaf].FractionDied</VariableName>
-        </VariableReference>
-        <Constant>
-          <Name>DMReallocationFactor</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.8</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.94</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>InitialWtFunction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
-          <Units>g/m^2</Units>
-        </Constant>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
-          <Units>/d</Units>
-        </Constant>
-        <Constant>
-          <Name>MaintenanceRespirationFunction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
-          <Units>0-1</Units>
-        </Constant>
-        <Constant>
-          <Name>DMConversionEfficiency</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1</FixedValue>
-          <Units>0-1</Units>
-        </Constant>
-        <BiomassRemoval>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0.5</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.6</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0.6</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </BiomassRemoval>
-        <VariableReference>
-          <Name>CriticalNConc</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Petiole].MinimumNConc.Value()</VariableName>
-        </VariableReference>
-        <Constant>
-          <Name>RemobilisationCost</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>CarbonConcentration</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </GenericOrgan>
       <Leaf>
         <Name>Leaf</Name>
         <LeafCohort>
@@ -3629,6 +3472,163 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
+      <GenericOrgan>
+        <Name>Petiole</Name>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.5</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.02</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.01</FixedValue>
+        </Constant>
+        <PhaseBasedSwitch>
+          <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Start>Germination</Start>
+          <End>Maturity</End>
+        </PhaseBasedSwitch>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.005</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.0025</FixedValue>
+        </Constant>
+        <MaximumFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>MinDemand</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <MultiplyFunction>
+            <Name>PotDemand</Name>
+            <Constant>
+              <Name>Ratio</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <SubtractFunction>
+              <Name>SubtractFunction</Name>
+              <VariableReference>
+                <Name>leafwt</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[FodderBeet].Leaf.Live.Wt</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>Petiolewt</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[FodderBeet].Petiole.Wt</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </SubtractFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </MaximumFunction>
+        <VariableReference>
+          <Name>SenescenceRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Leaf].FractionDied</VariableName>
+        </VariableReference>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.8</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.94</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </BiomassRemoval>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Petiole].MinimumNConc.Value()</VariableName>
+        </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </GenericOrgan>
       <Root>
         <Name>Root</Name>
         <LinearInterpolationFunction>
@@ -3950,6 +3950,9 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Command>[Leaf].CohortParameters.NRetranslocationFactor.FixedValue = 0.00</Command>
           <Command>[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.00</Command>
           <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaf.FixedValue = 30000</Command>
+          <Command>[Petiole].NRetranslocationFactor.FixedValue = 0</Command>
+          <Command>[Petiole].DMRetranslocationFactor.FixedValue = 0</Command>
+          <Command>[Petiole].DMDemandFunction.PotDemand.Ratio.FixedValue = 1.2</Command>
         </Cultivar>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </CultivarFolder>
@@ -10360,10 +10363,10 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>5</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
                   <SowingDate>2014-10-17</SowingDate>
-                  <InitialRootDepth>5</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -22350,8 +22353,8 @@ namespace Models
                   <Name>NitTreatments</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <NitAmount>0</NitAmount>
                     <SplitFactor>0</SplitFactor>
+                    <NitAmount>0</NitAmount>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
