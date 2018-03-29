@@ -16,7 +16,6 @@ namespace UserInterface.Presenters
     using Models.Factorial;
     using Models.Soils;
     using APSIM.Shared.Utilities;
-    using Models.Graph;
     using Models.Storage;
     using Models.Report;
 
@@ -107,7 +106,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception ex)
                 {
-                    this.explorerPresenter.MainPresenter.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
+                    this.explorerPresenter.MainPresenter.ShowError(ex);
                 }
             }
         }
@@ -205,7 +204,7 @@ namespace UserInterface.Presenters
                 if (duplicates.Count > 0)
                 {
                     string errorMessage = "Duplicate simulation names found " + StringUtilities.BuildString(duplicates.ToArray(), ", ");
-                    explorerPresenter.MainPresenter.ShowMessage(errorMessage, Simulation.ErrorLevel.Error);
+                    explorerPresenter.MainPresenter.ShowError(errorMessage);
                 }
                 else
                 {
@@ -245,7 +244,7 @@ namespace UserInterface.Presenters
                 string errorMessages = currentSoil.Check(false);
                 if (errorMessages != string.Empty)
                 {
-                    this.explorerPresenter.MainPresenter.ShowMessage(errorMessages, Simulation.ErrorLevel.Error);
+                    this.explorerPresenter.MainPresenter.ShowError(errorMessages);
                 }
             }
         }
@@ -271,7 +270,7 @@ namespace UserInterface.Presenters
             }
             catch (ApsimXException ex)
             {
-                this.explorerPresenter.MainPresenter.ShowMessage(ex.Message, Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(ex);
             }
             finally
             {
@@ -307,11 +306,11 @@ namespace UserInterface.Presenters
                 // Run all child model post processors.
                 foreach (IPostSimulationTool tool in Apsim.Children(storage as Model, typeof(IPostSimulationTool)))
                     tool.Run(storage);
-                this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.ErrorLevel.Information);
+                this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
             catch (Exception err)
             {
-                this.explorerPresenter.MainPresenter.ShowMessage("Error: " + err.Message, Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -350,7 +349,7 @@ namespace UserInterface.Presenters
             {
                 string fileName = Path.ChangeExtension(storage.FileName, ".xlsx");
                 Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
-                explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, Simulation.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, Simulation.MessageType.Information);
             }
             finally
             {
@@ -373,11 +372,11 @@ namespace UserInterface.Presenters
             {
                 Report.WriteAllTables(storage, explorerPresenter.ApsimXFile.FileName);
                 string folder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-                explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, Simulation.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, Simulation.MessageType.Information);
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
             finally
             {
@@ -399,11 +398,11 @@ namespace UserInterface.Presenters
             {
                 string summaryFleName = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".sum");
                 Summary.WriteSummaryToTextFiles(storage, summaryFleName);
-                explorerPresenter.MainPresenter.ShowMessage("Summary file written: " + summaryFleName, Simulation.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowMessage("Summary file written: " + summaryFleName, Simulation.MessageType.Information);
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
             finally
             {
@@ -424,19 +423,19 @@ namespace UserInterface.Presenters
                 string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
                 if (destinationFolder != null)
                 {
-                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.ErrorLevel.Information);
+                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                     explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
                     try
                     {
                         ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
                         this.explorerPresenter.CommandHistory.Add(command, true);
-                        explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", Simulation.ErrorLevel.Information);
+                        explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", Simulation.MessageType.Information);
                         Process.Start(command.FileNameWritten);
                     }
                     catch (Exception err)
                     {
-                        explorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                        explorerPresenter.MainPresenter.ShowError(err);
                     }
                     finally
                     {
@@ -446,7 +445,7 @@ namespace UserInterface.Presenters
             }
         }
 
-        [ContextMenu(MenuName = "Run on cloud (In development - DO NOT USE)",
+        [ContextMenu(MenuName = "Run on cloud",
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),
                                               typeof(Experiment),
@@ -470,7 +469,7 @@ namespace UserInterface.Presenters
                                                        "UserInterface.Presenters.NewAzureJobPresenter");
             } else
             {
-                explorerPresenter.MainPresenter.ShowMessage("Microsoft Azure functionality is currently only available under Windows.", Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError("Microsoft Azure functionality is currently only available under Windows.");
             }
             
         }
@@ -490,37 +489,7 @@ namespace UserInterface.Presenters
         ]
         public void OnGenerateApsimXFiles(object sender, EventArgs e)
         {
-            IModel node = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
-
-            List<IModel> children;
-            if (node is Experiment)
-            {
-                children = new List<IModel> { node };
-            }
-            else
-            {
-                children = Apsim.ChildrenRecursively(node, typeof(Experiment));
-            }
-
-            string outDir = ViewBase.AskUserForDirectory("Select a directory to save model files to.");
-            if (outDir == null)                
-                return;
-            if (!Directory.Exists(outDir))
-                Directory.CreateDirectory(outDir);
-            string err = "";
-            int i = 0;            
-            children.ForEach(expt => 
-            {
-                explorerPresenter.MainPresenter.ShowMessage("Generating simulation files: ", Simulation.ErrorLevel.Information);
-                explorerPresenter.MainPresenter.ShowProgress(100 * i / children.Count, false);                
-                while (GLib.MainContext.Iteration()) ;
-                err += (expt as Experiment).GenerateApsimXFile(outDir);
-                i++;
-            });            
-            if (err.Length < 1)
-                explorerPresenter.MainPresenter.ShowMessage("Successfully generated .apsimx files under " + outDir + ".", Simulation.ErrorLevel.Information);
-            else
-                explorerPresenter.MainPresenter.ShowMessage(err, Simulation.ErrorLevel.Error);
+            explorerPresenter.GenerateApsimXFiles(Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel); ;
         }
 
         /// <summary>
@@ -569,7 +538,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -589,11 +558,23 @@ namespace UserInterface.Presenters
                 foreach (IModel child in Apsim.ChildrenRecursively(model))
                     child.IncludeInDocumentation = model.IncludeInDocumentation;
                 explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+                explorerPresenter.Refresh();
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
+
+        [ContextMenu(MenuName = "Show documentation status", IsToggle = true)]
+        public void ShowIncludeInDocumentation(object sender, EventArgs e)
+        {
+            explorerPresenter.ShowIncludeInDocumentation = !explorerPresenter.ShowIncludeInDocumentation;
+        }
+
+        public bool ShowIncludeInDocumentationChecked()
+        {
+            return explorerPresenter != null ? explorerPresenter.ShowIncludeInDocumentation : false;
         }
 
         /// <summary>

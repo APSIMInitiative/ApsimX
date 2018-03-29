@@ -95,6 +95,11 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.view = view as IProfileView;
+            this.view.ProfileGrid.FormatColumns += (sender, e) =>
+            {
+                FormatGrid((view as IProfileView).ProfileGrid.DataSource);
+            };
+
             this.explorerPresenter = explorerPresenter;
 
             this.view.ShowView(false);
@@ -494,7 +499,7 @@ namespace UserInterface.Presenters
                     e = (e as System.Reflection.TargetInvocationException).InnerException;
                 }
 
-                this.explorerPresenter.MainPresenter.ShowMessage(e.Message, Simulation.ErrorLevel.Error);
+                this.explorerPresenter.MainPresenter.ShowError(e);
             }
         }
 
@@ -553,7 +558,7 @@ namespace UserInterface.Presenters
                             e = (e as System.Reflection.TargetInvocationException).InnerException;
                         }
 
-                        this.explorerPresenter.MainPresenter.ShowMessage(e.Message, Simulation.ErrorLevel.Error);
+                        this.explorerPresenter.MainPresenter.ShowError(e);
                     }
                 }
             }

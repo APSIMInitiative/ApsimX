@@ -83,7 +83,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
     }

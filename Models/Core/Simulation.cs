@@ -44,6 +44,18 @@ namespace Models.Core
             Error
         };
 
+        /// <summary>
+        /// An enum that is used to indicate message severity when writing messages to the status window.
+        /// </summary>
+        public enum MessageType
+        {
+            /// <summary>Information</summary>
+            Information,
+
+            /// <summary>Warning</summary>
+            Warning
+        };
+
         /// <summary>Returns the object responsible for scoping rules.</summary>
         public ScopingRules Scope
         {
@@ -158,6 +170,16 @@ namespace Models.Core
             if (Parent is ISimulationGenerator)
                 return new string[0];
             return new string[] { Name };
+        }
+
+        /// <summary>
+        /// Generates an .apsimx file for this simulation.
+        /// </summary>
+        /// <param name="path">Directory to write the file to.</param>
+        public void GenerateApsimXFile(string path)
+        {
+            string xml = Apsim.Serialise(Simulations.Create(new List<IModel> { this, new Models.Storage.DataStore() }));
+            File.WriteAllText(Path.Combine(path, Name + ".apsimx"), xml);
         }
     }
 }
