@@ -307,69 +307,72 @@ namespace UserInterface.Views
 
             if (keyName == "ISO_Left_Tab")
                 keyName = "Tab";
-            if ((keyName == "Return" || keyName == "Tab") && userEditingCell)
+            if (keyName == "Return" || keyName == "Tab")
             {
-                bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
-                int nextRow = iRow;
-                int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
-                int nextCol = iCol;
-                if (shifted) // Move backwards
+                if (userEditingCell)
                 {
-                    do
+                    bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
+                    int nextRow = iRow;
+                    int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+                    int nextCol = iCol;
+                    if (shifted) // Move backwards
                     {
-                        if (keyName == "Tab") // Move horizontally
+                        do
                         {
-                            if (--nextCol < 0)
-                            {
-                                if (--nextRow < 0)
-                                    nextRow = RowCount - 1;
-                                nextCol = nCols - 1;
-                            }
-                        }
-                        else if (keyName == "Return") // Move vertically
-                        {
-                            if (--nextRow < 0)
+                            if (keyName == "Tab") // Move horizontally
                             {
                                 if (--nextCol < 0)
+                                {
+                                    if (--nextRow < 0)
+                                        nextRow = RowCount - 1;
                                     nextCol = nCols - 1;
-                                nextRow = RowCount - 1;
+                                }
                             }
-                        }
-                    }
-                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
-                }
-                else
-                {
-                    do
-                    {
-                        if (keyName == "Tab") // Move horizontally
-                        {
-                            if (++nextCol >= nCols)
+                            else if (keyName == "Return") // Move vertically
                             {
-                                if (++nextRow >= RowCount)
-                                    nextRow = 0;
-                                nextCol = 0;
+                                if (--nextRow < 0)
+                                {
+                                    if (--nextCol < 0)
+                                        nextCol = nCols - 1;
+                                    nextRow = RowCount - 1;
+                                }
                             }
                         }
-                        else if (keyName == "Return") // Move vertically
+                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+                    }
+                    else
+                    {
+                        do
                         {
-                            if (++nextRow >= RowCount)
+                            if (keyName == "Tab") // Move horizontally
                             {
                                 if (++nextCol >= nCols)
+                                {
+                                    if (++nextRow >= RowCount)
+                                        nextRow = 0;
                                     nextCol = 0;
-                                nextRow = 0;
+                                }
+                            }
+                            else if (keyName == "Return") // Move vertically
+                            {
+                                if (++nextRow >= RowCount)
+                                {
+                                    if (++nextCol >= nCols)
+                                        nextCol = 0;
+                                    nextRow = 0;
+                                }
                             }
                         }
+                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
                     }
-                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+
+                    EndEdit();
+                    while (GLib.MainContext.Iteration())
+                        ;
+                    if (nextRow != iRow || nextCol != iCol)
+                        gridview.SetCursor(new TreePath(new int[1] { nextRow }), gridview.GetColumn(nextCol), true);
+                    args.RetVal = true;
                 }
-                
-                EndEdit();
-                while (GLib.MainContext.Iteration())
-                    ;
-                if (nextRow != iRow || nextCol != iCol)
-                    gridview.SetCursor(new TreePath(new int[1] { nextRow }), gridview.GetColumn(nextCol), true);
-                args.RetVal = true;
             }
             else if (!userEditingCell && !GetColumn(iCol).ReadOnly) // Initiate cell editing when user starts typing.
             {
