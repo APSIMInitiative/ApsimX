@@ -305,13 +305,6 @@ namespace UserInterface.Views
             int iRow = cell.RowIndex;
             int iCol = cell.ColumnIndex;
 
-            if (keyName == "F2" && !userEditingCell) // Allow f2 to initiate cell editing
-            {
-                if (!this.GetColumn(iCol).ReadOnly)
-                {
-                    gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
-                }
-            }
             if (keyName == "ISO_Left_Tab")
                 keyName = "Tab";
             if ((keyName == "Return" || keyName == "Tab") && userEditingCell)
@@ -377,6 +370,16 @@ namespace UserInterface.Views
                 if (nextRow != iRow || nextCol != iCol)
                     gridview.SetCursor(new TreePath(new int[1] { nextRow }), gridview.GetColumn(nextCol), true);
                 args.RetVal = true;
+            }
+            else if (!userEditingCell && !GetColumn(iCol).ReadOnly) // Initiate cell editing when user starts typing.
+            {
+                gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
+                Entry editable = editControl as Entry;
+                editable.Text = "";
+                Gdk.EventHelper.Put(args.Event);
+                editable.Position = editable.Text.Length;
+                userEditingCell = true;
+                while (GLib.MainContext.Iteration()) ;
             }
             else if ((char)Gdk.Keyval.ToUnicode(args.Event.KeyValue) == '.')
             {
