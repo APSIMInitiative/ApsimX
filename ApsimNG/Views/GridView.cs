@@ -374,7 +374,7 @@ namespace UserInterface.Views
                     args.RetVal = true;
                 }
             }
-            else if (!userEditingCell && !GetColumn(iCol).ReadOnly) // Initiate cell editing when user starts typing.
+            else if (!userEditingCell && !GetColumn(iCol).ReadOnly && (activeCol == null || activeCol.Count < 1)) // Initiate cell editing when user starts typing.
             {
                 gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
                 Entry editable = editControl as Entry;
@@ -384,7 +384,6 @@ namespace UserInterface.Views
                 Gdk.EventHelper.Put(args.Event);
                 editable.Position = editable.Text.Length;
                 userEditingCell = true;
-                while (GLib.MainContext.Iteration()) ;
             }
             else if ((char)Gdk.Keyval.ToUnicode(args.Event.KeyValue) == '.')
             {
@@ -794,6 +793,19 @@ namespace UserInterface.Views
                     cell.BackgroundGdk = bgColour;
                     cell.ForegroundGdk = fgColour;
                 });
+            }
+            if (FormatColumns == null)
+            {
+                foreach (int i in Enumerable.Range(0, gridview.Columns.Length).Where(n => !activeCol.Contains(n)))
+                {
+                    bgColour = gridview.Style.Base(StateType.Normal);
+                    fgColour = new Gdk.Color(0, 0, 0);
+                    gridview.Columns[i].Cells.OfType<CellRendererText>().ToList().ForEach(cell =>
+                    {
+                        cell.BackgroundGdk = bgColour;
+                        cell.ForegroundGdk = fgColour;
+                    });
+                }
             }
             
             gridview.QueueDraw();
