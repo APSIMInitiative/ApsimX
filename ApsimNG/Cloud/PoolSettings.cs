@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
-using ApsimNG;
-
-namespace ApsimNG.Cloud
+﻿namespace ApsimNG.Cloud
 {
     public class PoolSettings
     {
@@ -18,10 +10,10 @@ namespace ApsimNG.Cloud
 
         public static PoolSettings FromConfiguration()
         {
-            object maxTasks = Properties.Settings.Default["PoolMaxTasksPerVM"];
-            object name = Properties.Settings.Default["PoolName"];
-            object vmCount = Properties.Settings.Default["PoolVMCount"];
-            object size = Properties.Settings.Default["PoolVMSize"];
+            object maxTasks = AzureSettings.Default["PoolMaxTasksPerVM"];
+            object name = AzureSettings.Default["PoolName"];
+            object vmCount = AzureSettings.Default["PoolVMCount"];
+            object size = AzureSettings.Default["PoolVMSize"];
 
             return new PoolSettings
             {

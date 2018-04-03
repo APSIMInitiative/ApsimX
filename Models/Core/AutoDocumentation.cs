@@ -64,7 +64,7 @@ namespace Models.Core
         /// <param name="headingLevel">The heading level to use.</param>
         /// <param name="indent">The indentation level.</param>
         /// <param name="documentAllChildren">Document all children?</param>
-        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = false)
+        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = true)
         {
             if (model.IncludeInDocumentation)
             {
@@ -234,7 +234,7 @@ namespace Models.Core
 
         private static void StoreParagraphSoFarIntoTags(List<ITag> tags, int indent, ref string paragraphSoFar)
         {
-            if (paragraphSoFar != string.Empty)
+            if (paragraphSoFar.Trim() != string.Empty) 
                 tags.Add(new Paragraph(paragraphSoFar, indent));
             paragraphSoFar = string.Empty;
         }

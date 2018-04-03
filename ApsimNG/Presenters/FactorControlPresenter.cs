@@ -116,7 +116,7 @@ namespace UserInterface.Presenters
                     return; // if user has changed their mind (because of the warning) then do nothing
                 } else if (n < 0)
                 {
-                    explorerPresenter.MainPresenter.ShowMessage("Max number of simulations must be a positive number.", Simulation.ErrorLevel.Error); // don't allow users to specify a negative number (0 is acceptable)                
+                    explorerPresenter.MainPresenter.ShowError("Max number of simulations must be a positive number."); // don't allow users to specify a negative number (0 is acceptable)                
                     return;
                 }
                 maxSimsToDisplay = n;
@@ -124,7 +124,7 @@ namespace UserInterface.Presenters
                 UpdateView();
             } else
             {
-                explorerPresenter.MainPresenter.ShowMessage("Unable to parse max number of simulations " + str + " to int", Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError("Unable to parse max number of simulations " + str + " to int");
             }
         }
 
@@ -137,7 +137,34 @@ namespace UserInterface.Presenters
             view.Populate(simulations.GetRange(0, Math.Min(simulations.Count, maxSimsToDisplay)));
             view.NumSims = model.AllCombinations().Count.ToString();
         }
-        
+
+        /// <summary>
+        /// Runs a list of simulations.
+        /// </summary>
+        /// <param name="names">Names of the simulations to be run.</param>
+        public void RunSims(List<string> names)
+        {
+            try
+            {
+                Simulation sim;
+                List<Model> simulationList = new List<Model>();
+                foreach (string simName in names)
+                {
+                    sim = model.CreateSpecificSimulation(simName);
+                    simulationList.Add(sim);
+                }
+                Simulations simulationsToRun = Simulations.Create(simulationList);
+
+                Commands.RunCommand command = new Commands.RunCommand(simulationsToRun, explorerPresenter, false, null);
+                command.Do(null);
+
+            }
+            catch (Exception e)
+            {
+                explorerPresenter.MainPresenter.ShowError(e);
+            }
+        }
+
         /// <summary>
         /// Gets the name of a simulation (list of factors levels).
         /// </summary>
@@ -188,7 +215,7 @@ namespace UserInterface.Presenters
                 foreach (List<FactorValue> factors in model.AllCombinations())
                 {
                     if (!getAllData && i > maxSimsToDisplay) break;
-                    string name = "";
+                    string name = model.Name;
                     List<string> values = new List<string>();
                     List<string> names = new List<string>();
                     Experiment.GetFactorNamesAndValues(factors, names, values);
@@ -202,13 +229,13 @@ namespace UserInterface.Presenters
                     i++;
                 }
                 return sims;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
-                explorerPresenter.MainPresenter.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(e);
                 return new List<Tuple<string, List<string>, bool>>();
             }
         }
-
 
         /// <summary>
         /// Generates a list of 'simulations', where each simulation is a list of factor values.
@@ -262,7 +289,7 @@ namespace UserInterface.Presenters
             StringBuilder csv = new StringBuilder();
             if (headers == null || headers.Count < 1)
             {
-                explorerPresenter.MainPresenter.ShowMessage("Nothing to Export", Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError("Nothing to Export");
                 return;
             }
             
@@ -290,10 +317,11 @@ namespace UserInterface.Presenters
             try
             {
                 File.WriteAllText(path, csv.ToString());
-                explorerPresenter.MainPresenter.ShowMessage("Successfully generated " + path + ".", Simulation.ErrorLevel.Information);
-            } catch (Exception e)
+                explorerPresenter.MainPresenter.ShowMessage("Successfully generated " + path + ".", Simulation.MessageType.Information);
+            }
+            catch (Exception e)
             {
-                explorerPresenter.MainPresenter.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(e);
             }
         }
 
@@ -303,8 +331,6 @@ namespace UserInterface.Presenters
         /// <param name="path">Path to the csv file.</param>
         public void ImportCsv(string path = "")
         {
-            explorerPresenter.MainPresenter.ShowMessage("", Simulation.ErrorLevel.Error);
-
             if (path == null || path == "") return;
             try
             {
@@ -337,23 +363,22 @@ namespace UserInterface.Presenters
                 }
                 UpdateView();
                 model.DisabledSimNames = GetDisabledSimNames();
-                explorerPresenter.MainPresenter.ShowMessage("Successfully imported data from " + path, Simulation.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowMessage("Successfully imported data from " + path, Simulation.MessageType.Information);
             }
             catch (Exception e)
             {
-                explorerPresenter.MainPresenter.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(e);
             }
         }
 
         public void Sobol()
         {
-            explorerPresenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.ErrorLevel.Information);
+            explorerPresenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.MessageType.Information);
         }
-
 
         public void Morris()
         {
-            explorerPresenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.ErrorLevel.Information);
+            explorerPresenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.MessageType.Information);
         }
     }
 }

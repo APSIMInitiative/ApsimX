@@ -501,29 +501,33 @@ namespace Models.PMF.Organs
         [Units("max units")]
         public double MaxCover;
 
+        /// <summary>The number of cohorts initiated that have not yet emerged</summary>
+        [Description("The number of cohorts initiated that have not yet emerged")]
+        public int ApicalCohortNo { get { return InitialisedCohortNo - AppearedCohortNo; } }
+        
         /// <summary>Gets the initialised cohort no.</summary>
         [Description("Number of leaf cohort objects that have been initialised")]
-        public double InitialisedCohortNo { get { return CohortCounter("IsInitialised"); } }
+        public int InitialisedCohortNo { get { return CohortCounter("IsInitialised"); } }
 
         /// <summary>Gets the appeared cohort no.</summary>
         [Description("Number of leaf cohort that have appeared")]
-        public double AppearedCohortNo { get { return CohortCounter("IsAppeared"); } }
+        public int AppearedCohortNo { get { return CohortCounter("IsAppeared"); } }
 
         /// <summary>Gets the expanding cohort no.</summary>
         [Description("Number of leaf cohorts that have appeared but not yet fully expanded")]
-        public double ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
+        public int ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
 
         /// <summary>Gets the expanded cohort no.</summary>
         [Description("Number of leaf cohorts that are fully expanded")]
-        public double ExpandedCohortNo { get { return CohortCounter("IsFullyExpanded"); } }
+        public int ExpandedCohortNo { get { return CohortCounter("IsFullyExpanded"); } }
 
         /// <summary>Gets the green cohort no.</summary>
         [Description("Number of leaf cohorts that are have expanded but not yet fully senesced")]
-        public double GreenCohortNo { get { return CohortCounter("IsGreen"); } }
+        public int GreenCohortNo { get { return CohortCounter("IsGreen"); } }
 
         /// <summary>Gets the senescing cohort no.</summary>
         [Description("Number of leaf cohorts that are Senescing")]
-        public double SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
+        public int SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
 
         /// <summary>Gets the dead cohort no.</summary>
         [Description("Number of leaf cohorts that have fully Senesced")]
@@ -611,7 +615,21 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
+        public double RadIntTot
+        {
+            get
+            {
+                if (MicroClimatePresent)
+                {
+                    double TotalRadn = 0;
+                    for (int i = 0; i < LightProfile.Length; i++)
+                        TotalRadn += LightProfile[i].amount;
+                    return TotalRadn;                    
+                }
+                else
+                    return CoverGreen * MetData.Radn;
+            }
+        }
 
         /// <summary>Gets the specific area.</summary>
         [Units("mm^2/g")]
@@ -645,17 +663,20 @@ namespace Models.PMF.Organs
         /// <summary>Gets the DeltaPotentialArea</summary>
         [XmlIgnore]
         [Units("mm2")]
-        public double DeltaPotentialArea
+        public double[] DeltaPotentialArea
         {
             get
-            { 
-                double value = 0;
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
                 foreach (LeafCohort L in Leaves)
                 {
                     if (L.IsGrowing)
-                        value += L.DeltaPotentialArea;
+                        values[i] = L.DeltaPotentialArea;
+                    else values[i] = 0;
+                    i++;
                 }
-                return value;
+                return values;
             }
         }
 
@@ -663,38 +684,106 @@ namespace Models.PMF.Organs
         /// <summary>Gets the DeltaStressConstrainedArea</summary>
         [XmlIgnore]
         [Units("mm2")]
-        public double DeltaStressConstrainedArea
+        public double [] DeltaStressConstrainedArea
         {
             get
             {
-                double value = 0;
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
                 foreach (LeafCohort L in Leaves)
                 {
                     if (L.IsGrowing)
-                        value += L.DeltaStressConstrainedArea;
+                        values[i] += L.DeltaStressConstrainedArea;
+                    else values[i] = 0;
+                    i++;
                 }
-                return value;
+                return values;
             }
         }
 
         /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
         [XmlIgnore]
         [Units("mm2")]
-        public double DeltaCarbonConstrainedArea
+        public double [] DeltaCarbonConstrainedArea
         {
             get
             {
-                double value = 0;
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
                 foreach (LeafCohort L in Leaves)
                 {
                     if (L.IsGrowing)
-                        value += L.DeltaCarbonConstrainedArea;
+                        values[i] += L.DeltaCarbonConstrainedArea;
+                    else values[i] = 0;
+                    i++;
                 }
-                return value;
+                return values;
             }
         }
 
 
+
+
+        /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double[] CohortStructuralDMDemand
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        values[i] += L.StructuralDMDemand;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+        /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double[] CohortMetabolicDMDemand
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        values[i] += L.MetabolicDMDemand;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+        /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double[] CohortStorageDMDemand
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        values[i] += L.StorageDMDemand;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
 
         /// <summary>Gets the cohort population.</summary>
         [XmlIgnore]
@@ -844,6 +933,25 @@ namespace Models.PMF.Organs
                 foreach (LeafCohort L in Leaves)
                 {
                     values[i] = L.MaxArea;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+        
+        /// <summary>Gets the cohort Wt.</summary> 
+        [Units("mm2")]
+        public double[] CohortLiveWt
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.Live.Wt;
                     i++;
                 }
                 return values;
@@ -1012,12 +1120,14 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Clears this instance.</summary>
-        protected void Clear()
+        public void Reset()
         {
             Leaves = new List<LeafCohort>();
+            needToRecalculateLiveDead = true;
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
+            Structure.TipToAppear = 0;
             apexGroupAge.Clear();
             dryMatterSupply.Clear();
             dryMatterDemand.Clear();
@@ -1078,19 +1188,27 @@ namespace Models.PMF.Organs
                 apexGroupAge.Add(1);
             }
 
-            while (apexGroupSize.Sum() > Structure.ApexNum)
+            if (apexGroupSize.Count > 1)
             {
-                double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
-                double remainingRemoveApex = removeApex;
-                for (int i = apexGroupSize.Count - 1; i > 0; i--)
+                while (apexGroupSize.Sum() > Structure.ApexNum)
                 {
-                    double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
-                    apexGroupSize[i] -= remove;
-                    remainingRemoveApex -= remove;
-                    if (remainingRemoveApex <= 0)
-                        break;
+                    double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
+                    double remainingRemoveApex = removeApex;
+                    for (int i = apexGroupSize.Count - 1; i > 0; i--)
+                    {
+                        double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
+                        apexGroupSize[i] -= remove;
+                        remainingRemoveApex -= remove;
+                        if (remainingRemoveApex <= 0)
+                            break;
+                    }
                 }
             }
+            else
+            {
+                // not sure what to do here as the while loop would not have exited.... ever!
+            }
+            
             NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
             NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
         }
@@ -1190,6 +1308,17 @@ namespace Models.PMF.Organs
         {
             foreach (LeafCohort leaf in Leaves)
                 leaf.CohortPopulation *= 1 - ProportionRemoved;
+        }
+
+        /// <summary>
+        /// Called when defoliation calls for removal of main-stem nodes
+        /// </summary>
+        public void RemoveHighestLeaf()
+        {
+            Leaves.RemoveAt(InitialisedCohortNo-1);
+            needToRecalculateLiveDead = true;
+            
+            
         }
         #endregion
 
@@ -1678,7 +1807,7 @@ namespace Models.PMF.Organs
             if (data.Plant == Plant)
             {
                 MicroClimatePresent = false;
-                Clear();
+                Reset();
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
@@ -1707,7 +1836,7 @@ namespace Models.PMF.Organs
         {
             Structure.PotLeafTipsAppeared = 0;
             Structure.CohortToInitialise = 0;
-            Structure.TipToAppear = 0;
+            Structure.TipToAppear =  0;
             Structure.Emerged = false;
             Structure.Clear();
             Structure.ResetStemPopn();
@@ -1718,7 +1847,7 @@ namespace Models.PMF.Organs
             needToRecalculateLiveDead = true;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
-            Structure.Germinated = false;
+            Structure.Germinated = false;            
 
         }
 
@@ -1749,7 +1878,7 @@ namespace Models.PMF.Organs
                 SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
             }
 
-            Clear();
+            Reset();
             CohortsAtInitialisation = 0;
         }
 
@@ -1762,17 +1891,6 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
         }
         #endregion
-        /// <summary>
-        /// Document a specific function
-        /// </summary>
-        /// <param name="FunctName"></param>
-        /// <param name="indent"></param>
-        /// <param name="tags"></param>
-        public void DocumentFunction(string FunctName, List<AutoDocumentation.ITag> tags, int indent)
-        {
-            IModel Funct = Apsim.Child(this, FunctName);
-            AutoDocumentation.DocumentModel(Funct, tags, -1, indent);
-        }
 
     }
 }

@@ -28,6 +28,14 @@ namespace UserInterface.Interfaces
         /// <summary>Occurs when user clicks a button on the cell.</summary>
         event EventHandler<GridCellsChangedArgs> ButtonClick;
 
+        event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
+
+        /// <summary>
+        /// Invoked when the columns need to be reset to their default colours.
+        /// If this event handler is null, the default colours are assumed to be white.
+        /// </summary>
+        event EventHandler<EventArgs> FormatColumns;
+
         /// <summary>
         /// Gets or sets the data to use to populate the grid.
         /// </summary>

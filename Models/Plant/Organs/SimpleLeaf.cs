@@ -61,6 +61,18 @@ namespace Models.PMF.Organs
 
         #region Leaf Interface
         /// <summary>
+        /// Number of initiated cohorts that have not appeared yet
+        /// </summary>
+        public int ApicalCohortNo { get; set; }
+        /// <summary>
+        /// reset leaf numbers
+        /// </summary>
+        public void Reset() { }
+        /// <summary></summary>
+        public int InitialisedCohortNo { get; set; }
+        /// <summary></summary>
+        public void RemoveHighestLeaf() { }
+        /// <summary>
         /// 
         /// </summary>
         public bool CohortsInitialised { get; set; }
@@ -74,12 +86,8 @@ namespace Models.PMF.Organs
         public int CohortsAtInitialisation { get; set; }
         /// <summary>
         /// 
-        /// </summary>
-        public double InitialisedCohortNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public double AppearedCohortNo { get; set; }
+        ///</summary>
+        public int AppearedCohortNo { get; set; }
 
         /// <summary>
         /// 
@@ -259,7 +267,21 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
+        public double RadIntTot
+        {
+            get
+            {
+                if (MicroClimatePresent)
+                {
+                    double TotalRadn = 0;
+                    for (int i = 0; i < LightProfile.Length; i++)
+                        TotalRadn += LightProfile[i].amount;
+                    return TotalRadn;
+                }
+                else
+                    return CoverGreen * MetData.Radn;
+            }
+        }
 
         #endregion
 

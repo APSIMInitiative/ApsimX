@@ -19,6 +19,7 @@ namespace UserInterface.Views
     using Gtk;
     using Interfaces;
     using Models.Core;
+    using System.Linq;
 
     /// <summary>
     /// We want to have a "button" we can press within a grid cell. We could use a Gtk CellRendererPixbuf for this, 
@@ -54,6 +55,15 @@ namespace UserInterface.Views
         /// <summary>Occurs when user clicks a button on the cell.</summary>
         public event EventHandler<GridCellsChangedArgs> ButtonClick;
 
+        /// <summary>Invoked when the editor needs context items (after user presses '.')</summary>
+        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
+
+        /// <summary>
+        /// Invoked when the columns need to be reset to their default colours.
+        /// If this event handler is null, the default colours are assumed to be white.
+        /// </summary>
+        public event EventHandler<EventArgs> FormatColumns;
+
         /// <summary>
         /// Is the user currently editing a cell?
         /// </summary>
@@ -85,6 +95,11 @@ namespace UserInterface.Views
         /// </summary>
         private bool selfCursorMove = false;
 
+        /// <summary>
+        /// A value storing the caret location when the user activates intellisense.
+        /// </summary>
+        private int caretLocation;
+
         private ScrolledWindow scrolledwindow1 = null;
         public TreeView gridview = null;
         public TreeView fixedcolview = null;
@@ -100,7 +115,8 @@ namespace UserInterface.Views
         private Menu Popup = new Menu();
         private AccelGroup accel = new AccelGroup();
         private GridCell popupCell = null;
-
+        private IntellisenseView intellisense;
+        private List<int> activeCol = new List<int>();
         /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
         /// </summary>
@@ -133,8 +149,37 @@ namespace UserInterface.Views
             image1.Pixbuf = null;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
+                        
+            intellisense = new IntellisenseView();
+            intellisense.ContextItemsNeeded += ContextItemsNeeded;
+            intellisense.ItemSelected += InsertCompletionText;
         }
 
+        /// <summary>
+        /// Inserts the currently selected text in the intellisense popup into the active grid cell, puts the cell in edit mode, then hides the intellisense popup.
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event arguments</param>
+        private void InsertCompletionText(object sender, IntellisenseItemSelectedArgs e)
+        {   
+            try
+            {
+                string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation + 1);
+                string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation + 1);
+
+                GetCurrentCell.Value = beforeCaret + e.ItemSelected + afterCaret;
+                gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), gridview.GetColumn(GetCurrentCell.ColumnIndex), true);
+                (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
+                while (GLib.MainContext.Iteration()) ;
+                valueBeforeEdit = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                var mainView = GetMainViewReference(this);
+                if (mainView != null)
+                    mainView.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
+            }
+        }
 
         /// <summary>
         /// Does cleanup when the main widget is destroyed
@@ -252,7 +297,7 @@ namespace UserInterface.Views
         /// <param name="args"></param>
         [GLib.ConnectBefore]
         private void Gridview_KeyPressEvent(object o, KeyPressEventArgs args)
-        {
+        {            
             string keyName = Gdk.Keyval.Name(args.Event.KeyValue);
             IGridCell cell = GetCurrentCell;
             if (cell == null)
@@ -260,78 +305,201 @@ namespace UserInterface.Views
             int iRow = cell.RowIndex;
             int iCol = cell.ColumnIndex;
 
-            if (keyName == "F2" && !userEditingCell) // Allow f2 to initiate cell editing
-            {
-                if (!this.GetColumn(iCol).ReadOnly)
-                {
-                    gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
-                }
-            }
             if (keyName == "ISO_Left_Tab")
                 keyName = "Tab";
-            if ((keyName == "Return" || keyName == "Tab") && userEditingCell)
+            if (keyName == "Return" || keyName == "Tab")
             {
-                bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
-                int nextRow = iRow;
-                int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
-                int nextCol = iCol;
-                if (shifted) // Move backwards
+                if (userEditingCell)
                 {
-                    do
+                    bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
+                    int nextRow = iRow;
+                    int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+                    int nextCol = iCol;
+                    if (shifted) // Move backwards
                     {
-                        if (keyName == "Tab") // Move horizontally
+                        do
                         {
-                            if (--nextCol < 0)
-                            {
-                                if (--nextRow < 0)
-                                    nextRow = RowCount - 1;
-                                nextCol = nCols - 1;
-                            }
-                        }
-                        else if (keyName == "Return") // Move vertically
-                        {
-                            if (--nextRow < 0)
+                            if (keyName == "Tab") // Move horizontally
                             {
                                 if (--nextCol < 0)
+                                {
+                                    if (--nextRow < 0)
+                                        nextRow = RowCount - 1;
                                     nextCol = nCols - 1;
-                                nextRow = RowCount - 1;
+                                }
                             }
-                        }
-                    }
-                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
-                }
-                else
-                {
-                    do
-                    {
-                        if (keyName == "Tab") // Move horizontally
-                        {
-                            if (++nextCol >= nCols)
+                            else if (keyName == "Return") // Move vertically
                             {
-                                if (++nextRow >= RowCount)
-                                    nextRow = 0;
-                                nextCol = 0;
+                                if (--nextRow < 0)
+                                {
+                                    if (--nextCol < 0)
+                                        nextCol = nCols - 1;
+                                    nextRow = RowCount - 1;
+                                }
                             }
                         }
-                        else if (keyName == "Return") // Move vertically
+                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+                    }
+                    else
+                    {
+                        do
                         {
-                            if (++nextRow >= RowCount)
+                            if (keyName == "Tab") // Move horizontally
                             {
                                 if (++nextCol >= nCols)
+                                {
+                                    if (++nextRow >= RowCount)
+                                        nextRow = 0;
                                     nextCol = 0;
-                                nextRow = 0;
+                                }
+                            }
+                            else if (keyName == "Return") // Move vertically
+                            {
+                                if (++nextRow >= RowCount)
+                                {
+                                    if (++nextCol >= nCols)
+                                        nextCol = 0;
+                                    nextRow = 0;
+                                }
                             }
                         }
+                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
                     }
-                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+
+                    EndEdit();
+                    while (GLib.MainContext.Iteration())
+                        ;
+                    if (nextRow != iRow || nextCol != iCol)
+                        gridview.SetCursor(new TreePath(new int[1] { nextRow }), gridview.GetColumn(nextCol), true);
+                    args.RetVal = true;
                 }
-                EndEdit();
-                while (GLib.MainContext.Iteration())
-                    ;
-                if (nextRow != iRow || nextCol != iCol)
-                    gridview.SetCursor(new TreePath(new int[1] { nextRow }), gridview.GetColumn(nextCol), true);
-                args.RetVal = true;
             }
+            else if (!userEditingCell && !GetColumn(iCol).ReadOnly) // Initiate cell editing when user starts typing.
+            {
+                gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
+                Entry editable = editControl as Entry;
+                editable.Text = "";
+                Gdk.EventHelper.Put(args.Event);
+                editable.Position = editable.Text.Length;
+                userEditingCell = true;
+                while (GLib.MainContext.Iteration()) ;
+            }
+            else if ((char)Gdk.Keyval.ToUnicode(args.Event.KeyValue) == '.')
+            {
+                ShowCompletionWindow();
+            }
+        }
+
+        private void ShowCompletionWindow()
+        {
+            if (ContextItemsNeeded == null)
+                return;
+            try
+            {
+                caretLocation = (editControl as Entry).Position;
+                string cellContents = (editControl as Entry).Text;
+                string contentsToCursor = cellContents.Substring(0, caretLocation);
+                string contentsAfterCursor = cellContents.Substring(caretLocation);
+                string node = contentsToCursor.Substring(contentsToCursor.LastIndexOf(',') + 1);
+
+                intellisense.ContextItemsNeeded += this.ContextItemsNeeded;
+                if (!intellisense.GenerateAutoCompletionOptions(node))
+                    return;
+
+                GetCurrentCell.Value = contentsToCursor + "." + contentsAfterCursor;
+                gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), gridview.Columns[GetCurrentCell.ColumnIndex], true);
+                (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
+                // Get the coordinates of the cell 1 row beneath the current one - we don't want the popup to cover the cell we're working on
+                Tuple<int, int> coordinates = GetAbsoluteCellPosition(GetCurrentCell.ColumnIndex, GetCurrentCell.RowIndex + 1);
+                intellisense.MainWindow = MainWidget.Toplevel as Window;                
+                intellisense.SmartShowAtCoordinates(coordinates.Item1, coordinates.Item2);
+
+                while (Gtk.Application.EventsPending())
+                    Gtk.Application.RunIteration();
+            }
+            catch (Exception e)
+            {
+                var mainView = GetMainViewReference(this);
+                if (mainView != null)
+                    mainView.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+            }            
+        }
+
+        /// <summary>
+        /// Finds a reference to the main view, so that error messages can be displayed.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private MainView GetMainViewReference(ViewBase obj)
+        {
+            if (obj is MainView)
+                return obj as MainView;
+            if (obj.Owner == null)
+                return null;
+            return GetMainViewReference(obj.Owner);
+        }
+
+        /// <summary>
+        /// Calculates the size of a given cell.
+        /// Results are returned in a tuple, where Item1 is the width and Item2 is the height of the cell.
+        /// </summary>
+        /// <param name="col">Column number of the cell.</param>
+        /// <param name="row">Row number of the cell.</param>
+        /// <returns></returns>
+        private Tuple<int, int> GetCellSize (int col, int row)
+        {
+            int cellHeight, offsetX, offsetY, cellWidth;
+            Gdk.Rectangle rectangle = new Gdk.Rectangle();
+            TreeViewColumn column = gridview.GetColumn(col);
+
+            // Getting dimensions from TreeViewColumn
+            column.CellGetSize(rectangle, out offsetX, out offsetY,
+                out cellWidth, out cellHeight);
+
+            // And now get padding from CellRenderer
+            CellRenderer renderer = column.CellRenderers[row];
+            cellHeight += (int)renderer.Ypad;            
+            return new Tuple<int, int>(column.Width, cellHeight);
+        }
+
+        /// <summary>
+        /// Calculates the XY coordinates of a given cell relative to the origin of the TreeView.
+        /// Results are returned in a tuple, where Item1 is the x-coord and Item2 is the y-coord.
+        /// </summary>
+        /// <param name="col">Column number of the cell.</param>
+        /// <param name="row">Row number of the cell.</param>
+        /// <returns></returns>
+        private Tuple<int, int> GetCellPosition(int col, int row)
+        {
+            int x = 0;            
+
+            for (int i = 0; i < col; i++)
+            {
+                Tuple<int, int> cellSize = GetCellSize(i, 0);
+                x += cellSize.Item1;
+            }
+
+            // Rows are uniform in height, so we just get the height of the first cell in the table, 
+            // then multiply by the number of rows.
+            int y = GetCellSize(0, 0).Item2 * row;
+            
+            return new Tuple<int, int>(x, y);
+        }
+
+        /// <summary>
+        /// Calculates the absolute coordinates of the top-left corner of a given cell on the screen. 
+        /// Results are returned in a tuple, where Item1 is the x-coordinate and Item2 is the y-coordinate.
+        /// </summary>
+        /// <param name="col">Column of the cell.</param>
+        /// <param name="row">Row of the cell.</param>
+        /// <returns></returns>
+        private Tuple<int, int> GetAbsoluteCellPosition(int col, int row)
+        {
+            int frameX, frameY, containerX, containerY;
+            mainWindow.GetOrigin(out frameX, out frameY);            
+            gridview.GdkWindow.GetOrigin(out containerX, out containerY);
+            Tuple<int, int> relCoordinates = GetCellPosition(col, row + 1);
+            return new Tuple<int, int>(relCoordinates.Item1 + containerX, relCoordinates.Item2 + containerY);
         }
 
         /// <summary>
@@ -538,6 +706,235 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Event handler for when the user clicks on a column header.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
+        [GLib.ConnectBefore]
+        private void HeaderClicked(object sender, ButtonPressEventArgs e)
+        {
+            if (activeCol == null)
+                activeCol = new List<int>();
+            if (e.Event.Button == 1)
+            {
+                gridview.Selection.UnselectAll();
+                int x;
+                gridview.TranslateCoordinates(MainWidget.Toplevel, 0, 0, out x, out _);
+                int colNo = GetColumn(e.Event.XRoot - x);
+                if (e.Event.State == Gdk.ModifierType.ShiftMask)
+                {
+
+                    int closestColumn = activeCol.Aggregate((a, b) => Math.Abs(a - colNo) < Math.Abs(b - colNo) ? a : b);
+                    int lowerBound = Math.Min(colNo, closestColumn);
+                    int n = Math.Max(colNo, closestColumn) - lowerBound + 1;
+                    foreach (int columnIndex in Enumerable.Range(lowerBound, n))
+                    {
+                        if (!activeCol.Contains(columnIndex))
+                            activeCol.Add(columnIndex);
+                    }
+                }
+                else if (e.Event.State == Gdk.ModifierType.ControlMask)
+                {
+                    if (activeCol.Contains(colNo))
+                        activeCol.Remove(colNo);
+                    else
+                        activeCol.Add(colNo);
+                }
+                else
+                {
+                    activeCol = new List<int> { colNo };
+                }
+                HighlightColumns();
+            }
+            if (e.Event.Button == 3 && activeCol.Count >= 1)
+            {
+                Menu headerMenu = new Menu();
+                MenuItem copy = new MenuItem("Copy");
+                copy.Activated += CopyColumn;
+                copy.ShowAll();
+                headerMenu.Append(copy);
+
+                MenuItem paste = new MenuItem("Paste");
+                paste.Activated += PasteColumn;
+                paste.ShowAll();
+                headerMenu.Append(paste);
+                
+                headerMenu.Popup();
+            }
+        }
+
+        /// <summary>
+        /// Highlights all selected columns and un-highlights all other columns.
+        /// </summary>
+        private void HighlightColumns()
+        {
+            // Reset all columns to default colour.
+            FormatColumns?.Invoke(this, new EventArgs());
+
+            Gdk.Color bgColour, fgColour;
+            foreach (int n in activeCol)
+            {
+                try
+                {
+                    // Attempt to get default highlighting colour from the user's selected theme.
+                    bgColour = gridview.Style.Base(StateType.Selected);
+                }
+                catch
+                {
+                    // Last resort - use the default highlighting colour in the theme packaged with Apsim.
+                    bgColour = new Gdk.Color(0, 120, 215);
+                }
+                fgColour = new Gdk.Color(255, 255, 255);
+
+                gridview.Columns[n].Cells.OfType<CellRendererText>().ToList().ForEach(cell =>
+                {
+                    cell.BackgroundGdk = bgColour;
+                    cell.ForegroundGdk = fgColour;
+                });
+            }
+            
+            gridview.QueueDraw();
+        }
+
+        /// <summary>
+        /// Calculates the index of the column which a given x-coordinate falls indside.
+        /// </summary>
+        /// <param name="x">x-coordinate relative to the <see cref="gridview"/>.</param>
+        /// <returns></returns>
+        private int GetColumn(double x)
+        {
+            int width = 0;
+            int i;
+            for (i = 0; i < gridview.Columns.Length; i++)
+            {
+                width += gridview.Columns[i].Width;
+                if (width > x)
+                    break;
+            }
+            return i;
+        }
+
+        /// <summary>
+        /// Copies data from all selected columns to the clipboard.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
+        private void CopyColumn(object sender, EventArgs e)
+        {
+            if (activeCol.Count < 1)
+                return;
+            activeCol.Sort();
+            StringBuilder buffer = new StringBuilder();
+            for (int i = 0; i < DataSource.Rows.Count; i++)
+            {
+                buffer.Append(AsString(DataSource.Rows[i][activeCol[0]]));
+                for (int j = 1; j < activeCol.Count; j++)
+                {
+                    buffer.Append('\t');
+                    buffer.Append(AsString(DataSource.Rows[i][activeCol[j]]));
+                }
+                buffer.Append('\n');
+            }
+            Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+            cb.Text = buffer.ToString();
+        }
+
+        /// <summary>
+        /// Pastes data from the clipboard into the selected column(s).
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
+        private void PasteColumn(object sender, EventArgs e)
+        {
+            if (activeCol == null || activeCol.Count < 1)
+                return;
+
+            List<IGridCell> cellsChanged = new List<IGridCell>();
+            activeCol.Sort();
+            Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+            string text = cb.WaitForText();
+            if (text != null)
+            {
+                string[] lines = text.Split(Environment.NewLine.ToCharArray());
+                string[] firstLine = lines[0].Split('\t');
+
+                // The indices of the columns of the gridview which we will paste the data into.
+                List<int> columnIndices = new List<int>();
+
+                if (firstLine.Length == activeCol.Count)
+                {
+                    columnIndices = activeCol;
+                }
+                else if (gridview.Columns.Length - activeCol.Aggregate((x, y) => Math.Min(x, y)) - 1 > firstLine.Length)
+                {
+                    // Paste into contiguous columns starting at earliest selected column.
+                    columnIndices = Enumerable.Range(activeCol.Aggregate((x, y) => Math.Min(x, y)), firstLine.Length).ToList();
+                }
+                else if (firstLine.Length < gridview.Columns.Length - 1)
+                {
+                    // Paste into contiguous columns starting from the first column in the gridview.
+                    columnIndices = Enumerable.Range(0, firstLine.Length).ToList();
+                }
+                else
+                {
+                    throw new Exception("Unable to paste " + firstLine.Length + " columns of data into a grid with " + gridview.Columns.Length + " columns.");
+                }
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    if (i < this.RowCount && lines[i].Length > 0)
+                    {
+                        string[] words = lines[i].Split('\t');
+                        
+                        for (int j = 0; j < columnIndices.Count; j++)
+                        {
+                            // Make sure there are enough rows in the data source.
+                            while (this.DataSource.Rows.Count <= i)
+                            {
+                                this.DataSource.Rows.Add(this.DataSource.NewRow());
+                            }
+                            
+                            IGridCell cell = this.GetCell(columnIndices[j], i);
+                            IGridColumn column = this.GetColumn(columnIndices[j]);
+                            if (!column.ReadOnly)
+                            {
+                                try
+                                {
+                                    if (cell.Value == null || AsString(cell.Value) != words[j])
+                                    {
+                                        // We are pasting a new value for this cell. Put the new
+                                        // value into the cell.
+                                        if (words[j] == string.Empty)
+                                        {
+                                            cell.Value = DBNull.Value;
+                                        }
+                                        else
+                                        {
+                                            cell.Value = Convert.ChangeType(words[j], this.DataSource.Columns[j].DataType);
+                                        }
+
+                                        // Put a cell into the cells changed member.
+                                        cellsChanged.Add(this.GetCell(columnIndices[j], i));
+                                    }
+                                }
+                                catch (FormatException)
+                                {
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // If some cells were changed then send out an event.
+            if (cellsChanged.Count > 0 && this.CellsChanged != null)
+            {
+                fixedcolview.QueueDraw();
+                gridview.QueueDraw();
+                this.CellsChanged?.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
+            }
+        }
+
+        /// <summary>
         /// Modify the settings of all column headers
         /// We apply center-justification to all the column headers, just for the heck of it
         /// Note that "justification" here refers to justification of wrapped lines, not 
@@ -562,6 +959,20 @@ namespace UserInterface.Views
                 if (this.DataSource.Columns[i].Caption != this.DataSource.Columns[i].ColumnName)
                     newLabel.Parent.Parent.Parent.TooltipText = this.DataSource.Columns[i].ColumnName;
                 newLabel.Show();
+                
+                // By default, it's difficult to trap a right-click event on a TreeViewColumn (on the header of a column).
+                // TreeViewColumn responds to a click event, but this is not terribly useful, as we have no way of knowing 
+                // what type of click triggered the event. To get around this, we respond to the ButtonPressEvent of the 
+                // tree's internal button. The button is several parent-levels above the tree's widget (newLabel). 
+                // See https://bugzilla.gnome.org/show_bug.cgi?id=141937. This is a bit of a hack, but it works (for now). 
+                view.Columns[i].Clickable = true;
+                Widget w = view.Columns[i].Widget;
+                while (!(w is Button || w == null))
+                {
+                    w = w.Parent;
+                }
+                if (w != null)
+                    w.ButtonPressEvent += HeaderClicked;
             }
         }
 
@@ -1674,6 +2085,8 @@ namespace UserInterface.Views
         [GLib.ConnectBefore] 
         private void OnButtonDown(object sender, ButtonPressEventArgs e)
         {
+            activeCol = new List<int>();
+            HighlightColumns();
             if (e.Event.Button == 3)
             {
                 if (this.ColumnHeaderClicked != null)

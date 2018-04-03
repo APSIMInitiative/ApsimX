@@ -15,6 +15,7 @@ namespace Models.Zones
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(AgroforestrySystem))]
+    [ValidParent(ParentType = typeof(StripCropZone))]
     public class RectangularZone : Zone
     {
         /// <summary>Length of the zone.</summary>

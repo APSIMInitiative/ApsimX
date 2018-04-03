@@ -57,7 +57,7 @@ namespace Models.PMF.Functions
 
                     // write memos.
                     foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                        AutoDocumentation.DocumentModel(memo, tags, -1, indent);
+                        AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                     tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));
                 }

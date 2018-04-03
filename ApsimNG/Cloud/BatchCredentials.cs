@@ -1,25 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
-
-namespace ApsimNG.Cloud
+﻿namespace ApsimNG.Cloud
 {    
     public class BatchCredentials
     {
+        /// <summary>
+        /// URL of the batch account.
+        /// </summary>
         public string Url { get; set; }
+        
+        /// <summary>
+        /// Azure Batch account name.
+        /// </summary>
         public string Account { get; set; }
+
+        /// <summary>
+        /// Azure Batch account key.
+        /// </summary>
         public string Key { get; set; }
 
+        /// <summary>
+        /// Generates an instance of BatchCredentials from the settings saved in ApsimNG.Cloud.AzureSettings.
+        /// </summary>
+        /// <returns></returns>
         public static BatchCredentials FromConfiguration()
         {
             return new BatchCredentials
             {
-                Url = (string)Properties.Settings.Default["BatchUrl"],
-                Account = (string)Properties.Settings.Default["BatchAccount"],
-                Key = (string)Properties.Settings.Default["BatchKey"]
+                Url = (string)AzureSettings.Default["BatchUrl"],
+                Account = (string)AzureSettings.Default["BatchAccount"],
+                Key = (string)AzureSettings.Default["BatchKey"]
             };
         }
     }

@@ -42,6 +42,8 @@ namespace UserInterface.Presenters
         /// <summary>Using advanced mode</summary>
         private bool advancedMode = false;
 
+        private bool showDocumentationStatus;
+
         /// <summary>Initializes a new instance of the <see cref="ExplorerPresenter" /> class</summary>
         /// <param name="mainPresenter">The presenter for the main window</param>
         public ExplorerPresenter(MainPresenter mainPresenter)
@@ -49,6 +51,22 @@ namespace UserInterface.Presenters
             this.MainPresenter = mainPresenter;
         }
 
+        /// <summary>
+        /// Gets or sets whether graphical ticks should be displayed next to nodes that
+        /// are to be included in auto documentation.
+        /// </summary>
+        public bool ShowIncludeInDocumentation
+        {
+            get
+            {
+                return view.ShowIncludeInDocumentation;
+            }
+            set
+            {
+                view.ShowIncludeInDocumentation = value;
+                Refresh();
+            }
+        }
         /// <summary>Gets or sets the command history for this presenter</summary>
         /// <value>The command history.</value>
         public CommandHistory CommandHistory { get; set; }
@@ -206,7 +224,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, Simulation.ErrorLevel.Error);
+                MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
                 result = false;
             }
 
@@ -236,7 +254,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                this.MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, Simulation.ErrorLevel.Error);
+                this.MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
             }
             finally
             {
@@ -266,7 +284,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    this.MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, Simulation.ErrorLevel.Error);
+                    this.MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
                 }
             }
 
@@ -390,9 +408,9 @@ namespace UserInterface.Presenters
                 {
                     document.LoadXml(xml);
                 }
-                catch (XmlException)
+                catch (XmlException err)
                 {
-                    MainPresenter.ShowMessage("Invalid XML. Are you sure you're trying to paste an APSIM model?", Simulation.ErrorLevel.Error);
+                    MainPresenter.ShowError(new Exception("Invalid XML. Are you sure you're trying to paste an APSIM model?", err));
                 }
 
                 object newModel = XmlUtilities.Deserialise(document.DocumentElement, this.ApsimXFile.GetType().Assembly);
@@ -451,9 +469,9 @@ namespace UserInterface.Presenters
                     this.CommandHistory.Add(command, true);
                 }
             }
-            catch (Exception exception)
+            catch (Exception err)
             {
-                this.MainPresenter.ShowMessage(exception.Message, Simulation.ErrorLevel.Error);
+                this.MainPresenter.ShowError(err);
             }
         }
 
@@ -571,6 +589,66 @@ namespace UserInterface.Presenters
             this.view.PopulateContextMenu(descriptions);
         }
 
+        /// <summary>
+        /// Generates .apsimx files for each child model under a given model.
+        /// Returns false if errors were encountered, or true otherwise.
+        /// </summary>
+        /// <param name="model">Model to generate .apsimx files for.</param>
+        /// <param name="path">
+        /// Path which the files will be saved to. 
+        /// If null, the user will be prompted to choose a directory.
+        /// </param>
+        public bool GenerateApsimXFiles(IModel model, string path = null)
+        {
+            List<IModel> children;
+            if (model is ISimulationGenerator)
+            {
+                children = new List<IModel> { model };
+            }
+            else
+            {
+                children = Apsim.ChildrenRecursively(model, typeof(ISimulationGenerator));
+            }
+
+            if (string.IsNullOrEmpty(path))
+            {
+                path = ViewBase.AskUserForDirectory("Select a directory to save model files to.");
+                if (path == null)
+                    return false;
+            }
+            
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            List<Exception> errors = new List<Exception>();
+            int i = 0;
+            children.ForEach(sim =>
+            {
+                MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
+                MainPresenter.ShowProgress(100 * i / children.Count, false);
+                while (GLib.MainContext.Iteration()) ;
+                try
+                {
+                    (sim as ISimulationGenerator).GenerateApsimXFile(path);
+                }
+                catch (Exception err)
+                {
+                    errors.Add(err);
+                }
+
+                i++;
+            });
+            if (errors.Count < 1)
+            {
+                MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
+                return true;
+            }
+            else
+            {
+                MainPresenter.ShowError(errors);
+                return false;
+            }
+        }
+
         /// <summary>Hide the right hand panel.</summary>
         public void HideRightHandPanel()
         {
@@ -583,7 +661,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
+                    MainPresenter.ShowError(err);
                 }
             }
 
@@ -656,7 +734,7 @@ namespace UserInterface.Presenters
 
                 string message = err.Message;
                 message += "\r\n" + err.StackTrace;
-                MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
+                MainPresenter.ShowError(err);
             }
         }
 
@@ -822,7 +900,7 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    MainPresenter.ShowMessage("Use alpha numeric characters only!", Simulation.ErrorLevel.Error);
+                    MainPresenter.ShowError("Use alpha numeric characters only!");
                     e.CancelEdit = true;
                 }
             }
@@ -873,30 +951,7 @@ namespace UserInterface.Presenters
         {
             if (this.ApsimXFile.LoadErrors != null)
             {
-                foreach (Exception err in this.ApsimXFile.LoadErrors)
-                {
-                    string message = string.Empty;
-                    if (err is ApsimXException)
-                    {
-                        message = string.Format("[{0}]: {1}", (err as ApsimXException).model, err.Message);
-                    }
-                    else
-                    {
-                        if (!string.IsNullOrEmpty(err.Source) && err.Source != "mscorlib")
-                        {
-                            message = "[" + err.Source + "]: ";
-                        }
-
-                        message += string.Format("{0}", err.Message + "\r\n" + err.StackTrace);
-                    }
-
-                    if (err.InnerException != null)
-                    {
-                        message += "\r\n" + err.InnerException.Message;
-                    }
-
-                    MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
-                }
+                MainPresenter.ShowError(ApsimXFile.LoadErrors);
             }
         }
 
@@ -939,7 +994,7 @@ namespace UserInterface.Presenters
                     description.Children.Add(this.GetNodeDescription(child));
                 }
             }
-
+            description.IncludeInDocumentation = model.IncludeInDocumentation;
             return description;
         }
 

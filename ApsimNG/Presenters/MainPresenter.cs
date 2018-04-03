@@ -17,7 +17,8 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Views;
     using System.Linq;
-    using System.Text;    
+    using System.Text;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
@@ -38,6 +39,11 @@ namespace UserInterface.Presenters
 
         /// <summary>A list of presenters for tabs on the right.</summary>
         private List<IPresenter> presenters2 = new List<IPresenter>();
+
+        /// <summary>
+        /// The most recent exception that has been thrown.
+        /// </summary>
+        public List<string> LastError { get; private set; }
 
         /// <summary>Attach this presenter with a view. Can throw if there are errors during startup.</summary>
         /// <param name="view">The view to attach</param>
@@ -74,6 +80,7 @@ namespace UserInterface.Presenters
             this.view.StartPage1.List.DoubleClicked += this.OnFileDoubleClicked;
             this.view.StartPage2.List.DoubleClicked += this.OnFileDoubleClicked;
             this.view.TabClosing += this.OnTabClosing;
+            this.view.ShowDetailedError += this.ShowDetailedErrorMessage;
             this.view.Show();
             if (Utility.Configuration.Settings.StatusPanelHeight > 0.5 * this.view.WindowSize.Height)
                 this.view.StatusPanelHeight = 20;
@@ -158,12 +165,107 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Add a status message. A message of null will clear the status message.
+        /// For error messages, use <see cref="ShowError(Exception)"/>.
         /// </summary>
         /// <param name="message">The message test</param>
         /// <param name="errorLevel">The error level value</param>
-        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel)
+        public void ShowMessage(string message, Simulation.MessageType messageType)
         {
-            this.view.ShowMessage(message, errorLevel);
+            Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
+
+            if (messageType == Simulation.MessageType.Information)
+                errorType = Simulation.ErrorLevel.Information;
+            else if (messageType == Simulation.MessageType.Warning)
+                errorType = Simulation.ErrorLevel.Warning;
+
+            this.view.ShowMessage(message, errorType);
+        }
+        
+        /// <summary>
+        /// Displays several messages, with a separator between them. 
+        /// For error messages, use <see cref="ShowError(List{Exception})"/>.
+        /// </summary>
+        /// <param name="messages">Messages to be displayed.</param>
+        /// <param name="messageType"></param>
+        public void ShowMessage(List<string> messages, Simulation.MessageType messageType)
+        {
+            Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
+
+            if (messageType == Simulation.MessageType.Information)
+                errorType = Simulation.ErrorLevel.Information;
+            else if (messageType == Simulation.MessageType.Warning)
+                errorType = Simulation.ErrorLevel.Warning;
+
+            foreach (string msg in messages)
+            {
+                view.ShowMessage(msg, errorType, false, true, false);
+            }
+        }
+
+        /// <summary>
+        /// Displays a simple error message in the status bar, without a 'more information' button.
+        /// If you've just caught an exception, <see cref="ShowError(Exception)"/> is probably a better method to use.
+        /// </summary>
+        /// <param name="error"></param>
+        public void ShowError(string error)
+        {
+            LastError = new List<string>();
+            view.ShowMessage(error, Simulation.ErrorLevel.Error, withButton : false);
+        }
+
+        /// <summary>
+        /// Displays an error message in the status bar, along with a button which brings up more info.
+        /// </summary>
+        /// <param name="error">The error to be displayed.</param>
+        public void ShowError(Exception error)
+        {
+            if (error != null)
+            {
+                LastError = new List<string> { error.ToString() };
+                view.ShowMessage(error.Message, Simulation.ErrorLevel.Error);
+            }
+            else
+            {
+                LastError = new List<string>();
+                ShowError(new NullReferenceException("Attempted to display a null error"));
+            }
+        }
+
+        /// <summary>
+        /// Displays several error messages in the status bar. Each error will have an associated 
+        /// </summary>
+        /// <param name="errors"></param>
+        public void ShowError(List<Exception> errors)
+        {
+            // if the list contains at least 1 null exception, display none of them
+            if (errors != null && !errors.Contains(null))
+            {
+                LastError = errors.Select(err => err.ToString()).ToList();
+                for (int i = 0; i < errors.Count; i++)
+                {
+                    // only overwrite other messages the first time through the loop
+                    view.ShowMessage(errors[i].Message, Simulation.ErrorLevel.Error, i == 0, true);
+                }
+            }
+            else
+            {
+                LastError = new List<string>();
+                ShowError(new NullReferenceException("Attempted to display a null error"));
+            }
+        }
+
+        /// <summary>
+        /// Shows a window which contains detailed error information (such as stack trace).
+        /// </summary>
+        /// <param name="sender">Sender object. Must be an <see cref="ApsimNG.Classes.CustomButton"/></param>
+        /// <param name="e">Event Arguments.</param>
+        private void ShowDetailedErrorMessage(object sender, EventArgs e)
+        {
+            if (sender is ApsimNG.Classes.CustomButton)
+            {
+                ErrorView err = new ErrorView(LastError[(sender as ApsimNG.Classes.CustomButton).ID], view as ViewBase);
+                err.Show();
+            }
         }
 
         /// <summary>Show a message in a dialog box</summary>
@@ -224,7 +326,7 @@ namespace UserInterface.Presenters
         /// <param name="askToSave">Prompt to save</param>
         public void Close(bool askToSave)
         {
-            this.view.Close();
+            this.view.Close(askToSave);
         }
 
         /// <summary>Ask the user a question</summary>
@@ -278,10 +380,7 @@ namespace UserInterface.Presenters
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
                     if (simulations.LoadErrors.Count > 0)
                     {
-                        foreach (Exception error in simulations.LoadErrors)
-                        {
-                            this.view.ShowMessage(error.ToString(), Simulation.ErrorLevel.Error);
-                        }
+                        ShowError(simulations.LoadErrors);
                     }
 
                     // Add to MRU list and update display
@@ -290,13 +389,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    string message = err.Message;
-                    while (err.InnerException != null)
-                    {
-                        message += "\r\n" + err.InnerException.Message;
-                        err = err.InnerException;
-                    }
-                    this.view.ShowMessage(message, Simulation.ErrorLevel.Error);
+                    ShowError(err);
                 }
 
                 this.view.ShowWaitCursor(false);
@@ -505,9 +598,9 @@ namespace UserInterface.Presenters
                         Utility.Configuration.Settings.RenameMruFile(fileName, newName);
                         this.UpdateMRUDisplay();
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        this.view.ShowMessage("Error renaming file!", Simulation.ErrorLevel.Error);
+                        ShowError(new Exception("Error renaming file!", e));
                     }
                 }
             }
@@ -534,9 +627,9 @@ namespace UserInterface.Presenters
                         Utility.Configuration.Settings.AddMruFile(copyName);
                         this.UpdateMRUDisplay();
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        this.view.ShowMessage("Error creating copy of file!", Simulation.ErrorLevel.Error);
+                        ShowError(new Exception("Error creating copy of file!", e));
                     }
                 }
             }
@@ -560,9 +653,9 @@ namespace UserInterface.Presenters
                         Utility.Configuration.Settings.DelMruFile(fileName);
                         this.UpdateMRUDisplay();
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        this.view.ShowMessage("Error deleting file!", Simulation.ErrorLevel.Error);
+                        ShowError(new Exception("Error deleting file!", e));
                     }
                 }
             }
@@ -639,10 +732,11 @@ namespace UserInterface.Presenters
             {
                 newView = (ViewBase)Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
                 newPresenter = (IPresenter)Assembly.GetExecutingAssembly().CreateInstance(presenterName, false, BindingFlags.Default, null, new object[] { this }, null, null);
-            } catch (InvalidCastException e)
+            }
+            catch (InvalidCastException e)
             {
                 // viewName or presenterName does not define a class derived from ViewBase or IPresenter, respectively.
-                view.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
+                ShowError(e);
                 return null;
             }
             
@@ -779,7 +873,7 @@ namespace UserInterface.Presenters
                     message += "\r\n" + err.InnerException.Message;
                 }
 
-                this.view.ShowMessage(message, Simulation.ErrorLevel.Error);
+                ShowError(err);
             }
         }
 
@@ -830,8 +924,7 @@ namespace UserInterface.Presenters
                 CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "UserInterface.Views.CloudJobDisplayView", "UserInterface.Presenters.AzureJobDisplayPresenter");
             } else
             {
-                ShowMessage("Microsoft Azure functionality is currently only available under Windows.", Simulation.ErrorLevel.Error);
-                Console.WriteLine("You aren't on Windows!");
+                ShowError("Microsoft Azure functionality is currently only available under Windows.");
             }
             
         }
@@ -884,7 +977,7 @@ namespace UserInterface.Presenters
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             if (version.Revision == 0)
             {
-                this.view.ShowMessage("You are on a custom build. You cannot upgrade.", Simulation.ErrorLevel.Error);
+                ShowError("You are on a custom build. You cannot upgrade.");
             }
             else
             {

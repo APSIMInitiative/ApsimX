@@ -145,6 +145,9 @@ namespace UserInterface.Commands
             }
             section.AddImage(png1);
 
+            Paragraph version = new Paragraph();
+            version.AddText(ExplorerPresenter.ApsimXFile.ApsimVersion);
+            section.Add(version);
             // Convert all models in file to tags.
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
             foreach (IModel child in ExplorerPresenter.ApsimXFile.Children)
@@ -669,14 +672,18 @@ namespace UserInterface.Commands
                             ExplorerPresenter.ApsimXFile.Links.Resolve(presenter);
                             presenter.Attach(modelView.model, view, ExplorerPresenter);
 
-                            Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
-                            popupWin.SetSizeRequest(800, 800);
-                            // Move the window offscreen; the user doesn't need to see it.
-                            // This works with IE, but not with WebKit
-                            // Not yet tested on OSX
-                            if (ProcessUtilities.CurrentOS.IsWindows)
-                                popupWin.Move(-10000, -10000);
-                            popupWin.Add(view.MainWidget);
+                            Gtk.Window popupWin;
+                            if (view is MapView)
+                            {
+                                popupWin = (view as MapView).GetPopupWin();
+                                popupWin.SetSizeRequest(500, 500);
+                            }
+                            else
+                            {
+                                popupWin = new Gtk.Window(Gtk.WindowType.Popup);
+                                popupWin.SetSizeRequest(800, 800);
+                                popupWin.Add(view.MainWidget);
+                            }
                             popupWin.ShowAll();
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
@@ -685,6 +692,7 @@ namespace UserInterface.Commands
                             section.AddImage(PNGFileName);
                             presenter.Detach();
                             view.MainWidget.Destroy();
+                            popupWin.Destroy();
                         }
                     }
                 }

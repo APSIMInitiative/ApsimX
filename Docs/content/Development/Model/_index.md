@@ -5,7 +5,8 @@ weight: 20
 ---
 
 * [Overview](/development/model/1-overview)
-* [Attributes](/development/2-attributes)
-* [Path specification](/development/3-pathspecification)
-* [Scope](/development/4-scope)
-* [Auto documentation](/development/5-autodocumentation)
+* [Coding Style](/development/model/2-codingstyle)
+* [Attributes](/development/model/3-attributes)
+* [Path specification](/development/model/4-pathspecification)
+* [Scope](/development/model/5-scope)
+* [Auto documentation](/development/model/6-autodocumentation)

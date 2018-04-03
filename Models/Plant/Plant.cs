@@ -417,8 +417,12 @@ namespace Models.PMF
                 Phenology.ReSetToStage(removalData.SetPhenologyStage);
 
             // Reduce plant and stem population if thinning proportion specified
-            if (removalData != null && removalData.SetThinningProportion != 0)
+            if (removalData != null && removalData.SetThinningProportion != 0 && Structure != null)
                 Structure.doThin(removalData.SetThinningProportion);
+
+            // Remove nodes from the main-stem
+            if (removalData != null && removalData.NodesToRemove > 0)
+                Structure.doNodeRemoval(removalData.NodesToRemove);
 
 
 
@@ -478,7 +482,7 @@ namespace Models.PMF
                 tags.Add(new AutoDocumentation.Table(tableData, indent));
 
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent, true);
             }
         }
     }

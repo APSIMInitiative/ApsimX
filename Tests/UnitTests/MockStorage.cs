@@ -125,5 +125,10 @@ namespace UnitTests
         {
             throw new NotImplementedException();
         }
+
+        public void AddUnitsForTable(string tableName, List<string> columnNames, List<string> columnUnits)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

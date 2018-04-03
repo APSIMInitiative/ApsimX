@@ -211,25 +211,25 @@
         /// <summary>
         /// The amount of live biomass taken from each organ and removeed from the zone on harvest, cut, graze or prune.
         /// </summary>
-        [Description("Fraction of live biomass to remove from plant (lost to system)")]
+        [Description("Fraction of live biomass to remove from plant (remove from the system)")]
         public double FractionLiveToRemove { get; set; }
 
         /// <summary>
         /// The amount of dead biomass taken from each organ and removeed from the zone on harvest, cut, graze or prune.
         /// </summary>
-        [Description("Fraction of dead biomass to remove from plant (lost to system)")]
+        [Description("Fraction of dead biomass to remove from plant (remove from the system)")]
         public double FractionDeadToRemove { get; set; }
 
         /// <summary>
         /// The amount of live biomass to removed from each organ and passed to residue pool on on harvest, cut, graze or prune
         /// </summary>
-        [Description("Fraction of live biomass to remove from plant (and send to surface organic matter")]
+        [Description("Fraction of live biomass to remove from plant (send to surface organic matter")]
         public double FractionLiveToResidue { get; set; }
 
         /// <summary>
         /// The amount of dead biomass to removed from each organ and passed to residue pool on on harvest, cut, graze or prune
         /// </summary>
-        [Description("Fraction of dead biomass to remove from plant (and send to surface organic matter")]
+        [Description("Fraction of dead biomass to remove from plant (send to surface organic matter")]
         public double FractionDeadToResidue { get; set; }
     }
 
@@ -250,6 +250,11 @@
         /// The Phenological stage that biomass removal resets phenology to.
         ///</summary>
         public double SetPhenologyStage { get; set; }
+
+        /// <summary>
+        /// The nunber of Main-stem nodes to remove
+        /// </summary>
+        public int NodesToRemove { get; set; }
 
         /// <summary>
         /// Method to set the FractionToRemove for specified Organ

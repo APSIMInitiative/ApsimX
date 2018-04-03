@@ -55,8 +55,6 @@ namespace ApsimNG.Cloud
         /// </summary>
         private Button btnHelp;
 
-        public EventHandler Finished { get; set; }
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -122,6 +120,29 @@ namespace ApsimNG.Cloud
             adj.ShowAll();
             Show();
         }
+        
+        /// <summary>
+        /// Event handler for when the user has finished entering credentials (when they press save).
+        /// </summary>
+        public EventHandler Finished { get; set; }
+
+        /// <summary>
+        /// Checks if Azure credentials exist in AzureSettings.Default. This method does not check their validity.
+        /// It also does not check to see if the path to the Azure licence file exists there.
+        /// </summary>
+        /// <returns>True if credentials exist, false otherwise.</returns>
+        public static bool CredentialsExist()
+        {
+            string[] credentials = new string[] { "BatchAccount", "BatchUrl", "BatchKey", "StorageAccount", "StorageKey", "EmailSender", "EmailPW" };
+            // not very scalable, I know. the better solution would be to split the properties into 2 files: credentials, and misc settings. then just iterate over the following:
+            //List<string> properties = AzureSettings.Default.Properties.Cast<System.Configuration.SettingsProperty>().Select(p => p.Name).ToList();
+            foreach (string key in credentials)
+            {
+                string value = (string)AzureSettings.Default[key];
+                if (value == null || value == "") return false;
+            }
+            return true;
+        }
 
         /// <summary>
         /// Opens a file chooser dialog for the user to select a licence (.lic) file. 
@@ -131,7 +152,7 @@ namespace ApsimNG.Cloud
         /// <param name="e"></param>
         private void LoadCredentialsFromFile(object sender, EventArgs e)
         {
-            string path = UserInterface.ViewBase.AskUserForFileName("Select a licence file", "Azure Licence file (*.lic) | *.lic", FileChooserAction.Open);            
+            string path = UserInterface.ViewBase.AskUserForFileName("Select a licence file", "Azure Licence file (*.lic) | *.lic", FileChooserAction.Open, (string)AzureSettings.Default["AzureLicenceFilePath"]);
             if (path != "" && path != null)
             {
                 AzureSettings.Default["AzureLicenceFilePath"] = path;
@@ -198,30 +219,14 @@ namespace ApsimNG.Cloud
             this.Destroy();
         }
 
+        /// <summary>
+        /// Provides help for the user by opening the ApsimX documentation on getting started with Azure.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ProvideHelp(object sender, EventArgs e)
         {
-            // System.Diagnostics.Process.Start("http://apsimnextgeneration.netlify.com/usage/cloud/azure/gettingstarted/"); // this page will not exist until this branch is merged
-            System.Diagnostics.Process.Start("https://azure.microsoft.com/free/");
-            System.Diagnostics.Process.Start("https://docs.microsoft.com/en-us/azure/batch/batch-account-create-portal");
-            System.Diagnostics.Process.Start("https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account");
-        }
-
-        /// <summary>
-        /// Checks if Azure credentials exist in AzureSettings.Default. This method does not check their validity.
-        /// It also does not check to see if the path to the Azure licence file exists there.
-        /// </summary>
-        /// <returns>True if credentials exist, false otherwise.</returns>
-        public static bool CredentialsExist()
-        {
-            string[] credentials = new string[] { "BatchAccount", "BatchUrl", "BatchKey", "StorageAccount", "StorageKey", "EmailSender", "EmailPW" };
-            // not very scalable, I know. the better solution would be to split the properties into 2 files: credentials, and misc settings. then just iterate over the following:
-            //List<string> properties = AzureSettings.Default.Properties.Cast<System.Configuration.SettingsProperty>().Select(p => p.Name).ToList();
-            foreach (string key in credentials)
-            {
-                string value = (string)AzureSettings.Default[key];
-                if (value == null || value == "") return false;
-            }
-            return true;
+            System.Diagnostics.Process.Start("http://apsimnextgeneration.netlify.com/usage/cloud/azure/gettingstarted/");            
         }
     }
 }

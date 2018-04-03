@@ -900,8 +900,10 @@ namespace Models.AgPasture
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 layerFrac = FractionLayerWithRoots(layer);
-                mySoilNH4Available[layer] = myZone.NH4N[layer] * layerFrac;
-                mySoilNO3Available[layer] = myZone.NO3N[layer] * layerFrac;
+                //mySoilNH4Available[layer] = myZone.NH4N[layer] * layerFrac;
+                //mySoilNO3Available[layer] = myZone.NO3N[layer] * layerFrac;
+                mySoilNH4Available[layer] = Math.Min(myZone.NH4N[layer], SoilNitrogen.nh4_PlantAvailable[layer]) * layerFrac;
+                mySoilNO3Available[layer] = Math.Min(myZone.NO3N[layer], SoilNitrogen.no3_PlantAvailable[layer]) * layerFrac;
             }
         }
 
