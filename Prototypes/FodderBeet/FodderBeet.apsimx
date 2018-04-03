@@ -10370,10 +10370,10 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>5</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
                   <SowingDate>2014-10-17</SowingDate>
+                  <InitialRootDepth>5</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -22360,8 +22360,8 @@ namespace Models
                   <Name>NitTreatments</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <SplitFactor>0</SplitFactor>
                     <NitAmount>0</NitAmount>
+                    <SplitFactor>0</SplitFactor>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -23257,5 +23257,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>303</ExplorerWidth>
+  <ExplorerWidth>283</ExplorerWidth>
 </Simulations>
