@@ -3933,17 +3933,12 @@ date of Experiment 4 is assumed here.]]></MemoText>
       <CultivarFolder>
         <Name>Cultivars</Name>
         <Cultivar>
-          <Name>Rivage</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command />
-        </Cultivar>
-        <Cultivar>
           <Name>Brigadier</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command />
         </Cultivar>
         <Cultivar>
-          <Name>FRivage</Name>
+          <Name>Rivage</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Leaf].CohortParameters.SenescenceDuration.BaseValue.FixedValue = 1200</Command>
           <Command>[Leaf].CohortParameters.LagDuration.LagDurationBase.XYPairs.Y = 100,300,300</Command>
@@ -3953,6 +3948,18 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Command>[Petiole].NRetranslocationFactor.FixedValue = 0</Command>
           <Command>[Petiole].DMRetranslocationFactor.FixedValue = 0</Command>
           <Command>[Petiole].DMDemandFunction.PotDemand.Ratio.FixedValue = 1.2</Command>
+        </Cultivar>
+        <Cultivar>
+          <Name>FungalRivage</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Command>[Leaf].CohortParameters.SenescenceDuration.BaseValue.FixedValue = 600</Command>
+          <Command>[Leaf].CohortParameters.LagDuration.LagDurationBase.XYPairs.Y = 100,200,300</Command>
+          <Command>[Leaf].CohortParameters.NRetranslocationFactor.FixedValue = 0.00</Command>
+          <Command>[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.00</Command>
+          <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaf.FixedValue = 50000</Command>
+          <Command>[Petiole].NRetranslocationFactor.FixedValue = 0</Command>
+          <Command>[Petiole].DMRetranslocationFactor.FixedValue = 0</Command>
+          <Command>[Petiole].DMDemandFunction.PotDemand.Ratio.FixedValue = 1</Command>
         </Cultivar>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </CultivarFolder>
@@ -5583,7 +5590,7 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <InitialRootDepth>2</InitialRootDepth>
-                  <CropToSow>Rivage</CropToSow>
+                  <CropToSow>FungalRivage</CropToSow>
                   <SowingDate>2011-10-31</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -7972,7 +7979,7 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <InitialRootDepth>2</InitialRootDepth>
-                  <CropToSow>Rivage</CropToSow>
+                  <CropToSow>FungalRivage</CropToSow>
                   <SowingDate>2012-10-29</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -9528,7 +9535,7 @@ namespace Models
             <Name>Cv</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Specifications>
-              <string>[Sowing].Script.Cultivar = Rivage,Brigadier</string>
+              <string>[Sowing].Script.Cultivar = FungalRivage,Brigadier</string>
             </Specifications>
           </Factor>
           <Factor>
@@ -13159,7 +13166,7 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <InitialRootDepth>5</InitialRootDepth>
-                  <CropToSow>FRivage</CropToSow>
+                  <CropToSow>Rivage</CropToSow>
                   <SowingDate>2016-10-18</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -17923,7 +17930,7 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <InitialRootDepth>2</InitialRootDepth>
-                  <CropToSow>Rivage</CropToSow>
+                  <CropToSow>FungalRivage</CropToSow>
                   <SowingDate>2013-11-03</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -22239,7 +22246,7 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
                     <InitialRootDepth>2</InitialRootDepth>
-                    <CropToSow>FRivage</CropToSow>
+                    <CropToSow>Rivage</CropToSow>
                     <SowingDate>2016-10-17</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
