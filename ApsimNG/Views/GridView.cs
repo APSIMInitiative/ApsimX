@@ -378,6 +378,8 @@ namespace UserInterface.Views
             {
                 gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
                 Entry editable = editControl as Entry;
+                if (editable == null)
+                    return;
                 editable.Text = "";
                 Gdk.EventHelper.Put(args.Event);
                 editable.Position = editable.Text.Length;
@@ -624,6 +626,7 @@ namespace UserInterface.Views
                 comboRender.Edited += ComboRender_Edited;
                 comboRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 1.0f; // Left or right align, as appropriate
                 comboRender.Visible = false;
+                comboRender.EditingStarted += ComboRender_Editing;
                 CellRendererActiveButton pixbufRender = new CellRendererActiveButton();
                 pixbufRender.pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
                 pixbufRender.Toggled += PixbufRender_Toggled;
@@ -1640,10 +1643,22 @@ namespace UserInterface.Views
             }
         }
 
+        private void ComboRender_Editing(object sender, EditingStartedArgs e)
+        {
+            (e.Editable as ComboBox).Changed += (o, _) =>
+            {
+                UpdateCellText(GetCurrentCell, (o as ComboBox).ActiveText);
+            };
+        }
+
         private void ComboRender_Edited(object sender, EditedArgs e)
         {
-            IGridCell where = GetCurrentCell;
-            string newText = e.NewText;
+            UpdateCellText(GetCurrentCell, e.NewText);
+
+        }
+
+        private void UpdateCellText(IGridCell where, string newText)
+        {
             while (this.DataSource != null && where.RowIndex >= this.DataSource.Rows.Count)
             {
                 this.DataSource.Rows.Add(this.DataSource.NewRow());
