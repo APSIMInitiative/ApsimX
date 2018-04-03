@@ -378,6 +378,8 @@ namespace UserInterface.Views
             {
                 gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
                 Entry editable = editControl as Entry;
+                if (editable == null)
+                    return;
                 editable.Text = "";
                 Gdk.EventHelper.Put(args.Event);
                 editable.Position = editable.Text.Length;
