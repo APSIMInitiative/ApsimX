@@ -64,10 +64,10 @@ namespace UserInterface.Views
 
         private Menu Popup = new Menu();
 
-        private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string));
+        private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string));
         private CellRendererText textRender;
         private AccelGroup accel = new AccelGroup();
-
+        private bool showIncludeInDocs = false;
         private const string modelMime = "application/x-model-component";
 
         System.Timers.Timer timer = new System.Timers.Timer();
@@ -92,8 +92,12 @@ namespace UserInterface.Views
             textRender.EditingStarted += OnBeforeLabelEdit;
             textRender.Edited += OnAfterLabelEdit;
             column.PackStart(textRender, true);
+            CellRendererText tickCell = new CellRendererText();
+            tickCell.Editable = false;
+            column.PackEnd(tickCell, false);
             column.SetAttributes(iconRender, "pixbuf", 1);
             column.SetAttributes(textRender, "text", 0);
+            column.SetAttributes(tickCell, "text", 3);
             // column.SetCellDataFunc(textRender, treecelldatafunc);
             treeview1.AppendColumn(column);
             treeview1.TooltipColumn = 2;
@@ -217,15 +221,47 @@ namespace UserInterface.Views
         /// <summary>Invoked then a node is renamed.</summary>
         public event EventHandler<NodeRenameArgs> Renamed;
 
+        /// <summary>
+        /// If true, a small tick will be displayed beside nodes which are to be included in auto-docs.
+        /// </summary>
+        public bool ShowIncludeInDocumentation
+        {
+            get
+            {
+                return showIncludeInDocs;
+            }
+            set
+            {
+                showIncludeInDocs = value;
+            }
+        }
+
         /// <summary>Refreshes the entire tree from the specified descriptions.</summary>
         /// <param name="nodeDescriptions">The nodes descriptions.</param>
         public void Refresh(NodeDescriptionArgs nodeDescriptions)
         {
+            // Record which rows are currently expanded.
+            // We can't directly use a TreePath to an outdated TreeModel/TreeView, so we store the path as a string, and 
+            // then parse that into a new TreePath after the model is reassembled. This assumes that the structure of the 
+            // tree view/model does not change when RefreshNode() is called (e.g. it still has the same number of rows/columns).
+            List<string> expandedRows = new List<string>();
+            treeview1.MapExpandedRows(new TreeViewMappingFunc((tree, path) =>
+            {
+                expandedRows.Add(path.ToString());
+            }));
             treemodel.Clear();
             TreeIter iter = treemodel.AppendNode();
             RefreshNode(iter, nodeDescriptions);
             treeview1.ShowAll();
             treeview1.ExpandRow(new TreePath("0"), false);
+            // Expand all rows which were previously expanded by the user.
+            try
+            {
+                expandedRows.ForEach(row => treeview1.ExpandRow(new TreePath(row), false));
+            }
+            catch
+            {
+            }
         }
 
         /// <summary>Moves the specified node up 1 position.</summary>
@@ -562,8 +598,8 @@ namespace UserInterface.Views
                     pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png");
                 }
             }
-
-            treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip);
+            string tick = description.IncludeInDocumentation && showIncludeInDocs ? "✔" : "";
+            treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick);
 
             for (int i = 0; i < description.Children.Count; i++)
             {
