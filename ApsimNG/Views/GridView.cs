@@ -94,7 +94,7 @@ namespace UserInterface.Views
         /// Flag to keep track of whether a cursor move was initiated internally
         /// </summary>
         private bool selfCursorMove = false;
-
+        
         /// <summary>
         /// A value storing the caret location when the user activates intellisense.
         /// </summary>
@@ -117,6 +117,7 @@ namespace UserInterface.Views
         private GridCell popupCell = null;
         private IntellisenseView intellisense;
         private List<int> activeCol = new List<int>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
         /// </summary>
@@ -1595,45 +1596,85 @@ namespace UserInterface.Views
             Type dataType = this.valueBeforeEdit.GetType();
             if (dataType == typeof(DateTime))
             {
-                Dialog dialog = new Dialog("Select date", gridview.Toplevel as Window, DialogFlags.DestroyWithParent);
+                Window dialog = new Window("Select date")
+                {
+                    TransientFor = gridview.Toplevel as Window,
+                    SkipPagerHint = true,
+                    SkipTaskbarHint = true,
+                    KeepBelow = true
+                };
+                dialog.KeyPressEvent += new KeyPressEventHandler((o, eArgs) => 
+                {
+                    if (eArgs.Event.Key == Gdk.Key.Escape)
+                        dialog.Destroy();
+                    else if (eArgs.Event.Key == Gdk.Key.Return)
+                        GLib.Signal.Emit(o as Calendar, "day-selected-double-click");
+                });
                 dialog.SetPosition(WindowPosition.None);
-                VBox topArea = dialog.VBox;
+                VBox topArea = new VBox();
                 topArea.PackStart(new HBox());
                 Calendar calendar = new Calendar();
                 calendar.DisplayOptions = CalendarDisplayOptions.ShowHeading |
                                      CalendarDisplayOptions.ShowDayNames |
                                      CalendarDisplayOptions.ShowWeekNumbers;
                 calendar.Date = (DateTime)this.valueBeforeEdit;
+
                 topArea.PackStart(calendar, true, true, 0);
+                dialog.Add(topArea);
+                
                 dialog.ShowAll();
-                dialog.Run();
-                // What SHOULD we do here? For now, assume that if the user modified the date in the calendar dialog,
-                // the resulting date is what they want. Otherwise, keep the text-editing (Entry) widget active, and
-                // let the user enter a value manually.
-                if (calendar.Date != (DateTime)this.valueBeforeEdit)
+                calendar.DaySelectedDoubleClick += (_, __) =>
                 {
-                    DateTime date = calendar.GetDate();
-                    this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = date;
-                    CellRendererText render = sender as CellRendererText;
-                    if (render != null)
+                    // What SHOULD we do here? For now, assume that if the user modified the date in the calendar dialog,
+                    // the resulting date is what they want. Otherwise, keep the text-editing (Entry) widget active, and
+                    // let the user enter a value manually.
+                    if (calendar.Date != (DateTime)this.valueBeforeEdit)
                     {
-                        render.Text = String.Format("{0:d}", date);
-                        if (e.Editable is Entry)
+                        DateTime date = calendar.GetDate();
+                        this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = date;
+                        CellRendererText render = sender as CellRendererText;
+                        if (render != null)
                         {
-                            (e.Editable as Entry).Text = render.Text;
-                            (e.Editable as Entry).Destroy();
-                            this.userEditingCell = false;
-                            if (this.CellsChanged != null)
+                            render.Text = String.Format("{0:d}", date);
+                            if (e.Editable is Entry)
                             {
-                                GridCellsChangedArgs args = new GridCellsChangedArgs();
-                                args.ChangedCells = new List<IGridCell>();
-                                args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
-                                this.CellsChanged(this, args);
+                                (e.Editable as Entry).Text = render.Text;
+                                (e.Editable as Entry).Destroy();
+                                this.userEditingCell = false;
+                                if (this.CellsChanged != null)
+                                {
+                                    GridCellsChangedArgs args = new GridCellsChangedArgs();
+                                    args.ChangedCells = new List<IGridCell>();
+                                    args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
+                                    this.CellsChanged(this, args);
+                                }
                             }
                         }
                     }
-                }
-                dialog.Destroy();
+                    dialog.Destroy();
+                    gridview.QueueDraw();
+                };
+                
+                // The new dialog will have focus by default. Switch focus back to the main window so that
+                // the Entry widget will be immediately editable.
+                (gridview.Toplevel as Window).Present();
+
+                // When the calendar dialog first appears, the Entry widget will briefly lose focus. We don't want
+                // the custom focus out event handler below to fire when this occurs, so we process all events in 
+                // the events queue before attaching the new event handler.
+                while (GLib.MainContext.Iteration()) ;
+                (e.Editable as Widget).FocusOutEvent += (_, __) =>
+                {
+                    // Process all events in the events queue, so we can accurately test if the
+                    // calendar has the focus.
+                    while (GLib.MainContext.Iteration()) ;
+                    // If the user clicks on the calendar dialog, the entry widget will lose focus.
+                    // Normally we want to remove the calendar dialog when the entry loses focus, but the user might
+                    // be a bit annoyed if the calendar disappears when they click on it.
+                    if (!(dialog.HasFocus || calendar.HasFocus))
+                        dialog.Destroy();
+                };
+                userEditingCell = true;
             }
         }
 
