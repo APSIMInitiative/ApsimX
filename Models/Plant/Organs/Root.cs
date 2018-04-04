@@ -340,7 +340,7 @@ namespace Models.PMF.Organs
             {
                 double uptake = 0;
                 foreach (ZoneState zone in Zones)
-                    uptake = uptake + MathUtilities.Sum(zone.Uptake);
+                    uptake = uptake + MathUtilities.Sum(zone.WaterUptake);
                 return -uptake;
             }
         }
@@ -484,8 +484,8 @@ namespace Models.PMF.Organs
             if (zone == null)
                 throw new Exception("Cannot find a zone called " + zoneName);
 
-            zone.Uptake = MathUtilities.Multiply_Value(Amount, -1.0);
-            zone.soil.SoilWater.dlt_sw_dep = zone.Uptake;
+            zone.WaterUptake = MathUtilities.Multiply_Value(Amount, -1.0);
+            zone.soil.SoilWater.dlt_sw_dep = zone.WaterUptake;
         }
 
         /// <summary>Does the Nitrogen uptake.</summary>
@@ -581,7 +581,7 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dry matter potential allocation.</summary>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
-            if (PlantZone.Uptake == null)
+            if (PlantZone.WaterUptake == null)
                 throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
 
             if (PlantZone.Depth <= 0)
