@@ -41,9 +41,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Using advanced mode</summary>
         private bool advancedMode = false;
-
-        private bool showDocumentationStatus;
-
+        
         /// <summary>Initializes a new instance of the <see cref="ExplorerPresenter" /> class</summary>
         /// <param name="mainPresenter">The presenter for the main window</param>
         public ExplorerPresenter(MainPresenter mainPresenter)

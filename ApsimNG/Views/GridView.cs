@@ -375,7 +375,7 @@ namespace UserInterface.Views
                     args.RetVal = true;
                 }
             }
-            else if (!userEditingCell && !GetColumn(iCol).ReadOnly) // Initiate cell editing when user starts typing.
+            else if (!userEditingCell && !GetColumn(iCol).ReadOnly && (activeCol == null || activeCol.Count < 1)) // Initiate cell editing when user starts typing.
             {
                 gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
                 Entry editable = editControl as Entry;
@@ -385,7 +385,6 @@ namespace UserInterface.Views
                 Gdk.EventHelper.Put(args.Event);
                 editable.Position = editable.Text.Length;
                 userEditingCell = true;
-                while (GLib.MainContext.Iteration()) ;
             }
             else if ((char)Gdk.Keyval.ToUnicode(args.Event.KeyValue) == '.')
             {
@@ -725,9 +724,8 @@ namespace UserInterface.Views
                 int x;
                 gridview.TranslateCoordinates(MainWidget.Toplevel, 0, 0, out x, out _);
                 int colNo = GetColumn(e.Event.XRoot - x);
-                if (e.Event.State == Gdk.ModifierType.ShiftMask)
+                if (e.Event.State == Gdk.ModifierType.ShiftMask && activeCol.Count > 0)
                 {
-
                     int closestColumn = activeCol.Aggregate((a, b) => Math.Abs(a - colNo) < Math.Abs(b - colNo) ? a : b);
                     int lowerBound = Math.Min(colNo, closestColumn);
                     int n = Math.Max(colNo, closestColumn) - lowerBound + 1;
@@ -795,6 +793,19 @@ namespace UserInterface.Views
                     cell.BackgroundGdk = bgColour;
                     cell.ForegroundGdk = fgColour;
                 });
+            }
+            if (FormatColumns == null)
+            {
+                foreach (int i in Enumerable.Range(0, gridview.Columns.Length).Where(n => !activeCol.Contains(n)))
+                {
+                    bgColour = gridview.Style.Base(StateType.Normal);
+                    fgColour = new Gdk.Color(0, 0, 0);
+                    gridview.Columns[i].Cells.OfType<CellRendererText>().ToList().ForEach(cell =>
+                    {
+                        cell.BackgroundGdk = bgColour;
+                        cell.ForegroundGdk = fgColour;
+                    });
+                }
             }
             
             gridview.QueueDraw();
