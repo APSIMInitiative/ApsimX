@@ -95,6 +95,11 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.view = view as IProfileView;
+            this.view.ProfileGrid.FormatColumns += (sender, e) =>
+            {
+                FormatGrid((view as IProfileView).ProfileGrid.DataSource);
+            };
+
             this.explorerPresenter = explorerPresenter;
 
             this.view.ShowView(false);

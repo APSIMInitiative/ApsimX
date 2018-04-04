@@ -4332,6 +4332,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
         <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
         <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+        <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 90</Command>        
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </CultivarFolder>

@@ -392,6 +392,32 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
+        [Units("0-1")]
+        public double PlantWaterPotentialFactor
+        {
+            get
+            {
+                if (PlantZone == null)
+                    return 0;
+
+                double MeanWTF = 0;
+
+                double liveWt = Live.Wt;
+                if (liveWt > 0)
+                    foreach (ZoneState Z in Zones)
+                    {
+                        double[] paw = Z.soil.PAW;
+                        double[] pawc = Z.soil.PAWC;
+                        Biomass[] layerLiveForZone = Z.LayerLive;
+                        for (int i = 0; i < Z.LayerLive.Length; i++)
+                            MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(paw[i] / pawc[i], 0, 1);
+                    }
+
+                return MeanWTF;
+            }
+        }
+
         /// <summary>Gets or sets the minimum nconc.</summary>
         public double MinNconc { get { return minimumNConc.Value(); } }
 
