@@ -723,9 +723,8 @@ namespace UserInterface.Views
                 int x;
                 gridview.TranslateCoordinates(MainWidget.Toplevel, 0, 0, out x, out _);
                 int colNo = GetColumn(e.Event.XRoot - x);
-                if (e.Event.State == Gdk.ModifierType.ShiftMask)
+                if (e.Event.State == Gdk.ModifierType.ShiftMask && activeCol.Count > 0)
                 {
-
                     int closestColumn = activeCol.Aggregate((a, b) => Math.Abs(a - colNo) < Math.Abs(b - colNo) ? a : b);
                     int lowerBound = Math.Min(colNo, closestColumn);
                     int n = Math.Max(colNo, closestColumn) - lowerBound + 1;
