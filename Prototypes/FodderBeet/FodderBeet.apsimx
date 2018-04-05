@@ -2150,7 +2150,7 @@ assumed to be 0°C (Chakwizira et al., 2016).]]></MemoText>
             <Constant>
               <Name>MaxThermalTimeToBolt</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>3200</FixedValue>
+              <FixedValue>2700</FixedValue>
               <Units>oCd</Units>
             </Constant>
             <Memo>
@@ -2164,6 +2164,40 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Established</Start>
           <End>InitRepro</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>EarlyReproductive</Name>
+          <Constant>
+            <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
+            <Units>oCd</Units>
+          </Constant>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This an empirical fit - 400°Cd estimated from Experiment 4 (October sowing date) dataset.]]></MemoText>
+          </Memo>
+          <LinearInterpolationFunction>
+            <Name>ThermalTime</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <X>
+                <double>13</double>
+                <double>14</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <XProperty>[Phenology].Photoperiod.Value()</XProperty>
+          </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Start>InitRepro</Start>
+          <End>PreBolt</End>
         </GenericPhase>
         <GenericPhase>
           <Name>Bolt</Name>
@@ -2183,7 +2217,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <MemoText><![CDATA[The 800°Cd is is an empirical fit based on Experiment 4 results.]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>InitRepro</Start>
+          <Start>PreBolt</Start>
           <End>StartBolt</End>
         </GenericPhase>
         <EndPhase>
@@ -2400,34 +2434,56 @@ date of Experiment 4 is assumed here.]]></MemoText>
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
-          <LinearInterpolationFunction>
+          <PhaseLookup>
             <Name>PartitionFraction</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
+            <PhaseLookupValue>
+              <Name>NonReproductive</Name>
+              <LinearInterpolationFunction>
+                <Name>PartitionFraction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <X>
+                    <double>1</double>
+                    <double>6</double>
+                    <double>17</double>
+                    <double>20</double>
+                    <double>25</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0.7</double>
+                    <double>0.8</double>
+                  </Y>
+                </XYPairs>
+                <Memo>
+                  <Name>Memo</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <MemoText><![CDATA[Allocation determined by node number - partitioning coefficients have been determined using the sowing date October data]]></MemoText>
+                </Memo>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <XProperty>[Structure].LeafTipsAppeared</XProperty>
+              </LinearInterpolationFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>1</double>
-                <double>6</double>
-                <double>15</double>
-                <double>30</double>
-                <double>51</double>
-              </X>
-              <Y>
-                <double>0.1</double>
-                <double>0.35</double>
-                <double>0.7</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </Y>
-            </XYPairs>
-            <Memo>
-              <Name>Memo</Name>
+              <Start>PreEmerge</Start>
+              <End>InitRepro</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <Constant>
+                <Name>InitialWtFunction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+                <Units>g/m^2</Units>
+              </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[Allocation determined by node number - partitioning coefficients have been determined using the sowing date October data]]></MemoText>
-            </Memo>
+              <Start>InitRepro</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
-          </LinearInterpolationFunction>
+          </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
         <Constant>
@@ -3935,7 +3991,13 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <Cultivar>
           <Name>Brigadier</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command />
+          <Command>[Leaf].CohortParameters.LagDuration.LagDurationBase.XYPairs.Y = 100,300,300</Command>
+          <Command>[Leaf].CohortParameters.NRetranslocationFactor.FixedValue = 0.00</Command>
+          <Command>[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.00</Command>
+          <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaf.FixedValue = 30000</Command>
+          <Command>[Petiole].NRetranslocationFactor.FixedValue = 0</Command>
+          <Command>[Petiole].DMRetranslocationFactor.FixedValue = 0</Command>
+          <Command>[Petiole].DMDemandFunction.PotDemand.Ratio.FixedValue = 1.2</Command>
         </Cultivar>
         <Cultivar>
           <Name>Rivage</Name>
@@ -5590,7 +5652,7 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <InitialRootDepth>2</InitialRootDepth>
-                  <CropToSow>FungalRivage</CropToSow>
+                  <CropToSow>Rivage</CropToSow>
                   <SowingDate>2011-10-31</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -5771,6 +5833,56 @@ namespace Models
                   <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10); </Action>
                 </Operation>
               </Operations>
+              <Manager>
+                <Name>FungalInfection</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script>
+                  <InfectionDate>2011-12-15</InfectionDate>
+                  <IsInfected>True</IsInfected>
+                </Script>
+                <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Summary Summary;
+
+
+        [Description(" Date of Infection")]
+        public DateTime InfectionDate { get; set; }
+        [Description("Is Infected")]
+        public bool IsInfected  {get; set;}    
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+
+            if (IsInfected == true) // an infected crop
+              if (InfectionDate == Clock.Today)
+               {
+                zone.Set("FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue", 600);
+                Summary.WriteMessage(this,"Fodder beet infected with fugal disease");
+                }
+            
+        }
+        
+    }
+}
+                
+]]></Code>
+              </Manager>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
             </Folder>
@@ -6099,6 +6211,283 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
           </Graph>
+          <Folder>
+            <Name>N_Uptake</Name>
+            <Graph>
+              <Name>AboveGround_N</Name>
+              <Series>
+                <Name>Simulated</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.AboveGround.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Obs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>ObservedData</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.AboveGround.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>0</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>Date</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>StorageRoot_N</Name>
+              <Series>
+                <Name>Simulated</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.StorageRoot.Live.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Obs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>ObservedData</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.StorageRoot.Live.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Bulb_N (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>30</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>Date</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>Leaf_N</Name>
+              <Series>
+                <Name>Simulated</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.Leaf.Live.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Obs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>ObservedData</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.Leaf.Live.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Leaf_N (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>2</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>Date</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>Petiole_N</Name>
+              <Series>
+                <Name>Simulated</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.Petiole.Live.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Obs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>ObservedData</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.Petiole.Live.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Petiole (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>Date</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ShowPageOfGraphs>true</ShowPageOfGraphs>
+          </Folder>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
@@ -7979,7 +8368,7 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <InitialRootDepth>2</InitialRootDepth>
-                  <CropToSow>FungalRivage</CropToSow>
+                  <CropToSow>Rivage</CropToSow>
                   <SowingDate>2012-10-29</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -8100,6 +8489,56 @@ namespace Models
                   <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0); </Action>
                 </Operation>
               </Operations>
+              <Manager>
+                <Name>FungalInfection</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script>
+                  <InfectionDate>2012-12-15</InfectionDate>
+                  <IsInfected>True</IsInfected>
+                </Script>
+                <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Summary Summary;
+
+
+        [Description(" Date of Infection")]
+        public DateTime InfectionDate { get; set; }
+        [Description("Is Infected")]
+        public bool IsInfected  {get; set;}    
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+
+            if (IsInfected == true) // an infected crop
+              if (InfectionDate == Clock.Today)
+               {
+                zone.Set("FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue", 600);
+                Summary.WriteMessage(this,"Fodder beet infected with fugal disease");
+                }
+            
+        }
+        
+    }
+}
+                
+]]></Code>
+              </Manager>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
             </Folder>
@@ -8153,79 +8592,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Folder>
-            <Name>Phenology</Name>
-            <Graph>
-              <Name>Stage</Name>
-              <Series>
-                <Name>Simulated</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <Checkpoint>Current</Checkpoint>
-                <TableName>Report</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>FodderBeet.Phenology.Stage</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Obs</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-3376729</ColourArgb>
-                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledDiamond</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <Checkpoint>Current</Checkpoint>
-                <TableName>ObservedData</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>FodderBeet.Phenology.Stage</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Stage of development (3 = emergence)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>5</Maximum>
-                <Interval>1</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Title>Date</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-            </Graph>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ShowPageOfGraphs>true</ShowPageOfGraphs>
-          </Folder>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Simulation>
         <Folder>
@@ -9535,7 +9901,7 @@ namespace Models
             <Name>Cv</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Specifications>
-              <string>[Sowing].Script.Cultivar = FungalRivage,Brigadier</string>
+              <string>[Sowing].Script.Cultivar = Rivage,Brigadier</string>
             </Specifications>
           </Factor>
           <Factor>
@@ -10544,6 +10910,56 @@ namespace Models
                   <Action>[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 50);</Action>
                 </Operation>
               </Operations>
+              <Manager>
+                <Name>FungalInfection</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script>
+                  <InfectionDate>2014-12-15</InfectionDate>
+                  <IsInfected>True</IsInfected>
+                </Script>
+                <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Summary Summary;
+
+
+        [Description(" Date of Infection")]
+        public DateTime InfectionDate { get; set; }
+        [Description("Is Infected")]
+        public bool IsInfected  {get; set;}    
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+
+            if (IsInfected == true) // an infected crop
+              if (InfectionDate == Clock.Today)
+               {
+                zone.Set("FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue", 600);
+                Summary.WriteMessage(this,"Fodder beet infected with fugal disease");
+                }
+            
+        }
+        
+    }
+}
+                
+]]></Code>
+              </Manager>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
             </Folder>
@@ -18348,6 +18764,56 @@ namespace Models
 }
 }]]></Code>
               </Manager>
+              <Manager>
+                <Name>FungalInfection</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script>
+                  <InfectionDate>2015-01-03</InfectionDate>
+                  <IsInfected>True</IsInfected>
+                </Script>
+                <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Summary Summary;
+
+
+        [Description(" Date of Infection")]
+        public DateTime InfectionDate { get; set; }
+        [Description("Is Infected")]
+        public bool IsInfected  {get; set;}    
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+
+            if (IsInfected == true) // an infected crop
+              if (InfectionDate == Clock.Today)
+               {
+                zone.Set("FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue", 600);
+                Summary.WriteMessage(this,"Fodder beet infected with fugal disease");
+                }
+            
+        }
+        
+    }
+}
+                
+]]></Code>
+              </Manager>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
             </Folder>
@@ -22474,6 +22940,56 @@ namespace Models
 }
 ]]></Code>
                   </Manager>
+                  <Manager>
+                    <Name>FungalInfection</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Script>
+                      <InfectionDate>2012-12-15</InfectionDate>
+                      <IsInfected>False</IsInfected>
+                    </Script>
+                    <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Summary Summary;
+
+
+        [Description(" Date of Infection")]
+        public DateTime InfectionDate { get; set; }
+        [Description("Is Infected")]
+        public bool IsInfected  {get; set;}    
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+
+            if (IsInfected == true) // an infected crop
+              if (InfectionDate == Clock.Today)
+               {
+                zone.Set("FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue", 600);
+                Summary.WriteMessage(this,"Fodder beet infected with fugal disease");
+                }
+            
+        }
+        
+    }
+}
+                
+]]></Code>
+                  </Manager>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <ShowPageOfGraphs>true</ShowPageOfGraphs>
                 </Folder>
@@ -24481,8 +24997,8 @@ namespace Models
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
                       <InitialRootDepth>2</InitialRootDepth>
-                      <CropToSow>FungalRivage</CropToSow>
-                      <SowingDate>2016-10-17</SowingDate>
+                      <CropToSow>Rivage</CropToSow>
+                      <SowingDate>2016-10-14</SowingDate>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -24705,6 +25221,56 @@ namespace Models
         }//On Do Management
     }
 }
+]]></Code>
+                  </Manager>
+                  <Manager>
+                    <Name>FungalInfection</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Script>
+                      <InfectionDate>2016-12-15</InfectionDate>
+                      <IsInfected>True</IsInfected>
+                    </Script>
+                    <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Summary Summary;
+
+
+        [Description(" Date of Infection")]
+        public DateTime InfectionDate { get; set; }
+        [Description("Is Infected")]
+        public bool IsInfected  {get; set;}    
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+
+            if (IsInfected == true) // an infected crop
+              if (InfectionDate == Clock.Today)
+               {
+                zone.Set("FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue", 600);
+                Summary.WriteMessage(this,"Fodder beet infected with fugal disease");
+                }
+            
+        }
+        
+    }
+}
+                
 ]]></Code>
                   </Manager>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -26719,7 +27285,7 @@ namespace Models
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
                       <InitialRootDepth>2</InitialRootDepth>
-                      <CropToSow>FungalRivage</CropToSow>
+                      <CropToSow>Rivage</CropToSow>
                       <SowingDate>2016-10-17</SowingDate>
                     </Script>
                     <Code><![CDATA[using System;
@@ -26780,54 +27346,6 @@ namespace Models
                       <MemoText><![CDATA[MOnthly rain guage tip outs so irrigation need to be estimated minus rain fall]]></MemoText>
                     </Memo>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Operation>
-                      <Date>2016-11-01</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-11-14</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-11-21</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-12-07</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-12-21</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-12-28</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-01-05</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-01-19</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-01-31</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-02-12</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-02-24</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-03-01</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
                   </Operations>
                   <Manager>
                     <Name>NitTreatments</Name>
@@ -26943,6 +27461,56 @@ namespace Models
         }//On Do Management
     }
 }
+]]></Code>
+                  </Manager>
+                  <Manager>
+                    <Name>FungalInfection</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Script>
+                      <InfectionDate>2016-12-15</InfectionDate>
+                      <IsInfected>True</IsInfected>
+                    </Script>
+                    <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Summary Summary;
+
+
+        [Description(" Date of Infection")]
+        public DateTime InfectionDate { get; set; }
+        [Description("Is Infected")]
+        public bool IsInfected  {get; set;}    
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+
+            if (IsInfected == true) // an infected crop
+              if (InfectionDate == Clock.Today)
+               {
+                zone.Set("FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue", 600);
+                Summary.WriteMessage(this,"Fodder beet infected with fugal disease");
+                }
+            
+        }
+        
+    }
+}
+                
 ]]></Code>
                   </Manager>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -28952,8 +29520,8 @@ namespace Models
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
                       <InitialRootDepth>2</InitialRootDepth>
-                      <CropToSow>FungalRivage</CropToSow>
-                      <SowingDate>2016-10-17</SowingDate>
+                      <CropToSow>Rivage</CropToSow>
+                      <SowingDate>2016-12-03</SowingDate>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -29176,6 +29744,56 @@ namespace Models
         }//On Do Management
     }
 }
+]]></Code>
+                  </Manager>
+                  <Manager>
+                    <Name>FungalInfection</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Script>
+                      <InfectionDate>2016-12-15</InfectionDate>
+                      <IsInfected>True</IsInfected>
+                    </Script>
+                    <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Summary Summary;
+
+
+        [Description(" Date of Infection")]
+        public DateTime InfectionDate { get; set; }
+        [Description("Is Infected")]
+        public bool IsInfected  {get; set;}    
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+
+            if (IsInfected == true) // an infected crop
+              if (InfectionDate == Clock.Today)
+               {
+                zone.Set("FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue", 600);
+                Summary.WriteMessage(this,"Fodder beet infected with fugal disease");
+                }
+            
+        }
+        
+    }
+}
+                
 ]]></Code>
                   </Manager>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -31191,7 +31809,7 @@ namespace Models
                     <Script>
                       <InitialRootDepth>2</InitialRootDepth>
                       <CropToSow>FungalRivage</CropToSow>
-                      <SowingDate>2016-10-17</SowingDate>
+                      <SowingDate>2016-10-14</SowingDate>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -31251,54 +31869,6 @@ namespace Models
                       <MemoText><![CDATA[MOnthly rain guage tip outs so irrigation need to be estimated minus rain fall]]></MemoText>
                     </Memo>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Operation>
-                      <Date>2016-11-01</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-11-14</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-11-21</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-12-07</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-12-21</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-12-28</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-01-05</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-01-19</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-01-31</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-02-12</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-02-24</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-03-01</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
                   </Operations>
                   <Manager>
                     <Name>NitTreatments</Name>
@@ -31350,9 +31920,9 @@ namespace Models
 
               case   100 :  if (SplitFactor == 2)
                              {
-                              if ((DateUtilities.CompareDates("14-Nov", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("22-Nov", Clock.Today) == 0))
                                        Fert.Apply(50, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("19-Jan", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("7-Jan", Clock.Today) == 0))
                                        Fert.Apply(50, Models.Fertiliser.Types.UreaN, 10);
                               if ((DateUtilities.CompareDates("27-Feb", Clock.Today) == 0))
                                        Fert.Apply(0, Models.Fertiliser.Types.UreaN, 10);
@@ -31360,9 +31930,9 @@ namespace Models
                             }  
                             else
                             {
-                              if ((DateUtilities.CompareDates("14-Nov", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("22-Nov", Clock.Today) == 0))
                                        Fert.Apply(20, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("19-Jan", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("7-Jan", Clock.Today) == 0))
                                        Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);
                               if ((DateUtilities.CompareDates("27-Feb", Clock.Today) == 0))
                                        Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);
@@ -31371,9 +31941,9 @@ namespace Models
 
               case   200 :  if (SplitFactor == 2)
                              {
-                              if ((DateUtilities.CompareDates("14-Nov", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("22-Nov", Clock.Today) == 0))
                                        Fert.Apply(100, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("19-Jan", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("7-Jan", Clock.Today) == 0))
                                        Fert.Apply(100, Models.Fertiliser.Types.UreaN, 10);
                               if ((DateUtilities.CompareDates("27-Feb", Clock.Today) == 0))
                                        Fert.Apply(0, Models.Fertiliser.Types.UreaN, 10);
@@ -31381,9 +31951,9 @@ namespace Models
                             }  
                             else
                             {
-                              if ((DateUtilities.CompareDates("14-Nov", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("22-Nov", Clock.Today) == 0))
                                        Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("19-Jan", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("7-Jan", Clock.Today) == 0))
                                        Fert.Apply(80, Models.Fertiliser.Types.UreaN, 10);
                               if ((DateUtilities.CompareDates("27-Feb", Clock.Today) == 0))
                                        Fert.Apply(80, Models.Fertiliser.Types.UreaN, 10);
@@ -31393,7 +31963,7 @@ namespace Models
                              {
                               if ((DateUtilities.CompareDates("14-Nov", Clock.Today) == 0))
                                        Fert.Apply(150, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("19-Jan", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("7-Jan", Clock.Today) == 0))
                                        Fert.Apply(150, Models.Fertiliser.Types.UreaN, 10);
                               if ((DateUtilities.CompareDates("27-Feb", Clock.Today) == 0))
                                        Fert.Apply(0, Models.Fertiliser.Types.UreaN, 10);
@@ -31401,9 +31971,9 @@ namespace Models
                             }  
                             else
                             {
-                              if ((DateUtilities.CompareDates("14-Nov", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("22-Nov", Clock.Today) == 0))
                                        Fert.Apply(60, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("19-Jan", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("7-Jan", Clock.Today) == 0))
                                        Fert.Apply(120, Models.Fertiliser.Types.UreaN, 10);
                               if ((DateUtilities.CompareDates("27-Feb", Clock.Today) == 0))
                                        Fert.Apply(120, Models.Fertiliser.Types.UreaN, 10);
@@ -31414,6 +31984,56 @@ namespace Models
         }//On Do Management
     }
 }
+]]></Code>
+                  </Manager>
+                  <Manager>
+                    <Name>FungalInfection</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Script>
+                      <InfectionDate>2016-12-15</InfectionDate>
+                      <IsInfected>True</IsInfected>
+                    </Script>
+                    <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Summary Summary;
+
+
+        [Description(" Date of Infection")]
+        public DateTime InfectionDate { get; set; }
+        [Description("Is Infected")]
+        public bool IsInfected  {get; set;}    
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+
+            if (IsInfected == true) // an infected crop
+              if (InfectionDate == Clock.Today)
+               {
+                zone.Set("FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue", 600);
+                Summary.WriteMessage(this,"Fodder beet infected with fugal disease");
+                }
+            
+        }
+        
+    }
+}
+                
 ]]></Code>
                   </Manager>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -33423,8 +34043,8 @@ namespace Models
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
                       <InitialRootDepth>2</InitialRootDepth>
-                      <CropToSow>FungalRivage</CropToSow>
-                      <SowingDate>2016-10-17</SowingDate>
+                      <CropToSow>Rivage</CropToSow>
+                      <SowingDate>2016-10-24</SowingDate>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -33484,54 +34104,6 @@ namespace Models
                       <MemoText><![CDATA[MOnthly rain guage tip outs so irrigation need to be estimated minus rain fall]]></MemoText>
                     </Memo>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Operation>
-                      <Date>2016-11-01</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-11-14</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-11-21</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-12-07</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-12-21</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2016-12-28</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-01-05</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-01-19</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-01-31</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-02-12</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-02-24</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
-                    <Operation>
-                      <Date>2017-03-01</Date>
-                      <Action>[Irrigation].Apply(12);</Action>
-                    </Operation>
                   </Operations>
                   <Manager>
                     <Name>NitTreatments</Name>
@@ -33583,62 +34155,62 @@ namespace Models
 
               case   100 :  if (SplitFactor == 2)
                              {
-                              if ((DateUtilities.CompareDates("14-Nov", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("2-Dec", Clock.Today) == 0))
                                        Fert.Apply(50, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("19-Jan", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("11-Jan", Clock.Today) == 0))
                                        Fert.Apply(50, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("27-Feb", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("23-Feb", Clock.Today) == 0))
                                        Fert.Apply(0, Models.Fertiliser.Types.UreaN, 10);
 
                             }  
                             else
                             {
-                              if ((DateUtilities.CompareDates("14-Nov", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("2-Dec", Clock.Today) == 0))
                                        Fert.Apply(20, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("19-Jan", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("11-Jan", Clock.Today) == 0))
                                        Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("27-Feb", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("23-Feb", Clock.Today) == 0))
                                        Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);
 
                             }  break;
 
               case   200 :  if (SplitFactor == 2)
                              {
-                              if ((DateUtilities.CompareDates("14-Nov", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("2-Dec", Clock.Today) == 0))
                                        Fert.Apply(100, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("19-Jan", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("11-Jan", Clock.Today) == 0))
                                        Fert.Apply(100, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("27-Feb", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("23-Feb", Clock.Today) == 0))
                                        Fert.Apply(0, Models.Fertiliser.Types.UreaN, 10);
 
                             }  
                             else
                             {
-                              if ((DateUtilities.CompareDates("14-Nov", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("2-Dec", Clock.Today) == 0))
                                        Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("19-Jan", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("11-Jan", Clock.Today) == 0))
                                        Fert.Apply(80, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("27-Feb", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("23-Feb", Clock.Today) == 0))
                                        Fert.Apply(80, Models.Fertiliser.Types.UreaN, 10);
 
                             }  break;
              case   300 :  if (SplitFactor == 2)
                              {
-                              if ((DateUtilities.CompareDates("14-Nov", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("2-Dec", Clock.Today) == 0))
                                        Fert.Apply(150, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("19-Jan", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("11-Jan", Clock.Today) == 0))
                                        Fert.Apply(150, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("27-Feb", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("23-Feb", Clock.Today) == 0))
                                        Fert.Apply(0, Models.Fertiliser.Types.UreaN, 10);
 
                             }  
                             else
                             {
-                              if ((DateUtilities.CompareDates("14-Nov", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("2-Dec", Clock.Today) == 0))
                                        Fert.Apply(60, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("19-Jan", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("11-Jan", Clock.Today) == 0))
                                        Fert.Apply(120, Models.Fertiliser.Types.UreaN, 10);
-                              if ((DateUtilities.CompareDates("27-Feb", Clock.Today) == 0))
+                              if ((DateUtilities.CompareDates("23-Feb", Clock.Today) == 0))
                                        Fert.Apply(120, Models.Fertiliser.Types.UreaN, 10);
 
                             }  break;
@@ -33647,6 +34219,56 @@ namespace Models
         }//On Do Management
     }
 }
+]]></Code>
+                  </Manager>
+                  <Manager>
+                    <Name>FungalInfection</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Script>
+                      <InfectionDate>2016-12-15</InfectionDate>
+                      <IsInfected>True</IsInfected>
+                    </Script>
+                    <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Summary Summary;
+
+
+        [Description(" Date of Infection")]
+        public DateTime InfectionDate { get; set; }
+        [Description("Is Infected")]
+        public bool IsInfected  {get; set;}    
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+
+            if (IsInfected == true) // an infected crop
+              if (InfectionDate == Clock.Today)
+               {
+                zone.Set("FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue", 600);
+                Summary.WriteMessage(this,"Fodder beet infected with fugal disease");
+                }
+            
+        }
+        
+    }
+}
+                
 ]]></Code>
                   </Manager>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -35656,7 +36278,7 @@ namespace Models
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
                       <InitialRootDepth>2</InitialRootDepth>
-                      <CropToSow>FungalRivage</CropToSow>
+                      <CropToSow>Rivage</CropToSow>
                       <SowingDate>2016-10-17</SowingDate>
                     </Script>
                     <Code><![CDATA[using System;
@@ -35880,6 +36502,56 @@ namespace Models
         }//On Do Management
     }
 }
+]]></Code>
+                  </Manager>
+                  <Manager>
+                    <Name>FungalInfection</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Script>
+                      <InfectionDate>2016-12-15</InfectionDate>
+                      <IsInfected>True</IsInfected>
+                    </Script>
+                    <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant FodderBeet;
+        [Link] Clock Clock;
+        [Link] Zone zone;
+        [Link] Summary Summary;
+
+
+        [Description(" Date of Infection")]
+        public DateTime InfectionDate { get; set; }
+        [Description("Is Infected")]
+        public bool IsInfected  {get; set;}    
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            
+
+            if (IsInfected == true) // an infected crop
+              if (InfectionDate == Clock.Today)
+               {
+                zone.Set("FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue", 600);
+                Summary.WriteMessage(this,"Fodder beet infected with fugal disease");
+                }
+            
+        }
+        
+    }
+}
+                
 ]]></Code>
                   </Manager>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
