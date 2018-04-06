@@ -375,21 +375,29 @@ namespace UserInterface.Views
                     args.RetVal = true;
                 }
             }
-            else if (!userEditingCell && !GetColumn(iCol).ReadOnly && (activeCol == null || activeCol.Count < 1)) // Initiate cell editing when user starts typing.
+            else if (!userEditingCell && !GetColumn(iCol).ReadOnly && (activeCol == null || activeCol.Count < 1) && IsPrintableChar(args.Event.Key)) // Initiate cell editing when user starts typing.
             {
                 gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
-                Entry editable = editControl as Entry;
-                if (editable == null)
-                    return;
-                editable.Text = "";
                 Gdk.EventHelper.Put(args.Event);
-                editable.Position = editable.Text.Length;
                 userEditingCell = true;
+                args.RetVal = true;
             }
             else if ((char)Gdk.Keyval.ToUnicode(args.Event.KeyValue) == '.')
             {
                 ShowCompletionWindow();
             }
+        }
+
+        /// <summary>
+        /// Tests if a <see cref="Gdk.Key"/> is a printable character (e.g. 'a', '3', '#').
+        /// </summary>
+        /// <param name="chr">Character to be tested.</param>
+        /// <returns></returns>
+        private bool IsPrintableChar(Gdk.Key chr)
+        {
+            string keyName = Char.ConvertFromUtf32((int)Gdk.Keyval.ToUnicode((uint)chr));
+            char c;
+            return Char.TryParse(keyName, out c) && !Char.IsControl(c);
         }
 
         private void ShowCompletionWindow()
