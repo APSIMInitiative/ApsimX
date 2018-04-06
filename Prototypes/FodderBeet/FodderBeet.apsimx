@@ -10775,6 +10775,7 @@ namespace Models
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
 
+
         
         
         [EventSubscribe("DoManagement")]
@@ -37827,21 +37828,21 @@ namespace Models
               <Name>40K</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[SowDate].Script.population = 4</string>
+                <string>[Sowing].Script.Population = 4</string>
               </Specifications>
             </Factor>
             <Factor>
               <Name>80K</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[SowDate].Script.population = 8</string>
+                <string>[Sowing].Script.Population = 8</string>
               </Specifications>
             </Factor>
             <Factor>
               <Name>120K</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[SowDate].Script.population = 12</string>
+                <string>[Sowing].Script.Population = 12</string>
               </Specifications>
             </Factor>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -37864,7 +37865,7 @@ namespace Models
           <Weather>
             <Name>Weather</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FileName>Irishtown.met</FileName>
+            <FileName>Hobart.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <SoilArbitrator>
@@ -38204,7 +38205,7 @@ namespace Models
               <Country>Australia</Country>
               <NaturalVegetation />
               <ApsoilNumber>776</ApsoilNumber>
-              <Latitude>-41.2286472</Latitude>
+              <Latitude>-41.2286</Latitude>
               <Longitude>146.4985361</Longitude>
               <LocationAccuracy> +/- 20m</LocationAccuracy>
               <DataSource>Data collected by Bill Cotching as part of project 'Landscape Logic' in collaboration with Shaun Lisson</DataSource>
@@ -38523,9 +38524,10 @@ namespace Models
 ]]></Code>
               </Manager>
               <Manager>
-                <Name>SowDateCv</Name>
+                <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <Population>0</Population>
                   <InitialRootDepth>2.5</InitialRootDepth>
                   <CropToSow>Brigadier</CropToSow>
                   <SowingDate>2010-12-28</SowingDate>
@@ -38561,6 +38563,8 @@ namespace Models
         public string CropToSow { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
+        [Description("Population")]
+        public int Population { get; set; }
         
         
         
@@ -38641,7 +38645,7 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <InfectionDate>2012-12-15</InfectionDate>
-                  <IsInfected>True</IsInfected>
+                  <IsInfected>False</IsInfected>
                 </Script>
                 <Code><![CDATA[
 using System;
@@ -38741,6 +38745,79 @@ namespace Models
           </Zone>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Simulation>
+        <Folder>
+          <Name>BiomassGraphs</Name>
+          <Graph>
+            <Name>TotalWt</Name>
+            <Series>
+              <Name>Simulated</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>FodderBeet.AboveGround.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-3376729</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>ObservedData</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>FodderBeet.AboveGround.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Crop Biomass (g/m2)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>0</Minimum>
+              <Maximum>4000</Maximum>
+              <Interval>500</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title>Date</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
+        </Folder>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <DisabledSimNames />
       </Experiment>
