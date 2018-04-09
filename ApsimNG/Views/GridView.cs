@@ -375,21 +375,29 @@ namespace UserInterface.Views
                     args.RetVal = true;
                 }
             }
-            else if (!userEditingCell && !GetColumn(iCol).ReadOnly && (activeCol == null || activeCol.Count < 1)) // Initiate cell editing when user starts typing.
+            else if (!userEditingCell && !GetColumn(iCol).ReadOnly && (activeCol == null || activeCol.Count < 1) && IsPrintableChar(args.Event.Key)) // Initiate cell editing when user starts typing.
             {
                 gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
-                Entry editable = editControl as Entry;
-                if (editable == null)
-                    return;
-                editable.Text = "";
                 Gdk.EventHelper.Put(args.Event);
-                editable.Position = editable.Text.Length;
                 userEditingCell = true;
+                args.RetVal = true;
             }
             else if ((char)Gdk.Keyval.ToUnicode(args.Event.KeyValue) == '.')
             {
                 ShowCompletionWindow();
             }
+        }
+
+        /// <summary>
+        /// Tests if a <see cref="Gdk.Key"/> is a printable character (e.g. 'a', '3', '#').
+        /// </summary>
+        /// <param name="chr">Character to be tested.</param>
+        /// <returns></returns>
+        private bool IsPrintableChar(Gdk.Key chr)
+        {
+            string keyName = Char.ConvertFromUtf32((int)Gdk.Keyval.ToUnicode((uint)chr));
+            char c;
+            return Char.TryParse(keyName, out c) && !Char.IsControl(c);
         }
 
         private void ShowCompletionWindow()
@@ -721,9 +729,8 @@ namespace UserInterface.Views
             if (e.Event.Button == 1)
             {
                 gridview.Selection.UnselectAll();
-                int x;
-                gridview.TranslateCoordinates(MainWidget.Toplevel, 0, 0, out x, out _);
-                int colNo = GetColumn(e.Event.XRoot - x);
+                int colNo = GetColNoFromButton(sender as Button);
+                
                 if (e.Event.State == Gdk.ModifierType.ShiftMask && activeCol.Count > 0)
                 {
                     int closestColumn = activeCol.Aggregate((a, b) => Math.Abs(a - colNo) < Math.Abs(b - colNo) ? a : b);
@@ -763,6 +770,28 @@ namespace UserInterface.Views
                 
                 headerMenu.Popup();
             }
+        }
+
+        /// <summary>
+        /// Get the column number of the column associated with a button.
+        /// This is a bit of a hack but it works.
+        /// </summary>
+        /// <param name="btn"></param>
+        /// <returns></returns>
+        private int GetColNoFromButton(Button btn)
+        {
+            int colNo = 0;
+            foreach (Widget child in gridview.AllChildren)
+            {
+                if (child is Button)
+                {
+                    if (child == btn)
+                        break;
+                    else
+                        colNo++;
+                }
+            }
+            return colNo;
         }
 
         /// <summary>
