@@ -1418,11 +1418,16 @@ namespace UserInterface.Views
         /// <summary>
         /// Add an action (on context menu) on the series grid.
         /// </summary>
-        /// <param name="menuItemText">The text of the menu item</param>
+        /// <param name="itemName">The name of the item</param>
+        /// <param name="menuItemText">The text of the menu item - may include spaces or other "special" characters (if empty, the itemName is used)</param>
         /// <param name="onClick">The event handler to call when menu is selected</param>
-        public void AddContextOption(string menuItemText, System.EventHandler onClick, bool active)
+        /// <param name="active">Indicates whether the option is current selected</param>
+        public void AddContextOption(string itemName, string menuItemText, System.EventHandler onClick, bool active)
         {
+            if (String.IsNullOrEmpty(menuItemText))
+                menuItemText = itemName;
             CheckMenuItem item = new CheckMenuItem(menuItemText);
+            item.Name = itemName;
             item.DrawAsRadio = true;
             item.Active = active;
             item.Activated += onClick;
