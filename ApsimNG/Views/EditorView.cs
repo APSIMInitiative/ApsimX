@@ -98,7 +98,7 @@
         public event EventHandler LeaveEditor;
 
         private ScrolledWindow scroller;
-        private Mono.TextEditor.MonoTextEditor textEditor;        
+        private TextEditor textEditor;        
         private Menu Popup = new Menu();
         private AccelGroup accel = new AccelGroup();
         private int hScrollPos = -1;
@@ -110,7 +110,7 @@
         public EditorView(ViewBase owner) : base(owner)
         {
             scroller = new ScrolledWindow();
-            textEditor = new MonoTextEditor();
+            textEditor = new TextEditor();
             scroller.Add(textEditor);
             _mainWidget = scroller;
             Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
