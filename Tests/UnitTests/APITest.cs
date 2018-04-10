@@ -234,7 +234,7 @@ namespace UnitTests
            
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "wheat"));
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "clock"));
-            Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilNitrogen"));
+            Assert.IsNotNull(Apsim.Find(testrunSimulations, "Nutrient"));
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilWater"));
         }
 
