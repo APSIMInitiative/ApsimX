@@ -94,7 +94,7 @@ namespace UserInterface.Views
         /// Flag to keep track of whether a cursor move was initiated internally
         /// </summary>
         private bool selfCursorMove = false;
-
+        
         /// <summary>
         /// A value storing the caret location when the user activates intellisense.
         /// </summary>
@@ -117,6 +117,7 @@ namespace UserInterface.Views
         private GridCell popupCell = null;
         private IntellisenseView intellisense;
         private List<int> activeCol = new List<int>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
         /// </summary>
@@ -374,20 +375,29 @@ namespace UserInterface.Views
                     args.RetVal = true;
                 }
             }
-            else if (!userEditingCell && !GetColumn(iCol).ReadOnly) // Initiate cell editing when user starts typing.
+            else if (!userEditingCell && !GetColumn(iCol).ReadOnly && (activeCol == null || activeCol.Count < 1) && IsPrintableChar(args.Event.Key)) // Initiate cell editing when user starts typing.
             {
                 gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
-                Entry editable = editControl as Entry;
-                editable.Text = "";
                 Gdk.EventHelper.Put(args.Event);
-                editable.Position = editable.Text.Length;
                 userEditingCell = true;
-                while (GLib.MainContext.Iteration()) ;
+                args.RetVal = true;
             }
             else if ((char)Gdk.Keyval.ToUnicode(args.Event.KeyValue) == '.')
             {
                 ShowCompletionWindow();
             }
+        }
+
+        /// <summary>
+        /// Tests if a <see cref="Gdk.Key"/> is a printable character (e.g. 'a', '3', '#').
+        /// </summary>
+        /// <param name="chr">Character to be tested.</param>
+        /// <returns></returns>
+        private bool IsPrintableChar(Gdk.Key chr)
+        {
+            string keyName = Char.ConvertFromUtf32((int)Gdk.Keyval.ToUnicode((uint)chr));
+            char c;
+            return Char.TryParse(keyName, out c) && !Char.IsControl(c);
         }
 
         private void ShowCompletionWindow()
@@ -624,6 +634,7 @@ namespace UserInterface.Views
                 comboRender.Edited += ComboRender_Edited;
                 comboRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 1.0f; // Left or right align, as appropriate
                 comboRender.Visible = false;
+                comboRender.EditingStarted += ComboRender_Editing;
                 CellRendererActiveButton pixbufRender = new CellRendererActiveButton();
                 pixbufRender.pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
                 pixbufRender.Toggled += PixbufRender_Toggled;
@@ -718,12 +729,10 @@ namespace UserInterface.Views
             if (e.Event.Button == 1)
             {
                 gridview.Selection.UnselectAll();
-                int x;
-                gridview.TranslateCoordinates(MainWidget.Toplevel, 0, 0, out x, out _);
-                int colNo = GetColumn(e.Event.XRoot - x);
-                if (e.Event.State == Gdk.ModifierType.ShiftMask)
+                int colNo = GetColNoFromButton(sender as Button);
+                
+                if (e.Event.State == Gdk.ModifierType.ShiftMask && activeCol.Count > 0)
                 {
-
                     int closestColumn = activeCol.Aggregate((a, b) => Math.Abs(a - colNo) < Math.Abs(b - colNo) ? a : b);
                     int lowerBound = Math.Min(colNo, closestColumn);
                     int n = Math.Max(colNo, closestColumn) - lowerBound + 1;
@@ -764,6 +773,28 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Get the column number of the column associated with a button.
+        /// This is a bit of a hack but it works.
+        /// </summary>
+        /// <param name="btn"></param>
+        /// <returns></returns>
+        private int GetColNoFromButton(Button btn)
+        {
+            int colNo = 0;
+            foreach (Widget child in gridview.AllChildren)
+            {
+                if (child is Button)
+                {
+                    if (child == btn)
+                        break;
+                    else
+                        colNo++;
+                }
+            }
+            return colNo;
+        }
+
+        /// <summary>
         /// Highlights all selected columns and un-highlights all other columns.
         /// </summary>
         private void HighlightColumns()
@@ -791,6 +822,19 @@ namespace UserInterface.Views
                     cell.BackgroundGdk = bgColour;
                     cell.ForegroundGdk = fgColour;
                 });
+            }
+            if (FormatColumns == null)
+            {
+                foreach (int i in Enumerable.Range(0, gridview.Columns.Length).Where(n => !activeCol.Contains(n)))
+                {
+                    bgColour = gridview.Style.Base(StateType.Normal);
+                    fgColour = new Gdk.Color(0, 0, 0);
+                    gridview.Columns[i].Cells.OfType<CellRendererText>().ToList().ForEach(cell =>
+                    {
+                        cell.BackgroundGdk = bgColour;
+                        cell.ForegroundGdk = fgColour;
+                    });
+                }
             }
             
             gridview.QueueDraw();
@@ -1374,11 +1418,16 @@ namespace UserInterface.Views
         /// <summary>
         /// Add an action (on context menu) on the series grid.
         /// </summary>
-        /// <param name="menuItemText">The text of the menu item</param>
+        /// <param name="itemName">The name of the item</param>
+        /// <param name="menuItemText">The text of the menu item - may include spaces or other "special" characters (if empty, the itemName is used)</param>
         /// <param name="onClick">The event handler to call when menu is selected</param>
-        public void AddContextOption(string menuItemText, System.EventHandler onClick, bool active)
+        /// <param name="active">Indicates whether the option is current selected</param>
+        public void AddContextOption(string itemName, string menuItemText, System.EventHandler onClick, bool active)
         {
+            if (String.IsNullOrEmpty(menuItemText))
+                menuItemText = itemName;
             CheckMenuItem item = new CheckMenuItem(menuItemText);
+            item.Name = itemName;
             item.DrawAsRadio = true;
             item.Active = active;
             item.Activated += onClick;
@@ -1581,45 +1630,85 @@ namespace UserInterface.Views
             Type dataType = this.valueBeforeEdit.GetType();
             if (dataType == typeof(DateTime))
             {
-                Dialog dialog = new Dialog("Select date", gridview.Toplevel as Window, DialogFlags.DestroyWithParent);
+                Window dialog = new Window("Select date")
+                {
+                    TransientFor = gridview.Toplevel as Window,
+                    SkipPagerHint = true,
+                    SkipTaskbarHint = true,
+                    KeepBelow = true
+                };
+                dialog.KeyPressEvent += new KeyPressEventHandler((o, eArgs) => 
+                {
+                    if (eArgs.Event.Key == Gdk.Key.Escape)
+                        dialog.Destroy();
+                    else if (eArgs.Event.Key == Gdk.Key.Return)
+                        GLib.Signal.Emit(o as Calendar, "day-selected-double-click");
+                });
                 dialog.SetPosition(WindowPosition.None);
-                VBox topArea = dialog.VBox;
+                VBox topArea = new VBox();
                 topArea.PackStart(new HBox());
                 Calendar calendar = new Calendar();
                 calendar.DisplayOptions = CalendarDisplayOptions.ShowHeading |
                                      CalendarDisplayOptions.ShowDayNames |
                                      CalendarDisplayOptions.ShowWeekNumbers;
                 calendar.Date = (DateTime)this.valueBeforeEdit;
+
                 topArea.PackStart(calendar, true, true, 0);
+                dialog.Add(topArea);
+                
                 dialog.ShowAll();
-                dialog.Run();
-                // What SHOULD we do here? For now, assume that if the user modified the date in the calendar dialog,
-                // the resulting date is what they want. Otherwise, keep the text-editing (Entry) widget active, and
-                // let the user enter a value manually.
-                if (calendar.Date != (DateTime)this.valueBeforeEdit)
+                calendar.DaySelectedDoubleClick += (_, __) =>
                 {
-                    DateTime date = calendar.GetDate();
-                    this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = date;
-                    CellRendererText render = sender as CellRendererText;
-                    if (render != null)
+                    // What SHOULD we do here? For now, assume that if the user modified the date in the calendar dialog,
+                    // the resulting date is what they want. Otherwise, keep the text-editing (Entry) widget active, and
+                    // let the user enter a value manually.
+                    if (calendar.Date != (DateTime)this.valueBeforeEdit)
                     {
-                        render.Text = String.Format("{0:d}", date);
-                        if (e.Editable is Entry)
+                        DateTime date = calendar.GetDate();
+                        this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = date;
+                        CellRendererText render = sender as CellRendererText;
+                        if (render != null)
                         {
-                            (e.Editable as Entry).Text = render.Text;
-                            (e.Editable as Entry).Destroy();
-                            this.userEditingCell = false;
-                            if (this.CellsChanged != null)
+                            render.Text = String.Format("{0:d}", date);
+                            if (e.Editable is Entry)
                             {
-                                GridCellsChangedArgs args = new GridCellsChangedArgs();
-                                args.ChangedCells = new List<IGridCell>();
-                                args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
-                                this.CellsChanged(this, args);
+                                (e.Editable as Entry).Text = render.Text;
+                                (e.Editable as Entry).Destroy();
+                                this.userEditingCell = false;
+                                if (this.CellsChanged != null)
+                                {
+                                    GridCellsChangedArgs args = new GridCellsChangedArgs();
+                                    args.ChangedCells = new List<IGridCell>();
+                                    args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
+                                    this.CellsChanged(this, args);
+                                }
                             }
                         }
                     }
-                }
-                dialog.Destroy();
+                    dialog.Destroy();
+                    gridview.QueueDraw();
+                };
+                
+                // The new dialog will have focus by default. Switch focus back to the main window so that
+                // the Entry widget will be immediately editable.
+                (gridview.Toplevel as Window).Present();
+
+                // When the calendar dialog first appears, the Entry widget will briefly lose focus. We don't want
+                // the custom focus out event handler below to fire when this occurs, so we process all events in 
+                // the events queue before attaching the new event handler.
+                while (GLib.MainContext.Iteration()) ;
+                (e.Editable as Widget).FocusOutEvent += (_, __) =>
+                {
+                    // Process all events in the events queue, so we can accurately test if the
+                    // calendar has the focus.
+                    while (GLib.MainContext.Iteration()) ;
+                    // If the user clicks on the calendar dialog, the entry widget will lose focus.
+                    // Normally we want to remove the calendar dialog when the entry loses focus, but the user might
+                    // be a bit annoyed if the calendar disappears when they click on it.
+                    if (!(dialog.HasFocus || calendar.HasFocus))
+                        dialog.Destroy();
+                };
+                userEditingCell = true;
             }
         }
 
@@ -1640,10 +1729,22 @@ namespace UserInterface.Views
             }
         }
 
+        private void ComboRender_Editing(object sender, EditingStartedArgs e)
+        {
+            (e.Editable as ComboBox).Changed += (o, _) =>
+            {
+                UpdateCellText(GetCurrentCell, (o as ComboBox).ActiveText);
+            };
+        }
+
         private void ComboRender_Edited(object sender, EditedArgs e)
         {
-            IGridCell where = GetCurrentCell;
-            string newText = e.NewText;
+            UpdateCellText(GetCurrentCell, e.NewText);
+
+        }
+
+        private void UpdateCellText(IGridCell where, string newText)
+        {
             while (this.DataSource != null && where.RowIndex >= this.DataSource.Rows.Count)
             {
                 this.DataSource.Rows.Add(this.DataSource.NewRow());

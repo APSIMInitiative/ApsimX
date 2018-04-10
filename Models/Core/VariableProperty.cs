@@ -196,7 +196,6 @@ namespace Models.Core
                 string unitString = null;
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
                 PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                MethodInfo unitsToStringInfo = this.Object.GetType().GetMethod(this.property.Name + "UnitsToString");
                 if (unitsAttribute != null)
                 {
                     unitString = unitsAttribute.ToString();
@@ -204,13 +203,11 @@ namespace Models.Core
                 else if (unitsInfo != null)
                 {
                     object val = unitsInfo.GetValue(this.Object, null);
-                    if (unitsToStringInfo != null)
-                        unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { val });
+                    if (unitsInfo != null && unitsInfo.PropertyType.BaseType == typeof(Enum))
+                        unitString = GetEnumDescription(val as Enum);
                     else
                         unitString = val.ToString();
                 }
-                else if (unitsToStringInfo != null)
-                    unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { null });
                 if (unitString != null)
                     return "(" + unitString + ")";
                 else
@@ -219,19 +216,75 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets a list of allowable units
+        /// Looks for a description string associated with an enumerated value
+        /// Adapted from http://blog.spontaneouspublicity.com/associating-strings-with-enums-in-c
         /// </summary>
-        public string[] AllowableUnits
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string GetEnumDescription(Enum value)
+        {
+            FieldInfo fi = value.GetType().GetField(value.ToString());
+
+            DescriptionAttribute[] attributes =
+                (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            if (attributes != null && attributes.Length > 0)
+                return attributes[0].ToString();
+            else
+                return value.ToString();
+        }
+        
+        /// <summary>
+        /// Simple structure to hold both a name and an associated label
+        /// </summary>
+        public struct NameLabelPair
+        {
+            /// <summary>
+            /// Name of an object
+            /// </summary>
+            public string Name;
+            /// <summary>
+            /// Display label for the object
+            /// </summary>
+            public string Label;
+            /// <summary>
+            /// Constructs a NameLabelPair
+            /// </summary>
+            /// <param name="name">Name of the object</param>
+            /// <param name="label">Display label for the object</param>
+            public NameLabelPair(string name, string label = null)
+            {
+                Name = name;
+                if (String.IsNullOrEmpty(label))
+                    Label = name;
+                else
+                    Label = label;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of allowable units
+        /// The list contains both the actual name and a display name for each entry
+        /// </summary>
+        public NameLabelPair[] AllowableUnits
         {
             get
             {
                 PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                if (unitsInfo != null)
+                if (unitsInfo != null && unitsInfo.PropertyType.BaseType == typeof(Enum))
                 {
-                    return Enum.GetNames(unitsInfo.PropertyType);
+                    Array enumValArray = Enum.GetValues(unitsInfo.PropertyType);
+                    List<NameLabelPair> enumValList = new List<NameLabelPair>(enumValArray.Length);
+
+                    foreach (int val in enumValArray)
+                    {
+                        enumValList.Add(new NameLabelPair(val.ToString(), GetEnumDescription((Enum)Enum.Parse(unitsInfo.PropertyType, val.ToString()))));
+                    }
+                    return enumValList.ToArray();
+                    // return Enum.GetNames(unitsInfo.PropertyType);
                 }
                 else
-                    return new string[0];
+                    return new NameLabelPair[0];
             }
         }
 
