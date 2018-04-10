@@ -71,12 +71,12 @@ namespace UserInterface.Classes
                 }
                 */
                 Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);
-                if (gridView.buttonList.Contains(key))
+                if (gridView.ButtonList.Contains(key))
                 {
                     return EditorTypeEnum.Button;
                 }
                 
-                else if (gridView.comboLookup.ContainsKey(key))
+                else if (gridView.ComboLookup.ContainsKey(key))
                     return EditorTypeEnum.DropDown;
                 else
                     return EditorTypeEnum.TextBox;
@@ -115,9 +115,9 @@ namespace UserInterface.Classes
                     case EditorTypeEnum.Button:
                         {
                             Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);
-                            if (!gridView.buttonList.Contains(key))
+                            if (!gridView.ButtonList.Contains(key))
                             {
-                                gridView.buttonList.Add(key);
+                                gridView.ButtonList.Add(key);
                             }
                             break;
                         }
@@ -125,10 +125,10 @@ namespace UserInterface.Classes
                     case EditorTypeEnum.DropDown:
                         {
                             Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);
-                            if (!gridView.comboLookup.ContainsKey(key))
+                            if (!gridView.ComboLookup.ContainsKey(key))
                             {
                                 ListStore store = new ListStore(typeof(string));
-                                gridView.comboLookup.Add(key, store);
+                                gridView.ComboLookup.Add(key, store);
                             }
                             break;
                         }
@@ -146,7 +146,7 @@ namespace UserInterface.Classes
             get
             {
                 ListStore store;
-                if (gridView.comboLookup.TryGetValue(new Tuple<int, int>(this.RowIndex, this.ColumnIndex), out store))
+                if (gridView.ComboLookup.TryGetValue(new Tuple<int, int>(this.RowIndex, this.ColumnIndex), out store))
                 {
                     int nNames = store.IterNChildren();
                     string[] result = new string[nNames];
@@ -164,7 +164,7 @@ namespace UserInterface.Classes
             set
             {
                 ListStore store;
-                if (gridView.comboLookup.TryGetValue(new Tuple<int, int>(this.RowIndex, this.ColumnIndex), out store))
+                if (gridView.ComboLookup.TryGetValue(new Tuple<int, int>(this.RowIndex, this.ColumnIndex), out store))
                 {
                     store.Clear();
                     foreach (string st in value)
