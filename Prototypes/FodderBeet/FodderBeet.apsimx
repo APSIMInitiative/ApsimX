@@ -3546,7 +3546,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <Constant>
           <Name>MinimumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.01</FixedValue>
+          <FixedValue>0.015</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -43433,7 +43433,7 @@ namespace Models
             <Weather>
               <Name>Weather</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FileName>lincoln.met</FileName>
+              <FileName>Methven.met</FileName>
               <ExcelWorkSheetName />
             </Weather>
             <SoilArbitrator>
@@ -45428,7 +45428,7 @@ namespace Models
             <Weather>
               <Name>Weather</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FileName>lincoln.met</FileName>
+              <FileName>Methven.met</FileName>
               <ExcelWorkSheetName />
             </Weather>
             <SoilArbitrator>
@@ -46038,7 +46038,7 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
                     <InitialRootDepth>2</InitialRootDepth>
-                    <CropToSow>FungalRivage</CropToSow>
+                    <CropToSow>Rivage</CropToSow>
                     <SowingDate>2015-10-23</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
@@ -46454,7 +46454,7 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
                     <InfectionDate>2015-01-03</InfectionDate>
-                    <IsInfected>True</IsInfected>
+                    <IsInfected>False</IsInfected>
                   </Script>
                   <Code><![CDATA[
 using System;
@@ -61767,10 +61767,10 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Population>9</Population>
                   <InitialRootDepth>2.5</InitialRootDepth>
                   <CropToSow>Brigadier</CropToSow>
                   <SowingDate>2010-12-28</SowingDate>
+                  <Population>9</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
