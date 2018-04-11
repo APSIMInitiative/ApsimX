@@ -264,7 +264,9 @@ namespace UserInterface.Views
             Array.Sort(styleNames, StringComparer.InvariantCulture);
             foreach (string name in styleNames)
             {
-                MenuItem subItem = new MenuItem(name);
+                CheckMenuItem subItem = new CheckMenuItem(name);
+                if (string.Compare(name, options.ColorScheme, true) == 0)
+                    subItem.Toggle();
                 subItem.Activated += OnChangeEditorStyle;
                 styles.Append(subItem);
             }
@@ -659,8 +661,16 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnChangeEditorStyle(object sender, EventArgs e)
         {
-            string caption = ((Gtk.Label)(((MenuItem)sender).Children[0])).LabelProp;
-            
+            MenuItem subItem = (MenuItem)sender;
+            string caption = ((Gtk.Label)(subItem.Children[0])).LabelProp;
+
+            foreach (CheckMenuItem item in ((Menu)subItem.Parent).Children)
+            {
+                item.Activated -= OnChangeEditorStyle;  // stop recursion
+                item.Active = (string.Compare(caption, ((Gtk.Label)item.Children[0]).LabelProp, true) == 0);
+                item.Activated += OnChangeEditorStyle;
+            }
+
             Utility.Configuration.Settings.EditorStyleName = caption;
             textEditor.Options.ColorScheme = caption;
             textEditor.QueueDraw();
