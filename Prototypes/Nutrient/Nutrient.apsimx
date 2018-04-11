@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="26">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="28">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -766,12 +766,13 @@ But their data suggests a value of 0.3]]></MemoText>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
+        <ApicalCohortNo>0</ApicalCohortNo>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
-        <InitialisedCohortNo>0</InitialisedCohortNo>
         <AppearedCohortNo>0</AppearedCohortNo>
         <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
+        <InitialisedCohortNo>0</InitialisedCohortNo>
         <Albedo>0.2</Albedo>
         <Gsmax>0.0075</Gsmax>
         <R50>200</R50>
@@ -33406,5 +33407,5 @@ The model consists of:
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>279</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
