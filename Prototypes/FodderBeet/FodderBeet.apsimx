@@ -12,7 +12,7 @@ The New Zealand Institute for Plant & Food Research Limited
 Private Bag 4704, Christchurch, New Zealand
 
 
-The APSIM Fodder Beet Model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, Barley, sorghum) can be achieved by the model developer without additional coding.
+The APSIM Fodder Beet Model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, barley, sorghum) can be achieved by the model developer without additional coding.
 
 The model consists of:
 
@@ -1957,7 +1957,7 @@ The partitioning of biomass to fodder beet organs follows a "Relative Allocation
           <MemoText><![CDATA[The fodder beet model is described for growth and dry matter production using solar radiation and temperature
 as driving functions. The effect of temperature is quantified using a thermal-time accumulation function.
 Thermal-time is calculated in degree days for ambient temperature above a base temperature (Tbase). Tbase is 
-assumed to be 0°C [Chakwizira_etal_2016].]]></MemoText>
+assumed to be 0°C ([Chakwizira_etal_2016]).]]></MemoText>
         </Memo>
         <MultiplyFunction>
           <Name>ThermalTime</Name>
@@ -1991,7 +1991,8 @@ assumed to be 0°C [Chakwizira_etal_2016].]]></MemoText>
                 <Name>Memo</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <MemoText><![CDATA[The effect of soil temperature can go beyond germination as has been demonstrated in previous studies 
-(e.g. Stone et al. 1998).]]></MemoText>
+([Stone_etal_1998]).
+]]></MemoText>
               </Memo>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>Sowing</Start>
@@ -2019,6 +2020,11 @@ assumed to be 0°C [Chakwizira_etal_2016].]]></MemoText>
                 </XYPairs>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </AirTemperatureFunction>
+              <Memo>
+                <Name>Memo</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <MemoText><![CDATA[Temperature is extrapolated to 3-hourly values from daily maximum and minimum using a sinusoidal function, and thermal-time accumulation is calculated for each period and combined to give daily values ([Jones_etal_1986]). The optimum temperature was set at 25–30°C with a maximum of 45°C, targets assumed similar to those of sugar beet reported by ([Ober_Rajabi_2010]) and ([Sanghera_etal_2016]).]]></MemoText>
+              </Memo>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>Germination</Start>
               <End>Maturity</End>
@@ -2078,7 +2084,7 @@ assumed to be 0°C [Chakwizira_etal_2016].]]></MemoText>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[This is an empirical fit where 12.5°Cd per mm sowing depth is assumed based on the 2014 sowing date trial (Lincoln2014) results.]]></MemoText>
+            <MemoText><![CDATA[This is an empirical fit where 12.5°Cd per mm sowing depth is assumed based on the 2014 sowing date trial results ([Khaembah_etal_2017]).]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Germination</Start>
@@ -2102,7 +2108,7 @@ assumed to be 0°C [Chakwizira_etal_2016].]]></MemoText>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[This an empirical fit - 400°Cd estimated from the 2014 sowing date trial (October sowing date) dataset.]]></MemoText>
+            <MemoText><![CDATA[This an empirical fit - 400°Cd estimated from the 2014 sowing date trial (October sowing date) dataset ([Khaembah_etal_2017]).]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>PreEmerge</Start>
@@ -2143,8 +2149,7 @@ assumed to be 0°C [Chakwizira_etal_2016].]]></MemoText>
             <Memo>
               <Name>Memo</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[The effect of photoperiod is currently assumed neglible. The maximum TT of 3200 oCd for the October sowing 
-date of Experiment 4 is assumed here.]]></MemoText>
+              <MemoText><![CDATA[The effect of photoperiod on the vegetative phase is assumed neglible. The maximum TT of 3200°Cd based on the October sowing date data ([Khaembah_etal_2017])of the sowing date trial is assumed here.]]></MemoText>
             </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -2163,7 +2168,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[This an empirical fit - 400°Cd estimated from Experiment 4 (October sowing date) dataset.]]></MemoText>
+            <MemoText><![CDATA[This an empirical fit - 400°Cd estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).]]></MemoText>
           </Memo>
           <LinearInterpolationFunction>
             <Name>ThermalTime</Name>
@@ -2201,7 +2206,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The 800°Cd is is an empirical fit based on Experiment 4 results.]]></MemoText>
+            <MemoText><![CDATA[The 800°Cd is is an empirical fit based on the 2014 sowing date trial ([Khaembah_etal_2017]).]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>PreBolt</Start>
@@ -2222,7 +2227,8 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[This is estimated to be 3600°Cd]]></MemoText>
+            <MemoText><![CDATA[This is estimated to be 3600°Cd
+A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vegetative phase) is assumed for the duration of the “Maturity” phase. Accumulated thermal time (TTsum) for each phase (planted–vegetative) was empirically derived from the 2014 sowing date data ([Khaembah_etal_2017]).]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Bolting</Start>
@@ -2276,7 +2282,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[It is assumed that fodder beet can grow up to a maximum height of 500 mm.]]></MemoText>
+            <MemoText><![CDATA[The maximum height of 500 mm was estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Structure].LeafTipsAppeared</XProperty>
@@ -2300,7 +2306,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[Assumes that leaf primordia is produced at 2 times faster than the leaves (i.e. half of phyllochron values) following findings for other species such as maize [Padilla_and_Otegui_2005]. ]]></MemoText>
+            <MemoText><![CDATA[Assumes that leaf primordia is produced at two times faster than the leaves (i.e. half of phyllochron values) following findings for other species such as maize ([Padilla_and_Otegui_2005]). ]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>PreEmerge</Start>
@@ -2331,7 +2337,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[A two stage phyllochron (i.e. 100–50°Cd) is an empirical fit to get faster leaf appearance of the first 3 leaves. The 
-50°Cd for the fourth and later-formed leaves is estimated from measured values of the 2014-2015 October sowing date treatment. ]]></MemoText>
+50°Cd for the fourth and later-formed leaves is estimated from measured values of the 2014-2015 October sowing date treatment ([Khaembah_etal_2017]). ]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>PreEmerge</Start>
@@ -2448,7 +2454,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
                 <Memo>
                   <Name>Memo</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <MemoText><![CDATA[Allocation determined by node number - partitioning coefficients have been determined using the 2014 sowing date October data.]]></MemoText>
+                  <MemoText><![CDATA[Allocation determined by node number - partitioning coefficients have been determined using the 2014 sowing date October data ([Khaembah_etal_2017]).]]></MemoText>
                 </Memo>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <XProperty>[Structure].LeafTipsAppeared</XProperty>
@@ -2689,6 +2695,11 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <Name>ExtinctionCoeff</Name>
           <Constant>
             <Name>PotentialExtinctionCoeff</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The extinction coefficient value of 0.74 ([Chakwizira_etal_2016]) was used.]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.74</FixedValue>
           </Constant>
@@ -2709,32 +2720,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
-          <MultiplyFunction>
-            <Name>ExtinctionCoeff</Name>
-            <Constant>
-              <Name>PotentialExtinctionCoeff</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.74</FixedValue>
-            </Constant>
-            <LinearInterpolationFunction>
-              <Name>WaterStress</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <X>
-                  <double>0</double>
-                  <double>1</double>
-                </X>
-                <Y>
-                  <double>0.5</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
-            </LinearInterpolationFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </MultiplyFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <LeafCohortParameters>
@@ -2750,56 +2735,12 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <Memo>
               <Name>Memo</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[Data of expansion of  laminae at three leaf positions ( twelfth, sixteenth and twentieth) on six plants  from the sowing date  experiment were used to give indication of ontogenic increase in maximum leaf area. The pattern of maximum leaf area for sugar beet [Milford_etal_1985] was assumed.
+              <MemoText><![CDATA[Data of expansion of  laminae at three leaf positions (12th, 16th and 20th) on six plants  from the sowing date  experiment were used to give indication of ontogenic increase in maximum leaf area. The pattern of maximum leaf area for sugar beet ([Milford_etal_1985]) was assumed.
 
 ]]></MemoText>
             </Memo>
             <XYPairs>
               <Name>XYPairs</Name>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Series</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <Checkpoint>Current</Checkpoint>
-                  <XFieldName>.Simulations.Replacements.FodderBeet.Leaf.CohortParameters.MaxArea.XYPairs.X</XFieldName>
-                  <YFieldName>.Simulations.Replacements.FodderBeet.Leaf.CohortParameters.MaxArea.XYPairs.Y</YFieldName>
-                  <ShowInLegend>false</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-              </Graph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>1</double>
@@ -2865,7 +2806,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <Memo>
               <Name>Memo</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[The pattern is assumed to be similar to that of maize [Teixeira_et_al_2011].
+              <MemoText><![CDATA[The pattern is assumed to be similar to that of maize ([Teixeira_etal_2011]).
 ]]></MemoText>
             </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2943,7 +2884,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <Memo>
               <Name>Memo</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[The pattern is assumed to be similar to that of maize [Teixeira_et_al_2011].]]></MemoText>
+              <MemoText><![CDATA[The pattern is assumed to be similar to that of maize ([Teixeira_etal_2011]).]]></MemoText>
             </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].LeafTipsAppeared</XProperty>
@@ -2974,7 +2915,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <Memo>
               <Name>Memo</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[The pattern is assumed to be similar to that of maize [Teixeira_et_al_2011].
+              <MemoText><![CDATA[The pattern is assumed to be similar to that of maize ([Teixeira_etal_2011]).
 ]]></MemoText>
             </Memo>
             <LinearInterpolationFunction>
@@ -3054,7 +2995,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <Memo>
               <Name>Memo</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[Maximum leaf specific leaf area was estimated from the October sowing date of Experiment 4]]></MemoText>
+              <MemoText><![CDATA[Maximum leaf specific leaf area was estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).]]></MemoText>
             </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>16000</FixedValue>
@@ -3078,6 +3019,11 @@ date of Experiment 4 is assumed here.]]></MemoText>
           </LinearInterpolationFunction>
           <Constant>
             <Name>MinimumNConc</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The minimum, maximum and critical nitrogen concentration were determined in a previous study ([Chakwizira_etal_2016b]).]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.03</FixedValue>
           </Constant>
@@ -3158,116 +3104,6 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
-          <MultiplyFunction>
-            <Name>LagDuration1</Name>
-            <LinearInterpolationFunction>
-              <Name>PhotoperiodMultiplier</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <X>
-                  <double>1</double>
-                  <double>10</double>
-                  <double>13</double>
-                  <double>24</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-              <Memo>
-                <Name>Memo</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MemoText><![CDATA[The pattern is assumed to be similar to that of maize (Teixeira et al 2011).
-]]></MemoText>
-              </Memo>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Phenology].Photoperiod.Value()</XProperty>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>LagDurationBase</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <Graph>
-                  <Name>Graph</Name>
-                  <Series>
-                    <Name>Series</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Type>Scatter</Type>
-                    <XAxis>Bottom</XAxis>
-                    <YAxis>Left</YAxis>
-                    <ColourArgb>-65536</ColourArgb>
-                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                    <Marker>None</Marker>
-                    <MarkerSize>Normal</MarkerSize>
-                    <Line>Solid</Line>
-                    <LineThickness>Normal</LineThickness>
-                    <Checkpoint>Current</Checkpoint>
-                    <XFieldName>.Simulations.Replacements.FodderBeet.Leaf.CohortParameters.LagDuration.LagDurationBase.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.FodderBeet.Leaf.CohortParameters.LagDuration.LagDurationBase.XYPairs.Y</YFieldName>
-                    <ShowInLegend>false</ShowInLegend>
-                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                    <Cumulative>false</Cumulative>
-                    <CumulativeX>false</CumulativeX>
-                  </Series>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Axis>
-                    <Type>Left</Type>
-                    <Title>Y</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <Axis>
-                    <Type>Bottom</Type>
-                    <Title>X</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <LegendPosition>BottomRight</LegendPosition>
-                  <DisabledSeries />
-                </Graph>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <X>
-                  <double>1</double>
-                  <double>6</double>
-                  <double>11</double>
-                  <double>15</double>
-                  <double>21</double>
-                  <double>35</double>
-                  <double>45</double>
-                  <double>50</double>
-                </X>
-                <Y>
-                  <double>100</double>
-                  <double>200</double>
-                  <double>300</double>
-                  <double>300</double>
-                  <double>300</double>
-                  <double>200</double>
-                  <double>100</double>
-                  <double>80</double>
-                </Y>
-              </XYPairs>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Structure].LeafTipsAppeared</XProperty>
-            </LinearInterpolationFunction>
-            <Memo>
-              <Name>Memo</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[The pattern is assumed to be similar to that of maize (Teixeira et al 2011).
-]]></MemoText>
-            </Memo>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </MultiplyFunction>
           <AddFunction>
             <Name>DroughtInducedLagAcceleration</Name>
             <Constant>
@@ -3833,6 +3669,11 @@ date of Experiment 4 is assumed here.]]></MemoText>
                 <double>0</double>
               </Y>
             </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The roots were assumed to account for 5% of dry matter.]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Root].Depth</XProperty>
           </LinearInterpolationFunction>
@@ -4839,6 +4680,62 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
+      <Folder>
+        <Name>Phenology</Name>
+        <Graph>
+          <Name>Emergence</Name>
+          <Series>
+            <Name>Series1</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Small</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>PredictedObserved</TableName>
+            <XFieldName>Observed.FodderBeet.Phenology.Stage</XFieldName>
+            <YFieldName>Predicted.FodderBeet.Phenology.Stage</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
           </Series>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
@@ -55041,8 +54938,8 @@ namespace Models
             <Clock>
               <Name>clock</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <StartDate>2014-10-24T00:00:00</StartDate>
-              <EndDate>2017-05-30T00:00:00</EndDate>
+              <StartDate>2015-10-24T00:00:00</StartDate>
+              <EndDate>2016-05-30T00:00:00</EndDate>
             </Clock>
             <Summary>
               <Name>summaryfile</Name>
