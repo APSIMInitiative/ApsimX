@@ -8428,10 +8428,10 @@ namespace Models
                   <Name>Sowing</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
+                    <InitialRootDepth>5</InitialRootDepth>
                     <Cultivar>
                     </Cultivar>
                     <SowingDate>2014-10-17</SowingDate>
-                    <InitialRootDepth>5</InitialRootDepth>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -20517,8 +20517,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -22157,8 +22157,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -23829,8 +23829,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -25544,8 +25544,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -27216,8 +27216,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -28883,8 +28883,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -30598,8 +30598,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -38401,7 +38401,7 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
                     <InitialRootDepth>2</InitialRootDepth>
-                    <CropToSow>Rivage</CropToSow>
+                    <CropToSow>Brigadier</CropToSow>
                     <SowingDate>2015-10-23</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
@@ -55241,10 +55241,10 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Population>9</Population>
                   <InitialRootDepth>2.5</InitialRootDepth>
                   <CropToSow>Brigadier</CropToSow>
                   <SowingDate>2010-12-28</SowingDate>
+                  <Population>9</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
