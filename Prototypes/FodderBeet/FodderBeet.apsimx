@@ -11398,7 +11398,14 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
+              <DisabledSeries>
+                <string>RivageSep</string>
+                <string>BrigadierSep</string>
+                <string>BrigadierOct</string>
+                <string>RivageNov</string>
+                <string>BrigadierNov</string>
+                <string>BrigadierDec</string>
+              </DisabledSeries>
             </Graph>
             <Graph>
               <Name>StorageRoot_N</Name>
@@ -11465,7 +11472,14 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
+              <DisabledSeries>
+                <string>RivageSep</string>
+                <string>BrigadierSep</string>
+                <string>BrigadierOct</string>
+                <string>RivageNov</string>
+                <string>BrigadierNov</string>
+                <string>BrigadierDec</string>
+              </DisabledSeries>
             </Graph>
             <Graph>
               <Name>Leaf_N</Name>
@@ -11532,7 +11546,14 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
+              <DisabledSeries>
+                <string>RivageSep</string>
+                <string>BrigadierSep</string>
+                <string>BrigadierOct</string>
+                <string>RivageNov</string>
+                <string>BrigadierNov</string>
+                <string>BrigadierDec</string>
+              </DisabledSeries>
             </Graph>
             <Graph>
               <Name>Petiole_N</Name>
@@ -11599,7 +11620,14 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
+              <DisabledSeries>
+                <string>RivageSep</string>
+                <string>BrigadierSep</string>
+                <string>BrigadierOct</string>
+                <string>RivageNov</string>
+                <string>BrigadierNov</string>
+                <string>BrigadierDec</string>
+              </DisabledSeries>
             </Graph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -53834,7 +53862,7 @@ namespace Models
               <Name>clock</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <StartDate>2014-10-24T00:00:00</StartDate>
-              <EndDate>2016-05-30T00:00:00</EndDate>
+              <EndDate>2015-05-30T00:00:00</EndDate>
             </Clock>
             <Summary>
               <Name>summaryfile</Name>
@@ -55041,8 +55069,8 @@ namespace Models
             <Clock>
               <Name>clock</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <StartDate>2014-10-24T00:00:00</StartDate>
-              <EndDate>2017-05-30T00:00:00</EndDate>
+              <StartDate>2015-10-24T00:00:00</StartDate>
+              <EndDate>2016-05-30T00:00:00</EndDate>
             </Clock>
             <Summary>
               <Name>summaryfile</Name>
@@ -56687,10 +56715,10 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <Population>9</Population>
                   <InitialRootDepth>2.5</InitialRootDepth>
                   <CropToSow>Brigadier</CropToSow>
                   <SowingDate>2010-12-28</SowingDate>
-                  <Population>9</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
