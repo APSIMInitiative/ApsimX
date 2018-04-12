@@ -12,6 +12,7 @@ namespace Models.Report
     using System.Data;
     using System.IO;
     using System.Linq;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -53,6 +54,12 @@ namespace Models.Report
         /// <summary>Link to an event service.</summary>
         [Link]
         private IEvent events = null;
+
+        /// <summary>
+        /// Temporarily stores which tab is currently displayed.
+        /// Meaningful only within the GUI
+        /// </summary>
+        [XmlIgnore] public int ActiveTabIndex = 0;
 
         /// <summary>Experiment factor names</summary>
         public List<string> ExperimentFactorNames { get; set; }
