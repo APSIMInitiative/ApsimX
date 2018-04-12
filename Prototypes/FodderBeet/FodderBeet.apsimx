@@ -53533,7 +53533,7 @@ namespace Models
           <DisabledSimNames />
         </Experiment>
         <Experiment>
-          <Name>FRNL_NCRS2015x</Name>
+          <Name>FRNL_NCRS2015</Name>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -53635,7 +53635,7 @@ namespace Models
             <Clock>
               <Name>clock</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <StartDate>2015-10-24T00:00:00</StartDate>
+              <StartDate>2015-09-08T00:00:00</StartDate>
               <EndDate>2016-05-30T00:00:00</EndDate>
             </Clock>
             <Summary>
@@ -54249,7 +54249,7 @@ namespace Models
                   <Script>
                     <InitialRootDepth>2</InitialRootDepth>
                     <CropToSow>Jamon</CropToSow>
-                    <SowingDate>2015-10-25</SowingDate>
+                    <SowingDate>2015-10-27</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -54598,10 +54598,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <DisabledSimNames>
-            <string>FRNL_NCRS2015SDSepNit0</string>
-            <string>FRNL_NCRS2015SDSepNit100</string>
-          </DisabledSimNames>
+          <DisabledSimNames />
         </Experiment>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
