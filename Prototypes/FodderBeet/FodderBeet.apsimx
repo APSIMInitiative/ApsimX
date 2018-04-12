@@ -4208,8 +4208,8 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-2793984</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
@@ -51913,7 +51913,7 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
                     <InitialRootDepth>2</InitialRootDepth>
-                    <CropToSow>FungalRivage</CropToSow>
+                    <CropToSow>Rivage</CropToSow>
                     <SowingDate>2015-10-28</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
@@ -52741,7 +52741,7 @@ namespace Models
                 <Title>Crop Biomass (g/m2)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>0</Minimum>
-                <Maximum>4000</Maximum>
+                <Maximum>NaN</Maximum>
                 <Interval>500</Interval>
               </Axis>
               <Axis>
@@ -52809,7 +52809,7 @@ namespace Models
                 <Title>Crop Biomass (g/m2)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>NaN</Minimum>
-                <Maximum>2500</Maximum>
+                <Maximum>NaN</Maximum>
                 <Interval>500</Interval>
               </Axis>
               <Axis>
@@ -55969,7 +55969,7 @@ namespace Models
                 <Title>Crop Biomass (g/m2)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>0</Minimum>
-                <Maximum>4000</Maximum>
+                <Maximum>NaN</Maximum>
                 <Interval>500</Interval>
               </Axis>
               <Axis>
@@ -55981,11 +55981,7 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries>
-                <string>SepNit0</string>
-                <string>OctNit0</string>
-                <string>OctNit100</string>
-              </DisabledSeries>
+              <DisabledSeries />
             </Graph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
