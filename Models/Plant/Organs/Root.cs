@@ -340,7 +340,7 @@ namespace Models.PMF.Organs
             {
                 double uptake = 0;
                 foreach (ZoneState zone in Zones)
-                    uptake = uptake + MathUtilities.Sum(zone.Uptake);
+                    uptake = uptake + MathUtilities.Sum(zone.WaterUptake);
                 return -uptake;
             }
         }
@@ -386,6 +386,32 @@ namespace Models.PMF.Organs
                         Biomass[] layerLiveForZone = Z.LayerLive;
                         for (int i = 0; i < Z.LayerLive.Length; i++)
                             MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(2 * paw[i] / pawc[i], 0, 1);
+                    }
+
+                return MeanWTF;
+            }
+        }
+
+        /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
+        [Units("0-1")]
+        public double PlantWaterPotentialFactor
+        {
+            get
+            {
+                if (PlantZone == null)
+                    return 0;
+
+                double MeanWTF = 0;
+
+                double liveWt = Live.Wt;
+                if (liveWt > 0)
+                    foreach (ZoneState Z in Zones)
+                    {
+                        double[] paw = Z.soil.PAW;
+                        double[] pawc = Z.soil.PAWC;
+                        Biomass[] layerLiveForZone = Z.LayerLive;
+                        for (int i = 0; i < Z.LayerLive.Length; i++)
+                            MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(paw[i] / pawc[i], 0, 1);
                     }
 
                 return MeanWTF;
@@ -458,8 +484,8 @@ namespace Models.PMF.Organs
             if (zone == null)
                 throw new Exception("Cannot find a zone called " + zoneName);
 
-            zone.Uptake = MathUtilities.Multiply_Value(Amount, -1.0);
-            zone.soil.SoilWater.dlt_sw_dep = zone.Uptake;
+            zone.WaterUptake = MathUtilities.Multiply_Value(Amount, -1.0);
+            zone.soil.SoilWater.dlt_sw_dep = zone.WaterUptake;
         }
 
         /// <summary>Does the Nitrogen uptake.</summary>
@@ -555,7 +581,7 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dry matter potential allocation.</summary>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
-            if (PlantZone.Uptake == null)
+            if (PlantZone.WaterUptake == null)
                 throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
 
             if (PlantZone.Depth <= 0)
