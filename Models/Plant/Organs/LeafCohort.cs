@@ -967,10 +967,8 @@ namespace Models.PMF.Organs
             MaintenanceRespiration = 0;
             //Do Maintenance respiration
             MaintenanceRespiration += Live.MetabolicWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
-            Live.MetabolicWt *= (1 - leafCohortParameters.MaintenanceRespirationFunction.Value());
             MaintenanceRespiration += Live.StorageWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
-            Live.StorageWt *= (1 - leafCohortParameters.MaintenanceRespirationFunction.Value());
-
+            
             Age = Age + thermalTime;
 
             // Do Detachment of this Leaf Cohort

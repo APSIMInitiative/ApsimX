@@ -282,9 +282,7 @@ namespace Models.PMF.Organs
 
             {
                 MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
-                Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
                 MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
-                Live.StorageWt *= (1 - MaintenanceRespirationFunction.Value());
             }
 
         }
