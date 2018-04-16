@@ -1003,7 +1003,7 @@ namespace UserInterface.Views
                 {
                     activeCol = new List<int> { colNo };
                 }
-                HighlightColumns();
+                HighlightColumns((sender as Button).Parent as TreeView);
             }
             if (e.Event.Button == 3 && activeCol.Count >= 1)
             {
@@ -1031,7 +1031,10 @@ namespace UserInterface.Views
         private int GetColNoFromButton(Button btn)
         {
             int colNo = 0;
-            foreach (Widget child in Gridview.AllChildren)
+            TreeView view = btn.Parent as TreeView;
+            if (view == null)
+                return -1;
+            foreach (Widget child in view.AllChildren)
             {
                 if (child is Button)
                 {
@@ -1047,7 +1050,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Highlights all selected columns and un-highlights all other columns.
         /// </summary>
-        private void HighlightColumns()
+        private void HighlightColumns(TreeView view)
         {
             // Reset all columns to default colour.
             FormatColumns?.Invoke(this, new EventArgs());
@@ -1079,15 +1082,20 @@ namespace UserInterface.Views
                 {
                     backgroundColour = Gridview.Style.Base(StateType.Normal);
                     foregroundColour = new Gdk.Color(0, 0, 0);
-                    Gridview.Columns[i].Cells.OfType<CellRendererText>().ToList().ForEach(cell =>
+                    if (i < Gridview.Columns.Length && i >= 0)
                     {
-                        cell.BackgroundGdk = backgroundColour;
-                        cell.ForegroundGdk = foregroundColour;
-                    });
+                        Gridview.Columns[i].Cells.OfType<CellRendererText>().ToList().ForEach(cell =>
+                        {
+                            cell.BackgroundGdk = backgroundColour;
+                            cell.ForegroundGdk = foregroundColour;
+                        });
+                    }
                 }
             }
 
             Gridview.QueueDraw();
+            if (view != null)
+                view.QueueDraw();
         }
 
         /// <summary>
@@ -2294,7 +2302,8 @@ namespace UserInterface.Views
         private void OnButtonDown(object sender, ButtonPressEventArgs e)
         {
             activeCol = new List<int>();
-            HighlightColumns();
+            TreeView view = sender is TreeView ? sender as TreeView : Gridview;
+            HighlightColumns(view);
             if (e.Event.Button == 3)
             {
                 if (this.ColumnHeaderClicked != null)
