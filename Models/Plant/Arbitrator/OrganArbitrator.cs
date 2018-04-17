@@ -341,7 +341,9 @@ namespace Models.PMF
 
                 double totalWt = Organs.Sum(o => o.Total.Wt);
                 DM.SetupSupplies(supplies, totalWt);
-
+                // Subtract maintenance respiration
+                double maintenanceRespiration = Organs.Sum(o => o.MaintenanceRespiration);
+                DM.SubtractMaintenanceRespiration(maintenanceRespiration);
                 BiomassPoolType[] demands = Organs.Select(organ => organ.CalculateDryMatterDemand()).ToArray();
                 DM.SetupDemands(demands);
 

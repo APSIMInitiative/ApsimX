@@ -213,7 +213,24 @@ namespace Models.PMF
             SinkLimitation = 0;
             NutrientLimitation = 0;
         }
-        
+
+
+        /// <summary>Subtract maintenance respiration from daily fixation</summary>
+        /// <param name="respiration">The toal maintenance respiration</param>
+        public void SubtractMaintenanceRespiration(double respiration)
+        {
+            double total = TotalFixationSupply;
+            if (respiration > total)
+            {
+                throw new Exception("Maintenance respiration is more than daily fixation.");
+            }
+            double ratio = (total - respiration) / total;
+            for (int i = 0; i < FixationSupply.Length; i++)
+            {
+                FixationSupply[i] *= ratio;
+            }
+        }
+
         /// <summary>Clear the arbitration type</summary>
         public void Clear()
         {
