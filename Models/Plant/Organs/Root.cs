@@ -1041,9 +1041,9 @@ namespace Models.PMF.Organs
             // Do maintenance respiration
             MaintenanceRespiration = 0;
             MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-            Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
+            // Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
             MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
-            Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
+            // Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
             needToRecalculateLiveDead = true;
         }
 
