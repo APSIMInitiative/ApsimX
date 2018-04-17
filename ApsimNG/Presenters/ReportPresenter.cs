@@ -59,6 +59,8 @@ namespace UserInterface.Presenters
             this.explorerPresenter = explorerPresenter;
             this.view = view as IReportView;
 
+            this.view.VariableList.ScriptMode = false;
+            this.view.EventList.ScriptMode = false;
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
@@ -91,11 +93,13 @@ namespace UserInterface.Presenters
 
             dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
             this.view.DataStoreView.TableList.SelectedValue = this.report.Name;
+            this.view.TabIndex = this.report.ActiveTabIndex;
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
+            this.report.ActiveTabIndex = this.view.TabIndex;
             this.view.VariableList.ContextItemsNeeded -= OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded -= OnNeedEventNames;
             this.view.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;

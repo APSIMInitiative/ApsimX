@@ -60,9 +60,14 @@ namespace UserInterface.Views
         System.Drawing.Rectangle Location { get; set; }
         
         /// <summary>
+        /// Indicates whether we are editing a script, rather than "ordinary" text.
+        /// </summary>
+        bool ScriptMode { get; set; }
+
+        /// <summary>
         /// Add a separator line to the context menu
         /// </summary>
-        void AddContextSeparator();
+        MenuItem AddContextSeparator();
 
         /// <summary>
         /// Add an action (on context menu) on the series grid.
@@ -70,7 +75,7 @@ namespace UserInterface.Views
         /// <param name="menuItemText">The text of the menu item</param>
         /// <param name="onClick">The event handler to call when menu is selected</param>
         /// <param name="shortcut">Describes the key to use as the accelerator</param>
-        void AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut);
+        MenuItem AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut);
     }
 
     /// <summary>
@@ -146,9 +151,19 @@ namespace UserInterface.Views
             set
             {
                 textEditor.Text = value;
-                textEditor.Document.MimeType = "text/x-csharp";
-                textEditor.Options.EnableSyntaxHighlighting = true;
-                textEditor.Options.HighlightMatchingBracket = true;
+                if (ScriptMode)
+                {
+                    textEditor.Document.MimeType = "text/x-csharp";
+                    textEditor.Options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
+                    StyleSeparator.Visible = true;
+                    StyleMenu.Visible = true;
+                }
+                else
+                {
+                    textEditor.Options.ColorScheme = "Default";
+                    StyleSeparator.Visible = false;
+                    StyleMenu.Visible = false;
+                }
             }
         }
 
@@ -185,6 +200,11 @@ namespace UserInterface.Views
         public string IntelliSenseChars { get; set; }
 
         /// <summary>
+        /// Indicates whether we are editing a script, rather than "ordinary" text.
+        /// </summary>
+        public bool ScriptMode { get; set; }
+
+        /// <summary>
         /// Gets the current line number
         /// </summary>
         public int CurrentLineNumber
@@ -194,6 +214,9 @@ namespace UserInterface.Views
                 return textEditor.Caret.Line;
             }
         }
+
+        private MenuItem StyleMenu;
+        private MenuItem StyleSeparator;
 
         /// <summary>
         /// Gets or sets the current location of the caret (column and line) and the current scrolling position
@@ -235,6 +258,8 @@ namespace UserInterface.Views
             options.EnableSyntaxHighlighting = true;
             options.ColorScheme = Utility.Configuration.Settings.EditorStyleName; 
             options.HighlightCaretLine = true;
+            options.EnableSyntaxHighlighting = true;
+            options.HighlightMatchingBracket = true;
             textEditor.Options = options;
             textEditor.TextArea.DoPopupMenu = DoPopup;
             textEditor.Document.LineChanged += OnTextHasChanged;
@@ -254,10 +279,9 @@ namespace UserInterface.Views
             AddContextActionWithAccel("Redo", OnRedo, "Ctrl+Y");
             AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
-            AddContextSeparator();
-            MenuItem styleMenu = AddMenuItem("Use style", null);
+            StyleSeparator = AddContextSeparator();
+            StyleMenu = AddMenuItem("Use style", null);
             Menu styles = new Menu();
-            styleMenu.Submenu = styles;
 
             // find all the editor styles and add sub menu items to the popup
             string[] styleNames = Mono.TextEditor.Highlighting.SyntaxModeService.Styles;
@@ -268,8 +292,10 @@ namespace UserInterface.Views
                 if (string.Compare(name, options.ColorScheme, true) == 0)
                     subItem.Toggle();
                 subItem.Activated += OnChangeEditorStyle;
+                subItem.Visible = true;
                 styles.Append(subItem);
             }
+            StyleMenu.Submenu = styles;
 
             IntelliSenseChars = ".";
 
@@ -527,9 +553,11 @@ namespace UserInterface.Views
         /// <summary>
         /// Add an action (on context menu) on the series grid.
         /// </summary>
-        public void AddContextSeparator()
+        public MenuItem AddContextSeparator()
         {
-            popupMenu.Append(new SeparatorMenuItem());
+            MenuItem result = new SeparatorMenuItem();
+            popupMenu.Append(result);
+            return result;
         }
 
         /// <summary>
@@ -538,7 +566,7 @@ namespace UserInterface.Views
         /// <param name="menuItemText">The text of the menu item</param>
         /// <param name="onClick">The event handler to call when menu is selected</param>
         /// <param name="shortcut">The shortcut string</param>
-        public void AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut)
+        public MenuItem AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut)
         {
             ImageMenuItem item = new ImageMenuItem(menuItemText);
             if (!string.IsNullOrEmpty(shortcut))
@@ -572,6 +600,7 @@ namespace UserInterface.Views
                 item.Activated += onClick;
             popupMenu.Append(item);
             popupMenu.ShowAll();
+            return item;
         }
 
         /// <summary>
