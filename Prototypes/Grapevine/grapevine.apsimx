@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="26">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="27">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -4612,7 +4612,7 @@ Pollination alone results in the development of small, hard green berries (live 
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>2</FixedValue>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>RemobilisationCost</Name>
@@ -7879,8 +7879,8 @@ namespace Models
             <Name>ParameterTest</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <EndoTarget>0</EndoTarget>
               <BudBurstBase>0</BudBurstBase>
+              <EndoTarget>0</EndoTarget>
             </Script>
             <Code><![CDATA[
 using System;
@@ -9592,10 +9592,11 @@ This is important in SLURP as it is set for each species to represent their diff
             <FixedValue>0.4</FixedValue>
           </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ApicalCohortNo>0</ApicalCohortNo>
+          <InitialisedCohortNo>0</InitialisedCohortNo>
           <CohortsInitialised>false</CohortsInitialised>
           <TipsAtEmergence>0</TipsAtEmergence>
           <CohortsAtInitialisation>0</CohortsAtInitialisation>
-          <InitialisedCohortNo>0</InitialisedCohortNo>
           <AppearedCohortNo>0</AppearedCohortNo>
           <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
           <Albedo>0.018</Albedo>
