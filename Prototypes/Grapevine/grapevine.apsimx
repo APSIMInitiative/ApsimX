@@ -4612,7 +4612,7 @@ Pollination alone results in the development of small, hard green berries (live 
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.005</FixedValue>
+          <FixedValue>0.002</FixedValue>
         </Constant>
         <Constant>
           <Name>RemobilisationCost</Name>
@@ -7879,8 +7879,8 @@ namespace Models
             <Name>ParameterTest</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <BudBurstBase>0</BudBurstBase>
               <EndoTarget>0</EndoTarget>
+              <BudBurstBase>0</BudBurstBase>
             </Script>
             <Code><![CDATA[
 using System;
