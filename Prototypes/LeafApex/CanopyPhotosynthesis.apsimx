@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="27">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -935,7 +935,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </DivideFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>5</NumberOfDays>
-          <InitialValue>0</InitialValue>
+          <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
         </MovingAverageFunction>
         <MovingAverageFunction>
           <Name>MeanPhyllochron</Name>
@@ -946,7 +946,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
-          <InitialValue>80</InitialValue>
+          <StageToStartMovingAverage>Emergence</StageToStartMovingAverage>
         </MovingAverageFunction>
         <HoldFunction>
           <Name>FinalLeafNumber</Name>
@@ -1050,14 +1050,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <Constant>
           <Name>MaxNConcDailyGrowth</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1326,7 +1318,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Constant>
             <Name>MaintenanceFractionAt20C</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.1</FixedValue>
+            <FixedValue>0.01</FixedValue>
           </Constant>
           <WangEngelTempFunction>
             <Name>WangEngelTempFunction</Name>
@@ -1339,27 +1331,36 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </WangEngelTempFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
+        <Live>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Live>
+        <Dead>
+          <Name>Biomass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Dead>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Root].LayerDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <Constant>
           <Name>KLModifier</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1615,7 +1616,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Constant>
             <Name>MaintenanceFractionAt20C</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.1</FixedValue>
+            <FixedValue>0.015</FixedValue>
           </Constant>
           <WangEngelTempFunction>
             <Name>WangEngelTempFunction</Name>
@@ -1681,12 +1682,24 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <ZoneNamesToGrowRootsIn />
-        <ZoneRootDepths />
-        <ZoneInitialDM />
       </Root>
       <Leaf>
         <Name>Leaf</Name>
@@ -1700,7 +1713,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <ShadeInducedSenRate>0</ShadeInducedSenRate>
           <SenescedFrac>0</SenescedFrac>
           <DeltaPotentialArea>0</DeltaPotentialArea>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaStressConstrainedArea>0</DeltaStressConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
@@ -1717,6 +1730,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -1728,7 +1743,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <ShadeInducedSenRate>0</ShadeInducedSenRate>
           <SenescedFrac>0</SenescedFrac>
           <DeltaPotentialArea>0</DeltaPotentialArea>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaStressConstrainedArea>0</DeltaStressConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
@@ -1745,21 +1760,9 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Leaf].CohortLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Propertys>
-            <string>[Leaf].CohortDead</string>
-          </Propertys>
-        </CompositeBiomass>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2258,21 +2261,70 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
-          <WangEngelTempFunction>
-            <Name>MaintenanceRespirationFunction</Name>
-            <VariableReference>
-              <Name>VariableReference</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Phenology].MeanTemp.Value()</VariableName>
-            </VariableReference>
+          <ArrayFunction>
+            <Name>LagDurationAgeMultiplier</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MinTemp>-50</MinTemp>
-            <OptTemp>48</OptTemp>
-            <MaxTemp>60</MaxTemp>
-            <RefTemp>60</RefTemp>
-            <MaximumTemperatureWeighting>0.71</MaximumTemperatureWeighting>
-          </WangEngelTempFunction>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>SenescenceDurationAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1</Values>
+          </ArrayFunction>
+          <ArrayFunction>
+            <Name>LeafSizeAgeMultiplier</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Values>1 1 1 1 1 1 1 1 1 1 1 1</Values>
+          </ArrayFunction>
+          <Constant>
+            <Name>RemobilisationCost</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>CarbonConcentration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <MultiplyFunction>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <MemoText><![CDATA[Maintenance Respiration Function]]></MemoText>
+            </Memo>
+            <Constant>
+              <Name>MaintenanceFractionAt20C</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <FixedValue>0.03</FixedValue>
+            </Constant>
+            <WangEngelTempFunction>
+              <Name>WangEngelTempFunction</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <MinTemp>-50</MinTemp>
+              <OptTemp>48</OptTemp>
+              <MaxTemp>60</MaxTemp>
+              <RefTemp>20</RefTemp>
+              <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+            </WangEngelTempFunction>
+            <DivideFunction>
+              <Name>LiveLeafWtFraction</Name>
+              <VariableReference>
+                <Name>LiveLeafWt</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Leaf].Live.Wt</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>LeafWt</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Leaf].Wt</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </DivideFunction>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </MultiplyFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExpansionStressValue>0</ExpansionStressValue>
         </LeafCohortParameters>
         <CanopyPhotosynthesis>
           <Name>Photosynthesis</Name>
@@ -2393,7 +2445,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
-          <Name>DMConversionEfficiencyFunction</Name>
+          <Name>DMConversionEfficiency</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
@@ -2407,7 +2459,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Constant>
             <Name>MaintenanceFractionAt20C</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.1</FixedValue>
+            <FixedValue>0.03</FixedValue>
           </Constant>
           <WangEngelTempFunction>
             <Name>WangEngelTempFunction</Name>
@@ -2424,6 +2476,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>ApexStandard</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </ApexStandard>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -2441,7 +2503,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
-        <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -2491,14 +2552,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </AddFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PopulationBasedDemandFunction>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2648,7 +2701,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Constant>
             <Name>MaintenanceFractionAt20C</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.1</FixedValue>
+            <FixedValue>0.015</FixedValue>
           </Constant>
           <WangEngelTempFunction>
             <Name>WangEngelTempFunction</Name>
@@ -2671,18 +2724,20 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Spike].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
-        <Biomass>
-          <Name>Live</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Biomass>
         <PhaseLookup>
           <Name>StructuralFraction</Name>
           <PhaseLookupValue>
@@ -2945,7 +3000,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Constant>
             <Name>MaintenanceFractionAt20C</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.1</FixedValue>
+            <FixedValue>0.02</FixedValue>
           </Constant>
           <WangEngelTempFunction>
             <Name>WangEngelTempFunction</Name>
@@ -2968,6 +3023,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Stem].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>RemobilisationCost</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>CarbonConcentration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.4</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <CompositeBiomass>
@@ -4251,7 +4316,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Wheat</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>HarvestReport</Name>
@@ -4402,30 +4466,31 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Plant Wheat;
-		
-		public event EventHandler LeafReport;
-		
-		[XmlIgnore] public int LeafPosition { get; set; }
-		[XmlIgnore] public double MaxLeafSize { get; set; }
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if ((Wheat.Leaf.ExpandedCohortNo > LeafPosition) & (Wheat.Structure.NextLeafProportion == 1))
-			{
-				LeafPosition = (int)
-				Wheat.Leaf.ExpandedCohortNo;
-				MaxLeafSize = Wheat.Leaf.CohortSize[LeafPosition - 1];
-				LeafReport.Invoke(this, new EventArgs());
-			}
-		}
-	}
-}]]></Code>
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Plant Wheat;
+        
+        public event EventHandler LeafReport;
+        
+        [XmlIgnore] public int LeafPosition { get; set; }
+        [XmlIgnore] public double MaxLeafSize { get; set; }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if ((Wheat.Leaf.ExpandedCohortNo > LeafPosition) & (Wheat.Structure.NextLeafProportion == 1))
+            {
+                LeafPosition = (int)
+                Wheat.Leaf.ExpandedCohortNo;
+                MaxLeafSize = Wheat.Leaf.CohortSize[LeafPosition - 1];
+                LeafReport.Invoke(this, new EventArgs());
+            }
+        }
+    }
+}
+]]></Code>
     </Manager>
     <Report>
       <Name>MaxLeafSizeReport</Name>
@@ -4456,22 +4521,23 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Wheat;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Wheat.Phenology.CurrentPhaseName == "Maturing")
-			{
-				Wheat.Harvest();
-				Wheat.EndCrop();
-			}
-		}
-	}
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Plant Wheat;
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Wheat.Phenology.CurrentPhaseName == "Maturing")
+            {
+                Wheat.Harvest();
+                Wheat.EndCrop();
+            }
+        }
+    }
 }
-	   ]]></Code>
+       
+]]></Code>
     </Manager>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
@@ -4538,7 +4604,7 @@ namespace Models
             <Name>Wheat.Grain.Wt</Name>
             <n>23</n>
             <Slope>0.600275839123013</Slope>
-            <Intercept>195.40012684666363</Intercept>
+            <Intercept>195.40012684666362</Intercept>
             <SEslope>0.22342349205125303</SEslope>
             <SEintercept>135.21284582886673</SEintercept>
             <R2>0.25580608718707465</R2>
@@ -4558,8 +4624,6 @@ namespace Models
       <FieldNameUsedForMatch>Wheat.Phenology.CurrentStageName</FieldNameUsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>150</MaximumResultsPerPage>
   </DataStore>
   <Folder>
     <Name>Validation</Name>
@@ -6448,7 +6512,6 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>ResetSW</Name>
@@ -6466,24 +6529,24 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Soil Soil;
-		[Link] SurfaceOrganicMatter SurfaceOM;
-		[Description("Reset date")]
-		public DateTime reset_date { get; set; }
+    [Serializable]
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Soil Soil;
+        [Link] SurfaceOrganicMatter SurfaceOM;
+        [Description("Reset date")]
+        public DateTime reset_date { get; set; }
 
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Clock.Today == reset_date)
-				Soil.SoilWater.Reset();
-		}
-	}
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Clock.Today == reset_date)
+                Soil.SoilWater.Reset();
+        }
+    }
 }
 ]]></Code>
             </Manager>
@@ -6508,28 +6571,29 @@ using System.Xml.Serialization;
 
 namespace Models
 {
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Weather Met;
-		[Link] Clock Clock;
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Weather Met;
+        [Link] Clock Clock;
     
-		[Description("Start Date")]
-		public DateTime StartDate { get; set; }
+        [Description("Start Date")]
+        public DateTime StartDate { get; set; }
         
-		[Description("End Date")]
-		public DateTime EndDate { get; set; }
+        [Description("End Date")]
+        public DateTime EndDate { get; set; }
  
     
-		[EventSubscribe("PreparingNewWeatherData")]
-		private void OnPreparingNewWeatherData(object sender, EventArgs e)
-		{
-			if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
-				Met.Rain = 0;		
-		}
-	}
-}]]></Code>
+        [EventSubscribe("PreparingNewWeatherData")]
+        private void OnPreparingNewWeatherData(object sender, EventArgs e)
+        {
+            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
+                Met.Rain = 0;        
+        }
+    }
+}
+]]></Code>
             </Manager>
             <Report>
               <Name>DailyReport</Name>
@@ -6571,22 +6635,23 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Wheat;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-			{
-				Wheat.Harvest();
-				Wheat.EndCrop();
-			}
-		}
-	}
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Plant Wheat;
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
+            {
+                Wheat.Harvest();
+                Wheat.EndCrop();
+            }
+        }
+    }
 }
-	   ]]></Code>
+       
+]]></Code>
             </Manager>
             <SoluteManager>
               <Name>SoluteManager</Name>
@@ -6618,6 +6683,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ProfileWater</YFieldName>
@@ -6640,6 +6706,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>ProfileWater</YFieldName>
@@ -6685,6 +6752,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
@@ -6707,6 +6775,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
@@ -6750,6 +6819,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
@@ -6772,6 +6842,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
@@ -6815,6 +6886,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
@@ -6837,6 +6909,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
@@ -6880,6 +6953,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
@@ -6902,6 +6976,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
@@ -6945,6 +7020,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
@@ -6967,6 +7043,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
@@ -7010,6 +7087,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
@@ -7032,6 +7110,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
@@ -7075,6 +7154,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
@@ -7097,6 +7177,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
@@ -7140,6 +7221,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
@@ -7162,6 +7244,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
@@ -7208,6 +7291,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.AboveGround.Wt</YFieldName>
@@ -7231,6 +7315,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.AboveGround.Wt</YFieldName>
@@ -7274,6 +7359,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.LAI</YFieldName>
@@ -7296,6 +7382,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Leaf.LAI</YFieldName>
@@ -7339,6 +7426,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
@@ -7362,6 +7450,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
@@ -7405,6 +7494,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Grain.Number</YFieldName>
@@ -7428,6 +7518,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Grain.Number</YFieldName>
@@ -7478,6 +7569,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.AboveGroundLive.N</YFieldName>
@@ -7501,6 +7593,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.AboveGround.N</YFieldName>
@@ -7544,6 +7637,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Ear.N</YFieldName>
@@ -7567,6 +7661,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Spike.N</YFieldName>
@@ -7610,6 +7705,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Stem.N</YFieldName>
@@ -7633,6 +7729,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Stem.N</YFieldName>
@@ -7676,6 +7773,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Leaf.Live.N</YFieldName>
@@ -7699,6 +7797,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Leaf.Live.N</YFieldName>
@@ -7742,6 +7841,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Ear.Nconc</YFieldName>
@@ -7765,6 +7865,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Ear.Nconc</YFieldName>
@@ -7808,6 +7909,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Leaf.Live.Nconc</YFieldName>
@@ -7831,6 +7933,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Leaf.Live.Nconc</YFieldName>
@@ -7874,6 +7977,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Stem.Nconc</YFieldName>
@@ -7897,6 +8001,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Stem.Nconc</YFieldName>
@@ -7945,6 +8050,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Grain.Wt</YFieldName>
@@ -7967,6 +8073,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Grain.Wt</YFieldName>
@@ -8010,6 +8117,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Stem.Wt</YFieldName>
@@ -8032,6 +8140,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Stem.Wt</YFieldName>
@@ -8075,6 +8184,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
@@ -8097,6 +8207,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
@@ -8140,6 +8251,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Spike.Wt</YFieldName>
@@ -8162,6 +8274,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Spike.Wt</YFieldName>
@@ -8209,6 +8322,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Population</YFieldName>
@@ -8231,6 +8345,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Wheat.Structure.MainStemPopn</YFieldName>
@@ -8259,6 +8374,7 @@ namespace Models
           <DisabledSeries />
         </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DisabledSimNames />
       </Experiment>
       <Experiment>
         <Name>Lincoln1992</Name>
@@ -8418,15 +8534,15 @@ Emergence was recorded as the 28th of May for the first planting.  The model was
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <FertDate1>05-Aug</FertDate1>
-                  <FertDate2>01-Oct</FertDate2>
-                  <FertDate3>20-Oct</FertDate3>
-                  <FertDate4>25-Nov</FertDate4>
+                  <SDSwitch>0</SDSwitch>
                   <Amount1>0</Amount1>
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
+                  <FertDate1>05-Aug</FertDate1>
+                  <FertDate2>01-Oct</FertDate2>
+                  <FertDate3>20-Oct</FertDate3>
+                  <FertDate4>25-Nov</FertDate4>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -8434,46 +8550,46 @@ using Models.PMF;
 using APSIM.Shared.Utilities;
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		
-		[Description("Date to fertilise")]
-		public string FertDate1 { get; set; }
-		[Description("Date to fertilise")]
-		public string FertDate2 { get; set; }
-		[Description("Date to fertilise")]
-		public string FertDate3 { get; set; }
-		[Description("Date to fertilise")]
-		public string FertDate4 { get; set; }
-		
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount1 { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount2 { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount3 { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount4 { get; set; }
-		
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double SDSwitch { get; set; }
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (DateUtilities.WithinDates(FertDate1, Clock.Today, FertDate1))
-				Fertiliser.Apply(Amount: Amount1 * SDSwitch, Type: Fertiliser.Types.NO3N);
-			if (DateUtilities.WithinDates(FertDate2, Clock.Today, FertDate2))
-				Fertiliser.Apply(Amount: Amount2, Type: Fertiliser.Types.NO3N);
-			if (DateUtilities.WithinDates(FertDate3, Clock.Today, FertDate3))
-				Fertiliser.Apply(Amount: Amount3, Type: Fertiliser.Types.NO3N);
-			if (DateUtilities.WithinDates(FertDate4, Clock.Today, FertDate4))
-				Fertiliser.Apply(Amount: Amount4 * SDSwitch, Type: Fertiliser.Types.NO3N);
-		}
-	}
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Fertiliser Fertiliser;
+        
+        [Description("Date to fertilise")]
+        public string FertDate1 { get; set; }
+        [Description("Date to fertilise")]
+        public string FertDate2 { get; set; }
+        [Description("Date to fertilise")]
+        public string FertDate3 { get; set; }
+        [Description("Date to fertilise")]
+        public string FertDate4 { get; set; }
+        
+        [Description("Amount of fertiliser to be applied (kg/ha)")]
+        public double Amount1 { get; set; }
+        [Description("Amount of fertiliser to be applied (kg/ha)")]
+        public double Amount2 { get; set; }
+        [Description("Amount of fertiliser to be applied (kg/ha)")]
+        public double Amount3 { get; set; }
+        [Description("Amount of fertiliser to be applied (kg/ha)")]
+        public double Amount4 { get; set; }
+        
+        [Description("Amount of fertiliser to be applied (kg/ha)")]
+        public double SDSwitch { get; set; }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (DateUtilities.WithinDates(FertDate1, Clock.Today, FertDate1))
+                Fertiliser.Apply(Amount: Amount1 * SDSwitch, Type: Fertiliser.Types.NO3N);
+            if (DateUtilities.WithinDates(FertDate2, Clock.Today, FertDate2))
+                Fertiliser.Apply(Amount: Amount2, Type: Fertiliser.Types.NO3N);
+            if (DateUtilities.WithinDates(FertDate3, Clock.Today, FertDate3))
+                Fertiliser.Apply(Amount: Amount3, Type: Fertiliser.Types.NO3N);
+            if (DateUtilities.WithinDates(FertDate4, Clock.Today, FertDate4))
+                Fertiliser.Apply(Amount: Amount4 * SDSwitch, Type: Fertiliser.Types.NO3N);
+        }
+    }
 }
 ]]></Code>
               </Manager>
@@ -8882,7 +8998,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Wheat</ResourceName>
               <CropType>Wheat</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Report>
               <Name>DailyReport</Name>
@@ -8924,22 +9039,23 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Wheat;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Wheat.Phenology.CurrentPhaseName == "Ripening")
-			{
-				Wheat.Harvest();
-				Wheat.EndCrop();
-			}
-		}
-	}
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Plant Wheat;
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Wheat.Phenology.CurrentPhaseName == "Ripening")
+            {
+                Wheat.Harvest();
+                Wheat.EndCrop();
+            }
+        }
+    }
 }
-	   ]]></Code>
+       
+]]></Code>
             </Manager>
             <Report>
               <Name>SupReport</Name>
@@ -9007,6 +9123,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.AboveGround.N</YFieldName>
@@ -9030,6 +9147,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.AboveGround.N</YFieldName>
@@ -9073,6 +9191,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.AboveGround.N</YFieldName>
@@ -9096,6 +9215,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.AboveGround.N</YFieldName>
@@ -9139,6 +9259,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.AboveGround.Wt</YFieldName>
@@ -9162,6 +9283,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.AboveGround.Wt</YFieldName>
@@ -9205,6 +9327,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.AboveGround.Wt</YFieldName>
@@ -9228,6 +9351,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.AboveGround.Wt</YFieldName>
@@ -9271,6 +9395,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
@@ -9293,6 +9418,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
@@ -9336,6 +9462,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>ProfileWater</YFieldName>
@@ -9359,6 +9486,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>ProfileWater</YFieldName>
@@ -9405,6 +9533,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Ear.Wt</YFieldName>
@@ -9428,6 +9557,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Ear.Wt</YFieldName>
@@ -9471,6 +9601,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Ear.Wt</YFieldName>
@@ -9494,6 +9625,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Ear.Wt</YFieldName>
@@ -9537,6 +9669,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
@@ -9560,6 +9693,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
@@ -9603,6 +9737,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
@@ -9626,6 +9761,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
@@ -9674,6 +9810,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.Wt</YFieldName>
@@ -9697,6 +9834,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.Wt</YFieldName>
@@ -9740,6 +9878,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.Wt</YFieldName>
@@ -9763,6 +9902,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.Wt</YFieldName>
@@ -9811,6 +9951,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Ear.N</YFieldName>
@@ -9834,6 +9975,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Ear.N</YFieldName>
@@ -9877,6 +10019,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Ear.N</YFieldName>
@@ -9900,6 +10043,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Ear.N</YFieldName>
@@ -9943,6 +10087,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.N</YFieldName>
@@ -9966,6 +10111,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.N</YFieldName>
@@ -10009,6 +10155,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.N</YFieldName>
@@ -10032,6 +10179,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.N</YFieldName>
@@ -10075,6 +10223,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.N</YFieldName>
@@ -10098,6 +10247,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.N</YFieldName>
@@ -10141,6 +10291,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.N</YFieldName>
@@ -10164,6 +10315,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.N</YFieldName>
@@ -10212,6 +10364,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Ear.Nconc</YFieldName>
@@ -10235,6 +10388,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Ear.Nconc</YFieldName>
@@ -10278,6 +10432,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Ear.Nconc</YFieldName>
@@ -10301,6 +10456,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Ear.Nconc</YFieldName>
@@ -10344,6 +10500,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.Nconc</YFieldName>
@@ -10367,6 +10524,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.Nconc</YFieldName>
@@ -10410,6 +10568,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.Nconc</YFieldName>
@@ -10433,6 +10592,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.Nconc</YFieldName>
@@ -10476,6 +10636,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.Nconc</YFieldName>
@@ -10499,6 +10660,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.Nconc</YFieldName>
@@ -10542,6 +10704,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.Nconc</YFieldName>
@@ -10565,6 +10728,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.Nconc</YFieldName>
@@ -10618,6 +10782,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.LAI</YFieldName>
@@ -10641,6 +10806,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.LAI</YFieldName>
@@ -10689,6 +10855,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.LAI</YFieldName>
@@ -10712,6 +10879,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.LAI</YFieldName>
@@ -10760,6 +10928,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
@@ -10783,6 +10952,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
@@ -10826,6 +10996,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
@@ -10849,6 +11020,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
@@ -10897,6 +11069,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.CoverTotal</YFieldName>
@@ -10920,6 +11093,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.CoverTotal</YFieldName>
@@ -10963,6 +11137,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.CoverTotal</YFieldName>
@@ -10986,6 +11161,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.CoverTotal</YFieldName>
@@ -11029,6 +11205,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Structure.HaunStage.Value()</YFieldName>
@@ -11051,6 +11228,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
@@ -11099,6 +11277,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
@@ -11121,6 +11300,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Thin</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
@@ -11169,6 +11349,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
@@ -11192,6 +11373,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
@@ -11235,6 +11417,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
@@ -11257,6 +11440,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
@@ -11301,6 +11485,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
@@ -11323,6 +11508,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
@@ -11367,6 +11553,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
@@ -11389,6 +11576,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
@@ -11433,6 +11621,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
@@ -11455,6 +11644,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
@@ -11499,6 +11689,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
@@ -11521,6 +11712,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
@@ -11565,6 +11757,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
@@ -11609,6 +11802,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
@@ -11658,6 +11852,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
                 <TableName>DailyReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Stem.PercentWSC</YFieldName>
@@ -11693,6 +11888,7 @@ namespace Models
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DisabledSimNames />
       </Experiment>
       <Graph>
         <Name>Harvest Yield</Name>
@@ -11715,6 +11911,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>HarvestObsPred</TableName>
           <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
           <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
@@ -11765,6 +11962,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>HarvestObsPred</TableName>
           <XFieldName>Observed.Wheat.AboveGround.Wt</XFieldName>
           <YFieldName>Predicted.Wheat.AboveGround.Wt</YFieldName>
@@ -11815,6 +12013,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>HarvestObsPred</TableName>
           <XFieldName>Observed.Wheat.Grain.Number</XFieldName>
           <YFieldName>Predicted.Wheat.Grain.Number</YFieldName>
