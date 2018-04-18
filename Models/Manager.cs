@@ -103,6 +103,13 @@ namespace Models
         /// </summary>
         [XmlIgnore] public System.Drawing.Rectangle Location = new System.Drawing.Rectangle(1, 1, 0, 0);
 
+        /// <summary>
+        /// Stores whether we are currently on the tab displaying the script.
+        /// Meaningful only within the GUI
+        /// </summary>
+        [XmlIgnore] public int ActiveTabIndex = 0;
+
+
         /// <summary>The code for the Manager script</summary>
         [Summary]
         [Description("Script code")]

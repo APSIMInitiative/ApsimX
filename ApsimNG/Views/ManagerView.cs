@@ -14,6 +14,11 @@ namespace UserInterface.Views
         /// Provides access to the editor.
         /// </summary>
         IEditorView Editor { get; }
+
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        int TabIndex { get;  set; }
     }
 
     public class ManagerView : ViewBase,  IManagerView
@@ -46,6 +51,15 @@ namespace UserInterface.Views
             ScriptEditor = null;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
+        }
+
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        public int TabIndex
+        {
+            get { return notebook.CurrentPage; }
+            set { notebook.CurrentPage = value; }
         }
 
         public IGridView GridView { get { return Grid; } }
