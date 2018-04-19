@@ -33,10 +33,30 @@ namespace UserInterface.Views
         private ListStore comboModel = new ListStore(typeof(string));
         private CellRendererText comboRender = new CellRendererText();
 
-        /// <summary>Constructor</summary>
+        /// <summary>Constructor which also creates a ComboBox</summary>
         public DropDownView(ViewBase owner) : base(owner)
         {
             combobox1 = new ComboBox(comboModel);
+            SetupCombo();
+        }
+
+        /// <summary>
+        /// Construct a DropDownView with an existing ComboBox object
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="combo"></param>
+        public DropDownView(ViewBase owner, ComboBox combo) : base(owner)
+        {
+            combobox1 = combo;
+            combobox1.Model = comboModel;
+            SetupCombo();
+        }
+
+        /// <summary>
+        /// Configuration at construction time
+        /// </summary>
+        private void SetupCombo()
+        {
             _mainWidget = combobox1;
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
