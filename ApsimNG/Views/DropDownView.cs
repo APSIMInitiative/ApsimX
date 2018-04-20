@@ -109,6 +109,21 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Gets or sets the selected item for the combo
+        /// </summary>
+        public int SelectedIndex
+        {
+            get
+            {
+                return combobox1.Active;
+            }
+
+            set
+            {
+                combobox1.Active = Math.Min(value, comboModel.IterNChildren());
+            }
+        }
         /// <summary>Gets or sets the selected value.</summary>
         public string SelectedValue
         {
