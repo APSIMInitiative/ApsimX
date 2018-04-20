@@ -17,8 +17,8 @@ namespace Models.GrazPlan
     /// The main GrazPlan stock class
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.StockView")]
+    [PresenterName("UserInterface.Presenters.StockPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     public class Stock : Model
     {
