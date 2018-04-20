@@ -115,7 +115,7 @@
     <EmbeddedResource Include="Resources\Glade\ModelDetailsWrapperView.glade" />
     <EmbeddedResource Include="Resources\Glade\ReportActivityLedgerView.glade" />
     <EmbeddedResource Include="Resources\Glade\InputNextBackView.glade" />
-    <None Include="Resources\Glade\StockView.glade" />
+    <EmbeddedResource Include="Resources\Glade\StockView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
