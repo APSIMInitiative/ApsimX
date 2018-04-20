@@ -589,7 +589,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="constFileName">The name of the parameter file</param>
         /// <returns>The animal parameter set</returns>
-        private TAnimalParamSet MakeParamSet(string constFileName)
+        public static TAnimalParamSet MakeParamSet(string constFileName)
         {
             TAnimalParamSet result = new TAnimalParamSet((TAnimalParamSet)null);
             result.CopyAll(TGAnimalParams.AnimalParamsGlb());
@@ -607,7 +607,7 @@ namespace Models.GrazPlan
         private void SetParamFile(string fileName)
         {
             this.baseParams = null;
-            this.baseParams = this.MakeParamSet(fileName);
+            this.baseParams = StockList.MakeParamSet(fileName);
             this.paramFile = fileName;
         }
 
