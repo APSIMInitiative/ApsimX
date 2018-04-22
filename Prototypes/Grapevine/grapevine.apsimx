@@ -7879,8 +7879,8 @@ namespace Models
             <Name>ParameterTest</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <BudBurstBase>0</BudBurstBase>
               <EndoTarget>0</EndoTarget>
+              <BudBurstBase>0</BudBurstBase>
             </Script>
             <Code><![CDATA[
 using System;
@@ -11003,5 +11003,5 @@ namespace Models
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>283</ExplorerWidth>
 </Simulations>
