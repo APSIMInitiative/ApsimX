@@ -7879,8 +7879,8 @@ namespace Models
             <Name>ParameterTest</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <EndoTarget>0</EndoTarget>
               <BudBurstBase>0</BudBurstBase>
+              <EndoTarget>0</EndoTarget>
             </Script>
             <Code><![CDATA[
 using System;
