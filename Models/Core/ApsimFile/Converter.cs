@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 27; } }
+        public static int LastestVersion { get { return 28; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -820,6 +820,17 @@ namespace Models.Core.ApsimFile
                     ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, pattern, replacePattern, null);
                 }
             }
+        }
+
+        /// <summary>
+        /// Upgrades to version 28. Change ICrop to IPlant
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion28(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+                ConverterUtilities.SearchReplaceManagerCode(manager, " ICrop ", " IPlant ");
         }
     }
 }

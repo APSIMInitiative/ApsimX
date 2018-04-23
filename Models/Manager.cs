@@ -329,7 +329,7 @@ namespace Models
                     object value = property.GetValue(script, null);
                     if (value == null)
                         value = "";
-                    else if (value is ICrop)
+                    else if (value is IPlant)
                         value = (value as IModel).Name;
                     XmlUtilities.SetValue(doc.DocumentElement, property.Name, 
                                          ReflectionUtilities.ObjectToString(value));
