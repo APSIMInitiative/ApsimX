@@ -13,12 +13,13 @@ using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
 using Models.Core;
+using Models.PMF.Interfaces;
 
 namespace Models.AgPasture
 {
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureAboveGroundOrgan
+    public class PastureAboveGroundOrgan : AboveGround
     {
         /// <summary>Constructor, initialise tissues.</summary>
         /// <param name="numTissues">The number of tissues in the organ</param>
@@ -33,6 +34,34 @@ namespace Models.AgPasture
 
         /// <summary>The collection of tissues for this organ.</summary>
         internal GenericTissue[] Tissue { get; set; }
+
+        /// <summary>Return live biomass. Used by STOCK</summary>
+        Biomass Live
+        {
+            get
+            {
+                Biomass live = new Biomass();
+                live.StructuralWt = DMLive;
+                live.StructuralN = NLive;
+                live.DMDOfStructural = DigestibilityLive;
+                return live;
+            }
+        }
+
+        /// <summary>Return dead biomass. Used by STOCK</summary>
+        Biomass Dead
+        {
+            get
+            {
+                Biomass dead = new Biomass();
+                dead.StructuralWt = DMDead;
+                dead.StructuralN = NDead;
+                dead.DMDOfStructural = DigestibilityDead;
+                return dead;
+            }
+        }
+
+
 
         #region Organ specific characteristics  ----------------------------------------------------------------------------
 
@@ -905,10 +934,8 @@ namespace Models.AgPasture
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 layerFrac = FractionLayerWithRoots(layer);
-                //mySoilNH4Available[layer] = myZone.NH4N[layer] * layerFrac;
-                //mySoilNO3Available[layer] = myZone.NO3N[layer] * layerFrac;
-                mySoilNH4Available[layer] = Math.Min(myZone.NH4N[layer], SoilNitrogen.nh4_PlantAvailable[layer]) * layerFrac;
-                mySoilNO3Available[layer] = Math.Min(myZone.NO3N[layer], SoilNitrogen.no3_PlantAvailable[layer]) * layerFrac;
+                mySoilNH4Available[layer] = myZone.NH4N[layer] * layerFrac;
+                mySoilNO3Available[layer] = myZone.NO3N[layer] * layerFrac;
             }
         }
 

@@ -278,10 +278,10 @@ namespace Models.Core
 
                     foreach (int val in enumValArray)
                     {
-                        enumValList.Add(new NameLabelPair(val.ToString(), GetEnumDescription((Enum)Enum.Parse(unitsInfo.PropertyType, val.ToString()))));
+                        object parsedEnum = Enum.Parse(unitsInfo.PropertyType, val.ToString());
+                        enumValList.Add(new NameLabelPair(parsedEnum.ToString(), GetEnumDescription((Enum)parsedEnum)));
                     }
                     return enumValList.ToArray();
-                    // return Enum.GetNames(unitsInfo.PropertyType);
                 }
                 else
                     return new NameLabelPair[0];

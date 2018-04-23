@@ -37,6 +37,9 @@ namespace UserInterface.Commands
         /// <summary>A list of all citations found.</summary>
         private List<BibTeX.Citation> citations;
 
+        /// <summary>Temporary working directory.</summary>
+        private string workingDirectory;
+
         /// <summary>Gets the name of the file .</summary>
         public string FileNameWritten { get; private set; }
 
@@ -125,7 +128,7 @@ namespace UserInterface.Commands
                GlobalFontSettings.FontResolver = new MyFontResolver();
 
             // Create a temporary working directory.
-            string workingDirectory = Path.Combine(Path.GetTempPath(), "autodoc");
+            workingDirectory = Path.Combine(Path.GetTempPath(), "autodoc");
             if (Directory.Exists(workingDirectory))
                 Directory.Delete(workingDirectory, true);
             Directory.CreateDirectory(workingDirectory);
@@ -288,7 +291,7 @@ namespace UserInterface.Commands
                           " have described earlier versions of APSIM in detail, outlining the key APSIM crop and soil process models and presented some examples " +
                           " of the capabilities of APSIM." + Environment.NewLine + Environment.NewLine +
 
-                          "![Alt Text](..\\..\\Documentation\\Images\\Jigsaw.jpg)" + Environment.NewLine + Environment.NewLine +
+                          "![Alt Text](Jigsaw.jpg)" + Environment.NewLine + Environment.NewLine +
                           "**Figure [FigureNumber]:**  This conceptual representation of an APSIM simulation shows a “top level” farm (with climate, farm management and livestock) " +
                           "and two fields. The farm and each field are built from a combination of models found in the toolbox. The APSIM infrastructure connects all selected model pieces together to form a coherent simulation.*" + Environment.NewLine + Environment.NewLine +
 
@@ -708,8 +711,7 @@ namespace UserInterface.Commands
             markDown.ExtraMode = true;
             string html = markDown.Transform(paragraph.text);
 
-            string imageDirectory = Path.GetDirectoryName(ExplorerPresenter.ApsimXFile.FileName);
-            HtmlToMigraDoc.Convert(html, section, imageDirectory);
+            HtmlToMigraDoc.Convert(html, section, workingDirectory);
 
             Paragraph para = section.LastParagraph;
             para.Format.LeftIndent = Unit.FromCentimeter(paragraph.indent);

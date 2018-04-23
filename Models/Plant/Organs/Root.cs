@@ -432,6 +432,20 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         public double N { get { return Total.N; } }
 
+        /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
+        [XmlIgnore]
+        public double Nconc
+        {
+            get
+            {
+                if (Wt > 0.0)
+                    return N / Wt;
+                else
+                    return 0.0;
+            }
+        }
+
+
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
         public double NFixationCost { get { return 0; } }
