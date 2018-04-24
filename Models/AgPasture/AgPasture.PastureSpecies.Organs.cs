@@ -19,12 +19,17 @@ namespace Models.AgPasture
 {
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureAboveGroundOrgan : AboveGround
+    public class PastureAboveGroundOrgan : IRemovableBiomass
     {
+        /// <summary>Parent plant for this organ</summary>
+        private PastureSpecies parentPlant;
+
         /// <summary>Constructor, initialise tissues.</summary>
+        /// <param name="parentPlant">Parent plant for the organ</param>
         /// <param name="numTissues">The number of tissues in the organ</param>
-        public PastureAboveGroundOrgan(int numTissues)
+        public PastureAboveGroundOrgan(PastureSpecies parentPlant, int numTissues)
         {
+            this.parentPlant = parentPlant;
             // Typically four tissues above ground, three live and one dead
             TissueCount = numTissues;
             Tissue = new GenericTissue[TissueCount];
@@ -36,7 +41,7 @@ namespace Models.AgPasture
         internal GenericTissue[] Tissue { get; set; }
 
         /// <summary>Return live biomass. Used by STOCK</summary>
-        Biomass Live
+        public Biomass Live
         {
             get
             {
@@ -49,7 +54,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Return dead biomass. Used by STOCK</summary>
-        Biomass Dead
+        public Biomass Dead
         {
             get
             {
@@ -61,7 +66,18 @@ namespace Models.AgPasture
             }
         }
 
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return true; } }
 
+        /// <summary>
+        /// Biomass removal logic for this organ.
+        /// </summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove</param>
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        {
+            throw new NotImplementedException();
+        }
 
         #region Organ specific characteristics  ----------------------------------------------------------------------------
 

@@ -3998,7 +3998,7 @@ namespace Models.GrazPlan
                     PaddockInfo thePadd = this.stockModel.Paddocks.byObj(zone);
 
                     // find all the child crop, pasture components with an TAvailableToAnimal property
-                    foreach (Model crop in Apsim.FindAll(zone, typeof(ICrop)))
+                    foreach (Model crop in Apsim.FindAll(zone, typeof(IPlant)))
                     {
                         this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, crop.Name, 0, 0, crop, true);
                     }
