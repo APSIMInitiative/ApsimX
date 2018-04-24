@@ -830,7 +830,10 @@ namespace Models.Core.ApsimFile
         private static void UpgradeToVersion28(XmlNode node, string fileName)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
-                ConverterUtilities.SearchReplaceManagerCode(manager, " ICrop ", " IPlant ");
+            {
+                ConverterUtilities.SearchReplaceManagerCode(manager, " ICrop", " IPlant");
+                ConverterUtilities.SearchReplaceManagerCode(manager, "(ICrop)", "(IPlant)");
+            }
         }
     }
 }

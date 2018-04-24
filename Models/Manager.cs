@@ -305,7 +305,7 @@ namespace Models
                 if (property != null)
                 {
                     object value;
-                    if (property.PropertyType.Name == "ICrop")
+                    if (property.PropertyType.Name == "IPlant")
                         value = Apsim.Find(this, element.InnerText);
                     else
                         value = ReflectionUtilities.StringToObject(property.PropertyType, element.InnerText);
