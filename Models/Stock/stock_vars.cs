@@ -13,6 +13,7 @@ namespace Models.GrazPlan
     /// <summary>
     /// Livestock metabolizable energy partition
     /// </summary>
+    [Serializable]
     public class EnergyUse
     {
         /// <summary>
@@ -286,6 +287,7 @@ namespace Models.GrazPlan
     /// <summary>
     /// Supplement eaten type
     /// </summary>
+    [Serializable]
     public class SupplementEaten
     {
         /// <summary>
@@ -302,6 +304,7 @@ namespace Models.GrazPlan
     /// <summary>
     /// Dry matter pool
     /// </summary>
+    [Serializable]
     public class DMPoolHead
     {
         /// <summary>
@@ -333,6 +336,7 @@ namespace Models.GrazPlan
     /// <summary>
     /// Inorganic faeces type
     /// </summary>
+    [Serializable]
     public class InorgFaeces
     {
         /// <summary>
@@ -354,6 +358,7 @@ namespace Models.GrazPlan
     /// <summary>
     /// Forage available to the animal from a crop component
     /// </summary>
+    [Serializable]
     public class AvailableToAnimal
     {
         /// <summary>
