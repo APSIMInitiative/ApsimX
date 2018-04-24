@@ -62,7 +62,7 @@ namespace Models.GrazPlan
     /// <summary>
     /// The stock genotype
     /// </summary>
-    public class TStockGeno
+    public class StockGeno
     {
         /// <summary>
         /// Gets or sets the name of the genotype
@@ -489,7 +489,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="model">The animal model</param>
         /// <param name="genoValues">The genotypes returned</param>
-        public static void MakeGenotypesValue(StockList model, ref TStockGeno[] genoValues)
+        public static void MakeGenotypesValue(StockList model, ref StockGeno[] genoValues)
         {
             TAnimalParamSet parameters;
             string damBreed = string.Empty;
