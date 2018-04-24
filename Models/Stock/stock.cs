@@ -11,6 +11,8 @@ namespace Models.GrazPlan
     using Models.Core;
     using Models.Soils;
     using Models.SurfaceOM;
+    using Models.PMF.Interfaces;
+    using Models.PMF.Organs;
     using StdUnits;
 
     /// <summary>
@@ -25,7 +27,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The list of user specified forage component names
         /// </summary>
-        private List<string> userForages;       
+        private List<string> userForages;
 
         /// <summary>
         /// The list of user specified paddocks
@@ -108,7 +110,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The supplement component
         /// </summary>
-        [Link]
+        [Link(IsOptional = true)]
         private Supplement suppFeed = null;
 
         /// <summary>
@@ -333,7 +335,7 @@ namespace Models.GrazPlan
             {   // TODO: complete the function
 
                 ForageProvider forageProvider;
-                 
+
                 // using the component ID
                 // return the mass per area for all forages
                 forageProvider = this.stockModel.ForagesAll.FindProvider(0);
@@ -377,7 +379,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                int[] numbers = new int[this.stockModel.Count()];   
+                int[] numbers = new int[this.stockModel.Count()];
                 StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, false, false, false, ref numbers);
                 return numbers;
             }
@@ -4079,71 +4081,108 @@ namespace Models.GrazPlan
                     this.stockModel.Paddocks.byObj(zone).fArea = zone.Area;
                     this.stockModel.Paddocks.byObj(zone).Slope = zone.Slope;
                 }
+            }
+            this.RequestAvailableToAnimal();  // accesses each forage provider (crop)
 
-                this.RequestAvailableToAnimal();  // accesses each forage provider (crop)
+            this.stockModel.Paddocks.beginTimeStep();
 
-                this.stockModel.Paddocks.beginTimeStep();
-
+            if (this.suppFeed != null)
+            {
                 SuppToStockType[] availSupp = this.suppFeed.SuppToStock;
 
-                for (int idx = 0; idx < availSupp.Length; idx++)    
+                for (int idx = 0; idx < availSupp.Length; idx++)
                 {
                     // each paddock
                     this.suppFed.SetSuppAttrs(availSupp[idx]);
                     this.stockModel.PlaceSuppInPadd(availSupp[idx].Paddock, availSupp[idx].Amount, this.suppFed);
                 }
+            }
 
-                this.localWeather.MeanTemp = 0.5 * (this.localWeather.MaxTemp + this.localWeather.MinTemp);
-                this.stockModel.Weather = this.localWeather;
+            this.localWeather.MeanTemp = 0.5 * (this.localWeather.MaxTemp + this.localWeather.MinTemp);
+            this.stockModel.Weather = this.localWeather;
 
-                // Do internal management tasks that are defined for the various
-                // enterprises. This includes shearing, buying, selling...
-                this.stockModel.ManageInternalTasks(this.localWeather.TheDay);
+            // Do internal management tasks that are defined for the various
+            // enterprises. This includes shearing, buying, selling...
+            this.stockModel.ManageInternalTasks(this.localWeather.TheDay);
 
-                this.stockModel.Dynamics();
+            this.stockModel.Dynamics();
 
-                ForageProvider forageProvider;
+            ForageProvider forageProvider;
 
-                // Return the amounts of forage removed
-                for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
+            // Return the amounts of forage removed
+            for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
+            {
+                forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
+                if (forageProvider.ForageObj != null)
                 {
-                    forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
-                    if (forageProvider.ForageObj != null)                       
+                    // if there is forage removed from this forage object/crop/pasture
+                    if (forageProvider.somethingRemoved())
                     {
-                        // if there is a pubevent or setter then
-                        if (forageProvider.somethingRemoved())
-                        {
-                            // TODO: forageProvider        // Build "removedbyanimal" data
-                            // forageProvider.ForageObj    // call property setter
-                        }
-                    }
-                    else
-                        throw new ApsimXException(this, "No destination for forage removal");
-                }
-
-                // if destinations for the surface om and nutrients are known then
-                // send the values to the components
-                for (int idx = 0; idx <= this.stockModel.Paddocks.Count() - 1; idx++)
-                {
-                    PaddockInfo paddInfo = this.stockModel.Paddocks.byIndex(idx);
-                    
-                    if (paddInfo.AddFaecesObj != null)
-                    {
-                        SurfaceOrganicMatter.AddFaecesType faeces = new SurfaceOrganicMatter.AddFaecesType();
-                        if (this.PopulateFaeces(paddInfo.iPaddID, faeces))
-                        {
-                            ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).AddFaeces(faeces);
-                        }
-                    }
-                    if (paddInfo.AddUrineObj != null)
-                    {
-                        AddUrineType urine = new AddUrineType();
-                        if (this.PopulateUrine(paddInfo.iPaddID, urine))
-                        {
-                            ((SoilNitrogen)paddInfo.AddUrineObj).AddUrine(urine);
-                        }
+                        RemoveHerbageFromPlant(forageProvider);
                     }
                 }
+                else
+                    throw new ApsimXException(this, "No destination for forage removal");
+            }
+
+            // if destinations for the surface om and nutrients are known then
+            // send the values to the components
+            for (int idx = 0; idx <= this.stockModel.Paddocks.Count() - 1; idx++)
+            {
+                PaddockInfo paddInfo = this.stockModel.Paddocks.byIndex(idx);
+
+                if (paddInfo.AddFaecesObj != null)
+                {
+                    SurfaceOrganicMatter.AddFaecesType faeces = new SurfaceOrganicMatter.AddFaecesType();
+                    if (this.PopulateFaeces(paddInfo.iPaddID, faeces))
+                    {
+                        ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).AddFaeces(faeces);
+                    }
+                }
+                if (paddInfo.AddUrineObj != null)
+                {
+                    AddUrineType urine = new AddUrineType();
+                    if (this.PopulateUrine(paddInfo.iPaddID, urine))
+                    {
+                        ((SoilNitrogen)paddInfo.AddUrineObj).AddUrine(urine);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The herbage is removed from the plant/agpasture
+        /// </summary>
+        /// <param name="forageProvider">The provider component</param>
+        private void RemoveHerbageFromPlant(ForageProvider forageProvider)
+        {
+            string chemType = string.Empty;
+            int forageIdx = 0;
+
+            ForageInfo forage = forageProvider.ForageByIndex(forageIdx);
+            while (forage != null)
+            {
+                double area = forage.InPaddock.fArea;
+                GrazType.TGrazingOutputs removed = forage.RemovalKG;
+                // total the amount removed kg/ha
+                double totalRemoved = 0.0;
+                for (int i = 0; i < removed.Herbage.Length; i++)
+                    totalRemoved += removed.Herbage[i];
+                double propnRemoved = totalRemoved / (forage.TotalLive + forage.TotalDead); 
+
+                foreach (IOrgan organ in Apsim.Children((IModel)forageProvider.ForageObj, typeof(IOrgan)))
+                {
+                    if (organ is Leaf)
+                    {
+                        Leaf leaf = (Leaf)organ;
+                        if (leaf.Live.Wt > 0 || leaf.Dead.Wt > 0)
+                        {
+                        }
+                    }
+                }
+                //forage.sName
+                forageIdx++;
+                forage = forageProvider.ForageByIndex(forageIdx);
             }
         }
 
@@ -4393,8 +4432,7 @@ namespace Models.GrazPlan
                 forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
                 if (forageProvider.ForageObj != null)
                 {
-                    // TODO: get the forage info from forageProvider.ForageObj
-                    //// forageProvider.UpdateForages(available_to_animal);
+                    forageProvider.UpdateForages(forageProvider.ForageObj);
                 }
             }
         }

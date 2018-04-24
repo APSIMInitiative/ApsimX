@@ -9,6 +9,9 @@ namespace Models.GrazPlan
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Models.PMF.Interfaces;
+    using Models.PMF.Organs;
+    using Models.Core;
     using CMPServices;
 
     /*
@@ -141,6 +144,29 @@ namespace Models.GrazPlan
                 return false;
             }
         }
+
+        /// <summary>
+        /// The total live herbage used as input in TGrazingInputs
+        /// </summary>
+        public double TotalLive
+        {
+            get
+            {
+                return FForageData.TotalGreen;
+            }
+        }
+
+        /// <summary>
+        /// The total dead herbage used as input in TGrazingInputs
+        /// </summary>
+        public double TotalDead
+        {
+            get
+            {
+                return FForageData.TotalDead;
+            }
+        }
+
         // The computed attributes of this "forage", in the form used by TAnimalGroup
         /// <summary>
         /// Use the forage data
@@ -1110,7 +1136,7 @@ namespace Models.GrazPlan
 
     // ============================================================================
     /// <summary>
-    /// List of forages
+    /// List of ForageInfo forages 
     /// </summary>
     [Serializable]
     public class ForageList
@@ -1282,9 +1308,33 @@ namespace Models.GrazPlan
         public Object ForageObj { get { return FForageObj; } set { FForageObj = value; } }
 
         /// <summary>
+        /// Update the forage data for this crop/agpasture object
+        /// </summary>
+        /// <param name="forageObj">The crop/pasture object</param>
+        public void UpdateForages(Object forageObj)
+        {
+            //ensure this forage is in the list
+            //the forage key in this case is (CompName)
+            ForageInfo forage = FForages.byName(ForageHostName);
+            if (forage == null)  //if this cohort doesn't exist in the forage list then
+            {
+                forage = new ForageInfo();
+                forage.sName = ForageHostName.ToLower();
+                FOwningPaddock.AssignForage(forage);              //the paddock in the model can access this forage
+                FForages.Add(forage); //create a new forage for this cohort
+            }
+            // Need to clear the forage data for all the forages in this provider
+            for (int i = 0; i <= FForages.Count() - 1; i++)             // for each forage
+                FForages.byIndex(i).clearForageData();
+
+            forage.sName = ForageHostName; // TODO: just assuming one forage cohort in this component (expand here?)
+            passGrazingInputs(forage, Crop2GrazingInputs(forageObj), "g/m^2"); //then update it's value
+        }
+
+        /// <summary>
         /// Update the forages for this provider
         /// </summary>
-        /// <param name="availableForage"></param>
+        /// <param name="availableForage">The available forage with cohorts from a component</param>
         /// <returns></returns>
         public void UpdateForages(AvailableToAnimal[] availableForage)
         {
@@ -1403,7 +1453,88 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        /// Copies a Plant/AgPasture object biomass organs into TGrazingInputs object
+        /// </summary>
+        /// <param name="forageObj">The forage object</param>
+        /// <returns>The grazing inputs</returns>
+        private GrazType.TGrazingInputs Crop2GrazingInputs(Object forageObj)
+        {
+            GrazType.TGrazingInputs result = new GrazType.TGrazingInputs();
+            GrazType.zeroGrazingInputs(ref result);
+           
+//            for (int idx = 1; idx <= Math.Min(GrazType.DigClassNo, 6); idx++)
+                //Value2IntakeRecord(aValue.item(1).item((uint)Idx), ref Result.Herbage[Idx]);
+            
+            result.TotalGreen = 0;
+            result.TotalDead = 0;
+
+            
+            // test code *** do not keep ***
+            // fix up for AgPasture because it uses different containers, not IOrgan
+            foreach (IOrgan organ in Apsim.Children((IModel)forageObj, typeof(IOrgan)))
+            {
+                if (organ is Leaf)
+                {
+                    Leaf leaf = (Leaf)organ;
+                    if (leaf.Live.Wt > 0 || leaf.Dead.Wt > 0)
+                    {
+                        result.TotalGreen += leaf.Live.Wt;
+                        result.TotalDead += leaf.Dead.Wt;
+                    }
+                }
+                if (organ is ReproductiveOrgan)
+                {
+                    ReproductiveOrgan grain = (ReproductiveOrgan)organ;
+                    if (grain.Live.Wt > 0 || grain.Dead.Wt > 0)
+                    {
+                        result.TotalGreen +=grain.Live.Wt;
+                        result.TotalDead += grain.Dead.Wt;
+                    }
+                }
+                if (organ is GenericOrgan)
+                {
+                    GenericOrgan genorgan = (GenericOrgan)organ;
+                    if (genorgan.Live.Wt > 0 || genorgan.Dead.Wt > 0)
+                    {
+                        result.TotalGreen += genorgan.Live.Wt;
+                    result.TotalDead += genorgan.Dead.Wt;
+                    }
+                }
+            }
+
+            // store the total kg of the forage so the % removed can be calc'd later
+
+
+            // test code *** do not keep ***
+            for (int idx = 1; idx <= Math.Min(GrazType.DigClassNo, 6); idx++)
+            {
+                result.Herbage[idx].Biomass = (result.TotalGreen + result.TotalDead) / 6.0;
+                result.Herbage[idx].CrudeProtein = 10.0;
+                result.Herbage[idx].Digestibility = 0.3 + (idx-1) * ((0.8 - 0.3)/6.0);
+                result.Herbage[idx].Degradability = 0.75;
+                result.Herbage[idx].HeightRatio = 1;
+                result.Herbage[idx].PhosContent = 0;
+                result.Herbage[idx].SulfContent = 0;
+                result.Herbage[idx].AshAlkalinity = 0.13;
+            }
+            
+            result.LegumePropn = 0.0;
+            result.SelectFactor = 0;               
+
+            /*
+            for (Idx = 1; Idx <= Math.Min(2, aValue.item(5).count()); Idx++)                        // Item[5]="seed"                        
+            {
+                Value2IntakeRecord(aValue.item(5).item((uint)Idx), ref Result.Seeds[1, Idx]);
+                Result.SeedClass[1, Idx] = aValue.item(6).item((uint)Idx).asInteger();              // Item[6]="seed_class"                  
+            }
+
+            */
+            return result;
+
+        }
+
+        /// <summary>
+        /// Takes a TTypedValue plant2stock and fills the TGrazingInputs structure
         /// </summary>
         /// <param name="aValue"></param>
         /// <returns></returns>
