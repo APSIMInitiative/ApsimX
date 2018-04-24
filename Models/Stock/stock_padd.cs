@@ -1470,8 +1470,7 @@ namespace Models.GrazPlan
 
             
             // test code *** do not keep ***
-            // fix up for AgPasture because it uses different containers, not IOrgan
-            foreach (IOrgan organ in Apsim.Children((IModel)forageObj, typeof(IOrgan)))
+            foreach (IRemovableBiomass organ in Apsim.Children((IModel)forageObj, typeof(IRemovableBiomass)))
             {
                 if (organ is Leaf)
                 {

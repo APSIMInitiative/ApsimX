@@ -15,7 +15,7 @@ namespace UserInterface.Interfaces
     /// </summary>
     public interface IStockView
     {
-        TStockGeno[] Genotypes { get; set; }
+        StockGeno[] Genotypes { get; set; }
 
         void SetValues();
     }

@@ -3313,10 +3313,8 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="genoValue">A genotype value</param>
         /// <param name="genoInits">Genotype initial value</param>
-        public void Value2GenotypeInits(TStockGeno genoValue, ref SingleGenotypeInits genoInits)
+        public void Value2GenotypeInits(StockGeno genoValue, ref SingleGenotypeInits genoInits)
         {
-            int idx;
-
             genoInits.GenotypeName = genoValue.Name;
             genoInits.DamBreed = genoValue.DamBreed;
             genoInits.SireBreed = genoValue.SireBreed;
@@ -3333,10 +3331,14 @@ namespace Models.GrazPlan
             if (genoInits.DeathRate[TRUE] == 0.0)
                 genoInits.DeathRate[TRUE] = genoInits.DeathRate[FALSE];
 
-            for (int i = 0; i < genoInits.Conceptions.Length; i++)
-                genoInits.Conceptions[0] = 0.0;
-            for (idx = 1; idx <= genoValue.Conception.Length; idx++)
-                genoInits.Conceptions[idx - 1] = genoValue.Conception[idx - 1];
+            int i;
+            for (i = 0; i < genoInits.Conceptions.Length; i++)
+                genoInits.Conceptions[i] = 0.0;
+            if (genoValue.Conception != null)
+            {
+                for (i = 1; i <= genoValue.Conception.Length; i++)
+                    genoInits.Conceptions[i] = genoValue.Conception[i - 1]; // Conceptions[1..
+            }
         }
 
         /// <summary>

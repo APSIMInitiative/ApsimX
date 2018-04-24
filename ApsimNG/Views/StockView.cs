@@ -17,7 +17,7 @@ namespace UserInterface.Views
         private int FCurrGenotype;
         private GrazType.AnimalType[] FGenotypeAnimals = new GrazType.AnimalType[20];
         private TAnimalParamSet paramSet;
-        private TStockGeno[] genoTypeInits;
+        private StockGeno[] genoTypeInits;
 
         private Notebook notebook1 = null;
         private Notebook notebook2 = null;
@@ -64,7 +64,7 @@ namespace UserInterface.Views
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
-        public TStockGeno[] Genotypes
+        public StockGeno[] Genotypes
         {
             get {
                 return genoTypeInits;

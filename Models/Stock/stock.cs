@@ -157,11 +157,11 @@ namespace Models.GrazPlan
         /// </summary>
         [Description("Information about each animal genotype")]
         [Units("")]
-        public TStockGeno[] GenoTypes
+        public StockGeno[] GenoTypes
         {
             get
             {
-                TStockGeno[] geno = new TStockGeno[1];
+                StockGeno[] geno = new StockGeno[1];
                 StockVars.MakeGenotypesValue(this.stockModel, ref geno);
                 return geno;
             }
@@ -4000,7 +4000,7 @@ namespace Models.GrazPlan
                     PaddockInfo thePadd = this.stockModel.Paddocks.byObj(zone);
 
                     // find all the child crop, pasture components with an TAvailableToAnimal property
-                    foreach (Model crop in Apsim.FindAll(zone, typeof(ICrop)))
+                    foreach (Model crop in Apsim.FindAll(zone, typeof(IPlant)))
                     {
                         this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, crop.Name, 0, 0, crop, true);
                     }
@@ -4170,13 +4170,16 @@ namespace Models.GrazPlan
                     totalRemoved += removed.Herbage[i];
                 double propnRemoved = totalRemoved / (forage.TotalLive + forage.TotalDead); 
 
-                foreach (IOrgan organ in Apsim.Children((IModel)forageProvider.ForageObj, typeof(IOrgan)))
+                foreach (IRemovableBiomass organ in Apsim.Children((IModel)forageProvider.ForageObj, typeof(IRemovableBiomass)))
                 {
-                    if (organ is Leaf)
+                    if (organ.IsAboveGround)
                     {
-                        Leaf leaf = (Leaf)organ;
-                        if (leaf.Live.Wt > 0 || leaf.Dead.Wt > 0)
+                        if (organ is Leaf)
                         {
+                            Leaf leaf = (Leaf)organ;
+                            if (leaf.Live.Wt > 0 || leaf.Dead.Wt > 0)
+                            {
+                            }
                         }
                     }
                 }
