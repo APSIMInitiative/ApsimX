@@ -76,7 +76,19 @@ namespace Models.AgPasture
         /// <param name="biomassToRemove">Biomass to remove</param>
         public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
         {
-            throw new NotImplementedException();
+            // TODO: Work out what to do with biomassToRemove.FractionLiveToResidue
+            // Live removal
+            for (int t = 0; t < Tissue.Length-1; t++)
+            {
+                Tissue[t].DM *= biomassToRemove.FractionLiveToRemove;
+                Tissue[t].Namount *= biomassToRemove.FractionLiveToRemove;
+                Tissue[t].NRemobilisable *= biomassToRemove.FractionLiveToRemove;
+            }
+
+            // Dead removal
+            Tissue[Tissue.Length - 1].DM *= biomassToRemove.FractionDeadToRemove;
+            Tissue[Tissue.Length - 1].Namount *= biomassToRemove.FractionDeadToRemove;
+            Tissue[Tissue.Length - 1].NRemobilisable *= biomassToRemove.FractionDeadToRemove;
         }
 
         #region Organ specific characteristics  ----------------------------------------------------------------------------
