@@ -61,7 +61,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void PopulateView()
         {
-
+            PopulateGenotypes();
+            stockView.SetValues();
         }
 
         /// <summary>
@@ -91,6 +92,14 @@ namespace UserInterface.Presenters
             {
                 PopulateView();
             }
+        }
+
+        /// <summary>
+        /// Initialise the list of genotypes
+        /// </summary>
+        private void PopulateGenotypes()
+        {
+            stockView.Genotypes = stock.GenoTypes;
         }
     }
 }
