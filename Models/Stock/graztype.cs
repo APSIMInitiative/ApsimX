@@ -478,11 +478,11 @@ namespace Models.GrazPlan
             /// <summary>
             /// 
             /// </summary>
-            public double[] Herbage = new double[DigClassNo + 1];   // [1..
+            public double[] Herbage = new double[DigClassNo + 1];   // kg/ha [1..
             /// <summary>
             /// 
             /// </summary>
-            public double[,] Seed = new double[MaxPlantSpp + 1, 3];     // TODO: Fix this [1.., ripe..unripe]
+            public double[,] Seed = new double[MaxPlantSpp + 1, 3]; // kg/ha  TODO: Fix this [1.., ripe..unripe]
 
             /// <summary>
             /// Copy from grazing outputs
