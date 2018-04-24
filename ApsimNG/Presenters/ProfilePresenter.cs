@@ -609,8 +609,8 @@ namespace UserInterface.Presenters
             VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
             if (sender is Gtk.MenuItem)
             {
-                property.Units = (sender as Gtk.MenuItem).Name;
-                this.OnModelChanged(this.model);
+                string unitsString = (sender as Gtk.MenuItem).Name;
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(property, "Units", unitsString));               
             }
         }
     }
