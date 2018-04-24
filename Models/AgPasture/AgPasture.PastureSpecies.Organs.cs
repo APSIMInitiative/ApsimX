@@ -13,17 +13,23 @@ using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
 using Models.Core;
+using Models.PMF.Interfaces;
 
 namespace Models.AgPasture
 {
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureAboveGroundOrgan
+    public class PastureAboveGroundOrgan : IRemovableBiomass
     {
+        /// <summary>Parent plant for this organ</summary>
+        private PastureSpecies parentPlant;
+
         /// <summary>Constructor, initialise tissues.</summary>
+        /// <param name="parentPlant">Parent plant for the organ</param>
         /// <param name="numTissues">The number of tissues in the organ</param>
-        public PastureAboveGroundOrgan(int numTissues)
+        public PastureAboveGroundOrgan(PastureSpecies parentPlant, int numTissues)
         {
+            this.parentPlant = parentPlant;
             // Typically four tissues above ground, three live and one dead
             TissueCount = numTissues;
             Tissue = new GenericTissue[TissueCount];
@@ -33,6 +39,57 @@ namespace Models.AgPasture
 
         /// <summary>The collection of tissues for this organ.</summary>
         internal GenericTissue[] Tissue { get; set; }
+
+        /// <summary>Return live biomass. Used by STOCK</summary>
+        public Biomass Live
+        {
+            get
+            {
+                Biomass live = new Biomass();
+                live.StructuralWt = DMLive;
+                live.StructuralN = NLive;
+                live.DMDOfStructural = DigestibilityLive;
+                return live;
+            }
+        }
+
+        /// <summary>Return dead biomass. Used by STOCK</summary>
+        public Biomass Dead
+        {
+            get
+            {
+                Biomass dead = new Biomass();
+                dead.StructuralWt = DMDead;
+                dead.StructuralN = NDead;
+                dead.DMDOfStructural = DigestibilityDead;
+                return dead;
+            }
+        }
+
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return true; } }
+
+        /// <summary>
+        /// Biomass removal logic for this organ.
+        /// </summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove</param>
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        {
+            // TODO: Work out what to do with biomassToRemove.FractionLiveToResidue
+            // Live removal
+            for (int t = 0; t < Tissue.Length-1; t++)
+            {
+                Tissue[t].DM *= biomassToRemove.FractionLiveToRemove;
+                Tissue[t].Namount *= biomassToRemove.FractionLiveToRemove;
+                Tissue[t].NRemobilisable *= biomassToRemove.FractionLiveToRemove;
+            }
+
+            // Dead removal
+            Tissue[Tissue.Length - 1].DM *= biomassToRemove.FractionDeadToRemove;
+            Tissue[Tissue.Length - 1].Namount *= biomassToRemove.FractionDeadToRemove;
+            Tissue[Tissue.Length - 1].NRemobilisable *= biomassToRemove.FractionDeadToRemove;
+        }
 
         #region Organ specific characteristics  ----------------------------------------------------------------------------
 
@@ -905,10 +962,8 @@ namespace Models.AgPasture
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 layerFrac = FractionLayerWithRoots(layer);
-                //mySoilNH4Available[layer] = myZone.NH4N[layer] * layerFrac;
-                //mySoilNO3Available[layer] = myZone.NO3N[layer] * layerFrac;
-                mySoilNH4Available[layer] = Math.Min(myZone.NH4N[layer], SoilNitrogen.nh4_PlantAvailable[layer]) * layerFrac;
-                mySoilNO3Available[layer] = Math.Min(myZone.NO3N[layer], SoilNitrogen.no3_PlantAvailable[layer]) * layerFrac;
+                mySoilNH4Available[layer] = myZone.NH4N[layer] * layerFrac;
+                mySoilNO3Available[layer] = myZone.NO3N[layer] * layerFrac;
             }
         }
 

@@ -10,8 +10,14 @@ namespace Models.Core
     /// crops must have. In effect this interface describes the interactions
     /// between a crop and the other models in APSIM.
     /// </summary>
-    public interface ICrop
+    public interface IPlant
     {
+        /// <summary>Gets a value indicating how leguminous a plant is</summary>
+        double Legumosity { get; }
+
+        /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
+        bool IsC4 { get; }
+
         /// <summary> Is the plant alive?</summary>
         bool IsAlive { get; }
 
