@@ -3385,7 +3385,7 @@ namespace Models
       <Script>
         <NumCows>10</NumCows>
         <InitLocation>Paddock00</InitLocation>
-        <TargetRotationLength>20</TargetRotationLength>
+        <TargetRotationLength>6</TargetRotationLength>
         <TargetGrazingResidual>1800</TargetGrazingResidual>
         <HarvestExcessHerbage>True</HarvestExcessHerbage>
         <CurrentLocation>
@@ -3482,12 +3482,14 @@ namespace Models
 		    if (DaysInThisPaddock >= DaysPerPaddock)
 		    {
 				plantWeights.Sort((y, x) => x.totalWt.CompareTo(y.totalWt));
-
+				for (int ii = 0; ii < NumPaddocks; ii++)
+				   summary.WriteMessage(this, plantWeights[ii].paddockName + " " + plantWeights[ii].paddockName);
 				// look at the highest biomass paddock, 
 				//Cows.Move(g, "Paddock01");
 				//Debugger.Break();
 				Cows.Move(g, plantWeights[0].paddockName);
 				CurrentLocation = plantWeights[0].paddockName;
+				summary.WriteMessage(this, "moving to " + plantWeights[0].paddockName);
 				//double CurrentTotalWt = plantWeights[0].totalWt;
 
 		       // move to the next paddock
