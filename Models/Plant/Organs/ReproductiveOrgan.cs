@@ -10,6 +10,7 @@ using Models.PMF.Library;
 namespace Models.PMF.Organs
 {
     /// <summary>
+    /// # [Name] 
     /// This organ uses a generic model for plant reproductive components.  Yield is calculated from its components in terms of organ number and size (for example, grain number and grain size).  
     /// </summary>
     [Serializable]
