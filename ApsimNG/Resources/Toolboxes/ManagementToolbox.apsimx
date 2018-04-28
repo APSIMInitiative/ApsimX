@@ -32,7 +32,7 @@ namespace Models
 		Accumulator accumulatedRain;
 		
 		[Description("Crop")]
-		public ICrop Crop { get; set; }
+		public IPlant Crop { get; set; }
 		[Description("Sowing date (d-mmm)")]
 		public string SowDate { get; set; }
     [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
@@ -98,7 +98,7 @@ namespace Models
 		Accumulator accumulatedRain;
 		
 		[Description("Crop")]
-		public ICrop Crop { get; set; }
+		public IPlant Crop { get; set; }
 		[Description("Start of sowing window (d-mmm)")]
 		public string StartDate { get; set; }
 		[Description("End of sowing window (d-mmm)")]
@@ -166,7 +166,7 @@ namespace Models
 	public class Script : Model
 	{
 		[Description("Crop")]
-		public ICrop Crop { get; set; }
+		public IPlant Crop { get; set; }
         
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
@@ -242,7 +242,7 @@ namespace Models
 		[Link] Fertiliser Fertiliser;
 		
 		[Description("Crop to be fertilised")]
-		public ICrop Crop { get; set; }
+		public IPlant Crop { get; set; }
     
 		[Description("Amount of fertiliser to be applied (kg/ha)")]
 		public double Amount { get; set; }

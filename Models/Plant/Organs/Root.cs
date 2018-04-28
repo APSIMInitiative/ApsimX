@@ -62,7 +62,7 @@ namespace Models.PMF.Organs
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IRemovableBiomass
     {
         /// <summary>The plant</summary>
         [Link]
@@ -250,6 +250,9 @@ namespace Models.PMF.Organs
             ZoneInitialDM = new List<double>();
         }
 
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return false; } }
+
         /// <summary>A list of other zone names to grow roots in</summary>
         [XmlIgnore]
         public List<string> ZoneNamesToGrowRootsIn { get; set; }
@@ -431,6 +434,20 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total grain N</summary>
         [Units("g/m2")]
         public double N { get { return Total.N; } }
+
+        /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
+        [XmlIgnore]
+        public double Nconc
+        {
+            get
+            {
+                if (Wt > 0.0)
+                    return N / Wt;
+                else
+                    return 0.0;
+            }
+        }
+
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
@@ -760,7 +777,7 @@ namespace Models.PMF.Organs
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="removal">The fractions of biomass to remove</param>
-        public void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType removal)
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType removal)
         {
             biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, removal, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
         }
@@ -957,7 +974,7 @@ namespace Models.PMF.Organs
         private void DoPlantEnding(object sender, EventArgs e)
         {
             //Send all root biomass to soil FOM
-            DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
+            RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
             Clear();
         }
 
@@ -1035,7 +1052,7 @@ namespace Models.PMF.Organs
                 foreach (ZoneState Z in Zones)
                     Z.GrowRootDepth();
                 // Do Root Senescence
-                DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
+                RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
             }
             needToRecalculateLiveDead = false;
             // Do maintenance respiration

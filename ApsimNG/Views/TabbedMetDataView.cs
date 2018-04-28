@@ -88,6 +88,10 @@ namespace UserInterface.Views
         /// <param name="sheetNames"></param>
         void PopulateDropDownData(List<string> sheetNames);
 
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        int TabIndex { get; set; }
     }
 
     /// <summary>
@@ -245,6 +249,15 @@ namespace UserInterface.Views
         /// <summary>/// Gets the Radiation Graph/// </summary>
         /// <value>The Radiation Graph</value>
         public IGraphView GraphRadiation { get { return graphViewRadiation; } }
+
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        public int TabIndex
+        {
+            get { return notebook1.CurrentPage; }
+            set { notebook1.CurrentPage = value; }
+        }
 
         /// <summary>Sets the Graph Year</summary>
         public int GraphStartYearValue

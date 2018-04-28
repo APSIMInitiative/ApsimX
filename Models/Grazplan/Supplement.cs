@@ -1038,10 +1038,10 @@ namespace Models.GrazPlan
             if (Animals != null)
             {
                 // get the supplement eaten from the Stock component
-                TSupplementEaten[] eaten = Animals.SuppEaten;
+                SupplementEaten[] eaten = Animals.SuppEaten;
 
                 for (int Idx = 0; Idx < eaten.Length; Idx++)
-                    theModel.RemoveEaten(eaten[Idx].paddock, eaten[Idx].eaten);
+                    theModel.RemoveEaten(eaten[Idx].Paddock, eaten[Idx].Eaten);
             }
             theModel.CompleteTimeStep();
         }
