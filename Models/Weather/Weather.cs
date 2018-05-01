@@ -434,6 +434,23 @@ namespace Models
         }
 
         /// <summary>
+        /// Temporarily stores which tab is currently displayed.
+        /// Meaningful only within the GUI
+        /// </summary>
+        [XmlIgnore] public int ActiveTabIndex = 0;
+        /// <summary>
+        /// Temporarily stores the starting date for charts.
+        /// Meaningful only within the GUI
+        /// </summary>
+        [XmlIgnore] public int StartYear = -1;
+        /// <summary>
+        /// Temporarily stores the years to show in charts.
+        /// Meaningful only within the GUI
+        /// </summary>
+        [XmlIgnore] public int ShowYears = 1;
+
+
+        /// <summary>
         /// Gets the daily Photothermal Quotient (ptq).
         /// </summary>
         public double PhotothermalQuotient

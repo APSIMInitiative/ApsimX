@@ -103,6 +103,13 @@ namespace Models
         /// </summary>
         [XmlIgnore] public System.Drawing.Rectangle Location = new System.Drawing.Rectangle(1, 1, 0, 0);
 
+        /// <summary>
+        /// Stores whether we are currently on the tab displaying the script.
+        /// Meaningful only within the GUI
+        /// </summary>
+        [XmlIgnore] public int ActiveTabIndex = 0;
+
+
         /// <summary>The code for the Manager script</summary>
         [Summary]
         [Description("Script code")]
@@ -298,7 +305,7 @@ namespace Models
                 if (property != null)
                 {
                     object value;
-                    if (property.PropertyType.Name == "ICrop")
+                    if (property.PropertyType.Name == "IPlant")
                         value = Apsim.Find(this, element.InnerText);
                     else
                         value = ReflectionUtilities.StringToObject(property.PropertyType, element.InnerText);
@@ -322,7 +329,7 @@ namespace Models
                     object value = property.GetValue(script, null);
                     if (value == null)
                         value = "";
-                    else if (value is ICrop)
+                    else if (value is IPlant)
                         value = (value as IModel).Name;
                     XmlUtilities.SetValue(doc.DocumentElement, property.Name, 
                                          ReflectionUtilities.ObjectToString(value));

@@ -474,10 +474,8 @@ namespace UserInterface.Presenters
                         if (changedValues)
                         {
                             // Store the property change.
-                            Commands.ChangeProperty.Property property = new Commands.ChangeProperty.Property();
-                            property.Name = this.propertiesInGrid[i].Name;
-                            property.Obj = this.propertiesInGrid[i].Object;
-                            property.NewValue = values;
+                            Commands.ChangeProperty.Property property = 
+                                new Commands.ChangeProperty.Property(this.propertiesInGrid[i].Object, this.propertiesInGrid[i].Name, values);
                             properties.Add(property);
                         }
                     }
@@ -611,8 +609,8 @@ namespace UserInterface.Presenters
             VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
             if (sender is Gtk.MenuItem)
             {
-                property.Units = (sender as Gtk.MenuItem).Name;
-                this.OnModelChanged(this.model);
+                string unitsString = (sender as Gtk.MenuItem).Name;
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(property, "Units", unitsString));               
             }
         }
     }

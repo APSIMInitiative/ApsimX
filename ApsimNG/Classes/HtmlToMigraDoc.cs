@@ -123,14 +123,7 @@
                 if (String.IsNullOrEmpty(imagePath))
                     fullPath = srcAttribute.Value;
                 else
-                    fullPath = Path.Combine(imagePath, srcAttribute.Value);
-                if (!File.Exists(fullPath))
-                {
-                    // Look in documentation folder.
-                    string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                    fullPath = Path.Combine(binDirectory, @"..\Documentation\Images", Path.GetFileName(fullPath));
-                    fullPath = Path.GetFullPath(fullPath);
-                }
+                    fullPath = GetImagePath(srcAttribute.Value, imagePath);
 
                 if (File.Exists(fullPath))
                 {
@@ -139,6 +132,23 @@
                 }
             }
             return section;
+        }
+
+        /// <summary>
+        /// Copies an image stored as an embdedded resource to a given directory and returns the path to the image.
+        /// </summary>
+        /// <param name="imageName">Name of the image (without the path).</param>
+        /// <param name="imageDirectory">Directory which the image should be copied to.</param>
+        /// <returns>Full path to the image.</returns>
+        private static string GetImagePath(string imageName, string imageDirectory)
+        {
+            string path = Path.Combine(imageDirectory, imageName);
+            using (FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources." + imageName).CopyTo(file);
+            }
+
+            return path;
         }
 
         #region Table methods.
