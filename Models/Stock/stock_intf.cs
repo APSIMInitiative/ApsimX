@@ -349,7 +349,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Conception rates
         /// </summary>
-        public double[] Conceptions = new double[4];    // array[1..  3]
+        public double[] Conceptions = new double[4];    // array[1..3]
     }
 
     /// <summary>
@@ -836,7 +836,7 @@ namespace Models.GrazPlan
                 if (this.stock[posIdx].StepForageInputs[jdx] == null)
                     this.stock[posIdx].StepForageInputs[jdx] = new GrazType.TGrazingInputs();
 
-                this.stock[posIdx].InitForageInputs[jdx] = paddock.Forages.byIndex(jdx).availForage(group.Genotype.GrazeC[17], group.Genotype.GrazeC[18], group.Genotype.GrazeC[19]);
+                this.stock[posIdx].InitForageInputs[jdx] = paddock.Forages.byIndex(jdx).availForage();
                 this.stock[posIdx].StepForageInputs[jdx].CopyFrom(this.stock[posIdx].InitForageInputs[jdx]);
             }
         }
@@ -1074,10 +1074,7 @@ namespace Models.GrazPlan
             paddockInputs = new GrazType.TGrazingInputs();
             for (jdx = 0; jdx <= paddock.Forages.Count() - 1; jdx++)
             {
-                forageInputs = paddock.Forages.byIndex(jdx).availForage(
-                                                                        animalGroup.Genotype.GrazeC[17],
-                                                                        animalGroup.Genotype.GrazeC[18],
-                                                                        animalGroup.Genotype.GrazeC[19]);
+                forageInputs = paddock.Forages.byIndex(jdx).availForage();
                 GrazType.addGrazingInputs(jdx + 1, forageInputs, ref paddockInputs);
             }
             animalGroup.Herbage = paddockInputs;
@@ -3309,7 +3306,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Convert the Stock geno object to TSingleGenotypeInits
+        /// Convert the Stock geno object to SingleGenotypeInits
         /// </summary>
         /// <param name="genoValue">A genotype value</param>
         /// <param name="genoInits">Genotype initial value</param>
@@ -3336,8 +3333,37 @@ namespace Models.GrazPlan
                 genoInits.Conceptions[i] = 0.0;
             if (genoValue.Conception != null)
             {
-                for (i = 1; i <= genoValue.Conception.Length; i++)
-                    genoInits.Conceptions[i] = genoValue.Conception[i - 1]; // Conceptions[1..
+                for (i = 0; i < genoValue.Conception.Length; i++)
+                    genoInits.Conceptions[i] = genoValue.Conception[i]; // Conceptions[1..
+            }
+        }
+
+        /// <summary>
+        /// Convert the inits into a StockGeno array
+        /// </summary>
+        /// <param name="genoInits">The array of genotype inits</param>
+        /// <param name="genoValues">The returned array of StockGeno</param>
+        public void GenotypeInits2Value(SingleGenotypeInits[] genoInits, ref StockGeno[] genoValues)
+        {
+            genoValues = new StockGeno[genoInits.Length];
+            for (int idx = 0; idx < genoInits.Length; idx++)
+            {
+                genoValues[idx] = new StockGeno();
+                genoValues[idx].Name = genoInits[idx].GenotypeName;
+                genoValues[idx].DamBreed = genoInits[idx].DamBreed;
+                genoValues[idx].SireBreed = genoInits[idx].SireBreed;
+                genoValues[idx].Generation = genoInits[idx].Generation;
+                genoValues[idx].SRW = genoInits[idx].SRW;
+                genoValues[idx].RefFleeceWt = genoInits[idx].PotFleeceWt;
+                genoValues[idx].MaxFibreDiam = genoInits[idx].MaxFibreDiam;
+                genoValues[idx].FleeceYield = genoInits[idx].FleeceYield;
+                genoValues[idx].PeakMilk = genoInits[idx].PeakMilk;
+                genoValues[idx].DeathRate = genoInits[idx].DeathRate[FALSE];
+                genoValues[idx].WnrDeathRate = genoInits[idx].DeathRate[TRUE];
+
+                //genoValues[idx].Conception = new double[4];
+                for (int i = 0; i < genoInits[idx].Conceptions.Length; i++)
+                    genoValues[idx].Conception[i] = genoInits[idx].Conceptions[i]; // Conceptions[1..
             }
         }
 
@@ -3784,11 +3810,11 @@ namespace Models.GrazPlan
             for (int weanerIdx = 0; weanerIdx <= 1; weanerIdx++)
             {
                 // A zero death rate is permissible      
-                if (genoInits[genoIdx].DeathRate[weanerIdx] != StdMath.DMISSING)                    
+                if (genoInits[genoIdx].DeathRate[weanerIdx] != StdMath.DMISSING)
                     result.SetAnnualDeaths(weanerIdx == 1, genoInits[genoIdx].DeathRate[weanerIdx]);
             }
             if (this.IsGiven(genoInits[genoIdx].Conceptions[1]))
-                result.Conceptions = genoInits[genoIdx].Conceptions;
+                genoInits[genoIdx].Conceptions.CopyTo(result.Conceptions, 0);
 
             return result;
         }
