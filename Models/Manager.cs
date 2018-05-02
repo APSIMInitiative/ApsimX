@@ -96,6 +96,20 @@ namespace Models
             set { _Script = value; } 
         }
 
+        /// <summary>
+        /// Stores column and line of caret, and scrolling position when editing in GUI
+        /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
+        /// way to store both the caret position and scrolling information.
+        /// </summary>
+        [XmlIgnore] public System.Drawing.Rectangle Location = new System.Drawing.Rectangle(1, 1, 0, 0);
+
+        /// <summary>
+        /// Stores whether we are currently on the tab displaying the script.
+        /// Meaningful only within the GUI
+        /// </summary>
+        [XmlIgnore] public int ActiveTabIndex = 0;
+
+
         /// <summary>The code for the Manager script</summary>
         [Summary]
         [Description("Script code")]

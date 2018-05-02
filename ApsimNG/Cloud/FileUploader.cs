@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.RetryPolicies;
@@ -15,6 +11,10 @@ namespace ApsimNG.Cloud
     {
         private CloudStorageAccount account;        
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="acct">Azure storage account to upload the file to</param>
         public FileUploader(CloudStorageAccount acct)
         {
             account = acct;
@@ -52,7 +52,14 @@ namespace ApsimNG.Cloud
             return blob.Uri.AbsoluteUri + blob.GetSharedAccessSignature(policy);
         }
 
-
+        /// <summary>
+        /// Checks if a blob actually needs to be uploaded to a path.
+        /// Returns false if a blob with the same MD5 already exists at the given path.
+        /// Returns true otherwise.
+        /// </summary>
+        /// <param name="blob">Blob to be uploaded.</param>
+        /// <param name="filePath">Path for the blob to be uploaded to.</param>
+        /// <returns></returns>
         private bool BlobNeedsUploading(CloudBlockBlob blob, string filePath)
         {
             if (blob.Exists())
@@ -68,6 +75,11 @@ namespace ApsimNG.Cloud
             return true;
         }
 
+        /// <summary>
+        /// Gets the MD5 hash of a file at a given path.
+        /// </summary>
+        /// <param name="filePath">Path of the file.</param>
+        /// <returns>MD5 of the file.</returns>
         private string GetMD5(string filePath)
         {
             using (var md5 = MD5.Create())
@@ -78,8 +90,5 @@ namespace ApsimNG.Cloud
                 }
             }
         }
-
-
-
     }
 }

@@ -3617,7 +3617,7 @@ namespace Models.GrazPlan
 
             //...........................................................................  MAINTENANCE PROTEIN REQUIREMENT          
 
-            AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.N] = (AParams.MaintC[10] * AnimalState.DM_Intake.Solid + AParams.MaintC[11] * AnimalState.ME_Intake.Milk) / GrazType.N2Protein;
+            AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.n] = (AParams.MaintC[10] * AnimalState.DM_Intake.Solid + AParams.MaintC[11] * AnimalState.ME_Intake.Milk) / GrazType.N2Protein;
 
             if (Animal == GrazType.AnimalType.Cattle)
             {
@@ -3629,7 +3629,7 @@ namespace Models.GrazPlan
                 EndoUrineN = (AParams.MaintC[12] * BaseWeight + AParams.MaintC[13]) / GrazType.N2Protein;
                 AnimalState.DermalNLoss = 0.0;
             }
-            AnimalState.ProteinUse.Maint = GrazType.N2Protein * (AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.N] + EndoUrineN + AnimalState.DermalNLoss);
+            AnimalState.ProteinUse.Maint = GrazType.N2Protein * (AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.n] + EndoUrineN + AnimalState.DermalNLoss);
         }
         /// <summary>
         /// 
@@ -3691,12 +3691,12 @@ namespace Models.GrazPlan
                 AnimalState.UDP_Dig = DUDP.Herbage;
 
             AnimalState.OrgFaeces.DM = AnimalState.DM_Intake.Solid * (1.0 - AnimalState.Digestibility.Solid);       // Faecal DM & N:                           
-            AnimalState.OrgFaeces.Nu[(int)GrazType.TOMElement.N] = ((1.0 - DUDP.Herbage) * UDPIntakes.Herbage       //   Undigested UDP                         
+            AnimalState.OrgFaeces.Nu[(int)GrazType.TOMElement.n] = ((1.0 - DUDP.Herbage) * UDPIntakes.Herbage       //   Undigested UDP                         
                                + (1.0 - DUDP.Supp) * UDPIntakes.Supp
                                + (1.0 - DUDP.Milk) * UDPIntakes.Milk
                                + AParams.ProtC[8] * AnimalState.MicrobialCP)                                        //   Undigested MCP                         
-                               / GrazType.N2Protein + AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.N];        //   Endogenous component                   
-            AnimalState.InOrgFaeces.Nu[(int)GrazType.TOMElement.N] = 0.0;
+                               / GrazType.N2Protein + AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.n];        //   Endogenous component                   
+            AnimalState.InOrgFaeces.Nu[(int)GrazType.TOMElement.n] = 0.0;
         }
 
         private double fDeltaGompertz(double T, double A, double B, double C)
@@ -4083,10 +4083,10 @@ namespace Models.GrazPlan
             AnimalState.ProteinUse.Total = AnimalState.ProteinUse.Maint + AnimalState.ProteinUse.Gain +
                                  AnimalState.ProteinUse.Preg + AnimalState.ProteinUse.Lact +
                                  AnimalState.ProteinUse.Wool;
-            AnimalState.Urine.Nu[(int)GrazType.TOMElement.N] = StdMath.DIM(AnimalState.CP_Intake.Total / GrazType.N2Protein,                    // Urinary loss of N                        
+            AnimalState.Urine.Nu[(int)GrazType.TOMElement.n] = StdMath.DIM(AnimalState.CP_Intake.Total / GrazType.N2Protein,                    // Urinary loss of N                        
                                       (AnimalState.ProteinUse.Total - AnimalState.ProteinUse.Maint) / GrazType.N2Protein //   This is retention of N                 
-                                      + AnimalState.OrgFaeces.Nu[(int)GrazType.TOMElement.N]                             //   This is other excretion                
-                                      + AnimalState.InOrgFaeces.Nu[(int)GrazType.TOMElement.N]
+                                      + AnimalState.OrgFaeces.Nu[(int)GrazType.TOMElement.n]                             //   This is other excretion                
+                                      + AnimalState.InOrgFaeces.Nu[(int)GrazType.TOMElement.n]
                                       + AnimalState.DermalNLoss);
         }
 
@@ -4106,7 +4106,7 @@ namespace Models.GrazPlan
         {
             double AvailPhos;
             double ExcretePhos;
-            int P = (int)GrazType.TOMElement.P;
+            int P = (int)GrazType.TOMElement.p;
 
             AvailPhos = AParams.PhosC[1] * AnimalState.Phos_Intake.Solid + AParams.PhosC[2] * AnimalState.Phos_Intake.Milk;
             AnimalState.EndoFaeces.Nu[P] = AParams.PhosC[3] * BaseWeight;
@@ -4141,9 +4141,9 @@ namespace Models.GrazPlan
         private void Compute_Sulfur()
         {
             double ExcreteSulf;
-            int S = (int)GrazType.TOMElement.S;
+            int S = (int)GrazType.TOMElement.s;
 
-            AnimalState.EndoFaeces.Nu[S] = AParams.SulfC[1] * AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.N];
+            AnimalState.EndoFaeces.Nu[S] = AParams.SulfC[1] * AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.n];
 
             AnimalState.Sulf_Use.Maint = AnimalState.EndoFaeces.Nu[S];
             AnimalState.Sulf_Use.Preg = AParams.SulfC[1] * AnimalState.ProteinUse.Preg / GrazType.N2Protein;
@@ -4873,9 +4873,9 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public GrazType.DM_Pool AddDMPool(GrazType.DM_Pool Pool1, GrazType.DM_Pool Pool2)
         {
-            int N = (int)GrazType.TOMElement.N;
-            int P = (int)GrazType.TOMElement.P;
-            int S = (int)GrazType.TOMElement.S;
+            int N = (int)GrazType.TOMElement.n;
+            int P = (int)GrazType.TOMElement.p;
+            int S = (int)GrazType.TOMElement.s;
 
             GrazType.DM_Pool Result = new GrazType.DM_Pool();
             Result.DM = Pool1.DM + Pool2.DM;
@@ -4894,9 +4894,9 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public GrazType.DM_Pool MultiplyDMPool(GrazType.DM_Pool Src, double X)
         {
-            int N = (int)GrazType.TOMElement.N;
-            int P = (int)GrazType.TOMElement.P;
-            int S = (int)GrazType.TOMElement.S;
+            int N = (int)GrazType.TOMElement.n;
+            int P = (int)GrazType.TOMElement.p;
+            int S = (int)GrazType.TOMElement.s;
 
             GrazType.DM_Pool Result = new GrazType.DM_Pool();
             Result.DM = Src.DM * X;

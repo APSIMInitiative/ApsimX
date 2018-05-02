@@ -56,13 +56,15 @@ namespace UserInterface.Presenters
             this.explorerPresenter = explorerPresenter;
 
             this.propertyPresenter.Attach(this.manager.Script, this.managerView.GridView, this.explorerPresenter);
-
+            this.managerView.Editor.ScriptMode = true;
             this.managerView.Editor.Text = this.manager.Code;
             this.managerView.Editor.ContextItemsNeeded += this.OnNeedVariableNames;
             this.managerView.Editor.LeaveEditor += this.OnEditorLeave;
             this.managerView.Editor.AddContextSeparator();
             this.managerView.Editor.AddContextActionWithAccel("Test compile", this.OnDoCompile, "Ctrl+T");
             this.managerView.Editor.AddContextActionWithAccel("Reformat", this.OnDoReformat, "Ctrl+R");
+            this.managerView.Editor.Location = manager.Location;
+            this.managerView.TabIndex = manager.ActiveTabIndex;
             this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
         }
 
@@ -201,6 +203,9 @@ namespace UserInterface.Presenters
 
             try
             {
+                this.manager.Location = this.managerView.Editor.Location;
+                this.manager.ActiveTabIndex = this.managerView.TabIndex;
+
                 string code = this.managerView.Editor.Text;
 
                 // set the code property manually first so that compile error can be trapped via

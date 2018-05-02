@@ -1,52 +1,97 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Text;
-    using Views;
-    using System.ComponentModel;
-    using System.IO;
-    using System.IO.Compression;
-    using Microsoft.Azure.Batch;
-    using Microsoft.WindowsAzure.Storage;
-    using System.Security.Cryptography;
-    using ApsimNG.Cloud;
-    using Microsoft.Azure.Batch.Common;
-    using Models.Core;
-    using System.Linq;
+﻿using System;
+using System.Text;
+using System.ComponentModel;
+using System.IO;
+using System.IO.Compression;
+using UserInterface.Views;
+using Microsoft.Azure.Batch;
+using Microsoft.WindowsAzure.Storage;
+using System.Security.Cryptography;
+using ApsimNG.Cloud;
+using Microsoft.Azure.Batch.Common;
+using Models.Core;
+using System.Linq;
 
+namespace UserInterface.Presenters
+{
     public class NewAzureJobPresenter : IPresenter, INewCloudJobPresenter
-    {        
+    {
         /// <summary>The new azure job view</summary>
         private NewAzureJobView view;
         
         /// <summary>The explorer presenter</summary>
-        private ExplorerPresenter explorerPresenter;        
+        private ExplorerPresenter presenter;
+
+        /// <summary>
+        /// The node which we want to run on Azure.
+        /// </summary>
         private IModel model;
+
+        /// <summary>
+        /// The file uploader client.
+        /// </summary>
         private FileUploader uploader;
-        private BatchClient batchClient;
+
+        /// <summary>
+        /// The Azure Batch client.
+        /// </summary>
+        private BatchClient batchCli;
+
+        /// <summary>
+        /// The Azure Storage account.
+        /// </summary>
         private CloudStorageAccount storageAccount;
-        private StorageCredentials storageCredentials;
-        private BatchCredentials batchCredentials;
-        private PoolSettings poolSettings;
+
+        /// <summary>
+        /// The Azure Storage credentials (account name + key).
+        /// </summary>
+        private StorageCredentials storageAuth;
+
+        /// <summary>
+        /// The Azure Batch credentials (account name + key).
+        /// </summary>
+        private BatchCredentials batchAuth;
+
+        /// <summary>
+        /// The pool settings for the Azure VM pool.
+        /// </summary>
+        private PoolSettings poolOptions;
+
+        /// <summary>
+        /// The worker which will submit the job.
+        /// </summary>
         private BackgroundWorker submissionWorker;
 
-        private const string SETTINGS_FILENAME = "settings.txt";
+        /// <summary>
+        /// The settings file name. This is uploaded to Azure, and stores some information
+        /// used by the Azure APSIM job manager (azure-apsim.exe).
+        /// </summary>
+        private const string settingsFileName = "settings.txt";
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public NewAzureJobPresenter()
-        {            
+        {
         }
 
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        /// <summary>
+        /// Attaches this presenter to a view.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="view"></param>
+        /// <param name="parentPresenter"></param>
+        public void Attach(object model, object view, ExplorerPresenter parentPresenter)
         {
-            this.explorerPresenter = explorerPresenter;
+            this.presenter = parentPresenter;
             this.view = (NewAzureJobView)view;
             
             this.view.Presenter = this;
             
             GetCredentials(null, null);
-
-            this.view.SetDefaultJobName( (model as IModel).Name );
             this.model = (IModel)model;
+            this.view.JobName = this.model.Name;
+            
 
             submissionWorker = new BackgroundWorker();
             submissionWorker.DoWork += SubmitJob_DoWork;
@@ -93,7 +138,8 @@
                 try
                 {
                     Directory.CreateDirectory(jp.ModelPath);
-                } catch (Exception err)
+                }
+                catch (Exception err)
                 {
                     ShowError(err);
                     return;
@@ -123,10 +169,42 @@
             
             AzureSettings.Default["OutputDir"] = jp.OutputDir;
             AzureSettings.Default.Save();
-            if (batchClient == null)
+            if (batchCli == null)
                 GetCredentials(null, null);
             else
                 submissionWorker.RunWorkerAsync(jp);
+        }
+
+        /// <summary>
+        /// Cancels submission of a job and hides the right hand panel (which holds the new job view).
+        /// </summary>
+        public void CancelJobSubmission()
+        {
+            if (submissionWorker != null)
+                submissionWorker.CancelAsync();
+            presenter.HideRightHandPanel();
+        }
+
+        /// <summary>
+        /// Displays an error message to the user.
+        /// </summary>
+        /// <param name="msg">Message to be displayed.</param>
+        public void ShowError(Exception err)
+        {
+            presenter.MainPresenter.ShowError(err);
+        }
+
+        /// <summary>
+        /// Displays an error message to the user.
+        /// </summary>
+        /// <param name="msg">Message to be displayed.</param>
+        public void ShowErrorMessage(string msg)
+        {
+            presenter.MainPresenter.ShowError(msg);
+        }
+
+        public void Detach()
+        {
         }
 
         /// <summary>
@@ -154,7 +232,7 @@
                 tmpZip = Path.Combine(Path.GetTempPath(), "Apsim-tmp-X-" + Environment.UserName.ToLower() + ".zip");
                 if (File.Exists(tmpZip)) File.Delete(tmpZip);
 
-                if (createApsimXZip(jp.ApplicationPackagePath, tmpZip) > 0)
+                if (CreateApsimXZip(jp.ApplicationPackagePath, tmpZip) > 0)
                 {
                     view.Status = "Cancelled";
                     return;
@@ -167,7 +245,7 @@
             // add current job to the list of jobs                        
 
             // TODO : do we actually need/use the APSIMJob class?
-            APSIMJob job = new APSIMJob(jp.JobDisplayName, "", jp.ApplicationPackagePath, jp.ApplicationPackageVersion, jp.Recipient, batchCredentials, storageCredentials, PoolSettings.FromConfiguration());
+            APSIMJob job = new APSIMJob(jp.JobDisplayName, "", jp.ApplicationPackagePath, jp.ApplicationPackageVersion, jp.Recipient, batchAuth, storageAuth, PoolSettings.FromConfiguration());
             job.PoolInfo.MaxTasksPerVM = jp.PoolMaxTasksPerVM;
             job.PoolInfo.VMCount = jp.PoolVMCount;
 
@@ -194,7 +272,7 @@
                 {
                     // Store a config file into the job directory that has the e-mail config
 
-                    string tmpConfig = Path.Combine(Path.GetTempPath(), SETTINGS_FILENAME);
+                    string tmpConfig = Path.Combine(Path.GetTempPath(), settingsFileName);
                     using (StreamWriter file = new StreamWriter(tmpConfig))
                     {
                         file.WriteLine("EmailRecipient=" + jp.Recipient);
@@ -204,7 +282,6 @@
 
                     UploadFileIfNeeded("job-" + jp.JobId, tmpConfig);
                     File.Delete(tmpConfig);
-                    
                 }
                 catch (Exception err)
                 {
@@ -221,61 +298,44 @@
             view.Status = "Uploading APSIM Next Generation";
 
             UploadFileIfNeeded("apsim", jp.ApplicationPackagePath);
-
-
-            // create models
-
-            // TODO : show error message if other files already exist in model output directory?
-            //        may be necessary if using  a user-selected directory
-                     
-            string path = "";
-
-
+            
 
             // generate model files
 
             view.Status = "Generating model files";
             if (!Directory.Exists(jp.ModelPath)) Directory.CreateDirectory(jp.ModelPath);
 
-            // generate xml
-            string xml = "";
-            foreach (Simulation sim in Runner.AllSimulations(model))
+            try
             {
-                path = Path.Combine(jp.ModelPath, sim.Name + ".apsimx");
-                // if weather file is not in the same directory as the .apsimx file, display an error then abort
-                foreach (var child in sim.Children)
+                // copy weather files to models directory to be zipped up
+                foreach (Models.Weather child in Apsim.ChildrenRecursively(model).OfType<Models.Weather>())
                 {
-                    if (child is Models.Weather)
+                    if (Path.GetDirectoryName(child.FullFileName) != Path.GetDirectoryName(presenter.ApsimXFile.FileName))
                     {
-                        string childPath = sim.Children.OfType<Models.Weather>().ToList()[0].FileName;
-                        if (Path.GetDirectoryName(childPath) != "")
-                        {
-                            ShowErrorMessage(childPath + " must be in the same directory as the .apsimx file" + (sim.FileName != null ? " (" + Path.GetDirectoryName(sim.FileName) + ")" : ""));
-                            view.Status = "Cancelled";
-                            return;
-                        }
-                        string sourcePath = sim.Children.OfType<Models.Weather>().ToList()[0].FullFileName;
-                        string destPath = Path.Combine(jp.ModelPath, sim.Children.OfType<Models.Weather>().ToList()[0].FileName);
-                        if (!File.Exists(destPath)) File.Copy(sourcePath, destPath);
+                        presenter.MainPresenter.ShowError("Weather file must be in the same directory as .apsimx file: " + child.FullFileName);
+                        view.Status = "Cancelled";
+                        return;
                     }
-                }                
-                xml = Apsim.Serialise(sim);
-                // delete model file if it already exists
-                if (File.Exists(path)) File.Delete(path);
-                string pattern = @"<\?xml[^<>]+>";
-                System.Text.RegularExpressions.Regex rx = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-                var matches = rx.Matches(xml);
-                xml = "<Simulations xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Version=\"23\">\r\n<Name>" + sim.Name + "</Name>\r\n" + xml.Replace(matches[0].ToString(), "") + "<DataStore><Name>DataStore</Name><AutoExport>false</AutoExport><MaximumResultsPerPage>0</MaximumResultsPerPage></DataStore><ExplorerWidth>296</ExplorerWidth></Simulations>";
-                // write xml to file
-                using (FileStream fs = File.Create(path))
-                {
-                    Byte[] info = new UTF8Encoding(true).GetBytes(xml);
-                    fs.Write(info, 0, info.Length);
+                    string sourceFile = child.FullFileName;
+                    string destFile = Path.Combine(jp.ModelPath, child.FileName);
+                    if (!File.Exists(destFile))
+                        File.Copy(sourceFile, destFile); ;
                 }
-            }         
+                // Generate .apsimx files, and if any errors are encountered, abort the job submission process.
+                if (!presenter.GenerateApsimXFiles(model, jp.ModelPath))
+                {
+                    view.Status = "Cancelled";
+                    return;
+                }
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+                return;
+            }
 
             tmpZip = "";
-            
+
             // zip up models directory
             if (Directory.Exists(jp.ModelPath)) // this test may be unnecessary
             {
@@ -306,25 +366,26 @@
             // submit job
             try
             {
-                CloudJob cloudJob = batchClient.JobOperations.CreateJob(jp.JobId.ToString(), GetPoolInfo(job.PoolInfo));
+                CloudJob cloudJob = batchCli.JobOperations.CreateJob(jp.JobId.ToString(), GetPoolInfo(job.PoolInfo));
                 cloudJob.DisplayName = job.DisplayName;
                 cloudJob.JobPreparationTask = job.ToJobPreparationTask(jp.JobId, storageAccount.CreateCloudBlobClient());
                 cloudJob.JobReleaseTask = job.ToJobReleaseTask(jp.JobId, storageAccount.CreateCloudBlobClient());
                 cloudJob.JobManagerTask = job.ToJobManagerTask(jp.JobId, storageAccount.CreateCloudBlobClient(), jp.JobManagerShouldSubmitTasks, jp.AutoScale);
 
                 cloudJob.Commit();
-            } catch (Exception err)
+            }
+            catch (Exception err)
             {
                 ShowError(err);
             }
 
             view.Status = "Job Successfully submitted";
-
-            // in theory, instantiating an AzureResultsDownloader here and passing in this job's ID and name, then calling its DownloadResults() method would allow 
-            // for automatic job downloading as soon as the job is finished. The trouble is it needs an AzureJobDisplayPresenter (for progress bar updating, etc).
-
-            // explorerPresenter.MainPresenter.ShowMessage("Job Successfully submitted", Simulation.ErrorLevel.Information);            
-            // AzureResultsDownloader dl = new AzureResultsDownloader(jp.JobId, jp.JobDisplayName, jp.OutputDir, this.explorerPresenter, true, false, false);
+            
+            if (jp.AutoDownload)
+            {
+                AzureResultsDownloader dl = new AzureResultsDownloader(jp.JobId, jp.JobDisplayName, jp.OutputDir, null, true, jp.Summarise, true, true, true);
+                dl.DownloadResults(true);
+            }
         }
 
         /// <summary>
@@ -360,7 +421,8 @@
             try
             {
                 Directory.CreateDirectory(path);
-            } catch (Exception err)
+            }
+            catch (Exception err)
             {
                 ShowError(new Exception("Error: creation of simulation directory " + path + " failed: ", err));
                 return 1;
@@ -380,7 +442,11 @@
                         PoolSpecification = new PoolSpecification
                         {
                             MaxTasksPerComputeNode = settings.MaxTasksPerVM,
-                            CloudServiceConfiguration = new CloudServiceConfiguration("4"),
+
+                            // This specifies the OS that our VM will be running.
+                            // OS Family 5 means .NET 4.6 will be installed.
+                            // For more info see https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-guestos-update-matrix#releases
+                            CloudServiceConfiguration = new CloudServiceConfiguration("5"),
                             ResizeTimeout = TimeSpan.FromMinutes(15),
                             TargetDedicatedComputeNodes = settings.VMCount,
                             VirtualMachineSize = settings.VMSize,
@@ -475,7 +541,8 @@
                         try
                         {
                             AzureSettings.Default[key] = val;
-                        } catch // key does not exist in AzureSettings
+                        }
+                        catch // key does not exist in AzureSettings
                         {
                             return false;
                         }                        
@@ -489,21 +556,6 @@
             {                
                 return false;
             }
-        }
-
-
-        /// <summary>
-        /// Displays an error message to the user.
-        /// </summary>
-        /// <param name="msg">Message to be displayed.</param>
-        public void ShowErrorMessage(string msg)
-        {
-            explorerPresenter.MainPresenter.ShowError(msg);
-        }
-
-        public void ShowError(Exception err)
-        {
-            explorerPresenter.MainPresenter.ShowError(err);
         }
 
         /// <summary>
@@ -552,7 +604,7 @@
         /// <param name="srcPath">Path of the ApsimX directory</param>
         /// <param name="zipPath">Path to which the zip file will be saved</param>
         /// <returns>0 if successful, 1 otherwise</returns>
-        private int createApsimXZip(string srcPath, string zipPath)
+        private int CreateApsimXZip(string srcPath, string zipPath)
         {
             try
             {
@@ -561,9 +613,9 @@
                     using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
                     {
                         ZipArchiveEntry f;
-                        f = archive.CreateEntryFromFile(srcPath + "\\Bin\\APSIM.Shared.dll", "APSIM.Shared.dll");
-                        f = archive.CreateEntryFromFile(srcPath + "\\Bin\\Models.exe", "Models.exe");
-                        f = archive.CreateEntryFromFile(srcPath + "\\Bin\\sqlite3.dll", "sqlite3.dll");
+                        f = archive.CreateEntryFromFile(Path.Combine(srcPath, "Bin", "APSIM.Shared.dll"), "APSIM.Shared.dll");
+                        f = archive.CreateEntryFromFile(Path.Combine(srcPath, "Bin", "Models.exe"), "Models.exe");
+                        f = archive.CreateEntryFromFile(Path.Combine(srcPath, "Bin", "sqlite3.dll"), "sqlite3.dll");
                     }
                 }
                 return 0;
@@ -592,9 +644,9 @@
                     {
                         ZipArchiveEntry f;
 
-                        f = archive.CreateEntryFromFile(srcPath + "\\Apsim.xml", "Apsim.xml");
-                        ZipAddDir(srcPath + "\\Model", srcPath + "\\", archive);  // note trailing \\
-                        ZipAddDir(srcPath + "\\UserInterface", srcPath + "\\", archive);  // note trailing \\
+                        f = archive.CreateEntryFromFile(Path.Combine(srcPath, "Apsim.xml"), "Apsim.xml");
+                        ZipAddDir(Path.Combine(srcPath, "Model"), srcPath, archive);
+                        ZipAddDir(Path.Combine(srcPath, "UserInterface"), srcPath, archive);
                     }
                 }
                 return 0;
@@ -640,10 +692,6 @@
             }
         } 
 
-        public void Detach()
-        {
-        }
-
         /// <summary>
         /// Initialises the uploader and batch client. Asks user for an Azure licence file and saves the credentials
         /// if the credentials have not previously been set.
@@ -655,16 +703,16 @@
             if (AzureCredentialsSetup.CredentialsExist())
             {
                 // store credentials
-                storageCredentials = StorageCredentials.FromConfiguration();
-                batchCredentials = BatchCredentials.FromConfiguration();
-                poolSettings = PoolSettings.FromConfiguration();
+                storageAuth = StorageCredentials.FromConfiguration();
+                batchAuth = BatchCredentials.FromConfiguration();
+                poolOptions = PoolSettings.FromConfiguration();
 
-                storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
+                storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageAuth.Account, storageAuth.Key), true);
                 uploader = new FileUploader(storageAccount);
-                var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
+                var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchAuth.Url, batchAuth.Account, batchAuth.Key);
                 try
                 {
-                    batchClient = BatchClient.Open(sharedCredentials);
+                    batchCli = BatchClient.Open(sharedCredentials);
                 }
                 catch (UriFormatException)
                 {
@@ -683,16 +731,6 @@
                 AzureCredentialsSetup cred = new AzureCredentialsSetup();
                 cred.Finished += GetCredentials;
             }
-        }
-        
-        /// <summary>
-        /// Cancels submission of a job and hides the right hand panel (which holds the new job view).
-        /// </summary>
-        public void CancelJobSubmission()
-        {
-            if (submissionWorker != null)
-                submissionWorker.CancelAsync();
-            explorerPresenter.HideRightHandPanel();
         }
     }
 }

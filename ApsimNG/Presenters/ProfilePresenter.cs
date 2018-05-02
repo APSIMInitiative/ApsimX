@@ -95,6 +95,11 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.view = view as IProfileView;
+            this.view.ProfileGrid.FormatColumns += (sender, e) =>
+            {
+                FormatGrid((view as IProfileView).ProfileGrid.DataSource);
+            };
+
             this.explorerPresenter = explorerPresenter;
 
             this.view.ShowView(false);
@@ -588,9 +593,9 @@ namespace UserInterface.Presenters
                 if (property.AllowableUnits.Length > 0)
                 {
                     this.view.ProfileGrid.AddContextSeparator();
-                    foreach (string unit in property.AllowableUnits)
+                    foreach (VariableProperty.NameLabelPair unit in property.AllowableUnits)
                     {
-                        this.view.ProfileGrid.AddContextOption(unit, this.OnUnitClick, unit == property.Units);
+                        this.view.ProfileGrid.AddContextOption(unit.Name, unit.Label, this.OnUnitClick, unit.Name == property.Units);
                     }
                 }
             }
@@ -606,7 +611,7 @@ namespace UserInterface.Presenters
             VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
             if (sender is Gtk.MenuItem)
             {
-                property.Units = ((sender as Gtk.MenuItem).Child as Gtk.AccelLabel).Text;
+                property.Units = (sender as Gtk.MenuItem).Name;
                 this.OnModelChanged(this.model);
             }
         }

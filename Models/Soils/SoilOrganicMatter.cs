@@ -61,7 +61,7 @@ namespace Models.Soils
         /// <value>The depth.</value>
         [Summary]
         [Units("cm")]
-        [Description("Soil Depth")]
+        [Description("Depth")]
         public string[] Depth
         {
             get
@@ -77,9 +77,10 @@ namespace Models.Soils
         /// <summary>Organic carbon concentration (0.1 - 10%)</summary>
         /// <value>The oc.</value>
         [Summary]
-        [Description("Organic Carbon (0.1-10)")]
+        [Description("Organic Carbon")]
         [Bounds(Lower = 0.1, Upper = 10.0)]
-        [Units("%")]
+        // Units may be either "Total %" or "Walkley Black %". We store this labelling information in OCUnitsEnum and don't need it here.
+        // [Units("%")]
         [Display(Format = "N2")]
         public double[] OC { get; set; }
         /// <summary>Gets or sets the oc metadata.</summary>
@@ -89,14 +90,16 @@ namespace Models.Soils
         /// <summary>Gets or sets the f biom.</summary>
         /// <value>The f biom.</value>
         [Summary]
-        [Description("FBiom (0-1)")]
+        [Description("FBiom")]
+        [Units("0-1")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] FBiom { get; set; }
 
         /// <summary>Gets or sets the f inert.</summary>
         /// <value>The f inert.</value>
         [Summary]
-        [Description("FInert (0-1)")]
+        [Description("FInert")]
+        [Units("0-1")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] FInert { get; set; }
 
@@ -110,23 +113,17 @@ namespace Models.Soils
         public enum OCUnitsEnum 
         {
             /// <summary>The total</summary>
+            [Description("Total %")]
             Total,
 
             /// <summary>The walkley black</summary>
+            [Description("Walkley Black %")]
             WalkleyBlack 
         }
         /// <summary>Gets or sets the oc units.</summary>
         /// <value>The oc units.</value>
         public OCUnitsEnum OCUnits { get; set; }
-        /// <summary>Ocs the units to string.</summary>
-        /// <param name="Units">The units.</param>
-        /// <returns></returns>
-        public string OCUnitsToString(OCUnitsEnum Units)
-        {
-            if (Units == OCUnitsEnum.WalkleyBlack)
-                return "Walkley Black %";
-            return "Total %";
-        }
+
         /// <summary>Ocs the units set.</summary>
         /// <param name="ToUnits">To units.</param>
         public void OCUnitsSet(OCUnitsEnum ToUnits)

@@ -9,8 +9,8 @@ namespace Models.GrazPlan
     using System;
     using System.Collections.Generic;
     using Models.Core;
-    using Models.SurfaceOM;
     using Models.Soils;
+    using Models.SurfaceOM;
     using StdUnits;
 
     /// <summary>
@@ -22,31 +22,101 @@ namespace Models.GrazPlan
     [ValidParent(ParentType = typeof(Simulation))]
     public class Stock : Model
     {
-        private List<string> FUserForages;      // user specified forage component names
-        private List<string> FUserPaddocks;
-        private TStockList FModel;
-        private TAnimalWeather FWeather;
+        /// <summary>
+        /// The list of user specified forage component names
+        /// </summary>
+        private List<string> userForages;       
 
-        private bool FFirstStep;
-        private TSingleGenotypeInits[] FGenotypeInits = new TSingleGenotypeInits[0];
-        private TAnimalInits[] FAnimalInits;
-        private bool FPaddocksGiven;
-        private int FRandSeed = 0;
-        private TMyRandom FRandFactory;
-        private TSupplement FSuppFed;
-        private TExcretionInfo FExcretion;
-        private DateTime FTime;
+        /// <summary>
+        /// The list of user specified paddocks
+        /// </summary>
+        private List<string> userPaddocks;
+
+        /// <summary>
+        /// The main stock model
+        /// </summary>
+        private StockList stockModel;
+
+        /// <summary>
+        /// Weather used by the model
+        /// </summary>
+        private TAnimalWeather localWeather;
+
+        /// <summary>
+        /// True if at the first step of the run
+        /// </summary>
+        private bool isFirstStep;
+
+        /// <summary>
+        /// The list of specified genotypes
+        /// </summary>
+        private SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[0];
+
+        /// <summary>
+        /// The init values for the animal
+        /// </summary>
+        private AnimalInits[] animalInits;
+
+        /// <summary>
+        /// If the paddocks are specified by the user
+        /// </summary>
+        private bool paddocksGiven;
+
+        /// <summary>
+        /// The random seed for the mortality model
+        /// </summary>
+        private int randSeed = 0;
+
+        /// <summary>
+        /// The random number host
+        /// </summary>
+        private TMyRandom randFactory;
+
+        /// <summary>
+        /// The supplement used
+        /// </summary>
+        private TSupplement suppFed;
+
+        /// <summary>
+        /// The excretion info
+        /// </summary>
+        private TExcretionInfo excretionInfo;
+
+        /// <summary>
+        /// The current time value
+        /// </summary>
+        private DateTime currentTime;
+
+        /// <summary>
+        /// Used to show it is unset
+        /// </summary>
         internal const int UNKNOWN = -1;
 
         #region Class links
+        /// <summary>
+        /// The simulation clock
+        /// </summary>
         [Link]
-        Clock Systemclock = null;
+        private Clock systemClock = null;
 
+        /// <summary>
+        /// The simulation weather component
+        /// </summary>
         [Link]
-        Weather LocWtr = null;
+        private Weather locWtr = null;
 
+        /// <summary>
+        /// The supplement component
+        /// </summary>
         [Link]
-        Supplement Suppfeed = null;
+        private Supplement suppFeed = null;
+
+        /// <summary>
+        /// The simulation host
+        /// </summary>
+        [Link]
+        private Simulation sim = null;
+
         #endregion
 
         /// <summary>
@@ -54,34 +124,34 @@ namespace Models.GrazPlan
         /// </summary>
         public Stock() : base()
         {
-            this.FUserForages = new List<string>();
-            this.FUserPaddocks = new List<string>();
-            this.FRandFactory = new TMyRandom(this.FRandSeed);       // random number generator
-            this.FModel = new TStockList(this.FRandFactory);
+            this.userForages = new List<string>();
+            this.userPaddocks = new List<string>();
+            this.randFactory = new TMyRandom(this.randSeed);       // random number generator
+            this.stockModel = new StockList(this.randFactory);
 
-            Array.Resize(ref FGenotypeInits, 0);
-            Array.Resize(ref FAnimalInits, 0);
-            FSuppFed = new TSupplement();
-            FExcretion = new TExcretionInfo();
-            FPaddocksGiven = false;
-            FFirstStep = true;
-            FRandSeed = 0;
+            Array.Resize(ref this.genotypeInits, 0);
+            Array.Resize(ref this.animalInits, 0);
+            this.suppFed = new TSupplement();
+            this.excretionInfo = new TExcretionInfo();
+            this.paddocksGiven = false;
+            this.isFirstStep = true;
+            this.randSeed = 0;
         }
 
         #region Initialisation properties ====================================================
         /// <summary>
-        /// Seed for the random number generator. Used when computing numbers of animals dying and conceiving from the equations for mortality and conception rates
+        /// Gets or sets the Seed for the random number generator. Used when computing numbers of animals dying and conceiving from the equations for mortality and conception rates
         /// </summary>
         [Description("Random number seed for mortality and conception rates")]
         [Units("")]
         public int RandSeed
         {
-            get { return FRandSeed; }
-            set { FRandSeed = value; }
+            get { return this.randSeed; }
+            set { this.randSeed = value; }
         }
 
         /// <summary>
-        /// Information about each animal genotype
+        /// Gets or sets the information about each animal genotype
         /// </summary>
         [Description("Information about each animal genotype")]
         [Units("")]
@@ -90,101 +160,105 @@ namespace Models.GrazPlan
             get
             {
                 TStockGeno[] geno = new TStockGeno[1];
-                StockVars.MakeGenotypesValue(FModel, ref geno);
+                StockVars.MakeGenotypesValue(this.stockModel, ref geno);
                 return geno;
             }
+
             set
             {
-                Array.Resize(ref FGenotypeInits, value.Length);
-                for (int Idx = 0; Idx < value.Length; Idx++)
+                Array.Resize(ref this.genotypeInits, value.Length);
+                for (int idx = 0; idx < value.Length; idx++)
                 {
-                    FGenotypeInits[Idx] = new TSingleGenotypeInits();
-                    FModel.Value2GenotypeInits(value[Idx], ref FGenotypeInits[Idx]);
+                    this.genotypeInits[idx] = new SingleGenotypeInits();
+                    this.stockModel.Value2GenotypeInits(value[idx], ref this.genotypeInits[idx]);
                 }
             }
         }
 
         /// <summary>
-        /// Initial state of each animal group for sheep
+        /// Gets or sets the initial state of each animal group for sheep
         /// </summary>
         [Description("Initial state of each animal group for sheep")]
-        public TSheepInit[] Sheep
+        public SheepInit[] Sheep
         {
             get
             {
-                TSheepInit[] sheep = new TSheepInit[1];
-                StockVars.MakeSheepValue(FModel, GrazType.AnimalType.Sheep, ref sheep);
+                SheepInit[] sheep = new SheepInit[1];
+                StockVars.MakeSheepValue(this.stockModel, GrazType.AnimalType.Sheep, ref sheep);
                 return sheep;
             }
+
             set
             {
-                int iOffset = FAnimalInits.Length;
-                Array.Resize(ref FAnimalInits, iOffset + value.Length);
-                for (int Idx = 0; Idx < value.Length; Idx++)
-                    FModel.SheepValue2AnimalInits(value[Idx], ref FAnimalInits[iOffset + Idx]);
+                int offset = this.animalInits.Length;
+                Array.Resize(ref this.animalInits, offset + value.Length);
+                for (int idx = 0; idx < value.Length; idx++)
+                    this.stockModel.SheepValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
             }
         }
 
         /// <summary>
-        /// Initial state of each animal group for cattle
+        /// Gets or sets the initial state of each animal group for cattle
         /// </summary>
         [Description("Initial state of each animal group for cattle")]
-        public TCattleInit[] Cattle
+        public CattleInit[] Cattle
         {
             get
             {
-                TCattleInit[] cattle = new TCattleInit[1];
-                StockVars.MakeCattleValue(FModel, GrazType.AnimalType.Cattle, ref cattle);
+                CattleInit[] cattle = new CattleInit[1];
+                StockVars.MakeCattleValue(this.stockModel, GrazType.AnimalType.Cattle, ref cattle);
                 return cattle;
             }
+
             set
             {
-                int iOffset = FAnimalInits.Length;
-                Array.Resize(ref FAnimalInits, iOffset + value.Length);
-                for (int Idx = 0; Idx < value.Length; Idx++)
-                    FModel.CattleValue2AnimalInits(value[Idx], ref FAnimalInits[iOffset + Idx]);
+                int offset = this.animalInits.Length;
+                Array.Resize(ref this.animalInits, offset + value.Length);
+                for (int idx = 0; idx < value.Length; idx++)
+                    this.stockModel.CattleValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
             }
         }
 
         /// <summary>
-        /// Manually-specified structure of paddocks and forages 
+        /// Gets or sets the manually-specified structure of paddocks and forages 
         /// </summary>
         [Description("Manually-specified structure of paddocks and forages")]
-        public TPaddInit[] PaddockList
+        public PaddockInit[] PaddockList
         {
             get
             {
-                TPaddInit[] paddocks = new TPaddInit[1];
-                StockVars.MakePaddockList(FModel, ref paddocks);
+                PaddockInit[] paddocks = new PaddockInit[1];
+                StockVars.MakePaddockList(this.stockModel, ref paddocks);
                 return paddocks;
             }
+
             set
             {
-                FPaddocksGiven = (value.Length > 1);    // more than the null paddock
-                TPaddockInfo aPadd;
-                if (FPaddocksGiven)
+                this.paddocksGiven = value.Length > 1;    // more than the null paddock
+                PaddockInfo paddockInfo;
+                if (this.paddocksGiven)
                 {
-                    while (FModel.Paddocks.Count() > 0)
-                        FModel.Paddocks.Delete(FModel.Paddocks.Count() - 1);
+                    while (this.stockModel.Paddocks.Count() > 0)
+                        this.stockModel.Paddocks.Delete(this.stockModel.Paddocks.Count() - 1);
 
-                    for (int Idx = 0; Idx < value.Length; Idx++)
+                    for (int idx = 0; idx < value.Length; idx++)
                     {
                         // TODO: Find the paddock object for this name and store it
                         // if the paddock object is found then add it to Paddocks
-                        FModel.Paddocks.Add(Idx, value[Idx].name);
+                        this.stockModel.Paddocks.Add(idx, value[idx].Name);
 
-                        aPadd = FModel.Paddocks.byIndex(Idx);
-                        aPadd.sExcretionDest = value[Idx].excretion;
-                        aPadd.sUrineDest = value[Idx].urine;
-                        aPadd.iExcretionID = UNKNOWN;
-                        aPadd.iAddFaecesID = UNKNOWN;
-                        aPadd.iAddUrineID = UNKNOWN;
-                        aPadd.fArea = value[Idx].area;
-                        aPadd.Slope = value[Idx].slope;
-                        for (int Jdx = 0; Jdx < value[Idx].forages.Length; Jdx++)
+                        paddockInfo = this.stockModel.Paddocks.byIndex(idx);
+                        paddockInfo.sExcretionDest = value[idx].Excretion;
+                        paddockInfo.sUrineDest = value[idx].Urine;
+                        paddockInfo.iExcretionID = UNKNOWN;
+                        paddockInfo.iAddFaecesID = UNKNOWN;
+                        paddockInfo.iAddUrineID = UNKNOWN;
+                        paddockInfo.fArea = value[idx].Area;
+                        paddockInfo.Slope = value[idx].Slope;
+                        for (int jdx = 0; jdx < value[idx].Forages.Length; jdx++)
                         {
-                            FUserForages.Add(value[Idx].forages[Jdx]);    //keep a local list of these for queryInfos later
-                            FUserPaddocks.Add(value[Idx].name);
+                            this.userForages.Add(value[idx].Forages[jdx]);    // keep a local list of these for queryInfos later
+                            this.userPaddocks.Add(value[idx].Name);
                         }
                     }
                 }
@@ -192,53 +266,55 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Livestock enterprises and their management options
+        /// Gets or sets the livestock enterprises and their management options
         /// </summary>
         [Description("Livestock enterprises and their management options")]
-        public TEnterpriseInfo[] EnterpriseList
+        public EnterpriseInfo[] EnterpriseList
         {
             get
             {
-                TEnterpriseInfo[] ents = new TEnterpriseInfo[FModel.Enterprises.Count];
-                for (int i = 0; i < FModel.Enterprises.Count; i++)
-                    ents[i] = FModel.Enterprises.byIndex(i);
+                EnterpriseInfo[] ents = new EnterpriseInfo[this.stockModel.Enterprises.Count];
+                for (int i = 0; i < this.stockModel.Enterprises.Count; i++)
+                    ents[i] = this.stockModel.Enterprises.byIndex(i);
                 return ents;
             }
+
             set
             {
-                if (FModel.Enterprises != null)
+                if (this.stockModel.Enterprises != null)
                 {
-                    while (FModel.Enterprises.Count > 0)
-                        FModel.Enterprises.Delete(FModel.Enterprises.Count - 1);
+                    while (this.stockModel.Enterprises.Count > 0)
+                        this.stockModel.Enterprises.Delete(this.stockModel.Enterprises.Count - 1);
                     for (int i = 0; i < value.Length; i++)
-                        FModel.Enterprises.Add(value[i]);
+                        this.stockModel.Enterprises.Add(value[i]);
                 }
             }
         }
 
         /// <summary>
-        /// Livestock grazing rotations
+        /// Gets or sets the livestock grazing rotations
         /// </summary>
         [Description("Livestock grazing rotations")]
-        public TGrazingPeriod[] GrazingPeriods
+        public GrazingPeriod[] GrazingPeriods
         {
             get
             {
-                TGrazingPeriod[] periods = new TGrazingPeriod[FModel.GrazingPeriods.Count()];
-                for (int i = 0; i < FModel.GrazingPeriods.Count(); i++)
-                    periods[i] = FModel.GrazingPeriods.byIndex(i);
+                GrazingPeriod[] periods = new GrazingPeriod[this.stockModel.GrazingPeriods.Count()];
+                for (int i = 0; i < this.stockModel.GrazingPeriods.Count(); i++)
+                    periods[i] = this.stockModel.GrazingPeriods.ByIndex(i);
                 return periods;
             }
+
             set
             {
-                if (FModel.GrazingPeriods != null)
+                if (this.stockModel.GrazingPeriods != null)
                 {
-                    while (FModel.GrazingPeriods.Count() > 0)
+                    while (this.stockModel.GrazingPeriods.Count() > 0)
                     {
-                        FModel.GrazingPeriods.Delete(FModel.GrazingPeriods.Count() - 1);
+                        this.stockModel.GrazingPeriods.Delete(this.stockModel.GrazingPeriods.Count() - 1);
                     }
                     for (int i = 0; i < value.Length; i++)
-                        FModel.GrazingPeriods.Add(value[i]);
+                        this.stockModel.GrazingPeriods.Add(value[i]);
                 }
             }
         }
@@ -247,7 +323,7 @@ namespace Models.GrazPlan
 
         #region Readable properties ====================================================
         /// <summary>
-        /// Mass of grazers per unit area
+        /// Gets the mass of grazers per unit area
         /// </summary>
         [Description("Mass of grazers per unit area. The value returned depends on the requesting component")]
         [Units("kg/ha")]
@@ -256,57 +332,59 @@ namespace Models.GrazPlan
             get
             {   // TODO: complete the function
 
-                TForageProvider forageProvider;
-                //using the component ID
-                //return the mass per area for all forages
-                forageProvider = FModel.ForagesAll.FindProvider(0);
-                return FModel.returnMassPerArea(0, forageProvider, "kg/ha"); //by paddock or from forage ref
+                ForageProvider forageProvider;
+                 
+                // using the component ID
+                // return the mass per area for all forages
+                forageProvider = this.stockModel.ForagesAll.FindProvider(0);
+                return this.stockModel.ReturnMassPerArea(0, forageProvider, "kg/ha"); // by paddock or from forage ref
             }
         }
 
         /// <summary>
-        /// Consumption of supplementary feed by animals
+        /// Gets the consumption of supplementary feed by animals
         /// </summary>
         [Description("Consumption of supplementary feed by animals")]
-        public TSupplementEaten[] SuppEaten
+        public SupplementEaten[] SuppEaten
         {
             get
             {
-                TSupplementEaten[] value = null;
-                StockVars.MakeSuppEaten(FModel, ref value);
+                SupplementEaten[] value = null;
+                StockVars.MakeSuppEaten(this.stockModel, ref value);
                 return value;
             }
         }
 
         /// <summary>
-        /// Number of animal groups
+        /// Gets the number of animal groups
         /// </summary>
         [Description("Number of animal groups")]
         public int NoGroups
         {
             get
             {
-                return FModel.Count();
+                return this.stockModel.Count();
             }
         }
 
         // =============== All ============
+
         /// <summary>
-        /// Number of animals in each group
+        /// Gets the number of animals in each group
         /// </summary>
         [Description("Number of animals in each group")]
         public int[] Number
         {
             get
             {
-                int[] numbers = new int[FModel.Count()];   
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eBoth, false, false, false, ref numbers);
+                int[] numbers = new int[this.stockModel.Count()];   
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, false, false, false, ref numbers);
                 return numbers;
             }
         }
 
         /// <summary>
-        /// Total number of animals
+        /// Gets the total number of animals
         /// </summary>
         [Description("Total number of animals")]
         public int NumberAll
@@ -314,42 +392,43 @@ namespace Models.GrazPlan
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eBoth, false, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, false, true, false, ref numbers);
                 return numbers[0];
             }
         }
 
         /// <summary>
-        /// Number of animals in each tag group
+        /// Gets the number of animals in each tag group
         /// </summary>
         [Description("Number of animals in each tag group")]
         public int[] NumberTag
         {
             get
             {
-                int[] numbers = new int[FModel.iHighestTag()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eBoth, false, false, true, ref numbers);
+                int[] numbers = new int[this.stockModel.HighestTag()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, false, false, true, ref numbers);
                 return numbers;
             }
         }
 
         // ============== Young ============
+
         /// <summary>
-        /// Number of unweaned young animals in each group
+        /// Gets the number of unweaned young animals in each group
         /// </summary>
         [Description("Number of unweaned young animals in each group")]
         public int[] NumberYng
         {
             get
             {
-                int[] numbers = new int[FModel.Count()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eBoth, true, false, false, ref numbers);
+                int[] numbers = new int[this.stockModel.Count()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, true, false, false, ref numbers);
                 return numbers;
             }
         }
 
         /// <summary>
-        /// Total number of unweaned young animals
+        /// Gets the total number of unweaned young animals
         /// </summary>
         [Description("Number of unweaned young animals")]
         public int NumberYngAll
@@ -357,42 +436,43 @@ namespace Models.GrazPlan
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eBoth, true, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, true, true, false, ref numbers);
                 return numbers[0];
             }
         }
 
         /// <summary>
-        /// Number of unweaned young animals in each group
+        /// Gets the number of unweaned young animals in each group
         /// </summary>
         [Description("Number of unweaned young animals in each tag group")]
         public int[] NumberYngTag
         {
             get
             {
-                int[] numbers = new int[FModel.iHighestTag()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eBoth, true, false, true, ref numbers);
+                int[] numbers = new int[this.stockModel.HighestTag()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, true, false, true, ref numbers);
                 return numbers;
             }
         }
 
         // ================ Female ============
+
         /// <summary>
-        /// Number of female animals in each group
+        /// Gets the number of female animals in each group
         /// </summary>
         [Description("Number of female animals in each group")]
         public int[] NoFemale
         {
             get
             {
-                int[] numbers = new int[FModel.Count()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eFemale, false, false, false, ref numbers);
+                int[] numbers = new int[this.stockModel.Count()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eFemale, false, false, false, ref numbers);
                 return numbers;
             }
         }
 
         /// <summary>
-        /// Total number of female animals
+        /// Gets the total number of female animals
         /// </summary>
         [Description("Total number of female animals")]
         public int NoFemaleAll
@@ -400,42 +480,43 @@ namespace Models.GrazPlan
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eFemale, false, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eFemale, false, true, false, ref numbers);
                 return numbers[0];
             }
         }
 
         /// <summary>
-        /// Number of female animals in each tag group
+        /// Gets the number of female animals in each tag group
         /// </summary>
         [Description("Number of female animals in each tag group")]
         public int[] NoFemaleTag
         {
             get
             {
-                int[] numbers = new int[FModel.iHighestTag()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eFemale, false, false, true, ref numbers);
+                int[] numbers = new int[this.stockModel.HighestTag()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eFemale, false, false, true, ref numbers);
                 return numbers;
             }
         }
 
         // ================ Female Young ============
+
         /// <summary>
-        /// Number of unweaned female animals in each group
+        /// Gets the number of unweaned female animals in each group
         /// </summary>
         [Description("Number of unweaned female animals in each group")]
         public int[] NoFemaleYng
         {
             get
             {
-                int[] numbers = new int[FModel.Count()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eFemale, true, false, false, ref numbers);
+                int[] numbers = new int[this.stockModel.Count()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eFemale, true, false, false, ref numbers);
                 return numbers;
             }
         }
 
         /// <summary>
-        /// Total number of unweaned female animals
+        /// Gets the total number of unweaned female animals
         /// </summary>
         [Description("Total number of unweaned female animals")]
         public int NoFemaleYngAll
@@ -443,42 +524,43 @@ namespace Models.GrazPlan
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eFemale, true, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eFemale, true, true, false, ref numbers);
                 return numbers[0];
             }
         }
 
         /// <summary>
-        /// Number of unweaned female animals in each tag group
+        /// Gets the number of unweaned female animals in each tag group
         /// </summary>
         [Description("Number of unweaned female animals in each tag group")]
         public int[] NoFemaleYngTag
         {
             get
             {
-                int[] numbers = new int[FModel.iHighestTag()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eFemale, true, false, true, ref numbers);
+                int[] numbers = new int[this.stockModel.HighestTag()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eFemale, true, false, true, ref numbers);
                 return numbers;
             }
         }
 
         // ================ Male ============
+
         /// <summary>
-        /// Number of male animals in each group
+        /// Gets the number of male animals in each group
         /// </summary>
         [Description("Number of male animals in each group")]
         public int[] NoMale
         {
             get
             {
-                int[] numbers = new int[FModel.Count()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eMale, false, false, false, ref numbers);
+                int[] numbers = new int[this.stockModel.Count()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eMale, false, false, false, ref numbers);
                 return numbers;
             }
         }
 
         /// <summary>
-        /// Total number of male animals
+        /// Gets the total number of male animals
         /// </summary>
         [Description("Total number of male animals")]
         public int NoMaleAll
@@ -486,42 +568,43 @@ namespace Models.GrazPlan
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eMale, false, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eMale, false, true, false, ref numbers);
                 return numbers[0];
             }
         }
 
         /// <summary>
-        /// Number of male animals in each tag group
+        /// Gets the number of male animals in each tag group
         /// </summary>
         [Description("Number of male animals in each tag group")]
         public int[] NoMaleTag
         {
             get
             {
-                int[] numbers = new int[FModel.iHighestTag()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eMale, false, false, true, ref numbers);
+                int[] numbers = new int[this.stockModel.HighestTag()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eMale, false, false, true, ref numbers);
                 return numbers;
             }
         }
 
         // ================ Male Young ============
+
         /// <summary>
-        /// Number of unweaned male animals in each group
+        /// Gets the number of unweaned male animals in each group
         /// </summary>
         [Description("Number of unweaned male animals in each group")]
         public int[] NoMaleYng
         {
             get
             {
-                int[] numbers = new int[FModel.Count()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eMale, true, false, false, ref numbers);
+                int[] numbers = new int[this.stockModel.Count()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eMale, true, false, false, ref numbers);
                 return numbers;
             }
         }
 
         /// <summary>
-        /// Total number of unweaned male animals
+        /// Gets the total number of unweaned male animals
         /// </summary>
         [Description("Total number of unweaned male animals")]
         public int NoMaleYngAll
@@ -529,28 +612,29 @@ namespace Models.GrazPlan
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eMale, true, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eMale, true, true, false, ref numbers);
                 return numbers[0];
             }
         }
 
         /// <summary>
-        /// Number of unweaned male animals in each tag group
+        /// Gets the number of unweaned male animals in each tag group
         /// </summary>
         [Description("Number of unweaned male animals in each tag group")]
         public int[] NoMaleYngTag
         {
             get
             {
-                int[] numbers = new int[FModel.iHighestTag()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eMale, true, false, true, ref numbers);
+                int[] numbers = new int[this.stockModel.HighestTag()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eMale, true, false, true, ref numbers);
                 return numbers;
             }
         }
 
         // ================ Deaths ================
+
         /// <summary>
-        /// Deaths of all non suckling animals
+        /// Gets the deaths of all non suckling animals
         /// </summary>
         [Description("Number of all deaths")]
         public int DeathsAll
@@ -558,57 +642,58 @@ namespace Models.GrazPlan
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eDeaths, false, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eDeaths, false, true, false, ref numbers);
                 return numbers[0];
             }
         }
 
         /// <summary>
-        /// Deaths of non suckling animals in each group
+        /// Gets the deaths of non suckling animals in each group
         /// </summary>
         [Description("Number of deaths in each group")]
         public int[] Deaths
         {
             get
             {
-                int[] numbers = new int[FModel.Count()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eDeaths, false, false, false, ref numbers);
+                int[] numbers = new int[this.stockModel.Count()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eDeaths, false, false, false, ref numbers);
                 return numbers;
             }
         }
 
         /// <summary>
-        /// Deaths of non suckling animals in each tag group
+        /// Gets the deaths of non suckling animals in each tag group
         /// </summary>
         [Description("Number of deaths in each tag group")]
         public int[] DeathsTag
         {
             get
             {
-                int[] numbers = new int[FModel.iHighestTag()];
-                StockVars.PopulateNumberValue(FModel, StockVars.CountType.eDeaths, false, false, true, ref numbers);
+                int[] numbers = new int[this.stockModel.HighestTag()];
+                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eDeaths, false, false, true, ref numbers);
                 return numbers;
             }
         }
 
         /// <summary>
-        /// See the sex field of the sheep and cattle initialisation variables
+        /// Gets the sex field of the sheep and cattle initialisation variables
         /// </summary>
         [Description("See the sex field of the sheep and cattle initialisation variables. Returns 'heifer' for cows under two years of age")]
         public string[] Sex
         {
             get
             {
-                string[] values = new string[FModel.Count()];
-                for (int Idx = 0; Idx < FModel.Count(); Idx++)
-                    values[Idx] = FModel.SexString((int)Idx, false);
+                string[] values = new string[this.stockModel.Count()];
+                for (int idx = 0; idx < this.stockModel.Count(); idx++)
+                    values[idx] = this.stockModel.SexString((int)idx, false);
                 return values;
             }
         }
 
         // =========== Ages ==================
+
         /// <summary>
-        /// Age of animals by group.
+        /// Gets the age of animals by group.
         /// </summary>
         [Description("Age of animals by group")]
         [Units("d")]
@@ -616,14 +701,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpAGE, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Age of animals total
+        /// Gets the age of animals total
         /// </summary>
         [Description("Age of animals total")]
         [Units("d")]
@@ -632,13 +717,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpAGE, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Age of animals by tag number
+        /// Gets the age of animals by tag number
         /// </summary>
         [Description("Age of animals by tag number")]
         [Units("d")]
@@ -646,15 +731,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpAGE, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Ages of young ==================
+
         /// <summary>
-        /// Age of unweaned young animals by group
+        /// Gets the age of unweaned young animals by group
         /// </summary>
         [Description("Age of unweaned young animals by group")]
         [Units("d")]
@@ -662,14 +748,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpAGE, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Age of unweaned young animals total
+        /// Gets the age of unweaned young animals total
         /// </summary>
         [Description("Age of unweaned young animals total")]
         [Units("d")]
@@ -678,13 +764,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpAGE, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Age of unweaned young animals by tag number
+        /// Gets the age of unweaned young animals by tag number
         /// </summary>
         [Description("Age of unweaned young animals by tag number")]
         [Units("d")]
@@ -692,29 +778,30 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpAGE, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Ages months ==================
+
         /// <summary>
-        /// Age of animals, in months by group
+        /// Gets the age of animals, in months by group
         /// </summary>
         [Description("Age of animals, in months by group")]
         public double[] AgeMonths
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpAGE_MONTHS, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE_MONTHS, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Age of animals, in months total
+        /// Gets the age of animals, in months total
         /// </summary>
         [Description("Age of animals, in months total")]
         public double AgeMonthsAll
@@ -722,42 +809,43 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpAGE_MONTHS, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE_MONTHS, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Age of animals, in months by tag number
+        /// Gets the age of animals, in months by tag number
         /// </summary>
         [Description("Age of animals, in months by tag number")]
         public double[] AgeMonthsTag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpAGE_MONTHS, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE_MONTHS, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Ages of young in months ==================
+
         /// <summary>
-        /// Age of unweaned young animals, in months by group
+        /// Gets the age of unweaned young animals, in months by group
         /// </summary>
         [Description("Age of unweaned young animals, in months by group")]
         public double[] AgeMonthsYng
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpAGE_MONTHS, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE_MONTHS, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Age of unweaned young animals, in months total
+        /// Gets the age of unweaned young animals, in months total
         /// </summary>
         [Description("Age of unweaned young animals, in months total")]
         public double AgeMonthsYngAll
@@ -765,28 +853,29 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpAGE_MONTHS, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE_MONTHS, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Age of unweaned young animals, in months by tag number
+        /// Gets the age of unweaned young animals, in months by tag number
         /// </summary>
         [Description("Age of unweaned young animals, in months by tag number")]
         public double[] AgeMonthsYngTag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpAGE_MONTHS, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE_MONTHS, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Weight ==================
+
         /// <summary>
-        /// Average live weight by group
+        /// Gets the average live weight by group
         /// </summary>
         [Description("Average live weight by group")]
         [Units("kg")]
@@ -794,14 +883,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpLIVE_WT, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLIVE_WT, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Averge live weight total
+        /// Gets the averge live weight total
         /// </summary>
         [Description("Averge live weight total")]
         [Units("kg")]
@@ -810,13 +899,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpLIVE_WT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLIVE_WT, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Average live weight by tag number
+        /// Gets the average live weight by tag number
         /// </summary>
         [Description("Average live weight by tag number")]
         [Units("kg")]
@@ -824,15 +913,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpLIVE_WT, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLIVE_WT, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Weight of young ==================
+
         /// <summary>
-        /// Average live weight of unweaned young animals by group
+        /// Gets the average live weight of unweaned young animals by group
         /// </summary>
         [Description("Average live weight of unweaned young animals by group")]
         [Units("kg")]
@@ -840,14 +930,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpLIVE_WT, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLIVE_WT, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Average live weight of unweaned young animals total
+        /// Gets the average live weight of unweaned young animals total
         /// </summary>
         [Description("Average live weight of unweaned young animals total")]
         [Units("kg")]
@@ -856,13 +946,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpLIVE_WT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLIVE_WT, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Average live weight of unweaned young animals by tag number
+        /// Gets the average live weight of unweaned young animals by tag number
         /// </summary>
         [Description("Average live weight of unweaned young animals by tag number")]
         [Units("kg")]
@@ -870,15 +960,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpLIVE_WT, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLIVE_WT, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Fleece-free, conceptus-free weight ==================
+
         /// <summary>
-        /// Fleece-free, conceptus-free weight by group
+        /// Gets the fleece-free, conceptus-free weight by group
         /// </summary>
         [Description("Fleece-free, conceptus-free weight by group")]
         [Units("kg")]
@@ -886,14 +977,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpBASE_WT, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBASE_WT, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Fleece-free, conceptus-free weight total
+        /// Gets the fleece-free, conceptus-free weight total
         /// </summary>
         [Description("Fleece-free, conceptus-free weight total")]
         [Units("kg")]
@@ -902,13 +993,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpBASE_WT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBASE_WT, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Fleece-free, conceptus-free weight by tag number
+        /// Gets the fleece-free, conceptus-free weight by tag number
         /// </summary>
         [Description("Fleece-free, conceptus-free weight by tag number")]
         [Units("kg")]
@@ -916,15 +1007,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpBASE_WT, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBASE_WT, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Fleece-free, conceptus-free weight young ==================
+
         /// <summary>
-        /// Fleece-free, conceptus-free weight of unweaned young animals by group
+        /// Gets the fleece-free, conceptus-free weight of unweaned young animals by group
         /// </summary>
         [Description("Fleece-free, conceptus-free weight of unweaned young animals by group")]
         [Units("kg")]
@@ -932,14 +1024,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpBASE_WT, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBASE_WT, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Fleece-free, conceptus-free weight of unweaned young animals total
+        /// Gets the fleece-free, conceptus-free weight of unweaned young animals total
         /// </summary>
         [Description("Fleece-free, conceptus-free weight of unweaned young animals total")]
         [Units("kg")]
@@ -948,13 +1040,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpBASE_WT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBASE_WT, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Fleece-free, conceptus-free weight of unweaned young animals by tag number
+        /// Gets the fleece-free, conceptus-free weight of unweaned young animals by tag number
         /// </summary>
         [Description("Fleece-free, conceptus-free weight of unweaned young animals by tag number")]
         [Units("kg")]
@@ -962,29 +1054,30 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpBASE_WT, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBASE_WT, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Condition score of animals ==================
+
         /// <summary>
-        /// Condition score of animals (1-5 scale) by group
+        /// Gets the condition score of animals (1-5 scale) by group
         /// </summary>
         [Description("Condition score of animals (1-5 scale) by group")]
         public double[] CondScore
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCOND_SCORE, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCOND_SCORE, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Condition score of animals (1-5 scale) total
+        /// Gets the condition score of animals (1-5 scale) total
         /// </summary>
         [Description("Condition score of animals (1-5 scale) total")]
         public double CondScoreAll
@@ -992,42 +1085,43 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCOND_SCORE, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCOND_SCORE, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Condition score of animals (1-5 scale) by tag number
+        /// Gets the condition score of animals (1-5 scale) by tag number
         /// </summary>
         [Description("Condition score of animals (1-5 scale) by tag number")]
         public double[] CondScoreTag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCOND_SCORE, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCOND_SCORE, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Condition score of animals (1-5 scale) of young ==================
+
         /// <summary>
-        /// Condition score of unweaned young animals (1-5 scale) by group
+        /// Gets the condition score of unweaned young animals (1-5 scale) by group
         /// </summary>
         [Description("Condition score of unweaned young animals (1-5 scale) by group")]
         public double[] CondScoreYng
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCOND_SCORE, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCOND_SCORE, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Condition score of unweaned young animals (1-5 scale) total
+        /// Gets the condition score of unweaned young animals (1-5 scale) total
         /// </summary>
         [Description("Condition score of unweaned young animals (1-5 scale) total")]
         public double CondScoreYngAll
@@ -1035,28 +1129,29 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCOND_SCORE, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCOND_SCORE, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Condition score of unweaned young animals (1-5 scale) by tag number
+        /// Gets the condition score of unweaned young animals (1-5 scale) by tag number
         /// </summary>
         [Description("Condition score of unweaned young animals (1-5 scale) by tag number")]
         public double[] CondScoreYngTag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCOND_SCORE, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCOND_SCORE, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Maximum previous basal weight ==================
+
         /// <summary>
-        /// Maximum previous basal weight (fleece-free, conceptus-free) attained by each animal group
+        /// Gets the maximum previous basal weight (fleece-free, conceptus-free) attained by each animal group
         /// </summary>
         [Description("Maximum previous basal weight (fleece-free, conceptus-free) attained by each animal group")]
         [Units("kg")]
@@ -1064,14 +1159,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpMAX_PREV_WT, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMAX_PREV_WT, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Maximum previous basal weight (fleece-free, conceptus-free) attained total
+        /// Gets the maximum previous basal weight (fleece-free, conceptus-free) attained total
         /// </summary>
         [Description("Maximum previous basal weight (fleece-free, conceptus-free) attained total")]
         [Units("kg")]
@@ -1080,13 +1175,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpMAX_PREV_WT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMAX_PREV_WT, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Maximum previous basal weight (fleece-free, conceptus-free) attained by tag number
+        /// Gets the maximum previous basal weight (fleece-free, conceptus-free) attained by tag number
         /// </summary>
         [Description("Maximum previous basal weight (fleece-free, conceptus-free) attained by tag number")]
         [Units("kg")]
@@ -1094,15 +1189,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpMAX_PREV_WT, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMAX_PREV_WT, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Maximum previous basal weight young ==================
+
         /// <summary>
-        /// Maximum previous basal weight (fleece-free, conceptus-free) attained of unweaned young animals by group
+        /// Gets the maximum previous basal weight (fleece-free, conceptus-free) attained of unweaned young animals by group
         /// </summary>
         [Description("Maximum previous basal weight (fleece-free, conceptus-free) attained of unweaned young animals by group")]
         [Units("kg")]
@@ -1110,14 +1206,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpMAX_PREV_WT, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMAX_PREV_WT, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Maximum previous basal weight (fleece-free, conceptus-free) attained unweaned young animals total
+        /// Gets the maximum previous basal weight (fleece-free, conceptus-free) attained unweaned young animals total
         /// </summary>
         [Description("Maximum previous basal weight (fleece-free, conceptus-free) attained of unweaned young animals total")]
         [Units("kg")]
@@ -1126,13 +1222,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpMAX_PREV_WT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMAX_PREV_WT, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Maximum previous basal weight (fleece-free, conceptus-free) attained of unweaned young animals by tag number
+        /// Gets the maximum previous basal weight (fleece-free, conceptus-free) attained of unweaned young animals by tag number
         /// </summary>
         [Description("Maximum previous basal weight (fleece-free, conceptus-free) attained of unweaned young animals by tag number")]
         [Units("kg")]
@@ -1140,15 +1236,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpMAX_PREV_WT, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMAX_PREV_WT, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Current greasy fleece weight ==================
+
         /// <summary>
-        /// Current greasy fleece weight by group
+        /// Gets the current greasy fleece weight by group
         /// </summary>
         [Description("Current greasy fleece weight by group")]
         [Units("kg")]
@@ -1156,14 +1253,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpFLEECE_WT, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFLEECE_WT, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Current greasy fleece weight total
+        /// Gets the current greasy fleece weight total
         /// </summary>
         [Description("Current greasy fleece weight total")]
         [Units("kg")]
@@ -1172,13 +1269,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpFLEECE_WT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFLEECE_WT, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Current greasy fleece weight by tag number
+        /// Gets the current greasy fleece weight by tag number
         /// </summary>
         [Description("Current greasy fleece weight by tag number")]
         [Units("kg")]
@@ -1186,15 +1283,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpFLEECE_WT, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFLEECE_WT, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Current greasy fleece weight young ==================
+
         /// <summary>
-        /// Current greasy fleece weight of unweaned young animals by group
+        /// Gets the current greasy fleece weight of unweaned young animals by group
         /// </summary>
         [Description("Current greasy fleece weight of unweaned young animals by group")]
         [Units("kg")]
@@ -1202,14 +1300,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpFLEECE_WT, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFLEECE_WT, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Current greasy fleece weight of unweaned young animals total
+        /// Gets the current greasy fleece weight of unweaned young animals total
         /// </summary>
         [Description("Current greasy fleece weight of unweaned young animals total")]
         [Units("kg")]
@@ -1218,13 +1316,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpFLEECE_WT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFLEECE_WT, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Current greasy fleece weight of unweaned young animals by tag number
+        /// Gets the current greasy fleece weight of unweaned young animals by tag number
         /// </summary>
         [Description("Current greasy fleece weight of unweaned young animals by tag number")]
         [Units("kg")]
@@ -1232,15 +1330,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpFLEECE_WT, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFLEECE_WT, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Current clean fleece weight ==================
+
         /// <summary>
-        /// Current clean fleece weight by group
+        /// Gets the current clean fleece weight by group
         /// </summary>
         [Description("Current clean fleece weight by group")]
         [Units("kg")]
@@ -1248,14 +1347,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCFLEECE_WT, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_WT, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Current clean fleece weight total
+        /// Gets the current clean fleece weight total
         /// </summary>
         [Description("Current clean fleece weight total")]
         [Units("kg")]
@@ -1264,13 +1363,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCFLEECE_WT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_WT, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Current clean fleece weight by tag number
+        /// Gets the current clean fleece weight by tag number
         /// </summary>
         [Description("Current clean fleece weight by tag number")]
         [Units("kg")]
@@ -1278,15 +1377,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCFLEECE_WT, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_WT, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Current clean fleece weight young ==================
+
         /// <summary>
-        /// Current clean fleece weight of unweaned young animals by group
+        /// Gets the current clean fleece weight of unweaned young animals by group
         /// </summary>
         [Description("Current clean fleece weight of unweaned young animals by group")]
         [Units("kg")]
@@ -1294,14 +1394,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCFLEECE_WT, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_WT, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Current clean fleece weight of unweaned young animals total
+        /// Gets the current clean fleece weight of unweaned young animals total
         /// </summary>
         [Description("Current clean fleece weight of unweaned young animals total")]
         [Units("kg")]
@@ -1310,13 +1410,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCFLEECE_WT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_WT, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Current clean fleece weight of unweaned young animals by tag number
+        /// Gets the current clean fleece weight of unweaned young animals by tag number
         /// </summary>
         [Description("Current clean fleece weight of unweaned young animals by tag number")]
         [Units("kg")]
@@ -1324,15 +1424,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCFLEECE_WT, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_WT, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Current average wool fibre diameter ==================
+
         /// <summary>
-        /// Current average wool fibre diameter by group
+        /// Gets the current average wool fibre diameter by group
         /// </summary>
         [Description("Current average wool fibre diameter by group")]
         [Units("um")]
@@ -1340,14 +1441,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpFIBRE_DIAM, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFIBRE_DIAM, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Current average wool fibre diameter total
+        /// Gets the current average wool fibre diameter total
         /// </summary>
         [Description("Current average wool fibre diameter total")]
         [Units("um")]
@@ -1356,13 +1457,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpFIBRE_DIAM, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFIBRE_DIAM, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Current average wool fibre diameter by tag number
+        /// Gets the current average wool fibre diameter by tag number
         /// </summary>
         [Description("Current average wool fibre diameter by tag number")]
         [Units("um")]
@@ -1370,15 +1471,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpFIBRE_DIAM, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFIBRE_DIAM, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Current average wool fibre diameter young ==================
+
         /// <summary>
-        /// Current average wool fibre diameter of unweaned young animals by group
+        /// Gets the current average wool fibre diameter of unweaned young animals by group
         /// </summary>
         [Description("Current average wool fibre diameter of unweaned young animals by group")]
         [Units("um")]
@@ -1386,14 +1488,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpFIBRE_DIAM, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFIBRE_DIAM, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Current average wool fibre diameter of unweaned young animals total
+        /// Gets the current average wool fibre diameter of unweaned young animals total
         /// </summary>
         [Description("Current average wool fibre diameter of unweaned young animals total")]
         [Units("um")]
@@ -1402,13 +1504,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpFIBRE_DIAM, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFIBRE_DIAM, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Current average wool fibre diameter of unweaned young animals by tag number
+        /// Gets the current average wool fibre diameter of unweaned young animals by tag number
         /// </summary>
         [Description("Current average wool fibre diameter of unweaned young animals by tag number")]
         [Units("um")]
@@ -1416,15 +1518,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpFIBRE_DIAM, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFIBRE_DIAM, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== If the animals are pregnant, the number of days since conception; zero otherwise ==================
+
         /// <summary>
-        /// If the animals are pregnant, the number of days since conception; zero otherwise, by group
+        /// Gets the the pregnecy status. If the animals are pregnant, the number of days since conception; zero otherwise, by group
         /// </summary>
         [Description("If the animals are pregnant, the number of days since conception; zero otherwise, by group")]
         [Units("d")]
@@ -1432,14 +1535,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpPREGNANT, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpPREGNANT, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// If the animals are pregnant, the number of days since conception; zero otherwise, total
+        /// Gets the the pregnecy status. If the animals are pregnant, the number of days since conception; zero otherwise, total
         /// </summary>
         [Description("If the animals are pregnant, the number of days since conception; zero otherwise, total")]
         [Units("d")]
@@ -1448,13 +1551,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpPREGNANT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpPREGNANT, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// If the animals are pregnant, the number of days since conception; zero otherwise, by tag number
+        /// Gets the the pregnecy status. If the animals are pregnant, the number of days since conception; zero otherwise, by tag number
         /// </summary>
         [Description("If the animals are pregnant, the number of days since conception; zero otherwise, by tag number")]
         [Units("d")]
@@ -1462,15 +1565,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpPREGNANT, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpPREGNANT, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise ==================
+
         /// <summary>
-        /// If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, by group
+        /// Gets the lactation status. If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, by group
         /// </summary>
         [Description("If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, by group")]
         [Units("d")]
@@ -1478,14 +1582,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpLACTATING, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLACTATING, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, total
+        /// Gets the lactation status. If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, total
         /// </summary>
         [Description("If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, total")]
         [Units("d")]
@@ -1494,13 +1598,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpLACTATING, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLACTATING, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, by tag number
+        /// Gets the lactation status. If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, by tag number
         /// </summary>
         [Description("If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, by tag number")]
         [Units("d")]
@@ -1508,29 +1612,30 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpLACTATING, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLACTATING, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Number of foetuses per head ==================
+
         /// <summary>
-        /// Number of foetuses per head by group
+        /// Gets the number of foetuses per head by group
         /// </summary>
         [Description("Number of foetuses per head by group")]
         public double[] NoFoetuses
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpNO_FOETUSES, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpNO_FOETUSES, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Number of foetuses per head total
+        /// Gets the number of foetuses per head total
         /// </summary>
         [Description("Number of foetuses per head total")]
         public double NoFoetusesAll
@@ -1538,43 +1643,44 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpNO_FOETUSES, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpNO_FOETUSES, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Number of foetuses per head by tag number
+        /// Gets the number of foetuses per head by tag number
         /// </summary>
         [Description("Number of foetuses per head by tag number")]
         public double[] NoFoetusesTag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpNO_FOETUSES, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpNO_FOETUSES, false, false, true, ref values);
                 return values;
             }
         }
 
-        //AddScalarSet(ref   Idx, StockProps.prpNO_SUCKLING, "no_suckling", TTypedValue.TBaseType.ITYPE_DOUBLE, "", false, "Number of unweaned lambs or calves per head", "");
+        // AddScalarSet(ref   Idx, StockProps.prpNO_SUCKLING, "no_suckling", TTypedValue.TBaseType.ITYPE_DOUBLE, "", false, "Number of unweaned lambs or calves per head", "");
         // =========== Number of unweaned lambs or calves per head ==================
+
         /// <summary>
-        /// Number of unweaned lambs or calves per head by group
+        /// Gets the number of unweaned lambs or calves per head by group
         /// </summary>
         [Description("Number of unweaned lambs or calves per head by group")]
         public double[] NoSuckling
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpNO_SUCKLING, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpNO_SUCKLING, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Number of unweaned lambs or calves per head total
+        /// Gets the number of unweaned lambs or calves per head total
         /// </summary>
         [Description("Number of unweaned lambs or calves per head total")]
         public double NoSucklingAll
@@ -1582,42 +1688,43 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpNO_SUCKLING, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpNO_SUCKLING, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Number of unweaned lambs or calves per head by tag number
+        /// Gets the number of unweaned lambs or calves per head by tag number
         /// </summary>
         [Description("Number of unweaned lambs or calves per head by tag number")]
         public double[] NoSucklingTag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpNO_SUCKLING, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpNO_SUCKLING, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Condition score at last parturition; zero if lactating=0 ==================
+
         /// <summary>
-        /// Condition score at last parturition; zero if lactating=0, by group
+        /// Gets the condition score at last parturition; zero if lactating=0, by group
         /// </summary>
         [Description("Condition score at last parturition; zero if lactating=0, by group")]
         public double[] BirthCS
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpBIRTH_CS, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBIRTH_CS, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Condition score at last parturition; zero if lactating=0, total
+        /// Gets the condition score at last parturition; zero if lactating=0, total
         /// </summary>
         [Description("Condition score at last parturition; zero if lactating=0, total")]
         public double BirthCSAll
@@ -1625,87 +1732,88 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpBIRTH_CS, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBIRTH_CS, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Condition score at last parturition; zero if lactating=0, by tag number
+        /// Gets the condition score at last parturition; zero if lactating=0, by tag number
         /// </summary>
         [Description("Condition score at last parturition; zero if lactating=0, by tag number")]
         public double[] BirthCSTag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpBIRTH_CS, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBIRTH_CS, false, false, true, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Paddock occupied by each animal group
+        /// Gets the paddock occupied by each animal group
         /// </summary>
         [Description("Paddock occupied by each animal group")]
         public string[] Paddock
         {
             get
             {
-                string[] paddocks = new string[FModel.Count()];
-                for (int Idx = 1; Idx <= FModel.Count(); Idx++)
-                    paddocks[Idx - 1] = FModel.getInPadd((int)Idx);
+                string[] paddocks = new string[this.stockModel.Count()];
+                for (int idx = 1; idx <= this.stockModel.Count(); idx++)
+                    paddocks[idx - 1] = this.stockModel.GetInPadd((int)idx);
                 return paddocks;
             }
         }
 
         /// <summary>
-        /// Tag value assigned to each animal group
+        /// Gets the tag value assigned to each animal group
         /// </summary>
         [Description("Tag value assigned to each animal group")]
         public int[] TagNo
         {
             get
             {
-                int[] tags = new int[FModel.Count()];
-                for (int Idx = 1; Idx <= FModel.Count(); Idx++)
-                    tags[Idx - 1] = FModel.getTag((int)Idx);
+                int[] tags = new int[this.stockModel.Count()];
+                for (int idx = 1; idx <= this.stockModel.Count(); idx++)
+                    tags[idx - 1] = this.stockModel.GetTag((int)idx);
                 return tags;
             }
         }
 
         /// <summary>
-        /// Priority score assigned to each animal group; used in drafting
+        /// Gets the priority score assigned to each animal group; used in drafting
         /// </summary>
         [Description("Priority score assigned to each animal group; used in drafting")]
         public int[] Priority
         {
             get
             {
-                int[] priorities = new int[FModel.Count()];
-                for (int Idx = 1; Idx <= FModel.Count(); Idx++)
-                    priorities[Idx - 1] = FModel.getPriority((int)Idx);
+                int[] priorities = new int[this.stockModel.Count()];
+                for (int idx = 1; idx <= this.stockModel.Count(); idx++)
+                    priorities[idx - 1] = this.stockModel.GetPriority((int)idx);
                 return priorities;
             }
         }
 
         // =========== Dry sheep equivalents, based on potential intake ==================
+
         /// <summary>
-        /// Dry sheep equivalents, based on potential intake by group
+        /// Gets the dry sheep equivalents, based on potential intake by group
         /// </summary>
         [Description("Dry sheep equivalents, based on potential intake by group")]
         public double[] DSE
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpDSE, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDSE, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Dry sheep equivalents, based on potential intake total
+        /// Gets the dry sheep equivalents, based on potential intake total
         /// </summary>
         [Description("Dry sheep equivalents, based on potential intake total")]
         public double DSEAll
@@ -1713,42 +1821,43 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpDSE, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDSE, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Dry sheep equivalents, based on potential intake by tag number
+        /// Gets the dry sheep equivalents, based on potential intake by tag number
         /// </summary>
         [Description("Dry sheep equivalents, based on potential intake by tag number")]
         public double[] DSETag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpDSE, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDSE, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Dry sheep equivalents, based on potential intake young ==================
+
         /// <summary>
-        /// Dry sheep equivalents, based on potential intake of unweaned young animals by group
+        /// Gets the dry sheep equivalents, based on potential intake of unweaned young animals by group
         /// </summary>
         [Description("Dry sheep equivalents, based on potential intake of unweaned young animals by group")]
         public double[] DSEYng
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpDSE, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDSE, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Dry sheep equivalents, based on potential intake of unweaned young animals total
+        /// Gets the dry sheep equivalents, based on potential intake of unweaned young animals total
         /// </summary>
         [Description("Dry sheep equivalents, based on potential intake of unweaned young animals total")]
         public double DSEYngAll
@@ -1756,29 +1865,30 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpDSE, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDSE, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Dry sheep equivalents, based on potential intake of unweaned young animals by tag number
+        /// Gets the dry sheep equivalents, based on potential intake of unweaned young animals by tag number
         /// </summary>
         [Description("Dry sheep equivalents, based on potential intake of unweaned young animals by tag number")]
         public double[] DSEYngTag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpDSE, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDSE, true, false, true, ref values);
                 return values;
             }
         }
 
-        //AddScalarSet(ref   Idx, StockProps., "wt_change", TTypedValue.TBaseType.ITYPE_DOUBLE, "kg/d", true, "Rate of change of base weight of each animal group", "");
+        // AddScalarSet(ref   Idx, StockProps., "wt_change", TTypedValue.TBaseType.ITYPE_DOUBLE, "kg/d", true, "Rate of change of base weight of each animal group", "");
         // =========== Rate of change of base weight of each animal group ==================
+
         /// <summary>
-        /// Rate of change of base weight of each animal by group
+        /// Gets the rate of change of base weight of each animal by group
         /// </summary>
         [Description("Rate of change of base weight of each animal by group")]
         [Units("kg/d")]
@@ -1786,14 +1896,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpWT_CHANGE, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpWT_CHANGE, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Rate of change of base weight of each animal total
+        /// Gets the rate of change of base weight of each animal total
         /// </summary>
         [Description("Rate of change of base weight of each animal total")]
         [Units("kg/d")]
@@ -1802,13 +1912,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpWT_CHANGE, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpWT_CHANGE, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Rate of change of base weight of each animal by tag number
+        /// Gets the rate of change of base weight of each animal by tag number
         /// </summary>
         [Description("Rate of change of base weight of each animal by tag number")]
         [Units("kg/d")]
@@ -1816,15 +1926,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpWT_CHANGE, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpWT_CHANGE, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Rate of change of base weight of each animal group young ==================
+
         /// <summary>
-        /// Rate of change of base weight of unweaned young animals by group
+        /// Gets the rate of change of base weight of unweaned young animals by group
         /// </summary>
         [Description("Rate of change of base weight of unweaned young animals by group")]
         [Units("kg/d")]
@@ -1832,14 +1943,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpWT_CHANGE, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpWT_CHANGE, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Rate of change of base weight of unweaned young animals total
+        /// Gets the rate of change of base weight of unweaned young animals total
         /// </summary>
         [Description("Rate of change of base weight of unweaned young animals total")]
         [Units("kg/d")]
@@ -1848,13 +1959,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpWT_CHANGE, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpWT_CHANGE, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Rate of change of base weight of unweaned young animals by tag number
+        /// Gets the rate of change of base weight of unweaned young animals by tag number
         /// </summary>
         [Description("Rate of change of base weight of unweaned young animals by tag number")]
         [Units("kg/d")]
@@ -1862,273 +1973,280 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpWT_CHANGE, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpWT_CHANGE, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Total intake per head of dry matter and nutrients by each animal group ==================
+
         /// <summary>
-        /// Total intake per head of dry matter and nutrients by each animal group
+        /// Gets the total intake per head of dry matter and nutrients by each animal group
         /// </summary>
         [Description("Total intake per head of dry matter and nutrients by each animal group")]
-        public TDMPoolHead[] Intake
+        public DMPoolHead[] Intake
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.Count()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE, false, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE, false, false, false, ref pools);
                 return pools;
             }
         }
 
         /// <summary>
-        /// Total intake per head of dry matter and nutrients
+        /// Gets the total intake per head of dry matter and nutrients
         /// </summary>
         [Description("Total intake per head of dry matter and nutrients")]
-        public TDMPoolHead IntakeAll
+        public DMPoolHead IntakeAll
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[1];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE, false, true, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[1];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE, false, true, false, ref pools);
                 return pools[0];
             }
         }
 
         /// <summary>
-        /// Total intake per head of dry matter and nutrients by tag
+        /// Gets the total intake per head of dry matter and nutrients by tag
         /// </summary>
         [Description("Total intake per head of dry matter and nutrients by tag")]
-        public TDMPoolHead[] IntakeTag
+        public DMPoolHead[] IntakeTag
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.iHighestTag()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE, false, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE, false, false, true, ref pools);
                 return pools;
             }
         }
 
         // =========== Total intake per head of dry matter and nutrients of unweaned animals by group ==================
+
         /// <summary>
-        /// Total intake per head of dry matter and nutrients of unweaned animals by group
+        /// Gets the total intake per head of dry matter and nutrients of unweaned animals by group
         /// </summary>
         [Description("Total intake per head of dry matter and nutrients of unweaned animals by group")]
-        public TDMPoolHead[] IntakeYng
+        public DMPoolHead[] IntakeYng
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.Count()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE, true, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE, true, false, false, ref pools);
                 return pools;
             }
         }
 
         /// <summary>
-        /// Total intake per head of dry matter and nutrients of unweaned animals
+        /// Gets the total intake per head of dry matter and nutrients of unweaned animals
         /// </summary>
         [Description("Total intake per head of dry matter and nutrients of unweaned animals")]
-        public TDMPoolHead IntakeYngAll
+        public DMPoolHead IntakeYngAll
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[1];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE, true, true, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[1];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE, true, true, false, ref pools);
                 return pools[0];
             }
         }
 
         /// <summary>
-        /// Total intake per head of dry matter and nutrients of unweaned animals by tag
+        /// Gets the total intake per head of dry matter and nutrients of unweaned animals by tag
         /// </summary>
         [Description("Total intake per head of dry matter and nutrients of unweaned animals by tag")]
-        public TDMPoolHead[] IntakeYngTag
+        public DMPoolHead[] IntakeYngTag
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.iHighestTag()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE, true, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE, true, false, true, ref pools);
                 return pools;
             }
         }
 
         // =========== Intake per head of pasture dry matter and nutrients by each animal group ==================
+
         /// <summary>
-        /// Intake per head of pasture dry matter and nutrients by each animal group
+        /// Gets the intake per head of pasture dry matter and nutrients by each animal group
         /// </summary>
         [Description("Intake per head of pasture dry matter and nutrients by each animal group")]
-        public TDMPoolHead[] PastIntake
+        public DMPoolHead[] PastIntake
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.Count()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE_PAST, false, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_PAST, false, false, false, ref pools);
                 return pools;
             }
         }
 
         /// <summary>
-        /// Intake per head of pasture dry matter and nutrients
+        /// Gets the intake per head of pasture dry matter and nutrients
         /// </summary>
         [Description("Intake per head of pasture dry matter and nutrients")]
-        public TDMPoolHead PastIntakeAll
+        public DMPoolHead PastIntakeAll
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[1];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE_PAST, false, true, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[1];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_PAST, false, true, false, ref pools);
                 return pools[0];
             }
         }
 
         /// <summary>
-        /// Intake per head of pasture dry matter and nutrients by tag
+        /// Gets the intake per head of pasture dry matter and nutrients by tag
         /// </summary>
         [Description("Intake per head of pasture dry matter and nutrients by tag")]
-        public TDMPoolHead[] PastIntakeTag
+        public DMPoolHead[] PastIntakeTag
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.iHighestTag()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE_PAST, false, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_PAST, false, false, true, ref pools);
                 return pools;
             }
         }
 
         // =========== Intake per head of pasture dry matter and nutrients of unweaned animals by group ==================
+
         /// <summary>
-        /// Intake per head of pasture dry matter and nutrients of unweaned animals by group
+        /// Gets the intake per head of pasture dry matter and nutrients of unweaned animals by group
         /// </summary>
         [Description("Intake per head of pasture dry matter and nutrients of unweaned animals by group")]
-        public TDMPoolHead[] PastIntakeYng
+        public DMPoolHead[] PastIntakeYng
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.Count()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE_PAST, true, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_PAST, true, false, false, ref pools);
                 return pools;
             }
         }
 
         /// <summary>
-        /// Intake per head of pasture dry matter and nutrients of unweaned animals
+        /// Gets the intake per head of pasture dry matter and nutrients of unweaned animals
         /// </summary>
         [Description("Intake per head of pasture dry matter and nutrients of unweaned animals")]
-        public TDMPoolHead PastIntakeYngAll
+        public DMPoolHead PastIntakeYngAll
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[1];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE_PAST, true, true, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[1];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_PAST, true, true, false, ref pools);
                 return pools[0];
             }
         }
 
         /// <summary>
-        /// Intake per head of pasture dry matter and nutrients of unweaned animals by tag
+        /// Gets the intake per head of pasture dry matter and nutrients of unweaned animals by tag
         /// </summary>
         [Description("Intake per head of pasture dry matter and nutrients of unweaned animals by tag")]
-        public TDMPoolHead[] PastIntakeYngTag
+        public DMPoolHead[] PastIntakeYngTag
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.iHighestTag()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE_PAST, true, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_PAST, true, false, true, ref pools);
                 return pools;
             }
         }
 
         // =========== Intake per head of supplement dry matter and nutrients by each animal group ==================
+
         /// <summary>
-        /// Intake per head of supplement dry matter and nutrients by each animal group
+        /// Gets the intake per head of supplement dry matter and nutrients by each animal group
         /// </summary>
         [Description("Intake per head of supplement dry matter and nutrients by each animal group")]
-        public TDMPoolHead[] SuppIntake
+        public DMPoolHead[] SuppIntake
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.Count()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE_SUPP, false, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_SUPP, false, false, false, ref pools);
                 return pools;
             }
         }
 
         /// <summary>
-        /// Intake per head of supplement dry matter and nutrients
+        /// Gets the intake per head of supplement dry matter and nutrients
         /// </summary>
         [Description("Intake per head of supplement dry matter and nutrients")]
-        public TDMPoolHead SuppIntakeAll
+        public DMPoolHead SuppIntakeAll
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[1];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE_SUPP, false, true, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[1];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_SUPP, false, true, false, ref pools);
                 return pools[0];
             }
         }
 
         /// <summary>
-        /// Intake per head of supplement dry matter and nutrients by tag
+        /// Gets the intake per head of supplement dry matter and nutrients by tag
         /// </summary>
         [Description("Intake per head of supplement dry matter and nutrients by tag")]
-        public TDMPoolHead[] SuppIntakeTag
+        public DMPoolHead[] SuppIntakeTag
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.iHighestTag()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE_SUPP, false, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_SUPP, false, false, true, ref pools);
                 return pools;
             }
         }
 
         // =========== Intake per head of supplement dry matter and nutrients of unweaned animals by group ==================
+
         /// <summary>
-        /// Intake per head of supplement dry matter and nutrients of unweaned animals by group
+        /// Gets the intake per head of supplement dry matter and nutrients of unweaned animals by group
         /// </summary>
         [Description("Intake per head of supplement dry matter and nutrients of unweaned animals by group")]
-        public TDMPoolHead[] SuppIntakeYng
+        public DMPoolHead[] SuppIntakeYng
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.Count()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE_SUPP, true, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_SUPP, true, false, false, ref pools);
                 return pools;
             }
         }
 
         /// <summary>
-        /// Intake per head of supplement dry matter and nutrients of unweaned animals
+        /// Gets the intake per head of supplement dry matter and nutrients of unweaned animals
         /// </summary>
         [Description("Intake per head of supplement dry matter and nutrients of unweaned animals")]
-        public TDMPoolHead SuppIntakeYngAll
+        public DMPoolHead SuppIntakeYngAll
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[1];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE_SUPP, true, true, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[1];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_SUPP, true, true, false, ref pools);
                 return pools[0];
             }
         }
 
         /// <summary>
-        /// Intake per head of supplement dry matter and nutrients of unweaned animals by tag
+        /// Gets the intake per head of supplement dry matter and nutrients of unweaned animals by tag
         /// </summary>
         [Description("Intake per head of supplement dry matter and nutrients of unweaned animals by tag")]
-        public TDMPoolHead[] SuppIntakeYngTag
+        public DMPoolHead[] SuppIntakeYngTag
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.iHighestTag()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINTAKE_SUPP, true, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_SUPP, true, false, true, ref pools);
                 return pools;
             }
         }
 
         // =========== Intake per head of metabolizable energy ==================
+
         /// <summary>
-        /// Intake per head of metabolizable energy by group
+        /// Gets the intake per head of metabolizable energy by group
         /// </summary>
         [Description("Intake per head of metabolizable energy by group")]
         [Units("MJ/d")]
@@ -2136,14 +2254,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpME_INTAKE, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpME_INTAKE, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Intake per head of metabolizable energy total
+        /// Gets the intake per head of metabolizable energy total
         /// </summary>
         [Description("Intake per head of metabolizable energy total")]
         [Units("MJ/d")]
@@ -2152,13 +2270,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpME_INTAKE, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpME_INTAKE, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Intake per head of metabolizable energy by tag number
+        /// Gets the intake per head of metabolizable energy by tag number
         /// </summary>
         [Description("Intake per head of metabolizable energy by tag number")]
         [Units("MJ/d")]
@@ -2166,15 +2284,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpME_INTAKE, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpME_INTAKE, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Intake per head of metabolizable energy of young ==================
+
         /// <summary>
-        /// Intake per head of metabolizable energy of unweaned young animals by group
+        /// Gets the intake per head of metabolizable energy of unweaned young animals by group
         /// </summary>
         [Description("Intake per head of metabolizable energy of unweaned young animals by group")]
         [Units("MJ/d")]
@@ -2182,14 +2301,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpME_INTAKE, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpME_INTAKE, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Intake per head of metabolizable energy of unweaned young animals total
+        /// Gets the intake per head of metabolizable energy of unweaned young animals total
         /// </summary>
         [Description("Intake per head of metabolizable energy of unweaned young animals total")]
         [Units("MJ/d")]
@@ -2198,13 +2317,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpME_INTAKE, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpME_INTAKE, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Intake per head of metabolizable energy of unweaned young animals by tag number
+        /// Gets the intake per head of metabolizable energy of unweaned young animals by tag number
         /// </summary>
         [Description("Intake per head of metabolizable energy of unweaned young animals by tag number")]
         [Units("MJ/d")]
@@ -2212,15 +2331,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpME_INTAKE, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpME_INTAKE, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Crude protein intake per head ==================
+
         /// <summary>
-        /// Crude protein intake per head by group
+        /// Gets the crude protein intake per head by group
         /// </summary>
         [Description("Crude protein intake per head by group")]
         [Units("kg/d")]
@@ -2228,14 +2348,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCPI_INTAKE, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCPI_INTAKE, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Crude protein intake per head total
+        /// Gets the crude protein intake per head total
         /// </summary>
         [Description("Crude protein intake per head total")]
         [Units("kg/d")]
@@ -2244,13 +2364,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCPI_INTAKE, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCPI_INTAKE, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Crude protein intake per head by tag number
+        /// Gets the crude protein intake per head by tag number
         /// </summary>
         [Description("Crude protein intake per head by tag number")]
         [Units("kg/d")]
@@ -2258,15 +2378,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCPI_INTAKE, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCPI_INTAKE, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Crude protein intake per head of young ==================
+
         /// <summary>
-        /// Crude protein intake per head of unweaned young animals by group
+        /// Gets the crude protein intake per head of unweaned young animals by group
         /// </summary>
         [Description("Crude protein intake per head of unweaned young animals by group")]
         [Units("kg/d")]
@@ -2274,14 +2395,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCPI_INTAKE, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCPI_INTAKE, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Crude protein intake per head of unweaned young animals total
+        /// Gets the crude protein intake per head of unweaned young animals total
         /// </summary>
         [Description("Crude protein intake per head of unweaned young animals total")]
         [Units("kg/d")]
@@ -2290,13 +2411,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCPI_INTAKE, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCPI_INTAKE, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Crude protein intake per head of unweaned young animals by tag number
+        /// Gets the crude protein intake per head of unweaned young animals by tag number
         /// </summary>
         [Description("Crude protein intake per head of unweaned young animals by tag number")]
         [Units("kg/d")]
@@ -2304,15 +2425,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCPI_INTAKE, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCPI_INTAKE, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Growth rate of clean fleece ==================
+
         /// <summary>
-        /// Growth rate of clean fleece by group
+        /// Gets the growth rate of clean fleece by group
         /// </summary>
         [Description("Growth rate of clean fleece by group")]
         [Units("kg/d")]
@@ -2320,14 +2442,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCFLEECE_GROWTH, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_GROWTH, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Growth rate of clean fleece total
+        /// Gets the growth rate of clean fleece total
         /// </summary>
         [Description("Growth rate of clean fleece total")]
         [Units("kg/d")]
@@ -2336,13 +2458,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCFLEECE_GROWTH, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_GROWTH, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Growth rate of clean fleece by tag number
+        /// Gets the growth rate of clean fleece by tag number
         /// </summary>
         [Description("Growth rate of clean fleece by tag number")]
         [Units("kg/d")]
@@ -2350,15 +2472,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCFLEECE_GROWTH, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_GROWTH, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Growth rate of clean fleece of young ==================
+
         /// <summary>
-        /// Growth rate of clean fleece of unweaned young animals by group
+        /// Gets the growth rate of clean fleece of unweaned young animals by group
         /// </summary>
         [Description("Growth rate of clean fleece of unweaned young animals by group")]
         [Units("kg/d")]
@@ -2366,14 +2489,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCFLEECE_GROWTH, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_GROWTH, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Growth rate of clean fleece of unweaned young animals total
+        /// Gets the growth rate of clean fleece of unweaned young animals total
         /// </summary>
         [Description("Growth rate of clean fleece of unweaned young animals total")]
         [Units("kg/d")]
@@ -2382,13 +2505,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCFLEECE_GROWTH, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_GROWTH, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Growth rate of clean fleece of unweaned young animals by tag number
+        /// Gets the growth rate of clean fleece of unweaned young animals by tag number
         /// </summary>
         [Description("Growth rate of clean fleece of unweaned young animals by tag number")]
         [Units("kg/d")]
@@ -2396,15 +2519,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCFLEECE_GROWTH, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_GROWTH, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Fibre diameter of the current day's wool growth ==================
+
         /// <summary>
-        /// Fibre diameter of the current day's wool growth by group
+        /// Gets the fibre diameter of the current day's wool growth by group
         /// </summary>
         [Description("Fibre diameter of the current day's wool growth by group")]
         [Units("um")]
@@ -2412,14 +2536,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpDAY_FIBRE_DIAM, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDAY_FIBRE_DIAM, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Fibre diameter of the current day's wool growth total
+        /// Gets the fibre diameter of the current day's wool growth total
         /// </summary>
         [Description("Fibre diameter of the current day's wool growth total")]
         [Units("um")]
@@ -2428,13 +2552,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpDAY_FIBRE_DIAM, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDAY_FIBRE_DIAM, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Fibre diameter of the current day's wool growth by tag number
+        /// Gets the fibre diameter of the current day's wool growth by tag number
         /// </summary>
         [Description("Fibre diameter of the current day's wool growth by tag number")]
         [Units("um")]
@@ -2442,15 +2566,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpDAY_FIBRE_DIAM, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDAY_FIBRE_DIAM, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Fibre diameter of the current day's wool growth of young ==================
+
         /// <summary>
-        /// Fibre diameter of the current day's wool growth of unweaned young animals by group
+        /// Gets the fibre diameter of the current day's wool growth of unweaned young animals by group
         /// </summary>
         [Description("Fibre diameter of the current day's wool growth of unweaned young animals by group")]
         [Units("um")]
@@ -2458,14 +2583,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpDAY_FIBRE_DIAM, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDAY_FIBRE_DIAM, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Fibre diameter of the current day's wool growth of unweaned young animals total
+        /// Gets the fibre diameter of the current day's wool growth of unweaned young animals total
         /// </summary>
         [Description("Fibre diameter of the current day's wool growth of unweaned young animals total")]
         [Units("um")]
@@ -2474,13 +2599,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpDAY_FIBRE_DIAM, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDAY_FIBRE_DIAM, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Fibre diameter of the current day's wool growth of unweaned young animals by tag number
+        /// Gets the fibre diameter of the current day's wool growth of unweaned young animals by tag number
         /// </summary>
         [Description("Fibre diameter of the current day's wool growth of unweaned young animals by tag number")]
         [Units("um")]
@@ -2488,15 +2613,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpDAY_FIBRE_DIAM, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDAY_FIBRE_DIAM, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Weight of milk produced per head, on a 4pc fat-corrected basis ==================
+
         /// <summary>
-        /// Weight of milk produced per head, on a 4pc fat-corrected basis by group
+        /// Gets the weight of milk produced per head, on a 4pc fat-corrected basis by group
         /// </summary>
         [Description("Weight of milk produced per head, on a 4pc fat-corrected basis by group")]
         [Units("kg/d")]
@@ -2504,14 +2630,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpMILK_WT, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMILK_WT, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Weight of milk produced per head, on a 4pc fat-corrected basis total
+        /// Gets the weight of milk produced per head, on a 4pc fat-corrected basis total
         /// </summary>
         [Description("Weight of milk produced per head, on a 4pc fat-corrected basis total")]
         [Units("kg/d")]
@@ -2520,13 +2646,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpMILK_WT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMILK_WT, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Weight of milk produced per head, on a 4pc fat-corrected basis by tag number
+        /// Gets the weight of milk produced per head, on a 4pc fat-corrected basis by tag number
         /// </summary>
         [Description("Weight of milk produced per head, on a 4pc fat-corrected basis by tag number")]
         [Units("kg/d")]
@@ -2534,15 +2660,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpMILK_WT, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMILK_WT, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Metabolizable energy produced in milk (per head) by each animal group ==================
+
         /// <summary>
-        /// Metabolizable energy produced in milk (per head) by each animal group by group
+        /// Gets the metabolizable energy produced in milk (per head) by each animal group by group
         /// </summary>
         [Description("Metabolizable energy produced in milk (per head) by each animal group by group")]
         [Units("MJ/d")]
@@ -2550,14 +2677,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpMILK_ME, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMILK_ME, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Metabolizable energy produced in milk (per head) by each animal group total
+        /// Gets the metabolizable energy produced in milk (per head) by each animal group total
         /// </summary>
         [Description("Metabolizable energy produced in milk (per head) by each animal group total")]
         [Units("MJ/d")]
@@ -2566,13 +2693,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpMILK_ME, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMILK_ME, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Metabolizable energy produced in milk (per head) by each animal group by tag number
+        /// Gets the metabolizable energy produced in milk (per head) by each animal group by tag number
         /// </summary>
         [Description("Metabolizable energy produced in milk (per head) by each animal group by tag number")]
         [Units("MJ/d")]
@@ -2580,15 +2707,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpMILK_ME, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMILK_ME, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Nitrogen retained within the animals, on a per-head basis ==================
+
         /// <summary>
-        /// Nitrogen retained within the animals, on a per-head basis by group
+        /// Gets the nitrogen retained within the animals, on a per-head basis by group
         /// </summary>
         [Description("Nitrogen retained within the animals, on a per-head basis by group")]
         [Units("kg/d")]
@@ -2596,14 +2724,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_N, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_N, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Nitrogen retained within the animals, on a per-head basis total
+        /// Gets the nitrogen retained within the animals, on a per-head basis total
         /// </summary>
         [Description("Nitrogen retained within the animals, on a per-head basis total")]
         [Units("kg/d")]
@@ -2612,13 +2740,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_N, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_N, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Nitrogen retained within the animals, on a per-head basis by tag number
+        /// Gets the nitrogen retained within the animals, on a per-head basis by tag number
         /// </summary>
         [Description("Nitrogen retained within the animals, on a per-head basis by tag number")]
         [Units("kg/d")]
@@ -2626,15 +2754,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_N, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_N, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Nitrogen retained within the animals, on a per-head basis of young ==================
+
         /// <summary>
-        /// Nitrogen retained within the animals, on a per-head basis of unweaned young animals by group
+        /// Gets the nitrogen retained within the animals, on a per-head basis of unweaned young animals by group
         /// </summary>
         [Description("Nitrogen retained within the animals, on a per-head basis of unweaned young animals by group")]
         [Units("kg/d")]
@@ -2642,14 +2771,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_N, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_N, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Nitrogen retained within the animals, on a per-head basis of unweaned young animals total
+        /// Gets the nitrogen retained within the animals, on a per-head basis of unweaned young animals total
         /// </summary>
         [Description("Nitrogen retained within the animals, on a per-head basis of unweaned young animals total")]
         [Units("kg/d")]
@@ -2658,13 +2787,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_N, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_N, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Nitrogen retained within the animals, on a per-head basis of unweaned young animals by tag number
+        /// Gets the nitrogen retained within the animals, on a per-head basis of unweaned young animals by tag number
         /// </summary>
         [Description("Nitrogen retained within the animals, on a per-head basis of unweaned young animals by tag number")]
         [Units("kg/d")]
@@ -2672,16 +2801,17 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_N, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_N, true, false, true, ref values);
                 return values;
             }
         }
 
-        //AddScalarSet(ref   Idx, StockProps., "retained_p", TTypedValue.TBaseType.ITYPE_DOUBLE, "", true, "", "");
+        // AddScalarSet(ref   Idx, StockProps., "retained_p", TTypedValue.TBaseType.ITYPE_DOUBLE, "", true, "", "");
         // =========== Phosphorus retained within the animals, on a per-head basis ==================
+
         /// <summary>
-        /// Phosphorus retained within the animals, on a per-head basis by group
+        /// Gets the phosphorus retained within the animals, on a per-head basis by group
         /// </summary>
         [Description("Phosphorus retained within the animals, on a per-head basis by group")]
         [Units("kg/d")]
@@ -2689,14 +2819,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_P, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_P, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Phosphorus retained within the animals, on a per-head basis total
+        /// Gets the phosphorus retained within the animals, on a per-head basis total
         /// </summary>
         [Description("Phosphorus retained within the animals, on a per-head basis total")]
         [Units("kg/d")]
@@ -2705,13 +2835,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_P, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_P, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Phosphorus retained within the animals, on a per-head basis by tag number
+        /// Gets the phosphorus retained within the animals, on a per-head basis by tag number
         /// </summary>
         [Description("Phosphorus retained within the animals, on a per-head basis by tag number")]
         [Units("kg/d")]
@@ -2719,15 +2849,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_P, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_P, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Phosphorus retained within the animals, on a per-head basis of young ==================
+
         /// <summary>
-        /// Phosphorus retained within the animals, on a per-head basis of unweaned young animals by group
+        /// Gets the phosphorus retained within the animals, on a per-head basis of unweaned young animals by group
         /// </summary>
         [Description("Phosphorus retained within the animals, on a per-head basis of unweaned young animals by group")]
         [Units("kg/d")]
@@ -2735,14 +2866,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_P, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_P, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Phosphorus retained within the animals, on a per-head basis of unweaned young animals total
+        /// Gets the phosphorus retained within the animals, on a per-head basis of unweaned young animals total
         /// </summary>
         [Description("Phosphorus retained within the animals, on a per-head basis of unweaned young animals total")]
         [Units("kg/d")]
@@ -2751,13 +2882,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_P, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_P, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Phosphorus retained within the animals, on a per-head basis of unweaned young animals by tag number
+        /// Gets the phosphorus retained within the animals, on a per-head basis of unweaned young animals by tag number
         /// </summary>
         [Description("Phosphorus retained within the animals, on a per-head basis of unweaned young animals by tag number")]
         [Units("kg/d")]
@@ -2765,30 +2896,30 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_P, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_P, true, false, true, ref values);
                 return values;
             }
         }
 
-
         // =========== Sulphur retained within the animals, on a per-head basis ==================
+
         /// <summary>
-        /// Sulphur retained within the animals, on a per-head basis by group
+        /// Gets the sulphur retained within the animals, on a per-head basis by group
         /// </summary>
         [Description("Sulphur retained within the animals, on a per-head basis by group")]
         public double[] RetainedS
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_S, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_S, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Sulphur retained within the animals, on a per-head basis total
+        /// Gets the sulphur retained within the animals, on a per-head basis total
         /// </summary>
         [Description("Sulphur retained within the animals, on a per-head basis total")]
         [Units("kg/d")]
@@ -2797,13 +2928,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_S, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_S, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Sulphur retained within the animals, on a per-head basis by tag number
+        /// Gets the sulphur retained within the animals, on a per-head basis by tag number
         /// </summary>
         [Description("Sulphur retained within the animals, on a per-head basis by tag number")]
         [Units("kg/d")]
@@ -2811,15 +2942,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_S, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_S, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Sulphur retained within the animals, on a per-head basis of young ==================
+
         /// <summary>
-        /// Sulphur retained within the animals, on a per-head basis of unweaned young animals by group
+        /// Gets the sulphur retained within the animals, on a per-head basis of unweaned young animals by group
         /// </summary>
         [Description("Sulphur retained within the animals, on a per-head basis of unweaned young animals by group")]
         [Units("kg/d")]
@@ -2827,14 +2959,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_S, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_S, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Sulphur retained within the animals, on a per-head basis of unweaned young animals total
+        /// Gets the sulphur retained within the animals, on a per-head basis of unweaned young animals total
         /// </summary>
         [Description("Sulphur retained within the animals, on a per-head basis of unweaned young animals total")]
         [Units("kg/d")]
@@ -2843,13 +2975,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_S, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_S, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Sulphur retained within the animals, on a per-head basis of unweaned young animals by tag number
+        /// Gets the sulphur retained within the animals, on a per-head basis of unweaned young animals by tag number
         /// </summary>
         [Description("Sulphur retained within the animals, on a per-head basis of unweaned young animals by tag number")]
         [Units("kg/d")]
@@ -2857,237 +2989,242 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRETAINED_S, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_S, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Faecal dry matter and nutrients per head ==================
+
         /// <summary>
-        /// Faecal dry matter and nutrients per head by each animal group
+        /// Gets the faecal dry matter and nutrients per head by each animal group
         /// </summary>
         [Description("Faecal dry matter and nutrients per head by each animal group")]
-        public TDMPoolHead[] Faeces
+        public DMPoolHead[] Faeces
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.Count()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpFAECES, false, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpFAECES, false, false, false, ref pools);
                 return pools;
             }
         }
 
         /// <summary>
-        /// Faecal dry matter and nutrients per head
+        /// Gets the faecal dry matter and nutrients per head
         /// </summary>
         [Description("Faecal dry matter and nutrients per head")]
-        public TDMPoolHead FaecesAll
+        public DMPoolHead FaecesAll
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[1];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpFAECES, false, true, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[1];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpFAECES, false, true, false, ref pools);
                 return pools[0];
             }
         }
 
         /// <summary>
-        /// Faecal dry matter and nutrients per head by tag
+        /// Gets the faecal dry matter and nutrients per head by tag
         /// </summary>
         [Description("Faecal dry matter and nutrients per head by tag")]
-        public TDMPoolHead[] FaecesTag
+        public DMPoolHead[] FaecesTag
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.iHighestTag()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpFAECES, false, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpFAECES, false, false, true, ref pools);
                 return pools;
             }
         }
 
         // =========== Faecal dry matter and nutrients per head of unweaned animals ==================
+
         /// <summary>
-        /// Faecal dry matter and nutrients per head of unweaned animals by group
+        /// Gets the faecal dry matter and nutrients per head of unweaned animals by group
         /// </summary>
         [Description("Faecal dry matter and nutrients per head of unweaned animals by group")]
-        public TDMPoolHead[] FaecesYng
+        public DMPoolHead[] FaecesYng
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.Count()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpFAECES, true, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpFAECES, true, false, false, ref pools);
                 return pools;
             }
         }
 
         /// <summary>
-        /// Faecal dry matter and nutrients per head of unweaned animals
+        /// Gets the faecal dry matter and nutrients per head of unweaned animals
         /// </summary>
         [Description("Faecal dry matter and nutrients per head of unweaned animals")]
-        public TDMPoolHead FaecesYngAll
+        public DMPoolHead FaecesYngAll
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[1];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpFAECES, true, true, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[1];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpFAECES, true, true, false, ref pools);
                 return pools[0];
             }
         }
 
         /// <summary>
-        /// Faecal dry matter and nutrients per head of unweaned animals by tag
+        /// Gets the faecal dry matter and nutrients per head of unweaned animals by tag
         /// </summary>
         [Description("Faecal dry matter and nutrients per head of unweaned animals by tag")]
-        public TDMPoolHead[] FaecesYngTag
+        public DMPoolHead[] FaecesYngTag
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.iHighestTag()];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpFAECES, true, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpFAECES, true, false, true, ref pools);
                 return pools;
             }
         }
 
         // =========== Inorganic nutrients excreted in faeces, per head ==================
+
         /// <summary>
-        /// Inorganic nutrients excreted in faeces, per head by each animal group
+        /// Gets the inorganic nutrients excreted in faeces, per head by each animal group
         /// </summary>
         [Description("Inorganic nutrients excreted in faeces, per head by each animal group")]
-        public TInorgFaeces[] FaecesInorg
+        public InorgFaeces[] FaecesInorg
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.Count()];
-                TInorgFaeces[] inorgpools = new TInorgFaeces[pools.Length];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINORG_FAECES, false, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
+                InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINORG_FAECES, false, false, false, ref pools);
                 for (int i = 0; i < pools.Length; i++)
                 {
-                    inorgpools[i].n = pools[i].n;
-                    inorgpools[i].p = pools[i].p;
-                    inorgpools[i].s = pools[i].s;
+                    inorgpools[i].N = pools[i].N;
+                    inorgpools[i].P = pools[i].P;
+                    inorgpools[i].S = pools[i].S;
                 }
                 return inorgpools;
             }
         }
 
         /// <summary>
-        /// Inorganic nutrients excreted in faeces, per head
+        /// Gets the inorganic nutrients excreted in faeces, per head
         /// </summary>
         [Description("Inorganic nutrients excreted in faeces, per head")]
-        public TInorgFaeces FaecesInorgAll
+        public InorgFaeces FaecesInorgAll
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[1];
-                TInorgFaeces[] inorgpools = new TInorgFaeces[pools.Length];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINORG_FAECES, false, true, false, ref pools);
-                inorgpools[0].n = pools[0].n;
-                inorgpools[0].p = pools[0].p;
-                inorgpools[0].s = pools[0].s;
+                DMPoolHead[] pools = new DMPoolHead[1];
+                InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINORG_FAECES, false, true, false, ref pools);
+                inorgpools[0].N = pools[0].N;
+                inorgpools[0].P = pools[0].P;
+                inorgpools[0].S = pools[0].S;
                 return inorgpools[0];
             }
         }
 
         /// <summary>
-        /// Inorganic nutrients excreted in faeces, per head by tag
+        /// Gets the inorganic nutrients excreted in faeces, per head by tag
         /// </summary>
         [Description("Inorganic nutrients excreted in faeces, per head by tag")]
-        public TInorgFaeces[] FaecesInorgTag
+        public InorgFaeces[] FaecesInorgTag
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.iHighestTag()];
-                TInorgFaeces[] inorgpools = new TInorgFaeces[pools.Length];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINORG_FAECES, false, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
+                InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINORG_FAECES, false, false, true, ref pools);
                 for (int i = 0; i < pools.Length; i++)
                 {
-                    inorgpools[i].n = pools[i].n;
-                    inorgpools[i].p = pools[i].p;
-                    inorgpools[i].s = pools[i].s;
+                    inorgpools[i].N = pools[i].N;
+                    inorgpools[i].P = pools[i].P;
+                    inorgpools[i].S = pools[i].S;
                 }
                 return inorgpools;
             }
         }
 
         // =========== Inorganic nutrients excreted in faeces, per head of unweaned animals ==================
+
         /// <summary>
-        /// Inorganic nutrients excreted in faeces, per head of unweaned animals by group
+        /// Gets the inorganic nutrients excreted in faeces, per head of unweaned animals by group
         /// </summary>
         [Description("Inorganic nutrients excreted in faeces, per head of unweaned animals by group")]
-        public TInorgFaeces[] FaecesInorgYng
+        public InorgFaeces[] FaecesInorgYng
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.Count()];
-                TInorgFaeces[] inorgpools = new TInorgFaeces[pools.Length];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINORG_FAECES, true, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
+                InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINORG_FAECES, true, false, false, ref pools);
                 for (int i = 0; i < pools.Length; i++)
                 {
-                    inorgpools[i].n = pools[i].n;
-                    inorgpools[i].p = pools[i].p;
-                    inorgpools[i].s = pools[i].s;
+                    inorgpools[i].N = pools[i].N;
+                    inorgpools[i].P = pools[i].P;
+                    inorgpools[i].S = pools[i].S;
                 }
                 return inorgpools;
             }
         }
 
         /// <summary>
-        /// Inorganic nutrients excreted in faeces, per head of unweaned animals
+        /// Gets the inorganic nutrients excreted in faeces, per head of unweaned animals
         /// </summary>
         [Description("Inorganic nutrients excreted in faeces, per head of unweaned animals")]
-        public TInorgFaeces FaecesInorgYngAll
+        public InorgFaeces FaecesInorgYngAll
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[1];
-                TInorgFaeces[] inorgpools = new TInorgFaeces[pools.Length];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINORG_FAECES, true, true, false, ref pools);
-                inorgpools[0].n = pools[0].n;
-                inorgpools[0].p = pools[0].p;
-                inorgpools[0].s = pools[0].s;
+                DMPoolHead[] pools = new DMPoolHead[1];
+                InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINORG_FAECES, true, true, false, ref pools);
+                inorgpools[0].N = pools[0].N;
+                inorgpools[0].P = pools[0].P;
+                inorgpools[0].S = pools[0].S;
                 return inorgpools[0];
             }
         }
 
         /// <summary>
-        /// Inorganic nutrients excreted in faeces, per head of unweaned animals by tag
+        /// Gets the inorganic nutrients excreted in faeces, per head of unweaned animals by tag
         /// </summary>
         [Description("Inorganic nutrients excreted in faeces, per head of unweaned animals by tag")]
-        public TInorgFaeces[] FaecesInorgYngTag
+        public InorgFaeces[] FaecesInorgYngTag
         {
             get
             {
-                TDMPoolHead[] pools = new TDMPoolHead[FModel.iHighestTag()];
-                TInorgFaeces[] inorgpools = new TInorgFaeces[pools.Length];
-                StockVars.PopulateDMPoolValue(FModel, StockProps.prpINORG_FAECES, true, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
+                InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
+                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINORG_FAECES, true, false, true, ref pools);
                 for (int i = 0; i < pools.Length; i++)
                 {
-                    inorgpools[i].n = pools[i].n;
-                    inorgpools[i].p = pools[i].p;
-                    inorgpools[i].s = pools[i].s;
+                    inorgpools[i].N = pools[i].N;
+                    inorgpools[i].P = pools[i].P;
+                    inorgpools[i].S = pools[i].S;
                 }
                 return inorgpools;
             }
         }
 
         /// <summary>
-        /// Metabolizable energy use for each animal group
+        /// Gets the metabolizable energy use for each animal group
         /// </summary>
         [Description("Metabolizable energy use for each animal group")]
-        public TEnergyUse[] EnergyUse
+        public EnergyUse[] EnergyUse
         {
             get
             {
-                TEnergyUse[] use = new TEnergyUse[FModel.Count()];
-                StockVars.MakeEnergyUse(FModel, ref use);
+                EnergyUse[] use = new EnergyUse[this.stockModel.Count()];
+                StockVars.MakeEnergyUse(this.stockModel, ref use);
                 return use;
             }
         }
 
         // =========== Output of methane (per head) ==================
+
         /// <summary>
-        /// Output of methane (per head) by group
+        /// Gets the output of methane (per head) by group
         /// </summary>
         [Description("Output of methane (per head) by group")]
         [Units("kg/d")]
@@ -3095,14 +3232,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCH4_OUTPUT, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCH4_OUTPUT, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Output of methane (per head) total
+        /// Gets the output of methane (per head) total
         /// </summary>
         [Description("Output of methane (per head) total")]
         [Units("kg/d")]
@@ -3111,13 +3248,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCH4_OUTPUT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCH4_OUTPUT, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Output of methane (per head) by tag number
+        /// Gets the output of methane (per head) by tag number
         /// </summary>
         [Description("Output of methane (per head) by tag number")]
         [Units("kg/d")]
@@ -3125,15 +3262,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCH4_OUTPUT, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCH4_OUTPUT, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Output of methane (per head) of young ==================
+
         /// <summary>
-        /// Output of methane (per head) of unweaned young animals by group
+        /// Gets the output of methane (per head) of unweaned young animals by group
         /// </summary>
         [Description("Output of methane (per head) of unweaned young animals by group")]
         [Units("kg/d")]
@@ -3141,14 +3279,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCH4_OUTPUT, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCH4_OUTPUT, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Output of methane (per head) of unweaned young animals total
+        /// Gets the output of methane (per head) of unweaned young animals total
         /// </summary>
         [Description("Output of methane (per head) of unweaned young animals total")]
         [Units("kg/d")]
@@ -3157,13 +3295,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCH4_OUTPUT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCH4_OUTPUT, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Output of methane (per head) of unweaned young animals by tag number
+        /// Gets the output of methane (per head) of unweaned young animals by tag number
         /// </summary>
         [Description("Output of methane (per head) of unweaned young animals by tag number")]
         [Units("kg/d")]
@@ -3171,15 +3309,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpCH4_OUTPUT, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCH4_OUTPUT, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Urinary nitrogen output per head ==================
+
         /// <summary>
-        /// Urinary nitrogen output per head by group
+        /// Gets the urinary nitrogen output per head by group
         /// </summary>
         [Description("Urinary nitrogen output per head by group")]
         [Units("kg/d")]
@@ -3187,14 +3326,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_N, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_N, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Urinary nitrogen output per head total
+        /// Gets the urinary nitrogen output per head total
         /// </summary>
         [Description("Urinary nitrogen output per head total")]
         [Units("kg/d")]
@@ -3203,13 +3342,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_N, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_N, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Urinary nitrogen output per head by tag number
+        /// Gets the urinary nitrogen output per head by tag number
         /// </summary>
         [Description("Urinary nitrogen output per head by tag number")]
         [Units("kg/d")]
@@ -3217,15 +3356,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_N, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_N, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Urinary nitrogen output per head of young ==================
+
         /// <summary>
-        /// Urinary nitrogen output per head of unweaned young animals by group
+        /// Gets the urinary nitrogen output per head of unweaned young animals by group
         /// </summary>
         [Description("Urinary nitrogen output per head of unweaned young animals by group")]
         [Units("kg/d")]
@@ -3233,14 +3373,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_N, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_N, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Urinary nitrogen output per head of unweaned young animals total
+        /// Gets the urinary nitrogen output per head of unweaned young animals total
         /// </summary>
         [Description("Urinary nitrogen output per head of unweaned young animals total")]
         [Units("kg/d")]
@@ -3249,13 +3389,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_N, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_N, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Urinary nitrogen output per head of unweaned young animals by tag number
+        /// Gets the urinary nitrogen output per head of unweaned young animals by tag number
         /// </summary>
         [Description("Urinary nitrogen output per head of unweaned young animals by tag number")]
         [Units("kg/d")]
@@ -3263,15 +3403,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_N, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_N, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Urinary phosphorus output per head ==================
+
         /// <summary>
-        /// Urinary phosphorus output per head by group
+        /// Gets the urinary phosphorus output per head by group
         /// </summary>
         [Description("Urinary phosphorus output per head by group")]
         [Units("kg/d")]
@@ -3279,14 +3420,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_P, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_P, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Urinary phosphorus output per head total
+        /// Gets the urinary phosphorus output per head total
         /// </summary>
         [Description("Urinary phosphorus output per head total")]
         [Units("kg/d")]
@@ -3295,13 +3436,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_P, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_P, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Urinary phosphorus output per head by tag number
+        /// Gets the urinary phosphorus output per head by tag number
         /// </summary>
         [Description("Urinary phosphorus output per head by tag number")]
         [Units("kg/d")]
@@ -3309,15 +3450,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_P, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_P, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Urinary phosphorus output per head of young ==================
+
         /// <summary>
-        /// Urinary phosphorus output per head of unweaned young animals by group
+        /// Gets the urinary phosphorus output per head of unweaned young animals by group
         /// </summary>
         [Description("Urinary phosphorus output per head of unweaned young animals by group")]
         [Units("kg/d")]
@@ -3325,14 +3467,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_P, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_P, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Urinary phosphorus output per head of unweaned young animals total
+        /// Gets the urinary phosphorus output per head of unweaned young animals total
         /// </summary>
         [Description("Urinary phosphorus output per head of unweaned young animals total")]
         [Units("kg/d")]
@@ -3341,13 +3483,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_P, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_P, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Urinary phosphorus output per head of unweaned young animals by tag number
+        /// Gets the urinary phosphorus output per head of unweaned young animals by tag number
         /// </summary>
         [Description("Urinary phosphorus output per head of unweaned young animals by tag number")]
         [Units("kg/d")]
@@ -3355,15 +3497,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_P, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_P, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Urinary sulphur output per head ==================
+
         /// <summary>
-        /// Urinary sulphur output per head by group
+        /// Gets the urinary sulphur output per head by group
         /// </summary>
         [Description("Urinary sulphur output per head by group")]
         [Units("kg/d")]
@@ -3371,14 +3514,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_S, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_S, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Urinary sulphur output per head total
+        /// Gets the urinary sulphur output per head total
         /// </summary>
         [Description("Urinary sulphur output per head total")]
         [Units("kg/d")]
@@ -3387,13 +3530,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_S, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_S, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Urinary sulphur output per head by tag number
+        /// Gets the urinary sulphur output per head by tag number
         /// </summary>
         [Description("Urinary sulphur output per head by tag number")]
         [Units("kg/d")]
@@ -3401,15 +3544,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_S, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_S, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Urinary sulphur output per head of young ==================
+
         /// <summary>
-        /// Urinary sulphur output per head of unweaned young animals by group
+        /// Gets the urinary sulphur output per head of unweaned young animals by group
         /// </summary>
         [Description("Urinary sulphur output per head of unweaned young animals by group")]
         [Units("kg/d")]
@@ -3417,14 +3561,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_S, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_S, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Urinary sulphur output per head of unweaned young animals total
+        /// Gets the urinary sulphur output per head of unweaned young animals total
         /// </summary>
         [Description("Urinary sulphur output per head of unweaned young animals total")]
         [Units("kg/d")]
@@ -3433,13 +3577,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_S, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_S, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Urinary sulphur output per head of unweaned young animals by tag number
+        /// Gets the urinary sulphur output per head of unweaned young animals by tag number
         /// </summary>
         [Description("Urinary sulphur output per head of unweaned young animals by tag number")]
         [Units("kg/d")]
@@ -3447,15 +3591,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpURINE_S, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_S, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Intake per head of rumen-degradable protein ==================
+
         /// <summary>
-        /// Intake per head of rumen-degradable protein by group
+        /// Gets the intake per head of rumen-degradable protein by group
         /// </summary>
         [Description("Intake per head of rumen-degradable protein by group")]
         [Units("kg/d")]
@@ -3463,14 +3608,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDPI, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPI, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Intake per head of rumen-degradable protein total
+        /// Gets the intake per head of rumen-degradable protein total
         /// </summary>
         [Description("Intake per head of rumen-degradable protein total")]
         [Units("kg/d")]
@@ -3479,13 +3624,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDPI, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPI, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Intake per head of rumen-degradable protein by tag number
+        /// Gets the intake per head of rumen-degradable protein by tag number
         /// </summary>
         [Description("Intake per head of rumen-degradable protein by tag number")]
         [Units("kg/d")]
@@ -3493,15 +3638,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDPI, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPI, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Intake per head of rumen-degradable protein of young ==================
+
         /// <summary>
-        /// Intake per head of rumen-degradable protein of unweaned young animals by group
+        /// Gets the intake per head of rumen-degradable protein of unweaned young animals by group
         /// </summary>
         [Description("Intake per head of rumen-degradable protein of unweaned young animals by group")]
         [Units("kg/d")]
@@ -3509,14 +3655,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDPI, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPI, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Intake per head of rumen-degradable protein of unweaned young animals total
+        /// Gets the intake per head of rumen-degradable protein of unweaned young animals total
         /// </summary>
         [Description("Intake per head of rumen-degradable protein of unweaned young animals total")]
         [Units("kg/d")]
@@ -3525,13 +3671,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDPI, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPI, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Intake per head of rumen-degradable protein of unweaned young animals by tag number
+        /// Gets the intake per head of rumen-degradable protein of unweaned young animals by tag number
         /// </summary>
         [Description("Intake per head of rumen-degradable protein of unweaned young animals by tag number")]
         [Units("kg/d")]
@@ -3539,15 +3685,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDPI, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPI, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Requirement per head of rumen-degradable protein ==================
+
         /// <summary>
-        /// Requirement per head of rumen-degradable protein by group
+        /// Gets the requirement per head of rumen-degradable protein by group
         /// </summary>
         [Description("Requirement per head of rumen-degradable protein by group")]
         [Units("kg/d")]
@@ -3555,14 +3702,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDPR, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPR, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Requirement per head of rumen-degradable protein total
+        /// Gets the requirement per head of rumen-degradable protein total
         /// </summary>
         [Description("Requirement per head of rumen-degradable protein total")]
         [Units("kg/d")]
@@ -3571,13 +3718,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDPR, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPR, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Requirement per head of rumen-degradable protein by tag number
+        /// Gets the requirement per head of rumen-degradable protein by tag number
         /// </summary>
         [Description("Requirement per head of rumen-degradable protein by tag number")]
         [Units("kg/d")]
@@ -3585,15 +3732,16 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDPR, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPR, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Requirement per head of rumen-degradable protein of young ==================
+
         /// <summary>
-        /// Requirement per head of rumen-degradable protein of unweaned young animals by group
+        /// Gets the requirement per head of rumen-degradable protein of unweaned young animals by group
         /// </summary>
         [Description("Requirement per head of rumen-degradable protein of unweaned young animals by group")]
         [Units("kg/d")]
@@ -3601,14 +3749,14 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDPR, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPR, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Requirement per head of rumen-degradable protein of unweaned young animals total
+        /// Gets the requirement per head of rumen-degradable protein of unweaned young animals total
         /// </summary>
         [Description("Requirement per head of rumen-degradable protein of unweaned young animals total")]
         [Units("kg/d")]
@@ -3617,13 +3765,13 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDPR, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPR, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Requirement per head of rumen-degradable protein of unweaned young animals by tag number
+        /// Gets the requirement per head of rumen-degradable protein of unweaned young animals by tag number
         /// </summary>
         [Description("Requirement per head of rumen-degradable protein of unweaned young animals by tag number")]
         [Units("kg/d")]
@@ -3631,29 +3779,30 @@ namespace Models.GrazPlan
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDPR, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPR, true, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Effect of rumen-degradable protein availability on rate of intake  ==================
+
         /// <summary>
-        /// Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) by group
+        /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) by group
         /// </summary>
         [Description("Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) by group")]
         public double[] RDPFactor
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDP_EFFECT, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDP_EFFECT, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) total
+        /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) total
         /// </summary>
         [Description("Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) total")]
         public double RDPFactorAll
@@ -3661,42 +3810,43 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDP_EFFECT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDP_EFFECT, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) by tag number
+        /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) by tag number
         /// </summary>
         [Description("Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) by tag number")]
         public double[] RDPFactorTag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDP_EFFECT, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDP_EFFECT, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Effect of rumen-degradable protein availability on rate of intake of young ==================
+
         /// <summary>
-        /// Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals by group
+        /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals by group
         /// </summary>
         [Description("Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals by group")]
         public double[] RDPFactorYng
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDP_EFFECT, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDP_EFFECT, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals total
+        /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals total
         /// </summary>
         [Description("Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals total")]
         public double RDPFactorYngAll
@@ -3704,27 +3854,27 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDP_EFFECT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDP_EFFECT, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals by tag number
+        /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals by tag number
         /// </summary>
         [Description("Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals by tag number")]
         public double[] RDPFactorYngTag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpRDP_EFFECT, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDP_EFFECT, true, false, true, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// List of all paddocks identified by the component. In decreasing order of herbage relative intake (computed for the first group of animals in the list)
+        /// Gets the list of all paddocks identified by the component. In decreasing order of herbage relative intake (computed for the first group of animals in the list)
         /// </summary>
         [Description("List of all paddocks identified by the component. In decreasing order of herbage relative intake (computed for the first group of animals in the list)")]
         public string[] PaddockRank
@@ -3732,28 +3882,29 @@ namespace Models.GrazPlan
             get
             {
                 string[] ranks = new string[1];
-                StockVars.MakePaddockRank(FModel, ref ranks);
+                StockVars.MakePaddockRank(this.stockModel, ref ranks);
                 return ranks;
             }
         }
 
         // =========== Externally-imposed scaling factor for potential intake ==================
+
         /// <summary>
-        /// Externally-imposed scaling factor for potential intake. This property is resettable by group
+        /// Gets the externally-imposed scaling factor for potential intake. This property is resettable by group
         /// </summary>
         [Description("Externally-imposed scaling factor for potential intake. This property is resettable by group")]
         public double[] IntakeModifier
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpINTAKE_MOD, false, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpINTAKE_MOD, false, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Externally-imposed scaling factor for potential intake. This property is resettable, total
+        /// Gets the externally-imposed scaling factor for potential intake. This property is resettable, total
         /// </summary>
         [Description("Externally-imposed scaling factor for potential intake. This property is resettable, total")]
         public double IntakeModifierAll
@@ -3761,42 +3912,43 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpINTAKE_MOD, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpINTAKE_MOD, false, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Externally-imposed scaling factor for potential intake. This property is resettable by tag number
+        /// Gets the externally-imposed scaling factor for potential intake. This property is resettable by tag number
         /// </summary>
         [Description("Externally-imposed scaling factor for potential intake. This property is resettable by tag number")]
         public double[] IntakeModifierTag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpINTAKE_MOD, false, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpINTAKE_MOD, false, false, true, ref values);
                 return values;
             }
         }
 
         // =========== Externally-imposed scaling factor for potential intake of young ==================
+
         /// <summary>
-        /// Externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals by group
+        /// Gets the externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals by group
         /// </summary>
         [Description("Externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals by group")]
         public double[] IntakeModifierYng
         {
             get
             {
-                double[] values = new double[FModel.Count()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpINTAKE_MOD, true, false, false, ref values);
+                double[] values = new double[this.stockModel.Count()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpINTAKE_MOD, true, false, false, ref values);
                 return values;
             }
         }
 
         /// <summary>
-        /// Externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals total
+        /// Gets the externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals total
         /// </summary>
         [Description("Externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals total")]
         public double IntakeModifierYngAll
@@ -3804,21 +3956,21 @@ namespace Models.GrazPlan
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(FModel, StockProps.prpINTAKE_MOD, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpINTAKE_MOD, true, true, false, ref values);
                 return values[0];
             }
         }
 
         /// <summary>
-        /// Externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals by tag number
+        /// Gets the externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals by tag number
         /// </summary>
         [Description("Externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals by tag number")]
         public double[] IntakeModifierYngTag
         {
             get
             {
-                double[] values = new double[FModel.iHighestTag()];
-                StockVars.PopulateRealValue(FModel, StockProps.prpINTAKE_MOD, true, false, true, ref values);
+                double[] values = new double[this.stockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.stockModel, StockProps.prpINTAKE_MOD, true, false, true, ref values);
                 return values;
             }
         }
@@ -3827,141 +3979,138 @@ namespace Models.GrazPlan
 
         #region Subscribed events ====================================================
 
-
-        #region Class links
-        [Link]
-        Simulation sim = null;
-        #endregion
-
         /// <summary>
         /// At the start of the simulation, initialise all the paddocks and forages and nitrogen returns.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            if (!FPaddocksGiven)
+            if (!this.paddocksGiven)
             {
-                //get the paddock areas from the simulation
-                foreach (Zone zone in Apsim.FindAll(sim, typeof(Zone)))
+                // get the paddock areas from the simulation
+                foreach (Zone zone in Apsim.FindAll(this.sim, typeof(Zone)))
                 {
-                    FModel.Paddocks.Add(zone, zone.Name);                          // Add to the Paddocks list
-                    FModel.Paddocks.byObj(zone).fArea = zone.Area;
+                    this.stockModel.Paddocks.Add(zone, zone.Name);                          // Add to the Paddocks list
+                    this.stockModel.Paddocks.byObj(zone).fArea = zone.Area;
 
-                    TPaddockInfo ThePadd = FModel.Paddocks.byObj(zone);
+                    PaddockInfo thePadd = this.stockModel.Paddocks.byObj(zone);
 
                     // find all the child crop, pasture components with an TAvailableToAnimal property
                     foreach (Model crop in Apsim.FindAll(zone, typeof(ICrop)))
                     {
-                        FModel.ForagesAll.AddProvider(ThePadd, zone.Name, crop.Name, 0, 0, crop, true);
+                        this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, crop.Name, 0, 0, crop, true);
                     }
 
                     // locate surfaceOM and soil nutrient model
                     SurfaceOrganicMatter surfaceOM = (SurfaceOrganicMatter)Apsim.Find(zone, typeof(SurfaceOrganicMatter));
                     SoilNitrogen soiln = (SoilNitrogen)Apsim.Find(zone, typeof(SoilNitrogen));
-                    ThePadd.AddFaecesObj = surfaceOM;
-                    ThePadd.AddUrineObj = soiln;
+                    thePadd.AddFaecesObj = surfaceOM;
+                    thePadd.AddUrineObj = soiln;
                 }
             }
 
-            FModel.addGenotypes(FGenotypeInits);
-            for (int Idx = 0; Idx <= FAnimalInits.Length - 1; Idx++)                // Only create the initial animal groups 
-                FModel.Add(FAnimalInits[Idx]);                                      //   after the paddocks have been        
-                                                                                    //   identified                          
-            FTime = Systemclock.Today;
-            int currentDay = FTime.Day + FTime.Month * 0x100 + FTime.Year * 0x10000;
-            FModel.ManageInternalInit(currentDay, FWeather.Latitude);               //init groups
+            this.stockModel.AddGenotypes(this.genotypeInits);
+            for (int idx = 0; idx <= this.animalInits.Length - 1; idx++)                // Only create the initial animal groups 
+                this.stockModel.Add(this.animalInits[idx]);                             // after the paddocks have been identified                          
+
+            this.currentTime = this.systemClock.Today;
+            int currentDay = this.currentTime.Day + (this.currentTime.Month * 0x100) + (this.currentTime.Year * 0x10000);
+            this.stockModel.ManageInternalInit(currentDay, this.localWeather.Latitude);               // init groups
         }
 
         /// <summary>
-        /// 
+        /// New weather data available handler
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The argument parameters</param>
         [EventSubscribe("NewWeatherDataAvailable")]
         private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        /// 
+        /// Handle the start of day event and get the latitude, time and weather
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The argument parameters</param>
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
         {
-            if (FFirstStep)
+            if (this.isFirstStep)
             {
-                FWeather.Latitude = LocWtr.Latitude;
+                this.localWeather.Latitude = this.locWtr.Latitude;
 
-                FFirstStep = false;
+                this.isFirstStep = false;
             }
 
-            GetTimeAndWeather();
+            this.GetTimeAndWeather();
         }
 
         /// <summary>
-        /// 
+        /// Handle the end of day event 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
         [EventSubscribe("EndOfDay")]
         private void OnEndOfDay(object sender, EventArgs e)
         {
         }
 
-
-
         /// <summary>
         /// Initialisation step
         /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
         [EventSubscribe("DoStock")]
         private void OnDoStock(object sender, EventArgs e)
         {
             // Weather is retrieved at StartOfDay
 
-            // for each paddock
-            //FModel.Paddocks.byID(1).fWaterlog = 0.0;    // TODO
+            //// for each paddock
+            ////FModel.Paddocks.byID(1).fWaterlog = 0.0;    // TODO
 
-            if (!FPaddocksGiven)
+            if (!this.paddocksGiven)
             {
                 // update the paddock area as this can change during the simulation
-                foreach (Zone zone in Apsim.FindAll(sim, typeof(Zone)))
+                foreach (Zone zone in Apsim.FindAll(this.sim, typeof(Zone)))
                 {
-                    FModel.Paddocks.byObj(zone).fArea = zone.Area;
-                    FModel.Paddocks.byObj(zone).Slope = zone.Slope;
+                    this.stockModel.Paddocks.byObj(zone).fArea = zone.Area;
+                    this.stockModel.Paddocks.byObj(zone).Slope = zone.Slope;
                 }
 
-                RequestAvailableToAnimal();  // accesses each forage provider (crop)
+                this.RequestAvailableToAnimal();  // accesses each forage provider (crop)
 
-                FModel.Paddocks.beginTimeStep();
+                this.stockModel.Paddocks.beginTimeStep();
 
-                SuppToStockType[] availSupp = Suppfeed.SuppToStock;
+                SuppToStockType[] availSupp = this.suppFeed.SuppToStock;
 
-                for (int Idx = 0; Idx < availSupp.Length; Idx++)    // each paddock
+                for (int idx = 0; idx < availSupp.Length; idx++)    
                 {
-                    FSuppFed.SetSuppAttrs(availSupp[Idx]);
-                    FModel.PlaceSuppInPadd(availSupp[Idx].Paddock, availSupp[Idx].Amount, FSuppFed);
+                    // each paddock
+                    this.suppFed.SetSuppAttrs(availSupp[idx]);
+                    this.stockModel.PlaceSuppInPadd(availSupp[idx].Paddock, availSupp[idx].Amount, this.suppFed);
                 }
 
-                FWeather.MeanTemp = 0.5 * (FWeather.MaxTemp + FWeather.MinTemp);
-                FModel.Weather = FWeather;
+                this.localWeather.MeanTemp = 0.5 * (this.localWeather.MaxTemp + this.localWeather.MinTemp);
+                this.stockModel.Weather = this.localWeather;
 
                 // Do internal management tasks that are defined for the various
                 // enterprises. This includes shearing, buying, selling...
-                FModel.ManageInternalTasks(FWeather.TheDay);
+                this.stockModel.ManageInternalTasks(this.localWeather.TheDay);
 
-                FModel.Dynamics();
+                this.stockModel.Dynamics();
 
-                TForageProvider forageProvider;
+                ForageProvider forageProvider;
+
                 // Return the amounts of forage removed
-                for (int i = 0; i <= FModel.ForagesAll.Count() - 1; i++)
+                for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
                 {
-                    forageProvider = FModel.ForagesAll.ForageProvider(i);
-                    if (forageProvider.ForageObj != null)                       //if there is a pubevent or setter then
+                    forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
+                    if (forageProvider.ForageObj != null)                       
                     {
+                        // if there is a pubevent or setter then
                         if (forageProvider.somethingRemoved())
                         {
                             // TODO: forageProvider        // Build "removedbyanimal" data
@@ -3972,55 +4121,55 @@ namespace Models.GrazPlan
                         throw new ApsimXException(this, "No destination for forage removal");
                 }
 
-                //if destinations for the surface om and nutrients are known then
-                //send the values to the components
-                for (int Idx = 0; Idx <= FModel.Paddocks.Count() - 1; Idx++)
+                // if destinations for the surface om and nutrients are known then
+                // send the values to the components
+                for (int idx = 0; idx <= this.stockModel.Paddocks.Count() - 1; idx++)
                 {
-                    TPaddockInfo PaddInfo = FModel.Paddocks.byIndex(Idx);
+                    PaddockInfo paddInfo = this.stockModel.Paddocks.byIndex(idx);
                     
-                    if (PaddInfo.AddFaecesObj != null)
+                    if (paddInfo.AddFaecesObj != null)
                     {
                         SurfaceOrganicMatter.AddFaecesType faeces = new SurfaceOrganicMatter.AddFaecesType();
-                        if (PopulateFaeces(PaddInfo.iPaddID, faeces))
+                        if (this.PopulateFaeces(paddInfo.iPaddID, faeces))
                         {
-                            ((SurfaceOrganicMatter)PaddInfo.AddFaecesObj).AddFaeces(faeces);
+                            ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).AddFaeces(faeces);
                         }
                     }
-                    if (PaddInfo.AddUrineObj != null)
+                    if (paddInfo.AddUrineObj != null)
                     {
                         AddUrineType urine = new AddUrineType();
-                        if (PopulateUrine(PaddInfo.iPaddID, urine))
+                        if (this.PopulateUrine(paddInfo.iPaddID, urine))
                         {
-                            ((SoilNitrogen)PaddInfo.AddUrineObj).AddUrine(urine);
+                            ((SoilNitrogen)paddInfo.AddUrineObj).AddUrine(urine);
                         }
                     }
                 }
             }
         }
 
-        //............................................................................
+        // ............................................................................
         // Management methods                                                         
-        //............................................................................
+        // ............................................................................
 
         /// <summary>
         /// Causes a set of related age cohorts of animals to enter the simulation. 
         /// Each age cohort may contain animals that are pregnant and/or lactating, in which case distributions of numbers of foetuses and/or suckling offspring are computed automatically. 
         /// This event is primarily intended to simplify the initialisation of flocks and herds in simulations.
         /// </summary>
-        /// <param name="animals"></param>
-        public void Add(TStockAdd animals)
+        /// <param name="animals">The animal data</param>
+        public void Add(StockAdd animals)
         {
-            GetTimeAndWeather();
-            FModel.doStockManagement(FModel, animals, FWeather.TheDay, FWeather.Latitude);
+            this.GetTimeAndWeather();
+            this.stockModel.DoStockManagement(this.stockModel, animals, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
         /// Buys animals (i.e. they enter the simulation). The purchased animals will form a new animal group that is placed at the end of the list of animal groups.
         /// </summary>
-        /// <param name="stock"></param>
-        public void Buy(TStockBuy stock)
+        /// <param name="stock">The stock data</param>
+        public void Buy(StockBuy stock)
         {
-            FModel.doStockManagement(FModel, stock, FWeather.TheDay, FWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, stock, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
@@ -4032,11 +4181,11 @@ namespace Models.GrazPlan
         ///     Animal groups with the same priority score are placed in the same paddock
         /// </summary>
         /// <param name="closedZones">Names of paddocks to be excluded from consideration as possible destinations</param>
-        public void Draft(TStockDraft closedZones)
+        public void Draft(StockDraft closedZones)
         {
-            RequestAvailableToAnimal();
+            this.RequestAvailableToAnimal();
 
-            FModel.doStockManagement(FModel, closedZones, FWeather.TheDay, FWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, closedZones, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
@@ -4047,10 +4196,10 @@ namespace Models.GrazPlan
         /// <param name="number">Number of animals to sell.</param>
         public void Sell(int group, int number)
         {
-            TStockSell selling = new TStockSell();
-            selling.group = group;
-            selling.number = number;
-            FModel.doStockManagement(FModel, selling, FWeather.TheDay, FWeather.Latitude);
+            StockSell selling = new StockSell();
+            selling.Group = group;
+            selling.Number = number;
+            this.stockModel.DoStockManagement(this.stockModel, selling, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
@@ -4061,10 +4210,10 @@ namespace Models.GrazPlan
         /// <param name="number">Number of animals to sell.</param>
         public void SellTag(int tag, int number)
         {
-            TStockSellTag selling = new TStockSellTag();
-            selling.tag = tag;
-            selling.number = number; 
-            FModel.doStockManagement(FModel, selling, FWeather.TheDay, FWeather.Latitude);
+            StockSellTag selling = new StockSellTag();
+            selling.Tag = tag;
+            selling.Number = number;
+            this.stockModel.DoStockManagement(this.stockModel, selling, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
@@ -4076,23 +4225,23 @@ namespace Models.GrazPlan
         /// Feasible values are the null string (main group), ‘adults’ (main group), ‘lambs’ (suckling lambs), ‘both’ (both).</param>
         public void Shear(int group, string subGroup)
         {
-            TStockShear shearing = new TStockShear();
-            shearing.group = group;
-            shearing.sub_group = subGroup;
-            FModel.doStockManagement(FModel, shearing, FWeather.TheDay, FWeather.Latitude);
+            StockShear shearing = new StockShear();
+            shearing.Group = group;
+            shearing.SubGroup = subGroup;
+            this.stockModel.DoStockManagement(this.stockModel, shearing, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
         /// Changes the paddock to which an animal group is assigned.
         /// </summary>
-        ///<param name="group">Index number of the animal group to be moved.</param>
-        ///<param name="paddock">Name of the paddock to which the animal group is to be moved.</param>
+        /// <param name="group">Index number of the animal group to be moved.</param>
+        /// <param name="paddock">Name of the paddock to which the animal group is to be moved.</param>
         public void Move(int group, string paddock)
         {
-            TStockMove move = new TStockMove();
-            move.group = group;
-            move.paddock = paddock;
-            FModel.doStockManagement(FModel, move, FWeather.TheDay, FWeather.Latitude);
+            StockMove move = new StockMove();
+            move.Group = group;
+            move.Paddock = paddock;
+            this.stockModel.DoStockManagement(this.stockModel, move, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
@@ -4105,11 +4254,11 @@ namespace Models.GrazPlan
         /// <param name="mateDays">Length of the mating period in days.</param>
         public void Join(int group, string mateTo, int mateDays)
         {
-            TStockJoin join = new TStockJoin();
-            join.group = group;
-            join.mate_to = mateTo;
-            join.mate_days = mateDays;
-            FModel.doStockManagement(FModel, join, FWeather.TheDay, FWeather.Latitude);
+            StockJoin join = new StockJoin();
+            join.Group = group;
+            join.MateTo = mateTo;
+            join.MateDays = mateDays;
+            this.stockModel.DoStockManagement(this.stockModel, join, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
@@ -4123,19 +4272,20 @@ namespace Models.GrazPlan
         /// <param name="number">Number of male lambs or calves to be castrated.</param>
         public void Castrate(int group, int number)
         {
-            TStockCastrate castrate = new TStockCastrate();
-            castrate.group = group;
-            castrate.number = number;
-            FModel.doStockManagement(FModel, castrate, FWeather.TheDay, FWeather.Latitude);
+            StockCastrate castrate = new StockCastrate();
+            castrate.Group = group;
+            castrate.Number = number;
+            this.stockModel.DoStockManagement(this.stockModel, castrate, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
         /// Weans some or all of the lambs or calves from an animal group. 
         /// The newly weaned animals are added to the end of the list of animal groups, with males and females in separate groups.
         /// </summary>
-        public void Wean(TStockWean wean)
+        /// <param name="wean">The weaning data</param>
+        public void Wean(StockWean wean)
         {
-            FModel.doStockManagement(FModel, wean, FWeather.TheDay, FWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, wean, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
@@ -4148,33 +4298,33 @@ namespace Models.GrazPlan
         /// <param name="number">Number of females for which lactation is to end.</param>
         public void DryOff(int group, int number)
         {
-            TStockDryoff dryoff = new TStockDryoff();
-            dryoff.group = group;
-            dryoff.number = number;
-            FModel.doStockManagement(FModel, dryoff, FWeather.TheDay, FWeather.Latitude);
+            StockDryoff dryoff = new StockDryoff();
+            dryoff.Group = group;
+            dryoff.Number = number;
+            this.stockModel.DoStockManagement(this.stockModel, dryoff, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
         /// Creates new animal groups from all the animal groups.  The new groups are placed at the end of the animal group list. 
         /// This event is for when splits need to occur over all animal groups. Description of split event also applies.
         /// </summary>
-        /// <param name="splitall"></param>
-        public void SplitAll(TStockSplitAll splitall)
+        /// <param name="splitall">The split data</param>
+        public void SplitAll(StockSplitAll splitall)
         {
-            FModel.doStockManagement(FModel, splitall, FWeather.TheDay, FWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, splitall, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
         /// Creates two or more animal groups from the nominated group.  
         /// One of these groups is placed at the end of the animal group list. 
         /// The new groups remain in the same paddock and keep the same tag value as the original animal group. 
-        ///The division may only persist until the beginning of the next do_stock step, when sufficiently similar 
-        ///groups of animals are merged.Splitting an animal group is therefore usually carried out as a preliminary to some other management event.
+        /// The division may only persist until the beginning of the next do_stock step, when sufficiently similar 
+        /// groups of animals are merged.Splitting an animal group is therefore usually carried out as a preliminary to some other management event.
         /// </summary>
-        /// <param name="split"></param>
-        public void Split(TStockSplit split)
+        /// <param name="split">The split data</param>
+        public void Split(StockSplit split)
         {
-            FModel.doStockManagement(FModel, split, FWeather.TheDay, FWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, split, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
@@ -4187,10 +4337,10 @@ namespace Models.GrazPlan
         /// <param name="value">Tag value to be assigned.</param>
         public void Tag(int group, int value)
         {
-            TStockTag tag = new TStockTag();
-            tag.group = group;
-            tag.value = value;
-            FModel.doStockManagement(FModel, tag, FWeather.TheDay, FWeather.Latitude);
+            StockTag tag = new StockTag();
+            tag.Group = group;
+            tag.Value = value;
+            this.stockModel.DoStockManagement(this.stockModel, tag, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
@@ -4200,10 +4350,10 @@ namespace Models.GrazPlan
         /// <param name="value">New priority value for the group.</param>
         public void Prioritise(int group, int value)
         {
-            TStockPrioritise prioritise = new TStockPrioritise();
-            prioritise.group = group;
-            prioritise.value = value;
-            FModel.doStockManagement(FModel, prioritise, FWeather.TheDay, FWeather.Latitude);
+            StockPrioritise prioritise = new StockPrioritise();
+            prioritise.Group = group;
+            prioritise.Value = value;
+            this.stockModel.DoStockManagement(this.stockModel, prioritise, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
@@ -4211,10 +4361,9 @@ namespace Models.GrazPlan
         /// </summary>
         public void Sort()
         {
-            TStockSort sortEvent = new TStockSort();
-            FModel.doStockManagement(FModel, sortEvent, FWeather.TheDay, FWeather.Latitude);
+            StockSort sortEvent = new StockSort();
+            this.stockModel.DoStockManagement(this.stockModel, sortEvent, this.localWeather.TheDay, this.localWeather.Latitude);
         }
-
 
         #endregion
 
@@ -4224,13 +4373,13 @@ namespace Models.GrazPlan
         /// </summary>
         private void GetTimeAndWeather()
         {
-            FTime = Systemclock.Today;
-            FWeather.DayLength = LocWtr.CalculateDayLength(-6.0);   // civil twighlight
-            FWeather.TheDay = FTime.Day + FTime.Month * 0x100 + FTime.Year * 0x10000;
-            FWeather.MaxTemp = LocWtr.MaxT;
-            FWeather.MinTemp = LocWtr.MinT;
-            FWeather.Precipitation = LocWtr.Rain;
-            FWeather.WindSpeed = LocWtr.Wind;
+            this.currentTime = this.systemClock.Today;
+            this.localWeather.DayLength = this.locWtr.CalculateDayLength(-6.0);   // civil twighlight
+            this.localWeather.TheDay = this.currentTime.Day + (this.currentTime.Month * 0x100) + (this.currentTime.Year * 0x10000);
+            this.localWeather.MaxTemp = this.locWtr.MaxT;
+            this.localWeather.MinTemp = this.locWtr.MinT;
+            this.localWeather.Precipitation = this.locWtr.Rain;
+            this.localWeather.WindSpeed = this.locWtr.Wind;
         }
 
         /// <summary>
@@ -4238,49 +4387,48 @@ namespace Models.GrazPlan
         /// </summary>
         private void RequestAvailableToAnimal()
         {
-            TForageProvider forageProvider;
-            for (int i = 0; i <= FModel.ForagesAll.Count() - 1; i++)
+            ForageProvider forageProvider;
+            for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
             {
-                forageProvider = FModel.ForagesAll.ForageProvider(i);
+                forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
                 if (forageProvider.ForageObj != null)
                 {
-                    //TODO: get the forage info from forageProvider.ForageObj
-                    // forageProvider.UpdateForages(available_to_animal);
+                    // TODO: get the forage info from forageProvider.ForageObj
+                    //// forageProvider.UpdateForages(available_to_animal);
                 }
-
             }
         }
 
         /// <summary>
         /// Populate the AddFaecesType object
         /// </summary>
-        /// <param name="iPaddID"></param>
-        /// <param name="aValue"></param>
-        /// <returns></returns>
-        private bool PopulateFaeces(int iPaddID, SurfaceOrganicMatter.AddFaecesType aValue)
+        /// <param name="paddID">The paddock ID</param>
+        /// <param name="faecesValue">The faeces data</param>
+        /// <returns>True if the number of defaecations > 0</returns>
+        private bool PopulateFaeces(int paddID, SurfaceOrganicMatter.AddFaecesType faecesValue)
         {
-            int N = (int)GrazType.TOMElement.N;
-            int P = (int)GrazType.TOMElement.P;
-            int S = (int)GrazType.TOMElement.S;
+            int n = (int)GrazType.TOMElement.n;
+            int p = (int)GrazType.TOMElement.p;
+            int s = (int)GrazType.TOMElement.s;
             bool result = false;
 
-            FModel.ReturnExcretion(iPaddID, out FExcretion);
+            this.stockModel.ReturnExcretion(paddID, out this.excretionInfo);
 
-            if (FExcretion.dDefaecations > 0)
+            if (this.excretionInfo.dDefaecations > 0)
             {
-                aValue.Defaecations = FExcretion.dDefaecations;
-                aValue.VolumePerDefaecation = FExcretion.dDefaecationVolume;
-                aValue.AreaPerDefaecation = FExcretion.dDefaecationArea;
-                aValue.Eccentricity = FExcretion.dDefaecationEccentricity;
-                aValue.OMWeight = FExcretion.OrgFaeces.DM;
-                aValue.OMN = FExcretion.OrgFaeces.Nu[N];
-                aValue.OMP = FExcretion.OrgFaeces.Nu[P];
-                aValue.OMS = FExcretion.OrgFaeces.Nu[S];
-                aValue.OMAshAlk = FExcretion.OrgFaeces.AshAlk;
-                aValue.NO3N = FExcretion.InOrgFaeces.Nu[N] * FExcretion.dFaecalNO3Propn;
-                aValue.NH4N = FExcretion.InOrgFaeces.Nu[N] * (1.0 - FExcretion.dFaecalNO3Propn);
-                aValue.POXP = FExcretion.InOrgFaeces.Nu[P];
-                aValue.SO4S = FExcretion.InOrgFaeces.Nu[S];
+                faecesValue.Defaecations = this.excretionInfo.dDefaecations;
+                faecesValue.VolumePerDefaecation = this.excretionInfo.dDefaecationVolume;
+                faecesValue.AreaPerDefaecation = this.excretionInfo.dDefaecationArea;
+                faecesValue.Eccentricity = this.excretionInfo.dDefaecationEccentricity;
+                faecesValue.OMWeight = this.excretionInfo.OrgFaeces.DM;
+                faecesValue.OMN = this.excretionInfo.OrgFaeces.Nu[n];
+                faecesValue.OMP = this.excretionInfo.OrgFaeces.Nu[p];
+                faecesValue.OMS = this.excretionInfo.OrgFaeces.Nu[s];
+                faecesValue.OMAshAlk = this.excretionInfo.OrgFaeces.AshAlk;
+                faecesValue.NO3N = this.excretionInfo.InOrgFaeces.Nu[n] * this.excretionInfo.dFaecalNO3Propn;
+                faecesValue.NH4N = this.excretionInfo.InOrgFaeces.Nu[n] * (1.0 - this.excretionInfo.dFaecalNO3Propn);
+                faecesValue.POXP = this.excretionInfo.InOrgFaeces.Nu[p];
+                faecesValue.SO4S = this.excretionInfo.InOrgFaeces.Nu[s];
                 result = true;
             }
             return result;
@@ -4289,28 +4437,27 @@ namespace Models.GrazPlan
         /// <summary>
         /// Copy the urine info into the AddUrineType
         /// </summary>
-        /// <param name="iPaddID"></param>
-        /// <param name="aValue"></param>
-        /// <returns></returns>
-        private bool PopulateUrine(int iPaddID, AddUrineType aValue)
+        /// <param name="paddID">The paddock ID</param>
+        /// <param name="urineValue">The urine data</param>
+        /// <returns>True if the number of urinations > 0</returns>
+        private bool PopulateUrine(int paddID, AddUrineType urineValue)
         {
-
-            int N = (int)GrazType.TOMElement.N;
-            int P = (int)GrazType.TOMElement.P;
-            int S = (int)GrazType.TOMElement.S;
+            int n = (int)GrazType.TOMElement.n;
+            int p = (int)GrazType.TOMElement.p;
+            int s = (int)GrazType.TOMElement.s;
             bool result = false;
 
-            FModel.ReturnExcretion(iPaddID, out FExcretion);
-            if (FExcretion.dUrinations > 0)
+            this.stockModel.ReturnExcretion(paddID, out this.excretionInfo);
+            if (this.excretionInfo.dUrinations > 0)
             {
-                aValue.Urinations = FExcretion.dUrinations;
-                aValue.VolumePerUrination = FExcretion.dUrinationVolume;
-                aValue.AreaPerUrination = FExcretion.dUrinationArea;
-                aValue.Eccentricity = FExcretion.dUrinationEccentricity;
-                aValue.Urea = FExcretion.Urine.Nu[N];
-                aValue.POX = FExcretion.Urine.Nu[P];
-                aValue.SO4 = FExcretion.Urine.Nu[S];
-                aValue.AshAlk = FExcretion.Urine.AshAlk;
+                urineValue.Urinations = this.excretionInfo.dUrinations;
+                urineValue.VolumePerUrination = this.excretionInfo.dUrinationVolume;
+                urineValue.AreaPerUrination = this.excretionInfo.dUrinationArea;
+                urineValue.Eccentricity = this.excretionInfo.dUrinationEccentricity;
+                urineValue.Urea = this.excretionInfo.Urine.Nu[n];
+                urineValue.POX = this.excretionInfo.Urine.Nu[p];
+                urineValue.SO4 = this.excretionInfo.Urine.Nu[s];
+                urineValue.AshAlk = this.excretionInfo.Urine.AshAlk;
                 result = true;
             }
             return result;
