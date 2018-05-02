@@ -228,6 +228,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Struct.ApexStandard))]
         [XmlElement(typeof(Models.PMF.Struct.ApexTiller))]
         [XmlElement(typeof(Alias))]
+        [XmlElement(typeof(Morris))]
         [XmlElement(typeof(Models.Zones.CircularZone))]
         [XmlElement(typeof(Models.Zones.RectangularZone))]
         [XmlElement(typeof(Models.Aqua.PondWater))]

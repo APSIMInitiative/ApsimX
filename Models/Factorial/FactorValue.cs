@@ -80,6 +80,8 @@ namespace Models.Factorial
             {
                 if (values[i] is string)
                     ApplyStringAsValue(newSimulation, paths[i], values[i].ToString());
+                else if (values[i] is double)
+                    ApplyDoubleAsValue(newSimulation, paths[i], Convert.ToDouble(values[i]));
                 else
                     ApplyModelReplacement(newSimulation, paths[i], values[i] as IModel);
 
@@ -109,6 +111,15 @@ namespace Models.Factorial
                 newValue = Convert.ToString(name);
             else
                 newValue = name;
+            newSimulation.Set(path, newValue);
+        }
+
+        /// <summary>
+        /// Use the name of this object as a value to insert into the specified 'newSimulation'
+        /// </summary>
+        private static void ApplyDoubleAsValue(Simulation newSimulation, string path, double value)
+        {
+            object newValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
             newSimulation.Set(path, newValue);
         }
 

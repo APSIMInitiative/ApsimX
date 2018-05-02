@@ -236,6 +236,7 @@
     <Compile Include="Presenters\NewAzureJobPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
     <Compile Include="Presenters\ProfilePresenter.cs" />
+    <Compile Include="Presenters\GridPresenter.cs" />
     <Compile Include="Presenters\PropertyPresenter.cs" />
     <Compile Include="Presenters\ReportActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
@@ -389,6 +390,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Morris.png" />
     <EmbeddedResource Include="Resources\TwoStageEvaporation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportPasturePoolDetails.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazeAll.png" />
