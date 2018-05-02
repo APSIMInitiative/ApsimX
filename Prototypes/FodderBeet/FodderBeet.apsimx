@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="27">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="28">
   <Name>Simulations</Name>
   <Memo>
     <Name>Title page</Name>
@@ -797,6 +797,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
         <CompositeBiomass>
           <Name>Total</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <DMDOfStructural>0.6</DMDOfStructural>
           <Propertys>
             <string>[Leaf].Live</string>
             <string>[Leaf].Dead</string>
@@ -1912,6 +1913,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -1924,6 +1926,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>BelowGround</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Root].Live</string>
           <string>[Root].Dead</string>
@@ -1932,6 +1935,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>Total</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -1946,6 +1950,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>TotalLive</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Petiole].Live</string>
@@ -1956,6 +1961,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>TotalDead</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Leaf].Dead</string>
           <string>[Petiole].Dead</string>
@@ -55241,10 +55247,10 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <Population>9</Population>
                   <InitialRootDepth>2.5</InitialRootDepth>
                   <CropToSow>Brigadier</CropToSow>
                   <SowingDate>2010-12-28</SowingDate>
-                  <Population>9</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -55288,7 +55294,7 @@ namespace Models
         {
             if (Clock.Today.Date == SowingDate)
             {
-                FodderBeet.Sow(cultivar: CropToSow, population: 8, depth: InitialRootDepth, rowSpacing: 500);
+                FodderBeet.Sow(cultivar: CropToSow, population: Population, depth: InitialRootDepth, rowSpacing: 500);
                 
             }
                         
@@ -55460,79 +55466,6 @@ namespace Models
           </Zone>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Simulation>
-        <Folder>
-          <Name>BiomassGraphs</Name>
-          <Graph>
-            <Name>TotalWt</Name>
-            <Series>
-              <Name>Simulated</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>Report</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FodderBeet.AboveGround.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>Observed</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-3376729</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledCircle</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>ObservedData</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FodderBeet.AboveGround.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Axis>
-              <Type>Left</Type>
-              <Title>Crop Biomass (g/m2)</Title>
-              <Inverted>false</Inverted>
-              <Minimum>0</Minimum>
-              <Maximum>4000</Maximum>
-              <Interval>500</Interval>
-            </Axis>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title>Date</Title>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ShowPageOfGraphs>true</ShowPageOfGraphs>
-        </Folder>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <DisabledSimNames />
       </Experiment>
@@ -55671,5 +55604,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>647</ExplorerWidth>
+  <ExplorerWidth>456</ExplorerWidth>
 </Simulations>
