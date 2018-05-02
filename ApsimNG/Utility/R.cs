@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Win32;
 using System.IO;
 using APSIM.Shared.Utilities;
+using System.Data;
 
 namespace Utility
 {
@@ -81,7 +82,7 @@ namespace Utility
             {
                 string rScript = GetRExePath();
                 // Create a temporary working directory.
-                workingDirectory = Path.Combine(Path.GetTempPath(), new Guid().ToString());
+                workingDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
                 if (!Directory.Exists(workingDirectory)) // I would be very suprised if it did already exist
                     Directory.CreateDirectory(workingDirectory);
 
@@ -101,6 +102,28 @@ namespace Utility
             RunAsync(fileName);
             proc.WaitForExit();
             return Output;
+        }
+
+        /// <summary>
+        /// Runs an R script (synchronously) and returns the stdout as a <see cref="DataTable"/>.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public DataTable RunToTable(string fileName)
+        {
+            // Not sure that this method really belongs in this class, but it can stay here for now.
+            string result = Run(fileName);
+
+            string tempFile = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), "csv");
+            if (!File.Exists(tempFile))
+                File.Create(tempFile).Close();
+            
+            File.WriteAllText(tempFile, result);
+            DataTable table = ApsimTextFile.ToTable(tempFile);
+            System.Threading.Thread.Sleep(200);
+            if (File.Exists(tempFile))
+                File.Delete(tempFile);
+            return table;
         }
 
         /// <summary>
