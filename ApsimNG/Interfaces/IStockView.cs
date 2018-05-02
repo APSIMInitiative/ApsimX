@@ -18,7 +18,16 @@ namespace UserInterface.Interfaces
         StockGeno[] Genotypes { get; set; }
 
         void SetValues();
+        void SetGenoParams(TAnimalParamSet animalParams);
+
+        event EventHandler<GenotypeInitArgs> GetGenoParams;
     }
 
- 
+    public class GenotypeInitArgs : EventArgs
+    {
+        public TAnimalParamSet ParamSet;
+        public StockGeno[] Genotypes;
+        public int index;
+    }
+
 }

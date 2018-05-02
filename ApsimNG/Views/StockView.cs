@@ -10,25 +10,58 @@ namespace UserInterface.Views
     using System.Collections.Generic;
     using Gtk;
     using Interfaces;
-    using Models.GrazPlan;   
+    using Models.GrazPlan;
 
     public class StockView : ViewBase, IStockView
     {
+        private const int MAX_GENOTYPES = 20;
         private int FCurrGenotype;
         private GrazType.AnimalType[] FGenotypeAnimals = new GrazType.AnimalType[20];
         private TAnimalParamSet paramSet;
-        private StockGeno[] genoTypeInits;
+        private TAnimalParamSet genotypeSet;
+        private bool FILLING = false;
+
+        
+        /// <summary>
+        /// The array of genotype specifications from the component inits
+        /// </summary>
+        private StockGeno[] genotypeInits;
 
         private Notebook notebook1 = null;
-        private Notebook notebook2 = null;
         // genotypes tab
-        private Gtk.TreeView tvGenotype = null;
+        private Frame gbxGenotype = null;
+        private Entry edtGenotypeName = null;
+        private Entry edtBreedSRW = null;
+        private Gtk.TreeView lbxGenotypeList = null;
         private Button btnNewGeno = null;
         private Button btnDelGeno = null;
+        private DropDownView cbxGeneration = null;
         private DropDownView cbxDamBreed = null;
         private DropDownView cbxSireBreed = null;
         private RadioButton rbtnSheep = null;
         private RadioButton rbtnCattle = null;
+        private Label lblConception3 = null;
+        private Label unitConception = null;
+        private Entry edtConception1 = null;
+        private Entry edtConception2 = null;
+        private Entry edtConception3 = null;
+        private Entry edtDeathRate = null;
+        private Entry edtWnrDeathRate = null;
+        private Entry edtBreedPFW_PeakMilk = null;
+        private Label lblBreedPFW_PeakMilk = null;
+        private Label unitBreedPFW_PeakMilk = null;
+        private Entry edtWoolYield = null;
+        private Label untWoolYield = null;
+        private Label lblWoolYield = null;
+        private Label lblDamBreed = null;
+        private Label lblSireBreed = null;
+        private Entry edtBreedMaxMu = null;
+        private Label lblBreedMaxMu = null;
+        private Label unitBreedMaxMu = null;
+
+        // TODO: write a small wrapper class for Entry controls so it contains the max,min,scale parameters. Has a
+        // validation function that can be called whe .Changed is handled.
+
         /// <summary>
         /// The list of genotypes in the treeview
         /// </summary>
@@ -37,41 +70,91 @@ namespace UserInterface.Views
         // animals tab
         private DropDownView cbxGroupGenotype = null;
 
+        public event EventHandler<GenotypeInitArgs> GetGenoParams;
+
         public StockView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.StockView.glade");
             notebook1 = (Notebook)builder.GetObject("notebook1");
             notebook1.SwitchPage += TabControl1_SelectedIndexChanged;
-            notebook2 = (Notebook)builder.GetObject("notebook2");
-            // genotypes tab
-            tvGenotype = (Gtk.TreeView)builder.GetObject("tvGenotypes");
-            tvGenotype.Model = genoList;
+
+            gbxGenotype = (Frame)builder.GetObject("gbxGenotype");
+            edtGenotypeName = (Entry)builder.GetObject("edtGenotypeName");
+            edtBreedSRW = (Entry)builder.GetObject("edtBreedSRW");
             btnNewGeno = (Button)builder.GetObject("btnNewGeno");
             btnDelGeno = (Button)builder.GetObject("btnDelGeno");
-            btnNewGeno.Clicked += btnNewGeno_Clicked;
-            btnDelGeno.Clicked += btnDelGeno_Clicked;
-            cbxDamBreed = new Views.DropDownView(this, (ComboBox)builder.GetObject("cbxDamBreed"));
-            cbxSireBreed = new Views.DropDownView(this, (ComboBox)builder.GetObject("cbxSireBreed"));
             rbtnSheep = (Gtk.RadioButton)builder.GetObject("rbtnSheep");
             rbtnCattle = (Gtk.RadioButton)builder.GetObject("rbtnCattle");
+            lblConception3 = (Label)builder.GetObject("lblConception3");
+            unitConception = (Label)builder.GetObject("unitConception");
+            edtConception1 = (Entry)builder.GetObject("edtConception1");
+            edtConception2 = (Entry)builder.GetObject("edtConception2");
+            edtConception3 = (Entry)builder.GetObject("edtConception3");
+            edtDeathRate = (Entry)builder.GetObject("edtDeathRate");
+            edtWnrDeathRate = (Entry)builder.GetObject("edtWnrDeathRate");
+            edtBreedPFW_PeakMilk = (Entry)builder.GetObject("edtBreedPFW_PeakMilk");
+            lblBreedPFW_PeakMilk = (Label)builder.GetObject("lblBreedPFW_PeakMilk");
+            unitBreedPFW_PeakMilk = (Label)builder.GetObject("unitBreedPFW_PeakMilk");
+            edtWoolYield = (Entry)builder.GetObject("edtWoolYield");
+            untWoolYield = (Label)builder.GetObject("untWoolYield");
+            lblWoolYield = (Label)builder.GetObject("lblWoolYield");
+            lblDamBreed = (Label)builder.GetObject("lblDamBreed");
+            lblSireBreed = (Label)builder.GetObject("lblSireBreed");
+            edtBreedMaxMu = (Entry)builder.GetObject("edtBreedMaxMu");
+            lblBreedMaxMu = (Label)builder.GetObject("lblBreedMaxMu");
+            unitBreedMaxMu = (Label)builder.GetObject("unitBreedMaxMu");
 
+            cbxDamBreed = new Views.DropDownView(this, (ComboBox)builder.GetObject("cbxDamBreed"));
+            cbxSireBreed = new Views.DropDownView(this, (ComboBox)builder.GetObject("cbxSireBreed"));
+            cbxGeneration = new Views.DropDownView(this, (ComboBox)builder.GetObject("cbxGeneration"));
+            cbxGroupGenotype = new Views.DropDownView(this, (ComboBox)builder.GetObject("cbxGroupGenotype"));   // animals tab
+
+            cbxGeneration.Values = new string[] { "Purebred", "First cross", "Second cross", "Third cross", "Fourth cross", "Fifth cross", "Sixth cross" };
+
+            // configure the treeview of genotype names
+            lbxGenotypeList = (Gtk.TreeView)builder.GetObject("tvGenotypes");
+            lbxGenotypeList.Model = genoList;
+            CellRendererText textRender = new Gtk.CellRendererText();
+            TreeViewColumn column = new TreeViewColumn("Genotype Names", textRender, "text", 0);
+            lbxGenotypeList.AppendColumn(column);
+            lbxGenotypeList.HeadersVisible = false;
+            lbxGenotypeList.CursorChanged += lbxGenotypeList_SelectedIndexChanged;
+
+            btnNewGeno.Clicked += btnNewGeno_Clicked;
+            btnDelGeno.Clicked += btnDelGeno_Clicked;
+            edtGenotypeName.Changed += ChangeGenotypeName;
             rbtnSheep.Clicked += ClickAnimal;
             rbtnCattle.Clicked += ClickAnimal;
-
-            cbxGroupGenotype = (new Views.DropDownView(this, (ComboBox)builder.GetObject("cbxGroupGenotype")));
+            cbxDamBreed.Changed += ChangeBreed;
+            cbxGeneration.Changed += ChangeGeneration;
 
             _mainWidget = notebook1;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
+        /// <summary>
+        /// The list of genotypes in the component's inits
+        /// </summary>
         public StockGeno[] Genotypes
         {
-            get {
-                return genoTypeInits;
+            get
+            {
+                return genotypeInits;
             }
-            set {
-                genoTypeInits = value;
+            set
+            {
+                genotypeInits = new StockGeno[value.Length];
+                value.CopyTo(genotypeInits, 0);
             }
+        }
+
+        /// <summary>
+        /// Responds after a GetGenoParams event is called
+        /// </summary>
+        /// <param name="animalParams"></param>
+        public void SetGenoParams(TAnimalParamSet animalParams)
+        {
+            this.genotypeSet = animalParams;
         }
 
         /// <summary>
@@ -79,151 +162,507 @@ namespace UserInterface.Views
         /// </summary>
         public void SetValues()
         {
-            /*            
-              tempParams: TAnimalParamSet;
-              bWeaner: Boolean;
-            */
-
             this.paramSet = StockList.MakeParamSet("");   // can use the param filename from component inits
 
-            string[] genoNames = new string[genoTypeInits.Length];
-            for (int i = 0; i < genoTypeInits.Length; i++)
-                genoNames[i] = genoTypeInits[i].Name;
-
             genoList.Clear();
-            genoList.AppendValues(genoNames);
-
-            cbxGroupGenotype.Values = genoNames;
-
-            for (int idx = 0; idx < genoTypeInits.Length; idx++)
+            string[] genoNames = new string[genotypeInits.Length];
+            for (int i = 0; i < genotypeInits.Length; i++)
             {
-                /*   tempParams := ParamsFromGenotypeInits(ParamSet, FValues.Genotypes, Idx);
-                   if (tempParams <> NIL) then
-                   begin
-                     FGenotypeAnimals[Idx] := tempParams.Animal;
-
-                     FValues.Genotypes[Idx].SRW := tempParams.BreedSRW;
-                     { Read back any default-handling that }
-                     FValues.Genotypes[Idx].PotFleeceWt := tempParams.PotentialGFW;
-                     { was done while creating tempParams }
-                     FValues.Genotypes[Idx].MaxFibreDiam := tempParams.MaxMicrons;
-                     FValues.Genotypes[Idx].FleeceYield := tempParams.FleeceYield;
-                     FValues.Genotypes[Idx].PeakMilk := tempParams.PotMilkYield;
-                     for bWeaner := False to True do
-                       FValues.Genotypes[Idx].DeathRate[bWeaner] :=
-                         tempParams.AnnualDeaths[bWeaner];
-                     FValues.Genotypes[Idx].Conceptions := tempParams.Conceptions;
-                   end
-                   else
-                     FGenotypeAnimals[Idx] := Sheep;
-                   tempParams.Free;
-                 */
+                genoNames[i] = genotypeInits[i].Name;
+                genoList.AppendValues(genotypeInits[i].Name);
             }
-            FCurrGenotype = 0; // Math.Min(0, genoTypeInits.Length - 1); 
+            cbxGroupGenotype.Values = genoNames;        // animals tab
+
+            GenotypeInitArgs args = new GenotypeInitArgs();
+            args.Genotypes = genotypeInits;
+            args.ParamSet = this.paramSet;
+            for (int idx = 0; idx < genotypeInits.Length; idx++)
+            {
+                args.index = idx;
+                GetGenoParams.Invoke(null, args);   // gets params from the stock model
+
+                if (this.genotypeSet != null)
+                {
+                    FGenotypeAnimals[idx] = this.genotypeSet.Animal;
+                }
+                else
+                    FGenotypeAnimals[idx] = GrazType.AnimalType.Sheep;
+            }
+            FCurrGenotype = Math.Min(0, genotypeInits.Length - 1);
             FillCurrGenotype();
-            /*
-            lbxGenotypeList.ItemIndex := FCurrGenotype;
 
-            lbxAnimalList.Clear; { Populate the animal groups list box }
-            for Idx := 0 to FValues.NoGroups - 1 do
-              lbxAnimalList.Items.Add(GroupText(Idx));
+            FILLING = true;
+            if (FCurrGenotype >= 0)
+                SelectedGenoIndex = FCurrGenotype;
+            FILLING = false;
 
-            //setup all the enterprises
-            while pcEnterprises.PageCount > 1 do
-              pcEnterprises.Pages[pcEnterprises.PageCount - 1].Free;
-
-            Panel1.Visible := False;
-            pcEnterprises.Pages[0].TabVisible := False;
-            if FValues.Enterprises <> nil then
-            begin
-              for i := 0 to FValues.Enterprises.Count - 1 do
-                addTabPage(FValues.Enterprises.byIndex(i).name);
-              pcEnterprises.ActivePageIndex := 0;
-            end;
-
-            FCurrGroup := Min(0, FValues.NoGroups - 1);
-            { Decide on and display the initial value }
-            FillCurrGroup; { of the currently selected animal group }
-            lbxAnimalList.ItemIndex := FCurrGroup;
-
-            enableButtons;
-
-                      */
+            EnableButtons();
         }
 
+        /// <summary>
+        /// Fill the controls on the form
+        /// </summary>
         private void FillCurrGenotype()
         {
-
             GrazType.AnimalType theAnimal;
-            SingleGenotypeInits theGenoType;
-            /*
+            StockGeno theGenoType;
+
             if (FCurrGenotype < 0)
-                gbxGenotype.Hide;
+                gbxGenotype.Hide();
             else
-                gbxGenotype.Show;
+                gbxGenotype.Show();
 
-            FILLING:= True;
 
-            theGenoType:= FValues.Genotypes[FCurrGenotype]; */
-            theAnimal = FGenotypeAnimals[FCurrGenotype];
-            /*
-            if (theAnimal = GrazType.Sheep) then
-            begin
-      edtBreedSRW.maxValue := MAXSHEEPSRW;
-            edtBreedSRW.minValue := MINSHEEPSRW;
-            end
-    else if (theAnimal = GrazType.Cattle) then
-    begin
-      edtBreedSRW.maxValue := MAXCATTLESRW;
-            edtBreedSRW.minValue := MINCATTLESRW;
-            end;
+            FILLING = true;
 
-            lblConception3.Visible := (theAnimal = Sheep);
-            { Visibility of animal - specific parameters }
-            edtConception3.Visible := (theAnimal = Sheep);
-            unitConception.Visible := (theAnimal = Sheep);
-            pnlWool.Visible := (theAnimal = GrazType.Sheep);
-            pnlMilk.Visible := (theAnimal = GrazType.Cattle);
+            if (FCurrGenotype >= 0)
+            {
+                theGenoType = this.genotypeInits[FCurrGenotype];
+                theAnimal = FGenotypeAnimals[FCurrGenotype];
 
-            edtGenotypeName.Text := theGenoType.sGenotypeName; */
-            rbtnSheep.Active = (theAnimal == GrazType.AnimalType.Sheep);
-            rbtnCattle.Active = (theAnimal == GrazType.AnimalType.Cattle);
-            /*cbxGeneration.ItemIndex :=
-              Max(0, Min(theGenoType.iGeneration, cbxGeneration.Items.Count - 1));
-            ChangeGeneration(NIL);
+                if (theAnimal == GrazType.AnimalType.Sheep)
+                {
+                    ////edtBreedSRW.maxValue = MAXSHEEPSRW;
+                    ////edtBreedSRW.minValue = MINSHEEPSRW;
+                }
+                else if (theAnimal == GrazType.AnimalType.Cattle)
+                {
+                    ////edtBreedSRW.maxValue = MAXCATTLESRW;
+                    ////edtBreedSRW.minValue = MINCATTLESRW;
+                }
 
-            if (theGenoType.iGeneration = 0) and(theGenoType.sDamBreed = '') then
-            //sDamBreed
-      cbxDamBreed.ItemIndex := cbxDamBreed.Items.IndexOf
-        (theGenoType.sGenotypeName)
+
+                // Enable controls for Peak milk or fleece details
+                EnablePeakMilkOrFleece(theAnimal);
+
+                edtGenotypeName.Text = theGenoType.Name;
+
+                //rbtnSheep.Clicked -= ClickAnimal;
+                //rbtnCattle.Clicked -= ClickAnimal;
+
+                rbtnSheep.Active = (theAnimal == GrazType.AnimalType.Sheep);
+                rbtnCattle.Active = (theAnimal == GrazType.AnimalType.Cattle);
+
+                //rbtnSheep.Clicked += ClickAnimal;
+                //rbtnCattle.Clicked += ClickAnimal;
+
+                cbxGeneration.SelectedIndex = Math.Max(0, Math.Min(theGenoType.Generation, cbxGeneration.Values.Length - 1));
+                ChangeGeneration(null, null);
+
+                if ((theGenoType.Generation == 0) && (theGenoType.DamBreed == ""))                    //sDamBreed
+                    cbxDamBreed.SelectedIndex = cbxDamBreed.IndexOf(theGenoType.Name);
+                else
+                    cbxDamBreed.SelectedIndex = cbxDamBreed.IndexOf(theGenoType.DamBreed);
+
+                cbxSireBreed.SelectedIndex = cbxSireBreed.IndexOf(theGenoType.SireBreed);
+                if (cbxSireBreed.SelectedIndex < 0)
+                    cbxSireBreed.SelectedIndex = cbxDamBreed.SelectedIndex;
+
+                edtBreedSRW.Text = theGenoType.SRW.ToString();
+                edtDeathRate.Text = (100 * theGenoType.DeathRate).ToString();
+                edtWnrDeathRate.Text = (100 * theGenoType.WnrDeathRate).ToString();
+                edtConception1.Text = (100 * theGenoType.Conception[1]).ToString();
+                edtConception2.Text = (100 * theGenoType.Conception[2]).ToString();
+
+                if (theAnimal == GrazType.AnimalType.Sheep)
+                {
+                    edtConception3.Text = (100 * theGenoType.Conception[3]).ToString();
+                    edtBreedPFW_PeakMilk.Text = theGenoType.RefFleeceWt.ToString();
+                    edtBreedMaxMu.Text = theGenoType.MaxFibreDiam.ToString();
+                    edtWoolYield.Text = (100 * theGenoType.FleeceYield).ToString();
+                }
+                else if (theAnimal == GrazType.AnimalType.Cattle)
+                {
+                    ////edtPeakMilk.minValue = Min(10.0, edtBreedSRW.Value * 0.01);
+                    edtBreedPFW_PeakMilk.Text = theGenoType.PeakMilk.ToString();
+                }
+            }
+            FILLING = false;
+        }
+
+        /// <summary>
+        /// When changing the pure/cross bred
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChangeGeneration(object sender, EventArgs e)
+        {
+            if (cbxGeneration.SelectedIndex <= 0)
+            {
+                lblDamBreed.Text = "Breed";
+                lblSireBreed.Hide();
+                cbxSireBreed.IsVisible = false;
+            }
             else
-      cbxDamBreed.ItemIndex := cbxDamBreed.Items.IndexOf(theGenoType.sDamBreed);
-            cbxSireBreed.ItemIndex := cbxSireBreed.Items.IndexOf
-              (theGenoType.sSireBreed);
-            if (cbxSireBreed.ItemIndex < 0) then
-              cbxSireBreed.ItemIndex := cbxDamBreed.ItemIndex;
+            {
+                lblDamBreed.Text = "Dam breed";
+                lblSireBreed.Show();
+                cbxSireBreed.IsVisible = true;
+            }
+        }
 
-            edtBreedSRW.Value := theGenoType.SRW;
-            edtDeathRate.Value := theGenoType.DeathRate[False];
-            edtWnrDeathRate.Value := theGenoType.DeathRate[True];
-            edtConception1.Value := theGenoType.Conceptions[1];
-            edtConception2.Value := theGenoType.Conceptions[2];
-
-            if (theAnimal = GrazType.Sheep) then
-            begin
-              edtConception3.Value := theGenoType.Conceptions[3];
-            edtBreedPFW.Value := theGenoType.PotFleeceWt;
-            edtBreedMaxMu.Value := theGenoType.MaxFibreDiam;
-            edtWoolYield.Value := theGenoType.FleeceYield;
-            end
-            else if (theAnimal = GrazType.Cattle) then
-              edtPeakMilk.minValue := Min(10.0, edtBreedSRW.Value * 0.01);
-            edtPeakMilk.Value := theGenoType.PeakMilk;
-
-            FILLING:= False;
-            */
+        /// <summary>
+        /// Switch between sheep and cattle controls
+        /// </summary>
+        /// <param name="theAnimal"></param>
+        private void EnablePeakMilkOrFleece(GrazType.AnimalType theAnimal)
+        {
+            // Visibility of animal - specific parameters 
+            lblConception3.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            edtConception3.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            //unitConception.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            edtWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            untWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            lblWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            edtBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            unitBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            lblBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            if (theAnimal == GrazType.AnimalType.Sheep)
+            {
+                lblBreedPFW_PeakMilk.Text = "Breed potential fleece weight";
+                unitBreedPFW_PeakMilk.Text = "kg";
+            }
+            else
+            {
+                //cattle
+                lblBreedPFW_PeakMilk.Text = "Peak milk production";
+                unitBreedPFW_PeakMilk.Text = "kg FCM";
 
             }
+        }
+
+        /// <summary>
+        /// Store the current genotype
+        /// </summary>
+        private void ParseCurrGenotype()
+        {
+            StockGeno theGenoType;
+
+            if (FCurrGenotype >= 0 && !FILLING)
+            {
+                theGenoType = new StockGeno();
+                theGenoType.Conception = new double[4];
+                theGenoType.Name = edtGenotypeName.Text;
+
+                theGenoType.Generation = cbxGeneration.SelectedIndex;
+                if (theGenoType.Generation > 0)
+                {
+                    theGenoType.DamBreed = cbxDamBreed.SelectedValue;
+                    theGenoType.SireBreed = cbxSireBreed.SelectedValue;
+                }
+                else if (cbxDamBreed.SelectedValue.ToLower() == theGenoType.Name.ToLower())
+                {
+                    theGenoType.DamBreed = string.Empty;
+                    theGenoType.SireBreed = string.Empty;
+                }
+                else
+                {
+                    theGenoType.DamBreed = cbxDamBreed.SelectedValue;
+                    theGenoType.SireBreed = string.Empty;
+                }
+
+                theGenoType.SRW = Convert.ToDouble(edtBreedSRW.Text);
+                theGenoType.DeathRate = Convert.ToDouble(edtDeathRate.Text) * 0.01;
+                theGenoType.WnrDeathRate = Convert.ToDouble(edtWnrDeathRate.Text) * 0.01;
+                theGenoType.Conception[1] = Convert.ToDouble(edtConception1.Text) * 0.01;
+                theGenoType.Conception[2] = Convert.ToDouble(edtConception2.Text) * 0.01;
+
+                if (FGenotypeAnimals[FCurrGenotype] == GrazType.AnimalType.Sheep)
+                {
+                    theGenoType.Conception[3] = Convert.ToDouble(edtConception3.Text) * 0.01;
+                    theGenoType.RefFleeceWt = Convert.ToDouble(edtBreedPFW_PeakMilk.Text);
+                    theGenoType.MaxFibreDiam = Convert.ToDouble(edtBreedMaxMu.Text);
+                    theGenoType.FleeceYield = Convert.ToDouble(edtWoolYield.Text) * 0.01;
+                    theGenoType.PeakMilk = 0.0;
+                }
+                else if (FGenotypeAnimals[FCurrGenotype] == GrazType.AnimalType.Cattle)
+                {
+                    theGenoType.PeakMilk = Convert.ToDouble(edtBreedPFW_PeakMilk.Text);
+                    theGenoType.Conception[3] = 0.0;
+                    theGenoType.RefFleeceWt = 0.0;
+                    theGenoType.MaxFibreDiam = 0.0;
+                    theGenoType.FleeceYield = 0.0;
+                }
+                this.genotypeInits[FCurrGenotype] = theGenoType;
+            }
+        }
+
+        /// <summary>
+        /// Add a new genotype to the list on the form
+        /// </summary>
+        /// <param name="sender">Sending object</param>
+        /// <param name="e">Event arguments</param>
+        private void btnNewGeno_Clicked(object sender, EventArgs e)
+        {
+            GrazType.AnimalType newAnimal;
+            int iNewBreed;
+            string sNewBreed = "";
+            bool bFound;
+            int Idx;
+
+            if (genotypeInits.Length < MAX_GENOTYPES)
+            {
+                ParseCurrGenotype();
+
+                newAnimal = GrazType.AnimalType.Sheep;
+                iNewBreed = 0;
+                bFound = false;
+                while ((iNewBreed < paramSet.iBreedCount(newAnimal)) && !bFound)
+                {
+                    sNewBreed = paramSet.sBreedName(GrazType.AnimalType.Sheep, iNewBreed);
+
+                    bFound = true;
+                    for (Idx = 0; Idx < genotypeInits.Length; Idx++)
+                    {
+                        bFound = (bFound && (sNewBreed.ToLower() != genotypeInits[Idx].Name.ToLower()));
+                    }
+                    if (!bFound && (newAnimal == GrazType.AnimalType.Sheep) && (iNewBreed == paramSet.iBreedCount(newAnimal)))
+                    {
+                        newAnimal = GrazType.AnimalType.Cattle;
+                        iNewBreed = 0;
+                    }
+                    else
+                        iNewBreed++;
+                }
+
+                if (!bFound)
+                    throw new Exception("Error allocating new breed");
+                else
+                {
+                    Array.Resize(ref genotypeInits, genotypeInits.Length + 1);
+                    genotypeInits[genotypeInits.Length - 1] = new StockGeno();
+                    genotypeInits[genotypeInits.Length - 1].Conception = new double[4];
+                }
+
+                SetGenotypeDefaults(genotypeInits.Length - 1, sNewBreed);
+                genoList.AppendValues(sNewBreed);
+                SelectedGenoIndex = genotypeInits.Length - 1;
+                ClickGenotypeList(null, null);
+
+                EnableButtons();
+            }
+        }
+
+        /// <summary>
+        /// When an item is clicked in the genotype list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClickGenotypeList(object sender, EventArgs e)
+        {
+            if (FCurrGenotype >= 0 && !FILLING)
+                ParseCurrGenotype();
+            FCurrGenotype = SelectedGenoIndex;
+            FillCurrGenotype(); 
+        }
+
+        /// <summary>
+        /// Enable the add/del buttons
+        /// </summary>
+        private void EnableButtons()
+        {
+            btnNewGeno.Sensitive = (genotypeInits.Length < MAX_GENOTYPES);
+            btnDelGeno.Sensitive = (genotypeInits.Length > 0);
+        }
+
+        /// <summary>
+        /// Respond to the changing of the breed using the combo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChangeBreed(object sender, EventArgs e)
+        {
+            if (!FILLING)
+            {
+                string newGenoName = MakeUniqueGenoName(cbxDamBreed.SelectedValue);
+                SetGenotypeDefaults(FCurrGenotype, cbxDamBreed.SelectedValue);
+                FillCurrGenotype();
+                edtGenotypeName.Text = newGenoName;
+                //ChangeGenotypeName(sender, e);          // ensure trigger updates on the Animals tab also
+                FILLING = true;            SetItem(genoList, FCurrGenotype, newGenoName); FILLING = false;
+            }
+        }
+
+        /// <summary>
+        /// Make adjustments when the genotype name is edited by the user.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChangeGenotypeName(object sender, EventArgs e)
+        {
+            if (!FILLING)
+            {
+                SetItem(genoList, FCurrGenotype, edtGenotypeName.Text);
+            }
+        }
+        /// <summary>
+        /// Create a unique genotype name that doesn't exist in the list of names.
+        /// </summary>
+        /// <param name="newGenoName"></param>
+        /// <returns></returns>
+        private string MakeUniqueGenoName(string newGenoName)
+        {
+            string result = newGenoName;
+            int i = 2;
+
+            while ((IndexOf(genoList, result) >= 0) || (IndexOf(genoList, result.ToLower()) >= 0))
+            {
+                result = newGenoName + " #" + i.ToString();
+                i++;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get the index of the search string in the ListStore
+        /// </summary>
+        /// <param name="store"></param>
+        /// <param name="search"></param>
+        /// <returns>-1 if not found</returns>
+        private int IndexOf(ListStore store, string search)
+        {
+            int result = -1;
+            int nNames = store.IterNChildren();
+            TreeIter iter;
+            int i = 0;
+            if (store.GetIterFirst(out iter))
+            {
+                do
+                {
+                    if (string.Compare(search, (string)store.GetValue(iter, 0), true) == 0)
+                        result = i;
+                    i++;
+                }
+                while (store.IterNext(ref iter) && result == -1);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get the string of the item at an index
+        /// </summary>
+        /// <param name="store">The list store</param>
+        /// <param name="index">The index of the item</param>
+        /// <returns>The string value at the index</returns>
+        private string GetItem(ListStore store, int index)
+        {
+            string result = string.Empty;
+            TreeIter iter;
+            int i = 0;
+            bool more = store.GetIterFirst(out iter);
+            while (more)
+            {
+                if (i == index)
+                {
+                    result = (string)store.GetValue(iter, 0);
+                    more = false;
+                }
+                else
+                    more = store.IterNext(ref iter);
+                i++;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Sets the item in the list with a new string value
+        /// </summary>
+        /// <param name="store">The list store</param>
+        /// <param name="index">Set this item</param>
+        /// <param name="value">The new string</param>
+        private void SetItem(ListStore store, int index, string value)
+        {
+            TreeIter iter;
+            int i = 0;
+            bool more = store.GetIterFirst(out iter);
+            while (more)
+            {
+                if (i == index)
+                {
+                    store.SetValue(iter, 0, value);
+                    more = false;
+                }
+                more = store.IterNext(ref iter);
+                i++;
+            }
+        }
+
+        private double RoundValue(double fX, double fScale)
+        {
+            return fScale * Math.Round(fX / fScale);
+        }
+
+        /// <summary>
+        /// Store the settings for the breed name in the list of genotypes that have been defined.
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <param name="sBreedName"></param>
+        private void SetGenotypeDefaults(int idx, string sBreedName)
+        {
+            TAnimalParamSet breedParams;
+            StockGeno theGenoType;
+
+            breedParams = paramSet.Match(sBreedName);
+            if (breedParams != null)
+            {
+                theGenoType = genotypeInits[idx];
+
+                FGenotypeAnimals[idx] = breedParams.Animal;
+
+                theGenoType.Name = breedParams.sName;
+                theGenoType.DamBreed = string.Empty;
+                theGenoType.SireBreed = string.Empty;
+                theGenoType.Generation = 0;
+                theGenoType.SRW = breedParams.BreedSRW;
+                theGenoType.DeathRate = RoundValue(breedParams.AnnualDeaths(false), 0.001);
+                theGenoType.WnrDeathRate = RoundValue(breedParams.AnnualDeaths(true), 0.001);
+                theGenoType.Conception[1] = RoundValue(breedParams.Conceptions[1], 0.01);
+                theGenoType.Conception[2] = RoundValue(breedParams.Conceptions[2], 0.01);
+
+                if (breedParams.Animal == GrazType.AnimalType.Sheep)
+                {
+                    theGenoType.Conception[3] = RoundValue(breedParams.Conceptions[3], 0.01);
+                    theGenoType.RefFleeceWt = breedParams.PotentialGFW;
+                    theGenoType.MaxFibreDiam = breedParams.MaxMicrons;
+                    theGenoType.FleeceYield = breedParams.FleeceYield;
+                    theGenoType.PeakMilk = 0.0;
+                }
+                else if (breedParams.Animal == GrazType.AnimalType.Cattle)
+                {
+                    theGenoType.PeakMilk = breedParams.PotMilkYield;
+                    theGenoType.Conception[3] = 0.0;
+                    theGenoType.RefFleeceWt = 0.0;
+                    theGenoType.MaxFibreDiam = 0.0;
+                    theGenoType.FleeceYield = 0.0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Selected index for the treeview
+        /// </summary>
+        private int SelectedGenoIndex
+        {
+            get
+            {
+                TreePath selPath;
+                TreeViewColumn selCol;
+                lbxGenotypeList.GetCursor(out selPath, out selCol);
+                return selPath != null ? selPath.Indices[0] : 0;
+            }
+
+            set
+            {
+                if (value >= 0)
+                {
+                    int[] indices = new int[1] { value };
+                    TreePath selPath = new TreePath(indices);
+                    lbxGenotypeList.SetCursor(selPath, null, false);
+                }
+            }
+        }
 
         /// <summary>
         /// Sets the value of TheAnimal, then initialises the breed list boxes and 
@@ -242,46 +681,62 @@ namespace UserInterface.Views
             else
                 currAnimal = GrazType.AnimalType.Cattle;
 
-            //if (currAnimal <> FGenotypeAnimals[FCurrGenotype]) then
-              //  deleteGroupsWithGenotype(FCurrGenotype);
-
             FGenotypeAnimals[FCurrGenotype] = currAnimal;
 
             List<string> names = new List<string>();
-            
+
             int count = this.paramSet.iBreedCount(currAnimal);
             string[] namesArray = new string[count];
             for (int i = 0; i < count; i++)
             {
                 namesArray[i] = paramSet.sBreedName(currAnimal, i);
             }
+
+            cbxDamBreed.Changed -= ChangeBreed;
+
             cbxDamBreed.Values = namesArray;
-            cbxDamBreed.SelectedIndex = 0; 
+            cbxDamBreed.SelectedIndex = 0;
             cbxSireBreed.Values = namesArray;
             cbxSireBreed.SelectedIndex = 0;
 
-            //ChangeBreed(NIL);            //Force default SRW values etc 
+            cbxDamBreed.Changed += ChangeBreed;
+
+            ChangeBreed(null, null);            //Force default SRW values etc 
         }
 
-        private void btnNewGeno_Clicked(object sender, EventArgs e)
-        {
-
-        }
-
+        /// <summary>
+        /// Delete the currently selected genotype from genotypeInits[]
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDelGeno_Clicked(object sender, EventArgs e)
         {
+            //int idx = SelectedGenoIndex;
 
-        }
+            if (FCurrGenotype >= 0)
+            {
+                //TODO when animals tab is working: deleteGroupsWithGenotype(FCurrGenotype);
 
-        public string[] GenotypeNames
-        {
-            get;
-            set;
+                for (int idx = FCurrGenotype + 1; idx <= genotypeInits.Length - 1; idx++)
+                        genotypeInits[idx - 1] = genotypeInits[idx];
+                Array.Resize(ref genotypeInits, genotypeInits.Length - 1);
+
+                // repopulate the view
+                SetValues();
+                EnableButtons();
+            }
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             // detach events
+            btnNewGeno.Clicked -= btnNewGeno_Clicked;
+            btnDelGeno.Clicked -= btnDelGeno_Clicked;
+            edtGenotypeName.Changed -= ChangeGenotypeName;
+            rbtnSheep.Clicked -= ClickAnimal;
+            rbtnCattle.Clicked -= ClickAnimal;
+            cbxDamBreed.Changed -= ChangeBreed;
+            cbxGeneration.Changed -= ChangeGeneration;
             notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
         }
 
@@ -294,5 +749,13 @@ namespace UserInterface.Views
                     break;
             }
         }
+
+        private void lbxGenotypeList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ClickGenotypeList(sender, e);
+        }
     }
 }
+
+// myArray = new List<string>(myArray) { "add this" }.ToArray();
+

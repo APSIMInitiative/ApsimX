@@ -41,9 +41,11 @@ namespace UserInterface.Presenters
             stockView = view as StockView;
             explorerPresenter = explrPresenter;
 
+            stockView.GetGenoParams += OnGetGenoParams;
+
             ConnectViewEvents();
             PopulateView();
-
+            
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
@@ -54,6 +56,9 @@ namespace UserInterface.Presenters
         {
             DisconnectViewEvents();
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+
+            stock.GenoTypes = stockView.Genotypes;  // copies back to the model
+
         }
 
         /// <summary>
@@ -81,7 +86,6 @@ namespace UserInterface.Presenters
 
         }
 
-
         /// <summary>
         /// The model has changed. Update the view.
         /// </summary>
@@ -99,7 +103,13 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateGenotypes()
         {
-            stockView.Genotypes = stock.GenoTypes;
+            stockView.Genotypes = stock.GenoTypes;  // copies the init value array into the View
+        }
+
+        private void OnGetGenoParams(object sender, GenotypeInitArgs e)
+        {
+            TAnimalParamSet tempParams = stock.ParamsFromGenotypeInits(e.ParamSet, e.Genotypes, e.index);
+            stockView.SetGenoParams(tempParams);
         }
     }
 }

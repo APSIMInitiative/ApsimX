@@ -124,6 +124,7 @@ namespace UserInterface.Views
                 combobox1.Active = Math.Min(value, comboModel.IterNChildren());
             }
         }
+
         /// <summary>Gets or sets the selected value.</summary>
         public string SelectedValue
         {
@@ -181,5 +182,30 @@ namespace UserInterface.Views
                 Changed.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Get the index of the string value in the list.
+        /// </summary>
+        /// <param name="value">The string to search for</param>
+        /// <returns>The index 0->n. Returns -1 if not found.</returns>
+        public int IndexOf(string value)
+        {
+            int result = -1;
+            TreeIter iter;
+            int i = 0;
+            
+            bool more = comboModel.GetIterFirst(out iter);
+            while (more && (result == -1))
+            {
+                if (string.Compare(value, (string)comboModel.GetValue(iter, 0), false) == 0)
+                {
+                    result = i;
+                }
+                i++;
+
+                more = comboModel.IterNext(ref iter);
+            }
+
+            return result;
+        }
     }
 }
