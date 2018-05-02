@@ -69,6 +69,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="App.config" />
     <EmbeddedResource Include="Resources\Glade\ExplorerView.glade">
@@ -259,6 +260,7 @@
     <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Utility\DateTimeCellType.cs" />
     <Compile Include="Utility\Excel.cs" />
+    <Compile Include="Utility\R.cs" />
     <Compile Include="Utility\StringEntryForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs" />
     <Compile Include="Utility\Graph.cs" />
@@ -388,6 +390,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TwoStageEvaporation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportPasturePoolDetails.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazeAll.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazePasture.png" />
@@ -549,6 +552,11 @@
     <EmbeddedResource Include="Resources\Delete.png" />
     <EmbeddedResource Include="Resources\Delete16.png" />
     <EmbeddedResource Include="Resources\Cloud.png" />
+    <EmbeddedResource Include="Resources\ArbitrationDiagram.PNG" />
+    <EmbeddedResource Include="Resources\CurveNumberCover.png" />
+    <EmbeddedResource Include="Resources\Jigsaw.jpg" />
+    <EmbeddedResource Include="Resources\RunoffRainfallCurves.png" />
+    <EmbeddedResource Include="Resources\RunoffResponseCurve.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

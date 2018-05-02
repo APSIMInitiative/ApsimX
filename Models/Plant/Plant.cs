@@ -60,7 +60,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
-    public class Plant : ModelCollectionFromResource, ICrop, ICustomDocumentation
+    public class Plant : ModelCollectionFromResource, IPlant, ICustomDocumentation
     {
         #region Class links
         /// <summary>The summary</summary>
@@ -102,6 +102,14 @@ namespace Models.PMF
         #region Class properties and fields
         /// <summary>Used by several organs to determine the type of crop.</summary>
         public string CropType { get; set; }
+
+        /// <summary>Gets a value indicating how leguminous a plant is</summary>
+        [XmlIgnore]
+        public double Legumosity { get; }
+
+        /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
+        [XmlIgnore]
+        public bool IsC4 { get; }
 
         /// <summary>The sowing data</summary>
         [XmlIgnore]
@@ -148,6 +156,16 @@ namespace Models.PMF
 
         /// <summary>The current cultivar definition.</summary>
         private Cultivar cultivarDefinition;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Plant()
+        {
+            string photosyntheticPathway = (string) Apsim.Get(this, "Leaf.Photosynthesis.FCO2.PhotosyntheticPathway");
+            IsC4 = photosyntheticPathway != null && photosyntheticPathway == "C4";
+            Legumosity = 0;
+        }
 
         /// <summary>Gets the water supply demand ratio.</summary>
         [Units("0-1")]
@@ -409,7 +427,7 @@ namespace Models.PMF
                 OrganBiomassRemovalType biomassRemoval = null;
                 if (removalData != null)
                     biomassRemoval = removalData.GetFractionsForOrgan(organ.Name);
-                organ.DoRemoveBiomass(biomassRemoveType, biomassRemoval);
+                (organ as IRemovableBiomass).RemoveBiomass(biomassRemoveType, biomassRemoval);
             }
 
             // Reset the phenology if SetPhenologyStage specified.
