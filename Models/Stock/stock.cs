@@ -162,7 +162,7 @@ namespace Models.GrazPlan
             get
             {
                 StockGeno[] geno = new StockGeno[1];
-                StockVars.MakeGenotypesValue(this.stockModel, ref geno);
+                this.stockModel.GenotypeInits2Value(this.genotypeInits, ref geno);
                 return geno;
             }
 
@@ -3999,10 +3999,10 @@ namespace Models.GrazPlan
 
                     PaddockInfo thePadd = this.stockModel.Paddocks.byObj(zone);
 
-                    // find all the child crop, pasture components with an TAvailableToAnimal property
+                    // find all the child crop, pasture components that have removable biomass
                     foreach (Model crop in Apsim.FindAll(zone, typeof(IPlant)))
                     {
-                        this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, crop.Name, 0, 0, crop, true);
+                        this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop, true);
                     }
 
                     // locate surfaceOM and soil nutrient model
@@ -4168,7 +4168,7 @@ namespace Models.GrazPlan
                 double totalRemoved = 0.0;
                 for (int i = 0; i < removed.Herbage.Length; i++)
                     totalRemoved += removed.Herbage[i];
-                double propnRemoved = totalRemoved / (forage.TotalLive + forage.TotalDead); 
+                double propnRemoved = totalRemoved / (forage.TotalLive + forage.TotalDead);
 
                 foreach (IRemovableBiomass organ in Apsim.Children((IModel)forageProvider.ForageObj, typeof(IRemovableBiomass)))
                 {
@@ -4425,7 +4425,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Do a request for the AvailableToAnimals property
+        /// Do a request for the biomasses
         /// </summary>
         private void RequestAvailableToAnimal()
         {
@@ -4502,6 +4502,28 @@ namespace Models.GrazPlan
                 result = true;
             }
             return result;
+        }
+
+        #endregion
+
+        #region Public functions ============================================
+
+        /// <summary>
+        /// Get the parameters for this genotype
+        /// </summary>
+        /// <param name="mainParams"></param>
+        /// <param name="genoInits"></param>
+        /// <param name="genoIdx"></param>
+        /// <returns></returns>
+        public TAnimalParamSet ParamsFromGenotypeInits(TAnimalParamSet mainParams, StockGeno[] genoInits, int genoIdx)
+        {
+            SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[genoInits.Length];
+            for (int idx = 0; idx < genoInits.Length; idx++)
+            {
+                genotypeInits[idx] = new SingleGenotypeInits();
+                this.stockModel.Value2GenotypeInits(genoInits[idx], ref genotypeInits[idx]);
+            }
+            return this.stockModel.ParamsFromGenotypeInits(mainParams, genotypeInits, genoIdx);
         }
 
         #endregion

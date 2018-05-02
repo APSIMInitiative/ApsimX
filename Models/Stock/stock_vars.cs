@@ -60,7 +60,7 @@ namespace Models.GrazPlan
     } 
 
     /// <summary>
-    /// The stock genotype
+    /// The stock genotype. The initial values in the stock component.
     /// </summary>
     public class StockGeno
     {
@@ -92,7 +92,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the conception rates
         /// </summary>
-        public double[] Conception;
+        public double[] Conception = new double[4];
         
         /// <summary>
         /// Gets or sets the death rate /y
@@ -354,7 +354,7 @@ namespace Models.GrazPlan
         /// </summary>
         public double S { get; set; }
     }
-
+    /*
     /// <summary>
     /// Forage available to the animal from a crop component
     /// </summary>
@@ -415,7 +415,7 @@ namespace Models.GrazPlan
         /// Gets or sets the ash alkalinity
         /// </summary>
         public double AshAlk { get; set; }
-    }
+    }*/
 
     /// <summary>
     /// Definitions of many property constants in the Stock component
