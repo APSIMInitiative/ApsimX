@@ -260,6 +260,7 @@
     <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Utility\DateTimeCellType.cs" />
     <Compile Include="Utility\Excel.cs" />
+    <Compile Include="Utility\R.cs" />
     <Compile Include="Utility\StringEntryForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs" />
     <Compile Include="Utility\Graph.cs" />
