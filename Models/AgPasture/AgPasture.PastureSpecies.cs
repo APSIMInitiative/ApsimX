@@ -26,7 +26,7 @@ namespace Models.AgPasture
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Sward))]
-    public class PastureSpecies : Model, ICrop, ICanopy, IUptake
+    public class PastureSpecies : Model, IPlant, ICanopy, IUptake
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------
 
@@ -210,6 +210,21 @@ namespace Models.AgPasture
         #endregion  --------------------------------------------------------------------------------------------------------
 
         #region ICrop implementation  --------------------------------------------------------------------------------------
+
+        /// <summary>Gets a value indicating how leguminous a plant is</summary>
+        public double Legumosity
+        {
+            get
+            {
+                if (SpeciesFamily == PastureSpecies.PlantFamilyType.Legume)
+                    return 1;
+                else
+                    return 0;
+            }
+        }
+
+        /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
+        public bool IsC4 { get { return PhotosyntheticPathway == PastureSpecies.PhotosynthesisPathwayType.C4; } }
 
         /// <summary>Gets a list of cultivar names (not used by AgPasture).</summary>
         public string[] CultivarNames
@@ -3608,9 +3623,9 @@ namespace Models.AgPasture
             nLayers = mySoil.Thickness.Length;
 
             // set up the organs (use 4 or 2 tissues, the last is dead)
-            leaves = new PastureAboveGroundOrgan(4);
-            stems = new PastureAboveGroundOrgan(4);
-            stolons = new PastureAboveGroundOrgan(4);
+            leaves = new PastureAboveGroundOrgan(this, 4);
+            stems = new PastureAboveGroundOrgan(this, 4);
+            stolons = new PastureAboveGroundOrgan(this, 4);
             rootZones = new List<PastureBelowGroundOrgan>();
             plantZoneRoots = new PastureBelowGroundOrgan(2, nLayers, 
                                                          myWaterAvailableMethod, myNitrogenAvailableMethod,

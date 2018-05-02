@@ -15,7 +15,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation
+    public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
     {
         /// <summary>The parent plant</summary>
         [Link]
@@ -145,6 +145,9 @@ namespace Models.PMF.Organs
             Dead = new Biomass();
         }
 
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return true; } }
+
         /// <summary>The live biomass</summary>
         [XmlIgnore]
         public Biomass Live { get; private set; }
@@ -233,7 +236,7 @@ namespace Models.PMF.Organs
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="amountToRemove">The fractions of biomass to remove</param>
-        public virtual void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
+        public virtual void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
         }

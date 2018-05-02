@@ -18,14 +18,9 @@ namespace UserInterface.Views
     interface IMapView
     {
         /// <summary>
-        /// Invoked when the zoom level is changed
+        /// Invoked when the zoom level or map center is changed
         /// </summary>
-        event EventHandler ZoomChanged;
-
-        /// <summary>
-        /// Invoked when the map center is changed
-        /// </summary>
-        event EventHandler PositionChanged;
+        event EventHandler ViewChanged;
 
         /// <summary>Show the map</summary>
         void ShowMap(List<Models.Map.Coordinate> coordinates);
@@ -65,14 +60,9 @@ namespace UserInterface.Views
     public class MapView : HTMLView, IMapView
     {
         /// <summary>
-        /// Invoked when the zoom level is changed
+        /// Invoked when the zoom level or map center is changed
         /// </summary>
-        public event EventHandler ZoomChanged;
-
-        /// <summary>
-        /// Invoked when the map center is changed
-        /// </summary>
-        public event EventHandler PositionChanged;
+        public event EventHandler ViewChanged;
 
         /// <summary>Construtor</summary>
         public MapView(ViewBase owner) : base(owner)
@@ -168,13 +158,15 @@ var locations = [";
   {
      var mapProp = {
        center:myCenter,
+       fullscreenControl:false,
+       scaleControl:true,
        zoom: 1,
 ";
             if (popupWin != null) // When exporting into a report, leave off the controls
             {
                 html += "zoomControl: false,";
                 html += "mapTypeControl: false,";
-                html += "scaleControl: false,";
+                // html += "scaleControl: false,";
                 html += "streetViewControl: false,";
             }
             html += @"
@@ -293,6 +285,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
             }
             set
             {
+                _center = value;
                 browser.ExecJavaScript("SetCenter", new object[] { value.Latitude, value.Longitude });
 
                 // With WebKit, it appears we need to give it time to actually update the display
@@ -317,6 +310,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
             if (!String.IsNullOrEmpty(title))
             {
                 double newLat, newLong, newZoom;
+                bool modified = false;
                 // Incoming title should look like "6, (-27.15, 151.25)"
                 // That is Zoom, then lat, long pair
                 // We remove the brackets and split on the commas
@@ -326,18 +320,18 @@ google.maps.event.addDomListener(window, 'load', initialize);
                 if (Double.TryParse(parts[0], out newZoom) && newZoom != _zoom)
                 {
                     _zoom = newZoom;
-                    if (ZoomChanged != null)
-                        ZoomChanged.Invoke(this, EventArgs.Empty);
+                    modified = true;
                 }
                 if (Double.TryParse(parts[1], out newLat) &&
                     Double.TryParse(parts[2], out newLong) &&
-                    (newLat != _center.Latitude || newLong != Center.Longitude))
+                    (newLat != _center.Latitude || newLong != _center.Longitude))
                 {
                     _center.Latitude = newLat;
                     _center.Longitude = newLong;
-                    if (PositionChanged != null)
-                        PositionChanged.Invoke(this, EventArgs.Empty);
+                    modified = true;
                 }
+                if (modified && ViewChanged != null)
+                    ViewChanged.Invoke(this, EventArgs.Empty);
             }
         }
     }
