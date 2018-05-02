@@ -235,7 +235,7 @@ namespace UserInterface.Presenters
 
                     if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
                     {
-                        ICrop crop = this.GetCrop(this.properties);
+                        IPlant crop = this.GetCrop(this.properties);
                         if (crop != null)
                         {
                             cell.DropDownStrings = this.GetCultivarNames(crop);
@@ -302,7 +302,7 @@ namespace UserInterface.Presenters
                 else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    ICrop crop = this.GetCrop(this.properties);
+                    IPlant crop = this.GetCrop(this.properties);
                     if (crop != null)
                     {
                         cell.DropDownStrings = this.GetCultivarNames(crop);
@@ -337,20 +337,20 @@ namespace UserInterface.Presenters
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = StringUtilities.EnumToStrings(cellValue);
                     }
-                    else if (cellValue.GetType() == typeof(ICrop))
+                    else if (cellValue.GetType() == typeof(IPlant))
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
                         List<string> cropNames = new List<string>();
-                        foreach (Model crop in Apsim.FindAll(this.model, typeof(ICrop)))
+                        foreach (Model crop in Apsim.FindAll(this.model, typeof(IPlant)))
                         {
                             cropNames.Add(crop.Name);
                         }
 
                         cell.DropDownStrings = cropNames.ToArray();
                     }
-                    else if (this.properties[i].DataType == typeof(ICrop))
+                    else if (this.properties[i].DataType == typeof(IPlant))
                     {
-                        List<string> plantNames = Apsim.FindAll(this.model, typeof(ICrop)).Select(m => m.Name).ToList();
+                        List<string> plantNames = Apsim.FindAll(this.model, typeof(IPlant)).Select(m => m.Name).ToList();
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = plantNames.ToArray();
                     }
@@ -372,7 +372,7 @@ namespace UserInterface.Presenters
         /// <summary>Get a list of cultivars for crop.</summary>
         /// <param name="crop">The crop.</param>
         /// <returns>A list of cultivars.</returns>
-        private string[] GetCultivarNames(ICrop crop)
+        private string[] GetCultivarNames(IPlant crop)
         {
             if (crop.CultivarNames.Length == 0)
             {
@@ -380,7 +380,7 @@ namespace UserInterface.Presenters
                 Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
                 if (replacements != null)
                 {
-                    ICrop replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as ICrop;
+                    IPlant replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as IPlant;
                     if (replacementCrop != null)
                     {
                         return replacementCrop.CultivarNames;
@@ -428,13 +428,13 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="properties">The list of properties to look through.</param>
         /// <returns>The found crop or null if none found.</returns>
-        private ICrop GetCrop(List<VariableProperty> properties)
+        private IPlant GetCrop(List<VariableProperty> properties)
         {
             foreach (VariableProperty property in properties)
             {
-                if (property.DataType == typeof(ICrop))
+                if (property.DataType == typeof(IPlant))
                 {
-                    ICrop plant = property.Value as ICrop;
+                    IPlant plant = property.Value as IPlant;
                     if (plant != null)
                     {
                         return plant;
@@ -443,7 +443,7 @@ namespace UserInterface.Presenters
             }
 
             // Not found so look for one in scope.
-            return Apsim.Find(this.model, typeof(ICrop)) as ICrop;
+            return Apsim.Find(this.model, typeof(IPlant)) as IPlant;
         }
 
         /// <summary>
@@ -501,9 +501,9 @@ namespace UserInterface.Presenters
                     throw new ApsimXException(this.model, "Invalid property type: " + property.DataType.ToString());
                 }
             }
-            else if (typeof(ICrop).IsAssignableFrom(property.DataType))
+            else if (typeof(IPlant).IsAssignableFrom(property.DataType))
             {
-                value = Apsim.Find(this.model, value.ToString()) as ICrop;
+                value = Apsim.Find(this.model, value.ToString()) as IPlant;
             }
             else if (property.DataType == typeof(DateTime))
             {

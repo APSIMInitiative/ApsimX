@@ -369,10 +369,8 @@ namespace UserInterface.Presenters
                     if (changedValues)
                     {
                         // Store the property change.
-                        Commands.ChangeProperty.Property property = new Commands.ChangeProperty.Property();
-                        property.Name = this.propertiesInGrid[i].Name;
-                        property.Obj = this.propertiesInGrid[i].Object;
-                        property.NewValue = values;
+                        Commands.ChangeProperty.Property property =
+                            new Commands.ChangeProperty.Property(this.propertiesInGrid[i].Object, this.propertiesInGrid[i].Name, values);
                         properties.Add(property);
                     }
                 }

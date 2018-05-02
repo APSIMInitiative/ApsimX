@@ -11003,5 +11003,5 @@ namespace Models
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>283</ExplorerWidth>
 </Simulations>

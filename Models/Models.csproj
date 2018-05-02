@@ -194,6 +194,7 @@
     <Compile Include="Plant\Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Plant\Functions\TrackerFunction.cs" />
     <Compile Include="Plant\Functions\ArrayFunction.cs" />
+    <Compile Include="Plant\Interfaces\IRemovableBiomass.cs" />
     <Compile Include="Plant\Phenology\BBCH.cs" />
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
@@ -483,7 +484,7 @@
     <Compile Include="Graph\Axis.cs" />
     <Compile Include="Graph\Series.cs" />
     <Compile Include="Clock.cs" />
-    <Compile Include="Core\ICrop.cs" />
+    <Compile Include="Core\IPlant.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Utilities\Accumulator.cs" />
     <Compile Include="WaterModel\CNReductionForCover.cs" />
